@@ -3,10 +3,13 @@ package binging
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"reflect"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
+
+	"github.com/hatlonely/go-kit/strex"
 )
 
 func TestParseTag(t *testing.T) {
@@ -103,6 +106,15 @@ func TestBind(t *testing.T) {
 			So(bind.Bind(MapGetter(map[string]interface{}{
 				"a1.key1": "val1-1",
 			}), b), ShouldNotBeNil)
+		})
+
+		os.Setenv("A1_KEY1", "val1-1")
+		os.Setenv("A2_KEY1", "val1-2")
+		os.Setenv("A1_KEY2", "456")
+		os.Setenv("A2_KEY3", "val3-2")
+		Convey("env", func() {
+			So(bind.Bind(NewEnvGetter("", "_"), b), ShouldBeNil)
+			fmt.Println(strex.MustJsonMarshal(b))
 		})
 	})
 }
