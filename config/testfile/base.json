@@ -1,0 +1,18 @@
+{
+  "Decoder": {
+    "Name": "json"
+  },
+  "Provider": {
+    "Type": "Local",
+    "File": "/Users/hatlonely/hatlonely/gitlab.alibaba-inc.com/hatlonely.hl/go-kit/config/testfile/test.json"
+  },
+  "Cipher": {
+    "Type": "Group",
+    "Ciphers": [{
+      "Type": "AES",
+      "Key": "IrjXy4vx7iwgCLaUeu5TVUA9TkgMwSw3QWcgE/IW5W0="
+    }, {
+      "Type": "Base64"
+    }]
+  }
+}

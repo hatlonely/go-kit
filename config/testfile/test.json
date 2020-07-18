@@ -1,0 +1,21 @@
+{
+  "Host": "localhost",
+  "Logger": [
+    {
+      "File": "test.info",
+      "MaxAge": "24h",
+      "Name": "Info"
+    },
+    {
+      "File": "test.warn",
+      "MaxAge": "168h",
+      "Name": "Warn"
+    }
+  ],
+  "OSS": {
+    "@AccessKeyID": "pJGER0prjbOQdOYJrdx+y//9ny0bkVVTe1rejeDPuf559j4pj0LzrNGBgkH22V9a",
+    "@AccessKeySecret": "4ma/nO1LB4CTl8r3OYVhnPb1MskFihnG6g8rPDi2EqyzegHDtK+mVMpX6GmVgIAd",
+    "Endpoint": "endpoint"
+  },
+  "Port": 6062
+}
