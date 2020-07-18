@@ -10,12 +10,12 @@ import (
 	"github.com/hatlonely/go-kit/refex"
 )
 
-func Bind(c Getter, v interface{}) error {
+func Bind(v interface{}, getters ...Getter) error {
 	b, err := Compile(v)
 	if err != nil {
 		return errors.Wrap(err, "bind failed")
 	}
-	return b.Bind(c, v)
+	return b.Bind(v, getters...)
 }
 
 func MustCompile(v interface{}) *Binder {
@@ -49,11 +49,11 @@ type Binder struct {
 	infos map[string]info
 }
 
-func (b *Binder) Bind(c Getter, v interface{}) error {
-	return bindRecursive(c, b.infos, v, "", "")
+func (b *Binder) Bind(v interface{}, getters ...Getter) error {
+	return bindRecursive(b.infos, v, "", "", getters...)
 }
 
-func bindRecursive(c Getter, infos map[string]info, v interface{}, prefix1 string, prefix2 string) error {
+func bindRecursive(infos map[string]info, v interface{}, prefix1 string, prefix2 string, getters ...Getter) error {
 	rv := reflect.ValueOf(v)
 	if rv.Kind() != reflect.Ptr || rv.IsNil() {
 		return &Error{Code: ErrInvalidDstType, Err: errors.Errorf("invalid value [%v] type or value is nil", reflect.TypeOf(v)), Key: prefix1}
@@ -71,21 +71,21 @@ func bindRecursive(c Getter, infos map[string]info, v interface{}, prefix1 strin
 					rv.Field(i).Set(nv)
 				}
 				if rv.Type().Field(i).Anonymous {
-					if err := bindRecursive(c, infos, rv.Field(i).Interface(), prefix1, prefix2); err != nil {
+					if err := bindRecursive(infos, rv.Field(i).Interface(), prefix1, prefix2, getters...); err != nil {
 						return err
 					}
 				} else {
-					if err := bindRecursive(c, infos, rv.Field(i).Interface(), prefixAppendKey(prefix1, key), prefixAppendKey(prefix2, info.key)); err != nil {
+					if err := bindRecursive(infos, rv.Field(i).Interface(), prefixAppendKey(prefix1, key), prefixAppendKey(prefix2, info.key), getters...); err != nil {
 						return err
 					}
 				}
 			default:
 				if rv.Type().Field(i).Anonymous {
-					if err := bindRecursive(c, infos, rv.Field(i).Addr().Interface(), prefix1, prefix2); err != nil {
+					if err := bindRecursive(infos, rv.Field(i).Addr().Interface(), prefix1, prefix2, getters...); err != nil {
 						return err
 					}
 				} else {
-					if err := bindRecursive(c, infos, rv.Field(i).Addr().Interface(), prefixAppendKey(prefix1, key), prefixAppendKey(prefix2, info.key)); err != nil {
+					if err := bindRecursive(infos, rv.Field(i).Addr().Interface(), prefixAppendKey(prefix1, key), prefixAppendKey(prefix2, info.key), getters...); err != nil {
 						return err
 					}
 				}
@@ -95,7 +95,11 @@ func bindRecursive(c Getter, infos map[string]info, v interface{}, prefix1 strin
 	}
 
 	prefix2 = prefixAppendKey(prefix2, info.key)
-	src, ok := c.Get(prefix2)
+	var src interface{}
+	var ok bool
+	for _, getter := range getters {
+		src, ok = getter.Get(prefix2)
+	}
 	if !ok {
 		if info.required {
 			return &Error{Code: ErrMissingRequiredField, Key: prefix1, Err: errors.New("prefix not exists")}

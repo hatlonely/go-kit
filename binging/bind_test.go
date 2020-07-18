@@ -91,21 +91,21 @@ func TestBind(t *testing.T) {
 
 		b := &B{}
 		Convey("normal", func() {
-			So(bind.Bind(MapGetter(map[string]interface{}{
+			So(bind.Bind(b, MapGetter(map[string]interface{}{
 				"a1.key1": "val1-1",
 				"a2.key1": "val1-2",
 				"a1.Key2": 456,
 				"a2.Key3": "val3-2",
-			}), b), ShouldBeNil)
+			})), ShouldBeNil)
 
 			buf, _ := json.MarshalIndent(b, "  ", "  ")
 			fmt.Printf(string(buf))
 		})
 
 		Convey("error", func() {
-			So(bind.Bind(MapGetter(map[string]interface{}{
+			So(bind.Bind(b, MapGetter(map[string]interface{}{
 				"a1.key1": "val1-1",
-			}), b), ShouldNotBeNil)
+			})), ShouldNotBeNil)
 		})
 
 		os.Setenv("A1_KEY1", "val1-1")
@@ -113,7 +113,7 @@ func TestBind(t *testing.T) {
 		os.Setenv("A1_KEY2", "456")
 		os.Setenv("A2_KEY3", "val3-2")
 		Convey("env", func() {
-			So(bind.Bind(NewEnvGetter("", "_"), b), ShouldBeNil)
+			So(bind.Bind(b, NewEnvGetter("", "_")), ShouldBeNil)
 			fmt.Println(strex.MustJsonMarshal(b))
 		})
 	})
