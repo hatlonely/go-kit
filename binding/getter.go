@@ -1,4 +1,4 @@
-package binging
+package binding
 
 import (
 	"os"
