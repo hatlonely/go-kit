@@ -7,7 +7,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/hatlonely/go-kit/refex"
+	"github.com/hatlonely/go-kit/cast"
 )
 
 func Bind(v interface{}, getters ...Getter) error {
@@ -109,7 +109,7 @@ func bindRecursive(infos map[string]info, v interface{}, prefix1 string, prefix2
 		}
 	}
 	if src != nil {
-		if err := refex.SetInterface(v, src); err != nil {
+		if err := cast.SetInterface(v, src); err != nil {
 			return &Error{Code: ErrInvalidFormat, Key: prefix1, Err: errors.Wrap(err, "set interface failed")}
 		}
 	}
@@ -181,13 +181,13 @@ func parseTag(key string, bTag string, dTag string, rt reflect.Type) (*info, err
 	}
 	if rt.Kind() == reflect.Ptr {
 		val := reflect.New(rt.Elem())
-		if err := refex.SetInterface(val.Interface(), dTag); err != nil {
+		if err := cast.SetInterface(val.Interface(), dTag); err != nil {
 			return nil, errors.Wrapf(err, "set interface failed. type [%v] tag [%v]", rt, dTag)
 		}
 		info.dftVal = val.Elem().Interface()
 	} else {
 		val := reflect.New(rt)
-		if err := refex.SetInterface(val.Interface(), dTag); err != nil {
+		if err := cast.SetInterface(val.Interface(), dTag); err != nil {
 			return nil, errors.Wrapf(err, "set interface failed. type [%v] tag [%v]", rt, dTag)
 		}
 		info.dftVal = val.Elem().Interface()

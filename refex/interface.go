@@ -5,6 +5,8 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+
+	"github.com/hatlonely/go-kit/cast"
 )
 
 func Validate(v interface{}) error {
@@ -280,7 +282,7 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string)
 			return fmt.Errorf("convert src to map[string]interface{} or map[interface{}]interface{} failed. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(src))
 		}
 	default:
-		if err := SetInterface(dst, src); err != nil {
+		if err := cast.SetInterface(dst, src); err != nil {
 			return fmt.Errorf("set interface failed. prefix: [%v], err: [%v]", prefix, err)
 		}
 	}
