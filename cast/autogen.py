@@ -36,7 +36,7 @@ func SetInterface(dst interface{{}}, src interface{{}}) error {{
 }}
 """
 
-item_tpl = """	case *{type}:
+set_interface_item_tpl = """	case *{type}:
 		v, err := To{name}E(src)
 		if err != nil {{
 			return err
@@ -49,7 +49,7 @@ def generate_set_interface(infos):
     out.write(set_interface_header)
     items = ""
     for info in infos:
-        items += item_tpl.format(**info)
+        items += set_interface_item_tpl.format(**info)
     out.write(set_interface_tpl.format(items=items))
     out.close()
 
@@ -63,7 +63,7 @@ import (
 )
 """
 
-cast_tpl = """
+cast_item_tpl = """
 func To{name}(val interface{{}}) {type} {{
 	if v, err := To{name}E(val); err == nil {{
 		return v
@@ -94,9 +94,10 @@ def generate_cast(infos):
     out.write(cast_header)
     items = ""
     for info in infos:
-        items += cast_tpl.format(**info)
+        items += cast_item_tpl.format(**info)
     out.write(items)
     out.close()
+
 
 def main():
     infos = parse_info()
