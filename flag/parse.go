@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (f *Flag) Parse(args []string) error {
+func (f *Flag) ParseArgs(args []string) error {
 	var arguments []string
 	for i := 0; i < len(args); i++ {
 		arg := args[i]

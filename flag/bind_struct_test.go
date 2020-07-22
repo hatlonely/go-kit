@@ -30,7 +30,7 @@ func TestBind(t *testing.T) {
 		panic(err)
 	}
 	fmt.Println(f.Usage())
-	if err := f.Parse(strings.Split("-str abc -ip 192.168.0.1 --int-slice 1,2,3 posflag -sub-f1 140", " ")); err != nil {
+	if err := f.ParseArgs(strings.Split("-str abc -ip 192.168.0.1 --int-slice 1,2,3 posflag -sub-f1 140", " ")); err != nil {
 		fmt.Println(f.Usage())
 		panic(err)
 	}
