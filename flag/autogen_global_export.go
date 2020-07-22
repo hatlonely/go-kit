@@ -18,8 +18,12 @@ func GetInfo(key string) (*Info, bool) {
 	return gflag.GetInfo(key)
 }
 
-func Set(key string, val string) error {
+func Set(key string, val interface{}) error {
 	return gflag.Set(key, val)
+}
+
+func Get(key string, val string) (interface{}, bool) {
+	return gflag.Get(key, val)
 }
 
 func AddFlag(name string, usage string, opts ...AddFlagOption) error {

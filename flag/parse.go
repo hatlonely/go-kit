@@ -29,7 +29,7 @@ func (f *Flag) ParseArgs(args []string) error {
 			if !ok {
 				return errors.Errorf("unknown key [%v]", key)
 			}
-			if err := f.Set(key, val); err != nil {
+			if err := f.set(key, val); err != nil {
 				return errors.WithMessage(err, fmt.Sprintf("parse failed, key [%v]", key))
 			}
 		} else if info, ok := f.GetInfo(key); ok {
@@ -37,7 +37,7 @@ func (f *Flag) ParseArgs(args []string) error {
 				if i+1 >= len(args) {
 					return errors.Errorf("miss argument for non boolean key [%v]", key)
 				}
-				if err := f.Set(key, args[i+1]); err != nil {
+				if err := f.set(key, args[i+1]); err != nil {
 					return errors.WithMessage(err, fmt.Sprintf("parse failed, key [%v]", key))
 				}
 				i++
@@ -47,14 +47,14 @@ func (f *Flag) ParseArgs(args []string) error {
 					val = args[i+1]
 					i++
 				}
-				if err := f.Set(key, val); err != nil {
+				if err := f.set(key, val); err != nil {
 					return errors.WithMessage(err, "parse failed")
 				}
 			}
 		} else if f.allBoolFlag(key) { // -aux 全是 bool 选项，-aux 和 -a -u -x 等效
 			for i := 0; i < len(key); i++ {
 				k := key[i : i+1]
-				if err := f.Set(k, "true"); err != nil {
+				if err := f.set(k, "true"); err != nil {
 					return errors.WithMessage(err, "parse failed")
 				}
 			}
@@ -65,7 +65,7 @@ func (f *Flag) ParseArgs(args []string) error {
 			if !ok {
 				return errors.Errorf("unknown key [%v]", key)
 			}
-			if err := f.Set(key, val); err != nil {
+			if err := f.set(key, val); err != nil {
 				return errors.WithMessage(err, "parse failed")
 			}
 		}
@@ -75,7 +75,7 @@ func (f *Flag) ParseArgs(args []string) error {
 		if i >= len(f.arguments) {
 			break
 		}
-		if err := f.Set(f.arguments[i], val); err != nil {
+		if err := f.set(f.arguments[i], val); err != nil {
 			return errors.WithMessage(err, "parse failed")
 		}
 	}
