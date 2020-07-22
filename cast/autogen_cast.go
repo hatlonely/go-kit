@@ -396,3 +396,394 @@ func ToIPP(val interface{}) net.IP {
 	}
 	return v
 }
+
+func ToBoolSlice(val interface{}) []bool {
+	if v, err := ToBoolSliceE(val); err == nil {
+		return v
+	}
+	var v []bool
+	return v
+}
+
+func ToBoolSliceD(val interface{}, defaultValue []bool) []bool {
+	if v, err := ToBoolSliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToBoolSliceP(val interface{}) []bool {
+	v, err := ToBoolSliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToIntSlice(val interface{}) []int {
+	if v, err := ToIntSliceE(val); err == nil {
+		return v
+	}
+	var v []int
+	return v
+}
+
+func ToIntSliceD(val interface{}, defaultValue []int) []int {
+	if v, err := ToIntSliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToIntSliceP(val interface{}) []int {
+	v, err := ToIntSliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToUintSlice(val interface{}) []uint {
+	if v, err := ToUintSliceE(val); err == nil {
+		return v
+	}
+	var v []uint
+	return v
+}
+
+func ToUintSliceD(val interface{}, defaultValue []uint) []uint {
+	if v, err := ToUintSliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToUintSliceP(val interface{}) []uint {
+	v, err := ToUintSliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToInt64Slice(val interface{}) []int64 {
+	if v, err := ToInt64SliceE(val); err == nil {
+		return v
+	}
+	var v []int64
+	return v
+}
+
+func ToInt64SliceD(val interface{}, defaultValue []int64) []int64 {
+	if v, err := ToInt64SliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToInt64SliceP(val interface{}) []int64 {
+	v, err := ToInt64SliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToInt32Slice(val interface{}) []int32 {
+	if v, err := ToInt32SliceE(val); err == nil {
+		return v
+	}
+	var v []int32
+	return v
+}
+
+func ToInt32SliceD(val interface{}, defaultValue []int32) []int32 {
+	if v, err := ToInt32SliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToInt32SliceP(val interface{}) []int32 {
+	v, err := ToInt32SliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToInt16Slice(val interface{}) []int16 {
+	if v, err := ToInt16SliceE(val); err == nil {
+		return v
+	}
+	var v []int16
+	return v
+}
+
+func ToInt16SliceD(val interface{}, defaultValue []int16) []int16 {
+	if v, err := ToInt16SliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToInt16SliceP(val interface{}) []int16 {
+	v, err := ToInt16SliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToInt8Slice(val interface{}) []int8 {
+	if v, err := ToInt8SliceE(val); err == nil {
+		return v
+	}
+	var v []int8
+	return v
+}
+
+func ToInt8SliceD(val interface{}, defaultValue []int8) []int8 {
+	if v, err := ToInt8SliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToInt8SliceP(val interface{}) []int8 {
+	v, err := ToInt8SliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToUint64Slice(val interface{}) []uint64 {
+	if v, err := ToUint64SliceE(val); err == nil {
+		return v
+	}
+	var v []uint64
+	return v
+}
+
+func ToUint64SliceD(val interface{}, defaultValue []uint64) []uint64 {
+	if v, err := ToUint64SliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToUint64SliceP(val interface{}) []uint64 {
+	v, err := ToUint64SliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToUint32Slice(val interface{}) []uint32 {
+	if v, err := ToUint32SliceE(val); err == nil {
+		return v
+	}
+	var v []uint32
+	return v
+}
+
+func ToUint32SliceD(val interface{}, defaultValue []uint32) []uint32 {
+	if v, err := ToUint32SliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToUint32SliceP(val interface{}) []uint32 {
+	v, err := ToUint32SliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToUint16Slice(val interface{}) []uint16 {
+	if v, err := ToUint16SliceE(val); err == nil {
+		return v
+	}
+	var v []uint16
+	return v
+}
+
+func ToUint16SliceD(val interface{}, defaultValue []uint16) []uint16 {
+	if v, err := ToUint16SliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToUint16SliceP(val interface{}) []uint16 {
+	v, err := ToUint16SliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToUint8Slice(val interface{}) []uint8 {
+	if v, err := ToUint8SliceE(val); err == nil {
+		return v
+	}
+	var v []uint8
+	return v
+}
+
+func ToUint8SliceD(val interface{}, defaultValue []uint8) []uint8 {
+	if v, err := ToUint8SliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToUint8SliceP(val interface{}) []uint8 {
+	v, err := ToUint8SliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToFloat64Slice(val interface{}) []float64 {
+	if v, err := ToFloat64SliceE(val); err == nil {
+		return v
+	}
+	var v []float64
+	return v
+}
+
+func ToFloat64SliceD(val interface{}, defaultValue []float64) []float64 {
+	if v, err := ToFloat64SliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToFloat64SliceP(val interface{}) []float64 {
+	v, err := ToFloat64SliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToFloat32Slice(val interface{}) []float32 {
+	if v, err := ToFloat32SliceE(val); err == nil {
+		return v
+	}
+	var v []float32
+	return v
+}
+
+func ToFloat32SliceD(val interface{}, defaultValue []float32) []float32 {
+	if v, err := ToFloat32SliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToFloat32SliceP(val interface{}) []float32 {
+	v, err := ToFloat32SliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToStringSlice(val interface{}) []string {
+	if v, err := ToStringSliceE(val); err == nil {
+		return v
+	}
+	var v []string
+	return v
+}
+
+func ToStringSliceD(val interface{}, defaultValue []string) []string {
+	if v, err := ToStringSliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToStringSliceP(val interface{}) []string {
+	v, err := ToStringSliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToDurationSlice(val interface{}) []time.Duration {
+	if v, err := ToDurationSliceE(val); err == nil {
+		return v
+	}
+	var v []time.Duration
+	return v
+}
+
+func ToDurationSliceD(val interface{}, defaultValue []time.Duration) []time.Duration {
+	if v, err := ToDurationSliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToDurationSliceP(val interface{}) []time.Duration {
+	v, err := ToDurationSliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToTimeSlice(val interface{}) []time.Time {
+	if v, err := ToTimeSliceE(val); err == nil {
+		return v
+	}
+	var v []time.Time
+	return v
+}
+
+func ToTimeSliceD(val interface{}, defaultValue []time.Time) []time.Time {
+	if v, err := ToTimeSliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToTimeSliceP(val interface{}) []time.Time {
+	v, err := ToTimeSliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToIPSlice(val interface{}) []net.IP {
+	if v, err := ToIPSliceE(val); err == nil {
+		return v
+	}
+	var v []net.IP
+	return v
+}
+
+func ToIPSliceD(val interface{}, defaultValue []net.IP) []net.IP {
+	if v, err := ToIPSliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToIPSliceP(val interface{}) []net.IP {
+	v, err := ToIPSliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}

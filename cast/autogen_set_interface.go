@@ -112,6 +112,108 @@ func SetInterface(dst interface{}, src interface{}) error {
 			return err
 		}
 		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]bool:
+		v, err := ToBoolSliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]int:
+		v, err := ToIntSliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]uint:
+		v, err := ToUintSliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]int64:
+		v, err := ToInt64SliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]int32:
+		v, err := ToInt32SliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]int16:
+		v, err := ToInt16SliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]int8:
+		v, err := ToInt8SliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]uint64:
+		v, err := ToUint64SliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]uint32:
+		v, err := ToUint32SliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]uint16:
+		v, err := ToUint16SliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]uint8:
+		v, err := ToUint8SliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]float64:
+		v, err := ToFloat64SliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]float32:
+		v, err := ToFloat32SliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]string:
+		v, err := ToStringSliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]time.Duration:
+		v, err := ToDurationSliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]time.Time:
+		v, err := ToTimeSliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]net.IP:
+		v, err := ToIPSliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
 
 	default:
 		return fmt.Errorf("unsupport dst type [%v]", reflect.TypeOf(dst))
