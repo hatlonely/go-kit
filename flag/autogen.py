@@ -121,8 +121,67 @@ def generate_global_export(infos):
     out.close()
 
 
+get_header = """// this file is auto generate by autogen.py. do not edit!
+package flag
+
+import (
+	"net"
+	"time"
+
+	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/cast"
+)
+"""
+
+get_item_tpl = """
+func (f *Flag) Get{name}E(key string) ({type}, error) {{
+	v, ok := f.Get(key)
+	if !ok {{
+		var res {type}
+		return res, errors.Errorf("get failed: key not exist. key: [%v]", key)
+	}}
+	return cast.To{name}E(v)
+}}
+
+func (f *Flag) Get{name}(key string) {type} {{
+	var res {type}
+	v, err := f.Get{name}E(key)
+	if err != nil {{
+		return res
+	}}
+	return v
+}}
+
+func (f *Flag) Get{name}D(key string, val {type}) {type} {{
+	v, err := f.Get{name}E(key)
+	if err != nil {{
+		return val
+	}}
+	return v
+}}
+
+func (f *Flag) Get{name}P(key string) {type} {{
+	v, err := f.Get{name}E(key)
+	if err != nil {{
+		panic(err)
+	}}
+	return v
+}}
+"""
+
+
+def generate_get(infos):
+    out = open("autogen_get.go", "w")
+    out.write(get_header)
+    for info in infos:
+        out.write(get_item_tpl.format(**info))
+    out.close()
+
+
 def main():
     generate_bind([*parse_info("../cast/cast.go"), *parse_info("../cast/autogen_to_slice.go")])
+    generate_get([*parse_info("../cast/cast.go"), *parse_info("../cast/autogen_to_slice.go")])
     generate_global_export(parse_fun())
 
 

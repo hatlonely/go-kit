@@ -68,7 +68,7 @@ func (f *Flag) Set(key string, val interface{}) error {
 	return f.set(key, cast.ToString(val))
 }
 
-func (f *Flag) Get(key string, val string) (interface{}, bool) {
+func (f *Flag) Get(key string) (interface{}, bool) {
 	key = strex.KebabName(key)
 	if v, ok := f.kvs[key]; ok {
 		return v, true

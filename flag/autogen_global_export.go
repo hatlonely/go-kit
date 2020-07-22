@@ -22,8 +22,552 @@ func Set(key string, val interface{}) error {
 	return gflag.Set(key, val)
 }
 
-func Get(key string, val string) (interface{}, bool) {
-	return gflag.Get(key, val)
+func Get(key string) (interface{}, bool) {
+	return gflag.Get(key)
+}
+
+func GetBoolE(key string) (bool, error) {
+	return gflag.GetBoolE(key)
+}
+
+func GetBool(key string) bool {
+	return gflag.GetBool(key)
+}
+
+func GetBoolD(key string, val bool) bool {
+	return gflag.GetBoolD(key, val)
+}
+
+func GetBoolP(key string) bool {
+	return gflag.GetBoolP(key)
+}
+
+func GetIntE(key string) (int, error) {
+	return gflag.GetIntE(key)
+}
+
+func GetInt(key string) int {
+	return gflag.GetInt(key)
+}
+
+func GetIntD(key string, val int) int {
+	return gflag.GetIntD(key, val)
+}
+
+func GetIntP(key string) int {
+	return gflag.GetIntP(key)
+}
+
+func GetUintE(key string) (uint, error) {
+	return gflag.GetUintE(key)
+}
+
+func GetUint(key string) uint {
+	return gflag.GetUint(key)
+}
+
+func GetUintD(key string, val uint) uint {
+	return gflag.GetUintD(key, val)
+}
+
+func GetUintP(key string) uint {
+	return gflag.GetUintP(key)
+}
+
+func GetInt64E(key string) (int64, error) {
+	return gflag.GetInt64E(key)
+}
+
+func GetInt64(key string) int64 {
+	return gflag.GetInt64(key)
+}
+
+func GetInt64D(key string, val int64) int64 {
+	return gflag.GetInt64D(key, val)
+}
+
+func GetInt64P(key string) int64 {
+	return gflag.GetInt64P(key)
+}
+
+func GetInt32E(key string) (int32, error) {
+	return gflag.GetInt32E(key)
+}
+
+func GetInt32(key string) int32 {
+	return gflag.GetInt32(key)
+}
+
+func GetInt32D(key string, val int32) int32 {
+	return gflag.GetInt32D(key, val)
+}
+
+func GetInt32P(key string) int32 {
+	return gflag.GetInt32P(key)
+}
+
+func GetInt16E(key string) (int16, error) {
+	return gflag.GetInt16E(key)
+}
+
+func GetInt16(key string) int16 {
+	return gflag.GetInt16(key)
+}
+
+func GetInt16D(key string, val int16) int16 {
+	return gflag.GetInt16D(key, val)
+}
+
+func GetInt16P(key string) int16 {
+	return gflag.GetInt16P(key)
+}
+
+func GetInt8E(key string) (int8, error) {
+	return gflag.GetInt8E(key)
+}
+
+func GetInt8(key string) int8 {
+	return gflag.GetInt8(key)
+}
+
+func GetInt8D(key string, val int8) int8 {
+	return gflag.GetInt8D(key, val)
+}
+
+func GetInt8P(key string) int8 {
+	return gflag.GetInt8P(key)
+}
+
+func GetUint64E(key string) (uint64, error) {
+	return gflag.GetUint64E(key)
+}
+
+func GetUint64(key string) uint64 {
+	return gflag.GetUint64(key)
+}
+
+func GetUint64D(key string, val uint64) uint64 {
+	return gflag.GetUint64D(key, val)
+}
+
+func GetUint64P(key string) uint64 {
+	return gflag.GetUint64P(key)
+}
+
+func GetUint32E(key string) (uint32, error) {
+	return gflag.GetUint32E(key)
+}
+
+func GetUint32(key string) uint32 {
+	return gflag.GetUint32(key)
+}
+
+func GetUint32D(key string, val uint32) uint32 {
+	return gflag.GetUint32D(key, val)
+}
+
+func GetUint32P(key string) uint32 {
+	return gflag.GetUint32P(key)
+}
+
+func GetUint16E(key string) (uint16, error) {
+	return gflag.GetUint16E(key)
+}
+
+func GetUint16(key string) uint16 {
+	return gflag.GetUint16(key)
+}
+
+func GetUint16D(key string, val uint16) uint16 {
+	return gflag.GetUint16D(key, val)
+}
+
+func GetUint16P(key string) uint16 {
+	return gflag.GetUint16P(key)
+}
+
+func GetUint8E(key string) (uint8, error) {
+	return gflag.GetUint8E(key)
+}
+
+func GetUint8(key string) uint8 {
+	return gflag.GetUint8(key)
+}
+
+func GetUint8D(key string, val uint8) uint8 {
+	return gflag.GetUint8D(key, val)
+}
+
+func GetUint8P(key string) uint8 {
+	return gflag.GetUint8P(key)
+}
+
+func GetFloat64E(key string) (float64, error) {
+	return gflag.GetFloat64E(key)
+}
+
+func GetFloat64(key string) float64 {
+	return gflag.GetFloat64(key)
+}
+
+func GetFloat64D(key string, val float64) float64 {
+	return gflag.GetFloat64D(key, val)
+}
+
+func GetFloat64P(key string) float64 {
+	return gflag.GetFloat64P(key)
+}
+
+func GetFloat32E(key string) (float32, error) {
+	return gflag.GetFloat32E(key)
+}
+
+func GetFloat32(key string) float32 {
+	return gflag.GetFloat32(key)
+}
+
+func GetFloat32D(key string, val float32) float32 {
+	return gflag.GetFloat32D(key, val)
+}
+
+func GetFloat32P(key string) float32 {
+	return gflag.GetFloat32P(key)
+}
+
+func GetStringE(key string) (string, error) {
+	return gflag.GetStringE(key)
+}
+
+func GetString(key string) string {
+	return gflag.GetString(key)
+}
+
+func GetStringD(key string, val string) string {
+	return gflag.GetStringD(key, val)
+}
+
+func GetStringP(key string) string {
+	return gflag.GetStringP(key)
+}
+
+func GetDurationE(key string) (time.Duration, error) {
+	return gflag.GetDurationE(key)
+}
+
+func GetDuration(key string) time.Duration {
+	return gflag.GetDuration(key)
+}
+
+func GetDurationD(key string, val time.Duration) time.Duration {
+	return gflag.GetDurationD(key, val)
+}
+
+func GetDurationP(key string) time.Duration {
+	return gflag.GetDurationP(key)
+}
+
+func GetTimeE(key string) (time.Time, error) {
+	return gflag.GetTimeE(key)
+}
+
+func GetTime(key string) time.Time {
+	return gflag.GetTime(key)
+}
+
+func GetTimeD(key string, val time.Time) time.Time {
+	return gflag.GetTimeD(key, val)
+}
+
+func GetTimeP(key string) time.Time {
+	return gflag.GetTimeP(key)
+}
+
+func GetIPE(key string) (net.IP, error) {
+	return gflag.GetIPE(key)
+}
+
+func GetIP(key string) net.IP {
+	return gflag.GetIP(key)
+}
+
+func GetIPD(key string, val net.IP) net.IP {
+	return gflag.GetIPD(key, val)
+}
+
+func GetIPP(key string) net.IP {
+	return gflag.GetIPP(key)
+}
+
+func GetBoolSliceE(key string) ([]bool, error) {
+	return gflag.GetBoolSliceE(key)
+}
+
+func GetBoolSlice(key string) []bool {
+	return gflag.GetBoolSlice(key)
+}
+
+func GetBoolSliceD(key string, val []bool) []bool {
+	return gflag.GetBoolSliceD(key, val)
+}
+
+func GetBoolSliceP(key string) []bool {
+	return gflag.GetBoolSliceP(key)
+}
+
+func GetIntSliceE(key string) ([]int, error) {
+	return gflag.GetIntSliceE(key)
+}
+
+func GetIntSlice(key string) []int {
+	return gflag.GetIntSlice(key)
+}
+
+func GetIntSliceD(key string, val []int) []int {
+	return gflag.GetIntSliceD(key, val)
+}
+
+func GetIntSliceP(key string) []int {
+	return gflag.GetIntSliceP(key)
+}
+
+func GetUintSliceE(key string) ([]uint, error) {
+	return gflag.GetUintSliceE(key)
+}
+
+func GetUintSlice(key string) []uint {
+	return gflag.GetUintSlice(key)
+}
+
+func GetUintSliceD(key string, val []uint) []uint {
+	return gflag.GetUintSliceD(key, val)
+}
+
+func GetUintSliceP(key string) []uint {
+	return gflag.GetUintSliceP(key)
+}
+
+func GetInt64SliceE(key string) ([]int64, error) {
+	return gflag.GetInt64SliceE(key)
+}
+
+func GetInt64Slice(key string) []int64 {
+	return gflag.GetInt64Slice(key)
+}
+
+func GetInt64SliceD(key string, val []int64) []int64 {
+	return gflag.GetInt64SliceD(key, val)
+}
+
+func GetInt64SliceP(key string) []int64 {
+	return gflag.GetInt64SliceP(key)
+}
+
+func GetInt32SliceE(key string) ([]int32, error) {
+	return gflag.GetInt32SliceE(key)
+}
+
+func GetInt32Slice(key string) []int32 {
+	return gflag.GetInt32Slice(key)
+}
+
+func GetInt32SliceD(key string, val []int32) []int32 {
+	return gflag.GetInt32SliceD(key, val)
+}
+
+func GetInt32SliceP(key string) []int32 {
+	return gflag.GetInt32SliceP(key)
+}
+
+func GetInt16SliceE(key string) ([]int16, error) {
+	return gflag.GetInt16SliceE(key)
+}
+
+func GetInt16Slice(key string) []int16 {
+	return gflag.GetInt16Slice(key)
+}
+
+func GetInt16SliceD(key string, val []int16) []int16 {
+	return gflag.GetInt16SliceD(key, val)
+}
+
+func GetInt16SliceP(key string) []int16 {
+	return gflag.GetInt16SliceP(key)
+}
+
+func GetInt8SliceE(key string) ([]int8, error) {
+	return gflag.GetInt8SliceE(key)
+}
+
+func GetInt8Slice(key string) []int8 {
+	return gflag.GetInt8Slice(key)
+}
+
+func GetInt8SliceD(key string, val []int8) []int8 {
+	return gflag.GetInt8SliceD(key, val)
+}
+
+func GetInt8SliceP(key string) []int8 {
+	return gflag.GetInt8SliceP(key)
+}
+
+func GetUint64SliceE(key string) ([]uint64, error) {
+	return gflag.GetUint64SliceE(key)
+}
+
+func GetUint64Slice(key string) []uint64 {
+	return gflag.GetUint64Slice(key)
+}
+
+func GetUint64SliceD(key string, val []uint64) []uint64 {
+	return gflag.GetUint64SliceD(key, val)
+}
+
+func GetUint64SliceP(key string) []uint64 {
+	return gflag.GetUint64SliceP(key)
+}
+
+func GetUint32SliceE(key string) ([]uint32, error) {
+	return gflag.GetUint32SliceE(key)
+}
+
+func GetUint32Slice(key string) []uint32 {
+	return gflag.GetUint32Slice(key)
+}
+
+func GetUint32SliceD(key string, val []uint32) []uint32 {
+	return gflag.GetUint32SliceD(key, val)
+}
+
+func GetUint32SliceP(key string) []uint32 {
+	return gflag.GetUint32SliceP(key)
+}
+
+func GetUint16SliceE(key string) ([]uint16, error) {
+	return gflag.GetUint16SliceE(key)
+}
+
+func GetUint16Slice(key string) []uint16 {
+	return gflag.GetUint16Slice(key)
+}
+
+func GetUint16SliceD(key string, val []uint16) []uint16 {
+	return gflag.GetUint16SliceD(key, val)
+}
+
+func GetUint16SliceP(key string) []uint16 {
+	return gflag.GetUint16SliceP(key)
+}
+
+func GetUint8SliceE(key string) ([]uint8, error) {
+	return gflag.GetUint8SliceE(key)
+}
+
+func GetUint8Slice(key string) []uint8 {
+	return gflag.GetUint8Slice(key)
+}
+
+func GetUint8SliceD(key string, val []uint8) []uint8 {
+	return gflag.GetUint8SliceD(key, val)
+}
+
+func GetUint8SliceP(key string) []uint8 {
+	return gflag.GetUint8SliceP(key)
+}
+
+func GetFloat64SliceE(key string) ([]float64, error) {
+	return gflag.GetFloat64SliceE(key)
+}
+
+func GetFloat64Slice(key string) []float64 {
+	return gflag.GetFloat64Slice(key)
+}
+
+func GetFloat64SliceD(key string, val []float64) []float64 {
+	return gflag.GetFloat64SliceD(key, val)
+}
+
+func GetFloat64SliceP(key string) []float64 {
+	return gflag.GetFloat64SliceP(key)
+}
+
+func GetFloat32SliceE(key string) ([]float32, error) {
+	return gflag.GetFloat32SliceE(key)
+}
+
+func GetFloat32Slice(key string) []float32 {
+	return gflag.GetFloat32Slice(key)
+}
+
+func GetFloat32SliceD(key string, val []float32) []float32 {
+	return gflag.GetFloat32SliceD(key, val)
+}
+
+func GetFloat32SliceP(key string) []float32 {
+	return gflag.GetFloat32SliceP(key)
+}
+
+func GetStringSliceE(key string) ([]string, error) {
+	return gflag.GetStringSliceE(key)
+}
+
+func GetStringSlice(key string) []string {
+	return gflag.GetStringSlice(key)
+}
+
+func GetStringSliceD(key string, val []string) []string {
+	return gflag.GetStringSliceD(key, val)
+}
+
+func GetStringSliceP(key string) []string {
+	return gflag.GetStringSliceP(key)
+}
+
+func GetDurationSliceE(key string) ([]time.Duration, error) {
+	return gflag.GetDurationSliceE(key)
+}
+
+func GetDurationSlice(key string) []time.Duration {
+	return gflag.GetDurationSlice(key)
+}
+
+func GetDurationSliceD(key string, val []time.Duration) []time.Duration {
+	return gflag.GetDurationSliceD(key, val)
+}
+
+func GetDurationSliceP(key string) []time.Duration {
+	return gflag.GetDurationSliceP(key)
+}
+
+func GetTimeSliceE(key string) ([]time.Time, error) {
+	return gflag.GetTimeSliceE(key)
+}
+
+func GetTimeSlice(key string) []time.Time {
+	return gflag.GetTimeSlice(key)
+}
+
+func GetTimeSliceD(key string, val []time.Time) []time.Time {
+	return gflag.GetTimeSliceD(key, val)
+}
+
+func GetTimeSliceP(key string) []time.Time {
+	return gflag.GetTimeSliceP(key)
+}
+
+func GetIPSliceE(key string) ([]net.IP, error) {
+	return gflag.GetIPSliceE(key)
+}
+
+func GetIPSlice(key string) []net.IP {
+	return gflag.GetIPSlice(key)
+}
+
+func GetIPSliceD(key string, val []net.IP) []net.IP {
+	return gflag.GetIPSliceD(key, val)
+}
+
+func GetIPSliceP(key string) []net.IP {
+	return gflag.GetIPSliceP(key)
 }
 
 func AddFlag(name string, usage string, opts ...AddFlagOption) error {
