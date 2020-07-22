@@ -56,7 +56,7 @@ func (f *Flag) set(key string, val string) error {
 	} else {
 		f.kvs[key] = val
 		f.flagInfos[key].Assigned = true
-		if fun := f.flagInfos[k].OnParse; fun != nil {
+		if fun := f.flagInfos[key].OnParse; fun != nil {
 			return fun(val)
 		}
 	}
