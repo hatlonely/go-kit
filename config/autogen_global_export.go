@@ -1,4 +1,4 @@
-// this file is generate by autogen.py, do not edit
+// this file is auto generate by autogen.py. do not edit!
 package config
 
 import (

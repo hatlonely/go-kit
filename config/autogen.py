@@ -3,6 +3,7 @@
 import os
 import re
 
+
 def parse_info(filename):
     infos = []
     for line in open(filename):
@@ -34,13 +35,12 @@ def parse_fun():
             fun.append(info)
     return fun
 
-get_header = """// this file is generate by autogen.py, do not edit
+
+get_header = """// this file is auto generate by autogen.py. do not edit!
 package config
 
 import (
-	"fmt"
 	"net"
-	"reflect"
 	"time"
 )
 """
@@ -89,27 +89,21 @@ func (c *Config) Get{name}D(key string, dftVal {type}) {type} {{
 }}
 """
 
-set_interface_tpl = """
-func SetInterface(dst interface{{}}, src interface{{}}) error {{
-	switch dst.(type) {{
-{items}
-	default:
-		return fmt.Errorf("unsupport dst type [%v]", reflect.TypeOf(dst))
-	}}
+def generate_get_bind(infos):
+    out = open("autogen_get.go", "w")
+    out.write(get_header)
+    for info in infos:
+        out.write(get_tpl.format(**info))
+    for info in infos:
+        out.write(gete_tpl.format(**info))
+    for info in infos:
+        out.write(getp_tpl.format(**info))
+    for info in infos:
+        out.write(getd_tpl.format(**info))
+    out.close()
 
-	return nil
-}}
-"""
 
-item_tpl = """	case *{type}:
-		v, err := To{name}E(src)
-		if err != nil {{
-			return err
-		}}
-		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
-"""
-
-bind_header = """// this file is generate by autogen.py, do not edit
+bind_header = """// this file is auto generate by autogen.py. do not edit!
 package config
 
 import (
@@ -176,42 +170,20 @@ func (c *Config) {name}(key string, opts ...BindOption) *Atomic{name} {{
 }}
 """
 
-def generate_get_bind():
-    infos = []
-    for line in open("cast.go"):
-        res = re.match(r"func To(.*?)E\(v interface{}\) \((.*?), error\).*", line)
-        if not res:
-            continue
-        infos.append({"name": res.group(1), "type": res.group(2)})
 
-    get_out = open("autogen_get.go", "w")
-    get_out.write(get_header)
+def generate_bind(infos):
+    out = open("autogen_bind.go", "w")
+    out.write(bind_header)
     for info in infos:
-        get_out.write(get_tpl.format(**info))
+        out.write(atomic_type_tpl.format(**info))
     for info in infos:
-        get_out.write(gete_tpl.format(**info))
+        out.write(bind_var_tpl.format(**info))
     for info in infos:
-        get_out.write(getp_tpl.format(**info))
-    for info in infos:
-        get_out.write(getd_tpl.format(**info))
-    items = ""
-    for info in infos:
-        items += item_tpl.format(**info)
-    get_out.write(set_interface_tpl.format(items=items))
-    get_out.close()
-
-    bind_out = open("autogen_bind.go", "w")
-    bind_out.write(bind_header)
-    for info in infos:
-        bind_out.write(atomic_type_tpl.format(**info))
-    for info in infos:
-        bind_out.write(bind_var_tpl.format(**info))
-    for info in infos:
-        bind_out.write(bind_tpl.format(**info))
-    bind_out.close()
+        out.write(bind_tpl.format(**info))
+    out.close()
 
 
-global_export_header = """// this file is generate by autogen.py, do not edit
+global_export_header = """// this file is auto generate by autogen.py. do not edit!
 package config
 
 import (
@@ -251,6 +223,7 @@ func {define} {{
 }}
 """
 
+
 def generate_global_export(infos):
     out = open("autogen_global_export.go", "w")
     out.write(global_export_header)
@@ -263,8 +236,9 @@ def generate_global_export(infos):
     out.write(items)
     out.close()
 
+
 def main():
-    generate_get_bind()
+    generate_get_bind(parse_info("../cast/cast.go"))
     generate_global_export(parse_fun())
 
 
