@@ -45,12 +45,6 @@ import (
 )
 """
 
-cast_tpl = """
-func To{name}E(v interface{{}}) ({type}, error) {{
-	return cast.To{name}E(v)
-}}
-"""
-
 gete_tpl = """
 func (c *Config) Get{name}E(key string) ({type}, error) {{
 	v, err := c.Get(key)
