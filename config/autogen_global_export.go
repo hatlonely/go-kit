@@ -29,8 +29,12 @@ func GetComponent() (Provider, *Storage, Decoder, Cipher) {
 	return gconf.GetComponent()
 }
 
-func Get(key string) (interface{}, error) {
+func Get(key string) (interface{}, bool) {
 	return gconf.Get(key)
+}
+
+func GetE(key string) (interface{}, error) {
+	return gconf.GetE(key)
 }
 
 func UnsafeSet(key string, val interface{}) error {

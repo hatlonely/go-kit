@@ -49,7 +49,7 @@ import (
 
 gete_tpl = """
 func (c *Config) Get{name}E(key string) ({type}, error) {{
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {{
 		var res {type}
 		return res, err

@@ -94,7 +94,7 @@ func (c *Config) GetIP(key string) net.IP {
 }
 
 func (c *Config) GetBoolE(key string) (bool, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res bool
 		return res, err
@@ -103,7 +103,7 @@ func (c *Config) GetBoolE(key string) (bool, error) {
 }
 
 func (c *Config) GetIntE(key string) (int, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res int
 		return res, err
@@ -112,7 +112,7 @@ func (c *Config) GetIntE(key string) (int, error) {
 }
 
 func (c *Config) GetUintE(key string) (uint, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res uint
 		return res, err
@@ -121,7 +121,7 @@ func (c *Config) GetUintE(key string) (uint, error) {
 }
 
 func (c *Config) GetInt64E(key string) (int64, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res int64
 		return res, err
@@ -130,7 +130,7 @@ func (c *Config) GetInt64E(key string) (int64, error) {
 }
 
 func (c *Config) GetInt32E(key string) (int32, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res int32
 		return res, err
@@ -139,7 +139,7 @@ func (c *Config) GetInt32E(key string) (int32, error) {
 }
 
 func (c *Config) GetInt16E(key string) (int16, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res int16
 		return res, err
@@ -148,7 +148,7 @@ func (c *Config) GetInt16E(key string) (int16, error) {
 }
 
 func (c *Config) GetInt8E(key string) (int8, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res int8
 		return res, err
@@ -157,7 +157,7 @@ func (c *Config) GetInt8E(key string) (int8, error) {
 }
 
 func (c *Config) GetUint64E(key string) (uint64, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res uint64
 		return res, err
@@ -166,7 +166,7 @@ func (c *Config) GetUint64E(key string) (uint64, error) {
 }
 
 func (c *Config) GetUint32E(key string) (uint32, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res uint32
 		return res, err
@@ -175,7 +175,7 @@ func (c *Config) GetUint32E(key string) (uint32, error) {
 }
 
 func (c *Config) GetUint16E(key string) (uint16, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res uint16
 		return res, err
@@ -184,7 +184,7 @@ func (c *Config) GetUint16E(key string) (uint16, error) {
 }
 
 func (c *Config) GetUint8E(key string) (uint8, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res uint8
 		return res, err
@@ -193,7 +193,7 @@ func (c *Config) GetUint8E(key string) (uint8, error) {
 }
 
 func (c *Config) GetFloat64E(key string) (float64, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res float64
 		return res, err
@@ -202,7 +202,7 @@ func (c *Config) GetFloat64E(key string) (float64, error) {
 }
 
 func (c *Config) GetFloat32E(key string) (float32, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res float32
 		return res, err
@@ -211,7 +211,7 @@ func (c *Config) GetFloat32E(key string) (float32, error) {
 }
 
 func (c *Config) GetStringE(key string) (string, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res string
 		return res, err
@@ -220,7 +220,7 @@ func (c *Config) GetStringE(key string) (string, error) {
 }
 
 func (c *Config) GetDurationE(key string) (time.Duration, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res time.Duration
 		return res, err
@@ -229,7 +229,7 @@ func (c *Config) GetDurationE(key string) (time.Duration, error) {
 }
 
 func (c *Config) GetTimeE(key string) (time.Time, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res time.Time
 		return res, err
@@ -238,7 +238,7 @@ func (c *Config) GetTimeE(key string) (time.Time, error) {
 }
 
 func (c *Config) GetIPE(key string) (net.IP, error) {
-	v, err := c.Get(key)
+	v, err := c.GetE(key)
 	if err != nil {
 		var res net.IP
 		return res, err

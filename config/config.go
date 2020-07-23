@@ -79,7 +79,15 @@ func (c *Config) GetComponent() (Provider, *Storage, Decoder, Cipher) {
 	return c.provider, c.storage, c.decoder, c.cipher
 }
 
-func (c *Config) Get(key string) (interface{}, error) {
+func (c *Config) Get(key string) (interface{}, bool) {
+	val, err := c.GetE(key)
+	if err != nil {
+		return nil, false
+	}
+	return val, true
+}
+
+func (c *Config) GetE(key string) (interface{}, error) {
 	return c.storage.Get(key)
 }
 
