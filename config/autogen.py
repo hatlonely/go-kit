@@ -3,6 +3,37 @@
 import os
 import re
 
+def parse_info(filename):
+    infos = []
+    for line in open(filename):
+        res = re.match(r"func To(.*?)E\(v interface{}\) \((.*?), error\).*", line)
+        if not res:
+            continue
+        infos.append({"name": res.group(1), "type": res.group(2)})
+    return infos
+
+
+def parse_fun():
+    fun = []
+    for name in os.listdir("."):
+        if not name.endswith(".go"):
+            continue
+        for line in open(name):
+            res = re.match(r"func \(c \*Config\) ((\w+)\((.*?)\)(.*?)) {", line)
+            if not res:
+                continue
+            params = [i.strip().split(" ")[0] for i in res.group(3).split(",")]
+            info = {
+                "define": res.group(1),
+                "name": res.group(2),
+                "params": ", ".join([i if i != "opts" else "opts..." for i in params]),
+                "return": res.group(4)
+            }
+            if info["name"][0].islower():
+                continue
+            fun.append(info)
+    return fun
+
 get_header = """// this file is generate by autogen.py, do not edit
 package config
 
@@ -145,73 +176,6 @@ func (c *Config) {name}(key string, opts ...BindOption) *Atomic{name} {{
 }}
 """
 
-global_header = """// this file is generate by autogen.py, do not edit
-package config
-
-import (
-	"net"
-	"sync/atomic"
-	"time"
-
-	"github.com/sirupsen/logrus"
-)
-
-var gconf = &Config{
-	itemHandlers: map[string][]OnChangeHandler{},
-	log:          logrus.New(),
-}
-
-func Init(filename string) error {
-	conf, err := NewConfigWithBaseFile(filename)
-	if err != nil {
-		return err
-	}
-	gconf.storage = conf.storage
-	gconf.decoder = conf.decoder
-	gconf.provider = conf.provider
-	return nil
-}
-"""
-
-global_tpl1 = """
-func {define} {{
-	return gconf.{name}({params})
-}}
-"""
-
-global_tpl2 = """
-func {define} {{
-	gconf.{name}({params})
-}}
-"""
-
-
-def generate_global_go():
-    global_out = open("autogen_global.go", "w")
-    funs = []
-    for name in os.listdir("."):
-        if not name.endswith(".go"):
-            continue
-        for line in open(name):
-            res = re.match(r"func \(c \*Config\) ((\w+)\((.*?)\)(.*?)) {", line)
-            if not res:
-                continue
-            params = [i.strip().split(" ")[0] for i in res.group(3).split(",")]
-            funs.append({
-                "define": res.group(1),
-                "name": res.group(2),
-                "params": ", ".join([i if i != "opts" else "opts..." for i in params]),
-                "return": res.group(4)
-            })
-    global_out.write(global_header)
-    for fun in funs:
-        if fun["return"]:
-            global_out.write(global_tpl1.format(**fun))
-        else:
-            global_out.write(global_tpl2.format(**fun))
-    global_out.close()
-
-
 def generate_get_bind():
     infos = []
     for line in open("cast.go"):
@@ -247,9 +211,61 @@ def generate_get_bind():
     bind_out.close()
 
 
+global_export_header = """// this file is generate by autogen.py, do not edit
+package config
+
+import (
+	"net"
+	"sync/atomic"
+	"time"
+
+	"github.com/sirupsen/logrus"
+)
+
+var gconf = &Config{
+	itemHandlers: map[string][]OnChangeHandler{},
+	log:          logrus.New(),
+}
+
+func Init(filename string) error {
+	conf, err := NewConfigWithBaseFile(filename)
+	if err != nil {
+		return err
+	}
+	gconf.storage = conf.storage
+	gconf.decoder = conf.decoder
+	gconf.provider = conf.provider
+	return nil
+}
+"""
+
+global_export_tpl1 = """
+func {define} {{
+	return gconf.{name}({params})
+}}
+"""
+
+global_export_tpl2 = """
+func {define} {{
+	gconf.{name}({params})
+}}
+"""
+
+def generate_global_export(infos):
+    out = open("autogen_global_export.go", "w")
+    out.write(global_export_header)
+    items = ""
+    for info in infos:
+        if info["return"]:
+            out.write(global_export_tpl1.format(**info))
+        else:
+            out.write(global_export_tpl2.format(**info))
+    out.write(items)
+    out.close()
+
 def main():
     generate_get_bind()
-    generate_global_go()
+    generate_global_export(parse_fun())
 
 
 if __name__ == "__main__":
