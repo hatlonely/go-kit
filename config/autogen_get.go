@@ -4,6 +4,8 @@ package config
 import (
 	"net"
 	"time"
+	
+	"github.com/hatlonely/go-kit/cast"
 )
 
 func (c *Config) GetBool(key string) bool {
@@ -97,7 +99,7 @@ func (c *Config) GetBoolE(key string) (bool, error) {
 		var res bool
 		return res, err
 	}
-	return ToBoolE(v)
+	return cast.ToBoolE(v)
 }
 
 func (c *Config) GetIntE(key string) (int, error) {
@@ -106,7 +108,7 @@ func (c *Config) GetIntE(key string) (int, error) {
 		var res int
 		return res, err
 	}
-	return ToIntE(v)
+	return cast.ToIntE(v)
 }
 
 func (c *Config) GetUintE(key string) (uint, error) {
@@ -115,7 +117,7 @@ func (c *Config) GetUintE(key string) (uint, error) {
 		var res uint
 		return res, err
 	}
-	return ToUintE(v)
+	return cast.ToUintE(v)
 }
 
 func (c *Config) GetInt64E(key string) (int64, error) {
@@ -124,7 +126,7 @@ func (c *Config) GetInt64E(key string) (int64, error) {
 		var res int64
 		return res, err
 	}
-	return ToInt64E(v)
+	return cast.ToInt64E(v)
 }
 
 func (c *Config) GetInt32E(key string) (int32, error) {
@@ -133,7 +135,7 @@ func (c *Config) GetInt32E(key string) (int32, error) {
 		var res int32
 		return res, err
 	}
-	return ToInt32E(v)
+	return cast.ToInt32E(v)
 }
 
 func (c *Config) GetInt16E(key string) (int16, error) {
@@ -142,7 +144,7 @@ func (c *Config) GetInt16E(key string) (int16, error) {
 		var res int16
 		return res, err
 	}
-	return ToInt16E(v)
+	return cast.ToInt16E(v)
 }
 
 func (c *Config) GetInt8E(key string) (int8, error) {
@@ -151,7 +153,7 @@ func (c *Config) GetInt8E(key string) (int8, error) {
 		var res int8
 		return res, err
 	}
-	return ToInt8E(v)
+	return cast.ToInt8E(v)
 }
 
 func (c *Config) GetUint64E(key string) (uint64, error) {
@@ -160,7 +162,7 @@ func (c *Config) GetUint64E(key string) (uint64, error) {
 		var res uint64
 		return res, err
 	}
-	return ToUint64E(v)
+	return cast.ToUint64E(v)
 }
 
 func (c *Config) GetUint32E(key string) (uint32, error) {
@@ -169,7 +171,7 @@ func (c *Config) GetUint32E(key string) (uint32, error) {
 		var res uint32
 		return res, err
 	}
-	return ToUint32E(v)
+	return cast.ToUint32E(v)
 }
 
 func (c *Config) GetUint16E(key string) (uint16, error) {
@@ -178,7 +180,7 @@ func (c *Config) GetUint16E(key string) (uint16, error) {
 		var res uint16
 		return res, err
 	}
-	return ToUint16E(v)
+	return cast.ToUint16E(v)
 }
 
 func (c *Config) GetUint8E(key string) (uint8, error) {
@@ -187,7 +189,7 @@ func (c *Config) GetUint8E(key string) (uint8, error) {
 		var res uint8
 		return res, err
 	}
-	return ToUint8E(v)
+	return cast.ToUint8E(v)
 }
 
 func (c *Config) GetFloat64E(key string) (float64, error) {
@@ -196,7 +198,7 @@ func (c *Config) GetFloat64E(key string) (float64, error) {
 		var res float64
 		return res, err
 	}
-	return ToFloat64E(v)
+	return cast.ToFloat64E(v)
 }
 
 func (c *Config) GetFloat32E(key string) (float32, error) {
@@ -205,7 +207,7 @@ func (c *Config) GetFloat32E(key string) (float32, error) {
 		var res float32
 		return res, err
 	}
-	return ToFloat32E(v)
+	return cast.ToFloat32E(v)
 }
 
 func (c *Config) GetStringE(key string) (string, error) {
@@ -214,7 +216,7 @@ func (c *Config) GetStringE(key string) (string, error) {
 		var res string
 		return res, err
 	}
-	return ToStringE(v)
+	return cast.ToStringE(v)
 }
 
 func (c *Config) GetDurationE(key string) (time.Duration, error) {
@@ -223,7 +225,7 @@ func (c *Config) GetDurationE(key string) (time.Duration, error) {
 		var res time.Duration
 		return res, err
 	}
-	return ToDurationE(v)
+	return cast.ToDurationE(v)
 }
 
 func (c *Config) GetTimeE(key string) (time.Time, error) {
@@ -232,7 +234,7 @@ func (c *Config) GetTimeE(key string) (time.Time, error) {
 		var res time.Time
 		return res, err
 	}
-	return ToTimeE(v)
+	return cast.ToTimeE(v)
 }
 
 func (c *Config) GetIPE(key string) (net.IP, error) {
@@ -241,7 +243,7 @@ func (c *Config) GetIPE(key string) (net.IP, error) {
 		var res net.IP
 		return res, err
 	}
-	return ToIPE(v)
+	return cast.ToIPE(v)
 }
 
 func (c *Config) GetBoolP(key string) bool {

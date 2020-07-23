@@ -42,6 +42,8 @@ package config
 import (
 	"net"
 	"time"
+	
+	"github.com/hatlonely/go-kit/cast"
 )
 """
 
@@ -52,7 +54,7 @@ func (c *Config) Get{name}E(key string) ({type}, error) {{
 		var res {type}
 		return res, err
 	}}
-	return To{name}E(v)
+	return cast.To{name}E(v)
 }}
 """
 
