@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+
+	"github.com/hatlonely/go-kit/cast"
 )
 
 // @see https://en.wikipedia.org/wiki/INI_file
@@ -150,7 +152,7 @@ func (d *IniDecoder) Encode(storage *Storage) ([]byte, error) {
 		return nil
 	}); err != nil {
 		_ = storage.Travel(func(key string, val interface{}) error {
-			str, _ := ToStringE(val)
+			str, _ := cast.ToStringE(val)
 			buf.WriteString(fmt.Sprintf("%v = %v\n", escape(key), escape(str)))
 			return nil
 		})
@@ -160,7 +162,7 @@ func (d *IniDecoder) Encode(storage *Storage) ([]byte, error) {
 	sort.Strings(globalKeys)
 	for _, key := range globalKeys {
 		val, _ := storage.Get(key)
-		str, _ := ToStringE(val)
+		str, _ := cast.ToStringE(val)
 		buf.WriteString(fmt.Sprintf("%v = %v\n", escape(key), escape(str)))
 	}
 
@@ -179,7 +181,7 @@ func (d *IniDecoder) Encode(storage *Storage) ([]byte, error) {
 
 		var lines []string
 		_ = sub.Travel(func(key string, val interface{}) error {
-			str, _ := ToStringE(val)
+			str, _ := cast.ToStringE(val)
 			lines = append(lines, fmt.Sprintf("%v = %v\n", escape(key), escape(str)))
 			return nil
 		})
