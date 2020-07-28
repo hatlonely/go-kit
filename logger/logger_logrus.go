@@ -5,13 +5,10 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
-	"strings"
 	"time"
 
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/sirupsen/logrus"
-
-	"github.com/hatlonely/go-kit/strex"
 )
 
 type LogrusLogger struct {
@@ -25,7 +22,6 @@ func NewLogrusLogger(filename string, maxAge time.Duration) (*LogrusLogger, erro
 	if err != nil {
 		return nil, err
 	}
-	log.AddHook(&CallerHook{})
 	log.Formatter = &LogrusFormatter{}
 
 	out, err := rotatelogs.New(
@@ -45,34 +41,26 @@ func NewLogrusLogger(filename string, maxAge time.Duration) (*LogrusLogger, erro
 }
 
 func (l *LogrusLogger) Info(v interface{}) {
-	l.log.Info(strex.MustJsonMarshal(v))
+	l.Log(logrus.InfoLevel, v)
 }
 
 func (l *LogrusLogger) Warn(v interface{}) {
-	l.log.Info(strex.MustJsonMarshal(v))
+	l.Log(logrus.WarnLevel, v)
 }
 
-type CallerHook struct{}
+func (l *LogrusLogger) Log(level logrus.Level, v interface{}) {
+	pc, file, line, _ := runtime.Caller(2)
+	fun := runtime.FuncForPC(pc).Name()
 
-func (hook *CallerHook) Levels() []logrus.Level {
-	return logrus.AllLevels
-}
-
-func (hook *CallerHook) Fire(entry *logrus.Entry) error {
-	for i := 5; i < 20; i++ {
-		pc, file, line, ok := runtime.Caller(i)
-		if !ok {
-			break
-		}
-		if strings.Contains(file, "logrus") {
-			continue
-		}
-		funcName := runtime.FuncForPC(pc).Name()
-		entry.Data["@file"] = fmt.Sprintf("%s:%v:%s", path.Base(file), line, path.Base(funcName))
-		break
-	}
-
-	return nil
+	now := time.Now()
+	l.log.Log(level, map[string]interface{}{
+		"timestamp": now.Unix(),
+		"time":      time.Now().Format(time.RFC3339Nano),
+		"level":     level,
+		"data":      v,
+		"file":      fmt.Sprintf("%s:%v", path.Base(file), line),
+		"caller":    fun,
+	})
 }
 
 type LogrusFormatter struct{}

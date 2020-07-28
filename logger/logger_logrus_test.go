@@ -5,6 +5,10 @@ import (
 	"time"
 )
 
+func hello(l Logger) {
+
+}
+
 func TestLogrusLogger(t *testing.T) {
 	l, err := NewLogrusLogger("hello.info", 24*time.Hour)
 	if err != nil {
