@@ -6,7 +6,16 @@ import (
 	"time"
 
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+
+	"github.com/hatlonely/go-kit/config"
 )
+
+func NewRotateFileWriterWithConfig(conf *config.Config) (*RotateFileWriter, error) {
+	return NewRotateFileWriter(
+		conf.GetString("filename"),
+		conf.GetDuration("maxAge"),
+	)
+}
 
 type RotateFileWriter struct {
 	out *rotatelogs.RotateLogs

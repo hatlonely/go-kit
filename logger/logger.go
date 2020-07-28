@@ -5,7 +5,30 @@ import (
 	"path"
 	"runtime"
 	"time"
+
+	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/config"
 )
+
+func NewLoggerWithConfig(conf *config.Config) (*Logger, error) {
+	var writers []Writer
+	sub, err := conf.SubArr("writers")
+	if err != nil {
+		return nil, err
+	}
+	for _, w := range sub {
+		writer, err := NewWriterWithConfig(w)
+		if err != nil {
+			return nil, errors.WithMessage(err, "new logger failed")
+		}
+		writers = append(writers, writer)
+	}
+	return &Logger{
+		level:   Level(conf.GetInt("level")),
+		writers: writers,
+	}, nil
+}
 
 func NewLogger(level Level, writers ...Writer) *Logger {
 	return &Logger{
