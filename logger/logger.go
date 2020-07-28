@@ -50,7 +50,7 @@ func (l *Logger) Log(level Level, v interface{}) {
 		writer.Write(map[string]interface{}{
 			"timestamp": now.Unix(),
 			"time":      time.Now().Format(time.RFC3339Nano),
-			"level":     level,
+			"level":     level.String(),
 			"data":      v,
 			"file":      fmt.Sprintf("%s:%v", path.Base(file), line),
 			"caller":    fun,
