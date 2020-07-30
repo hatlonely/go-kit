@@ -9,6 +9,8 @@ import (
 	"github.com/PaesslerAG/gval"
 	"github.com/generikvault/gvalstrings"
 	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/strex"
 )
 
 func Validate(v interface{}) error {
@@ -27,6 +29,15 @@ var lang = gval.Full(
 			return nil, err
 		}
 		return re.MatchString(x.(string)), nil
+	}),
+	gval.Function("isEmail", func(x interface{}) (bool, error) {
+		return strex.ReEmail.MatchString(x.(string)), nil
+	}),
+	gval.Function("isPhone", func(x interface{}) (bool, error) {
+		return strex.RePhone.MatchString(x.(string)), nil
+	}),
+	gval.Function("isIdentifier", func(x interface{}) (bool, error) {
+		return strex.ReIdentifier.MatchString(x.(string)), nil
 	}),
 )
 
