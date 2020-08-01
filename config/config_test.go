@@ -11,31 +11,72 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func CreateFile() {
+func CreateTestFile() {
 	fp, _ := os.Create("test.json")
 	_, _ = fp.WriteString(`{
-  "Host": "localhost",
-  "Port": 6060,
-  "Log": [{
-    "File": "test.info",
-    "MaxAge": "24h",
-    "Format": "json"
+  "host": "localhost",
+  "port": 6060,
+  "log": [{
+    "file": "test.info",
+    "maxAge": "24h",
+    "format": "json"
   }, {
-    "File": "test.warn",
-    "MaxAge": "24h",
-    "Format": "text"
+    "file": "test.warn",
+    "maxAge": "24h",
+    "format": "text"
   }]
 }`)
 	_ = fp.Close()
 }
 
-func DeleteFile() {
+func CreateBaseFile() {
+	fp, _ := os.Create("base.json")
+	_, _ = fp.WriteString(`{
+  "decoder": {
+    "name": "json"
+  },
+  "provider": {
+    "type": "Local",
+    "file": "test.json"
+  },
+  "Cipher": {
+    "type": "Group",
+    "ciphers": [{
+      "type": "AES",
+      "key": "IrjXy4vx7iwgCLaUeu5TVUA9TkgMwSw3QWcgE/IW5W0="
+    }, {
+      "type": "Base64"
+    }]
+  }
+}`)
+}
+
+func DeleteTestFile() {
 	_ = os.Remove("test.json")
+}
+
+func DeleteBaseFile() {
+	_ = os.Remove("base.json")
+}
+
+func TestNewConfigWithBaseFile(t *testing.T) {
+	Convey("TestNewConfigWithBaseFile", t, func() {
+		CreateTestFile()
+		CreateBaseFile()
+
+		conf, err := NewConfigWithBaseFile("base.json")
+		So(err, ShouldBeNil)
+		So(conf.GetInt("port"), ShouldEqual, 6060)
+		So(conf.GetString("log[1].file"), ShouldEqual, "test.warn")
+
+		DeleteTestFile()
+		DeleteBaseFile()
+	})
 }
 
 func TestConfigExample1(t *testing.T) {
 	Convey("TestConfigExample1", t, func() {
-		CreateFile()
+		CreateTestFile()
 		//provider, _ := NewLocalProvider("test.json")
 		//conf, err := NewConfig(&Json5Decoder{}, provider, nil)
 
@@ -74,7 +115,7 @@ func TestConfigExample1(t *testing.T) {
 			//time.Sleep(time.Second)
 		}
 
-		DeleteFile()
+		DeleteTestFile()
 	})
 }
 
@@ -91,9 +132,8 @@ type MyOption struct {
 }
 
 func TestConfigExample2(t *testing.T) {
-
 	Convey("TestConfigExample2", t, func() {
-		CreateFile()
+		CreateTestFile()
 		//provider, _ := NewLocalProvider("testfile/test.json")
 		//abc, _ := base64.StdEncoding.DecodeString("IrjXy4vx7iwgCLaUeu5TVUA9TkgMwSw3QWcgE/IW5W0=")
 		//cipher, _ := NewAESCipher(abc)
@@ -109,6 +149,6 @@ func TestConfigExample2(t *testing.T) {
 		So(opt.Host, ShouldEqual, "localhost")
 		fmt.Println(opt)
 		fmt.Println(opt.Logger[0])
-		DeleteFile()
+		DeleteTestFile()
 	})
 }
