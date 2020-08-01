@@ -90,6 +90,10 @@ import (
 
 var gflag = NewFlag(os.Args[0])
 
+func Instance() *Flag {
+	return gflag
+}
+
 func Parse() error {
 	return ParseArgs(os.Args[1:])
 }
