@@ -24,15 +24,15 @@ func NewConfigWithBaseFile(filename string) (*Config, error) {
 		return nil, err
 	}
 
-	cd, err := NewDecoderWithConfig(bc.Sub("Decoder"))
+	cd, err := NewDecoderWithConfig(bc.Sub("decoder"))
 	if err != nil {
 		return nil, err
 	}
-	cp, err := NewProviderWithConfig(bc.Sub("Provider"))
+	cp, err := NewProviderWithConfig(bc.Sub("provider"))
 	if err != nil {
 		return nil, err
 	}
-	cc, err := NewCipherWithConfig(bc.Sub("Cipher"))
+	cc, err := NewCipherWithConfig(bc.Sub("cipher"))
 	if err != nil {
 		return nil, err
 	}

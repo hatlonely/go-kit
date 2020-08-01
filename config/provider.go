@@ -14,18 +14,18 @@ type Provider interface {
 }
 
 func NewProviderWithConfig(conf *Config) (Provider, error) {
-	switch conf.GetString("Type") {
+	switch conf.GetString("type") {
 	case "Local":
-		return NewLocalProvider(conf.GetString("File"))
+		return NewLocalProvider(conf.GetString("file"))
 	case "OTS":
 		return NewOTSProviderWithAccessKey(
-			conf.GetString("AccessKeyID"),
-			conf.GetString("AccessKeySecret"),
-			conf.GetString("Endpoint"),
-			conf.GetString("Instance"),
-			conf.GetString("Table"),
-			conf.GetString("Key"),
-			conf.GetDuration("Interval"),
+			conf.GetString("accessKeyID"),
+			conf.GetString("accessKeySecret"),
+			conf.GetString("endpoint"),
+			conf.GetString("instance"),
+			conf.GetString("table"),
+			conf.GetString("key"),
+			conf.GetDuration("interval"),
 		)
 	}
 	return nil, fmt.Errorf("unsupport provider type. type: [%v]", conf.GetString("Type"))

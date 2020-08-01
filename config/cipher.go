@@ -10,31 +10,34 @@ type Cipher interface {
 }
 
 func NewCipherWithConfig(conf *Config) (Cipher, error) {
-	switch conf.GetString("Type") {
+	if conf == nil {
+		return nil, nil
+	}
+	switch conf.GetString("type") {
 	case "AES":
-		buf, err := base64.StdEncoding.DecodeString(conf.GetString("Key"))
+		buf, err := base64.StdEncoding.DecodeString(conf.GetString("key"))
 		if err != nil {
 			return nil, err
 		}
 		return NewAESCipher(buf)
 	case "AESWithKMSKey":
 		return NewAESWithKMSKeyCipherWithAccessKey(
-			conf.GetString("AccessKeyID"),
-			conf.GetString("AccessKeySecret"),
+			conf.GetString("accessKeyID"),
+			conf.GetString("accessKeySecret"),
 			conf.GetString("regionID"),
-			conf.GetString("Key"),
+			conf.GetString("key"),
 		)
 	case "KMS":
 		return NewKMSCipherWithAccessKey(
-			conf.GetString("AccessKeyID"),
-			conf.GetString("AccessKeySecret"),
+			conf.GetString("accessKeyID"),
+			conf.GetString("accessKeySecret"),
 			conf.GetString("regionID"),
-			conf.GetString("KeyID"),
+			conf.GetString("keyID"),
 		)
 	case "Base64":
 		return NewBase64Cipher(), nil
 	case "Group":
-		subs, err := conf.SubArr("Ciphers")
+		subs, err := conf.SubArr("ciphers")
 		if err != nil {
 			return nil, err
 		}

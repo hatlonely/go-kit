@@ -27,5 +27,5 @@ func NewDecoder(name string) (Decoder, error) {
 }
 
 func NewDecoderWithConfig(conf *Config) (Decoder, error) {
-	return NewDecoder(conf.GetStringD("Name", "json"))
+	return NewDecoder(conf.GetStringD("name", "json"))
 }
