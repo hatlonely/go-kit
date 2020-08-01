@@ -586,8 +586,8 @@ func BindFlag(v interface{}, name string, usage string, rtype reflect.Type, requ
 	return gflag.BindFlag(v, name, usage, rtype, required, shorthand, defaultValue, isArgument)
 }
 
-func Bind(v interface{}) error {
-	return gflag.Bind(v)
+func Struct(v interface{}) error {
+	return gflag.Struct(v)
 }
 
 func Usage() string {

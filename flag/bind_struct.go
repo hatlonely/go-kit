@@ -9,11 +9,11 @@ import (
 	"github.com/hatlonely/go-kit/strex"
 )
 
-func (f *Flag) Bind(v interface{}) error {
-	return f.bindRecursive(v, "")
+func (f *Flag) Struct(v interface{}) error {
+	return f.bindStructRecursive(v, "")
 }
 
-func (f *Flag) bindRecursive(v interface{}, prefix string) error {
+func (f *Flag) bindStructRecursive(v interface{}, prefix string) error {
 	if reflect.ValueOf(v).Kind() != reflect.Ptr {
 		return fmt.Errorf("expected a pointer, got [%v]", reflect.TypeOf(v))
 	}
@@ -40,7 +40,7 @@ func (f *Flag) bindRecursive(v interface{}, prefix string) error {
 			if prefix != "" {
 				key = prefix + "-" + key
 			}
-			if err := f.bindRecursive(rv.Field(i).Addr().Interface(), key); err != nil {
+			if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), key); err != nil {
 				return err
 			}
 		} else if t.Kind() == reflect.Ptr && t.Elem().Kind() == reflect.Struct && t != reflect.TypeOf(&time.Time{}) {
@@ -52,7 +52,7 @@ func (f *Flag) bindRecursive(v interface{}, prefix string) error {
 			if prefix != "" {
 				key = prefix + "-" + key
 			}
-			if err := f.bindRecursive(rv.Field(i).Interface(), key); err != nil {
+			if err := f.bindStructRecursive(rv.Field(i).Interface(), key); err != nil {
 				return err
 			}
 		} else {

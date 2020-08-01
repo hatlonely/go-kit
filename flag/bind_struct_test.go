@@ -26,7 +26,7 @@ type MyFlags struct {
 func TestBind(t *testing.T) {
 	mf := &MyFlags{}
 	f := NewFlag("hello")
-	if err := f.Bind(mf); err != nil {
+	if err := f.Struct(mf); err != nil {
 		panic(err)
 	}
 	fmt.Println(f.Usage())
