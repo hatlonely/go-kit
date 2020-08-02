@@ -11,7 +11,7 @@ type Writer interface {
 }
 
 func NewWriterWithConfig(conf *config.Config) (Writer, error) {
-	switch conf.GetString("Type") {
+	switch conf.GetString("type") {
 	case "RotateFile":
 		return NewRotateFileWriterWithConfig(conf)
 	}
