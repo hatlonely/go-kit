@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"bytes"
 	"encoding/json"
 	"path/filepath"
 	"time"
@@ -47,11 +48,9 @@ func (r *RotateFileWriter) Write(v interface{}) error {
 	if err != nil {
 		return err
 	}
-	_, err = r.out.Write(buf)
-	if err != nil {
-		return err
-	}
-	_, err = r.out.Write([]byte("\n"))
+	b := bytes.NewBuffer(buf)
+	b.WriteString("\n")
+	_, err = r.out.Write(b.Bytes())
 	if err != nil {
 		return err
 	}
