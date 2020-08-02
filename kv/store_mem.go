@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"github.com/coocood/freecache"
+
+	"github.com/hatlonely/go-kit/config"
 )
 
 type MemStore struct {
@@ -40,12 +42,23 @@ func NewMemStore(opts ...MemStoreOption) *MemStore {
 	for _, opt := range opts {
 		opt(&options)
 	}
-	cache := freecache.NewCache(options.MemoryByte)
+	return NewMemStoreWithOptions(&options)
+}
 
+func NewMemStoreWithOptions(options *MemStoreOptions) *MemStore {
+	cache := freecache.NewCache(options.MemoryByte)
 	return &MemStore{
 		cache:      cache,
 		Expiration: options.Expiration,
 	}
+}
+
+func NewMemStoreWithConfig(conf *config.Config) (*MemStore, error) {
+	var options = defaultMemStoreOptions
+	if err := conf.Unmarshal(&options); err != nil {
+		return nil, err
+	}
+	return NewMemStoreWithOptions(&options), nil
 }
 
 func (s *MemStore) Get(key []byte) ([]byte, error) {

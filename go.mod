@@ -13,6 +13,8 @@ require (
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/generikvault/gvalstrings v0.0.0-20180926130504-471f38f0112a
 	github.com/gin-gonic/gin v1.6.3
+	github.com/go-redis/redis v6.15.8+incompatible
+	github.com/golang/protobuf v1.3.3
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869 // indirect
 	github.com/jonboulle/clockwork v0.2.0 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.3.0+incompatible
@@ -22,6 +24,7 @@ require (
 	github.com/sirupsen/logrus v1.6.0
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/spf13/cast v1.3.1
+	github.com/syndtr/goleveldb v1.0.0
 	github.com/tebeka/strftime v0.1.4 // indirect
 	github.com/yosuke-furukawa/json5 v0.1.1
 	gopkg.in/yaml.v2 v2.2.8
