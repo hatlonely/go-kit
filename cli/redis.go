@@ -25,14 +25,32 @@ func NewRedisWithConfig(conf *config.Config) (*redis.Client, error) {
 }
 
 func NewRedisWithOptions(options *RedisOptions) (*redis.Client, error) {
-	client := redis.NewClient((*redis.Options)(options))
+	client := redis.NewClient(&redis.Options{
+		Addr:         options.Addr,
+		DialTimeout:  options.DialTimeout,
+		ReadTimeout:  options.ReadTimeout,
+		WriteTimeout: options.WriteTimeout,
+		MaxRetries:   options.MaxRetries,
+		PoolSize:     options.PoolSize,
+		DB:           options.DB,
+		Password:     options.Password,
+	})
 	if err := client.Ping().Err(); err != nil {
 		return nil, err
 	}
 	return client, nil
 }
 
-type RedisOptions redis.Options
+type RedisOptions struct {
+	Addr         string
+	DialTimeout  time.Duration
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
+	MaxRetries   int
+	PoolSize     int
+	DB           int
+	Password     string
+}
 
 var defaultRedisOptions = RedisOptions{
 	Addr:         "127.0.0.1:6379",

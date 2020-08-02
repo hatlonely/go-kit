@@ -25,14 +25,30 @@ func NewRedisClusterWithConfig(conf *config.Config) (*redis.ClusterClient, error
 }
 
 func NewRedisClusterWithOptions(options *RedisClusterOptions) (*redis.ClusterClient, error) {
-	client := redis.NewClusterClient((*redis.ClusterOptions)(options))
+	client := redis.NewClusterClient(&redis.ClusterOptions{
+		Addrs:        options.Addrs,
+		DialTimeout:  options.DialTimeout,
+		ReadTimeout:  options.ReadTimeout,
+		WriteTimeout: options.WriteTimeout,
+		MaxRetries:   options.MaxRetries,
+		PoolSize:     options.PoolSize,
+		Password:     options.Password,
+	})
 	if err := client.Ping().Err(); err != nil {
 		return nil, err
 	}
 	return client, nil
 }
 
-type RedisClusterOptions redis.ClusterOptions
+type RedisClusterOptions struct {
+	Addrs        []string
+	DialTimeout  time.Duration
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
+	MaxRetries   int
+	PoolSize     int
+	Password     string
+}
 
 var defaultRedisClusterOptions = RedisClusterOptions{
 	Addrs:        []string{"127.0.0.1:6379"},
