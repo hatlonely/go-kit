@@ -8,6 +8,30 @@ import (
 	"github.com/hatlonely/go-kit/config"
 )
 
+func NewRedis(opts ...RedisOption) (*redis.Client, error) {
+	options := defaultRedisOptions
+	for _, opt := range opts {
+		opt(&options)
+	}
+	return NewRedisWithOptions(&options)
+}
+
+func NewRedisWithConfig(conf *config.Config) (*redis.Client, error) {
+	options := defaultRedisOptions
+	if err := conf.Unmarshal(&options); err != nil {
+		return nil, err
+	}
+	return NewRedisWithOptions(&options)
+}
+
+func NewRedisWithOptions(options *RedisOptions) (*redis.Client, error) {
+	client := redis.NewClient((*redis.Options)(options))
+	if err := client.Ping().Err(); err != nil {
+		return nil, err
+	}
+	return client, nil
+}
+
 type RedisOptions redis.Options
 
 var defaultRedisOptions = RedisOptions{
@@ -58,28 +82,4 @@ func WithRedisDB(db int) RedisOption {
 	return func(options *RedisOptions) {
 		options.DB = db
 	}
-}
-
-func NewRedis(opts ...RedisOption) (*redis.Client, error) {
-	options := defaultRedisOptions
-	for _, opt := range opts {
-		opt(&options)
-	}
-	return NewRedisWithOptions(&options)
-}
-
-func NewRedisWithConfig(conf *config.Config) (*redis.Client, error) {
-	options := defaultRedisOptions
-	if err := conf.Unmarshal(&options); err != nil {
-		return nil, err
-	}
-	return NewRedisWithOptions(&options)
-}
-
-func NewRedisWithOptions(options *RedisOptions) (*redis.Client, error) {
-	client := redis.NewClient((*redis.Options)(options))
-	if err := client.Ping().Err(); err != nil {
-		return nil, err
-	}
-	return client, nil
 }
