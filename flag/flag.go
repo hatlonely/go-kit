@@ -2,6 +2,7 @@ package flag
 
 import (
 	"reflect"
+	"strings"
 
 	"github.com/hatlonely/go-kit/cast"
 	"github.com/hatlonely/go-kit/strex"
@@ -70,6 +71,8 @@ func (f *Flag) Set(key string, val interface{}) error {
 
 func (f *Flag) Get(key string) (interface{}, bool) {
 	key = strex.KebabName(key)
+	key = strings.Replace(key, ".", "-", -1)
+	key = strings.Replace(key, "--", "-", -1)
 	if v, ok := f.kvs[key]; ok {
 		return v, true
 	}
