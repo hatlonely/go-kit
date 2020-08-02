@@ -24,8 +24,14 @@ func NewLoggerWithConfig(conf *config.Config) (*Logger, error) {
 		}
 		writers = append(writers, writer)
 	}
+
+	level, err := LevelString(conf.GetString("level"))
+	if err != nil {
+		return nil, err
+	}
+
 	return &Logger{
-		level:   Level(conf.GetInt("level")),
+		level:   level,
 		writers: writers,
 	}, nil
 }
@@ -42,7 +48,7 @@ type Logger struct {
 	level   Level
 }
 
-//go:generate stringer -type Level -trimprefix Level
+//go:generate enumer -type Level -trimprefix Level -text
 type Level int
 
 const (
