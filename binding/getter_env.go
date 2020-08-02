@@ -63,6 +63,6 @@ func (g *EnvGetter) TransformKey(key string) string {
 	key = strings.Replace(key, ".", g.separator, -1)
 	key = strings.Replace(key, "[", g.separator, -1)
 	key = strings.Replace(key, "]", g.separator, -1)
-	key = strings.Replace(key, "__", g.separator, -1)
+	key = strings.Replace(key, g.separator+g.separator, g.separator, -1)
 	return key
 }

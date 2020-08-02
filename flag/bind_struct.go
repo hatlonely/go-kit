@@ -26,6 +26,9 @@ func (f *Flag) bindStructRecursive(v interface{}, prefix string) error {
 	}
 
 	for i := 0; i < rv.NumField(); i++ {
+		if !rv.Field(i).CanSet() {
+			continue
+		}
 		tag := rt.Field(i).Tag.Get("flag")
 		t := rt.Field(i).Type
 

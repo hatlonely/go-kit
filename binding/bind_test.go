@@ -113,7 +113,7 @@ func TestBind(t *testing.T) {
 		os.Setenv("A1_KEY2", "456")
 		os.Setenv("A2_KEY3", "val3-2")
 		Convey("env", func() {
-			So(bind.Bind(b, NewEnvGetter("", "_")), ShouldBeNil)
+			So(bind.Bind(b, NewEnvGetter()), ShouldBeNil)
 			fmt.Println(strex.MustJsonMarshal(b))
 		})
 	})

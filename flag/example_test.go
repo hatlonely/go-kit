@@ -28,7 +28,7 @@ func TestExample1(t *testing.T) {
 	}
 
 	mf := &MyFlags{}
-	if err := flag.Bind(mf); err != nil {
+	if err := flag.Struct(mf); err != nil {
 		panic(err)
 	}
 	if err := flag.ParseArgs(strings.Split("-str abc -ip 192.168.0.1 --int-slice 4,5,6 posflag -sub-f1 140", " ")); err != nil {
