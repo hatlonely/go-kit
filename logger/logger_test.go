@@ -22,7 +22,7 @@ func BenchmarkHello(b *testing.B) {
 	if err != nil {
 		panic(err)
 	}
-	l := NewLogger(0, w, NewStdoutWriter())
+	l := NewLogger(0, w)
 
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
