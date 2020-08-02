@@ -39,6 +39,9 @@ var lang = gval.Full(
 	gval.Function("isIdentifier", func(x interface{}) (bool, error) {
 		return strex.ReIdentifier.MatchString(x.(string)), nil
 	}),
+	gval.Function("len", func(x interface{}) (int, error) {
+		return len(x.(string)), nil
+	}),
 )
 
 func RegisterFunction(name string, fun interface{}) {
