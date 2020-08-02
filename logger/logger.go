@@ -42,7 +42,7 @@ type Logger struct {
 	level   Level
 }
 
-//go:generate stringer -type Level -trimprefix Level -case=toUpper
+//go:generate stringer -type Level -trimprefix Level
 type Level int
 
 const (
