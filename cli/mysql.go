@@ -34,9 +34,15 @@ func NewMysqlWithOptions(options *MySQLOptions) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db.DB().SetConnMaxLifetime(options.ConnMaxLifetime)
-	db.DB().SetMaxOpenConns(options.MaxOpenConns)
-	db.DB().SetMaxIdleConns(options.MaxIdleConns)
+	if options.ConnMaxLifetime != 0 {
+		db.DB().SetConnMaxLifetime(options.ConnMaxLifetime)
+	}
+	if options.MaxOpenConns != 0 {
+		db.DB().SetMaxOpenConns(options.MaxOpenConns)
+	}
+	if options.MaxIdleConns != 0 {
+		db.DB().SetMaxIdleConns(options.MaxIdleConns)
+	}
 	return db, nil
 }
 
@@ -60,3 +66,30 @@ var defaultMySQLOptions = MySQLOptions{
 }
 
 type MySQLOption func(options *MySQLOptions)
+
+func WithMysqlAuth(username, password string) MySQLOption {
+	return func(options *MySQLOptions) {
+		options.Username = username
+		options.Password = password
+	}
+}
+
+func WithMysqlAddr(host string, port int) MySQLOption {
+	return func(options *MySQLOptions) {
+		options.Host = host
+		options.Port = port
+	}
+}
+
+func WithMysqlConnMaxLifeTime(connMaxLifeTime time.Duration) MySQLOption {
+	return func(options *MySQLOptions) {
+		options.ConnMaxLifetime = connMaxLifeTime
+	}
+}
+
+func WithMysqlConns(maxIdle int, maxOpen int) MySQLOption {
+	return func(options *MySQLOptions) {
+		options.MaxIdleConns = maxIdle
+		options.MaxOpenConns = maxOpen
+	}
+}
