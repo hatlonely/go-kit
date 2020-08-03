@@ -81,6 +81,12 @@ func WithMysqlAddr(host string, port int) MySQLOption {
 	}
 }
 
+func WithMysqlDatabase(database string) MySQLOption {
+	return func(options *MySQLOptions) {
+		options.Database = database
+	}
+}
+
 func WithMysqlConnMaxLifeTime(connMaxLifeTime time.Duration) MySQLOption {
 	return func(options *MySQLOptions) {
 		options.ConnMaxLifetime = connMaxLifeTime
