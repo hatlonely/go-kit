@@ -73,8 +73,6 @@ Content-Type: text/html; charset=UTF-8;
 %v
 `, m.From, to, subject, body)
 
-	fmt.Println(m.From, m.Password)
-
 	return smtp.SendMail(
 		fmt.Sprintf("%v:%v", m.Server, m.Port),
 		smtp.PlainAuth("", m.From, m.Password, m.Server),
