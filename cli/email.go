@@ -16,7 +16,7 @@ func NewEmail(from string, password string, opts ...EmailOption) *EmailCli {
 	options.From = from
 	options.Password = password
 
-	return NewEmailWithOption(&options)
+	return NewEmailWithOptions(&options)
 }
 
 func NewEmailWithConfig(conf *config.Config) (*EmailCli, error) {
@@ -25,10 +25,10 @@ func NewEmailWithConfig(conf *config.Config) (*EmailCli, error) {
 		return nil, err
 	}
 
-	return NewEmailWithOption(&options), nil
+	return NewEmailWithOptions(&options), nil
 }
 
-func NewEmailWithOption(options *EmailOptions) *EmailCli {
+func NewEmailWithOptions(options *EmailOptions) *EmailCli {
 	return &EmailCli{
 		Password: options.Password,
 		From:     options.From,
