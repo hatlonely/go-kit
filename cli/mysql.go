@@ -43,6 +43,7 @@ func NewMysqlWithOptions(options *MySQLOptions) (*gorm.DB, error) {
 	if options.MaxIdleConns != 0 {
 		db.DB().SetMaxIdleConns(options.MaxIdleConns)
 	}
+	db.LogMode(options.LogMode)
 	return db, nil
 }
 
@@ -55,6 +56,7 @@ type MySQLOptions struct {
 	ConnMaxLifetime time.Duration
 	MaxIdleConns    int
 	MaxOpenConns    int
+	LogMode         bool
 }
 
 var defaultMySQLOptions = MySQLOptions{
@@ -63,6 +65,7 @@ var defaultMySQLOptions = MySQLOptions{
 	ConnMaxLifetime: 60 * time.Second,
 	MaxIdleConns:    10,
 	MaxOpenConns:    20,
+	LogMode:         false,
 }
 
 type MySQLOption func(options *MySQLOptions)
@@ -97,5 +100,11 @@ func WithMysqlConns(maxIdle int, maxOpen int) MySQLOption {
 	return func(options *MySQLOptions) {
 		options.MaxIdleConns = maxIdle
 		options.MaxOpenConns = maxOpen
+	}
+}
+
+func WithLogMode() MySQLOption {
+	return func(options *MySQLOptions) {
+		options.LogMode = true
 	}
 }
