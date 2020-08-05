@@ -8,7 +8,6 @@ require (
 	github.com/agiledragon/gomonkey v2.0.1+incompatible
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.332
 	github.com/aliyun/aliyun-tablestore-go-sdk v4.1.3+incompatible
-	github.com/alvaroloes/enumer v1.1.2 // indirect
 	github.com/coocood/freecache v1.1.1
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
 	github.com/fsnotify/fsnotify v1.4.9
@@ -21,6 +20,7 @@ require (
 	github.com/jonboulle/clockwork v0.2.0 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.3.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.1 // indirect
+	github.com/olivere/elastic/v7 v7.0.19
 	github.com/pkg/errors v0.9.1
 	github.com/sergi/go-diff v1.1.0
 	github.com/sirupsen/logrus v1.6.0
