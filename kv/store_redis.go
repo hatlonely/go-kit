@@ -17,30 +17,21 @@ type RedisStore struct {
 	keyLen int
 }
 
-type RedisStoreOptions struct {
-	Expiration time.Duration
-	Mode       string
-	KeyIdx     int
-	KeyLen     int
-}
-
-var defaultRedisStoreOptions = RedisStoreOptions{
-	Mode: "string",
-}
-
-type RedisStoreOption func(options *RedisStoreOptions)
-
 func NewRedisStore(client *redis.Client, opts ...RedisStoreOption) (*RedisStore, error) {
 	options := defaultRedisStoreOptions
 	for _, opt := range opts {
 		opt(&options)
 	}
 
+	return NewRedisStoreWithOptions(client, &options)
+}
+
+func NewRedisStoreWithOptions(client *redis.Client, options *RedisStoreOptions) (*RedisStore, error) {
 	store := &RedisStore{
 		client:     client,
 		expiration: options.Expiration,
 	}
-	if options.Mode == "string" {
+	if options.Mode == RedisStoreModeString {
 		store.getFunc = redisStringGet
 		store.setFunc = redisStringSet
 	} else {
@@ -98,5 +89,51 @@ func (s *RedisStore) parseKey(key string) (string, string) {
 		return key[s.keyIdx:], key[:s.keyIdx]
 	} else {
 		return "", key
+	}
+}
+
+type RedisStoreOptions struct {
+	Expiration time.Duration
+	Mode       RedisStoreMode
+	KeyIdx     int
+	KeyLen     int
+}
+
+var defaultRedisStoreOptions = RedisStoreOptions{
+	Expiration: 30 * time.Minute,
+	Mode:       RedisStoreModeString,
+}
+
+type RedisStoreMode int
+
+const (
+	RedisStoreModeString RedisStoreMode = 1
+	RedisStoreModeHash   RedisStoreMode = 2
+)
+
+type RedisStoreOption func(options *RedisStoreOptions)
+
+func WithRedisExpiration(expiration time.Duration) RedisStoreOption {
+	return func(options *RedisStoreOptions) {
+		options.Expiration = expiration
+	}
+}
+
+func WithRedisStoreModeString() RedisStoreOption {
+	return func(options *RedisStoreOptions) {
+		options.Mode = RedisStoreModeString
+	}
+}
+
+func WithRedisStoreModeHash() RedisStoreOption {
+	return func(options *RedisStoreOptions) {
+		options.Mode = RedisStoreModeHash
+	}
+}
+
+func WithRedisHashKey(keyIdx int, keyLen int) RedisStoreOption {
+	return func(options *RedisStoreOptions) {
+		options.KeyIdx = keyIdx
+		options.KeyLen = keyLen
 	}
 }
