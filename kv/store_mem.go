@@ -75,3 +75,8 @@ func (s *MemStore) Get(key []byte) ([]byte, error) {
 func (s *MemStore) Set(key []byte, val []byte) (err error) {
 	return s.cache.Set(key, val, int(s.Expiration/time.Second))
 }
+
+func (s *MemStore) Del(key []byte) error {
+	s.cache.Del(key)
+	return nil
+}

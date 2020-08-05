@@ -64,6 +64,10 @@ func (l *LevelDBStore) Get(key []byte) ([]byte, error) {
 	return val, nil
 }
 
-func (l *LevelDBStore) Set(key []byte, val []byte) (err error) {
+func (l *LevelDBStore) Set(key []byte, val []byte) error {
 	return l.db.Put(key, val, l.woptions)
+}
+
+func (l *LevelDBStore) Del(key []byte) error {
+	return l.db.Delete(key, l.woptions)
 }

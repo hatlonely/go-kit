@@ -12,6 +12,7 @@ type RedisStore struct {
 
 	getFunc func(s *RedisStore, key []byte) ([]byte, error)
 	setFunc func(s *RedisStore, key []byte, val []byte) error
+	delFunc func(s *RedisStore, key []byte) error
 
 	keyIdx int
 	keyLen int
@@ -34,9 +35,11 @@ func NewRedisStoreWithOptions(client *redis.Client, options *RedisStoreOptions) 
 	if options.Mode == RedisStoreModeString {
 		store.getFunc = redisStringGet
 		store.setFunc = redisStringSet
+		store.delFunc = redisStringDel
 	} else {
 		store.getFunc = redisHashGet
 		store.setFunc = redisHashSet
+		store.delFunc = redisHashDel
 	}
 
 	return store, nil
@@ -48,6 +51,10 @@ func (s *RedisStore) Get(key []byte) ([]byte, error) {
 
 func (s *RedisStore) Set(key []byte, val []byte) error {
 	return s.setFunc(s, key, val)
+}
+
+func (s *RedisStore) Del(key []byte) error {
+	return s.delFunc(s, key)
 }
 
 func redisStringGet(s *RedisStore, key []byte) ([]byte, error) {
@@ -65,6 +72,10 @@ func redisStringSet(s *RedisStore, key []byte, val []byte) error {
 	return s.client.Set(string(key), val, s.expiration).Err()
 }
 
+func redisStringDel(s *RedisStore, key []byte) error {
+	return s.client.Del(string(key)).Err()
+}
+
 func redisHashGet(s *RedisStore, key []byte) ([]byte, error) {
 	k, f := s.parseKey(string(key))
 	val, err := s.client.HGet(k, f).Result()
@@ -80,6 +91,11 @@ func redisHashGet(s *RedisStore, key []byte) ([]byte, error) {
 func redisHashSet(s *RedisStore, key []byte, val []byte) error {
 	k, f := s.parseKey(string(key))
 	return s.client.HSet(k, f, val).Err()
+}
+
+func redisHashDel(s *RedisStore, key []byte) error {
+	k, f := s.parseKey(string(key))
+	return s.client.HDel(k, f).Err()
 }
 
 func (s *RedisStore) parseKey(key string) (string, string) {
