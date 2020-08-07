@@ -39,6 +39,54 @@ func NewConfigWithBaseFile(filename string) (*Config, error) {
 	return NewConfig(cd, cp, cc)
 }
 
+type SimpleFileOptions struct {
+	FileType  string
+	DecodeKey string
+}
+
+var defaultSimpleFileOptions = SimpleFileOptions{
+	FileType: "json",
+}
+
+type SimpleFileOption func(options *SimpleFileOptions)
+
+func WithSimpleFileType(fileType string) SimpleFileOption {
+	return func(options *SimpleFileOptions) {
+		options.FileType = fileType
+	}
+}
+
+func WithSimpleFileKey(key string) SimpleFileOption {
+	return func(options *SimpleFileOptions) {
+		options.DecodeKey = key
+	}
+}
+
+func NewSimpleFileConfig(filename string, opts ...SimpleFileOption) (*Config, error) {
+	options := defaultSimpleFileOptions
+	for _, opt := range opts {
+		opt(&options)
+	}
+
+	decoder, err := NewDecoder(options.FileType)
+	if err != nil {
+		return nil, err
+	}
+	provider, err := NewLocalProvider(filename)
+	if err != nil {
+		return nil, err
+	}
+	var cipher Cipher
+	if options.DecodeKey != "" {
+		cipher, err = NewAESCipher([]byte(options.DecodeKey))
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return NewConfig(decoder, provider, cipher)
+}
+
 func NewConfig(decoder Decoder, provider Provider, cipher Cipher) (*Config, error) {
 	buf, err := provider.Load()
 	if err != nil {

@@ -152,3 +152,16 @@ func TestConfigExample2(t *testing.T) {
 		DeleteTestFile()
 	})
 }
+
+func TestNewSimpleFileConfig(t *testing.T) {
+	Convey("TestNewSimpleFileConfig", t, func() {
+		CreateTestFile()
+
+		conf, err := NewSimpleFileConfig("test.json", WithSimpleFileType("json"))
+		So(err, ShouldBeNil)
+		So(conf.GetInt("port"), ShouldEqual, 6060)
+		So(conf.GetString("log[1].file"), ShouldEqual, "test.warn")
+
+		DeleteTestFile()
+	})
+}
