@@ -40,11 +40,14 @@ func (f *Flag) bindStructRecursive(v interface{}, prefix string) error {
 			if key == "" {
 				key = strex.KebabName(rt.Field(i).Name)
 			}
-			if prefix != "" {
-				key = prefix + "-" + key
-			}
-			if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), key); err != nil {
-				return err
+			if rv.Type().Field(i).Anonymous {
+				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefix); err != nil {
+					return err
+				}
+			} else {
+				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, key)); err != nil {
+					return err
+				}
 			}
 		} else if t.Kind() == reflect.Ptr && t.Elem().Kind() == reflect.Struct && t != reflect.TypeOf(&time.Time{}) {
 			rv.Field(i).Set(reflect.New(rv.Field(i).Type().Elem()))
@@ -52,11 +55,14 @@ func (f *Flag) bindStructRecursive(v interface{}, prefix string) error {
 			if key == "" {
 				key = strex.KebabName(rt.Field(i).Name)
 			}
-			if prefix != "" {
-				key = prefix + "-" + key
-			}
-			if err := f.bindStructRecursive(rv.Field(i).Interface(), key); err != nil {
-				return err
+			if rv.Type().Field(i).Anonymous {
+				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefix); err != nil {
+					return err
+				}
+			} else {
+				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, key)); err != nil {
+					return err
+				}
 			}
 		} else {
 			name, shorthand, usage, required, defaultValue, isArgument, err := parseTag(tag)
@@ -122,4 +128,11 @@ func parseTag(tag string) (name string, shorthand string, usage string, required
 	}
 
 	return
+}
+
+func prefixAppendKey(prefix string, key string) string {
+	if prefix == "" {
+		return key
+	}
+	return fmt.Sprintf("%v-%v", prefix, key)
 }

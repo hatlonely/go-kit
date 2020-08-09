@@ -11,9 +11,7 @@ import (
 )
 
 type Options struct {
-	Help    bool   `flag:"--help,-h; default: false; usage: show help info"`
-	Version bool   `flag:"--version,-v; default: false; usage: show version"`
-	Port    string `bind:"port" flag:"--port; usage: service port"`
+	flag.Options
 
 	Redis cli.RedisOptions `bind:"redis"`
 	Mysql cli.MySQLOptions `bind:"mysql"`
