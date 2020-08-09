@@ -8,6 +8,12 @@ import (
 	"github.com/hatlonely/go-kit/strex"
 )
 
+type Options struct {
+	Help       bool   `flag:"--help,-h; default: false; usage: show help info"`
+	Version    bool   `flag:"--version,-v; default: false; usage: show version"`
+	ConfigPath string `flag:"--config-path,-c; usage: config path"`
+}
+
 type Info struct {
 	Type         reflect.Type
 	Name         string
