@@ -99,6 +99,9 @@ func bindRecursive(infos map[string]info, v interface{}, prefix1 string, prefix2
 	var src interface{}
 	var ok bool
 	for _, getter := range getters {
+		if getter == nil {
+			continue
+		}
 		src, ok = getter.Get(prefix2)
 		if ok {
 			break
