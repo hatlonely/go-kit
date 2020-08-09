@@ -2,6 +2,8 @@ package strex
 
 import (
 	"encoding/json"
+	"regexp"
+	"strings"
 )
 
 func MustJsonMarshal(v interface{}) string {
@@ -18,4 +20,10 @@ func MustJsonMarshalIndent(v interface{}) string {
 		panic(err)
 	}
 	return string(buf)
+}
+
+var spacePattern = regexp.MustCompile(`\s+`)
+
+func FormatSpace(str string) string {
+	return strings.TrimSpace(spacePattern.ReplaceAllString(str, " "))
 }
