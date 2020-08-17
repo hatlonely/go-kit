@@ -46,7 +46,7 @@ func ToBoolSliceE(v interface{}) ([]bool, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert bool %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []bool", reflect.TypeOf(v))
 	}
 }
 
@@ -86,7 +86,7 @@ func ToIntSliceE(v interface{}) ([]int, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert int %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []int", reflect.TypeOf(v))
 	}
 }
 
@@ -126,7 +126,7 @@ func ToUintSliceE(v interface{}) ([]uint, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert uint %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []uint", reflect.TypeOf(v))
 	}
 }
 
@@ -166,7 +166,7 @@ func ToInt64SliceE(v interface{}) ([]int64, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert int64 %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []int64", reflect.TypeOf(v))
 	}
 }
 
@@ -206,7 +206,7 @@ func ToInt32SliceE(v interface{}) ([]int32, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert int32 %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []int32", reflect.TypeOf(v))
 	}
 }
 
@@ -246,7 +246,7 @@ func ToInt16SliceE(v interface{}) ([]int16, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert int16 %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []int16", reflect.TypeOf(v))
 	}
 }
 
@@ -286,7 +286,7 @@ func ToInt8SliceE(v interface{}) ([]int8, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert int8 %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []int8", reflect.TypeOf(v))
 	}
 }
 
@@ -326,7 +326,7 @@ func ToUint64SliceE(v interface{}) ([]uint64, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert uint64 %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []uint64", reflect.TypeOf(v))
 	}
 }
 
@@ -366,7 +366,7 @@ func ToUint32SliceE(v interface{}) ([]uint32, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert uint32 %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []uint32", reflect.TypeOf(v))
 	}
 }
 
@@ -406,7 +406,7 @@ func ToUint16SliceE(v interface{}) ([]uint16, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert uint16 %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []uint16", reflect.TypeOf(v))
 	}
 }
 
@@ -446,7 +446,7 @@ func ToUint8SliceE(v interface{}) ([]uint8, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert uint8 %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []uint8", reflect.TypeOf(v))
 	}
 }
 
@@ -486,7 +486,7 @@ func ToFloat64SliceE(v interface{}) ([]float64, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert float64 %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []float64", reflect.TypeOf(v))
 	}
 }
 
@@ -526,7 +526,7 @@ func ToFloat32SliceE(v interface{}) ([]float32, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert float32 %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []float32", reflect.TypeOf(v))
 	}
 }
 
@@ -556,7 +556,7 @@ func ToStringSliceE(v interface{}) ([]string, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert string %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []string", reflect.TypeOf(v))
 	}
 }
 
@@ -596,7 +596,7 @@ func ToDurationSliceE(v interface{}) ([]time.Duration, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert time.Duration %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []time.Duration", reflect.TypeOf(v))
 	}
 }
 
@@ -636,7 +636,7 @@ func ToTimeSliceE(v interface{}) ([]time.Time, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert time.Time %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []time.Time", reflect.TypeOf(v))
 	}
 }
 
@@ -676,6 +676,6 @@ func ToIPSliceE(v interface{}) ([]net.IP, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert net.IP %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []net.IP", reflect.TypeOf(v))
 	}
 }

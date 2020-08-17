@@ -103,8 +103,10 @@ to_slice_header = """// this file is auto generate by autogen.py. do not edit!
 package cast
 
 import (
+	"net"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/pkg/errors"
 )
@@ -148,7 +150,7 @@ func To{name}SliceE(v interface{{}}) ([]{type}, error) {{
 		}}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert {type} %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []{type}", reflect.TypeOf(v))
 	}}
 }}
 """
@@ -181,7 +183,7 @@ func ToStringSliceE(v interface{}) ([]string, error) {
 		}
 		return vs, nil
 	default:
-		return nil, errors.Errorf("type %v cannot convert string %v slice", reflect.TypeOf(v))
+		return nil, errors.Errorf("type %v cannot convert []string", reflect.TypeOf(v))
 	}
 }
 """
