@@ -12,8 +12,9 @@ func TestRule(t *testing.T) {
 	type A struct {
 		Key1 string `rule:"x in ['hello', 'world']"`
 		Key2 int    `rule:"x>=5 && x<=6"`
-		Key3 string `rule:"x match '[0-9]{6}'"`
+		Key3 string `rule:"x =~ '^[0-9]{6}$'"`
 		Key4 string `rule:"isEmail(x)"`
+		Key5 int64  `rule:"x in [0, 1, 2]"`
 	}
 
 	RegisterFunction("isEmail", func(str string) (bool, error) {
