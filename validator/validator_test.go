@@ -10,7 +10,7 @@ import (
 
 func TestRule(t *testing.T) {
 	type A struct {
-		Key1 string `rule:"x in ['hello', 'world']"`
+		Key1 string `rule:"x in ['world', 'hello']"`
 		Key2 int    `rule:"x>=5 && x<=6"`
 		Key3 string `rule:"x =~ '^[0-9]{6}$'"`
 		Key4 string `rule:"isEmail(x)"`
@@ -27,6 +27,7 @@ func TestRule(t *testing.T) {
 			Key2: 5,
 			Key3: "123456",
 			Key4: "hatlonely@foxmail.com",
+			Key5: 1,
 		}
 
 		Convey("case 0", func() {

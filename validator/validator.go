@@ -45,9 +45,13 @@ var lang = gval.NewLanguage(
 		for _, value := range col {
 			switch a.(type) {
 			case string:
-				return a.(string) == value.(string), nil
+				if a.(string) == value.(string) {
+					return true, nil
+				}
 			default:
-				return cast.ToInt64(a) == cast.ToInt64(value), nil
+				if cast.ToInt64(a) == cast.ToInt64(value) {
+					return true, nil
+				}
 			}
 		}
 		return false, nil
