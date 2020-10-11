@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
+
+	"github.com/hatlonely/go-kit/refex"
 )
 
 type Logger interface {
@@ -143,8 +145,8 @@ func (c *Config) UnsafeSet(key string, val interface{}) error {
 	return c.storage.Set(key, val)
 }
 
-func (c *Config) Unmarshal(v interface{}) error {
-	return c.storage.Unmarshal(v)
+func (c *Config) Unmarshal(v interface{}, opts ...refex.Option) error {
+	return c.storage.Unmarshal(v, opts...)
 }
 
 func (c *Config) Sub(key string) *Config {

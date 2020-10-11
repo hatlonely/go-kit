@@ -246,6 +246,46 @@ func TestInterfaceToStruct(t *testing.T) {
 			"Key8": []interface{}{1, 2, 3},
 		})
 	})
+
+	Convey("TestInterfaceToStruct camel name", t, func() {
+		v := map[interface{}]interface{}{
+			"key1": 1,
+			"key2": "val2",
+			"key3": []interface{}{
+				map[string]interface{}{
+					"key4": "val4",
+					"key5": "val5",
+					"key6": map[interface{}]interface{}{
+						"key7": "val7",
+						"key8": []interface{}{1, 2, 3},
+					},
+				},
+			},
+		}
+
+		type Option struct {
+			Key1 int
+			Key2 string
+			Key3 []struct {
+				Key4 string
+				Key5 string
+				Key6 struct {
+					Key7 string
+					Key8 []int64
+				}
+			}
+		}
+		var opt Option
+		So(InterfaceToStruct(v, &opt, WithCamelName()), ShouldBeNil)
+		So(opt.Key1, ShouldEqual, 1)
+		So(opt.Key2, ShouldEqual, "val2")
+		So(opt.Key3[0].Key4, ShouldEqual, "val4")
+		So(opt.Key3[0].Key5, ShouldEqual, "val5")
+		So(opt.Key3[0].Key6.Key7, ShouldEqual, "val7")
+		So(opt.Key3[0].Key6.Key8[0], ShouldEqual, 1)
+		So(opt.Key3[0].Key6.Key8[1], ShouldEqual, 2)
+		So(opt.Key3[0].Key6.Key8[2], ShouldEqual, 3)
+	})
 }
 
 func TestInterfaceTravel(t *testing.T) {

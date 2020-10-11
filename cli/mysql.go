@@ -8,6 +8,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refex"
 )
 
 func NewMysql(opts ...MySQLOption) (*gorm.DB, error) {
@@ -20,7 +21,7 @@ func NewMysql(opts ...MySQLOption) (*gorm.DB, error) {
 
 func NewMysqlWithConfig(conf *config.Config) (*gorm.DB, error) {
 	options := defaultMySQLOptions
-	if err := conf.Unmarshal(&options); err != nil {
+	if err := conf.Unmarshal(&options, refex.WithCamelName()); err != nil {
 		return nil, err
 	}
 	return NewMysqlWithOptions(&options)

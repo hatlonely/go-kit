@@ -12,7 +12,6 @@ import (
 
 func NewStorage(root interface{}) (*Storage, error) {
 	if err := refex.Validate(root); err != nil {
-
 		return nil, err
 	}
 
@@ -139,8 +138,8 @@ func (s *Storage) Decrypt(cipher Cipher) error {
 	return nil
 }
 
-func (s Storage) Unmarshal(v interface{}) error {
-	return refex.InterfaceToStruct(s.root, v)
+func (s Storage) Unmarshal(v interface{}, opts ...refex.Option) error {
+	return refex.InterfaceToStruct(s.root, v, opts...)
 }
 
 func (s Storage) Sub(key string) *Storage {
