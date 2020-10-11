@@ -34,8 +34,8 @@ func NewMysqlWithOptions(options *MySQLOptions) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	if options.ConnMaxLifetime != 0 {
-		db.DB().SetConnMaxLifetime(options.ConnMaxLifetime)
+	if options.ConnMaxLifeTime != 0 {
+		db.DB().SetConnMaxLifetime(options.ConnMaxLifeTime)
 	}
 	if options.MaxOpenConns != 0 {
 		db.DB().SetMaxOpenConns(options.MaxOpenConns)
@@ -53,7 +53,7 @@ type MySQLOptions struct {
 	Database        string
 	Host            string
 	Port            int
-	ConnMaxLifetime time.Duration
+	ConnMaxLifeTime time.Duration
 	MaxIdleConns    int
 	MaxOpenConns    int
 	LogMode         bool
@@ -62,7 +62,7 @@ type MySQLOptions struct {
 var defaultMySQLOptions = MySQLOptions{
 	Host:            "localhost",
 	Port:            3306,
-	ConnMaxLifetime: 60 * time.Second,
+	ConnMaxLifeTime: 60 * time.Second,
 	MaxIdleConns:    10,
 	MaxOpenConns:    20,
 	LogMode:         false,
@@ -92,7 +92,7 @@ func WithMysqlDatabase(database string) MySQLOption {
 
 func WithMysqlConnMaxLifeTime(connMaxLifeTime time.Duration) MySQLOption {
 	return func(options *MySQLOptions) {
-		options.ConnMaxLifetime = connMaxLifeTime
+		options.ConnMaxLifeTime = connMaxLifeTime
 	}
 }
 
