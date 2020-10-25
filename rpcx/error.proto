@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package account;
+
+option go_package = "github.com/hatlonely/go-rpc/rpc-account/pkg/grpcex";
+
+message EInfo {
+  int64 status = 1;
+  string requestID = 2;
+  string code = 3;
+  string message = 4;
+}

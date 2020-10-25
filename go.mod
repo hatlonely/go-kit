@@ -15,6 +15,7 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-redis/redis v6.15.8+incompatible
 	github.com/golang/protobuf v1.3.3
+	github.com/grpc-ecosystem/grpc-gateway v1.15.2
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869 // indirect
 	github.com/jinzhu/gorm v1.9.15
 	github.com/jonboulle/clockwork v0.2.0 // indirect
@@ -22,6 +23,7 @@ require (
 	github.com/lestrrat-go/strftime v1.0.1 // indirect
 	github.com/olivere/elastic/v7 v7.0.19
 	github.com/pkg/errors v0.9.1
+	github.com/satori/go.uuid v1.2.0
 	github.com/sergi/go-diff v1.1.0
 	github.com/sirupsen/logrus v1.6.0
 	github.com/smartystreets/goconvey v1.6.4
@@ -29,5 +31,6 @@ require (
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/tebeka/strftime v0.1.4 // indirect
 	github.com/yosuke-furukawa/json5 v0.1.1
+	google.golang.org/grpc v1.32.0
 	gopkg.in/yaml.v2 v2.2.8
 )
