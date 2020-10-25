@@ -11,7 +11,11 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func NewError(err error, status codes.Code, requestID string, code string, message string) error {
+func NewErrorWithoutRefer(err error, status codes.Code, requestID string, code string, message string) error {
+	return NewError(err, status, requestID, code, message, "")
+}
+
+func NewError(err error, status codes.Code, requestID string, code string, message string, refer string) error {
 	return &Error{
 		Err: err,
 		Info: &EInfo{
@@ -19,11 +23,16 @@ func NewError(err error, status codes.Code, requestID string, code string, messa
 			RequestID: requestID,
 			Code:      code,
 			Message:   message,
+			Refer:     refer,
 		},
 	}
 }
 
-func NewErrorf(status codes.Code, requestID string, code string, format string, args ...interface{}) error {
+func NewErrorWithoutReferf(status codes.Code, requestID string, code string, format string, args ...interface{}) error {
+	return NewErrorf(status, requestID, code, "", format, args...)
+}
+
+func NewErrorf(status codes.Code, requestID string, code string, refer string, format string, args ...interface{}) error {
 	str := fmt.Sprintf(format, args...)
 	err := errors.New(str)
 	return &Error{
@@ -33,6 +42,7 @@ func NewErrorf(status codes.Code, requestID string, code string, format string, 
 			RequestID: requestID,
 			Code:      code,
 			Message:   str,
+			Refer:     refer,
 		},
 	}
 }
