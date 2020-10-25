@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hatlonely/go-kit/strex"
+	"github.com/hatlonely/go-kit/strx"
 )
 
 func (f *Flag) Struct(v interface{}) error {
@@ -38,7 +38,7 @@ func (f *Flag) bindStructRecursive(v interface{}, prefix string) error {
 		if t.Kind() == reflect.Struct && t != reflect.TypeOf(time.Time{}) {
 			key := tag
 			if key == "" {
-				key = strex.KebabName(rt.Field(i).Name)
+				key = strx.KebabName(rt.Field(i).Name)
 			}
 			if rv.Type().Field(i).Anonymous {
 				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefix); err != nil {
@@ -53,7 +53,7 @@ func (f *Flag) bindStructRecursive(v interface{}, prefix string) error {
 			rv.Field(i).Set(reflect.New(rv.Field(i).Type().Elem()))
 			key := tag
 			if key == "" {
-				key = strex.KebabName(rt.Field(i).Name)
+				key = strx.KebabName(rt.Field(i).Name)
 			}
 			if rv.Type().Field(i).Anonymous {
 				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefix); err != nil {
@@ -70,7 +70,7 @@ func (f *Flag) bindStructRecursive(v interface{}, prefix string) error {
 				return err
 			}
 			if name == "" {
-				name = strex.KebabName(rt.Field(i).Name)
+				name = strx.KebabName(rt.Field(i).Name)
 			}
 			if prefix != "" {
 				name = prefix + "-" + name

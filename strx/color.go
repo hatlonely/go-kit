@@ -1,7 +1,7 @@
 // @see https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux
 // @see https://en.wikipedia.org/wiki/ANSI_escape_code
 
-package strex
+package strx
 
 import (
 	"bytes"

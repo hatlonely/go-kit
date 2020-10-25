@@ -1,4 +1,4 @@
-package refex
+package refx
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/hatlonely/go-kit/cast"
-	"github.com/hatlonely/go-kit/strex"
+	"github.com/hatlonely/go-kit/strx"
 )
 
 type Options struct {
@@ -202,7 +202,7 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 		for i := 0; i < rv.NumField(); i++ {
 			key := rt.Field(i).Name
 			if options.CamelName {
-				key = strex.CamelName(key)
+				key = strx.CamelName(key)
 			}
 			var val interface{}
 			switch src.(type) {

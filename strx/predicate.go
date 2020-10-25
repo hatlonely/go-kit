@@ -1,4 +1,4 @@
-package strex
+package strx
 
 func IsUpper(ch uint8) bool {
 	return ch >= 'A' && ch <= 'Z'

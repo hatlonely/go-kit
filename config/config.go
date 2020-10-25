@@ -7,7 +7,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/hatlonely/go-kit/refex"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 type Logger interface {
@@ -145,7 +145,7 @@ func (c *Config) UnsafeSet(key string, val interface{}) error {
 	return c.storage.Set(key, val)
 }
 
-func (c *Config) Unmarshal(v interface{}, opts ...refex.Option) error {
+func (c *Config) Unmarshal(v interface{}, opts ...refx.Option) error {
 	return c.storage.Unmarshal(v, opts...)
 }
 

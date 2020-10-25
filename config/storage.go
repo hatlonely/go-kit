@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hatlonely/go-kit/refex"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 func NewStorage(root interface{}) (*Storage, error) {
-	if err := refex.Validate(root); err != nil {
+	if err := refx.Validate(root); err != nil {
 		return nil, err
 	}
 
@@ -45,15 +45,15 @@ func (s *Storage) GetCipherKeys() []string {
 }
 
 func (s Storage) Get(key string) (interface{}, error) {
-	return refex.InterfaceGet(s.root, key)
+	return refx.InterfaceGet(s.root, key)
 }
 
 func (s *Storage) Del(key string) error {
-	return refex.InterfaceDel(&s.root, key)
+	return refx.InterfaceDel(&s.root, key)
 }
 
 func (s *Storage) Set(key string, val interface{}) error {
-	return refex.InterfaceSet(&s.root, key, val)
+	return refx.InterfaceSet(&s.root, key, val)
 }
 
 func (s *Storage) Encrypt(cipher Cipher) error {
@@ -138,8 +138,8 @@ func (s *Storage) Decrypt(cipher Cipher) error {
 	return nil
 }
 
-func (s Storage) Unmarshal(v interface{}, opts ...refex.Option) error {
-	return refex.InterfaceToStruct(s.root, v, opts...)
+func (s Storage) Unmarshal(v interface{}, opts ...refx.Option) error {
+	return refx.InterfaceToStruct(s.root, v, opts...)
 }
 
 func (s Storage) Sub(key string) *Storage {
@@ -193,11 +193,11 @@ func (s Storage) Interface() interface{} {
 }
 
 func (s Storage) Diff(s2 Storage) ([]string, error) {
-	return refex.InterfaceDiff(s.root, s2.root)
+	return refx.InterfaceDiff(s.root, s2.root)
 }
 
 func (s Storage) Travel(fun func(key string, val interface{}) error) error {
-	return refex.InterfaceTravelRecursive(s.root, fun, "")
+	return refx.InterfaceTravelRecursive(s.root, fun, "")
 }
 
 func prefixAppendKey(prefix string, key string) string {

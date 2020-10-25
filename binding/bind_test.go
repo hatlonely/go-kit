@@ -9,7 +9,7 @@ import (
 
 	. "github.com/smartystreets/goconvey/convey"
 
-	"github.com/hatlonely/go-kit/strex"
+	"github.com/hatlonely/go-kit/strx"
 )
 
 func TestParseTag(t *testing.T) {
@@ -114,7 +114,7 @@ func TestBind(t *testing.T) {
 		os.Setenv("A2_KEY3", "val3-2")
 		Convey("env", func() {
 			So(bind.Bind(b, NewEnvGetter()), ShouldBeNil)
-			fmt.Println(strex.MustJsonMarshal(b))
+			fmt.Println(strx.MustJsonMarshal(b))
 		})
 	})
 }

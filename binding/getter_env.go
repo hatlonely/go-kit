@@ -4,7 +4,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/hatlonely/go-kit/strex"
+	"github.com/hatlonely/go-kit/strx"
 )
 
 func NewEnvGetter(opts ...EnvGetterOption) *EnvGetter {
@@ -59,7 +59,7 @@ func (g *EnvGetter) TransformKey(key string) string {
 	if g.prefix != "" {
 		key = g.prefix + g.separator + key
 	}
-	key = strex.SnakeNameAllCaps(key)
+	key = strx.SnakeNameAllCaps(key)
 	key = strings.Replace(key, ".", g.separator, -1)
 	key = strings.Replace(key, "[", g.separator, -1)
 	key = strings.Replace(key, "]", g.separator, -1)

@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/cast"
-	"github.com/hatlonely/go-kit/strex"
+	"github.com/hatlonely/go-kit/strx"
 )
 
 func Bind(v interface{}, getters ...Getter) error {
@@ -181,7 +181,7 @@ func parseTag(key string, bTag string, dTag string, rt reflect.Type) (*info, err
 		}
 	}
 	if info.key == "" {
-		info.key = strex.CamelName(key)
+		info.key = strx.CamelName(key)
 	}
 	if dTag == "" {
 		return info, nil

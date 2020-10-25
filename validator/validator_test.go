@@ -5,7 +5,7 @@ import (
 
 	. "github.com/smartystreets/goconvey/convey"
 
-	"github.com/hatlonely/go-kit/strex"
+	"github.com/hatlonely/go-kit/strx"
 )
 
 func TestRule(t *testing.T) {
@@ -18,7 +18,7 @@ func TestRule(t *testing.T) {
 	}
 
 	RegisterFunction("isEmail", func(str string) (bool, error) {
-		return strex.ReEmail.MatchString(str), nil
+		return strx.ReEmail.MatchString(str), nil
 	})
 
 	Convey("TestRule", t, func() {

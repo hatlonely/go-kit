@@ -1,4 +1,4 @@
-package strex
+package strx
 
 import (
 	"github.com/sergi/go-diff/diffmatchpatch"

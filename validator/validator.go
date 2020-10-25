@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/cast"
-	"github.com/hatlonely/go-kit/strex"
+	"github.com/hatlonely/go-kit/strx"
 )
 
 func Validate(v interface{}) error {
@@ -88,13 +88,13 @@ var lang = gval.NewLanguage(
 		return nil, fmt.Errorf("date() could not parse %s", s)
 	}),
 	gval.Function("isEmail", func(x interface{}) (bool, error) {
-		return strex.ReEmail.MatchString(x.(string)), nil
+		return strx.ReEmail.MatchString(x.(string)), nil
 	}),
 	gval.Function("isPhone", func(x interface{}) (bool, error) {
-		return strex.RePhone.MatchString(x.(string)), nil
+		return strx.RePhone.MatchString(x.(string)), nil
 	}),
 	gval.Function("isIdentifier", func(x interface{}) (bool, error) {
-		return strex.ReIdentifier.MatchString(x.(string)), nil
+		return strx.ReIdentifier.MatchString(x.(string)), nil
 	}),
 	gval.Function("len", func(x interface{}) (int, error) {
 		return len(x.(string)), nil

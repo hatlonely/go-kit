@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/hatlonely/go-kit/cast"
-	"github.com/hatlonely/go-kit/strex"
+	"github.com/hatlonely/go-kit/strx"
 )
 
 type Options struct {
@@ -71,12 +71,12 @@ func (f *Flag) set(key string, val string) error {
 }
 
 func (f *Flag) Set(key string, val interface{}) error {
-	key = strex.KebabName(key)
+	key = strx.KebabName(key)
 	return f.set(key, cast.ToString(val))
 }
 
 func (f *Flag) Get(key string) (interface{}, bool) {
-	key = strex.KebabName(key)
+	key = strx.KebabName(key)
 	key = strings.Replace(key, ".", "-", -1)
 	key = strings.Replace(key, "--", "-", -1)
 	if v, ok := f.kvs[key]; ok {

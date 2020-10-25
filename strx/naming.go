@@ -1,4 +1,4 @@
-package strex
+package strx
 
 import (
 	"bytes"
