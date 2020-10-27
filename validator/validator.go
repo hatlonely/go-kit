@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
+	"sync"
 	"time"
 
 	"github.com/PaesslerAG/gval"
@@ -15,11 +16,27 @@ import (
 	"github.com/hatlonely/go-kit/strx"
 )
 
+var mutex sync.RWMutex
+var validators map[reflect.Type]*Validator
+
+func init() {
+	validators = map[reflect.Type]*Validator{}
+}
+
 func Validate(v interface{}) error {
+	mutex.RLock()
+	if rule, ok := validators[reflect.TypeOf(v)]; ok {
+		mutex.RUnlock()
+		return rule.Validate(v)
+	}
+	mutex.RUnlock()
 	rule, err := Compile(v)
 	if err != nil {
 		return err
 	}
+	mutex.Lock()
+	validators[reflect.TypeOf(v)] = rule
+	mutex.Unlock()
 	return rule.Validate(v)
 }
 
@@ -151,6 +168,10 @@ func evaluateInterfaceRecursive(rules map[string]gval.Evaluable, tags map[string
 	if rt.Kind() == reflect.Struct {
 		for i := 0; i < rt.NumField(); i++ {
 			key := rt.Field(i).Name
+			// skip unexported field
+			if !rv.Field(i).CanInterface() {
+				continue
+			}
 			if rt.Field(i).Anonymous {
 				if err := evaluateInterfaceRecursive(rules, tags, rv.Field(i).Interface(), prefix); err != nil {
 					return err
