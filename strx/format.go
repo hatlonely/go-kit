@@ -6,6 +6,16 @@ import (
 	"strings"
 )
 
+func JsonMarshal(v interface{}) string {
+	buf, _ := json.Marshal(v)
+	return string(buf)
+}
+
+func JsonMarshalIndent(v interface{}) string {
+	buf, _ := json.MarshalIndent(v, "  ", "  ")
+	return string(buf)
+}
+
 func MustJsonMarshal(v interface{}) string {
 	buf, err := json.Marshal(v)
 	if err != nil {
