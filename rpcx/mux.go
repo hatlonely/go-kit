@@ -41,10 +41,17 @@ func WithMuxOutgoingHeaderMatcher() runtime.ServeMuxOption {
 	})
 }
 
-func WithMuxProtoErrorHandler() runtime.ServeMuxOption {
+func WithMuxProtoErrorHandler(opts ...MuxOption) runtime.ServeMuxOption {
+	options := defaultMuxOptions
+	for _, opt := range opts {
+		opt(&options)
+	}
+
 	return runtime.WithProtoErrorHandler(func(ctx context.Context, mux *runtime.ServeMux, marshaler runtime.Marshaler, writer http.ResponseWriter, request *http.Request, err error) {
-		writer.Header().Set("X-Request-Id", request.Header.Get("X-Request-Id"))
-		writer.Header().Set("Content-Type", "application/json")
+		writer.Header().Set("Content-Type", options.ContentType)
+		for _, header := range options.Headers {
+			writer.Header().Set(header, request.Header.Get(header))
+		}
 
 		s := status.Convert(err)
 		if len(s.Details()) >= 1 {
@@ -63,4 +70,28 @@ func WithMuxProtoErrorHandler() runtime.ServeMuxOption {
 		buf, _ := json.Marshal(e)
 		_, _ = writer.Write(buf)
 	})
+}
+
+type MuxOptions struct {
+	Headers     []string
+	ContentType string
+}
+
+var defaultMuxOptions = MuxOptions{
+	Headers:     []string{"X-Request-Id"},
+	ContentType: "application/json",
+}
+
+type MuxOption func(options *MuxOptions)
+
+func WithMuxHeaders(headers ...string) MuxOption {
+	return func(options *MuxOptions) {
+		options.Headers = headers
+	}
+}
+
+func WithMuxContentType(contentType string) MuxOption {
+	return func(options *MuxOptions) {
+		options.ContentType = contentType
+	}
 }

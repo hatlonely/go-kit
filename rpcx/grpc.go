@@ -18,13 +18,11 @@ import (
 	"github.com/hatlonely/go-kit/validator"
 )
 
-const GrpcCtxKey = "ctx"
-
 func MetaDataGetRequestID(ctx context.Context) string {
-	return MetaDataGet(ctx, "x-request-id")
+	return MetaDataIncomingGet(ctx, "x-request-id")
 }
 
-func MetaDataGet(ctx context.Context, key string) string {
+func MetaDataIncomingGet(ctx context.Context, key string) string {
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
 		if vals, ok := md[key]; ok {
 			return strings.Join(vals, ",")
@@ -33,23 +31,34 @@ func MetaDataGet(ctx context.Context, key string) string {
 	return ""
 }
 
-func MetaDataSet(ctx context.Context, key string, val string) {
+func MetaDataIncomingSet(ctx context.Context, key string, val string) {
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
 		md.Set(key, val)
 	}
 }
 
+type grpcCtxKey struct{}
+
+func NewRPCXContext(ctx context.Context) context.Context {
+	return context.WithValue(ctx, grpcCtxKey{}, map[string]interface{}{})
+}
+
 func CtxSet(ctx context.Context, key string, val interface{}) {
-	m := ctx.Value(GrpcCtxKey).(map[string]interface{})
+	m := ctx.Value(grpcCtxKey{}).(map[string]interface{})
 	m[key] = val
 }
 
 func CtxGet(ctx context.Context, key string) interface{} {
-	m := ctx.Value(GrpcCtxKey).(map[string]interface{})
+	m := ctx.Value(grpcCtxKey{}).(map[string]interface{})
 	return m[key]
 }
 
-func WithGrpcDecorator(log *logger.Logger) grpc.ServerOption {
+func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption {
+	options := defaultGRPCOptions
+	for _, opt := range opts {
+		opt(&options)
+	}
+
 	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		var requestID, remoteIP string
 		if md, ok := metadata.FromIncomingContext(ctx); ok {
@@ -65,7 +74,7 @@ func WithGrpcDecorator(log *logger.Logger) grpc.ServerOption {
 			}
 		}
 
-		ctx = context.WithValue(ctx, GrpcCtxKey, map[string]interface{}{})
+		ctx = NewRPCXContext(ctx)
 
 		var res interface{}
 		var err error
@@ -86,15 +95,18 @@ func WithGrpcDecorator(log *logger.Logger) grpc.ServerOption {
 				"clientIP":  clientIP,
 				"method":    info.FullMethod,
 				"req":       req,
-				"ctx":       ctx.Value(GrpcCtxKey),
+				"ctx":       ctx.Value(grpcCtxKey{}),
 				"res":       res,
 				"err":       err,
 				"errStack":  fmt.Sprintf("%+v", err),
 				"resTimeMs": time.Now().Sub(ts).Milliseconds(),
 			})
-			_ = grpc.SendHeader(ctx, metadata.New(map[string]string{
-				"X-Request-Id": requestID,
-			}))
+
+			headers := map[string]string{}
+			for _, header := range options.Headers {
+				headers[header] = MetaDataIncomingGet(ctx, header)
+			}
+			_ = grpc.SendHeader(ctx, metadata.New(headers))
 		}()
 
 		if err = validator.Validate(req); err != nil {
@@ -112,4 +124,20 @@ func WithGrpcDecorator(log *logger.Logger) grpc.ServerOption {
 		}
 		return res, nil
 	})
+}
+
+type GRPCOptions struct {
+	Headers []string
+}
+
+var defaultGRPCOptions = GRPCOptions{
+	Headers: []string{"X-Request-Id"},
+}
+
+type GRPCOption func(options *GRPCOptions)
+
+func WithGRPCHeaders(headers ...string) GRPCOption {
+	return func(options *GRPCOptions) {
+		options.Headers = headers
+	}
 }
