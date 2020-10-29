@@ -104,7 +104,7 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 
 			headers := map[string]string{}
 			for _, header := range options.Headers {
-				headers[header] = MetaDataIncomingGet(ctx, header)
+				headers[header] = MetaDataIncomingGet(ctx, strings.ToLower(header))
 			}
 			_ = grpc.SendHeader(ctx, metadata.New(headers))
 		}()
