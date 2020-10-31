@@ -9,16 +9,17 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 )
 
-func NewLoggerWithConfig(conf *config.Config) (*Logger, error) {
+func NewLoggerWithConfig(conf *config.Config, opts ...refx.Option) (*Logger, error) {
 	var writers []Writer
 	sub, err := conf.SubArr("writers")
 	if err != nil {
 		return nil, err
 	}
 	for _, w := range sub {
-		writer, err := NewWriterWithConfig(w)
+		writer, err := NewWriterWithConfig(w, opts...)
 		if err != nil {
 			return nil, errors.WithMessage(err, "new logger failed")
 		}
