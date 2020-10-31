@@ -9,21 +9,23 @@ import (
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 )
-
-func NewRotateFileWriterWithConfig(conf *config.Config) (*RotateFileWriter, error) {
-	return NewRotateFileWriter(
-		conf.GetString("filename"),
-		conf.GetDuration("maxAge"),
-	)
-}
 
 type RotateFileWriter struct {
 	out *rotatelogs.RotateLogs
 }
 
-func NewRotateFileWriter(filename string, maxAge time.Duration) (*RotateFileWriter, error) {
-	abs, err := filepath.Abs(filename)
+func NewRotateFileWriterWithConfig(cfg *config.Config, opts ...refx.Option) (*RotateFileWriter, error) {
+	options := defaultRotateFileWriterOptions
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
+		return nil, err
+	}
+	return NewRotateFileWriterWithOptions(&options)
+}
+
+func NewRotateFileWriterWithOptions(options *RotateFileWriterOptions) (*RotateFileWriter, error) {
+	abs, err := filepath.Abs(options.Filename)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +34,7 @@ func NewRotateFileWriter(filename string, maxAge time.Duration) (*RotateFileWrit
 		abs+".%Y%m%d%H",
 		rotatelogs.WithRotationTime(time.Hour),
 		rotatelogs.WithLinkName(abs),
-		rotatelogs.WithMaxAge(maxAge),
+		rotatelogs.WithMaxAge(options.MaxAge),
 	)
 	if err != nil {
 		return nil, err
@@ -41,6 +43,18 @@ func NewRotateFileWriter(filename string, maxAge time.Duration) (*RotateFileWrit
 	return &RotateFileWriter{
 		out: out,
 	}, nil
+}
+
+func NewRotateFileWriter(opts ...RotateFileWriterOption) (*RotateFileWriter, error) {
+	options := defaultRotateFileWriterOptions
+	for _, opt := range opts {
+		opt(&options)
+	}
+
+	return NewRotateFileWriterWithOptions(&RotateFileWriterOptions{
+		Filename: options.Filename,
+		MaxAge:   options.MaxAge,
+	})
 }
 
 func (r *RotateFileWriter) Write(v interface{}) error {
@@ -55,4 +69,27 @@ func (r *RotateFileWriter) Write(v interface{}) error {
 		return err
 	}
 	return nil
+}
+
+type RotateFileWriterOptions struct {
+	Filename string
+	MaxAge   time.Duration
+}
+
+var defaultRotateFileWriterOptions = RotateFileWriterOptions{
+	MaxAge: time.Hour,
+}
+
+type RotateFileWriterOption func(*RotateFileWriterOptions)
+
+func WithRotateFilename(filename string) RotateFileWriterOption {
+	return func(options *RotateFileWriterOptions) {
+		options.Filename = filename
+	}
+}
+
+func WithRotateMaxAge(maxAge time.Duration) RotateFileWriterOption {
+	return func(options *RotateFileWriterOptions) {
+		options.MaxAge = maxAge
+	}
 }

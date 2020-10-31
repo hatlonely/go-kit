@@ -7,6 +7,7 @@ import (
 	"github.com/olivere/elastic/v7"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 func NewElasticSearch(opts ...ElasticSearchOption) (*elastic.Client, error) {
@@ -18,9 +19,9 @@ func NewElasticSearch(opts ...ElasticSearchOption) (*elastic.Client, error) {
 	return NewElasticSearchWithOptions(&options)
 }
 
-func NewElasticSearchWithConfig(cfg *config.Config) (*elastic.Client, error) {
+func NewElasticSearchWithConfig(cfg *config.Config, opts ...refx.Option) (*elastic.Client, error) {
 	options := defaultElasticSearchOptions
-	if err := cfg.Unmarshal(&options); err != nil {
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, err
 	}
 	return NewElasticSearchWithOptions(&options)

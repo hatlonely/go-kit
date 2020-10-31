@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 func NewEmail(from string, password string, opts ...EmailOption) *EmailCli {
@@ -19,9 +20,9 @@ func NewEmail(from string, password string, opts ...EmailOption) *EmailCli {
 	return NewEmailWithOptions(&options)
 }
 
-func NewEmailWithConfig(conf *config.Config) (*EmailCli, error) {
+func NewEmailWithConfig(cfg *config.Config, opts ...refx.Option) (*EmailCli, error) {
 	options := defaultEmailOption
-	if err := conf.Unmarshal(&options); err != nil {
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, err
 	}
 

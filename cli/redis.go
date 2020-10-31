@@ -6,6 +6,7 @@ import (
 	"github.com/go-redis/redis"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 func NewRedis(opts ...RedisOption) (*redis.Client, error) {
@@ -16,9 +17,9 @@ func NewRedis(opts ...RedisOption) (*redis.Client, error) {
 	return NewRedisWithOptions(&options)
 }
 
-func NewRedisWithConfig(conf *config.Config) (*redis.Client, error) {
+func NewRedisWithConfig(cfg *config.Config, opts ...refx.Option) (*redis.Client, error) {
 	options := defaultRedisOptions
-	if err := conf.Unmarshal(&options); err != nil {
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, err
 	}
 	return NewRedisWithOptions(&options)

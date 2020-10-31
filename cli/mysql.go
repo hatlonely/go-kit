@@ -19,9 +19,9 @@ func NewMysql(opts ...MySQLOption) (*gorm.DB, error) {
 	return NewMysqlWithOptions(&options)
 }
 
-func NewMysqlWithConfig(conf *config.Config) (*gorm.DB, error) {
+func NewMysqlWithConfig(cfg *config.Config, opts ...refx.Option) (*gorm.DB, error) {
 	options := defaultMySQLOptions
-	if err := conf.Unmarshal(&options, refx.WithCamelName()); err != nil {
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, err
 	}
 	return NewMysqlWithOptions(&options)

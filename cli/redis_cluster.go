@@ -6,6 +6,7 @@ import (
 	"github.com/go-redis/redis"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 func NewRedisCluster(opts ...RedisClusterOption) (*redis.ClusterClient, error) {
@@ -16,9 +17,9 @@ func NewRedisCluster(opts ...RedisClusterOption) (*redis.ClusterClient, error) {
 	return NewRedisClusterWithOptions(&options)
 }
 
-func NewRedisClusterWithConfig(conf *config.Config) (*redis.ClusterClient, error) {
+func NewRedisClusterWithConfig(cfg *config.Config, opts ...refx.Option) (*redis.ClusterClient, error) {
 	options := defaultRedisClusterOptions
-	if err := conf.Unmarshal(&options); err != nil {
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, err
 	}
 	return NewRedisClusterWithOptions(&options)

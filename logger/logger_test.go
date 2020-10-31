@@ -7,7 +7,7 @@ import (
 )
 
 func TestLogger(t *testing.T) {
-	w, err := NewRotateFileWriter("hello.info", 24*time.Hour)
+	w, err := NewRotateFileWriter(WithRotateFilename("hello.info"))
 	if err != nil {
 		panic(err)
 	}
@@ -19,7 +19,7 @@ func TestLogger(t *testing.T) {
 }
 
 func TestParallel(t *testing.T) {
-	w, err := NewRotateFileWriter("hello.info", 24*time.Hour)
+	w, err := NewRotateFileWriter(WithRotateFilename("hello.info"))
 	if err != nil {
 		panic(err)
 	}
@@ -43,7 +43,7 @@ func TestParallel(t *testing.T) {
 }
 
 func BenchmarkHello(b *testing.B) {
-	w, err := NewRotateFileWriter("hello.info", 24*time.Hour)
+	w, err := NewRotateFileWriter(WithRotateFilename("hello.info"))
 	if err != nil {
 		panic(err)
 	}

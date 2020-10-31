@@ -8,6 +8,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 func TestNewMysqlWithConfig(t *testing.T) {
@@ -24,7 +25,7 @@ func TestNewMysqlWithConfig(t *testing.T) {
 		}`), 0644), ShouldBeNil)
 		cfg, err := config.NewSimpleFileConfig("1.json")
 		So(err, ShouldBeNil)
-		client, err := NewMysqlWithConfig(cfg)
+		client, err := NewMysqlWithConfig(cfg, refx.WithCamelName())
 		So(err, ShouldBeNil)
 		So(client, ShouldNotBeNil)
 		So(os.RemoveAll("1.json"), ShouldBeNil)
