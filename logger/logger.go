@@ -14,7 +14,7 @@ import (
 
 func NewLoggerWithConfig(conf *config.Config, opts ...refx.Option) (*Logger, error) {
 	var writers []Writer
-	sub, err := conf.SubArr("writers")
+	sub, err := conf.SubArr(refx.FormatKey("writers", opts...))
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +26,7 @@ func NewLoggerWithConfig(conf *config.Config, opts ...refx.Option) (*Logger, err
 		writers = append(writers, writer)
 	}
 
-	level, err := LevelString(conf.GetString("level"))
+	level, err := LevelString(conf.GetString(refx.FormatKey("level", opts...)))
 	if err != nil {
 		return nil, err
 	}

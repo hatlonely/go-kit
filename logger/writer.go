@@ -12,12 +12,12 @@ type Writer interface {
 }
 
 func NewWriterWithConfig(conf *config.Config, opts ...refx.Option) (Writer, error) {
-	switch conf.GetString("type") {
+	switch conf.GetString(refx.FormatKey("type", opts...)) {
 	case "RotateFile":
 		return NewRotateFileWriterWithConfig(conf, opts...)
 	case "Stdout":
 		return NewStdoutWriter(), nil
 	}
 
-	return nil, errors.Errorf("no such type %v", conf.GetString("Type"))
+	return nil, errors.Errorf("no such type %v", conf.GetString(refx.FormatKey("type", opts...)))
 }

@@ -22,6 +22,21 @@ func WithCamelName() Option {
 	}
 }
 
+func FormatKey(str string, opts ...Option) string {
+	var options Options
+	for _, opt := range opts {
+		opt(&options)
+	}
+	return formatKey(str, &options)
+}
+
+func formatKey(str string, options *Options) string {
+	if options.CamelName {
+		return strx.CamelName(str)
+	}
+	return str
+}
+
 func Validate(v interface{}) error {
 	return interfaceTravel(v, func(key string, val interface{}) error { return nil })
 }
@@ -200,10 +215,7 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 	switch rt.Kind() {
 	case reflect.Struct:
 		for i := 0; i < rv.NumField(); i++ {
-			key := rt.Field(i).Name
-			if options.CamelName {
-				key = strx.CamelName(key)
-			}
+			key := formatKey(rt.Field(i).Name, options)
 			var val interface{}
 			switch src.(type) {
 			case map[string]interface{}:
