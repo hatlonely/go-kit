@@ -8,16 +8,19 @@ import (
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
 )
 
-type OTSProvider struct {
-	otsCli   *tablestore.TableStoreClient
-	events   chan struct{}
-	errors   chan error
-	table    string
-	key      string
-	interval time.Duration
+type OTSProviderOptions struct {
+	Endpoint        string
+	AccessKeyID     string
+	AccessKeySecret string
+	Instance        string
+	Table           string
+	Key             string
+	Interval        time.Duration
+}
 
-	buf []byte
-	ts  int64
+func NewOTSProviderWithOptions(options *OTSProviderOptions) (*OTSProvider, error) {
+	otsCli := tablestore.NewClient(options.Endpoint, options.Instance, options.AccessKeyID, options.AccessKeySecret)
+	return NewOTSProvider(otsCli, options.Table, options.Key, options.Interval)
 }
 
 func NewOTSProviderWithAccessKey(ak string, sk string, endpoint string, instance string, table string, key string, interval time.Duration) (*OTSProvider, error) {
@@ -64,6 +67,18 @@ func NewOTSProvider(otsCli *tablestore.TableStoreClient, table string, key strin
 		events:   make(chan struct{}, 10),
 		errors:   make(chan error, 10),
 	}, nil
+}
+
+type OTSProvider struct {
+	otsCli   *tablestore.TableStoreClient
+	events   chan struct{}
+	errors   chan error
+	table    string
+	key      string
+	interval time.Duration
+
+	buf []byte
+	ts  int64
 }
 
 func (p *OTSProvider) Events() <-chan struct{} {

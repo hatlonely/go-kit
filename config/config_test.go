@@ -9,6 +9,8 @@ import (
 	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
+
+	"github.com/hatlonely/go-kit/refx"
 )
 
 func CreateTestFile() {
@@ -33,19 +35,23 @@ func CreateBaseFile() {
 	fp, _ := os.Create("base.json")
 	_, _ = fp.WriteString(`{
   "decoder": {
-    "name": "json"
+    "type": "json"
   },
   "provider": {
     "type": "Local",
-    "file": "test.json"
+	"localProvider": {
+      "filename": "test.json"
+    }
   },
-  "Cipher": {
+  "cipher": {
     "type": "Group",
-    "ciphers": [{
+    "cipherGroup": [{
       "type": "AES",
-      "key": "IrjXy4vx7iwgCLaUeu5TVUA9TkgMwSw3QWcgE/IW5W0="
+      "aesCipher": {
+        "base64Key": "IrjXy4vx7iwgCLaUeu5TVUA9TkgMwSw3QWcgE/IW5W0="
+      }
     }, {
-      "type": "Base64"
+      "type": "Base64",
     }]
   }
 }`)
@@ -64,10 +70,10 @@ func TestNewConfigWithBaseFile(t *testing.T) {
 		CreateTestFile()
 		CreateBaseFile()
 
-		conf, err := NewConfigWithBaseFile("base.json")
+		cfg, err := NewConfigWithBaseFile("base.json", refx.WithCamelName())
 		So(err, ShouldBeNil)
-		So(conf.GetInt("port"), ShouldEqual, 6060)
-		So(conf.GetString("log[1].file"), ShouldEqual, "test.warn")
+		So(cfg.GetInt("port"), ShouldEqual, 6060)
+		So(cfg.GetString("log[1].file"), ShouldEqual, "test.warn")
 
 		DeleteTestFile()
 		DeleteBaseFile()
@@ -80,7 +86,7 @@ func TestConfigExample1(t *testing.T) {
 		//provider, _ := NewLocalProvider("test.json")
 		//conf, err := NewConfig(&Json5Decoder{}, provider, nil)
 
-		conf, err := NewConfigWithBaseFile("testfile/base.json")
+		conf, err := NewConfigWithBaseFile("testfile/base.json", refx.WithCamelName())
 		So(err, ShouldBeNil)
 		//So(conf.GetInt("Port"), ShouldEqual, 6060)
 		//So(conf.GetString("Host"), ShouldEqual, "localhost")

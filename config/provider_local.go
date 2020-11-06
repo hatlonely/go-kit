@@ -7,16 +7,17 @@ import (
 	"path/filepath"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/refx"
 )
 
-type LocalProvider struct {
-	abs    string
-	events chan struct{}
-	errors chan error
+func NewLocalProvider(filename string) (*LocalProvider, error) {
+	return NewLocalProviderWithOptions(&LocalProviderOptions{Filename: filename})
 }
 
-func NewLocalProvider(filename string) (*LocalProvider, error) {
-	abs, err := filepath.Abs(filename)
+func NewLocalProviderWithOptions(options *LocalProviderOptions) (*LocalProvider, error) {
+	abs, err := filepath.Abs(options.Filename)
 	if err != nil {
 		return nil, err
 	}
@@ -26,6 +27,20 @@ func NewLocalProvider(filename string) (*LocalProvider, error) {
 		events: make(chan struct{}, 10),
 		errors: make(chan error, 10),
 	}, nil
+}
+
+func NewLocalProviderWithConfig(cfg *Config, opts ...refx.Option) (*LocalProvider, error) {
+	var options LocalProviderOptions
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
+		return nil, errors.Wrap(err, "cfg.Unmarshal failed.")
+	}
+	return NewLocalProviderWithOptions(&options)
+}
+
+type LocalProvider struct {
+	abs    string
+	events chan struct{}
+	errors chan error
 }
 
 func (p *LocalProvider) Events() <-chan struct{} {
@@ -82,4 +97,8 @@ func (p *LocalProvider) EventLoop(ctx context.Context) error {
 	}()
 
 	return nil
+}
+
+type LocalProviderOptions struct {
+	Filename string
 }

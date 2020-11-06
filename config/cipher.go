@@ -1,7 +1,9 @@
 package config
 
 import (
-	"encoding/base64"
+	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/refx"
 )
 
 type Cipher interface {
@@ -9,47 +11,32 @@ type Cipher interface {
 	Decrypt(textToDecrypt []byte) ([]byte, error)
 }
 
-func NewCipherWithConfig(conf *Config) (Cipher, error) {
-	if conf == nil {
-		return nil, nil
+func NewCipherWithConfig(cfg *Config, opts ...refx.Option) (Cipher, error) {
+	var options CipherOptions
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
+		return nil, errors.Wrap(err, "cfg.Unmarshal failed.")
 	}
-	switch conf.GetString("type") {
+	return NewCipherWithOptions(&options)
+}
+
+func NewCipherWithOptions(options *CipherOptions) (Cipher, error) {
+	switch options.Type {
 	case "AES":
-		buf, err := base64.StdEncoding.DecodeString(conf.GetString("key"))
-		if err != nil {
-			return nil, err
-		}
-		return NewAESCipher(buf)
-	case "AESWithKMSKey":
-		return NewAESWithKMSKeyCipherWithAccessKey(
-			conf.GetString("accessKeyID"),
-			conf.GetString("accessKeySecret"),
-			conf.GetString("regionID"),
-			conf.GetString("key"),
-		)
-	case "KMS":
-		return NewKMSCipherWithAccessKey(
-			conf.GetString("accessKeyID"),
-			conf.GetString("accessKeySecret"),
-			conf.GetString("regionID"),
-			conf.GetString("keyID"),
-		)
+		return NewAESCipherWithOptions(&options.AESCipher)
 	case "Base64":
-		return NewBase64Cipher(), nil
+		return NewBase64CipherWithOptions(&options.Base64Cipher), nil
+	case "KMS":
+		return NewKMSCipherWithOptions(&options.KMSCipher)
 	case "Group":
-		subs, err := conf.SubArr("ciphers")
-		if err != nil {
-			return nil, err
-		}
-		var ciphers []Cipher
-		for _, sub := range subs {
-			cipher, err := NewCipherWithConfig(sub)
-			if err != nil {
-				return nil, err
-			}
-			ciphers = append(ciphers, cipher)
-		}
-		return NewCipherGroup(ciphers...), nil
+		return NewCipherGroupWithOptions(&options.CipherGroup)
 	}
-	return nil, nil
+	return nil, errors.Errorf("unsupported cipher type [%v]", options.Type)
+}
+
+type CipherOptions struct {
+	Type         string
+	AESCipher    AESCipherOptions
+	KMSCipher    KMSCipherOptions
+	CipherGroup  CipherGroupOptions
+	Base64Cipher Base64CipherOptions
 }

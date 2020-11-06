@@ -4,6 +4,10 @@ import (
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/kms"
 )
 
+func NewKMSCipherWithOptions(options *KMSCipherOptions) (*KMSCipher, error) {
+	return NewKMSCipherWithAccessKey(options.AccessKeyID, options.AccessKeySecret, options.RegionID, options.KeyID)
+}
+
 func NewKMSCipherWithAccessKey(ak, sk, regionID string, keyID string) (*KMSCipher, error) {
 	kmsCli, err := kms.NewClientWithAccessKey(ak, sk, regionID)
 	if err != nil {
@@ -58,4 +62,11 @@ func (c *KMSCipher) GenerateDataKey() (string, string, error) {
 		return "", "", nil
 	}
 	return res.Plaintext, res.CiphertextBlob, nil
+}
+
+type KMSCipherOptions struct {
+	AccessKeyID     string
+	AccessKeySecret string
+	RegionID        string
+	KeyID           string
 }

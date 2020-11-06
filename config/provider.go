@@ -2,7 +2,10 @@ package config
 
 import (
 	"context"
-	"fmt"
+
+	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/refx"
 )
 
 type Provider interface {
@@ -13,20 +16,26 @@ type Provider interface {
 	EventLoop(ctx context.Context) error
 }
 
-func NewProviderWithConfig(conf *Config) (Provider, error) {
-	switch conf.GetString("type") {
-	case "Local":
-		return NewLocalProvider(conf.GetString("file"))
-	case "OTS":
-		return NewOTSProviderWithAccessKey(
-			conf.GetString("accessKeyID"),
-			conf.GetString("accessKeySecret"),
-			conf.GetString("endpoint"),
-			conf.GetString("instance"),
-			conf.GetString("table"),
-			conf.GetString("key"),
-			conf.GetDuration("interval"),
-		)
+func NewProviderWithConfig(cfg *Config, opts ...refx.Option) (Provider, error) {
+	var options ProviderOptions
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
+		return nil, errors.Wrap(err, "cfg.Unmarshal failed.")
 	}
-	return nil, fmt.Errorf("unsupport provider type. type: [%v]", conf.GetString("Type"))
+	return NewProviderWithOptions(&options)
+}
+
+func NewProviderWithOptions(options *ProviderOptions) (Provider, error) {
+	switch options.Type {
+	case "Local":
+		return NewLocalProviderWithOptions(&options.LocalProvider)
+	case "OTS":
+		return NewOTSProviderWithOptions(&options.OTSProvider)
+	}
+	return nil, errors.Errorf("unsupported provider type [%v]", options.Type)
+}
+
+type ProviderOptions struct {
+	Type          string
+	LocalProvider LocalProviderOptions
+	OTSProvider   OTSProviderOptions
 }

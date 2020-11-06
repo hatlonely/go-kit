@@ -2,12 +2,15 @@ package config
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
 	"github.com/hatlonely/go-kit/refx"
+	"github.com/hatlonely/go-kit/strx"
 )
 
 type Logger interface {
@@ -15,30 +18,40 @@ type Logger interface {
 	Warnf(format string, args ...interface{})
 }
 
-func NewConfigWithBaseFile(filename string) (*Config, error) {
-	bd, _ := NewDecoder("json")
-	bp, err := NewLocalProvider(filename)
+type Options struct {
+	Cipher   CipherOptions
+	Decoder  DecoderOptions
+	Provider ProviderOptions
+}
+
+func NewConfigWithOptions(options *Options) (*Config, error) {
+	cipher, err := NewCipherWithOptions(&options.Cipher)
 	if err != nil {
 		return nil, err
 	}
-	bc, err := NewConfig(bd, bp, nil)
+	decoder, err := NewDecoderWithOptions(&options.Decoder)
+	if err != nil {
+		return nil, err
+	}
+	provider, err := NewProviderWithOptions(&options.Provider)
+	if err != nil {
+		return nil, err
+	}
+	return NewConfig(decoder, provider, cipher)
+}
+
+func NewConfigWithBaseFile(filename string, opts ...refx.Option) (*Config, error) {
+	cfg, err := NewSimpleFileConfig(filename)
 	if err != nil {
 		return nil, err
 	}
 
-	cd, err := NewDecoderWithConfig(bc.Sub("decoder"))
-	if err != nil {
-		return nil, err
+	var options Options
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
+		return nil, errors.Wrap(err, "cfg.Unmarshal failed.")
 	}
-	cp, err := NewProviderWithConfig(bc.Sub("provider"))
-	if err != nil {
-		return nil, err
-	}
-	cc, err := NewCipherWithConfig(bc.Sub("cipher"))
-	if err != nil {
-		return nil, err
-	}
-	return NewConfig(cd, cp, cc)
+	fmt.Println(strx.JsonMarshalIndent(options))
+	return NewConfigWithOptions(&options)
 }
 
 type SimpleFileOptions struct {

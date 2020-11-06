@@ -6,11 +6,11 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"encoding/base64"
-	"errors"
 	"fmt"
 	"io"
 
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/kms"
+	"github.com/pkg/errors"
 )
 
 const AESMaxKeyLen = 32
@@ -56,6 +56,23 @@ func NewAESCipher(key []byte) (*AESCipher, error) {
 	}, nil
 }
 
+func NewAESCipherWithOptions(options *AESCipherOptions) (*AESCipher, error) {
+	if options.Key != "" {
+		return NewAESCipher([]byte(options.Key))
+	}
+	if options.Base64Key != "" {
+		buf, err := base64.StdEncoding.DecodeString(options.Base64Key)
+		if err != nil {
+			return nil, errors.Wrap(err, "base64 decode key failed.")
+		}
+		return NewAESCipher(buf)
+	}
+	if options.KMSKey != "" {
+		return NewAESWithKMSKeyCipherWithAccessKey(options.KMS.AccessKeyID, options.KMS.AccessKeySecret, options.KMS.RegionID, options.KMSKey)
+	}
+	return nil, errors.New("no key found")
+}
+
 type AESCipher struct {
 	cb cipher.Block
 }
@@ -86,4 +103,15 @@ func (c *AESCipher) Decrypt(textToDecrypt []byte) ([]byte, error) {
 	mode.CryptBlocks(textToDecrypt, textToDecrypt)
 
 	return bytes.TrimRight(textToDecrypt, "\x00"), nil
+}
+
+type AESCipherOptions struct {
+	Key       string
+	Base64Key string
+	KMSKey    string
+	KMS       struct {
+		AccessKeyID     string
+		AccessKeySecret string
+		RegionID        string
+	}
 }

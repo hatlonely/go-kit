@@ -5,6 +5,18 @@ type CipherGroup struct {
 	ciphers []Cipher
 }
 
+func NewCipherGroupWithOptions(options *CipherGroupOptions) (*CipherGroup, error) {
+	var ciphers []Cipher
+	for _, opt := range *options {
+		cipher, err := NewCipherWithOptions(&opt)
+		if err != nil {
+			return nil, err
+		}
+		ciphers = append(ciphers, cipher)
+	}
+	return NewCipherGroup(ciphers...), nil
+}
+
 func NewCipherGroup(ciphers ...Cipher) *CipherGroup {
 	return &CipherGroup{
 		ciphers: ciphers,
@@ -34,3 +46,5 @@ func (c *CipherGroup) Decrypt(textToDecrypt []byte) ([]byte, error) {
 	}
 	return buf, nil
 }
+
+type CipherGroupOptions []CipherOptions
