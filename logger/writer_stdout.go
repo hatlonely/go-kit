@@ -24,7 +24,7 @@ type StdoutWriter struct {
 }
 
 func (r *StdoutWriter) Write(v interface{}) error {
-	buf, err := json.Marshal(v)
+	buf, err := r.formatter.Format(v)
 	if err != nil {
 		return err
 	}
