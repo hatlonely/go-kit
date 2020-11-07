@@ -11,7 +11,10 @@ import (
 )
 
 type Options struct {
-	CamelName bool
+	CamelName  bool
+	SnakeName  bool
+	KebabName  bool
+	PascalName bool
 }
 
 type Option func(opt *Options)
@@ -19,6 +22,24 @@ type Option func(opt *Options)
 func WithCamelName() Option {
 	return func(opt *Options) {
 		opt.CamelName = true
+	}
+}
+
+func WithSnakeName() Option {
+	return func(opt *Options) {
+		opt.SnakeName = true
+	}
+}
+
+func WithKebabName() Option {
+	return func(opt *Options) {
+		opt.KebabName = true
+	}
+}
+
+func WithPascalName() Option {
+	return func(opt *Options) {
+		opt.PascalName = true
 	}
 }
 
@@ -33,6 +54,15 @@ func FormatKey(str string, opts ...Option) string {
 func formatKey(str string, options *Options) string {
 	if options.CamelName {
 		return strx.CamelName(str)
+	}
+	if options.SnakeName {
+		return strx.SnakeName(str)
+	}
+	if options.KebabName {
+		return strx.KebabName(str)
+	}
+	if options.PascalName {
+		return strx.PascalName(str)
 	}
 	return str
 }

@@ -33,7 +33,6 @@ func TestNaming(t *testing.T) {
 			So(PascalName("MyIPAddress"), ShouldEqual, "MyIPAddress")
 			So(PascalName("IP-Address"), ShouldEqual, "IPAddress")
 			So(PascalName("IP-AddressAPP"), ShouldEqual, "IPAddressAPP")
-
 		})
 
 		Convey("snake name", func() {
