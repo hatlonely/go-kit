@@ -40,7 +40,14 @@ func TestLogger(t *testing.T) {
 			"key2": "val2",
 		})
 	})
+}
 
+func TestNewStdoutLogger(t *testing.T) {
+	Convey("TestNewStdoutLogger", t, func() {
+		log := NewStdoutLogger()
+		log.Info("hello world")
+		log.Warn("hello golang")
+	})
 }
 
 func TestParallel(t *testing.T) {

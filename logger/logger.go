@@ -12,6 +12,27 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
+func NewStdoutLogger() *Logger {
+	log, err := NewLoggerWithOptions(&Options{
+		Level: "Debug",
+		Writers: []WriterOptions{{
+			Type: "Stdout",
+			StdoutWriter: StdoutWriterOptions{
+				Formatter: FormatterOptions{
+					Type: "Text",
+					TextFormat: TextFormatOptions{
+						Format: "{{.time}} [{{.level}}] [{{.caller}}:{{.file}}] {{.data}}",
+					},
+				},
+			},
+		}},
+	})
+	if err != nil {
+		panic(err)
+	}
+	return log
+}
+
 func NewLoggerWithConfig(cfg *config.Config, opts ...refx.Option) (*Logger, error) {
 	var options Options
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
