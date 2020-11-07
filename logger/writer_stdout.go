@@ -8,7 +8,15 @@ import (
 )
 
 func NewStdoutWriter() *StdoutWriter {
-	return &StdoutWriter{}
+	writer, _ := NewStdoutWriterWithOptions(&StdoutWriterOptions{
+		Formatter: FormatterOptions{
+			Type: "Text",
+			TextFormat: TextFormatOptions{
+				Format: "{{.time}} [{{.level}}] [{{.caller}}:{{.file}}] {{.data}}",
+			},
+		},
+	})
+	return writer
 }
 
 func NewStdoutWriterWithOptions(options *StdoutWriterOptions) (*StdoutWriter, error) {
