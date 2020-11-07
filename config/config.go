@@ -60,7 +60,7 @@ type SimpleFileOptions struct {
 }
 
 var defaultSimpleFileOptions = SimpleFileOptions{
-	FileType: "json",
+	FileType: "Json",
 }
 
 type SimpleFileOption func(options *SimpleFileOptions)

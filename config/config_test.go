@@ -35,7 +35,7 @@ func CreateBaseFile() {
 	fp, _ := os.Create("base.json")
 	_, _ = fp.WriteString(`{
   "decoder": {
-    "type": "json"
+    "type": "Json"
   },
   "provider": {
     "type": "Local",

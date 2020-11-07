@@ -13,15 +13,15 @@ type Decoder interface {
 
 func NewDecoderWithOptions(options *DecoderOptions) (Decoder, error) {
 	switch options.Type {
-	case "yaml":
+	case "Yaml":
 		return &YamlDecoder{}, nil
-	case "json", "json5":
+	case "Json", "Json5":
 		return &Json5Decoder{}, nil
-	case "toml":
+	case "Toml":
 		return &TomlDecoder{}, nil
-	case "ini":
+	case "Ini":
 		return &IniDecoder{}, nil
-	case "prop", "properties":
+	case "Prop", "Properties":
 		return &PropDecoder{}, nil
 	}
 
