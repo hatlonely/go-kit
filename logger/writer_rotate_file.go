@@ -2,18 +2,20 @@ package logger
 
 import (
 	"bytes"
-	"encoding/json"
+	"os"
 	"path/filepath"
 	"time"
 
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/refx"
 )
 
 type RotateFileWriter struct {
-	out *rotatelogs.RotateLogs
+	out       *rotatelogs.RotateLogs
+	formatter Formatter
 }
 
 func NewRotateFileWriterWithConfig(cfg *config.Config, opts ...refx.Option) (*RotateFileWriter, error) {
@@ -25,9 +27,18 @@ func NewRotateFileWriterWithConfig(cfg *config.Config, opts ...refx.Option) (*Ro
 }
 
 func NewRotateFileWriterWithOptions(options *RotateFileWriterOptions) (*RotateFileWriter, error) {
+	formatter, err := NewFormatterWithOptions(&options.Formatter)
+	if err != nil {
+		return nil, errors.WithMessage(err, "NewFormatterWithOptions failed")
+	}
+
 	abs, err := filepath.Abs(options.Filename)
 	if err != nil {
 		return nil, err
+	}
+
+	if err := os.MkdirAll(filepath.Dir(abs), 0755); err != nil {
+		return nil, errors.Wrapf(err, "os.MkdirAll [%s] failed", filepath.Dir(abs))
 	}
 
 	out, err := rotatelogs.New(
@@ -41,7 +52,8 @@ func NewRotateFileWriterWithOptions(options *RotateFileWriterOptions) (*RotateFi
 	}
 
 	return &RotateFileWriter{
-		out: out,
+		out:       out,
+		formatter: formatter,
 	}, nil
 }
 
@@ -51,10 +63,7 @@ func NewRotateFileWriter(opts ...RotateFileWriterOption) (*RotateFileWriter, err
 		opt(&options)
 	}
 
-	return NewRotateFileWriterWithOptions(&RotateFileWriterOptions{
-		Filename: options.Filename,
-		MaxAge:   options.MaxAge,
-	})
+	return NewRotateFileWriterWithOptions(&options)
 }
 
 func (r *RotateFileWriter) Write(v interface{}) error {
@@ -72,12 +81,16 @@ func (r *RotateFileWriter) Write(v interface{}) error {
 }
 
 type RotateFileWriterOptions struct {
-	Filename string
-	MaxAge   time.Duration
+	Filename  string
+	MaxAge    time.Duration
+	Formatter FormatterOptions
 }
 
 var defaultRotateFileWriterOptions = RotateFileWriterOptions{
 	MaxAge: time.Hour,
+	Formatter: FormatterOptions{
+		Type: "Json",
+	},
 }
 
 type RotateFileWriterOption func(*RotateFileWriterOptions)

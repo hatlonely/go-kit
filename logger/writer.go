@@ -11,13 +11,26 @@ type Writer interface {
 	Write(v interface{}) error
 }
 
-func NewWriterWithConfig(conf *config.Config, opts ...refx.Option) (Writer, error) {
-	switch conf.GetString(refx.FormatKey("type", opts...)) {
-	case "RotateFile":
-		return NewRotateFileWriterWithConfig(conf, opts...)
-	case "Stdout":
-		return NewStdoutWriter(), nil
+func NewWriterWithConfig(cfg *config.Config, opts ...refx.Option) (Writer, error) {
+	var options WriterOptions
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
+		return nil, errors.Wrap(err, "cfg.Unmarshal failed.")
 	}
+	return NewWriterWithOptions(&options)
+}
 
-	return nil, errors.Errorf("no such type %v", conf.GetString(refx.FormatKey("type", opts...)))
+func NewWriterWithOptions(options *WriterOptions) (Writer, error) {
+	switch options.Type {
+	case "RotateFile":
+		return NewRotateFileWriterWithOptions(&options.RotateFileWriter)
+	case "Stdout":
+		return NewStdoutWriterWithOptions(&options.StdoutWriter)
+	}
+	return nil, errors.Errorf("unsupported writer type [%v]", options.Type)
+}
+
+type WriterOptions struct {
+	Type             string
+	RotateFileWriter RotateFileWriterOptions
+	StdoutWriter     StdoutWriterOptions
 }

@@ -12,29 +12,36 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-func NewLoggerWithConfig(conf *config.Config, opts ...refx.Option) (*Logger, error) {
-	var writers []Writer
-	sub, err := conf.SubArr(refx.FormatKey("writers", opts...))
-	if err != nil {
-		return nil, err
+func NewLoggerWithConfig(cfg *config.Config, opts ...refx.Option) (*Logger, error) {
+	var options Options
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
+		return nil, errors.Wrap(err, "cfg.Unmarshal failed.")
 	}
-	for _, w := range sub {
-		writer, err := NewWriterWithConfig(w, opts...)
+	return NewLoggerWithOptions(&options)
+}
+
+func NewLoggerWithOptions(options *Options) (*Logger, error) {
+	var writers []Writer
+	for _, writerOpt := range options.Writers {
+		writer, err := NewWriterWithOptions(&writerOpt)
 		if err != nil {
-			return nil, errors.WithMessage(err, "new logger failed")
+			return nil, errors.WithMessage(err, "NewWriterWithOptions failed")
 		}
 		writers = append(writers, writer)
 	}
-
-	level, err := LevelString(conf.GetString(refx.FormatKey("level", opts...)))
+	level, err := LevelString(options.Level)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithMessage(err, "LevelToString failed")
 	}
-
 	return &Logger{
 		level:   level,
 		writers: writers,
 	}, nil
+}
+
+type Options struct {
+	Level   string
+	Writers []WriterOptions
 }
 
 func NewLogger(level Level, writers ...Writer) *Logger {
@@ -59,12 +66,20 @@ const (
 	LevelError Level = 4
 )
 
+func (l *Logger) Debug(v interface{}) {
+	l.Log(LevelDebug, v)
+}
+
 func (l *Logger) Info(v interface{}) {
 	l.Log(LevelInfo, v)
 }
 
 func (l *Logger) Warn(v interface{}) {
 	l.Log(LevelWarn, v)
+}
+
+func (l *Logger) Error(v interface{}) {
+	l.Log(LevelError, v)
 }
 
 func (l *Logger) Log(level Level, v interface{}) {
@@ -75,11 +90,10 @@ func (l *Logger) Log(level Level, v interface{}) {
 	fun := runtime.FuncForPC(pc).Name()
 
 	now := time.Now()
-
 	for _, writer := range l.writers {
-		writer.Write(map[string]interface{}{
+		_ = writer.Write(map[string]interface{}{
 			"timestamp": now.Unix(),
-			"time":      time.Now().Format(time.RFC3339Nano),
+			"time":      now.Format(time.RFC3339Nano),
 			"level":     level.String(),
 			"data":      v,
 			"file":      fmt.Sprintf("%s:%v", path.Base(file), line),

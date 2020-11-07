@@ -2,15 +2,26 @@ package logger
 
 import (
 	"bytes"
-	"encoding/json"
 	"os"
+
+	"github.com/pkg/errors"
 )
 
 func NewStdoutWriter() *StdoutWriter {
 	return &StdoutWriter{}
 }
 
-type StdoutWriter struct{}
+func NewStdoutWriterWithOptions(options *StdoutWriterOptions) (*StdoutWriter, error) {
+	formatter, err := NewFormatterWithOptions(&options.Formatter)
+	if err != nil {
+		return nil, errors.WithMessage(err, "NewFormatterWithOptions failed")
+	}
+	return &StdoutWriter{formatter: formatter}, nil
+}
+
+type StdoutWriter struct {
+	formatter Formatter
+}
 
 func (r *StdoutWriter) Write(v interface{}) error {
 	buf, err := json.Marshal(v)
@@ -24,4 +35,8 @@ func (r *StdoutWriter) Write(v interface{}) error {
 		return err
 	}
 	return nil
+}
+
+type StdoutWriterOptions struct {
+	Formatter FormatterOptions
 }
