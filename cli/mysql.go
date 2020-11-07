@@ -49,14 +49,14 @@ func NewMysqlWithOptions(options *MySQLOptions) (*gorm.DB, error) {
 }
 
 type MySQLOptions struct {
-	Username        string
+	Username        string `dft:"root"`
 	Password        string
 	Database        string
-	Host            string
-	Port            int
-	ConnMaxLifeTime time.Duration
-	MaxIdleConns    int
-	MaxOpenConns    int
+	Host            string        `dft:"localhost"`
+	Port            int           `dft:"3306"`
+	ConnMaxLifeTime time.Duration `dft:"60s"`
+	MaxIdleConns    int           `dft:"10"`
+	MaxOpenConns    int           `dft:"20"`
 	LogMode         bool
 }
 

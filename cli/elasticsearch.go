@@ -52,14 +52,14 @@ func NewElasticSearchWithOptions(options *ElasticSearchOptions) (*elastic.Client
 }
 
 type ElasticSearchOptions struct {
-	URI                       string
+	URI                       string `dft:"http://elasticsearch:9200"`
 	EnableSniff               bool
 	Username                  string
 	Password                  string
-	EnableHealthCheck         bool
-	HealthCheckTimeout        time.Duration
-	HealthCheckInterval       time.Duration
-	HealthCheckTimeoutStartUp time.Duration
+	EnableHealthCheck         bool          `dft:"true"`
+	HealthCheckInterval       time.Duration `dft:"60s"`
+	HealthCheckTimeout        time.Duration `dft:"5s"`
+	HealthCheckTimeoutStartUp time.Duration `dft:"5s"`
 }
 
 var defaultElasticSearchOptions = ElasticSearchOptions{
@@ -67,7 +67,7 @@ var defaultElasticSearchOptions = ElasticSearchOptions{
 	EnableSniff:               false,
 	EnableHealthCheck:         true,
 	HealthCheckInterval:       60 * time.Second,
-	HealthCheckTimeout:        1 * time.Second,
+	HealthCheckTimeout:        5 * time.Second,
 	HealthCheckTimeoutStartUp: 5 * time.Second,
 }
 

@@ -43,12 +43,12 @@ func NewRedisWithOptions(options *RedisOptions) (*redis.Client, error) {
 }
 
 type RedisOptions struct {
-	Addr         string
-	DialTimeout  time.Duration
-	ReadTimeout  time.Duration
-	WriteTimeout time.Duration
-	MaxRetries   int
-	PoolSize     int
+	Addr         string        `dft:"127.0.0.1:6379"`
+	DialTimeout  time.Duration `dft:"300ms"`
+	ReadTimeout  time.Duration `dft:"300ms"`
+	WriteTimeout time.Duration `dft:"300ms"`
+	MaxRetries   int           `dft:"3"`
+	PoolSize     int           `dft:"20"`
 	DB           int
 	Password     string
 }
