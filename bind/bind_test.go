@@ -3,6 +3,7 @@ package bind
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
 
@@ -14,7 +15,7 @@ func TestBind(t *testing.T) {
 		type A struct {
 			Key1 string
 			Key2 string
-			key5 int
+			Key4 time.Duration `dft:"4s"`
 		}
 
 		type B struct {
@@ -24,8 +25,9 @@ func TestBind(t *testing.T) {
 			A3   []A
 			A4   []*A
 			A5   map[string]A // 不支持，因为无法知道有哪些 key
+			A6   []A
 			Key3 string
-			key4 int // ignore unexported field
+			key5 int // ignore unexported field
 		}
 
 		var b B
@@ -45,7 +47,7 @@ func TestBind(t *testing.T) {
 			"A5.hello.Key2": "val13",
 			"Key1":          "val14",
 			"Key2":          "val15",
-			"A1.key5":       "val16",
+			"Key4":          "1m",
 		})})
 		So(err, ShouldBeNil)
 		fmt.Println(strx.JsonMarshalIndent(b))
@@ -62,5 +64,7 @@ func TestBind(t *testing.T) {
 		So(b.A4[1].Key2, ShouldEqual, "val11")
 		So(b.Key1, ShouldEqual, "val14")
 		So(b.Key2, ShouldEqual, "val15")
+		So(b.Key4, ShouldEqual, 1*time.Minute)
+		So(b.A1.Key4, ShouldEqual, 4*time.Second)
 	})
 }
