@@ -30,7 +30,7 @@ func NewWriterWithOptions(options *WriterOptions) (Writer, error) {
 }
 
 type WriterOptions struct {
-	Type             string
+	Type             string `dft:"Stdout" rule:"x in ['RotateFile', 'Stdout']"`
 	RotateFileWriter RotateFileWriterOptions
 	StdoutWriter     StdoutWriterOptions
 }

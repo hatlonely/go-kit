@@ -40,7 +40,7 @@ func NewLoggerWithOptions(options *Options) (*Logger, error) {
 }
 
 type Options struct {
-	Level   string
+	Level   string `rule:"x in ['Info', 'Warn', 'Debug', 'Error']"`
 	Writers []WriterOptions
 }
 

@@ -19,6 +19,6 @@ func NewFormatterWithOptions(options *FormatterOptions) (Formatter, error) {
 }
 
 type FormatterOptions struct {
-	Type       string
+	Type       string `dft:"Json" rule:"x in ['Json', 'Text']"`
 	TextFormat TextFormatOptions
 }

@@ -81,8 +81,8 @@ func (r *RotateFileWriter) Write(v interface{}) error {
 }
 
 type RotateFileWriterOptions struct {
-	Filename  string
-	MaxAge    time.Duration
+	Filename  string        `bind:"required"`
+	MaxAge    time.Duration `dft:"24h"`
 	Formatter FormatterOptions
 }
 
