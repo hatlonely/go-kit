@@ -1,8 +1,10 @@
 package config
 
 import (
+	"reflect"
 	"testing"
 
+	. "github.com/agiledragon/gomonkey"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/kms"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -23,6 +25,14 @@ func TestAESCipher(t *testing.T) {
 
 func TestAESWithKMSKeyCipher(t *testing.T) {
 	Convey("TestAESWithKMSKeyCipher", t, func() {
+		patches := ApplyMethod(reflect.TypeOf(&kms.Client{}), "Decrypt", func(
+			cli *kms.Client, request *kms.DecryptRequest) (*kms.DecryptResponse, error) {
+			return &kms.DecryptResponse{
+				Plaintext: "nV+j39GExjRZCX2kUkYB/gDMTE9F7H15bZ3faddUMB4=",
+			}, nil
+		})
+		defer patches.Reset()
+
 		kmsCli, err := kms.NewClientWithAccessKey(
 			"cn-shanghai",
 			"xx",

@@ -14,26 +14,26 @@ import (
 // 可测试性：需要调用 config 的 set 方法，mock 使用到的配置项，mock 的代价较高
 // 可维护性：配置项散落在代码中，新增和修改都不太方便
 // 安全性：可使用 GetD，GetE 之类的方法来做一些错误处理，关联的多个配置项无法保证原子性（这种场景触发几率较低，目前还未碰到过）
-func TestExample1(t *testing.T) {
-	// package main
-	if err := config.Init("testfile/base.json"); err != nil {
-		panic(err)
-	}
-	if err := config.Watch(); err != nil {
-		panic(err)
-	}
-	defer config.Stop()
-
-	// package module
-	fmt.Println(config.GetString("OSS.AccessKeyID"))
-	fmt.Println(config.GetString("OSS.AccessKeySecret"))
-	fmt.Println(config.GetString("OSS.Endpoint"))
-
-	// package test
-	_ = config.UnsafeSet("OSS.AccessKeyID", "test-ak")
-	_ = config.UnsafeSet("OSS.AccessKeyID", "test-sk")
-	_ = config.UnsafeSet("OSS.AccessKeyID", "endpoint")
-}
+//func TestExample1(t *testing.T) {
+//	// package main
+//	if err := config.Init("testfile/base.json"); err != nil {
+//		panic(err)
+//	}
+//	if err := config.Watch(); err != nil {
+//		panic(err)
+//	}
+//	defer config.Stop()
+//
+//	// package module
+//	fmt.Println(config.GetString("OSS.AccessKeyID"))
+//	fmt.Println(config.GetString("OSS.AccessKeySecret"))
+//	fmt.Println(config.GetString("OSS.Endpoint"))
+//
+//	// package test
+//	_ = config.UnsafeSet("OSS.AccessKeyID", "test-ak")
+//	_ = config.UnsafeSet("OSS.AccessKeyID", "test-sk")
+//	_ = config.UnsafeSet("OSS.AccessKeyID", "endpoint")
+//}
 
 // 场景二：使用全局 config 的 bind 类型方法，类 flag 的使用方式
 // 可读性：代码比较简单，类似 flag 的使用方法，需提前将变量绑定一个 key 上，使用时直接使用变量，可读性较好
