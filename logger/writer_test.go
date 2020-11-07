@@ -36,7 +36,7 @@ func TestRotateFileWriter(t *testing.T) {
 					Type: "Json",
 				},
 				MaxAge:   24 * time.Hour,
-				Filename: "hello.info",
+				Filename: "log/test.log",
 			},
 		})
 
