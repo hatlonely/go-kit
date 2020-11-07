@@ -1,10 +1,7 @@
 package binding
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
-	"reflect"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -12,109 +9,58 @@ import (
 	"github.com/hatlonely/go-kit/strx"
 )
 
-func TestParseTag(t *testing.T) {
-	Convey("TestParseTag", t, func() {
-		for _, unit := range []struct {
-			fkey     string
-			bTag     string
-			dTag     string
-			rt       interface{}
-			required bool
-			dftVal   interface{}
-			key      string
-		}{
-			{fkey: "Key1", bTag: `key1;required`, dTag: `123`, rt: 0, required: true, dftVal: 123, key: "key1"},
-			{fkey: "Key1", bTag: `key2;required`, dTag: `123`, rt: "", required: true, dftVal: "123", key: "key2"},
-		} {
-			info, err := parseTag(unit.fkey, unit.bTag, unit.dTag, reflect.TypeOf(unit.rt))
-			So(err, ShouldBeNil)
-			So(info.required, ShouldEqual, unit.required)
-			So(info.dftVal, ShouldEqual, unit.dftVal)
-			So(info.key, ShouldEqual, unit.key)
-		}
-	})
-}
-
-func TestCompile(t *testing.T) {
-	Convey("TestCompile", t, func() {
-		type A struct {
-			Key1 string  `bind:"key1;required" dft:"val1"`
-			Key2 int     `dft:"123"`
-			Key3 *string `dft:"val3"`
-		}
-
-		type B struct {
-			Key4 string `bind:"key3"`
-			A1   A      `bind:"a1"`
-			A2   *A     `bind:"a2"`
-		}
-
-		b, err := Compile(&B{})
-		So(err, ShouldBeNil)
-		fmt.Println(b.infos)
-		So(b.infos["Key4"].key, ShouldEqual, "key3")
-		So(b.infos["A1"].key, ShouldEqual, "a1")
-		So(b.infos["A1.Key1"].key, ShouldEqual, "key1")
-		So(b.infos["A1.Key1"].required, ShouldBeTrue)
-		So(b.infos["A1.Key1"].dftVal, ShouldEqual, "val1")
-		So(b.infos["A1.Key2"].key, ShouldEqual, "key2")
-		So(b.infos["A1.Key2"].required, ShouldBeFalse)
-		So(b.infos["A1.Key2"].dftVal, ShouldEqual, 123)
-		So(b.infos["A1.Key3"].dftVal, ShouldEqual, "val3")
-		So(b.infos["A2"].key, ShouldEqual, "a2")
-		So(b.infos["A2.Key1"].key, ShouldEqual, "key1")
-		So(b.infos["A2.Key1"].required, ShouldBeTrue)
-		So(b.infos["A2.Key1"].dftVal, ShouldEqual, "val1")
-		So(b.infos["A2.Key2"].key, ShouldEqual, "key2")
-		So(b.infos["A2.Key2"].required, ShouldBeFalse)
-		So(b.infos["A2.Key2"].dftVal, ShouldEqual, 123)
-		So(b.infos["A2.Key3"].dftVal, ShouldEqual, "val3")
-	})
-}
-
 func TestBind(t *testing.T) {
 	Convey("TestBind", t, func() {
 		type A struct {
-			Key1 string  `bind:"key1;required"`
-			Key2 int     `dft:"123"`
-			Key3 *string `dft:"val3"`
-			Key4 *int
+			Key1 string
+			Key2 string
+			key5 int
 		}
 
 		type B struct {
-			Key4 string `bind:"key4"`
-			A1   A      `bind:"a1"`
-			A2   *A     `bind:"a2"`
+			A
+			A1   A
+			A2   *A
+			A3   []A
+			A4   []*A
+			A5   map[string]A // 不支持，因为无法知道有哪些 key
+			Key3 string
+			key4 int // ignore unexported field
 		}
-		bind, err := Compile(&B{})
+
+		var b B
+		err := Bind(&b, []Getter{MapGetter(map[string]interface{}{
+			"A1.Key1":       "val1",
+			"A1.Key2":       "val2",
+			"A2.Key1":       "val3",
+			"A2.Key2":       "val4",
+			"Key3":          "val5",
+			"A3[0].Key1":    "val6",
+			"A3[0].Key2":    "val7",
+			"A4[0].Key1":    "val8",
+			"A4[0].Key2":    "val9",
+			"A4[1].Key1":    "val10",
+			"A4[1].Key2":    "val11",
+			"A5.hello.Key1": "val12",
+			"A5.hello.Key2": "val13",
+			"Key1":          "val14",
+			"Key2":          "val15",
+			"A1.key5":       "val16",
+		})})
 		So(err, ShouldBeNil)
-
-		b := &B{}
-		Convey("normal", func() {
-			So(bind.Bind(b, MapGetter(map[string]interface{}{
-				"a1.key1": "val1-1",
-				"a2.key1": "val1-2",
-				"a1.Key2": 456,
-				"a2.Key3": "val3-2",
-			})), ShouldBeNil)
-
-			buf, _ := json.MarshalIndent(b, "  ", "  ")
-			fmt.Printf(string(buf))
-		})
-
-		Convey("error", func() {
-			So(bind.Bind(b, MapGetter(map[string]interface{}{
-				"a1.key1": "val1-1",
-			})), ShouldNotBeNil)
-		})
-
-		os.Setenv("A1_KEY1", "val1-1")
-		os.Setenv("A2_KEY1", "val1-2")
-		os.Setenv("A1_KEY2", "456")
-		os.Setenv("A2_KEY3", "val3-2")
-		Convey("env", func() {
-			So(bind.Bind(b, NewEnvGetter()), ShouldBeNil)
-			fmt.Println(strx.MustJsonMarshal(b))
-		})
+		fmt.Println(strx.JsonMarshalIndent(b))
+		So(b.A1.Key1, ShouldEqual, "val1")
+		So(b.A1.Key2, ShouldEqual, "val2")
+		So(b.A2.Key1, ShouldEqual, "val3")
+		So(b.A2.Key2, ShouldEqual, "val4")
+		So(b.Key3, ShouldEqual, "val5")
+		So(b.A3[0].Key1, ShouldEqual, "val6")
+		So(b.A3[0].Key2, ShouldEqual, "val7")
+		So(b.A4[0].Key1, ShouldEqual, "val8")
+		So(b.A4[0].Key2, ShouldEqual, "val9")
+		So(b.A4[1].Key1, ShouldEqual, "val10")
+		So(b.A4[1].Key2, ShouldEqual, "val11")
+		So(b.Key1, ShouldEqual, "val14")
+		So(b.Key2, ShouldEqual, "val15")
 	})
 }

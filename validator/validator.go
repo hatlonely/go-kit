@@ -168,7 +168,7 @@ func evaluateInterfaceRecursive(rules map[string]gval.Evaluable, tags map[string
 	if rt.Kind() == reflect.Struct {
 		for i := 0; i < rt.NumField(); i++ {
 			key := rt.Field(i).Name
-			// skip unexported field
+			// ignore unexported field
 			if !rv.Field(i).CanInterface() {
 				continue
 			}

@@ -43,15 +43,19 @@ func WithPascalName() Option {
 	}
 }
 
-func FormatKey(str string, opts ...Option) string {
+func NewOptions(opts ...Option) *Options {
 	var options Options
 	for _, opt := range opts {
 		opt(&options)
 	}
-	return formatKey(str, &options)
+	return &options
 }
 
-func formatKey(str string, options *Options) string {
+func FormatKey(str string, opts ...Option) string {
+	return FormatKeyWithOptions(str, NewOptions(opts...))
+}
+
+func FormatKeyWithOptions(str string, options *Options) string {
 	if options.CamelName {
 		return strx.CamelName(str)
 	}
@@ -245,7 +249,7 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 	switch rt.Kind() {
 	case reflect.Struct:
 		for i := 0; i < rv.NumField(); i++ {
-			key := formatKey(rt.Field(i).Name, options)
+			key := FormatKeyWithOptions(rt.Field(i).Name, options)
 			var val interface{}
 			switch src.(type) {
 			case map[string]interface{}:

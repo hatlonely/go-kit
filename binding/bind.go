@@ -3,67 +3,31 @@ package binding
 import (
 	"fmt"
 	"reflect"
-	"strings"
 
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/cast"
-	"github.com/hatlonely/go-kit/strx"
+	"github.com/hatlonely/go-kit/refx"
 )
 
-func Bind(v interface{}, getters ...Getter) error {
-	b, err := Compile(v)
-	if err != nil {
-		return errors.Wrap(err, "bind failed")
-	}
-	return b.Bind(v, getters...)
+func Bind(v interface{}, getters []Getter, opts ...refx.Option) error {
+	_, err := bindRecursive(v, "", getters, refx.NewOptions(opts...))
+	return err
 }
 
-func MustCompile(v interface{}) *Binder {
-	rule, err := Compile(v)
-	if err != nil {
-		panic(err)
-	}
-	return rule
-}
-
-func Compile(v interface{}) (*Binder, error) {
-	rt := reflect.TypeOf(v)
-	if rt.Kind() == reflect.Ptr {
-		rt = rt.Elem()
-	}
-
-	infos := map[string]info{}
-	if err := interfaceToBindRecursive(infos, rt, ""); err != nil {
-		return nil, errors.Wrap(err, "compile failed")
-	}
-	return &Binder{infos: infos}, nil
-}
-
-type info struct {
-	key      string
-	dftVal   interface{}
-	required bool
-}
-
-type Binder struct {
-	infos map[string]info
-}
-
-func (b *Binder) Bind(v interface{}, getters ...Getter) error {
-	return bindRecursive(b.infos, v, "", "", getters...)
-}
-
-func bindRecursive(infos map[string]info, v interface{}, prefix1 string, prefix2 string, getters ...Getter) error {
+func bindRecursive(v interface{}, prefix string, getters []Getter, options *refx.Options) (int, error) {
 	rv := reflect.ValueOf(v)
 	if rv.Kind() != reflect.Ptr || rv.IsNil() {
-		return &Error{Code: ErrInvalidDstType, Err: errors.Errorf("invalid value [%v] type or value is nil", reflect.TypeOf(v)), Key: prefix1}
+		return 0, &Error{Code: ErrInvalidDstType, Err: errors.Errorf("invalid value [%v] type or value is nil", reflect.TypeOf(v)), Key: prefix}
 	}
 	rv = rv.Elem()
 
-	info := infos[prefix1]
 	if rv.Kind() == reflect.Struct {
+		count := 0
 		for i := 0; i < rv.NumField(); i++ {
+			if !rv.Field(i).CanInterface() {
+				continue
+			}
 			key := rv.Type().Field(i).Name
 			switch rv.Field(i).Type().Kind() {
 			case reflect.Ptr:
@@ -72,94 +36,86 @@ func bindRecursive(infos map[string]info, v interface{}, prefix1 string, prefix2
 					rv.Field(i).Set(nv)
 				}
 				if rv.Type().Field(i).Anonymous {
-					if err := bindRecursive(infos, rv.Field(i).Interface(), prefix1, prefix2, getters...); err != nil {
-						return err
+					if cnt, err := bindRecursive(rv.Field(i).Interface(), prefix, getters, options); err != nil {
+						return 0, err
+					} else {
+						count += cnt
 					}
 				} else {
-					if err := bindRecursive(infos, rv.Field(i).Interface(), prefixAppendKey(prefix1, key), prefixAppendKey(prefix2, info.key), getters...); err != nil {
-						return err
+					if cnt, err := bindRecursive(rv.Field(i).Interface(), prefixAppendKey(prefix, refx.FormatKeyWithOptions(key, options)), getters, options); err != nil {
+						return 0, err
+					} else {
+						count += cnt
 					}
 				}
 			default:
 				if rv.Type().Field(i).Anonymous {
-					if err := bindRecursive(infos, rv.Field(i).Addr().Interface(), prefix1, prefix2, getters...); err != nil {
-						return err
+					if cnt, err := bindRecursive(rv.Field(i).Addr().Interface(), prefix, getters, options); err != nil {
+						return 0, err
+					} else {
+						count += cnt
 					}
 				} else {
-					if err := bindRecursive(infos, rv.Field(i).Addr().Interface(), prefixAppendKey(prefix1, key), prefixAppendKey(prefix2, info.key), getters...); err != nil {
-						return err
+					if cnt, err := bindRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, refx.FormatKeyWithOptions(key, options)), getters, options); err != nil {
+						return 0, err
+					} else {
+						count += cnt
 					}
 				}
 			}
 		}
-		return nil
+		return count, nil
+	} else if rv.Kind() == reflect.Slice {
+		count := 0
+		rt := rv.Type()
+		for i := 0; ; i++ {
+			switch rt.Elem().Kind() {
+			case reflect.Ptr:
+				nv := reflect.New(rt.Elem().Elem())
+				if cnt, err := bindRecursive(nv.Interface(), prefixAppendIdx(prefix, i), getters, options); err != nil {
+					return 0, err
+				} else if cnt != 0 {
+					count += cnt
+					rv.Set(reflect.Append(rv, nv.Elem().Addr()))
+				} else {
+					return count, nil
+				}
+			default:
+				nv := reflect.New(rt.Elem())
+				if cnt, err := bindRecursive(nv.Interface(), prefixAppendIdx(prefix, i), getters, options); err != nil {
+					return 0, err
+				} else if cnt != 0 {
+					count += cnt
+					rv.Set(reflect.Append(rv, nv.Elem()))
+				} else {
+					return count, nil
+				}
+			}
+		}
 	}
 
-	prefix2 = prefixAppendKey(prefix2, info.key)
-	var src interface{}
-	var ok bool
 	for _, getter := range getters {
 		if getter == nil {
 			continue
 		}
-		src, ok = getter.Get(prefix2)
-		if ok {
-			break
+		src, ok := getter.Get(prefix)
+		if !ok {
+			continue
 		}
-	}
-	if !ok {
-		if info.required {
-			return &Error{Code: ErrMissingRequiredField, Key: prefix1, Err: errors.New("prefix not exists")}
-		}
-		if info.dftVal != nil {
-			src = info.dftVal
-		}
-	}
-	if src != nil {
 		if err := cast.SetInterface(v, src); err != nil {
-			return &Error{Code: ErrInvalidFormat, Key: prefix1, Err: errors.Wrap(err, "set interface failed")}
+			return 0, &Error{Code: ErrInvalidFormat, Key: prefix, Err: errors.Wrap(err, "set interface failed")}
 		}
+		return 1, nil
 	}
 
-	return nil
+	return 0, nil
 }
 
-func interfaceToBindRecursive(infos map[string]info, rt reflect.Type, prefix string) error {
-	if rt.Kind() == reflect.Ptr {
-		rt = rt.Elem()
+func prefixAppendIdx(prefix string, idx int) string {
+	if prefix == "" {
+		return fmt.Sprintf("[%v]", idx)
 	}
-	for i := 0; i < rt.NumField(); i++ {
-		t := rt.Field(i).Type
-		if t.Kind() == reflect.Ptr {
-			t = t.Elem()
-		}
-
-		tag := rt.Field(i).Tag
-		if tag.Get("bind") == "-" {
-			continue
-		}
-
-		key := rt.Field(i).Name
-		info, err := parseTag(key, tag.Get("bind"), tag.Get("dft"), rt.Field(i).Type)
-		if err != nil {
-			return errors.Wrap(err, "bind failed")
-		}
-		infos[prefixAppendKey(prefix, key)] = *info
-		if t.Kind() == reflect.Struct {
-			if rt.Field(i).Anonymous {
-				if err := interfaceToBindRecursive(infos, t, prefix); err != nil {
-					return err
-				}
-			} else {
-				if err := interfaceToBindRecursive(infos, t, prefixAppendKey(prefix, key)); err != nil {
-					return err
-				}
-			}
-			continue
-		}
-	}
-
-	return nil
+	return fmt.Sprintf("%v[%v]", prefix, idx)
 }
 
 func prefixAppendKey(prefix string, key string) string {
@@ -167,38 +123,4 @@ func prefixAppendKey(prefix string, key string) string {
 		return key
 	}
 	return fmt.Sprintf("%v.%v", prefix, key)
-}
-
-func parseTag(key string, bTag string, dTag string, rt reflect.Type) (*info, error) {
-	info := &info{}
-	vals := strings.Split(bTag, ";")
-	for _, val := range vals {
-		val = strings.TrimSpace(val)
-		if val == "required" {
-			info.required = true
-		} else {
-			info.key = val
-		}
-	}
-	if info.key == "" {
-		info.key = strx.CamelName(key)
-	}
-	if dTag == "" {
-		return info, nil
-	}
-	if rt.Kind() == reflect.Ptr {
-		val := reflect.New(rt.Elem())
-		if err := cast.SetInterface(val.Interface(), dTag); err != nil {
-			return nil, errors.Wrapf(err, "set interface failed. type [%v] tag [%v]", rt, dTag)
-		}
-		info.dftVal = val.Elem().Interface()
-	} else {
-		val := reflect.New(rt)
-		if err := cast.SetInterface(val.Interface(), dTag); err != nil {
-			return nil, errors.Wrapf(err, "set interface failed. type [%v] tag [%v]", rt, dTag)
-		}
-		info.dftVal = val.Elem().Interface()
-	}
-
-	return info, nil
 }
