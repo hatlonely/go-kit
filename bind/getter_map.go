@@ -1,4 +1,4 @@
-package binding
+package bind
 
 func NewMapGetter(m map[string]interface{}) MapGetter {
 	return m
