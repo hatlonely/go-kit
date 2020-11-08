@@ -23,11 +23,6 @@ func NewOTSProviderWithOptions(options *OTSProviderOptions) (*OTSProvider, error
 	return NewOTSProvider(otsCli, options.Table, options.Key, options.Interval)
 }
 
-func NewOTSProviderWithAccessKey(ak string, sk string, endpoint string, instance string, table string, key string, interval time.Duration) (*OTSProvider, error) {
-	otsCli := tablestore.NewClient(endpoint, instance, ak, sk)
-	return NewOTSProvider(otsCli, table, key, interval)
-}
-
 func NewOTSProvider(otsCli *tablestore.TableStoreClient, table string, key string, interval time.Duration) (*OTSProvider, error) {
 	if _, err := otsCli.DescribeTable(&tablestore.DescribeTableRequest{
 		TableName: table,
