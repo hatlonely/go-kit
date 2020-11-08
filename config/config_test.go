@@ -208,6 +208,13 @@ func TestConfig_Sub(t *testing.T) {
 			So(cfg.GetString("grpc.writers[0].rotateFileWriter.formatter.type"), ShouldEqual, "Json")
 		})
 
+		Convey("sub.sub", func() {
+			So(cfg.Sub("logger").Sub("grpc").Sub("writers").GetString("[0].type"), ShouldEqual, "RotateFile")
+			So(cfg.Sub("logger").Sub("grpc").Sub("writers").Sub("[0]").GetString("type"), ShouldEqual, "RotateFile")
+			So(cfg.Sub("logger").Sub("grpc").Sub("writers").Sub("[0]").Sub("type").GetString(""), ShouldEqual, "RotateFile")
+			So(cfg.Sub("logger").Sub("grpc.writers").Sub("[0]").Sub("type").GetString(""), ShouldEqual, "RotateFile")
+		})
+
 		Convey("sub unmarshal", func() {
 			type Options struct {
 				Level   string `rule:"x in ['Info', 'Warn', 'Debug', 'Error']"`

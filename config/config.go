@@ -222,7 +222,7 @@ func (c *Config) Watch() error {
 			if !traveled[key] {
 				traveled[key] = true
 				for _, handler := range c.itemHandlers[key] {
-					handler(c.Sub(""))
+					handler(c.Sub(key))
 				}
 			}
 
