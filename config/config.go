@@ -285,7 +285,7 @@ func (c *Config) Watch() error {
 					}
 				}
 				for _, handler := range c.itemHandlers[""] {
-					handler(c.Sub(""))
+					handler(c)
 				}
 			case err := <-c.provider.Errors():
 				c.log.Warnf("provider error [%v]", err)
@@ -318,6 +318,10 @@ func (c *Config) AddOnItemChangeHandler(key string, handler OnChangeHandler) {
 		return
 	}
 	c.itemHandlers[key] = append(c.itemHandlers[key], handler)
+}
+
+func (c *Config) SetLogger(log Logger) {
+	c.log = log
 }
 
 type Logger interface {

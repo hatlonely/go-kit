@@ -75,6 +75,10 @@ func AddOnItemChangeHandler(key string, handler OnChangeHandler) {
 	gcfg.AddOnItemChangeHandler(key, handler)
 }
 
+func SetLogger(log Logger) {
+	gcfg.SetLogger(log)
+}
+
 func GetBool(key string) bool {
 	return gcfg.GetBool(key)
 }

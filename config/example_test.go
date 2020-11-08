@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/logger"
 )
 
 func CreateTestFile() {
@@ -122,24 +123,29 @@ func DeleteBaseFile() {
 // 安全性：可使用 GetD，GetE 之类的方法来做一些错误处理，关联的多个配置项无法保证原子性（这种场景触发几率较低，目前还未碰到过）
 
 func TestExample1(t *testing.T) {
+	CreateTestFile()
+
 	// package main
-	if err := config.Init("testfile/base.json"); err != nil {
+	if err := config.InitWithSimpleFile("test.json"); err != nil {
 		panic(err)
 	}
+	config.SetLogger(logger.NewStdoutLogger())
 	if err := config.Watch(); err != nil {
 		panic(err)
 	}
 	defer config.Stop()
 
 	// package module
-	fmt.Println(config.GetString("OSS.AccessKeyID"))
-	fmt.Println(config.GetString("OSS.AccessKeySecret"))
-	fmt.Println(config.GetString("OSS.Endpoint"))
+	fmt.Println(config.GetString("redis.addr"))
+	fmt.Println(config.GetString("mysql.host"))
+	fmt.Println(config.GetString("logger.info.writers[0].type"))
 
 	// package test
-	_ = config.UnsafeSet("OSS.AccessKeyID", "test-ak")
-	_ = config.UnsafeSet("OSS.AccessKeyID", "test-sk")
-	_ = config.UnsafeSet("OSS.AccessKeyID", "endpoint")
+	_ = config.UnsafeSet("redis.addr", "127.0.0.1:6379")
+	_ = config.UnsafeSet("mysql.host", "localhost")
+	_ = config.UnsafeSet("logger.info.writers[0].type", "Stdout")
+
+	DeleteTestFile()
 }
 
 // 场景二：使用全局 config 的 bind 类型方法，类 flag 的使用方式
