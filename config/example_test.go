@@ -386,28 +386,32 @@ func (t MyType6) DoSomething() {
 // 可维护性：每个对象维护自己的动态参数，维护比较方便
 // 安全性：可以保证关联配置项的原子性
 func TestExample7(t *testing.T) {
+	CreateTestFile()
+
 	// package main
-	conf, err := config.NewConfigWithBaseFile("testfile/base.json")
+	cfg, err := config.NewSimpleFileConfig("test.json")
 	if err != nil {
 		panic(err)
 	}
-	if err := conf.Watch(); err != nil {
+	if err := cfg.Watch(); err != nil {
 		panic(err)
 	}
-	defer conf.Stop()
+	defer cfg.Stop()
 
-	myType := NewMyType7(conf.Bind("OSS", MyType2Option{}))
+	myType := NewMyType7(cfg.Bind("redis", Options{}, config.WithUnmarshalOptions(refx.WithCamelName())))
 	myType.DoSomething()
 
 	// package test
 	var option atomic.Value
-	option.Store(MyType2Option{
-		AccessKeyID:     "test-ak",
-		AccessKeySecret: "test-sk",
-		Endpoint:        "endpoint",
+	option.Store(Options{
+		Addr:        "127.0.0.1:6378",
+		DialTimeout: 100 * time.Millisecond,
+		ReadTimeout: 150 * time.Millisecond,
 	})
 	testType := NewMyType7(&option)
 	testType.DoSomething()
+
+	DeleteTestFile()
 }
 
 // package module
@@ -415,10 +419,15 @@ type MyType7 struct {
 	option *atomic.Value
 }
 
-type MyType2Option struct {
-	AccessKeyID     string
-	AccessKeySecret string
-	Endpoint        string
+type Options struct {
+	Addr         string        `dft:"127.0.0.1:6379"`
+	DialTimeout  time.Duration `dft:"300ms"`
+	ReadTimeout  time.Duration `dft:"300ms"`
+	WriteTimeout time.Duration `dft:"300ms"`
+	MaxRetries   int           `dft:"3"`
+	PoolSize     int           `dft:"20"`
+	DB           int
+	Password     string
 }
 
 func NewMyType7(option *atomic.Value) *MyType7 {
@@ -428,9 +437,9 @@ func NewMyType7(option *atomic.Value) *MyType7 {
 }
 
 func (t MyType7) DoSomething() {
-	fmt.Println(t.option.Load().(MyType2Option).AccessKeyID)
-	fmt.Println(t.option.Load().(MyType2Option).AccessKeySecret)
-	fmt.Println(t.option.Load().(MyType2Option).Endpoint)
+	fmt.Println(t.option.Load().(Options).Addr)
+	fmt.Println(t.option.Load().(Options).DialTimeout)
+	fmt.Println(t.option.Load().(Options).ReadTimeout)
 }
 
 // 场景八: 类似缓存的使用方式，用配置的 key 来初始化对象
