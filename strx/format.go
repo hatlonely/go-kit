@@ -1,10 +1,13 @@
 package strx
 
 import (
-	"encoding/json"
 	"regexp"
 	"strings"
+
+	jsoniter "github.com/json-iterator/go"
 )
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 func JsonMarshal(v interface{}) string {
 	buf, _ := json.Marshal(v)

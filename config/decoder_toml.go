@@ -1,6 +1,8 @@
 package config
 
 import (
+	"bytes"
+
 	"github.com/BurntSushi/toml"
 )
 
@@ -15,6 +17,9 @@ func (d *TomlDecoder) Decode(buf []byte) (*Storage, error) {
 }
 
 func (d *TomlDecoder) Encode(storage *Storage) ([]byte, error) {
-	panic("toml encode not support yet")
-	return nil, nil
+	var buf bytes.Buffer
+	if err := toml.NewEncoder(&buf).Encode(storage.Interface()); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
 }
