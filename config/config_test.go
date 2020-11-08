@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -279,6 +280,16 @@ func TestConfig_Sub(t *testing.T) {
 	})
 }
 
+func TestConfig_ToString(t *testing.T) {
+	Convey("TestConfig_ToString", t, func() {
+		CreateTestFile()
+		cfg, _ := NewSimpleFileConfig("test.json")
+		fmt.Println(cfg.ToString())
+		fmt.Println(cfg.ToStringIndent())
+		DeleteTestFile()
+	})
+}
+
 func TestNewConfigWithBaseFile(t *testing.T) {
 	Convey("TestNewConfigWithBaseFile", t, func() {
 		CreateTestFile()
@@ -286,8 +297,8 @@ func TestNewConfigWithBaseFile(t *testing.T) {
 
 		cfg, err := NewConfigWithBaseFile("base.json", refx.WithCamelName())
 		So(err, ShouldBeNil)
-		So(cfg.GetInt("port"), ShouldEqual, 6060)
-		So(cfg.GetString("log[1].file"), ShouldEqual, "test.warn")
+		So(cfg.GetInt("grpc.port"), ShouldEqual, 6080)
+		So(cfg.GetInt("http.port"), ShouldEqual, 80)
 
 		DeleteTestFile()
 		DeleteBaseFile()

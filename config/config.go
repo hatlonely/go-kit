@@ -9,6 +9,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/refx"
+	"github.com/hatlonely/go-kit/strx"
 )
 
 type Options struct {
@@ -318,6 +319,14 @@ func (c *Config) AddOnItemChangeHandler(key string, handler OnChangeHandler) {
 		return
 	}
 	c.itemHandlers[key] = append(c.itemHandlers[key], handler)
+}
+
+func (c *Config) ToString() string {
+	return strx.JsonMarshal(c.storage.Interface())
+}
+
+func (c *Config) ToStringIndent() string {
+	return strx.JsonMarshalIndent(c.storage.Interface())
 }
 
 func (c *Config) SetLogger(log Logger) {
