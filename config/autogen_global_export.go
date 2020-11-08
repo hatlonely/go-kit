@@ -21,7 +21,7 @@ func Init(filename string) error {
 
 func InitWithSimpleFile(filename string, opts ...SimpleFileOption) error {
 	var err error
-	if gcfg, err = NewSimpleFileConfig(filename, opts...); err != nil {
+	if gcfg, err = NewConfigWithSimpleFile(filename, opts...); err != nil {
 		return err
 	}
 	return nil
@@ -73,6 +73,14 @@ func AddOnChangeHandler(handler OnChangeHandler) {
 
 func AddOnItemChangeHandler(key string, handler OnChangeHandler) {
 	gcfg.AddOnItemChangeHandler(key, handler)
+}
+
+func ToString() string {
+	return gcfg.ToString()
+}
+
+func ToStringIndent() string {
+	return gcfg.ToStringIndent()
 }
 
 func SetLogger(log Logger) {

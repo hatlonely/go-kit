@@ -23,7 +23,7 @@ func TestNewMysqlWithConfig(t *testing.T) {
 		  "maxIdleConns": 12,
 		  "maxOpenConns": 23
 		}`), 0644), ShouldBeNil)
-		cfg, err := config.NewSimpleFileConfig("1.json")
+		cfg, err := config.NewConfigWithSimpleFile("1.json")
 		So(err, ShouldBeNil)
 		client, err := NewMysqlWithConfig(cfg, refx.WithCamelName())
 		So(err, ShouldBeNil)

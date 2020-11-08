@@ -120,7 +120,7 @@ func TestConfig_Get(t *testing.T) {
 	Convey("TestConfig_Get", t, func() {
 		CreateTestFile()
 
-		cfg, err := NewSimpleFileConfig("test.json")
+		cfg, err := NewConfigWithSimpleFile("test.json")
 		So(err, ShouldBeNil)
 		So(cfg.GetString("http.port"), ShouldEqual, "80")
 		So(cfg.GetInt("http.port"), ShouldEqual, 80)
@@ -174,7 +174,7 @@ func TestConfig_Unmarshal(t *testing.T) {
 	Convey("TestConfig_Unmarshal", t, func() {
 		CreateTestFile()
 
-		cfg, err := NewSimpleFileConfig("test.json")
+		cfg, err := NewConfigWithSimpleFile("test.json")
 		So(err, ShouldBeNil)
 
 		var options Options
@@ -198,7 +198,7 @@ func TestConfig_Unmarshal(t *testing.T) {
 func TestConfig_Sub(t *testing.T) {
 	Convey("TestConfig_Sub", t, func() {
 		CreateTestFile()
-		cfg, err := NewSimpleFileConfig("test.json")
+		cfg, err := NewConfigWithSimpleFile("test.json")
 		So(err, ShouldBeNil)
 
 		Convey("sub", func() {
@@ -283,7 +283,7 @@ func TestConfig_Sub(t *testing.T) {
 func TestConfig_ToString(t *testing.T) {
 	Convey("TestConfig_ToString", t, func() {
 		CreateTestFile()
-		cfg, _ := NewSimpleFileConfig("test.json")
+		cfg, _ := NewConfigWithSimpleFile("test.json")
 		fmt.Println(cfg.ToString())
 		fmt.Println(cfg.ToStringIndent())
 		DeleteTestFile()

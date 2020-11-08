@@ -35,7 +35,7 @@ func NewConfigWithOptions(options *Options) (*Config, error) {
 }
 
 func NewConfigWithBaseFile(filename string, opts ...refx.Option) (*Config, error) {
-	cfg, err := NewSimpleFileConfig(filename)
+	cfg, err := NewConfigWithSimpleFile(filename)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func WithSimpleFileKey(key string) SimpleFileOption {
 	}
 }
 
-func NewSimpleFileConfig(filename string, opts ...SimpleFileOption) (*Config, error) {
+func NewConfigWithSimpleFile(filename string, opts ...SimpleFileOption) (*Config, error) {
 	options := defaultSimpleFileOptions
 	for _, opt := range opts {
 		opt(&options)

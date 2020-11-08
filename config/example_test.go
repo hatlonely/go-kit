@@ -246,7 +246,7 @@ func TestExample4(t *testing.T) {
 	var MysqlHost config.AtomicString
 
 	// package main
-	cfg, err := config.NewSimpleFileConfig("test.json")
+	cfg, err := config.NewConfigWithSimpleFile("test.json")
 	if err != nil {
 		panic(err)
 	}
@@ -294,7 +294,7 @@ func TestExample5(t *testing.T) {
 	var options atomic.Value
 
 	// package main
-	cfg, err := config.NewSimpleFileConfig("test.json")
+	cfg, err := config.NewConfigWithSimpleFile("test.json")
 	if err != nil {
 		panic(err)
 	}
@@ -336,7 +336,7 @@ func TestExample6(t *testing.T) {
 	CreateTestFile()
 
 	// package main
-	cfg, err := config.NewSimpleFileConfig("test.json")
+	cfg, err := config.NewConfigWithSimpleFile("test.json")
 	if err != nil {
 		panic(err)
 	}
@@ -389,7 +389,7 @@ func TestExample7(t *testing.T) {
 	CreateTestFile()
 
 	// package main
-	cfg, err := config.NewSimpleFileConfig("test.json")
+	cfg, err := config.NewConfigWithSimpleFile("test.json")
 	if err != nil {
 		panic(err)
 	}
