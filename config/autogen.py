@@ -189,35 +189,46 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	github.com/hatlonely/go-kit/refx
+	"github.com/hatlonely/go-kit/refx"
 )
 
-var gconf = &Config{
+var gcfg = &Config{
 	itemHandlers: map[string][]OnChangeHandler{},
 	log:          logrus.New(),
 }
 
 func Init(filename string) error {
-	conf, err := NewConfigWithBaseFile(filename)
+	cfg, err := NewConfigWithBaseFile(filename)
 	if err != nil {
 		return err
 	}
-	gconf.storage = conf.storage
-	gconf.decoder = conf.decoder
-	gconf.provider = conf.provider
+	gcfg.storage = cfg.storage
+	gcfg.decoder = cfg.decoder
+	gcfg.provider = cfg.provider
+	return nil
+}
+
+func InitWithSimpleFile(filename string, opts ...SimpleFileOption) error {
+	cfg, err := NewSimpleFileConfig(filename, opts...)
+	if err != nil {
+		return err
+	}
+	gcfg.storage = cfg.storage
+	gcfg.decoder = cfg.decoder
+	gcfg.provider = cfg.provider
 	return nil
 }
 """
 
 global_export_tpl1 = """
 func {define} {{
-	return gconf.{name}({params})
+	return gcfg.{name}({params})
 }}
 """
 
 global_export_tpl2 = """
 func {define} {{
-	gconf.{name}({params})
+	gcfg.{name}({params})
 }}
 """
 
