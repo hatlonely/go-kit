@@ -6,35 +6,24 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/sirupsen/logrus"
-
 	"github.com/hatlonely/go-kit/refx"
 )
 
-var gcfg = &Config{
-	itemHandlers: map[string][]OnChangeHandler{},
-	log:          logrus.New(),
-}
+var gcfg *Config
 
 func Init(filename string) error {
-	cfg, err := NewConfigWithBaseFile(filename)
-	if err != nil {
+	var err error
+	if gcfg, err = NewConfigWithBaseFile(filename); err != nil {
 		return err
 	}
-	gcfg.storage = cfg.storage
-	gcfg.decoder = cfg.decoder
-	gcfg.provider = cfg.provider
 	return nil
 }
 
 func InitWithSimpleFile(filename string, opts ...SimpleFileOption) error {
-	cfg, err := NewSimpleFileConfig(filename, opts...)
-	if err != nil {
+	var err error
+	if gcfg, err = NewSimpleFileConfig(filename, opts...); err != nil {
 		return err
 	}
-	gcfg.storage = cfg.storage
-	gcfg.decoder = cfg.decoder
-	gcfg.provider = cfg.provider
 	return nil
 }
 
