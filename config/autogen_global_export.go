@@ -11,482 +11,493 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-var gconf = &Config{
+var gcfg = &Config{
 	itemHandlers: map[string][]OnChangeHandler{},
 	log:          logrus.New(),
 }
 
 func Init(filename string) error {
-	conf, err := NewConfigWithBaseFile(filename)
+	cfg, err := NewConfigWithBaseFile(filename)
 	if err != nil {
 		return err
 	}
-	gconf.storage = conf.storage
-	gconf.decoder = conf.decoder
-	gconf.provider = conf.provider
+	gcfg.storage = cfg.storage
+	gcfg.decoder = cfg.decoder
+	gcfg.provider = cfg.provider
+	return nil
+}
+
+func InitWithSimpleFile(filename string, opts ...SimpleFileOption) error {
+	cfg, err := NewSimpleFileConfig(filename, opts...)
+	if err != nil {
+		return err
+	}
+	gcfg.storage = cfg.storage
+	gcfg.decoder = cfg.decoder
+	gcfg.provider = cfg.provider
 	return nil
 }
 
 func GetComponent() (Provider, *Storage, Decoder, Cipher) {
-	return gconf.GetComponent()
+	return gcfg.GetComponent()
 }
 
 func Get(key string) (interface{}, bool) {
-	return gconf.Get(key)
+	return gcfg.Get(key)
 }
 
 func GetE(key string) (interface{}, error) {
-	return gconf.GetE(key)
+	return gcfg.GetE(key)
 }
 
 func UnsafeSet(key string, val interface{}) error {
-	return gconf.UnsafeSet(key, val)
+	return gcfg.UnsafeSet(key, val)
 }
 
 func Unmarshal(v interface{}, opts ...refx.Option) error {
-	return gconf.Unmarshal(v, opts...)
+	return gcfg.Unmarshal(v, opts...)
 }
 
 func Sub(key string) *Config {
-	return gconf.Sub(key)
+	return gcfg.Sub(key)
 }
 
 func SubArr(key string) ([]*Config, error) {
-	return gconf.SubArr(key)
+	return gcfg.SubArr(key)
 }
 
 func SubMap(key string) (map[string]*Config, error) {
-	return gconf.SubMap(key)
+	return gcfg.SubMap(key)
 }
 
 func Stop() {
-	gconf.Stop()
+	gcfg.Stop()
 }
 
 func Watch() error {
-	return gconf.Watch()
+	return gcfg.Watch()
 }
 
 func AddOnChangeHandler(handler OnChangeHandler) {
-	gconf.AddOnChangeHandler(handler)
+	gcfg.AddOnChangeHandler(handler)
 }
 
 func AddOnItemChangeHandler(key string, handler OnChangeHandler) {
-	gconf.AddOnItemChangeHandler(key, handler)
+	gcfg.AddOnItemChangeHandler(key, handler)
 }
 
 func GetBool(key string) bool {
-	return gconf.GetBool(key)
+	return gcfg.GetBool(key)
 }
 
 func GetInt(key string) int {
-	return gconf.GetInt(key)
+	return gcfg.GetInt(key)
 }
 
 func GetUint(key string) uint {
-	return gconf.GetUint(key)
+	return gcfg.GetUint(key)
 }
 
 func GetInt64(key string) int64 {
-	return gconf.GetInt64(key)
+	return gcfg.GetInt64(key)
 }
 
 func GetInt32(key string) int32 {
-	return gconf.GetInt32(key)
+	return gcfg.GetInt32(key)
 }
 
 func GetInt16(key string) int16 {
-	return gconf.GetInt16(key)
+	return gcfg.GetInt16(key)
 }
 
 func GetInt8(key string) int8 {
-	return gconf.GetInt8(key)
+	return gcfg.GetInt8(key)
 }
 
 func GetUint64(key string) uint64 {
-	return gconf.GetUint64(key)
+	return gcfg.GetUint64(key)
 }
 
 func GetUint32(key string) uint32 {
-	return gconf.GetUint32(key)
+	return gcfg.GetUint32(key)
 }
 
 func GetUint16(key string) uint16 {
-	return gconf.GetUint16(key)
+	return gcfg.GetUint16(key)
 }
 
 func GetUint8(key string) uint8 {
-	return gconf.GetUint8(key)
+	return gcfg.GetUint8(key)
 }
 
 func GetFloat64(key string) float64 {
-	return gconf.GetFloat64(key)
+	return gcfg.GetFloat64(key)
 }
 
 func GetFloat32(key string) float32 {
-	return gconf.GetFloat32(key)
+	return gcfg.GetFloat32(key)
 }
 
 func GetString(key string) string {
-	return gconf.GetString(key)
+	return gcfg.GetString(key)
 }
 
 func GetDuration(key string) time.Duration {
-	return gconf.GetDuration(key)
+	return gcfg.GetDuration(key)
 }
 
 func GetTime(key string) time.Time {
-	return gconf.GetTime(key)
+	return gcfg.GetTime(key)
 }
 
 func GetIP(key string) net.IP {
-	return gconf.GetIP(key)
+	return gcfg.GetIP(key)
 }
 
 func GetBoolE(key string) (bool, error) {
-	return gconf.GetBoolE(key)
+	return gcfg.GetBoolE(key)
 }
 
 func GetIntE(key string) (int, error) {
-	return gconf.GetIntE(key)
+	return gcfg.GetIntE(key)
 }
 
 func GetUintE(key string) (uint, error) {
-	return gconf.GetUintE(key)
+	return gcfg.GetUintE(key)
 }
 
 func GetInt64E(key string) (int64, error) {
-	return gconf.GetInt64E(key)
+	return gcfg.GetInt64E(key)
 }
 
 func GetInt32E(key string) (int32, error) {
-	return gconf.GetInt32E(key)
+	return gcfg.GetInt32E(key)
 }
 
 func GetInt16E(key string) (int16, error) {
-	return gconf.GetInt16E(key)
+	return gcfg.GetInt16E(key)
 }
 
 func GetInt8E(key string) (int8, error) {
-	return gconf.GetInt8E(key)
+	return gcfg.GetInt8E(key)
 }
 
 func GetUint64E(key string) (uint64, error) {
-	return gconf.GetUint64E(key)
+	return gcfg.GetUint64E(key)
 }
 
 func GetUint32E(key string) (uint32, error) {
-	return gconf.GetUint32E(key)
+	return gcfg.GetUint32E(key)
 }
 
 func GetUint16E(key string) (uint16, error) {
-	return gconf.GetUint16E(key)
+	return gcfg.GetUint16E(key)
 }
 
 func GetUint8E(key string) (uint8, error) {
-	return gconf.GetUint8E(key)
+	return gcfg.GetUint8E(key)
 }
 
 func GetFloat64E(key string) (float64, error) {
-	return gconf.GetFloat64E(key)
+	return gcfg.GetFloat64E(key)
 }
 
 func GetFloat32E(key string) (float32, error) {
-	return gconf.GetFloat32E(key)
+	return gcfg.GetFloat32E(key)
 }
 
 func GetStringE(key string) (string, error) {
-	return gconf.GetStringE(key)
+	return gcfg.GetStringE(key)
 }
 
 func GetDurationE(key string) (time.Duration, error) {
-	return gconf.GetDurationE(key)
+	return gcfg.GetDurationE(key)
 }
 
 func GetTimeE(key string) (time.Time, error) {
-	return gconf.GetTimeE(key)
+	return gcfg.GetTimeE(key)
 }
 
 func GetIPE(key string) (net.IP, error) {
-	return gconf.GetIPE(key)
+	return gcfg.GetIPE(key)
 }
 
 func GetBoolP(key string) bool {
-	return gconf.GetBoolP(key)
+	return gcfg.GetBoolP(key)
 }
 
 func GetIntP(key string) int {
-	return gconf.GetIntP(key)
+	return gcfg.GetIntP(key)
 }
 
 func GetUintP(key string) uint {
-	return gconf.GetUintP(key)
+	return gcfg.GetUintP(key)
 }
 
 func GetInt64P(key string) int64 {
-	return gconf.GetInt64P(key)
+	return gcfg.GetInt64P(key)
 }
 
 func GetInt32P(key string) int32 {
-	return gconf.GetInt32P(key)
+	return gcfg.GetInt32P(key)
 }
 
 func GetInt16P(key string) int16 {
-	return gconf.GetInt16P(key)
+	return gcfg.GetInt16P(key)
 }
 
 func GetInt8P(key string) int8 {
-	return gconf.GetInt8P(key)
+	return gcfg.GetInt8P(key)
 }
 
 func GetUint64P(key string) uint64 {
-	return gconf.GetUint64P(key)
+	return gcfg.GetUint64P(key)
 }
 
 func GetUint32P(key string) uint32 {
-	return gconf.GetUint32P(key)
+	return gcfg.GetUint32P(key)
 }
 
 func GetUint16P(key string) uint16 {
-	return gconf.GetUint16P(key)
+	return gcfg.GetUint16P(key)
 }
 
 func GetUint8P(key string) uint8 {
-	return gconf.GetUint8P(key)
+	return gcfg.GetUint8P(key)
 }
 
 func GetFloat64P(key string) float64 {
-	return gconf.GetFloat64P(key)
+	return gcfg.GetFloat64P(key)
 }
 
 func GetFloat32P(key string) float32 {
-	return gconf.GetFloat32P(key)
+	return gcfg.GetFloat32P(key)
 }
 
 func GetStringP(key string) string {
-	return gconf.GetStringP(key)
+	return gcfg.GetStringP(key)
 }
 
 func GetDurationP(key string) time.Duration {
-	return gconf.GetDurationP(key)
+	return gcfg.GetDurationP(key)
 }
 
 func GetTimeP(key string) time.Time {
-	return gconf.GetTimeP(key)
+	return gcfg.GetTimeP(key)
 }
 
 func GetIPP(key string) net.IP {
-	return gconf.GetIPP(key)
+	return gcfg.GetIPP(key)
 }
 
 func GetBoolD(key string, dftVal bool) bool {
-	return gconf.GetBoolD(key, dftVal)
+	return gcfg.GetBoolD(key, dftVal)
 }
 
 func GetIntD(key string, dftVal int) int {
-	return gconf.GetIntD(key, dftVal)
+	return gcfg.GetIntD(key, dftVal)
 }
 
 func GetUintD(key string, dftVal uint) uint {
-	return gconf.GetUintD(key, dftVal)
+	return gcfg.GetUintD(key, dftVal)
 }
 
 func GetInt64D(key string, dftVal int64) int64 {
-	return gconf.GetInt64D(key, dftVal)
+	return gcfg.GetInt64D(key, dftVal)
 }
 
 func GetInt32D(key string, dftVal int32) int32 {
-	return gconf.GetInt32D(key, dftVal)
+	return gcfg.GetInt32D(key, dftVal)
 }
 
 func GetInt16D(key string, dftVal int16) int16 {
-	return gconf.GetInt16D(key, dftVal)
+	return gcfg.GetInt16D(key, dftVal)
 }
 
 func GetInt8D(key string, dftVal int8) int8 {
-	return gconf.GetInt8D(key, dftVal)
+	return gcfg.GetInt8D(key, dftVal)
 }
 
 func GetUint64D(key string, dftVal uint64) uint64 {
-	return gconf.GetUint64D(key, dftVal)
+	return gcfg.GetUint64D(key, dftVal)
 }
 
 func GetUint32D(key string, dftVal uint32) uint32 {
-	return gconf.GetUint32D(key, dftVal)
+	return gcfg.GetUint32D(key, dftVal)
 }
 
 func GetUint16D(key string, dftVal uint16) uint16 {
-	return gconf.GetUint16D(key, dftVal)
+	return gcfg.GetUint16D(key, dftVal)
 }
 
 func GetUint8D(key string, dftVal uint8) uint8 {
-	return gconf.GetUint8D(key, dftVal)
+	return gcfg.GetUint8D(key, dftVal)
 }
 
 func GetFloat64D(key string, dftVal float64) float64 {
-	return gconf.GetFloat64D(key, dftVal)
+	return gcfg.GetFloat64D(key, dftVal)
 }
 
 func GetFloat32D(key string, dftVal float32) float32 {
-	return gconf.GetFloat32D(key, dftVal)
+	return gcfg.GetFloat32D(key, dftVal)
 }
 
 func GetStringD(key string, dftVal string) string {
-	return gconf.GetStringD(key, dftVal)
+	return gcfg.GetStringD(key, dftVal)
 }
 
 func GetDurationD(key string, dftVal time.Duration) time.Duration {
-	return gconf.GetDurationD(key, dftVal)
+	return gcfg.GetDurationD(key, dftVal)
 }
 
 func GetTimeD(key string, dftVal time.Time) time.Time {
-	return gconf.GetTimeD(key, dftVal)
+	return gcfg.GetTimeD(key, dftVal)
 }
 
 func GetIPD(key string, dftVal net.IP) net.IP {
-	return gconf.GetIPD(key, dftVal)
+	return gcfg.GetIPD(key, dftVal)
 }
 
 func Bind(key string, v interface{}, opts ...BindOption) *atomic.Value {
-	return gconf.Bind(key, v, opts...)
+	return gcfg.Bind(key, v, opts...)
 }
 
 func BindVar(key string, v interface{}, av *atomic.Value, opts ...BindOption) {
-	gconf.BindVar(key, v, av, opts...)
+	gcfg.BindVar(key, v, av, opts...)
 }
 
 func BoolVar(key string, av *AtomicBool, opts ...BindOption) {
-	gconf.BoolVar(key, av, opts...)
+	gcfg.BoolVar(key, av, opts...)
 }
 
 func IntVar(key string, av *AtomicInt, opts ...BindOption) {
-	gconf.IntVar(key, av, opts...)
+	gcfg.IntVar(key, av, opts...)
 }
 
 func UintVar(key string, av *AtomicUint, opts ...BindOption) {
-	gconf.UintVar(key, av, opts...)
+	gcfg.UintVar(key, av, opts...)
 }
 
 func Int64Var(key string, av *AtomicInt64, opts ...BindOption) {
-	gconf.Int64Var(key, av, opts...)
+	gcfg.Int64Var(key, av, opts...)
 }
 
 func Int32Var(key string, av *AtomicInt32, opts ...BindOption) {
-	gconf.Int32Var(key, av, opts...)
+	gcfg.Int32Var(key, av, opts...)
 }
 
 func Int16Var(key string, av *AtomicInt16, opts ...BindOption) {
-	gconf.Int16Var(key, av, opts...)
+	gcfg.Int16Var(key, av, opts...)
 }
 
 func Int8Var(key string, av *AtomicInt8, opts ...BindOption) {
-	gconf.Int8Var(key, av, opts...)
+	gcfg.Int8Var(key, av, opts...)
 }
 
 func Uint64Var(key string, av *AtomicUint64, opts ...BindOption) {
-	gconf.Uint64Var(key, av, opts...)
+	gcfg.Uint64Var(key, av, opts...)
 }
 
 func Uint32Var(key string, av *AtomicUint32, opts ...BindOption) {
-	gconf.Uint32Var(key, av, opts...)
+	gcfg.Uint32Var(key, av, opts...)
 }
 
 func Uint16Var(key string, av *AtomicUint16, opts ...BindOption) {
-	gconf.Uint16Var(key, av, opts...)
+	gcfg.Uint16Var(key, av, opts...)
 }
 
 func Uint8Var(key string, av *AtomicUint8, opts ...BindOption) {
-	gconf.Uint8Var(key, av, opts...)
+	gcfg.Uint8Var(key, av, opts...)
 }
 
 func Float64Var(key string, av *AtomicFloat64, opts ...BindOption) {
-	gconf.Float64Var(key, av, opts...)
+	gcfg.Float64Var(key, av, opts...)
 }
 
 func Float32Var(key string, av *AtomicFloat32, opts ...BindOption) {
-	gconf.Float32Var(key, av, opts...)
+	gcfg.Float32Var(key, av, opts...)
 }
 
 func StringVar(key string, av *AtomicString, opts ...BindOption) {
-	gconf.StringVar(key, av, opts...)
+	gcfg.StringVar(key, av, opts...)
 }
 
 func DurationVar(key string, av *AtomicDuration, opts ...BindOption) {
-	gconf.DurationVar(key, av, opts...)
+	gcfg.DurationVar(key, av, opts...)
 }
 
 func TimeVar(key string, av *AtomicTime, opts ...BindOption) {
-	gconf.TimeVar(key, av, opts...)
+	gcfg.TimeVar(key, av, opts...)
 }
 
 func IPVar(key string, av *AtomicIP, opts ...BindOption) {
-	gconf.IPVar(key, av, opts...)
+	gcfg.IPVar(key, av, opts...)
 }
 
 func Bool(key string, opts ...BindOption) *AtomicBool {
-	return gconf.Bool(key, opts...)
+	return gcfg.Bool(key, opts...)
 }
 
 func Int(key string, opts ...BindOption) *AtomicInt {
-	return gconf.Int(key, opts...)
+	return gcfg.Int(key, opts...)
 }
 
 func Uint(key string, opts ...BindOption) *AtomicUint {
-	return gconf.Uint(key, opts...)
+	return gcfg.Uint(key, opts...)
 }
 
 func Int64(key string, opts ...BindOption) *AtomicInt64 {
-	return gconf.Int64(key, opts...)
+	return gcfg.Int64(key, opts...)
 }
 
 func Int32(key string, opts ...BindOption) *AtomicInt32 {
-	return gconf.Int32(key, opts...)
+	return gcfg.Int32(key, opts...)
 }
 
 func Int16(key string, opts ...BindOption) *AtomicInt16 {
-	return gconf.Int16(key, opts...)
+	return gcfg.Int16(key, opts...)
 }
 
 func Int8(key string, opts ...BindOption) *AtomicInt8 {
-	return gconf.Int8(key, opts...)
+	return gcfg.Int8(key, opts...)
 }
 
 func Uint64(key string, opts ...BindOption) *AtomicUint64 {
-	return gconf.Uint64(key, opts...)
+	return gcfg.Uint64(key, opts...)
 }
 
 func Uint32(key string, opts ...BindOption) *AtomicUint32 {
-	return gconf.Uint32(key, opts...)
+	return gcfg.Uint32(key, opts...)
 }
 
 func Uint16(key string, opts ...BindOption) *AtomicUint16 {
-	return gconf.Uint16(key, opts...)
+	return gcfg.Uint16(key, opts...)
 }
 
 func Uint8(key string, opts ...BindOption) *AtomicUint8 {
-	return gconf.Uint8(key, opts...)
+	return gcfg.Uint8(key, opts...)
 }
 
 func Float64(key string, opts ...BindOption) *AtomicFloat64 {
-	return gconf.Float64(key, opts...)
+	return gcfg.Float64(key, opts...)
 }
 
 func Float32(key string, opts ...BindOption) *AtomicFloat32 {
-	return gconf.Float32(key, opts...)
+	return gcfg.Float32(key, opts...)
 }
 
 func String(key string, opts ...BindOption) *AtomicString {
-	return gconf.String(key, opts...)
+	return gcfg.String(key, opts...)
 }
 
 func Duration(key string, opts ...BindOption) *AtomicDuration {
-	return gconf.Duration(key, opts...)
+	return gcfg.Duration(key, opts...)
 }
 
 func Time(key string, opts ...BindOption) *AtomicTime {
-	return gconf.Time(key, opts...)
+	return gcfg.Time(key, opts...)
 }
 
 func IP(key string, opts ...BindOption) *AtomicIP {
-	return gconf.IP(key, opts...)
+	return gcfg.IP(key, opts...)
 }
