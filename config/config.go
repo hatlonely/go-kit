@@ -125,6 +125,9 @@ func NewConfig(decoder Decoder, provider Provider, cipher Cipher) (*Config, erro
 }
 
 type Config struct {
+	parent *Config
+	prefix string
+
 	provider Provider
 	storage  *Storage
 	decoder  Decoder
@@ -139,10 +142,18 @@ type Config struct {
 }
 
 func (c *Config) GetComponent() (Provider, *Storage, Decoder, Cipher) {
+	if c.parent != nil {
+		return c.parent.GetComponent()
+	}
+
 	return c.provider, c.storage, c.decoder, c.cipher
 }
 
 func (c *Config) Get(key string) (interface{}, bool) {
+	if c.parent != nil {
+		return c.parent.Get(prefixAppendKey(c.prefix, key))
+	}
+
 	val, err := c.GetE(key)
 	if err != nil {
 		return nil, false
@@ -151,24 +162,28 @@ func (c *Config) Get(key string) (interface{}, bool) {
 }
 
 func (c *Config) GetE(key string) (interface{}, error) {
+	if c.parent != nil {
+		return c.parent.GetE(prefixAppendKey(c.prefix, key))
+	}
 	return c.storage.Get(key)
 }
 
 func (c *Config) UnsafeSet(key string, val interface{}) error {
+	if c.parent != nil {
+		return c.parent.UnsafeSet(prefixAppendKey(c.prefix, key), val)
+	}
 	return c.storage.Set(key, val)
 }
 
 func (c *Config) Unmarshal(v interface{}, opts ...refx.Option) error {
+	if c.parent != nil {
+		return c.parent.storage.Sub(c.prefix).Unmarshal(v, opts...)
+	}
 	return c.storage.Unmarshal(v, opts...)
 }
 
 func (c *Config) Sub(key string) *Config {
-	storage := c.storage.Sub(key)
-	if storage == nil {
-		return nil
-	}
-
-	return &Config{storage: storage}
+	return &Config{parent: c, prefix: key}
 }
 
 func (c *Config) SubArr(key string) ([]*Config, error) {
@@ -177,8 +192,8 @@ func (c *Config) SubArr(key string) ([]*Config, error) {
 		return nil, err
 	}
 	var configs []*Config
-	for _, storage := range vs {
-		configs = append(configs, &Config{storage: storage})
+	for i := range vs {
+		configs = append(configs, &Config{parent: c, prefix: prefixAppendIdx(key, i)})
 	}
 	return configs, nil
 }
@@ -189,8 +204,8 @@ func (c *Config) SubMap(key string) (map[string]*Config, error) {
 		return nil, err
 	}
 	configMap := map[string]*Config{}
-	for k, v := range kvs {
-		configMap[k] = &Config{storage: v}
+	for k := range kvs {
+		configMap[k] = &Config{parent: c, prefix: prefixAppendKey(key, k)}
 	}
 	return configMap, nil
 }
@@ -298,9 +313,17 @@ func (c *Config) Watch() error {
 type OnChangeHandler func(conf *Config)
 
 func (c *Config) AddOnChangeHandler(handler OnChangeHandler) {
+	if c.parent != nil {
+		c.parent.AddOnItemChangeHandler(c.prefix, handler)
+		return
+	}
 	c.AddOnItemChangeHandler("", handler)
 }
 
 func (c *Config) AddOnItemChangeHandler(key string, handler OnChangeHandler) {
+	if c.parent != nil {
+		c.parent.AddOnItemChangeHandler(prefixAppendKey(c.prefix, key), handler)
+		return
+	}
 	c.itemHandlers[key] = append(c.itemHandlers[key], handler)
 }
