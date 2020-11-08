@@ -239,35 +239,36 @@ func TestExample3(t *testing.T) {
 // 可维护性：和场景二一样
 // 安全性：和场景二一样
 func TestExample4(t *testing.T) {
+	CreateTestFile()
+
 	// package module
-	var AccessKeyID config.AtomicString
-	var AccessKeySecret config.AtomicString
-	var Endpoint config.AtomicString
+	var RedisAddr config.AtomicString
+	var MysqlHost config.AtomicString
 
 	// package main
-	conf, err := config.NewConfigWithBaseFile("testfile/base.json")
+	cfg, err := config.NewSimpleFileConfig("test.json")
 	if err != nil {
 		panic(err)
 	}
-	conf.AddOnChangeHandler(func(conf *config.Config) {
-		AccessKeyID.Set(conf.GetString("OSS.AccessKeyID"))
-		AccessKeySecret.Set(conf.GetString("OSS.AccessKeySecret"))
-		Endpoint.Set(conf.GetString("OSS.Endpoint"))
+	cfg.SetLogger(logger.NewStdoutLogger())
+	cfg.AddOnChangeHandler(func(conf *config.Config) {
+		RedisAddr.Set(conf.GetString("redis.addr"))
+		MysqlHost.Set(conf.GetString("mysql.host"))
 	})
-	if err := conf.Watch(); err != nil {
+	if err := cfg.Watch(); err != nil {
 		panic(err)
 	}
-	defer conf.Stop()
+	defer cfg.Stop()
 
 	// package module
-	fmt.Println(AccessKeyID.Get())
-	fmt.Println(AccessKeySecret.Get())
-	fmt.Println(Endpoint.Get())
+	fmt.Println(RedisAddr.Get())
+	fmt.Println(MysqlHost.Get())
 
 	// package test
-	AccessKeyID = *config.NewAtomicString("test-ak")
-	AccessKeySecret = *config.NewAtomicString("test-sk")
-	Endpoint = *config.NewAtomicString("endpoint")
+	RedisAddr = *config.NewAtomicString("127.0.0.1:6379")
+	MysqlHost = *config.NewAtomicString("localhost")
+
+	DeleteTestFile()
 }
 
 // 场景五: 在 OnChangeHandler 中初始化变量，模块中仅声明变量，不绑定 key
