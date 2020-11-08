@@ -226,7 +226,7 @@ func (c *Config) Watch() error {
 		}
 
 		for _, handler := range c.itemHandlers[""] {
-			handler(c.Sub(""))
+			handler(c)
 		}
 		return nil
 	})
@@ -275,7 +275,7 @@ func (c *Config) Watch() error {
 						if !traveled[key] {
 							traveled[key] = true
 							for _, handler := range c.itemHandlers[key] {
-								handler(c.Sub(""))
+								handler(c.Sub(key))
 							}
 						}
 						_, key, err = getLastToken(key)

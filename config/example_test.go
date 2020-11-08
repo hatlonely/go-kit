@@ -205,7 +205,7 @@ func TestExample3(t *testing.T) {
 	defer config.Stop()
 
 	// package module
-	type RedisOptions struct {
+	type Options struct {
 		Addr         string        `dft:"127.0.0.1:6379"`
 		DialTimeout  time.Duration `dft:"300ms"`
 		ReadTimeout  time.Duration `dft:"300ms"`
@@ -216,14 +216,14 @@ func TestExample3(t *testing.T) {
 		Password     string
 	}
 
-	var option = config.Bind("redis", RedisOptions{}, config.WithUnmarshalOptions(refx.WithCamelName()))
-	fmt.Println(option.Load().(RedisOptions).Addr)
-	fmt.Println(option.Load().(RedisOptions).DialTimeout)
-	fmt.Println(option.Load().(RedisOptions).ReadTimeout)
+	var option = config.Bind("redis", Options{}, config.WithUnmarshalOptions(refx.WithCamelName()))
+	fmt.Println(option.Load().(Options).Addr)
+	fmt.Println(option.Load().(Options).DialTimeout)
+	fmt.Println(option.Load().(Options).ReadTimeout)
 
 	// package test
 	option = &atomic.Value{}
-	option.Store(RedisOptions{
+	option.Store(Options{
 		Addr:        "127.0.0.1:6379",
 		DialTimeout: 300 * time.Millisecond,
 		ReadTimeout: 300 * time.Millisecond,
@@ -278,42 +278,52 @@ func TestExample4(t *testing.T) {
 // 可维护性：和场景三一样
 // 安全性：和场景三一样
 func TestExample5(t *testing.T) {
+	CreateTestFile()
+
 	// package module
-	type ModOption struct {
-		AccessKeyID     string
-		AccessKeySecret string
-		Endpoint        string
+	type Options struct {
+		Addr         string        `dft:"127.0.0.1:6379"`
+		DialTimeout  time.Duration `dft:"300ms"`
+		ReadTimeout  time.Duration `dft:"300ms"`
+		WriteTimeout time.Duration `dft:"300ms"`
+		MaxRetries   int           `dft:"3"`
+		PoolSize     int           `dft:"20"`
+		DB           int
+		Password     string
 	}
-	var option atomic.Value
+	var options atomic.Value
 
 	// package main
-	conf, err := config.NewConfigWithBaseFile("testfile/base.json")
+	cfg, err := config.NewSimpleFileConfig("test.json")
 	if err != nil {
 		panic(err)
 	}
-	conf.AddOnChangeHandler(func(conf *config.Config) {
-		var opt ModOption
-		if err := conf.Sub("OSS").Unmarshal(&opt); err != nil {
+	cfg.SetLogger(logger.NewStdoutLogger())
+	cfg.AddOnChangeHandler(func(conf *config.Config) {
+		var opt Options
+		if err := conf.Sub("redis").Unmarshal(&opt, refx.WithCamelName()); err != nil {
 			return
 		}
-		option.Store(opt)
+		options.Store(opt)
 	})
-	if err := conf.Watch(); err != nil {
+	if err := cfg.Watch(); err != nil {
 		panic(err)
 	}
-	defer conf.Stop()
+	defer cfg.Stop()
 
 	// package module
-	fmt.Println(option.Load().(ModOption).AccessKeyID)
-	fmt.Println(option.Load().(ModOption).AccessKeySecret)
-	fmt.Println(option.Load().(ModOption).Endpoint)
+	fmt.Println(options.Load().(Options).Addr)
+	fmt.Println(options.Load().(Options).DialTimeout)
+	fmt.Println(options.Load().(Options).ReadTimeout)
 
 	// package test
-	option.Store(ModOption{
-		AccessKeyID:     "test-ak",
-		AccessKeySecret: "test-sk",
-		Endpoint:        "endpoint",
+	options.Store(Options{
+		Addr:        "127.0.0.1:6379",
+		DialTimeout: 200 * time.Millisecond,
+		ReadTimeout: 200 * time.Millisecond,
 	})
+
+	DeleteTestFile()
 }
 
 // 场景六: 使用绑定变量作为参数传递给构造函数
