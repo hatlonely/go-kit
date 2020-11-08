@@ -2,11 +2,117 @@ package config_test
 
 import (
 	"fmt"
+	"os"
 	"sync/atomic"
 	"testing"
 
 	"github.com/hatlonely/go-kit/config"
 )
+
+func CreateTestFile() {
+	fp, _ := os.Create("test.json")
+	_, _ = fp.WriteString(`{
+  "http": {
+    "port": 80
+  },
+  "grpc": {
+    "port": 6080
+  },
+  "service": {
+    "accountExpiration": "5m",
+    "captchaExpiration": "30m"
+  },
+  "redis": {
+    "addr": "127.0.0.1:6379",
+    "dialTimeout": "200ms",
+    "readTimeout": "200ms",
+    "writeTimeout": "200ms",
+    "maxRetries": 3,
+    "poolSize": 20,
+    "db": 0,
+    "password": ""
+  },
+  "mysql": {
+    "username": "root",
+    "password": "",
+    "database": "account",
+    "host": "127.0.0.1",
+    "port": 3306,
+    "connMaxLifeTime": "60s",
+    "maxIdleConns": 10,
+    "maxOpenConns": 20
+  },
+  "email": {
+    "from": "hatlonely@foxmail.com",
+    "password": "123456",
+    "server": "smtp.qq.com",
+    "port": 25
+  },
+  "logger": {
+    "grpc": {
+      "level": "Info",
+      "writers": [{
+        "type": "RotateFile",
+        "rotateFileWriter": {
+          "filename": "log/account.rpc",
+          "maxAge": "24h",
+          "formatter": {
+            "type": "Json"
+          }
+        }
+      }]
+    },
+    "info": {
+      "level": "Info",
+      "writers": [{
+        "type": "RotateFile",
+        "rotateFileWriter": {
+          "filename": "log/account.log",
+          "maxAge": "48h",
+          "formatter": {
+            "type": "Json"
+          }
+        }
+      }]
+    }
+  }
+}`)
+	_ = fp.Close()
+}
+
+func CreateBaseFile() {
+	fp, _ := os.Create("base.json")
+	_, _ = fp.WriteString(`{
+  "decoder": {
+    "type": "Json"
+  },
+  "provider": {
+    "type": "Local",
+	"localProvider": {
+      "filename": "test.json"
+    }
+  },
+  "cipher": {
+    "type": "Group",
+    "cipherGroup": [{
+      "type": "AES",
+      "aesCipher": {
+        "base64Key": "IrjXy4vx7iwgCLaUeu5TVUA9TkgMwSw3QWcgE/IW5W0="
+      }
+    }, {
+      "type": "Base64",
+    }]
+  }
+}`)
+}
+
+func DeleteTestFile() {
+	_ = os.Remove("test.json")
+}
+
+func DeleteBaseFile() {
+	_ = os.Remove("base.json")
+}
 
 // 场景一：直接使用 config 的全局 Get 方法
 // 可读性：代码最简单，无需提前声明，写起来最方便，可读性也还可以
@@ -14,26 +120,27 @@ import (
 // 可测试性：需要调用 config 的 set 方法，mock 使用到的配置项，mock 的代价较高
 // 可维护性：配置项散落在代码中，新增和修改都不太方便
 // 安全性：可使用 GetD，GetE 之类的方法来做一些错误处理，关联的多个配置项无法保证原子性（这种场景触发几率较低，目前还未碰到过）
-//func TestExample1(t *testing.T) {
-//	// package main
-//	if err := config.Init("testfile/base.json"); err != nil {
-//		panic(err)
-//	}
-//	if err := config.Watch(); err != nil {
-//		panic(err)
-//	}
-//	defer config.Stop()
-//
-//	// package module
-//	fmt.Println(config.GetString("OSS.AccessKeyID"))
-//	fmt.Println(config.GetString("OSS.AccessKeySecret"))
-//	fmt.Println(config.GetString("OSS.Endpoint"))
-//
-//	// package test
-//	_ = config.UnsafeSet("OSS.AccessKeyID", "test-ak")
-//	_ = config.UnsafeSet("OSS.AccessKeyID", "test-sk")
-//	_ = config.UnsafeSet("OSS.AccessKeyID", "endpoint")
-//}
+
+func TestExample1(t *testing.T) {
+	// package main
+	if err := config.Init("testfile/base.json"); err != nil {
+		panic(err)
+	}
+	if err := config.Watch(); err != nil {
+		panic(err)
+	}
+	defer config.Stop()
+
+	// package module
+	fmt.Println(config.GetString("OSS.AccessKeyID"))
+	fmt.Println(config.GetString("OSS.AccessKeySecret"))
+	fmt.Println(config.GetString("OSS.Endpoint"))
+
+	// package test
+	_ = config.UnsafeSet("OSS.AccessKeyID", "test-ak")
+	_ = config.UnsafeSet("OSS.AccessKeyID", "test-sk")
+	_ = config.UnsafeSet("OSS.AccessKeyID", "endpoint")
+}
 
 // 场景二：使用全局 config 的 bind 类型方法，类 flag 的使用方式
 // 可读性：代码比较简单，类似 flag 的使用方法，需提前将变量绑定一个 key 上，使用时直接使用变量，可读性较好

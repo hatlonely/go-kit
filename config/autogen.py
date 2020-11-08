@@ -188,6 +188,8 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
+
+	github.com/hatlonely/go-kit/refx
 )
 
 var gconf = &Config{

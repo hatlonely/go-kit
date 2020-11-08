@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
+
+	"github.com/hatlonely/go-kit/refx"
 )
 
 var gconf = &Config{
@@ -41,8 +43,8 @@ func UnsafeSet(key string, val interface{}) error {
 	return gconf.UnsafeSet(key, val)
 }
 
-func Unmarshal(v interface{}) error {
-	return gconf.Unmarshal(v)
+func Unmarshal(v interface{}, opts ...refx.Option) error {
+	return gconf.Unmarshal(v, opts...)
 }
 
 func Sub(key string) *Config {
