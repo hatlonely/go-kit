@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"testing"
+	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
 
@@ -12,17 +13,70 @@ import (
 func CreateTestFile() {
 	fp, _ := os.Create("test.json")
 	_, _ = fp.WriteString(`{
-  "host": "localhost",
-  "port": 6060,
-  "log": [{
-    "file": "test.info",
-    "maxAge": "24h",
-    "format": "json"
-  }, {
-    "file": "test.warn",
-    "maxAge": "24h",
-    "format": "text"
-  }]
+  "http": {
+    "port": 80
+  },
+  "grpc": {
+    "port": 6080
+  },
+  "service": {
+    "accountExpiration": "5m",
+    "captchaExpiration": "30m"
+  },
+  "redis": {
+    "addr": "127.0.0.1:6379",
+    "dialTimeout": "200ms",
+    "readTimeout": "200ms",
+    "writeTimeout": "200ms",
+    "maxRetries": 3,
+    "poolSize": 20,
+    "db": 0,
+    "password": ""
+  },
+  "mysql": {
+    "username": "root",
+    "password": "",
+    "database": "account",
+    "host": "127.0.0.1",
+    "port": 3306,
+    "connMaxLifeTime": "60s",
+    "maxIdleConns": 10,
+    "maxOpenConns": 20
+  },
+  "email": {
+    "from": "hatlonely@foxmail.com",
+    "password": "123456",
+    "server": "smtp.qq.com",
+    "port": 25
+  },
+  "logger": {
+    "grpc": {
+      "level": "Info",
+      "writers": [{
+        "type": "RotateFile",
+        "rotateFileWriter": {
+          "filename": "log/account.rpc",
+          "maxAge": "24h",
+          "formatter": {
+            "type": "Json"
+          }
+        }
+      }]
+    },
+    "info": {
+      "level": "Info",
+      "writers": [{
+        "type": "RotateFile",
+        "rotateFileWriter": {
+          "filename": "log/account.log",
+          "maxAge": "48h",
+          "formatter": {
+            "type": "Json"
+          }
+        }
+      }]
+    }
+  }
 }`)
 	_ = fp.Close()
 }
@@ -61,6 +115,163 @@ func DeleteBaseFile() {
 	_ = os.Remove("base.json")
 }
 
+func TestConfig_Get(t *testing.T) {
+	Convey("TestConfig_Get", t, func() {
+		CreateTestFile()
+
+		cfg, err := NewSimpleFileConfig("test.json")
+		So(err, ShouldBeNil)
+		So(cfg.GetString("http.port"), ShouldEqual, "80")
+		So(cfg.GetInt("http.port"), ShouldEqual, 80)
+		So(cfg.GetInt64("http.port"), ShouldEqual, 80)
+		So(cfg.GetInt("grpc.port"), ShouldEqual, 6080)
+		So(cfg.GetDuration("service.accountExpiration"), ShouldEqual, 5*time.Minute)
+		So(cfg.GetDuration("service.captchaExpiration"), ShouldEqual, 30*time.Minute)
+		So(cfg.GetString("service.accountExpiration"), ShouldEqual, "5m")
+		So(cfg.GetString("service.captchaExpiration"), ShouldEqual, "30m")
+		So(cfg.GetString("logger.grpc.level"), ShouldEqual, "Info")
+		So(cfg.GetString("logger.grpc.writers[0].type"), ShouldEqual, "RotateFile")
+		So(cfg.GetString("logger.grpc.writers[0].rotateFileWriter.filename"), ShouldEqual, "log/account.rpc")
+		So(cfg.GetDuration("logger.grpc.writers[0].rotateFileWriter.maxAge"), ShouldEqual, 24*time.Hour)
+		So(cfg.GetString("logger.grpc.writers[0].rotateFileWriter.formatter.type"), ShouldEqual, "Json")
+
+		DeleteTestFile()
+	})
+}
+
+func TestConfig_Unmarshal(t *testing.T) {
+	type Options struct {
+		Http struct {
+			Port int
+		}
+		Grpc struct {
+			Port int
+		}
+
+		Service struct {
+			AccountExpiration time.Duration
+			CaptchaExpiration time.Duration
+		}
+
+		Logger struct {
+			Info struct {
+				Level   string `rule:"x in ['Info', 'Warn', 'Debug', 'Error']"`
+				Writers []struct {
+					Type             string `dft:"Stdout" rule:"x in ['RotateFile', 'Stdout']"`
+					RotateFileWriter struct {
+						Filename  string        `bind:"required"`
+						MaxAge    time.Duration `dft:"24h"`
+						Formatter struct {
+							Type string `dft:"Json" rule:"x in ['Json', 'Text']"`
+						}
+					}
+				}
+			}
+		}
+	}
+
+	Convey("TestConfig_Unmarshal", t, func() {
+		CreateTestFile()
+
+		cfg, err := NewSimpleFileConfig("test.json")
+		So(err, ShouldBeNil)
+
+		var options Options
+		So(cfg.Unmarshal(&options, refx.WithCamelName()), ShouldBeNil)
+
+		So(options.Http.Port, ShouldEqual, 80)
+		So(options.Grpc.Port, ShouldEqual, 6080)
+		So(options.Grpc.Port, ShouldEqual, 6080)
+		So(options.Service.AccountExpiration, ShouldEqual, 5*time.Minute)
+		So(options.Service.CaptchaExpiration, ShouldEqual, 30*time.Minute)
+		So(options.Logger.Info.Level, ShouldEqual, "Info")
+		So(options.Logger.Info.Writers[0].Type, ShouldEqual, "RotateFile")
+		So(options.Logger.Info.Writers[0].RotateFileWriter.Filename, ShouldEqual, "log/account.log")
+		So(options.Logger.Info.Writers[0].RotateFileWriter.MaxAge, ShouldEqual, 48*time.Hour)
+		So(options.Logger.Info.Writers[0].RotateFileWriter.Formatter.Type, ShouldEqual, "Json")
+
+		DeleteTestFile()
+	})
+}
+
+func TestConfig_Sub(t *testing.T) {
+	Convey("TestConfig_Sub", t, func() {
+		CreateTestFile()
+		cfg, err := NewSimpleFileConfig("test.json")
+		So(err, ShouldBeNil)
+
+		Convey("sub", func() {
+			cfg := cfg.Sub("logger")
+			So(cfg.GetString("grpc.writers[0].type"), ShouldEqual, "RotateFile")
+			So(cfg.GetString("grpc.writers[0].rotateFileWriter.filename"), ShouldEqual, "log/account.rpc")
+			So(cfg.GetDuration("grpc.writers[0].rotateFileWriter.maxAge"), ShouldEqual, 24*time.Hour)
+			So(cfg.GetString("grpc.writers[0].rotateFileWriter.formatter.type"), ShouldEqual, "Json")
+		})
+
+		Convey("sub unmarshal", func() {
+			type Options struct {
+				Level   string `rule:"x in ['Info', 'Warn', 'Debug', 'Error']"`
+				Writers []struct {
+					Type             string `dft:"Stdout" rule:"x in ['RotateFile', 'Stdout']"`
+					RotateFileWriter struct {
+						Filename  string        `bind:"required"`
+						MaxAge    time.Duration `dft:"24h"`
+						Formatter struct {
+							Type string `dft:"Json" rule:"x in ['Json', 'Text']"`
+						}
+					}
+				}
+			}
+			var options Options
+			cfg := cfg.Sub("logger.info")
+			So(cfg.Unmarshal(&options, refx.WithCamelName()), ShouldBeNil)
+			So(options.Writers[0].Type, ShouldEqual, "RotateFile")
+			So(options.Writers[0].RotateFileWriter.Filename, ShouldEqual, "log/account.log")
+			So(options.Writers[0].RotateFileWriter.MaxAge, ShouldEqual, 48*time.Hour)
+			So(options.Writers[0].RotateFileWriter.Formatter.Type, ShouldEqual, "Json")
+		})
+
+		Convey("sub array", func() {
+			cfgArr, err := cfg.SubArr("logger.grpc.writers")
+			So(err, ShouldBeNil)
+			So(len(cfgArr), ShouldEqual, 1)
+			So(cfgArr[0].GetString("type"), ShouldEqual, "RotateFile")
+			So(cfgArr[0].GetString("rotateFileWriter.filename"), ShouldEqual, "log/account.rpc")
+			So(cfgArr[0].GetDuration("rotateFileWriter.maxAge"), ShouldEqual, 24*time.Hour)
+			So(cfgArr[0].GetString("rotateFileWriter.formatter.type"), ShouldEqual, "Json")
+
+			type Options struct {
+				Type             string `dft:"Stdout" rule:"x in ['RotateFile', 'Stdout']"`
+				RotateFileWriter struct {
+					Filename  string        `bind:"required"`
+					MaxAge    time.Duration `dft:"24h"`
+					Formatter struct {
+						Type string `dft:"Json" rule:"x in ['Json', 'Text']"`
+					}
+				}
+			}
+			var options Options
+			So(cfgArr[0].Unmarshal(&options, refx.WithCamelName()), ShouldBeNil)
+			So(options.Type, ShouldEqual, "RotateFile")
+			So(options.RotateFileWriter.Filename, ShouldEqual, "log/account.rpc")
+			So(options.RotateFileWriter.MaxAge, ShouldEqual, 24*time.Hour)
+			So(options.RotateFileWriter.Formatter.Type, ShouldEqual, "Json")
+		})
+
+		Convey("sub map", func() {
+			cfg, err := cfg.SubMap("logger")
+			So(err, ShouldBeNil)
+			So(cfg["grpc"].GetString("level"), ShouldEqual, "Info")
+			So(cfg["grpc"].GetString("writers[0].type"), ShouldEqual, "RotateFile")
+			So(cfg["grpc"].GetString("writers[0].rotateFileWriter.filename"), ShouldEqual, "log/account.rpc")
+			So(cfg["grpc"].GetDuration("writers[0].rotateFileWriter.maxAge"), ShouldEqual, 24*time.Hour)
+			So(cfg["grpc"].GetString("writers[0].rotateFileWriter.formatter.type"), ShouldEqual, "Json")
+		})
+
+		DeleteTestFile()
+	})
+}
+
 func TestNewConfigWithBaseFile(t *testing.T) {
 	Convey("TestNewConfigWithBaseFile", t, func() {
 		CreateTestFile()
@@ -75,96 +286,3 @@ func TestNewConfigWithBaseFile(t *testing.T) {
 		DeleteBaseFile()
 	})
 }
-
-//func TestConfigExample1(t *testing.T) {
-//	Convey("TestConfigExample1", t, func() {
-//		CreateTestFile()
-//		CreateBaseFile()
-//		//provider, _ := NewLocalProvider("test.json")
-//		//conf, err := NewConfig(&Json5Decoder{}, provider, nil)
-//
-//		conf, err := NewConfigWithBaseFile("base.json", refx.WithCamelName())
-//		So(err, ShouldBeNil)
-//		//So(conf.GetInt("Port"), ShouldEqual, 6060)
-//		//So(conf.GetString("Host"), ShouldEqual, "localhost")
-//		//So(conf.GetString("Logger[0].File"), ShouldEqual, "test.info")
-//		//So(conf.GetDuration("Logger[0].MaxAge"), ShouldEqual, 24*time.Hour)
-//		//So(conf.GetString("Logger[1].File"), ShouldEqual, "test.warn")
-//		//So(conf.GetDuration("Logger[1].MaxAge"), ShouldEqual, 168*time.Hour)
-//
-//		if err := conf.Watch(); err != nil {
-//			fmt.Println(err)
-//		}
-//
-//		opt1 := &LogOption{}
-//		So(conf.Sub("log[0]").Unmarshal(opt1), ShouldBeNil)
-//		fmt.Println(opt1)
-//		fmt.Println(reflect.TypeOf(opt1))
-//		fmt.Println(conf.Get("OSS"))
-//
-//		opt := conf.Bind("Logger[0]", LogOption{}, OnSucc(func(c *Config) {
-//			fmt.Println("update logger succ", c.GetString("Logger[0].Name"))
-//		}), OnFail(func(err error) {
-//			fmt.Println(err)
-//
-//		}))
-//		port := conf.Int("Port", OnSucc(func(c *Config) {
-//			fmt.Println("update port success")
-//		}))
-//		fmt.Println(conf.Get("Logger[0]"))
-//		for i := 0; i < 60; i++ {
-//			fmt.Println(port.Get())
-//			fmt.Println(opt.Load().(LogOption))
-//			//time.Sleep(time.Second)
-//		}
-//
-//		DeleteTestFile()
-//	})
-//}
-//
-//type LogOption struct {
-//	File   string
-//	Name   string
-//	MaxAge time.Duration
-//}
-//
-//type MyOption struct {
-//	Host   string
-//	Port   int
-//	Logger []*LogOption
-//}
-//
-//func TestConfigExample2(t *testing.T) {
-//	Convey("TestConfigExample2", t, func() {
-//		CreateTestFile()
-//		//provider, _ := NewLocalProvider("testfile/test.json")
-//		//abc, _ := base64.StdEncoding.DecodeString("IrjXy4vx7iwgCLaUeu5TVUA9TkgMwSw3QWcgE/IW5W0=")
-//		//cipher, _ := NewAESCipher(abc)
-//		//conf, err := NewConfig(&Json5Decoder{}, provider, cipher)
-//		conf, err := NewConfigWithBaseFile("testfile/base.json")
-//		So(err, ShouldBeNil)
-//
-//		buf, _ := json.MarshalIndent(conf.storage.root, "  ", "  ")
-//		fmt.Println(string(buf))
-//
-//		opt := &MyOption{}
-//		So(conf.Unmarshal(opt), ShouldBeNil)
-//		So(opt.Host, ShouldEqual, "localhost")
-//		fmt.Println(opt)
-//		fmt.Println(opt.Logger[0])
-//		DeleteTestFile()
-//	})
-//}
-//
-//func TestNewSimpleFileConfig(t *testing.T) {
-//	Convey("TestNewSimpleFileConfig", t, func() {
-//		CreateTestFile()
-//
-//		conf, err := NewSimpleFileConfig("test.json", WithSimpleFileType("json"))
-//		So(err, ShouldBeNil)
-//		So(conf.GetInt("port"), ShouldEqual, 6060)
-//		So(conf.GetString("log[1].file"), ShouldEqual, "test.warn")
-//
-//		DeleteTestFile()
-//	})
-//}
