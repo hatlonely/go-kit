@@ -155,30 +155,32 @@ func TestExample1(t *testing.T) {
 // 可维护性：配置项可集中在模块中声明，维护起来稍微方便一些
 // 安全性：可以在检查声明中增加失败回调保证安全，关联的多个配置项同样无法保证原子性
 func TestExample2(t *testing.T) {
+	CreateTestFile()
+
 	// package main
-	if err := config.Init("testfile/base.json"); err != nil {
+	if err := config.InitWithSimpleFile("test.json"); err != nil {
 		panic(err)
 	}
+	config.SetLogger(logger.NewStdoutLogger())
 	if err := config.Watch(); err != nil {
 		panic(err)
 	}
 	defer config.Stop()
 
 	// package module
-	var AccessKeyID = config.String("OSS.AccessKeyID", config.OnFail(func(err error) {
+	var redisAddr = config.String("redis.addr", config.OnFail(func(err error) {
 		fmt.Println(err)
 	}))
-	var AccessKeySecret = config.String("OSS.AccessKeySecret")
-	var Endpoint = config.String("OSS.Endpoint")
+	var mysqlHost = config.String("mysql.host")
 
-	fmt.Println(AccessKeyID.Get())
-	fmt.Println(AccessKeySecret.Get())
-	fmt.Println(Endpoint.Get())
+	fmt.Println(redisAddr.Get())
+	fmt.Println(mysqlHost.Get())
 
 	// package test
-	AccessKeyID = config.NewAtomicString("test-ak")
-	AccessKeySecret = config.NewAtomicString("test-sk")
-	Endpoint = config.NewAtomicString("endpoint")
+	redisAddr = config.NewAtomicString("127.0.0.1:6379")
+	mysqlHost = config.NewAtomicString("localhost")
+
+	DeleteTestFile()
 }
 
 // 场景三: 将配置项定义成一个结构体，使用全局 config 的 bind 对象方法
