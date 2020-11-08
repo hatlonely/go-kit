@@ -299,9 +299,9 @@ func TestExample5(t *testing.T) {
 		panic(err)
 	}
 	cfg.SetLogger(logger.NewStdoutLogger())
-	cfg.AddOnChangeHandler(func(conf *config.Config) {
+	cfg.AddOnItemChangeHandler("redis", func(conf *config.Config) {
 		var opt Options
-		if err := conf.Sub("redis").Unmarshal(&opt, refx.WithCamelName()); err != nil {
+		if err := conf.Unmarshal(&opt, refx.WithCamelName()); err != nil {
 			return
 		}
 		options.Store(opt)
