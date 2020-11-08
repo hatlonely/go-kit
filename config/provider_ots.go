@@ -146,7 +146,7 @@ func (p *OTSProvider) Dump(buf []byte) error {
 
 func (p *OTSProvider) EventLoop(ctx context.Context) error {
 	go func() {
-		ticker := time.NewTicker(200 * time.Millisecond)
+		ticker := time.NewTicker(p.interval)
 		defer ticker.Stop()
 
 	out:
