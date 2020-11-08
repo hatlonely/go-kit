@@ -19,7 +19,6 @@ func TestNaming(t *testing.T) {
 			So(CamelName("MyIPAddress"), ShouldEqual, "myIPAddress")
 			So(CamelName("IP-Address"), ShouldEqual, "ipAddress")
 			So(CamelName("IP-AddressAPP"), ShouldEqual, "ipAddressAPP")
-
 		})
 
 		Convey("pascal name", func() {
