@@ -5,9 +5,11 @@ import (
 	"os"
 	"sync/atomic"
 	"testing"
+	"time"
 
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/logger"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 func CreateTestFile() {
@@ -190,34 +192,44 @@ func TestExample2(t *testing.T) {
 // 可维护性：配置项可集中在一个结构体中，和场景二差不多
 // 安全性：可保证关联配置项的原子性
 func TestExample3(t *testing.T) {
+	CreateTestFile()
+
 	// package main
-	if err := config.Init("testfile/base.json"); err != nil {
+	if err := config.InitWithSimpleFile("test.json"); err != nil {
 		panic(err)
 	}
+	config.SetLogger(logger.NewStdoutLogger())
 	if err := config.Watch(); err != nil {
 		panic(err)
 	}
 	defer config.Stop()
 
 	// package module
-	type ModOption struct {
-		AccessKeyID     string
-		AccessKeySecret string
-		Endpoint        string
+	type RedisOptions struct {
+		Addr         string        `dft:"127.0.0.1:6379"`
+		DialTimeout  time.Duration `dft:"300ms"`
+		ReadTimeout  time.Duration `dft:"300ms"`
+		WriteTimeout time.Duration `dft:"300ms"`
+		MaxRetries   int           `dft:"3"`
+		PoolSize     int           `dft:"20"`
+		DB           int
+		Password     string
 	}
 
-	var option = config.Bind("OSS", ModOption{})
-	fmt.Println(option.Load().(ModOption).AccessKeyID)
-	fmt.Println(option.Load().(ModOption).AccessKeySecret)
-	fmt.Println(option.Load().(ModOption).Endpoint)
+	var option = config.Bind("redis", RedisOptions{}, config.WithUnmarshalOptions(refx.WithCamelName()))
+	fmt.Println(option.Load().(RedisOptions).Addr)
+	fmt.Println(option.Load().(RedisOptions).DialTimeout)
+	fmt.Println(option.Load().(RedisOptions).ReadTimeout)
 
 	// package test
 	option = &atomic.Value{}
-	option.Store(ModOption{
-		AccessKeyID:     "test-ak",
-		AccessKeySecret: "test-sk",
-		Endpoint:        "endpoint",
+	option.Store(RedisOptions{
+		Addr:        "127.0.0.1:6379",
+		DialTimeout: 300 * time.Millisecond,
+		ReadTimeout: 300 * time.Millisecond,
 	})
+
+	DeleteTestFile()
 }
 
 // 场景四: 在 OnChangeHandler 中初始化变量，模块中仅声明变量，不绑定 key
