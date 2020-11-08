@@ -449,45 +449,46 @@ func (t MyType7) DoSomething() {
 // 可维护性：和场景一类似
 // 安全性：和场景一类似
 func TestExample8(t *testing.T) {
+	CreateTestFile()
+
 	// package main
-	if err := config.Init("testfile/base.json"); err != nil {
+	if err := config.InitWithSimpleFile("test.json"); err != nil {
 		panic(err)
 	}
+	config.SetLogger(logger.NewStdoutLogger())
 	if err := config.Watch(); err != nil {
 		panic(err)
 	}
 	defer config.Stop()
 
-	myType := NewMyType8("OSS.AccessKeyID", "OSS.AccessKeySecret", "OSS.Endpoint")
+	myType := NewMyType8("redis.addr", "mysql.host")
 
 	// package module
 	myType.DoSomething()
 
 	// package test
-	testType := NewMyType8("OSS.AccessKeyID", "OSS.AccessKeySecret", "OSS.Endpoint")
-	_ = config.UnsafeSet("OSS.AccessKeyID", "test-ak")
-	_ = config.UnsafeSet("OSS.AccessKeyID", "test-sk")
-	_ = config.UnsafeSet("OSS.AccessKeyID", "endpoint")
+	testType := NewMyType8("redis.addr", "mysql.host")
+	_ = config.UnsafeSet("redis.addr", "127.0.0.1:6378")
+	_ = config.UnsafeSet("mysql.host", "localhost")
 	testType.DoSomething()
+
+	DeleteTestFile()
 }
 
 // package module
 type MyType8 struct {
-	AccessKeyIDConfigKey     string
-	AccessKeySecretConfigKey string
-	EndpointConfigKey        string
+	RedisAddrKey string
+	MysqlHostKey string
 }
 
-func NewMyType8(AccessKeyIDConfigKey string, AccessKeySecretConfigKey string, EndpointConfigKey string) *MyType8 {
+func NewMyType8(redisAddrKey string, mysqlHostKey string) *MyType8 {
 	return &MyType8{
-		AccessKeyIDConfigKey:     AccessKeyIDConfigKey,
-		AccessKeySecretConfigKey: AccessKeySecretConfigKey,
-		EndpointConfigKey:        EndpointConfigKey,
+		RedisAddrKey: redisAddrKey,
+		MysqlHostKey: mysqlHostKey,
 	}
 }
 
 func (t MyType8) DoSomething() {
-	fmt.Println(config.GetString(t.AccessKeyIDConfigKey))
-	fmt.Println(config.GetString(t.AccessKeySecretConfigKey))
-	fmt.Println(config.GetString(t.EndpointConfigKey))
+	fmt.Println(config.GetString(t.RedisAddrKey))
+	fmt.Println(config.GetString(t.MysqlHostKey))
 }
