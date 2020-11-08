@@ -333,49 +333,50 @@ func TestExample5(t *testing.T) {
 // 可维护性：每个对象维护自己的动态参数，维护比较方便
 // 安全性：无法保证关联配置的原子性
 func TestExample6(t *testing.T) {
+	CreateTestFile()
+
 	// package main
-	conf, err := config.NewConfigWithBaseFile("testfile/base.json")
+	cfg, err := config.NewSimpleFileConfig("test.json")
 	if err != nil {
 		panic(err)
 	}
-	if err := conf.Watch(); err != nil {
+	cfg.SetLogger(logger.NewStdoutLogger())
+	if err := cfg.Watch(); err != nil {
 		panic(err)
 	}
-	defer conf.Stop()
+	defer cfg.Stop()
 
-	myType := NewMyType6(
-		conf.String("OSS.AccessKeyID"),
-		conf.String("OSS.AccessKeySecret"),
-		conf.String("OSS.Endpoint"),
-	)
+	myType := NewMyType6(cfg.String("redis.addr"), cfg.Duration("redis.dialTimeout"), cfg.Duration("mysql.readTimeout"))
 
 	// package module
 	myType.DoSomething()
 
 	// package test
-	testType := NewMyType6(config.NewAtomicString("test-ak"), config.NewAtomicString("test-sk"), config.NewAtomicString("endpoint"))
+	testType := NewMyType6(config.NewAtomicString("127.0.0.1:6378"), config.NewAtomicDuration(100*time.Millisecond), config.NewAtomicDuration(100*time.Millisecond))
 	testType.DoSomething()
+
+	DeleteTestFile()
 }
 
 // package module
 type MyType6 struct {
-	AccessKeyID     *config.AtomicString
-	AccessKeySecret *config.AtomicString
-	Endpoint        *config.AtomicString
+	Addr        *config.AtomicString
+	DialTimeout *config.AtomicDuration
+	ReadTimeout *config.AtomicDuration
 }
 
-func NewMyType6(accessKeyID *config.AtomicString, accessKeySecret *config.AtomicString, endpoint *config.AtomicString) *MyType6 {
+func NewMyType6(addr *config.AtomicString, dialTimeout *config.AtomicDuration, readTimeout *config.AtomicDuration) *MyType6 {
 	return &MyType6{
-		AccessKeyID:     accessKeyID,
-		AccessKeySecret: accessKeySecret,
-		Endpoint:        endpoint,
+		Addr:        addr,
+		DialTimeout: dialTimeout,
+		ReadTimeout: readTimeout,
 	}
 }
 
 func (t MyType6) DoSomething() {
-	fmt.Println(t.AccessKeyID.Get())
-	fmt.Println(t.AccessKeySecret.Get())
-	fmt.Println(t.Endpoint.Get())
+	fmt.Println(t.Addr.Get())
+	fmt.Println(t.DialTimeout.Get())
+	fmt.Println(t.ReadTimeout.Get())
 }
 
 // 场景七: 使用绑定的结构体作为参数传递给构造函数
