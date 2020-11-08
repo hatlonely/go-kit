@@ -202,7 +202,7 @@ func Init(filename string) error {
 
 func InitWithSimpleFile(filename string, opts ...SimpleFileOption) error {
 	var err error
-	if gcfg, err = NewSimpleFileConfig(filename, opts...); err != nil {
+	if gcfg, err = NewConfigWithSimpleFile(filename, opts...); err != nil {
 		return err
 	}
 	return nil
