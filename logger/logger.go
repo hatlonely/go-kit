@@ -103,6 +103,26 @@ func (l *Logger) Error(v interface{}) {
 	l.Log(LevelError, v)
 }
 
+func (l *Logger) Debugf(format string, args ...interface{}) {
+	l.Logf(LevelDebug, format, args...)
+}
+
+func (l *Logger) Infof(format string, args ...interface{}) {
+	l.Logf(LevelInfo, format, args...)
+}
+
+func (l *Logger) Warnf(format string, args ...interface{}) {
+	l.Logf(LevelWarn, format, args...)
+}
+
+func (l *Logger) Errorf(format string, args ...interface{}) {
+	l.Logf(LevelError, format, args...)
+}
+
+func (l *Logger) Logf(level Level, format string, args ...interface{}) {
+	l.Log(level, fmt.Sprintf(format, args...))
+}
+
 func (l *Logger) Log(level Level, v interface{}) {
 	if level < l.level {
 		return

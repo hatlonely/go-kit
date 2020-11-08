@@ -7,16 +7,9 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 
 	"github.com/hatlonely/go-kit/refx"
-	"github.com/hatlonely/go-kit/strx"
 )
-
-type Logger interface {
-	Infof(format string, args ...interface{})
-	Warnf(format string, args ...interface{})
-}
 
 type Options struct {
 	Cipher   CipherOptions
@@ -50,7 +43,6 @@ func NewConfigWithBaseFile(filename string, opts ...refx.Option) (*Config, error
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, errors.Wrap(err, "cfg.Unmarshal failed.")
 	}
-	fmt.Println(strx.JsonMarshalIndent(options))
 	return NewConfigWithOptions(&options)
 }
 
@@ -118,7 +110,7 @@ func NewConfig(decoder Decoder, provider Provider, cipher Cipher) (*Config, erro
 		provider:     provider,
 		storage:      storage,
 		decoder:      decoder,
-		log:          logrus.New(), // todo
+		log:          StdoutLogger{},
 		cipher:       cipher,
 		itemHandlers: map[string][]OnChangeHandler{},
 	}, nil
@@ -326,4 +318,19 @@ func (c *Config) AddOnItemChangeHandler(key string, handler OnChangeHandler) {
 		return
 	}
 	c.itemHandlers[key] = append(c.itemHandlers[key], handler)
+}
+
+type Logger interface {
+	Infof(format string, args ...interface{})
+	Warnf(format string, args ...interface{})
+}
+
+type StdoutLogger struct{}
+
+func (l StdoutLogger) Infof(format string, args ...interface{}) {
+	fmt.Printf(format+"\n", args...)
+}
+
+func (l StdoutLogger) Warnf(format string, args ...interface{}) {
+	fmt.Printf(format+"\n", args...)
 }
