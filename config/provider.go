@@ -30,12 +30,15 @@ func NewProviderWithOptions(options *ProviderOptions) (Provider, error) {
 		return NewLocalProviderWithOptions(&options.LocalProvider)
 	case "OTS":
 		return NewOTSProviderWithOptions(&options.OTSProvider)
+	case "OTSLegacy":
+		return NewOTSLegacyProviderWithOptions(&options.OTSLegacyProvider)
 	}
 	return nil, errors.Errorf("unsupported provider type [%v]", options.Type)
 }
 
 type ProviderOptions struct {
-	Type          string
-	LocalProvider LocalProviderOptions
-	OTSProvider   OTSProviderOptions
+	Type              string
+	LocalProvider     LocalProviderOptions
+	OTSProvider       OTSProviderOptions
+	OTSLegacyProvider OTSLegacyProviderOptions
 }
