@@ -14,21 +14,22 @@ import (
 )
 
 func TestOTSProvider(t *testing.T) {
-	Convey("TestOTSProvider", t, func() {
+	Convey("TestOTSProvider", t, func(c C) {
 		value := "hello world"
 
 		patches := ApplyMethod(reflect.TypeOf(&tablestore.TableStoreClient{}), "PutRow", func(
 			client *tablestore.TableStoreClient, req *tablestore.PutRowRequest) (*tablestore.PutRowResponse, error) {
+			c.So(req.PutRowChange.TableName, ShouldEqual, "TestConfig")
 			kvs := map[string]interface{}{}
 			for _, pk := range req.PutRowChange.PrimaryKey.PrimaryKeys {
 				kvs[pk.ColumnName] = pk.Value
 			}
+			c.So(kvs["Key"], ShouldEqual, "test")
 			for _, col := range req.PutRowChange.Columns {
 				kvs[col.ColumnName] = col.Value
 			}
 			value = kvs["Val"].(string)
-			time.Sleep(100 * time.Millisecond)
-			fmt.Println("put", req.PutRowChange.TableName, value)
+			fmt.Println("put", value)
 
 			return nil, nil
 		}).ApplyMethod(reflect.TypeOf(&tablestore.TableStoreClient{}), "DescribeTable", func(
@@ -46,13 +47,13 @@ func TestOTSProvider(t *testing.T) {
 			return nil, nil
 		}).ApplyMethod(reflect.TypeOf(&tablestore.TableStoreClient{}), "GetRow", func(
 			client *tablestore.TableStoreClient, req *tablestore.GetRowRequest) (*tablestore.GetRowResponse, error) {
+			c.So(req.SingleRowQueryCriteria.TableName, ShouldEqual, "TestConfig")
 			kvs := map[string]interface{}{}
 			for _, pk := range req.SingleRowQueryCriteria.PrimaryKey.PrimaryKeys {
 				kvs[pk.ColumnName] = pk.Value
 			}
-
-			time.Sleep(100 * time.Millisecond)
-			fmt.Println("get", req.SingleRowQueryCriteria.TableName, value)
+			c.So(kvs["Key"], ShouldEqual, "test")
+			fmt.Println("get", value)
 
 			return &tablestore.GetRowResponse{
 				PrimaryKey: tablestore.PrimaryKey{
@@ -67,17 +68,19 @@ func TestOTSProvider(t *testing.T) {
 		})
 		defer patches.Reset()
 
-		otsCli := tablestore.NewClient(
-			"https://hatlonely.cn-shanghai.ots.aliyuncs.com",
-			"hatlonely",
-			"xx",
-			"xx",
-		)
-		provider, err := NewOTSProvider(otsCli, "TestConfig", "test", 1000*time.Millisecond)
+		provider, err := NewOTSProviderWithOptions(&OTSProviderOptions{
+			Endpoint:        "https://hatlonely.cn-shanghai.ots.aliyuncs.com",
+			AccessKeyID:     "xx",
+			AccessKeySecret: "xx",
+			Instance:        "hatlonely",
+			Table:           "TestConfig",
+			Key:             "test",
+			Interval:        200 * time.Millisecond,
+		})
 		So(err, ShouldBeNil)
 		{
 			So(provider.Dump([]byte("hello world")), ShouldBeNil)
-			buf, _, err := OTSGetRow(otsCli, "TestConfig", "test")
+			buf, _, err := OTSGetRow(provider.otsCli, "TestConfig", "test")
 			So(err, ShouldBeNil)
 			So(string(buf), ShouldContainSubstring, "hello world")
 		}
@@ -90,7 +93,7 @@ func TestOTSProvider(t *testing.T) {
 			}
 
 			for i := 0; i < 5; i++ {
-				So(OTSPutRow(otsCli, "TestConfig", "test", []byte(fmt.Sprintf("hello world %v", i))), ShouldBeNil)
+				So(OTSPutRow(provider.otsCli, "TestConfig", "test", []byte(fmt.Sprintf("hello world %v", i))), ShouldBeNil)
 				<-provider.Events()
 				buf, err := provider.Load()
 				So(err, ShouldBeNil)
