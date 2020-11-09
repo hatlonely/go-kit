@@ -39,9 +39,9 @@ func main() {
 	if options.Help {
 		fmt.Println(flag.Usage())
 		fmt.Println(`examples:
-cfg -a get --in-base-file base_local.json
-cfg -a diff --in-base-file base_local.json --out-base-file base_remote.json
-cfg -a put --in-base-file base_local.json --out-base-file base_remote.json`)
+  cfg -a get --in-base-file base_local.json --camel-name --no-cipher
+  cfg -a diff --in-base-file base_local.json --out-base-file base_remote.json --camel-name
+  cfg -a put --in-base-file base_local.json --out-base-file base_remote.json --camel-name`)
 		return
 	}
 	if options.Version {
