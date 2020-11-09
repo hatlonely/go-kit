@@ -75,11 +75,31 @@ func AddOnItemChangeHandler(key string, handler OnChangeHandler) {
 	gcfg.AddOnItemChangeHandler(key, handler)
 }
 
+func TransformWithOptions(options *Options, transformOptions *TransformOptions) (*Config, error) {
+	return gcfg.TransformWithOptions(options, transformOptions)
+}
+
+func Transform(options *Options, opts ...TransformOption) (*Config, error) {
+	return gcfg.Transform(options, opts...)
+}
+
+func Bytes() ([]byte, error) {
+	return gcfg.Bytes()
+}
+
+func Save() error {
+	return gcfg.Save()
+}
+
+func Diff(o *Config) {
+	gcfg.Diff(o)
+}
+
 func ToString() string {
 	return gcfg.ToString()
 }
 
-func ToStringIndent() string {
+func ToJsonString() string {
 	return gcfg.ToJsonString()
 }
 
