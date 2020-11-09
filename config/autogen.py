@@ -85,7 +85,7 @@ func (c *Config) Get{name}D(key string, dftVal {type}) {type} {{
 }}
 """
 
-def generate_get_bind(infos):
+def generate_get(infos):
     out = open("autogen_get.go", "w")
     out.write(get_header)
     for info in infos:
@@ -236,8 +236,11 @@ def generate_global_export(infos):
 
 
 def main():
-    generate_get_bind(parse_info("../cast/cast.go"))
-    generate_global_export(parse_fun())
+    types = parse_info("../cast/cast.go")
+    funcs = parse_fun()
+    generate_bind(types)
+    generate_get(types)
+    generate_global_export(funcs)
 
 
 if __name__ == "__main__":
