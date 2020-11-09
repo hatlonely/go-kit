@@ -101,3 +101,50 @@ func TestConfigGetP(t *testing.T) {
 		DeleteTestFile()
 	})
 }
+
+func TestConfigGetD(t *testing.T) {
+	Convey("TestConfigGet", t, func() {
+		CreateTestFile3()
+
+		cfg, err := NewConfigWithSimpleFile("test.json")
+		So(err, ShouldBeNil)
+
+		So(cfg.GetBoolD("boolVal", false), ShouldBeTrue)
+		So(cfg.GetIntD("intVal", 1), ShouldEqual, 11)
+		So(cfg.GetInt8D("int8Val", 2), ShouldEqual, 22)
+		So(cfg.GetInt16D("int16Val", 3), ShouldEqual, 33)
+		So(cfg.GetInt32D("int32Val", 4), ShouldEqual, 44)
+		So(cfg.GetInt64D("int64Val", 5), ShouldEqual, 55)
+		So(cfg.GetUintD("uintVal", 6), ShouldEqual, 66)
+		So(cfg.GetUint8D("uint8Val", 7), ShouldEqual, 77)
+		So(cfg.GetUint16D("uint16Val", 8), ShouldEqual, 88)
+		So(cfg.GetUint32D("uint32Val", 9), ShouldEqual, 99)
+		So(cfg.GetUint64D("uint64Val", 10), ShouldEqual, 1010)
+		So(cfg.GetFloat32D("float32Val", 3.2), ShouldBeBetween, 32.31, 32.33)
+		So(cfg.GetFloat64D("float64Val", 6.4), ShouldBeBetween, 64.63, 64.65)
+		So(cfg.GetStringD("stringVal", "hello"), ShouldEqual, "world")
+		So(cfg.GetDurationD("durationVal", 3*time.Second), ShouldEqual, 6*time.Second)
+		So(cfg.GetTimeD("timeVal", time.Unix(1604930126, 0)), ShouldEqual, time.Unix(1604930127, 0))
+		So(cfg.GetIPD("ipVal", net.ParseIP("106.11.34.42")), ShouldEqual, net.ParseIP("106.11.34.43"))
+
+		So(cfg.GetBoolD("x", false), ShouldBeFalse)
+		So(cfg.GetIntD("x", 1), ShouldEqual, 1)
+		So(cfg.GetInt8D("x", 2), ShouldEqual, 2)
+		So(cfg.GetInt16D("x", 3), ShouldEqual, 3)
+		So(cfg.GetInt32D("x", 4), ShouldEqual, 4)
+		So(cfg.GetInt64D("x", 5), ShouldEqual, 5)
+		So(cfg.GetUintD("x", 6), ShouldEqual, 6)
+		So(cfg.GetUint8D("x", 7), ShouldEqual, 7)
+		So(cfg.GetUint16D("x", 8), ShouldEqual, 8)
+		So(cfg.GetUint32D("x", 9), ShouldEqual, 9)
+		So(cfg.GetUint64D("x", 10), ShouldEqual, 10)
+		So(cfg.GetFloat32D("x", 3.2), ShouldBeBetween, 3.1, 3.3)
+		So(cfg.GetFloat64D("x", 6.4), ShouldBeBetween, 6.3, 6.5)
+		So(cfg.GetStringD("x", "hello"), ShouldEqual, "hello")
+		So(cfg.GetDurationD("x", 3*time.Second), ShouldEqual, 3*time.Second)
+		So(cfg.GetTimeD("x", time.Unix(1604930126, 0)), ShouldEqual, time.Unix(1604930126, 0))
+		So(cfg.GetIPD("x", net.ParseIP("106.11.34.42")), ShouldEqual, net.ParseIP("106.11.34.42"))
+
+		DeleteTestFile()
+	})
+}
