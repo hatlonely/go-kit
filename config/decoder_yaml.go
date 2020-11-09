@@ -1,7 +1,9 @@
 package config
 
 import (
-	"gopkg.in/yaml.v2"
+	"bytes"
+
+	"gopkg.in/yaml.v3"
 )
 
 type YamlDecoder struct{}
@@ -15,5 +17,9 @@ func (d *YamlDecoder) Decode(buf []byte) (*Storage, error) {
 }
 
 func (d *YamlDecoder) Encode(storage *Storage) ([]byte, error) {
-	return yaml.Marshal(storage.Interface())
+	var buf bytes.Buffer
+	enc := yaml.NewEncoder(&buf)
+	enc.SetIndent(2)
+	err := enc.Encode(storage.Interface())
+	return buf.Bytes(), err
 }

@@ -32,5 +32,5 @@ require (
 	github.com/tebeka/strftime v0.1.4 // indirect
 	github.com/yosuke-furukawa/json5 v0.1.1
 	google.golang.org/grpc v1.32.0
-	gopkg.in/yaml.v2 v2.2.8
+	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 )

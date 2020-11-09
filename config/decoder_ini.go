@@ -115,7 +115,7 @@ func (d *IniDecoder) Decode(buf []byte) (*Storage, error) {
 		idx := strings.IndexAny(line, "=")
 		key := strings.Trim(line[:idx], " ")
 		val := strings.Trim(line[idx+1:], " ")
-		if val[0] == '"' && val[len(val)-1] == '"' {
+		if len(val) > 0 && val[0] == '"' && val[len(val)-1] == '"' {
 			val = val[1 : len(val)-1]
 		}
 		key = unescape(key)
