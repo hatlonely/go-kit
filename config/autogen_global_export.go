@@ -80,7 +80,7 @@ func ToString() string {
 }
 
 func ToStringIndent() string {
-	return gcfg.ToStringIndent()
+	return gcfg.ToJsonString()
 }
 
 func SetLogger(log Logger) {

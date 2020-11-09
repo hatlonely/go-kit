@@ -21,6 +21,8 @@ func NewCipherWithConfig(cfg *Config, opts ...refx.Option) (Cipher, error) {
 
 func NewCipherWithOptions(options *CipherOptions) (Cipher, error) {
 	switch options.Type {
+	case "", "Empty":
+		return EmptyCipher{}, nil
 	case "AES":
 		return NewAESCipherWithOptions(&options.AESCipher)
 	case "Base64":
@@ -39,4 +41,14 @@ type CipherOptions struct {
 	KMSCipher    KMSCipherOptions
 	CipherGroup  CipherGroupOptions
 	Base64Cipher Base64CipherOptions
+}
+
+type EmptyCipher struct{}
+
+func (c EmptyCipher) Encrypt(textToEncrypt []byte) ([]byte, error) {
+	return textToEncrypt, nil
+}
+
+func (c EmptyCipher) Decrypt(textToDecrypt []byte) ([]byte, error) {
+	return textToDecrypt, nil
 }

@@ -27,9 +27,7 @@ type Storage struct {
 }
 
 func (s *Storage) SetCipherKeys(keys []string) {
-	if s.cipherKeySet == nil {
-		s.cipherKeySet = map[string]bool{}
-	}
+	s.cipherKeySet = map[string]bool{}
 	for _, key := range keys {
 		s.cipherKeySet[key] = true
 	}

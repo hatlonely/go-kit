@@ -1,16 +1,15 @@
 package strx
 
 import (
+	"encoding/json"
 	"regexp"
 	"strings"
 
 	jsoniter "github.com/json-iterator/go"
 )
 
-var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
 func JsonMarshal(v interface{}) string {
-	buf, _ := json.Marshal(v)
+	buf, _ := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(v)
 	return string(buf)
 }
 
@@ -20,7 +19,7 @@ func JsonMarshalIndent(v interface{}) string {
 }
 
 func MustJsonMarshal(v interface{}) string {
-	buf, err := json.Marshal(v)
+	buf, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(v)
 	if err != nil {
 		panic(err)
 	}

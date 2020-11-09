@@ -285,7 +285,7 @@ func TestConfig_ToString(t *testing.T) {
 		CreateTestFile()
 		cfg, _ := NewConfigWithSimpleFile("test.json")
 		fmt.Println(cfg.ToString())
-		fmt.Println(cfg.ToStringIndent())
+		fmt.Println(cfg.ToJsonString())
 		DeleteTestFile()
 	})
 }

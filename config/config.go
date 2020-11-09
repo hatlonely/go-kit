@@ -71,28 +71,37 @@ func WithSimpleFileKey(key string) SimpleFileOption {
 }
 
 func NewConfigWithSimpleFile(filename string, opts ...SimpleFileOption) (*Config, error) {
-	options := defaultSimpleFileOptions
+	simpleFileOptions := defaultSimpleFileOptions
 	for _, opt := range opts {
-		opt(&options)
+		opt(&simpleFileOptions)
 	}
 
-	decoder, err := NewDecoder(options.FileType)
-	if err != nil {
-		return nil, err
+	options := &Options{
+		Decoder: DecoderOptions{
+			Type: "Json",
+		},
+		Provider: ProviderOptions{
+			Type: "Local",
+			LocalProvider: LocalProviderOptions{
+				Filename: filename,
+			},
+		},
 	}
-	provider, err := NewLocalProvider(filename)
-	if err != nil {
-		return nil, err
+	if simpleFileOptions.DecodeKey != "" {
+		options.Cipher = CipherOptions{
+			Type: "AES",
+			AESCipher: AESCipherOptions{
+				Key: simpleFileOptions.DecodeKey,
+			},
+		}
 	}
-	var cipher Cipher
-	if options.DecodeKey != "" {
-		cipher, err = NewAESCipher([]byte(options.DecodeKey))
-		if err != nil {
-			return nil, err
+	if simpleFileOptions.FileType != "" {
+		options.Decoder = DecoderOptions{
+			Type: simpleFileOptions.FileType,
 		}
 	}
 
-	return NewConfig(decoder, provider, cipher)
+	return NewConfigWithOptions(options)
 }
 
 func NewConfig(decoder Decoder, provider Provider, cipher Cipher) (*Config, error) {
@@ -239,6 +248,7 @@ func (c *Config) Watch() error {
 
 	c.wg.Add(1)
 	go func() {
+		c.log.Infof("start watch")
 		ticker := time.NewTicker(300 * time.Second)
 		defer ticker.Stop()
 	out:
@@ -268,7 +278,7 @@ func (c *Config) Watch() error {
 					continue
 				}
 				c.storage = storage
-				c.log.Infof("reload config success. storage: %v", c.storage)
+				c.log.Infof("reload config success. storage: %v", strx.JsonMarshal(c.storage.Interface()))
 
 				traveled := map[string]bool{}
 				for _, key := range diffKeys {
@@ -321,12 +331,117 @@ func (c *Config) AddOnItemChangeHandler(key string, handler OnChangeHandler) {
 	c.itemHandlers[key] = append(c.itemHandlers[key], handler)
 }
 
-func (c *Config) ToString() string {
-	return strx.JsonMarshal(c.storage.Interface())
+type TransformOptions struct {
+	CipherKeys []string
+	NoCipher   bool
 }
 
-func (c *Config) ToStringIndent() string {
-	return strx.JsonMarshalIndent(c.storage.Interface())
+type TransformOption func(options *TransformOptions)
+
+func WithTransformCipherKeys(keys ...string) TransformOption {
+	return func(options *TransformOptions) {
+		options.CipherKeys = append(options.CipherKeys, keys...)
+	}
+}
+
+func WithTransformNoCipher() TransformOption {
+	return func(options *TransformOptions) {
+		options.NoCipher = true
+	}
+}
+
+func (c *Config) TransformWithOptions(options *Options, transformOptions *TransformOptions) (*Config, error) {
+	if c.parent != nil {
+		return nil, errors.New("transform is not supported by children")
+	}
+	provider, err := NewProviderWithOptions(&options.Provider)
+	if err != nil {
+		return nil, err
+	}
+	cipher, err := NewCipherWithOptions(&options.Cipher)
+	if err != nil {
+		return nil, err
+	}
+	decoder, err := NewDecoderWithOptions(&options.Decoder)
+	if err != nil {
+		return nil, err
+	}
+
+	storage := c.deepcopyStorage()
+	if len(transformOptions.CipherKeys) != 0 {
+		storage.SetCipherKeys(transformOptions.CipherKeys)
+	}
+	if transformOptions.NoCipher {
+		storage.SetCipherKeys([]string{})
+	}
+
+	return &Config{
+		provider:     provider,
+		storage:      storage,
+		decoder:      decoder,
+		log:          StdoutLogger{},
+		cipher:       cipher,
+		itemHandlers: map[string][]OnChangeHandler{},
+	}, nil
+}
+
+func (c *Config) Transform(options *Options, opts ...TransformOption) (*Config, error) {
+	var transformOptions TransformOptions
+	for _, opt := range opts {
+		opt(&transformOptions)
+	}
+	return c.TransformWithOptions(options, &transformOptions)
+}
+
+func (c *Config) Bytes() ([]byte, error) {
+	s := c.deepcopyStorage()
+	if err := s.Encrypt(c.cipher); err != nil {
+		return nil, err
+	}
+	return c.decoder.Encode(s)
+}
+
+func (c *Config) Save() error {
+	buf, err := c.Bytes()
+	if err != nil {
+		return err
+	}
+	return c.provider.Dump(buf)
+}
+
+func (c *Config) Diff(o *Config) {
+	text1 := strx.JsonMarshalIndent(c.storage.Interface())
+	text2 := strx.JsonMarshalIndent(o.storage.Interface())
+	fmt.Println(strx.Diff(text1, text2))
+}
+
+func (c *Config) deepcopyStorage() *Storage {
+	buf, err := c.decoder.Encode(c.storage)
+	if err != nil {
+		panic(err)
+	}
+	s, err := c.decoder.Decode(buf)
+	if err != nil {
+		panic(err)
+	}
+	var keys []string
+	for key := range c.storage.cipherKeySet {
+		keys = append(keys, key)
+	}
+	s.SetCipherKeys(keys)
+	return s
+}
+
+func (c *Config) ToString() string {
+	buf, err := c.Bytes()
+	if err != nil {
+		panic(err)
+	}
+	return string(buf)
+}
+
+func (c *Config) ToJsonString() string {
+	return strx.JsonMarshal(c.storage.Interface())
 }
 
 func (c *Config) SetLogger(log Logger) {
