@@ -335,7 +335,7 @@ func (c *Config) BoolVar(key string, av *AtomicBool, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -362,7 +362,7 @@ func (c *Config) IntVar(key string, av *AtomicInt, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -389,7 +389,7 @@ func (c *Config) UintVar(key string, av *AtomicUint, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -416,7 +416,7 @@ func (c *Config) Int64Var(key string, av *AtomicInt64, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -443,7 +443,7 @@ func (c *Config) Int32Var(key string, av *AtomicInt32, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -470,7 +470,7 @@ func (c *Config) Int16Var(key string, av *AtomicInt16, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -497,7 +497,7 @@ func (c *Config) Int8Var(key string, av *AtomicInt8, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -524,7 +524,7 @@ func (c *Config) Uint64Var(key string, av *AtomicUint64, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -551,7 +551,7 @@ func (c *Config) Uint32Var(key string, av *AtomicUint32, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -578,7 +578,7 @@ func (c *Config) Uint16Var(key string, av *AtomicUint16, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -605,7 +605,7 @@ func (c *Config) Uint8Var(key string, av *AtomicUint8, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -632,7 +632,7 @@ func (c *Config) Float64Var(key string, av *AtomicFloat64, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -659,7 +659,7 @@ func (c *Config) Float32Var(key string, av *AtomicFloat32, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -686,7 +686,7 @@ func (c *Config) StringVar(key string, av *AtomicString, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -713,7 +713,7 @@ func (c *Config) DurationVar(key string, av *AtomicDuration, opts ...BindOption)
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -740,7 +740,7 @@ func (c *Config) TimeVar(key string, av *AtomicTime, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }
@@ -767,7 +767,7 @@ func (c *Config) IPVar(key string, av *AtomicIP, opts ...BindOption) {
 		}
 		av.Set(v)
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}
 	})
 }

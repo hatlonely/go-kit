@@ -152,7 +152,7 @@ func (c *Config) {name}Var(key string, av *Atomic{name}, opts ...BindOption) {{
 		}}
 		av.Set(v)
 		if options.OnSucc != nil {{
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(c.Sub(key))
 		}}
 	}})
 }}
