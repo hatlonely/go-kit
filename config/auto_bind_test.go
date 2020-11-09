@@ -210,8 +210,8 @@ func CreateTestFile3() {
 	_ = fp.Close()
 }
 
-func TestIntVar(t *testing.T) {
-	Convey("TestIntVar", t, func(c C) {
+func TestBindVars(t *testing.T) {
+	Convey("TestBindVars", t, func(c C) {
 		CreateTestFile2()
 
 		var boolVal AtomicBool
@@ -287,6 +287,76 @@ func TestIntVar(t *testing.T) {
 		cfg.IPVar("ipVal", &ipVal, OnSucc(func(cfg *Config) {
 			c.So(cfg.GetIP(""), ShouldEqual, net.ParseIP("106.11.34.43"))
 		}))
+
+		So(boolVal.Get(), ShouldEqual, false)
+		So(intVal.Get(), ShouldEqual, 1)
+		So(int8Val.Get(), ShouldEqual, 2)
+		So(int16Val.Get(), ShouldEqual, 3)
+		So(int32Val.Get(), ShouldEqual, 4)
+		So(int64Val.Get(), ShouldEqual, 5)
+		So(uintVal.Get(), ShouldEqual, 6)
+		So(uint8Val.Get(), ShouldEqual, 7)
+		So(uint16Val.Get(), ShouldEqual, 8)
+		So(uint32Val.Get(), ShouldEqual, 9)
+		So(uint64Val.Get(), ShouldEqual, 10)
+		So(float32Val.Get(), ShouldBeBetween, 3.1, 3.3)
+		So(float64Val.Get(), ShouldBeBetween, 6.3, 6.5)
+		So(stringVal.Get(), ShouldEqual, "hello")
+		So(durationVal.Get(), ShouldEqual, 3*time.Second)
+		So(timeVal.Get(), ShouldEqual, time.Unix(1604930126, 0))
+		So(ipVal.Get(), ShouldEqual, net.ParseIP("106.11.34.42"))
+
+		CreateTestFile3()
+		time.Sleep(time.Second)
+
+		So(boolVal.Get(), ShouldEqual, true)
+		So(intVal.Get(), ShouldEqual, 11)
+		So(int8Val.Get(), ShouldEqual, 22)
+		So(int16Val.Get(), ShouldEqual, 33)
+		So(int32Val.Get(), ShouldEqual, 44)
+		So(int64Val.Get(), ShouldEqual, 55)
+		So(uintVal.Get(), ShouldEqual, 66)
+		So(uint8Val.Get(), ShouldEqual, 77)
+		So(uint16Val.Get(), ShouldEqual, 88)
+		So(uint32Val.Get(), ShouldEqual, 99)
+		So(uint64Val.Get(), ShouldEqual, 1010)
+		So(float32Val.Get(), ShouldBeBetween, 32.31, 32.33)
+		So(float64Val.Get(), ShouldBeBetween, 64.63, 64.65)
+		So(stringVal.Get(), ShouldEqual, "world")
+		So(durationVal.Get(), ShouldEqual, 6*time.Second)
+		So(timeVal.Get(), ShouldEqual, time.Unix(1604930127, 0))
+		So(ipVal.Get(), ShouldEqual, net.ParseIP("106.11.34.43"))
+
+		DeleteTestFile()
+	})
+}
+
+func TestBinds(t *testing.T) {
+	Convey("TestBinds", t, func(c C) {
+		CreateTestFile2()
+
+		cfg, err := NewConfigWithSimpleFile("test.json")
+		So(err, ShouldBeNil)
+		So(cfg.Watch(), ShouldBeNil)
+		defer cfg.Stop()
+
+		boolVal := cfg.Bool("boolVal")
+		intVal := cfg.Int("intVal")
+		int8Val := cfg.Int8("int8Val")
+		int16Val := cfg.Int16("int16Val")
+		int32Val := cfg.Int32("int32Val")
+		int64Val := cfg.Int64("int64Val")
+		uintVal := cfg.Uint("uintVal")
+		uint8Val := cfg.Uint8("uint8Val")
+		uint16Val := cfg.Uint16("uint16Val")
+		uint32Val := cfg.Uint32("uint32Val")
+		uint64Val := cfg.Uint64("uint64Val")
+		float32Val := cfg.Float32("float32Val")
+		float64Val := cfg.Float64("float64Val")
+		stringVal := cfg.String("stringVal")
+		durationVal := cfg.Duration("durationVal")
+		timeVal := cfg.Time("timeVal")
+		ipVal := cfg.IP("ipVal")
 
 		So(boolVal.Get(), ShouldEqual, false)
 		So(intVal.Get(), ShouldEqual, 1)
