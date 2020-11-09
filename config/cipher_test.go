@@ -88,6 +88,12 @@ func TestKMSCipher(t *testing.T) {
 			return &kms.EncryptResponse{
 				CiphertextBlob: "NWMzYmNjODQtNTgxMC00NGZmLTkwMTAtNWIwMGY1NzhiNTg1qUxIaKYQ+GSXgLaPbl/XXrENJLEX4xqIezxb3+qM23+THE8pcs9u",
 			}, nil
+		}).ApplyMethod(reflect.TypeOf(&kms.Client{}), "GenerateDataKey", func(
+			cli *kms.Client, request *kms.GenerateDataKeyRequest) (*kms.GenerateDataKeyResponse, error) {
+			return &kms.GenerateDataKeyResponse{
+				CiphertextBlob: "blob",
+				Plaintext:      "plain",
+			}, nil
 		})
 		defer patches.Reset()
 
@@ -108,5 +114,11 @@ func TestKMSCipher(t *testing.T) {
 		buf, err = cipher.Decrypt(buf)
 		So(err, ShouldBeNil)
 		So(string(buf), ShouldEqual, "hello world")
+
+		plain, blob, err := cipher.(*KMSCipher).GenerateDataKey()
+		So(err, ShouldBeNil)
+		So(plain, ShouldEqual, "plain")
+		So(blob, ShouldEqual, "blob")
+
 	})
 }
