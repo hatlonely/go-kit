@@ -178,6 +178,10 @@ func CreateTestFile2() {
   "uint64Val": 10,
   "float32Val": 3.2,
   "float64Val": 6.4,
+  "stringVal": "hello",
+  "durationVal": "3s",
+  "timeVal": "2020-11-09T21:55:26+08:00",
+  "ipVal": "106.11.34.42"
 }`)
 	_ = fp.Close()
 }
@@ -198,6 +202,10 @@ func CreateTestFile3() {
   "uint64Val": 1010,
   "float32Val": 32.32,
   "float64Val": 64.64,
+  "stringVal": "world",
+  "durationVal": "6s",
+  "timeVal": "2020-11-09T21:55:27+08:00",
+  "ipVal": "106.11.34.43"
 }`)
 	_ = fp.Close()
 }
@@ -219,6 +227,10 @@ func TestIntVar(t *testing.T) {
 		var uint64Val AtomicUint64
 		var float32Val AtomicFloat32
 		var float64Val AtomicFloat64
+		var stringVal AtomicString
+		var durationVal AtomicDuration
+		var timeVal AtomicTime
+		var ipVal AtomicIP
 		cfg, err := NewConfigWithSimpleFile("test.json")
 		So(err, ShouldBeNil)
 		So(cfg.Watch(), ShouldBeNil)
@@ -263,6 +275,18 @@ func TestIntVar(t *testing.T) {
 		cfg.Float64Var("float64Val", &float64Val, OnSucc(func(cfg *Config) {
 			c.So(cfg.GetFloat64(""), ShouldBeBetween, 64.63, 64.65)
 		}))
+		cfg.StringVar("stringVal", &stringVal, OnSucc(func(cfg *Config) {
+			c.So(cfg.GetString(""), ShouldEqual, "world")
+		}))
+		cfg.DurationVar("durationVal", &durationVal, OnSucc(func(cfg *Config) {
+			c.So(cfg.GetDuration(""), ShouldEqual, 6*time.Second)
+		}))
+		cfg.TimeVar("timeVal", &timeVal, OnSucc(func(cfg *Config) {
+			c.So(cfg.GetTime(""), ShouldEqual, time.Unix(1604930127, 0))
+		}))
+		cfg.IPVar("ipVal", &ipVal, OnSucc(func(cfg *Config) {
+			c.So(cfg.GetIP(""), ShouldEqual, net.ParseIP("106.11.34.43"))
+		}))
 
 		So(boolVal.Get(), ShouldEqual, false)
 		So(intVal.Get(), ShouldEqual, 1)
@@ -277,6 +301,10 @@ func TestIntVar(t *testing.T) {
 		So(uint64Val.Get(), ShouldEqual, 10)
 		So(float32Val.Get(), ShouldBeBetween, 3.1, 3.3)
 		So(float64Val.Get(), ShouldBeBetween, 6.3, 6.5)
+		So(stringVal.Get(), ShouldEqual, "hello")
+		So(durationVal.Get(), ShouldEqual, 3*time.Second)
+		So(timeVal.Get(), ShouldEqual, time.Unix(1604930126, 0))
+		So(ipVal.Get(), ShouldEqual, net.ParseIP("106.11.34.42"))
 
 		CreateTestFile3()
 		time.Sleep(time.Second)
@@ -294,6 +322,10 @@ func TestIntVar(t *testing.T) {
 		So(uint64Val.Get(), ShouldEqual, 1010)
 		So(float32Val.Get(), ShouldBeBetween, 32.31, 32.33)
 		So(float64Val.Get(), ShouldBeBetween, 64.63, 64.65)
+		So(stringVal.Get(), ShouldEqual, "world")
+		So(durationVal.Get(), ShouldEqual, 6*time.Second)
+		So(timeVal.Get(), ShouldEqual, time.Unix(1604930127, 0))
+		So(ipVal.Get(), ShouldEqual, net.ParseIP("106.11.34.43"))
 
 		DeleteTestFile()
 	})
