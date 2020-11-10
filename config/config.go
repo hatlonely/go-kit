@@ -143,14 +143,6 @@ type Config struct {
 	wg     sync.WaitGroup
 }
 
-func (c *Config) GetComponent() (Provider, *Storage, Decoder, Cipher) {
-	if c.parent != nil {
-		return c.parent.GetComponent()
-	}
-
-	return c.provider, c.storage, c.decoder, c.cipher
-}
-
 func (c *Config) Get(key string) (interface{}, bool) {
 	if c.parent != nil {
 		return c.parent.Get(prefixAppendKey(c.prefix, key))

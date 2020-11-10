@@ -33,10 +33,6 @@ func InitWithSimpleFile(filename string, opts ...SimpleFileOption) error {
 	return nil
 }
 
-func GetComponent() (Provider, *Storage, Decoder, Cipher) {
-	return gcfg.GetComponent()
-}
-
 func Get(key string) (interface{}, bool) {
 	return gcfg.Get(key)
 }
