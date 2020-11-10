@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"testing"
 	"time"
@@ -36,7 +37,7 @@ func CreateTestFile() {
   },
   "mysql": {
     "username": "root",
-    "password": "",
+    "password": "123456",
     "database": "account",
     "host": "127.0.0.1",
     "port": 3306,
@@ -314,5 +315,86 @@ func TestNewConfigWithBaseFile(t *testing.T) {
 
 		DeleteTestFile()
 		DeleteBaseFile()
+	})
+}
+
+func TestConfig_Transform(t *testing.T) {
+	Convey("TestConfig_Transform", t, func() {
+		CreateTestFile()
+
+		cfg, err := NewConfigWithSimpleFile("test.json")
+		So(err, ShouldBeNil)
+		cfg, err = cfg.Transform(&Options{
+			Decoder: DecoderOptions{
+				Type: "Yaml",
+			},
+			Provider: ProviderOptions{
+				Type: "Local",
+				LocalProvider: LocalProviderOptions{
+					Filename: "test.yaml",
+				},
+			},
+			Cipher: CipherOptions{
+				Type: "Base64",
+			},
+		}, WithTransformCipherKeys("mysql.username", "mysql.password"))
+		So(err, ShouldBeNil)
+		So(cfg.Save(), ShouldBeNil)
+
+		buf, err := ioutil.ReadFile("test.yaml")
+		So(err, ShouldBeNil)
+		So(string(buf), ShouldEqual, `email:
+  from: hatlonely@foxmail.com
+  password: "123456"
+  port: 25
+  server: smtp.qq.com
+grpc:
+  port: 6080
+http:
+  port: 80
+logger:
+  grpc:
+    level: Info
+    writers:
+      - rotateFileWriter:
+          filename: log/account.rpc
+          formatter:
+            type: Json
+          maxAge: 24h
+        type: RotateFile
+  info:
+    level: Info
+    writers:
+      - rotateFileWriter:
+          filename: log/account.log
+          formatter:
+            type: Json
+          maxAge: 48h
+        type: RotateFile
+mysql:
+  '@password': MTIzNDU2
+  '@username': cm9vdA==
+  connMaxLifeTime: 60s
+  database: account
+  host: 127.0.0.1
+  maxIdleConns: 10
+  maxOpenConns: 20
+  port: 3306
+redis:
+  addr: 127.0.0.1:6379
+  db: 0
+  dialTimeout: 200ms
+  maxRetries: 3
+  password: ""
+  poolSize: 20
+  readTimeout: 200ms
+  writeTimeout: 200ms
+service:
+  accountExpiration: 5m
+  captchaExpiration: 30m
+`)
+
+		_ = os.RemoveAll("test.yaml")
+		DeleteTestFile()
 	})
 }
