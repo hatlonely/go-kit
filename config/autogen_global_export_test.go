@@ -123,6 +123,92 @@ func TestGlobalGet(t *testing.T) {
 		So(GetTimeD("x", time.Unix(1604930126, 0)), ShouldEqual, time.Unix(1604930126, 0))
 		So(GetIPD("x", net.ParseIP("106.11.34.42")), ShouldEqual, net.ParseIP("106.11.34.42"))
 
+		{
+			val, err := GetBoolE("boolVal")
+			So(err, ShouldBeNil)
+			So(val, ShouldBeTrue)
+		}
+		{
+			val, err := GetIntE("intVal")
+			So(err, ShouldBeNil)
+			So(val, ShouldEqual, 11)
+		}
+		{
+			val, err := GetInt8E("int8Val")
+			So(err, ShouldBeNil)
+			So(val, ShouldEqual, 22)
+		}
+		{
+			val, err := GetInt16E("int16Val")
+			So(err, ShouldBeNil)
+			So(val, ShouldEqual, 33)
+		}
+		{
+			val, err := GetInt32E("int32Val")
+			So(err, ShouldBeNil)
+			So(val, ShouldEqual, 44)
+		}
+		{
+			val, err := GetInt64E("int64Val")
+			So(err, ShouldBeNil)
+			So(val, ShouldEqual, 55)
+		}
+		{
+			val, err := GetUintE("uintVal")
+			So(err, ShouldBeNil)
+			So(val, ShouldEqual, 66)
+		}
+		{
+			val, err := GetUint8E("uint8Val")
+			So(err, ShouldBeNil)
+			So(val, ShouldEqual, 77)
+		}
+		{
+			val, err := GetUint16E("uint16Val")
+			So(err, ShouldBeNil)
+			So(val, ShouldEqual, 88)
+		}
+		{
+			val, err := GetUint32E("uint32Val")
+			So(err, ShouldBeNil)
+			So(val, ShouldEqual, 99)
+		}
+		{
+			val, err := GetUint64E("uint64Val")
+			So(err, ShouldBeNil)
+			So(val, ShouldEqual, 1010)
+		}
+		{
+			val, err := GetFloat32E("float32Val")
+			So(err, ShouldBeNil)
+			So(val, ShouldBeBetween, 32.31, 32.33)
+		}
+		{
+			val, err := GetFloat64E("float64Val")
+			So(err, ShouldBeNil)
+			So(val, ShouldBeBetween, 64.63, 64.65)
+		}
+		{
+			val, err := GetStringE("stringVal")
+			So(err, ShouldBeNil)
+			So(val, ShouldEqual, "world")
+		}
+		{
+			val, err := GetDurationE("durationVal")
+			So(err, ShouldBeNil)
+			So(val, ShouldEqual, 6*time.Second)
+		}
+		{
+			val, err := GetTimeE("timeVal")
+			So(err, ShouldBeNil)
+			So(val, ShouldEqual, time.Unix(1604930127, 0))
+		}
+		{
+			val, err := GetIPE("ipVal")
+			So(err, ShouldBeNil)
+			So(val, ShouldEqual, net.ParseIP("106.11.34.43"))
+		}
+
 		DeleteTestFile()
 	})
 }
