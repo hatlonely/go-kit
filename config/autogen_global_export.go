@@ -13,8 +13,8 @@ var gcfg = &Config{
 	itemHandlers: map[string][]OnChangeHandler{},
 }
 
-func Init(filename string) error {
-	cfg, err := NewConfigWithBaseFile(filename)
+func Init(filename string, opts ...refx.Option) error {
+	cfg, err := NewConfigWithBaseFile(filename, opts...)
 	if err != nil {
 		return err
 	}

@@ -6,6 +6,8 @@ import (
 	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
+
+	"github.com/hatlonely/go-kit/refx"
 )
 
 func TestGlobalGet(t *testing.T) {
@@ -285,6 +287,7 @@ func TestGlobalBinds(t *testing.T) {
 
 func TestGlobalBindVars(t *testing.T) {
 	Convey("TestBindVars", t, func(c C) {
+		CreateBaseFile()
 		CreateTestFile2()
 
 		var boolVal AtomicBool
@@ -304,7 +307,7 @@ func TestGlobalBindVars(t *testing.T) {
 		var durationVal AtomicDuration
 		var timeVal AtomicTime
 		var ipVal AtomicIP
-		err := InitWithSimpleFile("test.json")
+		err := Init("base.json", refx.WithCamelName())
 		So(err, ShouldBeNil)
 		So(Watch(), ShouldBeNil)
 		defer Stop()
@@ -401,5 +404,6 @@ func TestGlobalBindVars(t *testing.T) {
 		So(ipVal.Get(), ShouldEqual, net.ParseIP("106.11.34.43"))
 
 		DeleteTestFile()
+		DeleteBaseFile()
 	})
 }
