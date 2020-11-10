@@ -408,6 +408,9 @@ func (c *Config) Bytes() ([]byte, error) {
 }
 
 func (c *Config) Save() error {
+	if c.parent != nil {
+		return errors.New("children are not allow to save")
+	}
 	buf, err := c.Bytes()
 	if err != nil {
 		return err
