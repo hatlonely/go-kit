@@ -367,7 +367,7 @@ func (c *Config) TransformWithOptions(options *Options, transformOptions *Transf
 		return nil, err
 	}
 
-	storage := c.deepcopyStorage()
+	storage := c.deepCopyStorage()
 	if len(transformOptions.CipherKeys) != 0 {
 		storage.SetCipherKeys(transformOptions.CipherKeys)
 	}
@@ -394,7 +394,7 @@ func (c *Config) Transform(options *Options, opts ...TransformOption) (*Config, 
 }
 
 func (c *Config) Bytes() ([]byte, error) {
-	s := c.deepcopyStorage()
+	s := c.deepCopyStorage()
 	if err := s.Encrypt(c.cipher); err != nil {
 		return nil, err
 	}
@@ -415,7 +415,7 @@ func (c *Config) Diff(o *Config) {
 	fmt.Println(strx.Diff(text1, text2))
 }
 
-func (c *Config) deepcopyStorage() *Storage {
+func (c *Config) deepCopyStorage() *Storage {
 	buf, err := c.decoder.Encode(c.storage)
 	if err != nil {
 		panic(err)
