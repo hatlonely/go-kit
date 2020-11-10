@@ -153,7 +153,7 @@ func OTSLegacyGetRange(otsCli *tablestore.TableStoreClient, table string, primar
 
 	var ts int64
 	v := map[string]interface{}{}
-	p := map[string]interface{}{
+	prev := map[string]interface{}{
 		"$": v,
 	}
 	key := "$"
@@ -164,17 +164,17 @@ func OTSLegacyGetRange(otsCli *tablestore.TableStoreClient, table string, primar
 		}
 
 		for _, row := range res.Rows {
-			m := v
+			curr := v
 			for _, pks := range row.PrimaryKey.PrimaryKeys {
 				if pks.Value.(string) == "_" {
 					continue
 				}
 				key = pks.Value.(string)
-				if _, ok := m[key]; !ok {
-					m[key] = map[string]interface{}{}
+				if _, ok := curr[key]; !ok {
+					curr[key] = map[string]interface{}{}
 				}
-				p = m
-				m = m[key].(map[string]interface{})
+				prev = curr
+				curr = curr[key].(map[string]interface{})
 			}
 			if len(row.Columns) == 1 && row.Columns[0].ColumnName == "_" {
 				col := row.Columns[0]
@@ -182,12 +182,12 @@ func OTSLegacyGetRange(otsCli *tablestore.TableStoreClient, table string, primar
 				case string:
 					var obj interface{}
 					if err := json.Unmarshal([]byte(val), &obj); err != nil {
-						p[key] = val
+						prev[key] = val
 					} else {
-						p[key] = obj
+						prev[key] = obj
 					}
 				default:
-					p[key] = val
+					prev[key] = val
 				}
 				if ts < col.Timestamp {
 					ts = col.Timestamp
@@ -198,12 +198,12 @@ func OTSLegacyGetRange(otsCli *tablestore.TableStoreClient, table string, primar
 					case string:
 						var obj interface{}
 						if err := json.Unmarshal([]byte(val), &obj); err != nil {
-							m[col.ColumnName] = val
+							curr[col.ColumnName] = val
 						} else {
-							m[col.ColumnName] = obj
+							curr[col.ColumnName] = obj
 						}
 					default:
-						m[col.ColumnName] = col.Value
+						curr[col.ColumnName] = col.Value
 					}
 					if ts < col.Timestamp {
 						ts = col.Timestamp
