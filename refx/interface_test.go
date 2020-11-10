@@ -161,6 +161,11 @@ func TestInterfaceToStruct(t *testing.T) {
 				},
 			},
 		},
+		"Key9": []map[string]interface{}{{
+			"Key10": "val10",
+		}, {
+			"Key11": "val11",
+		}},
 	}
 
 	Convey("TestInterfaceToStruct 1", t, func() {
@@ -175,6 +180,7 @@ func TestInterfaceToStruct(t *testing.T) {
 					Key8 []int64
 				}
 			}
+			Key9 []map[string]interface{}
 		}
 		var opt Option
 		So(InterfaceToStruct(v, &opt), ShouldBeNil)
@@ -186,6 +192,8 @@ func TestInterfaceToStruct(t *testing.T) {
 		So(opt.Key3[0].Key6.Key8[0], ShouldEqual, 1)
 		So(opt.Key3[0].Key6.Key8[1], ShouldEqual, 2)
 		So(opt.Key3[0].Key6.Key8[2], ShouldEqual, 3)
+		So(opt.Key9[0]["Key10"], ShouldEqual, "val10")
+		So(opt.Key9[1]["Key11"], ShouldEqual, "val11")
 	})
 
 	Convey("TestInterfaceToStruct 2", t, func() {
@@ -303,13 +311,11 @@ func TestInterfaceTravel(t *testing.T) {
 					},
 				},
 			},
-			"Key9": []map[string]interface{}{
-				{
-					"Key10": "val10",
-				}, {
-					"Key11": "val11",
-				},
-			},
+			"Key9": []map[string]interface{}{{
+				"Key10": "val10",
+			}, {
+				"Key11": "val11",
+			}},
 		}
 
 		kvs := map[string]interface{}{}

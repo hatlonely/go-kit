@@ -278,12 +278,15 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 			}
 		}
 	case reflect.Slice:
-		eles, ok := src.([]interface{})
-		if !ok {
-			return fmt.Errorf("convert src to []interface{} failed. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(src))
+		srv := reflect.ValueOf(src)
+		srt := reflect.TypeOf(src)
+		if srt.Kind() != reflect.Slice {
+			return fmt.Errorf("convert src is not slice. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(src))
 		}
-		rv.Set(reflect.MakeSlice(rt, 0, len(eles)))
-		for idx, ele := range eles {
+		rv.Set(reflect.MakeSlice(rt, 0, srv.Len()))
+
+		for idx := 0; idx < srv.Len(); idx++ {
+			ele := srv.Index(idx).Interface()
 			switch rt.Elem().Kind() {
 			case reflect.Ptr:
 				nv := reflect.New(rt.Elem().Elem())
