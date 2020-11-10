@@ -64,7 +64,9 @@ Key8.Key9.Key11 = 11
 
 Key12[0].Key13 = val13
 Key12[1].Key14 = val14
-Key2.Key3 = val3
+Key2.Key3 = val3, \
+            val33, \
+            val333
 Key2.Key4 = 4
 Key2.Key5.Key6 = val6
 Key2.Key5.Key7 = val7
@@ -75,7 +77,7 @@ Key8.Key9.Key11 = 11
 			So(strx.JsonMarshal(s.Interface()), ShouldResemble, strx.JsonMarshal(map[string]interface{}{
 				"Key1": "val1",
 				"Key2": map[string]interface{}{
-					"Key3": "val3",
+					"Key3": "val3, val33, val333",
 					"Key4": "4",
 					"Key5": map[string]interface{}{
 						"Key6": "val6",
