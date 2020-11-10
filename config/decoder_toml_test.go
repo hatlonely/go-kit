@@ -69,9 +69,10 @@ func TestTomlDecoder(t *testing.T) {
 
 		{
 			s, err := decoder.Decode([]byte(`Key1 = "val1"
+# comment 1
 
 [[Key12]]
-  Key13 = "val13"
+  Key13 = "val13"  # comment 2
 
 [[Key12]]
   Key14 = "val14"

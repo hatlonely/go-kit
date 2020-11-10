@@ -12,7 +12,7 @@ import (
 	"github.com/hatlonely/go-kit/cast"
 )
 
-// https://docs.oracle.com/cd/E23095_01/Platform.93/ATGProgGuide/html/s0204propertiesfileformat01.html
+// @see https://docs.oracle.com/cd/E23095_01/Platform.93/ATGProgGuide/html/s0204propertiesfileformat01.html
 type PropDecoder struct{}
 
 func (d *PropDecoder) Decode(buf []byte) (*Storage, error) {

@@ -6,6 +6,7 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
+// @see https://github.com/toml-lang/toml
 type TomlDecoder struct{}
 
 func (d *TomlDecoder) Decode(buf []byte) (*Storage, error) {

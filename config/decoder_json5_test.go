@@ -60,7 +60,8 @@ func TestJson5Decoder(t *testing.T) {
 
 		{
 			s, err := decoder.Decode([]byte(`{
-  "Key1": "val1",
+  "Key1": "val1", // comment 1
+  // comment 2
   "Key2": {
     "Key3": "val3",
     "Key4": 4,

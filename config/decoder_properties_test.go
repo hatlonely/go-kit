@@ -59,6 +59,9 @@ Key8.Key9.Key11 = 11
 
 		{
 			s, err := decoder.Decode([]byte(`Key1 = val1
+! comment 1
+# comment 2
+
 Key12[0].Key13 = val13
 Key12[1].Key14 = val14
 Key2.Key3 = val3
