@@ -195,7 +195,7 @@ func (s Storage) Diff(s2 Storage) ([]string, error) {
 }
 
 func (s Storage) Travel(fun func(key string, val interface{}) error) error {
-	return refx.InterfaceTravelRecursive(s.root, fun, "")
+	return refx.InterfaceTravel(s.root, fun)
 }
 
 func prefixAppendKey(prefix string, key string) string {

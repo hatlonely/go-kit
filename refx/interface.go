@@ -72,7 +72,7 @@ func FormatKeyWithOptions(str string, options *Options) string {
 }
 
 func Validate(v interface{}) error {
-	return interfaceTravel(v, func(key string, val interface{}) error { return nil })
+	return InterfaceTravel(v, func(key string, val interface{}) error { return nil })
 }
 
 func InterfaceGet(v interface{}, key string) (interface{}, error) {
@@ -93,7 +93,7 @@ func InterfaceToStruct(src interface{}, dst interface{}, opts ...Option) error {
 
 func InterfaceDiff(v1 interface{}, v2 interface{}) ([]string, error) {
 	var keys []string
-	if err := interfaceTravel(v1, func(key string, val1 interface{}) error {
+	if err := InterfaceTravel(v1, func(key string, val1 interface{}) error {
 		val2, err := InterfaceGet(v2, key)
 		if err != nil || val1 != val2 {
 			keys = append(keys, key)
@@ -359,12 +359,12 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 	return nil
 }
 
-func interfaceTravel(v interface{}, fun func(key string, val interface{}) error) error {
-	return InterfaceTravelRecursive(v, fun, "")
+func InterfaceTravel(v interface{}, fun func(key string, val interface{}) error) error {
+	return interfaceTravelRecursive(v, fun, "")
 }
 
 // return error if fun is error immediately
-func InterfaceTravelRecursive(v interface{}, fun func(key string, val interface{}) error, prefix string) error {
+func interfaceTravelRecursive(v interface{}, fun func(key string, val interface{}) error, prefix string) error {
 	if v == nil {
 		return nil
 	}
@@ -379,13 +379,13 @@ func InterfaceTravelRecursive(v interface{}, fun func(key string, val interface{
 				if _, ok := key.(string); !ok {
 					return fmt.Errorf("key [%v.%v], unsupport type [%v]", prefix, key, reflect.TypeOf(v))
 				}
-				if err := InterfaceTravelRecursive(val, fun, prefixAppendKey(prefix, key.(string))); err != nil {
+				if err := interfaceTravelRecursive(val, fun, prefixAppendKey(prefix, key.(string))); err != nil {
 					return err
 				}
 			}
 		case map[string]interface{}:
 			for key, val := range v.(map[string]interface{}) {
-				if err := InterfaceTravelRecursive(val, fun, prefixAppendKey(prefix, key)); err != nil {
+				if err := interfaceTravelRecursive(val, fun, prefixAppendKey(prefix, key)); err != nil {
 					return err
 				}
 			}
@@ -394,7 +394,7 @@ func InterfaceTravelRecursive(v interface{}, fun func(key string, val interface{
 		switch v.(type) {
 		case []interface{}:
 			for idx, ele := range v.([]interface{}) {
-				if err := InterfaceTravelRecursive(ele, fun, prefixAppendIdx(prefix, idx)); err != nil {
+				if err := interfaceTravelRecursive(ele, fun, prefixAppendIdx(prefix, idx)); err != nil {
 					return err
 				}
 			}

@@ -306,7 +306,7 @@ func TestInterfaceTravel(t *testing.T) {
 		}
 
 		kvs := map[string]interface{}{}
-		err := interfaceTravel(v, func(key string, val interface{}) error {
+		err := InterfaceTravel(v, func(key string, val interface{}) error {
 			kvs[key] = val
 			return nil
 		})

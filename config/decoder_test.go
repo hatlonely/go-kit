@@ -239,6 +239,12 @@ func TestTomlDecoder(t *testing.T) {
 		{
 			s, err := decoder.Decode([]byte(`Key1 = "val1"
 
+[[Key12]]
+  Key13 = "val13"
+
+[[Key12]]
+  Key14 = "val14"
+
 [Key2]
   Key3 = "val3"
   Key4 = 4
@@ -265,6 +271,14 @@ func TestTomlDecoder(t *testing.T) {
 					"Key9": map[string]interface{}{
 						"Key10": 10,
 						"Key11": 11,
+					},
+				},
+				"Key12": []interface{}{
+					map[string]interface{}{
+						"Key13": "val13",
+					},
+					map[string]interface{}{
+						"Key14": "val14",
 					},
 				},
 			}))
