@@ -166,6 +166,7 @@ func TestInterfaceToStruct(t *testing.T) {
 		}, {
 			"Key11": "val11",
 		}},
+		"Key12": []int{1, 2, 3},
 	}
 
 	Convey("TestInterfaceToStruct 1", t, func() {
@@ -180,7 +181,8 @@ func TestInterfaceToStruct(t *testing.T) {
 					Key8 []int64
 				}
 			}
-			Key9 []map[string]interface{}
+			Key9  []map[string]interface{}
+			Key12 []interface{}
 		}
 		var opt Option
 		So(InterfaceToStruct(v, &opt), ShouldBeNil)
@@ -194,6 +196,7 @@ func TestInterfaceToStruct(t *testing.T) {
 		So(opt.Key3[0].Key6.Key8[2], ShouldEqual, 3)
 		So(opt.Key9[0]["Key10"], ShouldEqual, "val10")
 		So(opt.Key9[1]["Key11"], ShouldEqual, "val11")
+		So(opt.Key12, ShouldResemble, []interface{}{1, 2, 3})
 	})
 
 	Convey("TestInterfaceToStruct 2", t, func() {

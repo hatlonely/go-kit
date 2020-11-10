@@ -286,19 +286,18 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 		rv.Set(reflect.MakeSlice(rt, 0, srv.Len()))
 
 		for idx := 0; idx < srv.Len(); idx++ {
-			ele := srv.Index(idx).Interface()
 			switch rt.Elem().Kind() {
 			case reflect.Ptr:
 				nv := reflect.New(rt.Elem().Elem())
-				if err := interfaceToStructRecursive(ele, nv.Interface(), prefixAppendIdx(prefix, idx), options); err != nil {
+				if err := interfaceToStructRecursive(srv.Index(idx).Interface(), nv.Interface(), prefixAppendIdx(prefix, idx), options); err != nil {
 					return err
 				}
 				rv.Set(reflect.Append(rv, nv.Elem().Addr()))
 			case reflect.Interface:
-				rv.Set(reflect.Append(rv, reflect.ValueOf(ele)))
+				rv.Set(reflect.Append(rv, srv.Index(idx)))
 			default:
 				nv := reflect.New(rt.Elem())
-				if err := interfaceToStructRecursive(ele, nv.Interface(), prefixAppendIdx(prefix, idx), options); err != nil {
+				if err := interfaceToStructRecursive(srv.Index(idx).Interface(), nv.Interface(), prefixAppendIdx(prefix, idx), options); err != nil {
 					return err
 				}
 				rv.Set(reflect.Append(rv, nv.Elem()))
