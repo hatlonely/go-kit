@@ -326,7 +326,7 @@ func (c *Config) BoolVar(key string, av *AtomicBool, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetBoolE(key)
+		v, err = cfg.GetBoolE("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -353,7 +353,7 @@ func (c *Config) IntVar(key string, av *AtomicInt, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetIntE(key)
+		v, err = cfg.GetIntE("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -380,7 +380,7 @@ func (c *Config) UintVar(key string, av *AtomicUint, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetUintE(key)
+		v, err = cfg.GetUintE("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -407,7 +407,7 @@ func (c *Config) Int64Var(key string, av *AtomicInt64, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetInt64E(key)
+		v, err = cfg.GetInt64E("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -434,7 +434,7 @@ func (c *Config) Int32Var(key string, av *AtomicInt32, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetInt32E(key)
+		v, err = cfg.GetInt32E("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -461,7 +461,7 @@ func (c *Config) Int16Var(key string, av *AtomicInt16, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetInt16E(key)
+		v, err = cfg.GetInt16E("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -488,7 +488,7 @@ func (c *Config) Int8Var(key string, av *AtomicInt8, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetInt8E(key)
+		v, err = cfg.GetInt8E("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -515,7 +515,7 @@ func (c *Config) Uint64Var(key string, av *AtomicUint64, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetUint64E(key)
+		v, err = cfg.GetUint64E("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -542,7 +542,7 @@ func (c *Config) Uint32Var(key string, av *AtomicUint32, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetUint32E(key)
+		v, err = cfg.GetUint32E("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -569,7 +569,7 @@ func (c *Config) Uint16Var(key string, av *AtomicUint16, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetUint16E(key)
+		v, err = cfg.GetUint16E("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -596,7 +596,7 @@ func (c *Config) Uint8Var(key string, av *AtomicUint8, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetUint8E(key)
+		v, err = cfg.GetUint8E("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -623,7 +623,7 @@ func (c *Config) Float64Var(key string, av *AtomicFloat64, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetFloat64E(key)
+		v, err = cfg.GetFloat64E("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -650,7 +650,7 @@ func (c *Config) Float32Var(key string, av *AtomicFloat32, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetFloat32E(key)
+		v, err = cfg.GetFloat32E("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -677,7 +677,7 @@ func (c *Config) StringVar(key string, av *AtomicString, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetStringE(key)
+		v, err = cfg.GetStringE("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -704,7 +704,7 @@ func (c *Config) DurationVar(key string, av *AtomicDuration, opts ...BindOption)
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetDurationE(key)
+		v, err = cfg.GetDurationE("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -731,7 +731,7 @@ func (c *Config) TimeVar(key string, av *AtomicTime, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetTimeE(key)
+		v, err = cfg.GetTimeE("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -758,7 +758,7 @@ func (c *Config) IPVar(key string, av *AtomicIP, opts ...BindOption) {
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		var err error
-		v, err = c.GetIPE(key)
+		v, err = cfg.GetIPE("")
 		if err != nil {
 			if options.OnFail != nil {
 				options.OnFail(err)

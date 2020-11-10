@@ -143,7 +143,7 @@ func (c *Config) {name}Var(key string, av *Atomic{name}, opts ...BindOption) {{
 	av.Set(v)
 	c.AddOnItemChangeHandler(key, func(cfg *Config) {{
 		var err error
-		v, err = c.Get{name}E(key)
+		v, err = cfg.Get{name}E("")
 		if err != nil {{
 			if options.OnFail != nil {{
 				options.OnFail(err)
@@ -190,21 +190,27 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-var gcfg *Config
+var gcfg = &Config{
+	itemHandlers: map[string][]OnChangeHandler{},
+}
 
 func Init(filename string) error {
-	var err error
-	if gcfg, err = NewConfigWithBaseFile(filename); err != nil {
+	cfg, err := NewConfigWithBaseFile(filename)
+	if err != nil {
 		return err
 	}
+	cfg.itemHandlers = gcfg.itemHandlers
+	gcfg = cfg
 	return nil
 }
 
 func InitWithSimpleFile(filename string, opts ...SimpleFileOption) error {
-	var err error
-	if gcfg, err = NewConfigWithSimpleFile(filename, opts...); err != nil {
+	cfg, err := NewConfigWithSimpleFile(filename, opts...)
+	if err != nil {
 		return err
 	}
+	cfg.itemHandlers = gcfg.itemHandlers
+	gcfg = cfg
 	return nil
 }
 """
