@@ -9,6 +9,7 @@ require (
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.332
 	github.com/aliyun/aliyun-tablestore-go-sdk v4.1.3+incompatible
 	github.com/coocood/freecache v1.1.1
+	github.com/davecgh/go-spew v1.1.1
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/generikvault/gvalstrings v0.0.0-20180926130504-471f38f0112a

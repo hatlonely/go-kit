@@ -37,7 +37,7 @@ type OTSLegacyProvider struct {
 
 func NewOTSLegacyProviderWithOptions(options *OTSLegacyProviderOptions) (*OTSLegacyProvider, error) {
 	otsCli := tablestore.NewClient(options.Endpoint, options.Instance, options.AccessKeyID, options.AccessKeySecret)
-	if _, err := otsCli.DescribeTable(&tablestore.DescribeTableRequest{
+	if res, err := otsCli.DescribeTable(&tablestore.DescribeTableRequest{
 		TableName: options.Table,
 	}); err != nil {
 		if !strings.Contains(err.Error(), "does not exist") {
@@ -58,6 +58,18 @@ func NewOTSLegacyProviderWithOptions(options *OTSLegacyProviderOptions) (*OTSLeg
 		}
 		if _, err := otsCli.CreateTable(req); err != nil {
 			return nil, err
+		}
+	} else {
+		if len(res.TableMeta.SchemaEntry) != len(options.PrimaryKeys) {
+			return nil, errors.Errorf("ots primary key [%v] is not match options [%v]", res.TableMeta.SchemaEntry, options.PrimaryKeys)
+		}
+		for i, pk := range res.TableMeta.SchemaEntry {
+			if *pk.Name != options.PrimaryKeys[i] {
+				return nil, errors.Errorf("ots primary key [%v] is not match options [%v]", res.TableMeta.SchemaEntry, options.PrimaryKeys)
+			}
+			if *pk.Type != tablestore.PrimaryKeyType_STRING {
+				return nil, errors.Errorf("table [%v] primary key should be string", options.Table)
+			}
 		}
 	}
 
