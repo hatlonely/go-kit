@@ -303,6 +303,13 @@ func TestInterfaceTravel(t *testing.T) {
 					},
 				},
 			},
+			"Key9": []map[string]interface{}{
+				{
+					"Key10": "val10",
+				}, {
+					"Key11": "val11",
+				},
+			},
 		}
 
 		kvs := map[string]interface{}{}
@@ -319,6 +326,8 @@ func TestInterfaceTravel(t *testing.T) {
 		So(kvs["Key3[0].Key6.Key8[0]"], ShouldEqual, 1)
 		So(kvs["Key3[0].Key6.Key8[1]"], ShouldEqual, 2)
 		So(kvs["Key3[0].Key6.Key8[2]"], ShouldEqual, 3)
+		So(kvs["Key9[0].Key10"], ShouldEqual, "val10")
+		So(kvs["Key9[1].Key11"], ShouldEqual, "val11")
 	})
 }
 
