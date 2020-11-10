@@ -152,12 +152,6 @@ func (d *IniDecoder) Encode(storage *Storage) ([]byte, error) {
 		globalKeySet[info.key] = true
 		return nil
 	}); err != nil {
-		// 如果获取全局 key 出错，直接将所有的 key 输出
-		_ = storage.Travel(func(key string, val interface{}) error {
-			str, _ := cast.ToStringE(val)
-			buf.WriteString(fmt.Sprintf("%v = %v\n", escape(key), escape(str)))
-			return nil
-		})
 		return nil, err
 	}
 
