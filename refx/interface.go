@@ -253,11 +253,12 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 		for i := 0; i < rv.NumField(); i++ {
 			key := FormatKeyWithOptions(rt.Field(i).Name, options)
 			var val interface{}
-			switch src.(type) {
-			case map[string]interface{}:
-				val = src.(map[string]interface{})[key]
-			case map[interface{}]interface{}:
-				val = src.(map[interface{}]interface{})[key]
+			switch srt.Kind() {
+			case reflect.Map:
+				if srv.MapIndex(reflect.ValueOf(key)).Kind() == reflect.Invalid {
+					continue
+				}
+				val = srv.MapIndex(reflect.ValueOf(key)).Interface()
 			default:
 				return fmt.Errorf("convert src to map[string]interface{} or map[interface{}]interface{} failed. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(src))
 			}
