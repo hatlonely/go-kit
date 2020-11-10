@@ -304,9 +304,6 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 			}
 		}
 	case reflect.Map:
-		if rt.Key().Kind() != reflect.String {
-			return fmt.Errorf("unsupport dst type. prefix: [%v], type: [%v]", prefix, rt)
-		}
 		if rv.IsNil() {
 			rv.Set(reflect.MakeMap(rt))
 		}
