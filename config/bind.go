@@ -56,9 +56,9 @@ func (c *Config) BindVar(key string, v interface{}, av *atomic.Value, opts ...Bi
 			}
 		}
 	}
-	c.AddOnItemChangeHandler(key, func(conf *Config) {
+	c.AddOnItemChangeHandler(key, func(cfg *Config) {
 		val := reflect.New(reflect.TypeOf(v))
-		if err := conf.Sub(key).Unmarshal(val.Interface(), options.RefxOptions...); err != nil {
+		if err := cfg.Unmarshal(val.Interface(), options.RefxOptions...); err != nil {
 			c.log.Warnf("bind var failed. key: [%v], err: [%v]", key, err)
 			if options.OnFail != nil {
 				options.OnFail(err)
@@ -67,7 +67,7 @@ func (c *Config) BindVar(key string, v interface{}, av *atomic.Value, opts ...Bi
 		}
 		av.Store(val.Elem().Interface())
 		if options.OnSucc != nil {
-			options.OnSucc(c.Sub(""))
+			options.OnSucc(cfg)
 		}
 	})
 }

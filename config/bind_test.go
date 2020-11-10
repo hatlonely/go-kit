@@ -28,6 +28,23 @@ func CreateTestFile4() {
 	_ = fp.Close()
 }
 
+func CreateTestFile5() {
+	fp, _ := os.Create("test.json")
+	_, _ = fp.WriteString(`{
+  "mysql": {
+    "username": "hatlonely",
+    "password": "654321",
+    "database": "account2",
+    "host": "11.46.23.89",
+    "port": 3306,
+    "connMaxLifeTime": "120s",
+    "maxIdleConns": 15,
+    "maxOpenConns": 25
+  },
+}`)
+	_ = fp.Close()
+}
+
 func TestBind(t *testing.T) {
 	Convey("TestBind", t, func() {
 		CreateTestFile4()
@@ -61,6 +78,18 @@ func TestBind(t *testing.T) {
 		So(bindVal.Load().(Options).ConnMaxLifeTime, ShouldEqual, 60*time.Second)
 		So(bindVal.Load().(Options).MaxIdleConns, ShouldEqual, 10)
 		So(bindVal.Load().(Options).MaxOpenConns, ShouldEqual, 20)
+
+		CreateTestFile5()
+		time.Sleep(100 * time.Millisecond)
+
+		So(bindVal.Load().(Options).Username, ShouldEqual, "hatlonely")
+		So(bindVal.Load().(Options).Password, ShouldEqual, "654321")
+		So(bindVal.Load().(Options).Database, ShouldEqual, "account2")
+		So(bindVal.Load().(Options).Host, ShouldEqual, "11.46.23.89")
+		So(bindVal.Load().(Options).Port, ShouldEqual, 3306)
+		So(bindVal.Load().(Options).ConnMaxLifeTime, ShouldEqual, 120*time.Second)
+		So(bindVal.Load().(Options).MaxIdleConns, ShouldEqual, 15)
+		So(bindVal.Load().(Options).MaxOpenConns, ShouldEqual, 25)
 
 		DeleteTestFile()
 	})

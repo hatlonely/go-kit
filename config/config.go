@@ -395,10 +395,16 @@ func (c *Config) Transform(options *Options, opts ...TransformOption) (*Config, 
 
 func (c *Config) Bytes() ([]byte, error) {
 	s := c.deepCopyStorage()
+	if c.parent != nil {
+		if err := s.Encrypt(c.parent.cipher); err != nil {
+			return nil, err
+		}
+		return c.parent.decoder.Encode(s.Sub(c.prefix))
+	}
 	if err := s.Encrypt(c.cipher); err != nil {
 		return nil, err
 	}
-	return c.decoder.Encode(s)
+	return c.decoder.Encode(s.Sub(c.prefix))
 }
 
 func (c *Config) Save() error {
@@ -416,6 +422,10 @@ func (c *Config) Diff(o *Config) {
 }
 
 func (c *Config) deepCopyStorage() *Storage {
+	if c.parent != nil {
+		return c.parent.deepCopyStorage()
+	}
+
 	buf, err := c.decoder.Encode(c.storage)
 	if err != nil {
 		panic(err)
