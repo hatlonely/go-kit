@@ -141,6 +141,10 @@ func OTSLegacyGetRange(otsCli *tablestore.TableStoreClient, table string, primar
 
 	var ts int64
 	v := map[string]interface{}{}
+	p := map[string]interface{}{
+		"$": v,
+	}
+	key := "$"
 	for req.RangeRowQueryCriteria.StartPrimaryKey != nil {
 		res, err := otsCli.GetRange(req)
 		if err != nil {
@@ -150,25 +154,48 @@ func OTSLegacyGetRange(otsCli *tablestore.TableStoreClient, table string, primar
 		for _, row := range res.Rows {
 			m := v
 			for _, pks := range row.PrimaryKey.PrimaryKeys {
-				if _, ok := m[pks.Value.(string)]; !ok {
-					m[pks.Value.(string)] = map[string]interface{}{}
+				if pks.Value.(string) == "_" {
+					continue
 				}
-				m = m[pks.Value.(string)].(map[string]interface{})
+				key = pks.Value.(string)
+				if _, ok := m[key]; !ok {
+					m[key] = map[string]interface{}{}
+				}
+				p = m
+				m = m[key].(map[string]interface{})
 			}
-			for _, col := range row.Columns {
+			if len(row.Columns) == 1 && row.Columns[0].ColumnName == "_" {
+				col := row.Columns[0]
 				switch val := col.Value.(type) {
 				case string:
 					var obj interface{}
 					if err := json.Unmarshal([]byte(val), &obj); err != nil {
-						m[col.ColumnName] = val
+						p[key] = val
 					} else {
-						m[col.ColumnName] = obj
+						p[key] = obj
 					}
 				default:
-					m[col.ColumnName] = col.Value
+					p[key] = val
 				}
 				if ts < col.Timestamp {
 					ts = col.Timestamp
+				}
+			} else {
+				for _, col := range row.Columns {
+					switch val := col.Value.(type) {
+					case string:
+						var obj interface{}
+						if err := json.Unmarshal([]byte(val), &obj); err != nil {
+							m[col.ColumnName] = val
+						} else {
+							m[col.ColumnName] = obj
+						}
+					default:
+						m[col.ColumnName] = col.Value
+					}
+					if ts < col.Timestamp {
+						ts = col.Timestamp
+					}
 				}
 			}
 		}
@@ -205,16 +232,24 @@ func otsLegacyPutRowRecursive(otsCli *tablestore.TableStoreClient, table string,
 		}
 		m, ok := v.(map[string]interface{})
 		if !ok {
-			return errors.New("invalid format")
-		}
-		for key, val := range m {
-			switch n := val.(type) {
+			switch n := v.(type) {
 			case float64, int64, string, bool:
-				req.PutRowChange.AddColumn(key, n)
+				req.PutRowChange.AddColumn("_", n)
 			case int:
-				req.PutRowChange.AddColumn(key, int64(n))
+				req.PutRowChange.AddColumn("_", int64(n))
 			default:
-				req.PutRowChange.AddColumn(key, strx.JsonMarshal(n))
+				req.PutRowChange.AddColumn("_", strx.JsonMarshal(n))
+			}
+		} else {
+			for key, val := range m {
+				switch n := val.(type) {
+				case float64, int64, string, bool:
+					req.PutRowChange.AddColumn(key, n)
+				case int:
+					req.PutRowChange.AddColumn(key, int64(n))
+				default:
+					req.PutRowChange.AddColumn(key, strx.JsonMarshal(n))
+				}
 			}
 		}
 		if _, err := otsCli.PutRow(req); err != nil {
@@ -225,7 +260,7 @@ func otsLegacyPutRowRecursive(otsCli *tablestore.TableStoreClient, table string,
 
 	m, ok := v.(map[string]interface{})
 	if !ok {
-		return errors.New("invalid format")
+		return otsLegacyPutRowRecursive(otsCli, table, primaryKeys, append(values, "_"), v, idx-1)
 	}
 
 	for key, val := range m {
