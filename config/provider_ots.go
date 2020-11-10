@@ -47,21 +47,22 @@ func NewOTSProvider(otsCli *tablestore.TableStoreClient, table string, key strin
 		}
 	}
 
-	buf, ts, err := OTSGetRow(otsCli, table, key)
-	if err != nil {
-		return nil, err
-	}
-
-	return &OTSProvider{
+	provider := &OTSProvider{
 		otsCli:   otsCli,
 		table:    table,
 		key:      key,
 		interval: interval,
-		buf:      buf,
-		ts:       ts,
 		events:   make(chan struct{}, 10),
 		errors:   make(chan error, 10),
-	}, nil
+	}
+	buf, ts, err := provider.otsGetRow(otsCli, table, key)
+	if err != nil {
+		return nil, err
+	}
+	provider.buf = buf
+	provider.ts = ts
+
+	return provider, nil
 }
 
 type OTSProvider struct {
@@ -88,7 +89,7 @@ func (p *OTSProvider) Load() ([]byte, error) {
 	return p.buf, nil
 }
 
-func OTSGetRow(otsCli *tablestore.TableStoreClient, table string, key string) ([]byte, int64, error) {
+func (p *OTSProvider) otsGetRow(otsCli *tablestore.TableStoreClient, table string, key string) ([]byte, int64, error) {
 	res, err := otsCli.GetRow(&tablestore.GetRowRequest{
 		SingleRowQueryCriteria: &tablestore.SingleRowQueryCriteria{
 			TableName: table,
@@ -116,7 +117,7 @@ func OTSGetRow(otsCli *tablestore.TableStoreClient, table string, key string) ([
 	return []byte(val), ts, nil
 }
 
-func OTSPutRow(otsCli *tablestore.TableStoreClient, table string, key string, buf []byte) error {
+func (p *OTSProvider) otsPutRow(otsCli *tablestore.TableStoreClient, table string, key string, buf []byte) error {
 	_, err := otsCli.PutRow(&tablestore.PutRowRequest{
 		PutRowChange: &tablestore.PutRowChange{
 			TableName: table,
@@ -136,7 +137,7 @@ func OTSPutRow(otsCli *tablestore.TableStoreClient, table string, key string, bu
 }
 
 func (p *OTSProvider) Dump(buf []byte) error {
-	return OTSPutRow(p.otsCli, p.table, p.key, buf)
+	return p.otsPutRow(p.otsCli, p.table, p.key, buf)
 }
 
 func (p *OTSProvider) EventLoop(ctx context.Context) error {
@@ -148,7 +149,7 @@ func (p *OTSProvider) EventLoop(ctx context.Context) error {
 		for {
 			select {
 			case <-ticker.C:
-				buf, ts, err := OTSGetRow(p.otsCli, p.table, p.key)
+				buf, ts, err := p.otsGetRow(p.otsCli, p.table, p.key)
 				if err != nil {
 					p.errors <- err
 					continue
