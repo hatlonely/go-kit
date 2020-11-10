@@ -200,6 +200,14 @@ func TestTomlDecoder(t *testing.T) {
 					"Key11": 11,
 				},
 			},
+			"Key12": []interface{}{
+				map[string]interface{}{
+					"Key13": "val13",
+				},
+				map[string]interface{}{
+					"Key14": "val14",
+				},
+			},
 		})
 		So(err, ShouldBeNil)
 
@@ -207,6 +215,12 @@ func TestTomlDecoder(t *testing.T) {
 			buf, err := decoder.Encode(s)
 			So(err, ShouldBeNil)
 			So(string(buf), ShouldEqual, `Key1 = "val1"
+
+[[Key12]]
+  Key13 = "val13"
+
+[[Key12]]
+  Key14 = "val14"
 
 [Key2]
   Key3 = "val3"
@@ -281,6 +295,14 @@ func TestIniDecoder(t *testing.T) {
 					"Key11": 11,
 				},
 			},
+			"Key12": []interface{}{
+				map[string]interface{}{
+					"Key13": "val13",
+				},
+				map[string]interface{}{
+					"Key14": "val14",
+				},
+			},
 		})
 		So(err, ShouldBeNil)
 
@@ -288,6 +310,10 @@ func TestIniDecoder(t *testing.T) {
 			buf, err := decoder.Encode(s)
 			So(err, ShouldBeNil)
 			So(string(buf), ShouldEqual, `Key1 = val1
+
+[Key12]
+[0].Key13 = val13
+[1].Key14 = val14
 
 [Key2]
 Key3 = val3
@@ -303,6 +329,10 @@ Key9.Key11 = 11
 
 		{
 			s, err := decoder.Decode([]byte(`Key1 = val1
+
+[Key12]
+[0].Key13 = val13
+[1].Key14 = val14
 
 [Key2]
 Key3 = val3
@@ -329,6 +359,14 @@ Key9.Key11 = 11
 					"Key9": map[string]interface{}{
 						"Key10": "10",
 						"Key11": "11",
+					},
+				},
+				"Key12": []interface{}{
+					map[string]interface{}{
+						"Key13": "val13",
+					},
+					map[string]interface{}{
+						"Key14": "val14",
 					},
 				},
 			}))
