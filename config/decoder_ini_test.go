@@ -8,7 +8,7 @@ import (
 	"github.com/hatlonely/go-kit/strx"
 )
 
-func TestUnescape(t *testing.T) {
+func TestIniEscape(t *testing.T) {
 	Convey("TestUnescape", t, func() {
 		for _, unit := range []struct {
 			str          string
@@ -17,8 +17,16 @@ func TestUnescape(t *testing.T) {
 			{str: `\;\#\n\r`, unescapedStr: ";#\n\r"},
 			{str: `\"`, unescapedStr: `"`},
 			{str: `\'`, unescapedStr: `'`},
+			{str: `\=`, unescapedStr: `=`},
+			{str: `\:`, unescapedStr: `:`},
+			{str: `\\`, unescapedStr: `\`},
+			{str: `\t`, unescapedStr: "\t"},
+			{str: `\b`, unescapedStr: "\b"},
+			{str: `\a`, unescapedStr: "\a"},
+			{str: `\0`, unescapedStr: "\000"},
 		} {
 			So(unescape(unit.str), ShouldEqual, unit.unescapedStr)
+			So(escape(unit.unescapedStr), ShouldEqual, unit.str)
 		}
 	})
 }
