@@ -36,3 +36,20 @@ func TestDiff(t *testing.T) {
 		))
 	})
 }
+
+func TestJsonDiff(t *testing.T) {
+	Convey("TestJsonDiff", t, func() {
+		fmt.Println(JsonDiff(
+			MustJsonMarshal(map[string]interface{}{
+				"key1": "val1",
+				"key2": "val2",
+				"key3": "val3",
+			}),
+			MustJsonMarshal(map[string]interface{}{
+				"key1": "val1",
+				"key2": "val3",
+				"key4": "val4",
+			}),
+		))
+	})
+}

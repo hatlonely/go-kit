@@ -413,7 +413,7 @@ func (c *Config) Save() error {
 func (c *Config) Diff(o *Config) {
 	text1 := strx.JsonMarshalIndent(c.storage.Interface())
 	text2 := strx.JsonMarshalIndent(o.storage.Interface())
-	fmt.Println(strx.Diff(text1, text2))
+	fmt.Println(strx.JsonDiff(text1, text2))
 }
 
 func (c *Config) deepCopyStorage() *Storage {
