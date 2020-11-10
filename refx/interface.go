@@ -358,21 +358,10 @@ func interfaceTravelRecursive(v interface{}, fun func(key string, val interface{
 	case reflect.Ptr:
 		return fmt.Errorf("key [%v], unsupport type [%v]", prefix, reflect.TypeOf(v))
 	case reflect.Map:
-		switch v.(type) {
-		case map[interface{}]interface{}:
-			for key, val := range v.(map[interface{}]interface{}) {
-				if _, ok := key.(string); !ok {
-					return fmt.Errorf("key [%v.%v], unsupport type [%v]", prefix, key, reflect.TypeOf(v))
-				}
-				if err := interfaceTravelRecursive(val, fun, prefixAppendKey(prefix, key.(string))); err != nil {
-					return err
-				}
-			}
-		case map[string]interface{}:
-			for key, val := range v.(map[string]interface{}) {
-				if err := interfaceTravelRecursive(val, fun, prefixAppendKey(prefix, key)); err != nil {
-					return err
-				}
+		for _, key := range rv.MapKeys() {
+			val := rv.MapIndex(key).Interface()
+			if err := interfaceTravelRecursive(val, fun, prefixAppendKey(prefix, cast.ToString(key.Interface()))); err != nil {
+				return err
 			}
 		}
 	case reflect.Slice:
