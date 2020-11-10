@@ -136,6 +136,18 @@ func TestConfig_Get(t *testing.T) {
 		So(cfg.GetDuration("logger.grpc.writers[0].rotateFileWriter.maxAge"), ShouldEqual, 24*time.Hour)
 		So(cfg.GetString("logger.grpc.writers[0].rotateFileWriter.formatter.type"), ShouldEqual, "Json")
 
+		Convey("Get ok", func() {
+			val, ok := cfg.Get("http.port")
+			So(ok, ShouldBeTrue)
+			So(val, ShouldEqual, 80)
+		})
+
+		Convey("Get not ok", func() {
+			val, ok := cfg.Get("xxx")
+			So(ok, ShouldBeFalse)
+			So(val, ShouldBeNil)
+		})
+
 		DeleteTestFile()
 	})
 }
