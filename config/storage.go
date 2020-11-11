@@ -7,12 +7,14 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/pkg/errors"
+
 	"github.com/hatlonely/go-kit/refx"
 )
 
 func NewStorage(root interface{}) (*Storage, error) {
-	if err := refx.Validate(root); err != nil {
-		return nil, err
+	if err := refx.InterfaceTravel(root, func(key string, val interface{}) error { return nil }); err != nil {
+		return nil, errors.WithMessage(err, "NewStorage failed")
 	}
 
 	return &Storage{

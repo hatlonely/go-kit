@@ -71,10 +71,6 @@ func FormatKeyWithOptions(str string, options *Options) string {
 	return str
 }
 
-func Validate(v interface{}) error {
-	return InterfaceTravel(v, func(key string, val interface{}) error { return nil })
-}
-
 func InterfaceGet(v interface{}, key string) (interface{}, error) {
 	return interfaceGetRecursive(v, key, "")
 }
