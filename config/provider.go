@@ -26,7 +26,7 @@ func NewProviderWithConfig(cfg *Config, opts ...refx.Option) (Provider, error) {
 
 func NewProviderWithOptions(options *ProviderOptions) (Provider, error) {
 	switch options.Type {
-	case "Local":
+	case "", "Local":
 		return NewLocalProviderWithOptions(&options.LocalProvider)
 	case "OTS":
 		return NewOTSProviderWithOptions(&options.OTSProvider)

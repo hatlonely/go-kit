@@ -5,7 +5,6 @@ package strx
 
 import (
 	"bytes"
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -38,7 +37,6 @@ func RenderLine(str string, effects ...Effect) string {
 	buf.WriteString("m")
 	buf.WriteString(str)
 	buf.WriteString("\033[0m")
-	fmt.Println(buf.Bytes())
 	return buf.String()
 }
 

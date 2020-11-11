@@ -15,7 +15,7 @@ func NewDecoderWithOptions(options *DecoderOptions) (Decoder, error) {
 	switch options.Type {
 	case "Yaml":
 		return &YamlDecoder{}, nil
-	case "Json", "Json5":
+	case "", "Json", "Json5":
 		return &Json5Decoder{}, nil
 	case "Toml":
 		return &TomlDecoder{}, nil

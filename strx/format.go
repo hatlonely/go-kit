@@ -8,7 +8,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-var sortJson = jsoniter.Config{SortMapKeys: true}.Froze()
+var sortJson = jsoniter.ConfigCompatibleWithStandardLibrary
 
 func JsonMarshal(v interface{}) string {
 	buf, _ := jsoniter.Marshal(v)
