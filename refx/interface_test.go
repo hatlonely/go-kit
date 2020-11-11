@@ -134,7 +134,8 @@ func TestInterfaceDel(t *testing.T) {
 
 		for _, key := range []string{
 			"key4",
-			"key3[1]", // not exist key
+			"key3[1]",  // not exist key
+			"key33[1]", // not exist key
 			"key3[0].key6.key8[1]",
 			"key3[0].key5",
 		} {
