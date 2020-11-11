@@ -97,7 +97,6 @@ func main() {
 		cfg, err := config.NewConfigWithSimpleFile(options.InBaseFile)
 		Must(err)
 		Must(cfg.Unmarshal(&inOptions, opts...))
-		outOptions = inOptions
 		if options.OutBaseFile == "" {
 			options.OutBaseFile = options.InBaseFile
 		}
