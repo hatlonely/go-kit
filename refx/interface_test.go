@@ -194,7 +194,7 @@ func TestInterfaceToStruct(t *testing.T) {
 	}
 
 	Convey("TestInterfaceToStruct 1", t, func() {
-		type Option struct {
+		type Options struct {
 			Key1 int
 			Key2 string
 			Key3 []struct {
@@ -221,34 +221,34 @@ func TestInterfaceToStruct(t *testing.T) {
 				Key21 map[string]interface{}
 			}
 		}
-		var opt Option
-		So(InterfaceToStruct(v, &opt), ShouldBeNil)
-		So(opt.Key1, ShouldEqual, 1)
-		So(opt.Key2, ShouldEqual, "val2")
-		So(opt.Key3[0].Key4, ShouldEqual, "val4")
-		So(opt.Key3[0].Key5, ShouldEqual, "val5")
-		So(opt.Key3[0].Key6.Key7, ShouldEqual, "val7")
-		So(opt.Key3[0].Key6.Key8[0], ShouldEqual, 1)
-		So(opt.Key3[0].Key6.Key8[1], ShouldEqual, 2)
-		So(opt.Key3[0].Key6.Key8[2], ShouldEqual, 3)
-		So(opt.Key9[0]["Key10"], ShouldEqual, "val10")
-		So(opt.Key9[1]["Key11"], ShouldEqual, "val11")
-		So(opt.Key12, ShouldResemble, []interface{}{1, 2, 3})
-		So(opt.Key13["Key16"].Key14, ShouldEqual, "val14")
-		So(opt.Key13["Key16"].Key15, ShouldEqual, 15)
-		So(opt.Key13["Key17"].Key14, ShouldEqual, "val141")
-		So(opt.Key13["Key17"].Key15, ShouldEqual, 151)
-		So(opt.Key18[12], ShouldEqual, 24)
-		So(opt.Key18[13], ShouldEqual, 26)
-		So(opt.Key19.Key20.Key22, ShouldEqual, "val22")
-		So(opt.Key19.Key20.Key23, ShouldEqual, 23)
-		So(opt.Key19.Key20.Key24, ShouldEqual, "")
-		So(opt.Key19.Key21["Key22"], ShouldEqual, "val222")
-		So(opt.Key19.Key21["Key23"], ShouldEqual, 233)
+		var options Options
+		So(InterfaceToStruct(v, &options), ShouldBeNil)
+		So(options.Key1, ShouldEqual, 1)
+		So(options.Key2, ShouldEqual, "val2")
+		So(options.Key3[0].Key4, ShouldEqual, "val4")
+		So(options.Key3[0].Key5, ShouldEqual, "val5")
+		So(options.Key3[0].Key6.Key7, ShouldEqual, "val7")
+		So(options.Key3[0].Key6.Key8[0], ShouldEqual, 1)
+		So(options.Key3[0].Key6.Key8[1], ShouldEqual, 2)
+		So(options.Key3[0].Key6.Key8[2], ShouldEqual, 3)
+		So(options.Key9[0]["Key10"], ShouldEqual, "val10")
+		So(options.Key9[1]["Key11"], ShouldEqual, "val11")
+		So(options.Key12, ShouldResemble, []interface{}{1, 2, 3})
+		So(options.Key13["Key16"].Key14, ShouldEqual, "val14")
+		So(options.Key13["Key16"].Key15, ShouldEqual, 15)
+		So(options.Key13["Key17"].Key14, ShouldEqual, "val141")
+		So(options.Key13["Key17"].Key15, ShouldEqual, 151)
+		So(options.Key18[12], ShouldEqual, 24)
+		So(options.Key18[13], ShouldEqual, 26)
+		So(options.Key19.Key20.Key22, ShouldEqual, "val22")
+		So(options.Key19.Key20.Key23, ShouldEqual, 23)
+		So(options.Key19.Key20.Key24, ShouldEqual, "")
+		So(options.Key19.Key21["Key22"], ShouldEqual, "val222")
+		So(options.Key19.Key21["Key23"], ShouldEqual, 233)
 	})
 
 	Convey("TestInterfaceToStruct 2", t, func() {
-		type Option struct {
+		type Options struct {
 			Key1 int
 			Key2 string
 			Key3 []struct {
@@ -257,18 +257,18 @@ func TestInterfaceToStruct(t *testing.T) {
 				Key6 map[string]interface{}
 			}
 		}
-		var opt Option
-		So(InterfaceToStruct(v, &opt), ShouldBeNil)
-		So(opt.Key1, ShouldEqual, 1)
-		So(opt.Key2, ShouldEqual, "val2")
-		So(opt.Key3[0].Key4, ShouldEqual, "val4")
-		So(opt.Key3[0].Key5, ShouldEqual, "val5")
-		So(opt.Key3[0].Key6["Key7"], ShouldEqual, "val7")
-		So(opt.Key3[0].Key6["Key8"], ShouldResemble, []interface{}{1, 2, 3})
+		var options Options
+		So(InterfaceToStruct(v, &options), ShouldBeNil)
+		So(options.Key1, ShouldEqual, 1)
+		So(options.Key2, ShouldEqual, "val2")
+		So(options.Key3[0].Key4, ShouldEqual, "val4")
+		So(options.Key3[0].Key5, ShouldEqual, "val5")
+		So(options.Key3[0].Key6["Key7"], ShouldEqual, "val7")
+		So(options.Key3[0].Key6["Key8"], ShouldResemble, []interface{}{1, 2, 3})
 	})
 
 	Convey("TestInterfaceToStruct 3", t, func() {
-		type Option struct {
+		type Options struct {
 			Key1 int
 			Key2 *string
 			Key3 []*struct {
@@ -280,70 +280,202 @@ func TestInterfaceToStruct(t *testing.T) {
 				}
 			}
 		}
-		var opt Option
-		So(InterfaceToStruct(v, &opt), ShouldBeNil)
-		So(opt.Key1, ShouldEqual, 1)
-		So(*opt.Key2, ShouldEqual, "val2")
-		So(opt.Key3[0].Key4, ShouldEqual, "val4")
-		So(opt.Key3[0].Key5, ShouldEqual, "val5")
-		So(*opt.Key3[0].Key6.Key7, ShouldEqual, "val7")
-		So(*opt.Key3[0].Key6.Key8[0], ShouldEqual, 1)
-		So(*opt.Key3[0].Key6.Key8[1], ShouldEqual, 2)
-		So(*opt.Key3[0].Key6.Key8[2], ShouldEqual, 3)
+		var options Options
+		So(InterfaceToStruct(v, &options), ShouldBeNil)
+		So(options.Key1, ShouldEqual, 1)
+		So(*options.Key2, ShouldEqual, "val2")
+		So(options.Key3[0].Key4, ShouldEqual, "val4")
+		So(options.Key3[0].Key5, ShouldEqual, "val5")
+		So(*options.Key3[0].Key6.Key7, ShouldEqual, "val7")
+		So(*options.Key3[0].Key6.Key8[0], ShouldEqual, 1)
+		So(*options.Key3[0].Key6.Key8[1], ShouldEqual, 2)
+		So(*options.Key3[0].Key6.Key8[2], ShouldEqual, 3)
 	})
 
 	Convey("TestInterfaceToStruct 4", t, func() {
-		type Option struct {
+		type Options struct {
 			Key3 []map[string]interface{}
 		}
-		var opt Option
-		So(InterfaceToStruct(v, &opt), ShouldBeNil)
-		So(opt.Key3[0]["Key4"], ShouldEqual, "val4")
-		So(opt.Key3[0]["Key5"], ShouldEqual, "val5")
-		So(opt.Key3[0]["Key6"], ShouldResemble, map[interface{}]interface{}{
+		var options Options
+		So(InterfaceToStruct(v, &options), ShouldBeNil)
+		So(options.Key3[0]["Key4"], ShouldEqual, "val4")
+		So(options.Key3[0]["Key5"], ShouldEqual, "val5")
+		So(options.Key3[0]["Key6"], ShouldResemble, map[interface{}]interface{}{
 			"Key7": "val7",
 			"Key8": []interface{}{1, 2, 3},
 		})
 	})
+}
 
-	Convey("TestInterfaceToStruct camel name", t, func() {
+func TestInterfaceToStructWithCamelName(t *testing.T) {
+	Convey("TestInterfaceToStruct snake name", t, func() {
 		v := map[interface{}]interface{}{
-			"key1": 1,
-			"key2": "val2",
-			"key3": []interface{}{
+			"key1Key1": 1,
+			"key2Key2": "val2",
+			"key3Key3": []interface{}{
 				map[string]interface{}{
-					"key4": "val4",
-					"key5": "val5",
-					"key6": map[interface{}]interface{}{
-						"key7": "val7",
-						"key8": []interface{}{1, 2, 3},
+					"key4Key4": "val4",
+					"key5Key5": "val5",
+					"key6Key6": map[interface{}]interface{}{
+						"key7Key7": "val7",
+						"key8Key8": []interface{}{1, 2, 3},
 					},
 				},
 			},
 		}
 
-		type Option struct {
-			Key1 int
-			Key2 string
-			Key3 []struct {
-				Key4 string
-				Key5 string
-				Key6 struct {
-					Key7 string
-					Key8 []int64
+		type Options struct {
+			Key1Key1 int
+			Key2Key2 string
+			Key3Key3 []struct {
+				Key4Key4 string
+				Key5Key5 string
+				Key6Key6 struct {
+					Key7Key7 string
+					Key8Key8 []int64
 				}
 			}
 		}
-		var opt Option
-		So(InterfaceToStruct(v, &opt, WithCamelName()), ShouldBeNil)
-		So(opt.Key1, ShouldEqual, 1)
-		So(opt.Key2, ShouldEqual, "val2")
-		So(opt.Key3[0].Key4, ShouldEqual, "val4")
-		So(opt.Key3[0].Key5, ShouldEqual, "val5")
-		So(opt.Key3[0].Key6.Key7, ShouldEqual, "val7")
-		So(opt.Key3[0].Key6.Key8[0], ShouldEqual, 1)
-		So(opt.Key3[0].Key6.Key8[1], ShouldEqual, 2)
-		So(opt.Key3[0].Key6.Key8[2], ShouldEqual, 3)
+
+		var options Options
+		So(InterfaceToStruct(v, &options, WithCamelName()), ShouldBeNil)
+		So(options.Key1Key1, ShouldEqual, 1)
+		So(options.Key2Key2, ShouldEqual, "val2")
+		So(options.Key3Key3[0].Key4Key4, ShouldEqual, "val4")
+		So(options.Key3Key3[0].Key5Key5, ShouldEqual, "val5")
+		So(options.Key3Key3[0].Key6Key6.Key7Key7, ShouldEqual, "val7")
+		So(options.Key3Key3[0].Key6Key6.Key8Key8[0], ShouldEqual, 1)
+		So(options.Key3Key3[0].Key6Key6.Key8Key8[1], ShouldEqual, 2)
+		So(options.Key3Key3[0].Key6Key6.Key8Key8[2], ShouldEqual, 3)
+	})
+}
+
+func TestInterfaceToStructWithSnakeName(t *testing.T) {
+	Convey("TestInterfaceToStruct snake name", t, func() {
+		v := map[interface{}]interface{}{
+			"key1_key1": 1,
+			"key2_key2": "val2",
+			"key3_key3": []interface{}{
+				map[string]interface{}{
+					"key4_key4": "val4",
+					"key5_key5": "val5",
+					"key6_key6": map[interface{}]interface{}{
+						"key7_key7": "val7",
+						"key8_key8": []interface{}{1, 2, 3},
+					},
+				},
+			},
+		}
+
+		type Options struct {
+			Key1Key1 int
+			Key2Key2 string
+			Key3Key3 []struct {
+				Key4Key4 string
+				Key5Key5 string
+				Key6Key6 struct {
+					Key7Key7 string
+					Key8Key8 []int64
+				}
+			}
+		}
+
+		var options Options
+		So(InterfaceToStruct(v, &options, WithSnakeName()), ShouldBeNil)
+		So(options.Key1Key1, ShouldEqual, 1)
+		So(options.Key2Key2, ShouldEqual, "val2")
+		So(options.Key3Key3[0].Key4Key4, ShouldEqual, "val4")
+		So(options.Key3Key3[0].Key5Key5, ShouldEqual, "val5")
+		So(options.Key3Key3[0].Key6Key6.Key7Key7, ShouldEqual, "val7")
+		So(options.Key3Key3[0].Key6Key6.Key8Key8[0], ShouldEqual, 1)
+		So(options.Key3Key3[0].Key6Key6.Key8Key8[1], ShouldEqual, 2)
+		So(options.Key3Key3[0].Key6Key6.Key8Key8[2], ShouldEqual, 3)
+	})
+}
+
+func TestInterfaceToStructWithKebabName(t *testing.T) {
+	Convey("TestInterfaceToStruct snake name", t, func() {
+		v := map[interface{}]interface{}{
+			"Key1Key1": 1,
+			"Key2Key2": "val2",
+			"Key3Key3": []interface{}{
+				map[string]interface{}{
+					"Key4Key4": "val4",
+					"Key5Key5": "val5",
+					"Key6Key6": map[interface{}]interface{}{
+						"Key7Key7": "val7",
+						"Key8Key8": []interface{}{1, 2, 3},
+					},
+				},
+			},
+		}
+
+		type Options struct {
+			Key1_Key1 int
+			Key2_Key2 string
+			Key3_Key3 []struct {
+				Key4Key4 string
+				Key5Key5 string
+				Key6Key6 struct {
+					Key7Key7 string
+					Key8Key8 []int64
+				}
+			}
+		}
+
+		var options Options
+		So(InterfaceToStruct(v, &options, WithPascalName()), ShouldBeNil)
+		So(options.Key1_Key1, ShouldEqual, 1)
+		So(options.Key2_Key2, ShouldEqual, "val2")
+		So(options.Key3_Key3[0].Key4Key4, ShouldEqual, "val4")
+		So(options.Key3_Key3[0].Key5Key5, ShouldEqual, "val5")
+		So(options.Key3_Key3[0].Key6Key6.Key7Key7, ShouldEqual, "val7")
+		So(options.Key3_Key3[0].Key6Key6.Key8Key8[0], ShouldEqual, 1)
+		So(options.Key3_Key3[0].Key6Key6.Key8Key8[1], ShouldEqual, 2)
+		So(options.Key3_Key3[0].Key6Key6.Key8Key8[2], ShouldEqual, 3)
+	})
+}
+
+func TestInterfaceToStructWithPascalName(t *testing.T) {
+	Convey("TestInterfaceToStruct snake name", t, func() {
+		v := map[interface{}]interface{}{
+			"key1-key1": 1,
+			"key2-key2": "val2",
+			"key3-key3": []interface{}{
+				map[string]interface{}{
+					"key4-key4": "val4",
+					"key5-key5": "val5",
+					"key6-key6": map[interface{}]interface{}{
+						"key7-key7": "val7",
+						"key8-key8": []interface{}{1, 2, 3},
+					},
+				},
+			},
+		}
+
+		type Options struct {
+			Key1Key1 int
+			Key2Key2 string
+			Key3Key3 []struct {
+				Key4Key4 string
+				Key5Key5 string
+				Key6Key6 struct {
+					Key7Key7 string
+					Key8Key8 []int64
+				}
+			}
+		}
+
+		var options Options
+		So(InterfaceToStruct(v, &options, WithKebabName()), ShouldBeNil)
+		So(options.Key1Key1, ShouldEqual, 1)
+		So(options.Key2Key2, ShouldEqual, "val2")
+		So(options.Key3Key3[0].Key4Key4, ShouldEqual, "val4")
+		So(options.Key3Key3[0].Key5Key5, ShouldEqual, "val5")
+		So(options.Key3Key3[0].Key6Key6.Key7Key7, ShouldEqual, "val7")
+		So(options.Key3Key3[0].Key6Key6.Key8Key8[0], ShouldEqual, 1)
+		So(options.Key3Key3[0].Key6Key6.Key8Key8[1], ShouldEqual, 2)
+		So(options.Key3Key3[0].Key6Key6.Key8Key8[2], ShouldEqual, 3)
 	})
 }
 
