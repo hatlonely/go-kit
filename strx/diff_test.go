@@ -39,17 +39,33 @@ func TestDiff(t *testing.T) {
 
 func TestJsonDiff(t *testing.T) {
 	Convey("TestJsonDiff", t, func() {
-		fmt.Println(JsonDiff(
-			JsonMarshal(map[string]interface{}{
+		Convey("case normal", func() {
+			fmt.Println(JsonDiff(
+				JsonMarshal(map[string]interface{}{
+					"key1": "val1",
+					"key2": "val2",
+					"key3": "val3",
+				}),
+				JsonMarshal(map[string]interface{}{
+					"key1": "val1",
+					"key2": "val3",
+					"key4": "val4",
+				}),
+			))
+		})
+
+		Convey("case null", func() {
+			fmt.Println(JsonDiff("null", "null"))
+			fmt.Println(JsonDiff("null", JsonMarshal(map[string]interface{}{
 				"key1": "val1",
 				"key2": "val2",
 				"key3": "val3",
-			}),
-			JsonMarshal(map[string]interface{}{
+			})))
+			fmt.Println(JsonDiff(JsonMarshal(map[string]interface{}{
 				"key1": "val1",
-				"key2": "val3",
-				"key4": "val4",
-			}),
-		))
+				"key2": "val2",
+				"key3": "val3",
+			}), "null"))
+		})
 	})
 }
