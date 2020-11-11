@@ -21,19 +21,17 @@ func Must(err error) {
 type Options struct {
 	flag.Options
 
-	Action      string `flag:"--action,-a; usage: actions"`
-	CamelName   bool
-	SnakeName   bool
-	KebabName   bool
-	PascalName  bool
-	Key         string
-	Val         string
-	CipherKeys  []string
-	NoCipher    bool
-	InBaseFile  string
-	OutBaseFile string
-	In          config.Options
-	Out         config.Options
+	Action      string   `flag:"--action,-a; usage: actions, one of [get/set/put/diff]"`
+	CamelName   bool     `flag:"usage: base file key format, for example [redisExpiration]"`
+	SnakeName   bool     `flag:"usage: base file key format, for example [redis_expiration]"`
+	KebabName   bool     `flag:"usage: base file key format, for example [redis-expiration]"`
+	PascalName  bool     `flag:"usage: base file key format: for example [RedisExpiration]"`
+	Key         string   `flag:"usage: key for set or diff"`
+	Val         string   `flag:"usage: val for set or diff"`
+	CipherKeys  []string `flag:"usage: change cipher keys when put"`
+	NoCipher    bool     `flag:"usage: decrypt all keys when put"`
+	InBaseFile  string   `flag:"usage: base file name"`
+	OutBaseFile string   `flag:"usage: put/set target config, it will use in-base-file if not set"`
 }
 
 func main() {
@@ -43,29 +41,29 @@ func main() {
 	if options.Help {
 		fmt.Println(flag.Usage())
 		fmt.Println(`examples:
-cfg --camel-name --in-base-file base_local.json -a get --key mysql
-cfg --camel-name --in-base-file base_local.json -a diff --out-base-file base_remote.json
-cfg --camel-name --in-base-file base_local.json -a put --out-base-file base_remote.json
-cfg --camel-name --in-base-file base_local.json -a diff --key mysql --val '{
-  "connMaxLifeTime": "60s",
-  "database": "testdb2",
-  "host": "127.0.0.1",
-  "maxIdleConns": 10,
-  "maxOpenConns": 20,
-  "password": "",
-  "port": 3306,
-  "username": "hatlonely"
-}'
-cfg --camel-name --in-base-file base_local.json -a set --key mysql --val '{
-  "connMaxLifeTime": "60s",
-  "database": "testdb2",
-  "host": "127.0.0.1",
-  "maxIdleConns": 10,
-  "maxOpenConns": 20,
-  "password": "",
-  "port": 3306,
-  "username": "hatlonely"
-}'`)
+  cfg --camel-name --in-base-file base_local.json -a get --key mysql
+  cfg --camel-name --in-base-file base_local.json -a diff --out-base-file base_remote.json
+  cfg --camel-name --in-base-file base_local.json -a put --out-base-file base_remote.json
+  cfg --camel-name --in-base-file base_local.json -a diff --key mysql --val '{
+    "connMaxLifeTime": "60s",
+    "database": "testdb2",
+    "host": "127.0.0.1",
+    "maxIdleConns": 10,
+    "maxOpenConns": 20,
+    "password": "",
+    "port": 3306,
+    "username": "hatlonely"
+  }'
+  cfg --camel-name --in-base-file base_local.json -a set --key mysql --val '{
+    "connMaxLifeTime": "60s",
+    "database": "testdb2",
+    "host": "127.0.0.1",
+    "maxIdleConns": 10,
+    "maxOpenConns": 20,
+    "password": "",
+    "port": 3306,
+    "username": "hatlonely"
+  }'`)
 		return
 	}
 	if options.Version {
@@ -87,22 +85,24 @@ cfg --camel-name --in-base-file base_local.json -a set --key mysql --val '{
 		opts = append(opts, refx.WithSnakeName())
 	}
 
+	var inOptions config.Options
+	var outOptions config.Options
 	if options.InBaseFile != "" {
 		cfg, err := config.NewConfigWithSimpleFile(options.InBaseFile)
 		Must(err)
-		Must(cfg.Unmarshal(&options.In, opts...))
-		options.Out = options.In
+		Must(cfg.Unmarshal(&inOptions, opts...))
+		outOptions = inOptions
 	}
 	if options.OutBaseFile != "" {
 		cfg, err := config.NewConfigWithSimpleFile(options.OutBaseFile)
 		Must(err)
-		Must(cfg.Unmarshal(&options.Out, opts...))
+		Must(cfg.Unmarshal(&outOptions, opts...))
 	}
 
 	if options.Action == "get" {
-		cfg, err := config.NewConfigWithOptions(&options.In)
+		cfg, err := config.NewConfigWithOptions(&inOptions)
 		Must(err)
-		cfg, err = cfg.TransformWithOptions(&options.In, &config.TransformOptions{
+		cfg, err = cfg.TransformWithOptions(&inOptions, &config.TransformOptions{
 			CipherKeys: options.CipherKeys,
 			NoCipher:   options.NoCipher,
 		})
@@ -115,9 +115,9 @@ cfg --camel-name --in-base-file base_local.json -a set --key mysql --val '{
 	}
 
 	if options.Action == "diff" {
-		icfg, err := config.NewConfigWithOptions(&options.In)
+		icfg, err := config.NewConfigWithOptions(&inOptions)
 		Must(err)
-		ocfg, err := config.NewConfigWithOptions(&options.Out)
+		ocfg, err := config.NewConfigWithOptions(&outOptions)
 		Must(err)
 
 		if options.Key != "" {
@@ -133,7 +133,7 @@ cfg --camel-name --in-base-file base_local.json -a set --key mysql --val '{
 	}
 
 	if options.Action == "set" {
-		ocfg, err := config.NewConfigWithOptions(&options.Out)
+		ocfg, err := config.NewConfigWithOptions(&outOptions)
 		Must(err)
 		if options.Key != "" {
 			var v interface{}
@@ -147,9 +147,9 @@ cfg --camel-name --in-base-file base_local.json -a set --key mysql --val '{
 	}
 
 	if options.Action == "put" {
-		icfg, err := config.NewConfigWithOptions(&options.In)
+		icfg, err := config.NewConfigWithOptions(&inOptions)
 		Must(err)
-		ocfg, err := icfg.TransformWithOptions(&options.Out, &config.TransformOptions{
+		ocfg, err := icfg.TransformWithOptions(&outOptions, &config.TransformOptions{
 			CipherKeys: options.CipherKeys,
 			NoCipher:   options.NoCipher,
 		})

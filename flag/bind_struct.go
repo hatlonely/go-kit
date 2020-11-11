@@ -108,13 +108,9 @@ func parseTag(tag string) (name string, shorthand string, usage string, required
 				shorthand = shorthand[1:]
 			}
 		} else if strings.Contains(field, ":") { // default: 10; usage: int flag
-			kvs := strings.Split(field, ":")
-			if len(kvs) != 2 {
-				err = fmt.Errorf("expected format '<key>:<value>', got [%v]", field)
-				return
-			}
-			key := strings.Trim(kvs[0], " ")
-			val := strings.Trim(kvs[1], " ")
+			idx := strings.Index(field, ":")
+			key := strings.Trim(field[:idx], " ")
+			val := strings.Trim(field[idx+1:], " ")
 			switch key {
 			case "default":
 				defaultValue = val
