@@ -15,6 +15,7 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-redis/redis v6.15.8+incompatible
 	github.com/golang/protobuf v1.3.3
+	github.com/google/go-cmp v0.5.2 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.15.2
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869 // indirect
 	github.com/jinzhu/gorm v1.9.15

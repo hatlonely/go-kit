@@ -460,22 +460,16 @@ func TestInterfaceDiff(t *testing.T) {
 		{
 			keys, err := InterfaceDiff(v1, v2)
 			So(err, ShouldBeNil)
-			keySet := sliceToSet(keys)
-			for _, key := range []string{
+			So(sliceToSet(keys), ShouldResemble, sliceToSet([]string{
 				"Key2", "Key3[0].Key6.Key8[2]", "Key3[0].Key6.Key8[3]", "Key3[0].Key9",
-			} {
-				So(keySet[key], ShouldBeTrue)
-			}
+			}))
 		}
 		{
 			keys, err := InterfaceDiff(v2, v1)
 			So(err, ShouldBeNil)
-			keySet := sliceToSet(keys)
-			for _, key := range []string{
+			So(sliceToSet(keys), ShouldResemble, sliceToSet([]string{
 				"Key2", "Key3[0].Key6.Key8[2]", "Key3[0].Key10",
-			} {
-				So(keySet[key], ShouldBeTrue)
-			}
+			}))
 		}
 	})
 }
