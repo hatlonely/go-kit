@@ -360,7 +360,7 @@ func interfaceTravelRecursive(v interface{}, fun func(key string, val interface{
 
 	switch rt.Kind() {
 	case reflect.Ptr:
-		return fmt.Errorf("key [%v], unsupport type [%v]", prefix, reflect.TypeOf(v))
+		return errors.Errorf("key [%v], unsupported type [%v]", prefix, reflect.TypeOf(v))
 	case reflect.Map:
 		for _, key := range rv.MapKeys() {
 			val := rv.MapIndex(key).Interface()
