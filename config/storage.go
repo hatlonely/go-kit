@@ -188,7 +188,10 @@ func (s Storage) SubMap(key string) (map[string]*Storage, error) {
 	return res, nil
 }
 
-func (s Storage) Interface() interface{} {
+func (s *Storage) Interface() interface{} {
+	if s == nil {
+		return nil
+	}
 	return s.root
 }
 

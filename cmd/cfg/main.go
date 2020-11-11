@@ -1,11 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/flag"
 	"github.com/hatlonely/go-kit/refx"
+	"github.com/hatlonely/go-kit/strx"
 )
 
 var Version string
@@ -24,6 +26,8 @@ type Options struct {
 	SnakeName   bool
 	KebabName   bool
 	PascalName  bool
+	Key         string
+	Val         string
 	CipherKeys  []string
 	NoCipher    bool
 	InBaseFile  string
@@ -39,9 +43,29 @@ func main() {
 	if options.Help {
 		fmt.Println(flag.Usage())
 		fmt.Println(`examples:
-  cfg -a get --in-base-file base_local.json --camel-name --no-cipher
-  cfg -a diff --in-base-file base_local.json --out-base-file base_remote.json --camel-name
-  cfg -a put --in-base-file base_local.json --out-base-file base_remote.json --camel-name`)
+  cfg --camel-name --in-base-file base_local.json -a get --key mysql
+  cfg --camel-name --in-base-file base_local.json -a diff --out-base-file base_remote.json
+  cfg --camel-name --in-base-file base_local.json -a put --out-base-file base_remote.json
+  cfg --camel-name --in-base-file base_local.json -a diff --key mysql --val '{
+	  "connMaxLifeTime": "60s",
+	  "database": "testdb2",
+	  "host": "127.0.0.1",
+	  "maxIdleConns": 10,
+	  "maxOpenConns": 20,
+	  "password": "",
+	  "port": 3306,
+	  "username": "hatlonely"
+	}'
+  cfg --camel-name --in-base-file base_local.json -a set --key mysql --val '{
+	  "connMaxLifeTime": "60s",
+	  "database": "testdb2",
+	  "host": "127.0.0.1",
+	  "maxIdleConns": 10,
+	  "maxOpenConns": 20,
+	  "password": "",
+	  "port": 3306,
+	  "username": "hatlonely"
+	}'`)
 		return
 	}
 	if options.Version {
@@ -83,7 +107,11 @@ func main() {
 			NoCipher:   options.NoCipher,
 		})
 		Must(err)
-		fmt.Println(cfg.ToString())
+		val, ok := cfg.Get(options.Key)
+		if !ok {
+			fmt.Println("null")
+		}
+		fmt.Println(strx.JsonMarshalSortKeys(val))
 	}
 
 	if options.Action == "diff" {
@@ -91,7 +119,31 @@ func main() {
 		Must(err)
 		ocfg, err := config.NewConfigWithOptions(&options.Out)
 		Must(err)
-		icfg.Diff(ocfg)
+
+		if options.Key != "" {
+			var v interface{}
+			if err := json.Unmarshal([]byte(options.Val), &v); err != nil {
+				Must(ocfg.UnsafeSet(options.Key, options.Val))
+			} else {
+				Must(ocfg.UnsafeSet(options.Key, v))
+			}
+		}
+
+		fmt.Println(icfg.Diff(ocfg, options.Key))
+	}
+
+	if options.Action == "set" {
+		ocfg, err := config.NewConfigWithOptions(&options.Out)
+		Must(err)
+		if options.Key != "" {
+			var v interface{}
+			if err := json.Unmarshal([]byte(options.Val), &v); err != nil {
+				Must(ocfg.UnsafeSet(options.Key, options.Val))
+			} else {
+				Must(ocfg.UnsafeSet(options.Key, v))
+			}
+		}
+		Must(ocfg.Save())
 	}
 
 	if options.Action == "put" {
@@ -101,6 +153,7 @@ func main() {
 			CipherKeys: options.CipherKeys,
 			NoCipher:   options.NoCipher,
 		})
+
 		Must(err)
 		Must(ocfg.Save())
 	}
