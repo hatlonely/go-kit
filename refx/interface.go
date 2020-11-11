@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/pkg/errors"
+
 	"github.com/hatlonely/go-kit/cast"
 	"github.com/hatlonely/go-kit/strx"
 )
@@ -211,24 +213,30 @@ func interfaceGetRecursive(v interface{}, key string, prefix string) (interface{
 	if err != nil {
 		return nil, fmt.Errorf("get token failed. prefix: [%v], err: [%v]", prefix, err)
 	}
+
+	rt := reflect.TypeOf(v)
+	rv := reflect.ValueOf(v)
+
 	if info.mod == ArrMod {
-		val, ok := v.([]interface{})
-		if !ok {
-			return nil, fmt.Errorf("node is not a slice. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(v))
+		switch rt.Kind() {
+		case reflect.Slice:
+			if info.idx >= rv.Len() {
+				return nil, errors.Errorf("index out of bounds. prefix: [%v], index: [%v]", prefix, info.idx)
+			}
+			return interfaceGetRecursive(rv.Index(info.idx).Interface(), next, prefixAppendIdx(prefix, info.idx))
+		default:
+			return nil, errors.Errorf("node is not a slice. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(v))
 		}
-		if info.idx >= len(val) {
-			return nil, fmt.Errorf("index out of bounds. prefix: [%v], index: [%v]", prefix, info.idx)
-		}
-		return interfaceGetRecursive(val[info.idx], next, prefixAppendIdx(prefix, info.idx))
 	}
 
-	switch v.(type) {
-	case map[string]interface{}:
-		return interfaceGetRecursive(v.(map[string]interface{})[info.key], next, prefixAppendKey(prefix, info.key))
-	case map[interface{}]interface{}:
-		return interfaceGetRecursive(v.(map[interface{}]interface{})[info.key], next, prefixAppendKey(prefix, info.key))
+	switch rt.Kind() {
+	case reflect.Map:
+		if rv.MapIndex(reflect.ValueOf(info.key)).Kind() == reflect.Invalid {
+			return nil, errors.Errorf("no such key. prefix [%v], key [%v]", prefix, key)
+		}
+		return interfaceGetRecursive(rv.MapIndex(reflect.ValueOf(info.key)).Interface(), next, prefixAppendKey(prefix, info.key))
 	default:
-		return nil, fmt.Errorf("node is not a map. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(v))
+		return nil, errors.Errorf("node is not a map. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(v))
 	}
 }
 

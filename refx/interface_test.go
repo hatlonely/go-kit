@@ -18,16 +18,46 @@ func TestFormatKey(t *testing.T) {
 func TestInterfaceGet(t *testing.T) {
 	Convey("TestInterfaceGet", t, func() {
 		v := map[interface{}]interface{}{
-			"key1": 1,
-			"key2": "val2",
-			"key3": []interface{}{
+			"Key1": 1,
+			"Key2": "val2",
+			"Key3": []interface{}{
 				map[string]interface{}{
-					"key4": "val4",
-					"key5": "val5",
-					"key6": map[interface{}]interface{}{
-						"key7": "val7",
-						"key8": []interface{}{1, 2, 3},
+					"Key4": "val4",
+					"Key5": "val5",
+					"Key6": map[interface{}]interface{}{
+						"Key7": "val7",
+						"Key8": []interface{}{1, 2, 3},
 					},
+				},
+			},
+			"Key9": []map[string]interface{}{{
+				"Key10": "val10",
+			}, {
+				"Key11": "val11",
+			}},
+			"Key12": []int{1, 2, 3},
+			"Key13": map[string]map[string]interface{}{
+				"Key16": {
+					"Key14": "val14",
+					"Key15": 15,
+				},
+				"Key17": {
+					"Key14": "val141",
+					"Key15": 151,
+				},
+			},
+			"Key18": map[interface{}]interface{}{
+				"12": "24",
+				13:   "26", // this key cannot get
+			},
+			"Key19": map[string]map[string]interface{}{
+				"Key20": {
+					"Key22": "val22",
+					"Key23": 23,
+				},
+				"Key21": {
+					"Key22": "val222",
+					"Key23": 233,
 				},
 			},
 		}
@@ -36,14 +66,28 @@ func TestInterfaceGet(t *testing.T) {
 			key string
 			val interface{}
 		}{
-			{"key1", 1},
-			{"key2", "val2"},
-			{"key3[0].key4", "val4"},
-			{"key3[0].key5", "val5"},
-			{"key3[0].key6.key7", "val7"},
-			{"key3[0].key6.key8[0]", 1},
-			{"key3[0].key6.key8[1]", 2},
-			{"key3[0].key6.key8[2]", 3},
+			{"Key1", 1},
+			{"Key2", "val2"},
+			{"Key3[0].Key4", "val4"},
+			{"Key3[0].Key5", "val5"},
+			{"Key3[0].Key6.Key7", "val7"},
+			{"Key3[0].Key6.Key8[0]", 1},
+			{"Key3[0].Key6.Key8[1]", 2},
+			{"Key3[0].Key6.Key8[2]", 3},
+			{"Key9[0].Key10", "val10"},
+			{"Key9[1].Key11", "val11"},
+			{"Key12[0]", 1},
+			{"Key12[1]", 2},
+			{"Key12[2]", 3},
+			{"Key13.Key16.Key14", "val14"},
+			{"Key13.Key16.Key15", 15},
+			{"Key13.Key17.Key14", "val141"},
+			{"Key13.Key17.Key15", 151},
+			{"Key18.12", "24"},
+			{"Key19.Key20.Key22", "val22"},
+			{"Key19.Key20.Key23", 23},
+			{"Key19.Key21.Key22", "val222"},
+			{"Key19.Key21.Key23", 233},
 		} {
 			val, err := InterfaceGet(v, unit.key)
 			So(err, ShouldBeNil)
@@ -51,7 +95,7 @@ func TestInterfaceGet(t *testing.T) {
 		}
 
 		for _, key := range []string{
-			"key3.key4", "key3[1]", "key3[abc]", "[4]", "key4",
+			"Key3.Key4", "Key3[1]", "Key3[abc]", "[4]", "Key4", "Key18.13",
 		} {
 			_, err := InterfaceGet(v, key)
 			So(err, ShouldNotBeNil)
