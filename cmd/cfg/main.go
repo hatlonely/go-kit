@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"time"
 
 	"github.com/hatlonely/go-kit/config"
@@ -44,10 +45,10 @@ func main() {
 	if options.Help {
 		fmt.Println(flag.Usage())
 		fmt.Println(`examples:
-  cfg --camel-name --in-base-file base_local.json -a get --key mysql
-  cfg --camel-name --in-base-file base_local.json -a diff --out-base-file base_remote.json
-  cfg --camel-name --in-base-file base_local.json -a put --out-base-file base_remote.json
-  cfg --camel-name --in-base-file base_local.json -a diff --key mysql --val '{
+  cfg --camel-name --in-base-file base.json -a get --key mysql
+  cfg --camel-name --in-base-file base.json -a diff --out-base-file base_remote.json
+  cfg --camel-name --in-base-file base.json -a put --out-base-file base_remote.json
+  cfg --camel-name --in-base-file base.json -a diff --key mysql --val '{
     "connMaxLifeTime": "60s",
     "database": "testdb2",
     "host": "127.0.0.1",
@@ -57,7 +58,7 @@ func main() {
     "port": 3306,
     "username": "hatlonely"
   }'
-  cfg --camel-name --in-base-file base_local.json -a set --key mysql --val '{
+  cfg --camel-name --in-base-file base.json -a set --key mysql --val '{
     "connMaxLifeTime": "60s",
     "database": "testdb2",
     "host": "127.0.0.1",
@@ -67,7 +68,7 @@ func main() {
     "port": 3306,
     "username": "hatlonely"
   }'
-  cfg --camel-name --in-base-file base_local.json -a rollback --backup-file cfg.backup.json`)
+  cfg --camel-name --in-base-file base.json -a rollback --backup-file cfg.backup.json`)
 		return
 	}
 	if options.Version {
@@ -201,6 +202,8 @@ func main() {
 	}
 
 	fmt.Println(strx.Render(strx.Render(fmt.Sprintf("Unknown action %v", options.Action), strx.FormatSetBold, strx.ForegroundRed)))
+	fmt.Println(flag.Usage())
+	os.Exit(1)
 }
 
 func RollbackCommand(options *Options) string {
