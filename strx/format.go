@@ -1,11 +1,14 @@
 package strx
 
 import (
+	"encoding/json"
 	"regexp"
 	"strings"
 
 	jsoniter "github.com/json-iterator/go"
 )
+
+var sortJson = jsoniter.Config{SortMapKeys: true}.Froze()
 
 func JsonMarshal(v interface{}) string {
 	buf, _ := jsoniter.Marshal(v)
@@ -17,19 +20,18 @@ func JsonMarshalIndent(v interface{}) string {
 	return string(buf)
 }
 
-func MustJsonMarshal(v interface{}) string {
-	buf, err := jsoniter.Marshal(v)
-	if err != nil {
-		panic(err)
-	}
+func JsonMarshalSortKeys(v interface{}) string {
+	buf, _ := sortJson.Marshal(v)
 	return string(buf)
 }
 
-func MustJsonMarshalIndent(v interface{}) string {
-	buf, err := jsoniter.MarshalIndent(v, "", "  ")
-	if err != nil {
-		panic(err)
+func JsonMarshalIndentSortKeys(v interface{}) string {
+	// encoding/json 无法 marshal map[interface{}]interface{}
+	if buf, err := json.MarshalIndent(v, "", "  "); err == nil {
+		return string(buf)
 	}
+	// jsoniter marshal indent 在 sortKeys indent 格式有问题
+	buf, _ := sortJson.MarshalIndent(v, "", "  ")
 	return string(buf)
 }
 
