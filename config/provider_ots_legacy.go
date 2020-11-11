@@ -251,7 +251,7 @@ func (p *OTSLegacyProvider) otsPutRowRecursive(otsCli *tablestore.TableStoreClie
 			case int:
 				req.PutRowChange.AddColumn("_", int64(n))
 			default:
-				req.PutRowChange.AddColumn("_", strx.JsonMarshal(n))
+				req.PutRowChange.AddColumn("_", strx.JsonMarshalSortKeys(n))
 			}
 		} else {
 			for key, val := range m {
@@ -261,7 +261,7 @@ func (p *OTSLegacyProvider) otsPutRowRecursive(otsCli *tablestore.TableStoreClie
 				case int:
 					req.PutRowChange.AddColumn(key, int64(n))
 				default:
-					req.PutRowChange.AddColumn(key, strx.JsonMarshal(n))
+					req.PutRowChange.AddColumn(key, strx.JsonMarshalSortKeys(n))
 				}
 			}
 		}
