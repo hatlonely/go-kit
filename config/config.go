@@ -3,7 +3,6 @@ package config
 import (
 	"context"
 	"fmt"
-	"reflect"
 	"sync"
 	"time"
 
@@ -412,14 +411,8 @@ func (c *Config) Save() error {
 }
 
 func (c *Config) Diff(o *Config, key string) string {
-	subc := c.storage.Sub(key).Interface()
-	subo := o.storage.Sub(key).Interface()
-
-	text1 := strx.JsonMarshalIndentSortKeys(subc)
-	text2 := strx.JsonMarshalIndentSortKeys(subo)
-	if reflect.TypeOf(subc).Kind() == reflect.Map && reflect.TypeOf(subo).Kind() == reflect.Map {
-		return strx.JsonDiff(text1, text2)
-	}
+	text1 := strx.JsonMarshalIndentSortKeys(c.storage.Sub(key).Interface())
+	text2 := strx.JsonMarshalIndentSortKeys(o.storage.Sub(key).Interface())
 	return strx.Diff(text1, text2)
 }
 

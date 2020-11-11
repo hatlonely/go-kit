@@ -9,63 +9,54 @@ import (
 
 func TestDiff(t *testing.T) {
 	Convey("TestDiff", t, func() {
-		fmt.Println(Diff(
-			JsonMarshalSortKeys(map[string]interface{}{
-				"key1": "val1",
-				"key2": "val2",
-				"key3": "val3",
-			}),
-			JsonMarshalSortKeys(map[string]interface{}{
-				"key1": "val1",
-				"key2": "val3",
-				"key4": "val4",
-			}),
-		))
-
-		fmt.Println(Diff(
-			JsonMarshalIndentSortKeys(map[string]interface{}{
-				"key1": "val1",
-				"key2": "val2",
-				"key3": "val3",
-			}),
-			JsonMarshalIndentSortKeys(map[string]interface{}{
-				"key1": "val1",
-				"key2": "val3",
-				"key4": "val4",
-			}),
-		))
-	})
-}
-
-func TestJsonDiff(t *testing.T) {
-	Convey("TestJsonDiff", t, func() {
 		Convey("case normal", func() {
-			fmt.Println(JsonDiff(
-				JsonMarshal(map[string]interface{}{
+			fmt.Println(Diff(
+				JsonMarshalSortKeys(map[string]interface{}{
 					"key1": "val1",
 					"key2": "val2",
 					"key3": "val3",
 				}),
-				JsonMarshal(map[string]interface{}{
+				JsonMarshalSortKeys(map[string]interface{}{
 					"key1": "val1",
 					"key2": "val3",
+					"key4": "val4",
+				}),
+			))
+
+			fmt.Println(Diff(
+				JsonMarshalIndentSortKeys(map[string]interface{}{
+					"key1": "val1",
+					"key2": "val2",
+					"key3": "val3",
+					"key4": "val5",
+				}),
+				JsonMarshalIndentSortKeys(map[string]interface{}{
+					"key1": "val1",
+					"key2": "val3",
+					"key3": "val3",
 					"key4": "val4",
 				}),
 			))
 		})
 
 		Convey("case null", func() {
-			fmt.Println(JsonDiff("null", "null"))
-			fmt.Println(JsonDiff("null", JsonMarshal(map[string]interface{}{
+			fmt.Println(Diff("null", "null"))
+			fmt.Println(Diff("null", JsonMarshalIndentSortKeys(map[string]interface{}{
 				"key1": "val1",
 				"key2": "val2",
 				"key3": "val3",
 			})))
-			fmt.Println(JsonDiff(JsonMarshal(map[string]interface{}{
+			fmt.Println(Diff(JsonMarshalIndentSortKeys(map[string]interface{}{
 				"key1": "val1",
 				"key2": "val2",
 				"key3": "val3",
 			}), "null"))
+		})
+
+		Convey("case empty", func() {
+			fmt.Println(Diff("", ""))
+			fmt.Println(Diff("", "test"))
+			fmt.Println(Diff("test", ""))
 		})
 	})
 }
