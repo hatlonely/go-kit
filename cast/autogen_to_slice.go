@@ -15,7 +15,7 @@ func ToBoolSliceE(v interface{}) ([]bool, error) {
 	case []bool:
 		return v.([]bool), nil
 	case []interface{}:
-		vs := make([]bool, len(v.([]interface{})), 0)
+		vs := make([]bool, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToBoolE(i)
 			if err != nil {
@@ -25,8 +25,8 @@ func ToBoolSliceE(v interface{}) ([]bool, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]bool, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]bool, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToBoolE(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -55,7 +55,7 @@ func ToIntSliceE(v interface{}) ([]int, error) {
 	case []int:
 		return v.([]int), nil
 	case []interface{}:
-		vs := make([]int, len(v.([]interface{})), 0)
+		vs := make([]int, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToIntE(i)
 			if err != nil {
@@ -65,8 +65,8 @@ func ToIntSliceE(v interface{}) ([]int, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]int, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]int, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToIntE(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -95,7 +95,7 @@ func ToUintSliceE(v interface{}) ([]uint, error) {
 	case []uint:
 		return v.([]uint), nil
 	case []interface{}:
-		vs := make([]uint, len(v.([]interface{})), 0)
+		vs := make([]uint, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToUintE(i)
 			if err != nil {
@@ -105,8 +105,8 @@ func ToUintSliceE(v interface{}) ([]uint, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]uint, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]uint, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToUintE(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -135,7 +135,7 @@ func ToInt64SliceE(v interface{}) ([]int64, error) {
 	case []int64:
 		return v.([]int64), nil
 	case []interface{}:
-		vs := make([]int64, len(v.([]interface{})), 0)
+		vs := make([]int64, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToInt64E(i)
 			if err != nil {
@@ -145,8 +145,8 @@ func ToInt64SliceE(v interface{}) ([]int64, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]int64, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]int64, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToInt64E(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -175,7 +175,7 @@ func ToInt32SliceE(v interface{}) ([]int32, error) {
 	case []int32:
 		return v.([]int32), nil
 	case []interface{}:
-		vs := make([]int32, len(v.([]interface{})), 0)
+		vs := make([]int32, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToInt32E(i)
 			if err != nil {
@@ -185,8 +185,8 @@ func ToInt32SliceE(v interface{}) ([]int32, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]int32, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]int32, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToInt32E(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -215,7 +215,7 @@ func ToInt16SliceE(v interface{}) ([]int16, error) {
 	case []int16:
 		return v.([]int16), nil
 	case []interface{}:
-		vs := make([]int16, len(v.([]interface{})), 0)
+		vs := make([]int16, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToInt16E(i)
 			if err != nil {
@@ -225,8 +225,8 @@ func ToInt16SliceE(v interface{}) ([]int16, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]int16, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]int16, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToInt16E(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -255,7 +255,7 @@ func ToInt8SliceE(v interface{}) ([]int8, error) {
 	case []int8:
 		return v.([]int8), nil
 	case []interface{}:
-		vs := make([]int8, len(v.([]interface{})), 0)
+		vs := make([]int8, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToInt8E(i)
 			if err != nil {
@@ -265,8 +265,8 @@ func ToInt8SliceE(v interface{}) ([]int8, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]int8, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]int8, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToInt8E(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -295,7 +295,7 @@ func ToUint64SliceE(v interface{}) ([]uint64, error) {
 	case []uint64:
 		return v.([]uint64), nil
 	case []interface{}:
-		vs := make([]uint64, len(v.([]interface{})), 0)
+		vs := make([]uint64, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToUint64E(i)
 			if err != nil {
@@ -305,8 +305,8 @@ func ToUint64SliceE(v interface{}) ([]uint64, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]uint64, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]uint64, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToUint64E(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -335,7 +335,7 @@ func ToUint32SliceE(v interface{}) ([]uint32, error) {
 	case []uint32:
 		return v.([]uint32), nil
 	case []interface{}:
-		vs := make([]uint32, len(v.([]interface{})), 0)
+		vs := make([]uint32, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToUint32E(i)
 			if err != nil {
@@ -345,8 +345,8 @@ func ToUint32SliceE(v interface{}) ([]uint32, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]uint32, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]uint32, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToUint32E(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -375,7 +375,7 @@ func ToUint16SliceE(v interface{}) ([]uint16, error) {
 	case []uint16:
 		return v.([]uint16), nil
 	case []interface{}:
-		vs := make([]uint16, len(v.([]interface{})), 0)
+		vs := make([]uint16, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToUint16E(i)
 			if err != nil {
@@ -385,8 +385,8 @@ func ToUint16SliceE(v interface{}) ([]uint16, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]uint16, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]uint16, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToUint16E(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -415,7 +415,7 @@ func ToUint8SliceE(v interface{}) ([]uint8, error) {
 	case []uint8:
 		return v.([]uint8), nil
 	case []interface{}:
-		vs := make([]uint8, len(v.([]interface{})), 0)
+		vs := make([]uint8, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToUint8E(i)
 			if err != nil {
@@ -425,8 +425,8 @@ func ToUint8SliceE(v interface{}) ([]uint8, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]uint8, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]uint8, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToUint8E(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -455,7 +455,7 @@ func ToFloat64SliceE(v interface{}) ([]float64, error) {
 	case []float64:
 		return v.([]float64), nil
 	case []interface{}:
-		vs := make([]float64, len(v.([]interface{})), 0)
+		vs := make([]float64, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToFloat64E(i)
 			if err != nil {
@@ -465,8 +465,8 @@ func ToFloat64SliceE(v interface{}) ([]float64, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]float64, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]float64, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToFloat64E(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -495,7 +495,7 @@ func ToFloat32SliceE(v interface{}) ([]float32, error) {
 	case []float32:
 		return v.([]float32), nil
 	case []interface{}:
-		vs := make([]float32, len(v.([]interface{})), 0)
+		vs := make([]float32, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToFloat32E(i)
 			if err != nil {
@@ -505,8 +505,8 @@ func ToFloat32SliceE(v interface{}) ([]float32, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]float32, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]float32, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToFloat32E(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -535,7 +535,7 @@ func ToStringSliceE(v interface{}) ([]string, error) {
 	case []string:
 		return v.([]string), nil
 	case []interface{}:
-		vs := make([]string, len(v.([]interface{})), 0)
+		vs := make([]string, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToStringE(i)
 			if err != nil {
@@ -565,7 +565,7 @@ func ToDurationSliceE(v interface{}) ([]time.Duration, error) {
 	case []time.Duration:
 		return v.([]time.Duration), nil
 	case []interface{}:
-		vs := make([]time.Duration, len(v.([]interface{})), 0)
+		vs := make([]time.Duration, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToDurationE(i)
 			if err != nil {
@@ -575,8 +575,8 @@ func ToDurationSliceE(v interface{}) ([]time.Duration, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]time.Duration, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]time.Duration, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToDurationE(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -605,7 +605,7 @@ func ToTimeSliceE(v interface{}) ([]time.Time, error) {
 	case []time.Time:
 		return v.([]time.Time), nil
 	case []interface{}:
-		vs := make([]time.Time, len(v.([]interface{})), 0)
+		vs := make([]time.Time, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToTimeE(i)
 			if err != nil {
@@ -615,8 +615,8 @@ func ToTimeSliceE(v interface{}) ([]time.Time, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]time.Time, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]time.Time, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToTimeE(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")
@@ -645,7 +645,7 @@ func ToIPSliceE(v interface{}) ([]net.IP, error) {
 	case []net.IP:
 		return v.([]net.IP), nil
 	case []interface{}:
-		vs := make([]net.IP, len(v.([]interface{})), 0)
+		vs := make([]net.IP, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToIPE(i)
 			if err != nil {
@@ -655,8 +655,8 @@ func ToIPSliceE(v interface{}) ([]net.IP, error) {
 		}
 		return vs, nil
 	case []string:
-		vs := make([]net.IP, len(v.([]interface{})), 0)
-		for _, i := range v.([]interface{}) {
+		vs := make([]net.IP, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
 			val, err := ToIPE(i)
 			if err != nil {
 				return nil, errors.WithMessage(err, "cast failed")

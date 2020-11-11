@@ -119,7 +119,7 @@ func To{name}SliceE(v interface{{}}) ([]{type}, error) {{
 	case []{type}:
 		return v.([]{type}), nil
 	case []interface{{}}:
-		vs := make([]{type}, len(v.([]interface{{}})), 0)
+		vs := make([]{type}, 0, len(v.([]interface{{}})))
 		for _, i := range v.([]interface{{}}) {{
 			val, err := To{name}E(i)
 			if err != nil {{
@@ -129,8 +129,8 @@ func To{name}SliceE(v interface{{}}) ([]{type}, error) {{
 		}}
 		return vs, nil
 	case []string:
-		vs := make([]{type}, len(v.([]interface{{}})), 0)
-		for _, i := range v.([]interface{{}}) {{
+		vs := make([]{type}, 0, len(v.([]string)))
+		for _, i := range v.([]string) {{
 			val, err := To{name}E(i)
 			if err != nil {{
 				return nil, errors.WithMessage(err, "cast failed")
@@ -162,7 +162,7 @@ func ToStringSliceE(v interface{}) ([]string, error) {
 	case []string:
 		return v.([]string), nil
 	case []interface{}:
-		vs := make([]string, len(v.([]interface{})), 0)
+		vs := make([]string, 0, len(v.([]interface{})))
 		for _, i := range v.([]interface{}) {
 			val, err := ToStringE(i)
 			if err != nil {
