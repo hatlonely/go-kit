@@ -256,8 +256,9 @@ func TestInterfaceToStruct(t *testing.T) {
 				Key4 string
 				Key5 string
 				Key6 struct {
-					Key7 string
-					Key8 []int64
+					Key7        string
+					Key8        []int64
+					KeyNotExist string
 				}
 			}
 			Key9  []map[string]interface{}
