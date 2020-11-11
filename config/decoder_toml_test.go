@@ -89,7 +89,7 @@ func TestTomlDecoder(t *testing.T) {
     Key10 = 10
     Key11 = 11`))
 			So(err, ShouldBeNil)
-			So(strx.JsonMarshal(s.Interface()), ShouldResemble, strx.JsonMarshal(map[string]interface{}{
+			So(strx.JsonMarshalSortKeys(s.Interface()), ShouldResemble, strx.JsonMarshalSortKeys(map[string]interface{}{
 				"Key1": "val1",
 				"Key2": map[string]interface{}{
 					"Key3": "val3",

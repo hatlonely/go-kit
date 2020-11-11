@@ -1,8 +1,6 @@
 package config
 
 import (
-	"fmt"
-	"reflect"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -78,8 +76,7 @@ func TestJson5Decoder(t *testing.T) {
   }
 }`))
 			So(err, ShouldBeNil)
-			fmt.Println(reflect.TypeOf(s.Interface()))
-			So(strx.JsonMarshal(s.Interface()), ShouldResemble, strx.JsonMarshal(map[string]interface{}{
+			So(strx.JsonMarshalSortKeys(s.Interface()), ShouldResemble, strx.JsonMarshalSortKeys(map[string]interface{}{
 				"Key1": "val1",
 				"Key2": map[string]interface{}{
 					"Key3": "val3",
