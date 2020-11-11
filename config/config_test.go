@@ -398,3 +398,22 @@ service:
 		DeleteTestFile()
 	})
 }
+
+func TestConfig_Diff(t *testing.T) {
+	Convey("TestConfig_Diff", t, func() {
+		CreateTestFile()
+		cfg1, err := NewConfigWithSimpleFile("test.json")
+		So(err, ShouldBeNil)
+		cfg2, err := NewConfigWithSimpleFile("test.json")
+		So(err, ShouldBeNil)
+
+		So(cfg1.UnsafeSet("mysql.username", "hatlonely"), ShouldBeNil)
+		So(cfg1.UnsafeSet("mysql.password", "654321"), ShouldBeNil)
+		fmt.Println(cfg1.Diff(cfg2, ""))
+		fmt.Println(cfg2.Diff(cfg1, ""))
+		fmt.Println(cfg1.Diff(cfg2, "mysql"))
+		fmt.Println(cfg1.Diff(cfg2, "mysql.username"))
+
+		DeleteTestFile()
+	})
+}

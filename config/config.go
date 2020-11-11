@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"fmt"
+	"reflect"
 	"sync"
 	"time"
 
@@ -410,10 +411,16 @@ func (c *Config) Save() error {
 	return c.provider.Dump(buf)
 }
 
-func (c *Config) Diff(o *Config) {
-	text1 := strx.JsonMarshalIndent(c.storage.Interface())
-	text2 := strx.JsonMarshalIndent(o.storage.Interface())
-	fmt.Println(strx.JsonDiff(text1, text2))
+func (c *Config) Diff(o *Config, key string) string {
+	subc := c.storage.Sub(key).Interface()
+	subo := o.storage.Sub(key).Interface()
+
+	text1 := strx.JsonMarshalIndentSortKeys(subc)
+	text2 := strx.JsonMarshalIndentSortKeys(subo)
+	if reflect.TypeOf(subc).Kind() == reflect.Map && reflect.TypeOf(subo).Kind() == reflect.Map {
+		return strx.JsonDiff(text1, text2)
+	}
+	return strx.Diff(text1, text2)
 }
 
 func (c *Config) deepCopyStorage() *Storage {
@@ -446,7 +453,7 @@ func (c *Config) ToString() string {
 }
 
 func (c *Config) ToJsonString() string {
-	return strx.JsonMarshal(c.storage.Interface())
+	return strx.JsonMarshalSortKeys(c.storage.Interface())
 }
 
 func (c *Config) SetLogger(log Logger) {

@@ -93,8 +93,8 @@ func Save() error {
 	return gcfg.Save()
 }
 
-func Diff(o *Config) {
-	gcfg.Diff(o)
+func Diff(o *Config, key string) {
+	gcfg.Diff(o, key)
 }
 
 func ToString() string {
