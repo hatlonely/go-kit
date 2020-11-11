@@ -1,27 +1,24 @@
 package strx
 
 import (
-	"encoding/json"
 	"regexp"
 	"strings"
 
 	jsoniter "github.com/json-iterator/go"
 )
 
-// encoding/json not support map[interface{}]interface{}
 func JsonMarshal(v interface{}) string {
-	buf, _ := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(v)
+	buf, _ := jsoniter.Marshal(v)
 	return string(buf)
 }
 
-// json-iterator not support prefix
 func JsonMarshalIndent(v interface{}) string {
-	buf, _ := json.MarshalIndent(v, "  ", "  ")
+	buf, _ := jsoniter.MarshalIndent(v, "", "  ")
 	return string(buf)
 }
 
 func MustJsonMarshal(v interface{}) string {
-	buf, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(v)
+	buf, err := jsoniter.Marshal(v)
 	if err != nil {
 		panic(err)
 	}
@@ -29,7 +26,7 @@ func MustJsonMarshal(v interface{}) string {
 }
 
 func MustJsonMarshalIndent(v interface{}) string {
-	buf, err := json.MarshalIndent(v, "  ", "  ")
+	buf, err := jsoniter.MarshalIndent(v, "", "  ")
 	if err != nil {
 		panic(err)
 	}
