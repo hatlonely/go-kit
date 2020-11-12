@@ -1,0 +1,22 @@
+{
+  "decoder": {
+    "type": "Json"
+  },
+  "provider": {
+    "type": "Local",
+    "localProvider": {
+      "filename": "test.json"
+    }
+  },
+  "cipher": {
+    "type": "Group",
+    "cipherGroup": [{
+      "type": "AES",
+      "aesCipher": {
+        "base64Key": "IrjXy4vx7iwgCLaUeu5TVUA9TkgMwSw3QWcgE/IW5W0="
+      }
+    }, {
+      "type": "Base64",
+    }]
+  }
+}
