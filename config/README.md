@@ -9,6 +9,7 @@
 7. 支持多种配置文件后端，包括本地文件/阿里云表格存储OTS
 8. 支持配置项的自动加密解密
 9. 支持多种加密方式 `AES`/阿里云密钥服务KMS，以及多种加密方式的组合
+10. 提供配置管理工具 `cfg`
 
 ## Quick Start
 
@@ -199,7 +200,14 @@ func main() {
 
 ## 管理工具
 
+你可以通过如下命令获取配置工具
+
+```shell script
+go get -u github.com/hatlonely/go-kit/cmd/cfg
+```
+
 通过配置工具可以方便地管理你配置，包括配置的获取，更新，迁移，回滚，备份
+
 
 ```shell
 cfg --camel-name --in-base-file base.json -a get --key mysql
