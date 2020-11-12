@@ -8,14 +8,14 @@ import (
 )
 
 type BindOptions struct {
-	OnSucc      func(c *Config)
+	OnSucc      func(cfg *Config)
 	OnFail      func(err error)
 	RefxOptions []refx.Option
 }
 
 type BindOption func(options *BindOptions)
 
-func OnSucc(fun func(c *Config)) BindOption {
+func OnSucc(fun func(cfg *Config)) BindOption {
 	return func(options *BindOptions) {
 		options.OnSucc = fun
 	}
