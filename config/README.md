@@ -155,3 +155,63 @@ func main() {
 	fmt.Println(options)
 }
 ```
+
+## 配置文件
+
+你可以通过配置文件 (通常命名为 `base.json`) 来构造复杂的配置对象
+
+```json
+{
+  "decoder": {
+    "type": "Json"
+  },
+  "provider": {
+    "type": "Local",
+    "localProvider": {
+      "filename": "test.json"
+    }
+  },
+  "cipher": {
+    "type": "Group",
+    "cipherGroup": [{
+      "type": "AES",
+      "aesCipher": {
+        "base64Key": "IrjXy4vx7iwgCLaUeu5TVUA9TkgMwSw3QWcgE/IW5W0="
+      }
+    }, {
+      "type": "Base64",
+    }]
+  }
+}
+```
+
+## 管理工具
+
+通过配置工具可以方便地管理你配置，包括配置的获取，更新，迁移，回滚，备份
+
+```shell
+cfg --camel-name --in-base-file base.json -a get --key mysql
+cfg --camel-name --in-base-file base.json -a diff --out-base-file base_remote.json
+cfg --camel-name --in-base-file base.json -a put --out-base-file base_remote.json
+cfg --camel-name --in-base-file base.json -a diff --key mysql --val '{
+    "connMaxLifeTime": "60s",
+    "database": "testdb2",
+    "host": "127.0.0.1",
+    "maxIdleConns": 10,
+    "maxOpenConns": 20,
+    "password": "",
+    "port": 3306,
+    "username": "hatlonely"
+}'
+cfg --camel-name --in-base-file base.json -a set --key mysql --val '{
+    "connMaxLifeTime": "60s",
+    "database": "testdb2",
+    "host": "127.0.0.1",
+    "maxIdleConns": 10,
+    "maxOpenConns": 20,
+    "password": "",
+    "port": 3306,
+    "username": "hatlonely"
+}'
+cfg --camel-name --in-base-file base.json -a rollback --backup-file cfg.backup.json
+```
