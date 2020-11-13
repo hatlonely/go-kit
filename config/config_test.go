@@ -324,28 +324,32 @@ func TestConfig_Transform(t *testing.T) {
 
 		cfg, err := NewConfigWithSimpleFile("test.json")
 		So(err, ShouldBeNil)
-		cfg, err = cfg.Transform(&Options{
-			Decoder: DecoderOptions{
-				Type: "Yaml",
-			},
-			Provider: ProviderOptions{
-				Type: "Local",
-				LocalProvider: LocalProviderOptions{
-					Filename: "test.yaml",
+		cfg, err = cfg.Transform(
+			&Options{
+				Decoder: DecoderOptions{
+					Type: "Yaml",
+				},
+				Provider: ProviderOptions{
+					Type: "Local",
+					LocalProvider: LocalProviderOptions{
+						Filename: "test.yaml",
+					},
+				},
+				Cipher: CipherOptions{
+					Type: "Base64",
 				},
 			},
-			Cipher: CipherOptions{
-				Type: "Base64",
-			},
-		}, WithTransformCipherKeysToSet("mysql.username", "mysql.password"))
+			WithTransformCipherKeysToSet("mysql.username", "mysql.password"),
+			WithTransformCipherKeysToAdd("email.password"),
+		)
 		So(err, ShouldBeNil)
 		So(cfg.Save(), ShouldBeNil)
 
 		buf, err := ioutil.ReadFile("test.yaml")
 		So(err, ShouldBeNil)
 		So(string(buf), ShouldEqual, `email:
+  '@password': MTIzNDU2
   from: hatlonely@foxmail.com
-  password: "123456"
   port: 25
   server: smtp.qq.com
 grpc:
