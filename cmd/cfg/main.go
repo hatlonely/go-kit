@@ -23,19 +23,20 @@ func Must(err error) {
 type Options struct {
 	flag.Options
 
-	Action      string   `flag:"--action,-a; usage: actions, one of [get/set/put/diff/rollback]"`
-	CamelName   bool     `flag:"usage: base file key format, for example [redisExpiration]"`
-	SnakeName   bool     `flag:"usage: base file key format, for example [redis_expiration]"`
-	KebabName   bool     `flag:"usage: base file key format, for example [redis-expiration]"`
-	PascalName  bool     `flag:"usage: base file key format: for example [RedisExpiration]"`
-	Key         string   `flag:"usage: key for set or diff"`
-	Val         string   `flag:"usage: val for set or diff, val will auto convert to json"`
-	RawVal      string   `flag:"usage: raw string value"`
-	CipherKeys  []string `flag:"usage: change cipher keys when put"`
-	NoCipher    bool     `flag:"usage: decrypt all keys when put"`
-	InBaseFile  string   `flag:"usage: base file name; default: base.json"`
-	OutBaseFile string   `flag:"usage: put/set target config, it will use in-base-file if not set"`
-	BackupFile  string   `flag:"usage: file name to backup or rollback"`
+	Action        string   `flag:"--action,-a; usage: actions, one of [get/set/put/diff/rollback]"`
+	CamelName     bool     `flag:"usage: base file key format, for example [redisExpiration]"`
+	SnakeName     bool     `flag:"usage: base file key format, for example [redis_expiration]"`
+	KebabName     bool     `flag:"usage: base file key format, for example [redis-expiration]"`
+	PascalName    bool     `flag:"usage: base file key format: for example [RedisExpiration]"`
+	Key           string   `flag:"usage: key for set or diff"`
+	Val           string   `flag:"usage: val for set or diff, val will auto convert to json"`
+	RawVal        string   `flag:"usage: raw string value"`
+	SetCipherKeys []string `flag:"usage: set cipher keys when put"`
+	AddCipherKeys []string `flag:"usage: add cipher keys when put"`
+	NoCipher      bool     `flag:"usage: decrypt all keys when put"`
+	InBaseFile    string   `flag:"usage: base file name; default: base.json"`
+	OutBaseFile   string   `flag:"usage: put/set target config, it will use in-base-file if not set"`
+	BackupFile    string   `flag:"usage: file name to backup or rollback"`
 }
 
 func main() {
@@ -183,8 +184,9 @@ func main() {
 		BackUpCurrentConfig(ocfg, options.BackupFile)
 
 		ocfg, err = icfg.TransformWithOptions(&outOptions, &config.TransformOptions{
-			CipherKeys: options.CipherKeys,
-			NoCipher:   options.NoCipher,
+			CipherKeysToSet: options.SetCipherKeys,
+			CipherKeysToAdd: options.AddCipherKeys,
+			NoCipher:        options.NoCipher,
 		})
 		Must(err)
 		Must(ocfg.Save())

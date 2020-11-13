@@ -35,6 +35,15 @@ func (s *Storage) SetCipherKeys(keys []string) {
 	}
 }
 
+func (s *Storage) AddCipherKeys(keys []string) {
+	if s.cipherKeySet == nil {
+		s.cipherKeySet = map[string]bool{}
+	}
+	for _, key := range keys {
+		s.cipherKeySet[key] = true
+	}
+}
+
 func (s *Storage) GetCipherKeys() []string {
 	var keys []string
 	for key, _ := range s.cipherKeySet {

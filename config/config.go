@@ -325,15 +325,22 @@ func (c *Config) AddOnItemChangeHandler(key string, handler OnChangeHandler) {
 }
 
 type TransformOptions struct {
-	CipherKeys []string
-	NoCipher   bool
+	CipherKeysToSet []string
+	CipherKeysToAdd []string
+	NoCipher        bool
 }
 
 type TransformOption func(options *TransformOptions)
 
-func WithTransformCipherKeys(keys ...string) TransformOption {
+func WithTransformCipherKeysToSet(keys ...string) TransformOption {
 	return func(options *TransformOptions) {
-		options.CipherKeys = append(options.CipherKeys, keys...)
+		options.CipherKeysToSet = append(options.CipherKeysToSet, keys...)
+	}
+}
+
+func WithTransformCipherKeysToAdd(keys ...string) TransformOption {
+	return func(options *TransformOptions) {
+		options.CipherKeysToAdd = append(options.CipherKeysToAdd, keys...)
 	}
 }
 
@@ -361,8 +368,11 @@ func (c *Config) TransformWithOptions(options *Options, transformOptions *Transf
 	}
 
 	storage := c.deepCopyStorage()
-	if len(transformOptions.CipherKeys) != 0 {
-		storage.SetCipherKeys(transformOptions.CipherKeys)
+	if len(transformOptions.CipherKeysToSet) != 0 {
+		storage.SetCipherKeys(transformOptions.CipherKeysToSet)
+	}
+	if len(transformOptions.CipherKeysToAdd) != 0 {
+		storage.AddCipherKeys(transformOptions.CipherKeysToAdd)
 	}
 	if transformOptions.NoCipher {
 		storage.SetCipherKeys([]string{})

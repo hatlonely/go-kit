@@ -337,7 +337,7 @@ func TestConfig_Transform(t *testing.T) {
 			Cipher: CipherOptions{
 				Type: "Base64",
 			},
-		}, WithTransformCipherKeys("mysql.username", "mysql.password"))
+		}, WithTransformCipherKeysToSet("mysql.username", "mysql.password"))
 		So(err, ShouldBeNil)
 		So(cfg.Save(), ShouldBeNil)
 
