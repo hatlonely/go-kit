@@ -306,7 +306,7 @@ func (c *Config) Watch() error {
 	return nil
 }
 
-type OnChangeHandler func(conf *Config)
+type OnChangeHandler func(cfg *Config)
 
 func (c *Config) AddOnChangeHandler(handler OnChangeHandler) {
 	if c.parent != nil {
