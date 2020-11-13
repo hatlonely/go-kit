@@ -36,12 +36,15 @@ func NewConfigWithOptions(options *Options) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	storage, err := decoder.Decode(buf)
-	if err != nil {
-		return nil, err
-	}
-	if err := storage.Decrypt(cipher); err != nil {
-		return nil, err
+	storage, _ := NewStorage(nil)
+	if len(buf) != 0 {
+		storage, err = decoder.Decode(buf)
+		if err != nil {
+			return nil, err
+		}
+		if err := storage.Decrypt(cipher); err != nil {
+			return nil, err
+		}
 	}
 
 	return &Config{
