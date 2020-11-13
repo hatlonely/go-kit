@@ -6,6 +6,9 @@ import (
 	"time"
 
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
+	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/strx"
 )
 
 type OTSProviderOptions struct {
@@ -20,19 +23,15 @@ type OTSProviderOptions struct {
 
 func NewOTSProviderWithOptions(options *OTSProviderOptions) (*OTSProvider, error) {
 	otsCli := tablestore.NewClient(options.Endpoint, options.Instance, options.AccessKeyID, options.AccessKeySecret)
-	return NewOTSProvider(otsCli, options.Table, options.Key, options.Interval)
-}
-
-func NewOTSProvider(otsCli *tablestore.TableStoreClient, table string, key string, interval time.Duration) (*OTSProvider, error) {
-	if _, err := otsCli.DescribeTable(&tablestore.DescribeTableRequest{
-		TableName: table,
+	if res, err := otsCli.DescribeTable(&tablestore.DescribeTableRequest{
+		TableName: options.Table,
 	}); err != nil {
 		if !strings.Contains(err.Error(), "does not exist") {
-			return nil, err
+			return nil, errors.Wrap(err, "otsCli.DescribeTable failed")
 		}
 		req := &tablestore.CreateTableRequest{
 			TableMeta: &tablestore.TableMeta{
-				TableName: table,
+				TableName: options.Table,
 			},
 			TableOption: &tablestore.TableOption{
 				TimeToAlive: -1,
@@ -43,21 +42,31 @@ func NewOTSProvider(otsCli *tablestore.TableStoreClient, table string, key strin
 		req.TableMeta.AddPrimaryKeyColumn("Key", tablestore.PrimaryKeyType_STRING)
 		req.TableMeta.AddDefinedColumn("Val", tablestore.DefinedColumn_STRING)
 		if _, err := otsCli.CreateTable(req); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "otsCli.CreateTable failed")
+		}
+	} else {
+		if len(res.TableMeta.SchemaEntry) != 1 {
+			return nil, errors.Errorf("ots primary key [%v] is not match options [Key]", strx.JsonMarshal(res.TableMeta.SchemaEntry))
+		}
+		if *res.TableMeta.SchemaEntry[0].Name != "Key" {
+			return nil, errors.Errorf("ots primary key [%v] is not match options [Key]", strx.JsonMarshal(res.TableMeta.SchemaEntry))
+		}
+		if *res.TableMeta.SchemaEntry[0].Type != tablestore.PrimaryKeyType_STRING {
+			return nil, errors.Errorf("table [%v] primary key should be string", options.Table)
 		}
 	}
 
 	provider := &OTSProvider{
 		otsCli:   otsCli,
-		table:    table,
-		key:      key,
-		interval: interval,
+		table:    options.Table,
+		key:      options.Key,
+		interval: options.Interval,
 		events:   make(chan struct{}, 10),
 		errors:   make(chan error, 10),
 	}
-	buf, ts, err := provider.otsGetRow(otsCli, table, key)
+	buf, ts, err := provider.otsGetRow(otsCli, options.Table, options.Key)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "otsGetRow failed")
 	}
 	provider.buf = buf
 	provider.ts = ts
@@ -102,7 +111,7 @@ func (p *OTSProvider) otsGetRow(otsCli *tablestore.TableStoreClient, table strin
 		},
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, errors.Wrap(err, "ots.GetRow failed")
 	}
 
 	var val string
@@ -133,7 +142,7 @@ func (p *OTSProvider) otsPutRow(otsCli *tablestore.TableStoreClient, table strin
 		},
 	})
 
-	return err
+	return errors.Wrap(err, "ots.PutRow failed")
 }
 
 func (p *OTSProvider) Dump(buf []byte) error {

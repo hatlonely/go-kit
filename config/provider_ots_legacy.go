@@ -41,7 +41,7 @@ func NewOTSLegacyProviderWithOptions(options *OTSLegacyProviderOptions) (*OTSLeg
 		TableName: options.Table,
 	}); err != nil {
 		if !strings.Contains(err.Error(), "does not exist") {
-			return nil, err
+			return nil, errors.Wrap(err, "otsCli.DescribeTable failed")
 		}
 		req := &tablestore.CreateTableRequest{
 			TableMeta: &tablestore.TableMeta{
@@ -57,15 +57,15 @@ func NewOTSLegacyProviderWithOptions(options *OTSLegacyProviderOptions) (*OTSLeg
 			req.TableMeta.AddPrimaryKeyColumn(key, tablestore.PrimaryKeyType_STRING)
 		}
 		if _, err := otsCli.CreateTable(req); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "otsCli.CreateTable failed")
 		}
 	} else {
 		if len(res.TableMeta.SchemaEntry) != len(options.PrimaryKeys) {
-			return nil, errors.Errorf("ots primary key [%v] is not match options [%v]", res.TableMeta.SchemaEntry, options.PrimaryKeys)
+			return nil, errors.Errorf("ots primary key [%v] is not match options [%v]", strx.JsonMarshal(res.TableMeta.SchemaEntry), options.PrimaryKeys)
 		}
 		for i, pk := range res.TableMeta.SchemaEntry {
 			if *pk.Name != options.PrimaryKeys[i] {
-				return nil, errors.Errorf("ots primary key [%v] is not match options [%v]", res.TableMeta.SchemaEntry, options.PrimaryKeys)
+				return nil, errors.Errorf("ots primary key [%v] is not match options [%v]", strx.JsonMarshal(res.TableMeta.SchemaEntry), options.PrimaryKeys)
 			}
 			if *pk.Type != tablestore.PrimaryKeyType_STRING {
 				return nil, errors.Errorf("table [%v] primary key should be string", options.Table)
@@ -83,7 +83,7 @@ func NewOTSLegacyProviderWithOptions(options *OTSLegacyProviderOptions) (*OTSLeg
 	}
 	buf, ts, err := provider.otsGetRange(otsCli, options.Table, options.PrimaryKeys)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "otsGetRange failed")
 	}
 	provider.buf = buf
 	provider.ts = ts
