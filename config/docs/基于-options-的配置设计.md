@@ -97,7 +97,7 @@ func NewMySQLWithConfig(cfg *config.Config) (*MySQLCli, error) {
 }
 ```
 
-再在 main 中调用注册
+再在 main 中调用构造函数
 
 ```go
 mysqlCli, err := NewMySQLWithConfig(cfg.Sub("mysql"))
