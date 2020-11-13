@@ -43,9 +43,9 @@ func main() {
 	var options Options
 	Must(flag.Struct(&options))
 	Must(flag.Parse())
-	if options.Help {
-		fmt.Println(flag.Usage())
-		fmt.Println(`examples:
+	if options.Help || options.Action == "" {
+		Trac(flag.Usage())
+		Trac(`examples:
   cfg --camel-name --in-base-file base.json -a get
   cfg --camel-name --in-base-file base.json -a get --key mysql
   cfg --camel-name --in-base-file base.json -a get --key mysql.password
@@ -82,7 +82,7 @@ func main() {
 		return
 	}
 	if options.Version {
-		fmt.Println(Version)
+		Trac(Version)
 		return
 	}
 
@@ -256,7 +256,7 @@ func Info(format string, args ...interface{}) {
 }
 
 func Warn(format string, args ...interface{}) {
-	fmt.Println(strx.Render(fmt.Sprintf(format, args...)), strx.FormatSetBold, strx.ForegroundRed)
+	fmt.Println(strx.Render(fmt.Sprintf(format, args...), strx.FormatSetBold, strx.ForegroundRed))
 }
 
 func Trac(format string, args ...interface{}) {
