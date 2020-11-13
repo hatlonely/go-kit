@@ -142,7 +142,7 @@ func main() {
 			}
 		}
 
-		fmt.Println(icfg.Diff(ocfg, options.Key))
+		fmt.Println(ocfg.Diff(icfg, options.Key))
 
 		return
 	}
