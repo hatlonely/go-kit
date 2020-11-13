@@ -31,7 +31,27 @@ func NewConfigWithOptions(options *Options) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	return NewConfig(decoder, provider, cipher)
+
+	buf, err := provider.Load()
+	if err != nil {
+		return nil, err
+	}
+	storage, err := decoder.Decode(buf)
+	if err != nil {
+		return nil, err
+	}
+	if err := storage.Decrypt(cipher); err != nil {
+		return nil, err
+	}
+
+	return &Config{
+		provider:     provider,
+		storage:      storage,
+		decoder:      decoder,
+		log:          StdoutLogger{},
+		cipher:       cipher,
+		itemHandlers: map[string][]OnChangeHandler{},
+	}, nil
 }
 
 func NewConfigWithBaseFile(filename string, opts ...refx.Option) (*Config, error) {
@@ -102,28 +122,6 @@ func NewConfigWithSimpleFile(filename string, opts ...SimpleFileOption) (*Config
 	}
 
 	return NewConfigWithOptions(options)
-}
-
-func NewConfig(decoder Decoder, provider Provider, cipher Cipher) (*Config, error) {
-	buf, err := provider.Load()
-	if err != nil {
-		return nil, err
-	}
-	storage, err := decoder.Decode(buf)
-	if err != nil {
-		return nil, err
-	}
-	if err := storage.Decrypt(cipher); err != nil {
-		return nil, err
-	}
-	return &Config{
-		provider:     provider,
-		storage:      storage,
-		decoder:      decoder,
-		log:          StdoutLogger{},
-		cipher:       cipher,
-		itemHandlers: map[string][]OnChangeHandler{},
-	}, nil
 }
 
 type Config struct {
