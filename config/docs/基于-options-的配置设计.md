@@ -52,7 +52,7 @@ if err != nil {
 
 ## 动态配置
 
-和静态配置不同的是，动态配置需要在每次配置更新的时候调用 Unmarshal，因此需要用到 config 的时间处理机制，在 Key 上绑定事件处理 Unmarshal，这里提供两种实现
+和静态配置不同的是，动态配置需要在每次配置更新的时候调用 Unmarshal，这里就要用到 config 的事件处理机制，在 Key 上绑定事件处理 Unmarshal，这里提供两种实现
 
 1. 提供额外的 `OnChangeHandler(cfg *config.Config)`
 
