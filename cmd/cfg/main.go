@@ -35,7 +35,7 @@ type Options struct {
 	NoCipher    bool     `flag:"usage: decrypt all keys when put"`
 	InBaseFile  string   `flag:"usage: base file name; default: base.json"`
 	OutBaseFile string   `flag:"usage: put/set target config, it will use in-base-file if not set"`
-	BackupFile  string   `flag:"usage: file name to backup or rollback; default: cfg.backup.json"`
+	BackupFile  string   `flag:"usage: file name to backup or rollback"`
 }
 
 func main() {
