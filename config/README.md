@@ -192,7 +192,7 @@ func main() {
         "base64Key": "IrjXy4vx7iwgCLaUeu5TVUA9TkgMwSw3QWcgE/IW5W0="
       }
     }, {
-      "type": "Base64",
+      "type": "Base64"
     }]
   }
 }
@@ -206,7 +206,7 @@ func main() {
 go get -u github.com/hatlonely/go-kit/cmd/cfg
 ```
 
-通过配置工具可以方便地管理你配置，包括配置的获取，更新，迁移，回滚，备份
+通过[配置工具](docs/配置工具.md)可以方便地管理你配置，包括配置的获取，更新，迁移，回滚，备份
 
 
 ```shell
