@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"time"
 
@@ -30,7 +29,8 @@ type Options struct {
 	KebabName   bool     `flag:"usage: base file key format, for example [redis-expiration]"`
 	PascalName  bool     `flag:"usage: base file key format: for example [RedisExpiration]"`
 	Key         string   `flag:"usage: key for set or diff"`
-	Val         string   `flag:"usage: val for set or diff"`
+	Val         string   `flag:"usage: val for set or diff, val will auto convert to json"`
+	RawVal      string   `flag:"usage: raw string value"`
 	CipherKeys  []string `flag:"usage: change cipher keys when put"`
 	NoCipher    bool     `flag:"usage: decrypt all keys when put"`
 	InBaseFile  string   `flag:"usage: base file name; default: base.json"`
@@ -89,7 +89,10 @@ func main() {
 	if options.SnakeName {
 		opts = append(opts, refx.WithSnakeName())
 	}
-	options.BackupFile = fmt.Sprintf("%v.%v", options.BackupFile, time.Now().Format("20060102.150405"))
+
+	if options.BackupFile == "" {
+		options.BackupFile = fmt.Sprintf("cfg.backup.json.%v", time.Now().Format("20060102.150405"))
+	}
 
 	var inOptions config.Options
 	var outOptions config.Options
@@ -110,11 +113,6 @@ func main() {
 	if options.Action == "get" {
 		cfg, err := config.NewConfigWithOptions(&inOptions)
 		Must(err)
-		cfg, err = cfg.TransformWithOptions(&inOptions, &config.TransformOptions{
-			CipherKeys: options.CipherKeys,
-			NoCipher:   options.NoCipher,
-		})
-		Must(err)
 		val, ok := cfg.Get(options.Key)
 		if !ok {
 			fmt.Println("null")
@@ -131,11 +129,15 @@ func main() {
 		Must(err)
 
 		if options.Key != "" {
-			var v interface{}
-			if err := json.Unmarshal([]byte(options.Val), &v); err != nil {
-				Must(ocfg.UnsafeSet(options.Key, options.Val))
+			if options.RawVal != "" {
+				Must(ocfg.UnsafeSet(options.Key, options.RawVal))
 			} else {
-				Must(ocfg.UnsafeSet(options.Key, v))
+				var v interface{}
+				if err := json.Unmarshal([]byte(options.Val), &v); err != nil {
+					Must(ocfg.UnsafeSet(options.Key, options.Val))
+				} else {
+					Must(ocfg.UnsafeSet(options.Key, v))
+				}
 			}
 		}
 
@@ -150,7 +152,14 @@ func main() {
 
 		BackUpCurrentConfig(ocfg, options.BackupFile)
 
-		if options.Key != "" {
+		if options.Key == "" {
+			Warn("[key] is required in set action")
+			return
+		}
+
+		if options.RawVal != "" {
+			Must(ocfg.UnsafeSet(options.Key, options.RawVal))
+		} else {
 			var v interface{}
 			if err := json.Unmarshal([]byte(options.Val), &v); err != nil {
 				Must(ocfg.UnsafeSet(options.Key, options.Val))
@@ -160,8 +169,8 @@ func main() {
 		}
 		Must(ocfg.Save())
 
-		fmt.Println(strx.Render(fmt.Sprintf("Save success. Use follow command to rollback:")))
-		fmt.Println(strx.Render(RollbackCommand(&options), strx.FormatSetBold, strx.ForegroundGreen))
+		Trac("Save success. Use follow command to rollback:")
+		Info(RollbackCommand(&options))
 
 		return
 	}
@@ -180,8 +189,8 @@ func main() {
 		Must(err)
 		Must(ocfg.Save())
 
-		fmt.Println(strx.Render(fmt.Sprintf("Save success. Use follow command to rollback:")))
-		fmt.Println(strx.Render(RollbackCommand(&options), strx.FormatSetBold, strx.ForegroundGreen))
+		Trac("Save success. Use follow command to rollback:")
+		Info(RollbackCommand(&options))
 
 		return
 	}
@@ -193,15 +202,12 @@ func main() {
 		Must(err)
 		Must(ocfg.Save())
 
-		fmt.Println(strx.Render("Rollback success", strx.FormatSetBold, strx.ForegroundGreen))
-		buf, _ := ioutil.ReadFile(options.OutBaseFile)
-		fmt.Println(string(buf))
+		Info("Rollback success")
 
 		return
 	}
 
-	fmt.Println(strx.Render(strx.Render(fmt.Sprintf("Unknown action %v", options.Action), strx.FormatSetBold, strx.ForegroundRed)))
-	fmt.Println(flag.Usage())
+	Warn("Unknown action %v", options.Action)
 	os.Exit(1)
 }
 
@@ -232,4 +238,17 @@ func BackUpCurrentConfig(cfg *config.Config, name string) {
 	})
 	Must(err)
 	Must(cfg.Save())
+}
+
+func Info(format string, args ...interface{}) {
+	fmt.Println(strx.Render(fmt.Sprintf(format, args...), strx.FormatSetBold, strx.ForegroundGreen))
+}
+
+func Warn(format string, args ...interface{}) {
+	fmt.Println(strx.Render(fmt.Sprintf(format, args...)), strx.FormatSetBold, strx.ForegroundRed)
+}
+
+func Trac(format string, args ...interface{}) {
+	fmt.Printf(format, args...)
+	fmt.Println()
 }
