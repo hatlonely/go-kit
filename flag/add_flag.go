@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/cast"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 type AddFlagOptions struct {
@@ -124,7 +125,9 @@ func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
 	}
 
 	if options.DefaultValue != "" {
-		f.kvs[options.Key] = options.DefaultValue
+		if err := refx.InterfaceSet(&f.kvs, options.Key, options.DefaultValue); err != nil {
+			return errors.WithMessage(err, "InterfaceSet failed")
+		}
 	}
 
 	f.keyFlagInfosMap[options.Key] = info

@@ -4,7 +4,10 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/pkg/errors"
+
 	"github.com/hatlonely/go-kit/cast"
+	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/strx"
 )
 
@@ -33,7 +36,6 @@ func NewFlag(name string) *Flag {
 		keyFlagInfosMap: map[string]*Info{},
 		shorthandKeyMap: map[string]string{},
 		nameKeyMap:      map[string]string{},
-		kvs:             map[string]string{},
 	}
 }
 
@@ -43,7 +45,7 @@ type Flag struct {
 	keyFlagInfosMap map[string]*Info
 	shorthandKeyMap map[string]string
 	nameKeyMap      map[string]string
-	kvs             map[string]string
+	kvs             interface{}
 }
 
 func (f *Flag) GetInfo(key string) (*Info, bool) {
@@ -56,19 +58,24 @@ func (f *Flag) GetInfo(key string) (*Info, bool) {
 	return nil, false
 }
 
-func (f *Flag) set(key string, val string) error {
+func (f *Flag) findKey(key string) string {
 	if k, ok := f.shorthandKeyMap[key]; ok {
-		f.kvs[k] = val
-		f.keyFlagInfosMap[k].Assigned = true
-		if fun := f.keyFlagInfosMap[k].OnParse; fun != nil {
-			return fun(val)
-		}
-	} else {
-		f.kvs[key] = val
-		f.keyFlagInfosMap[key].Assigned = true
-		if fun := f.keyFlagInfosMap[key].OnParse; fun != nil {
-			return fun(val)
-		}
+		return k
+	}
+	if k, ok := f.nameKeyMap[key]; ok {
+		return k
+	}
+	return key
+}
+
+func (f *Flag) set(key string, val string) error {
+	key = f.findKey(key)
+	if err := refx.InterfaceSet(&f.kvs, key, val); err != nil {
+		return errors.WithMessage(err, "InterfaceSet failed")
+	}
+	f.keyFlagInfosMap[key].Assigned = true
+	if fun := f.keyFlagInfosMap[key].OnParse; fun != nil {
+		return fun(val)
 	}
 	return nil
 }
@@ -82,8 +89,10 @@ func (f *Flag) Get(key string) (interface{}, bool) {
 	key = strx.KebabName(key)
 	key = strings.Replace(key, ".", "-", -1)
 	key = strings.Replace(key, "--", "-", -1)
-	if v, ok := f.kvs[key]; ok {
-		return v, true
+
+	if val, err := refx.InterfaceGet(f.kvs, key); err != nil {
+		return nil, false
+	} else {
+		return val, true
 	}
-	return nil, false
 }
