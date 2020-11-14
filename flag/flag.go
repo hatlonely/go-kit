@@ -6,7 +6,6 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/hatlonely/go-kit/cast"
 	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/strx"
 )
@@ -66,7 +65,7 @@ func (f *Flag) findKey(key string) string {
 	return key
 }
 
-func (f *Flag) set(key string, val string) error {
+func (f *Flag) Set(key string, val string) error {
 	key = f.findKey(key)
 	if err := refx.InterfaceSet(&f.kvs, key, val); err != nil {
 		return errors.WithMessage(err, "InterfaceSet failed")
@@ -76,11 +75,6 @@ func (f *Flag) set(key string, val string) error {
 		return fun(val)
 	}
 	return nil
-}
-
-func (f *Flag) Set(key string, val interface{}) error {
-	key = strx.KebabName(key)
-	return f.set(key, cast.ToString(val))
 }
 
 func (f *Flag) Get(key string) (interface{}, bool) {

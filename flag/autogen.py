@@ -86,6 +86,8 @@ import (
 	"os"
 	"reflect"
 	"time"
+
+	"github.com/hatlonely/go-kit/refx"
 )
 
 var gflag = NewFlag(os.Args[0])
