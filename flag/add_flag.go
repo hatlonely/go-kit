@@ -35,9 +35,9 @@ func Shorthand(shorthand string) AddFlagOption {
 	}
 }
 
-func Type(rtype reflect.Type) AddFlagOption {
+func Type(v interface{}) AddFlagOption {
 	return func(o *AddFlagOptions) {
-		o.rtype = rtype
+		o.rtype = reflect.TypeOf(v)
 	}
 }
 
