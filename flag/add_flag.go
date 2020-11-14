@@ -97,11 +97,11 @@ func (f *Flag) BindFlag(v interface{}, name string, usage string, rtype reflect.
 }
 
 func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
-	if _, ok := f.flagInfos[options.Name]; ok {
+	if _, ok := f.keyFlagInfosMap[options.Name]; ok {
 		return errors.Errorf("conflict flag [%v]", options.Name)
 	}
 	if options.Shorthand != "" {
-		if _, ok := f.shorthand[options.Shorthand]; ok {
+		if _, ok := f.shorthandKeyMap[options.Shorthand]; ok {
 			return errors.Errorf("conflict shorthand [%v]", options.Shorthand)
 		}
 	}
@@ -115,6 +115,7 @@ func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
 		Type:         options.Type,
 		Usage:        options.Usage,
 		Name:         options.Name,
+		Key:          options.Key,
 		Shorthand:    options.Shorthand,
 		DefaultValue: options.DefaultValue,
 		IsArgument:   options.IsArgument,
@@ -123,16 +124,17 @@ func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
 	}
 
 	if options.DefaultValue != "" {
-		f.kvs[options.Name] = options.DefaultValue
+		f.kvs[options.Key] = options.DefaultValue
 	}
 
-	f.flagInfos[options.Name] = info
+	f.keyFlagInfosMap[options.Key] = info
 	if options.IsArgument {
-		f.arguments = append(f.arguments, options.Name)
+		f.arguments = append(f.arguments, options.Key)
 	} else {
 		if options.Shorthand != "" {
-			f.shorthand[options.Shorthand] = options.Name
+			f.shorthandKeyMap[options.Shorthand] = options.Key
 		}
+		f.nameKeyMap[options.Name] = options.Key
 	}
 
 	return nil

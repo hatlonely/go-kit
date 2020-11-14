@@ -29,42 +29,44 @@ type Info struct {
 
 func NewFlag(name string) *Flag {
 	return &Flag{
-		name:      name,
-		flagInfos: map[string]*Info{},
-		shorthand: map[string]string{},
-		kvs:       map[string]string{},
+		name:            name,
+		keyFlagInfosMap: map[string]*Info{},
+		shorthandKeyMap: map[string]string{},
+		nameKeyMap:      map[string]string{},
+		kvs:             map[string]string{},
 	}
 }
 
 type Flag struct {
-	name      string
-	flagInfos map[string]*Info
-	arguments []string
-	shorthand map[string]string
-	kvs       map[string]string
+	name            string
+	arguments       []string
+	keyFlagInfosMap map[string]*Info
+	shorthandKeyMap map[string]string
+	nameKeyMap      map[string]string
+	kvs             map[string]string
 }
 
 func (f *Flag) GetInfo(key string) (*Info, bool) {
-	if info, ok := f.flagInfos[key]; ok {
+	if info, ok := f.keyFlagInfosMap[key]; ok {
 		return info, true
 	}
-	if k, ok := f.shorthand[key]; ok {
-		return f.flagInfos[k], true
+	if k, ok := f.shorthandKeyMap[key]; ok {
+		return f.keyFlagInfosMap[k], true
 	}
 	return nil, false
 }
 
 func (f *Flag) set(key string, val string) error {
-	if k, ok := f.shorthand[key]; ok {
+	if k, ok := f.shorthandKeyMap[key]; ok {
 		f.kvs[k] = val
-		f.flagInfos[k].Assigned = true
-		if fun := f.flagInfos[k].OnParse; fun != nil {
+		f.keyFlagInfosMap[k].Assigned = true
+		if fun := f.keyFlagInfosMap[k].OnParse; fun != nil {
 			return fun(val)
 		}
 	} else {
 		f.kvs[key] = val
-		f.flagInfos[key].Assigned = true
-		if fun := f.flagInfos[key].OnParse; fun != nil {
+		f.keyFlagInfosMap[key].Assigned = true
+		if fun := f.keyFlagInfosMap[key].OnParse; fun != nil {
 			return fun(val)
 		}
 	}

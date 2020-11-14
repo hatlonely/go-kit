@@ -19,7 +19,7 @@ func (f *Flag) Usage() string {
 	var flagInfos []*info
 
 	for _, name := range f.arguments {
-		finfo := f.flagInfos[name]
+		finfo := f.keyFlagInfosMap[name]
 		defaultValue := finfo.Type.String()
 		if finfo.DefaultValue != "" {
 			defaultValue = defaultValue + "=" + finfo.DefaultValue
@@ -33,7 +33,7 @@ func (f *Flag) Usage() string {
 	}
 
 	var keys []string
-	for key, info := range f.flagInfos {
+	for key, info := range f.keyFlagInfosMap {
 		if info.IsArgument {
 			continue
 		}
@@ -41,7 +41,7 @@ func (f *Flag) Usage() string {
 	}
 	sort.Strings(keys)
 	for _, key := range keys {
-		finfo := f.flagInfos[key]
+		finfo := f.keyFlagInfosMap[key]
 		defaultValue := finfo.Type.String()
 		if finfo.DefaultValue != "" {
 			defaultValue = defaultValue + "=" + finfo.DefaultValue
@@ -80,7 +80,7 @@ func (f *Flag) Usage() string {
 	}
 
 	for _, key := range keys {
-		finfo := f.flagInfos[key]
+		finfo := f.keyFlagInfosMap[key]
 		nameShorthand := finfo.Name
 		if finfo.Shorthand != "" {
 			nameShorthand = finfo.Shorthand + "," + finfo.Name
