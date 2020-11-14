@@ -23,26 +23,32 @@ type AddFlagOptions struct {
 type AddFlagOption func(*AddFlagOptions)
 
 func Required() AddFlagOption {
-	return func(o *AddFlagOptions) {
-		o.Required = true
+	return func(options *AddFlagOptions) {
+		options.Required = true
 	}
 }
 
 func DefaultValue(val string) AddFlagOption {
-	return func(o *AddFlagOptions) {
-		o.DefaultValue = val
+	return func(options *AddFlagOptions) {
+		options.DefaultValue = val
 	}
 }
 
 func Shorthand(shorthand string) AddFlagOption {
-	return func(o *AddFlagOptions) {
-		o.Shorthand = shorthand
+	return func(options *AddFlagOptions) {
+		options.Shorthand = shorthand
 	}
 }
 
 func Type(v interface{}) AddFlagOption {
-	return func(o *AddFlagOptions) {
-		o.Type = reflect.TypeOf(v)
+	return func(options *AddFlagOptions) {
+		options.Type = reflect.TypeOf(v)
+	}
+}
+
+func Key(key string) AddFlagOption {
+	return func(options *AddFlagOptions) {
+		options.Key = key
 	}
 }
 
