@@ -38,7 +38,6 @@ func TestExample1(t *testing.T) {
 		panic(err)
 	}
 
-	fmt.Println(flag1.Usage())
 	fmt.Println("int =>", mf.I)
 	fmt.Println("str =>", mf.S)
 	fmt.Println("int-slice =>", mf.IntSlice)

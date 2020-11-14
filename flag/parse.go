@@ -59,8 +59,7 @@ func (f *Flag) ParseArgs(args []string) error {
 				}
 			}
 		} else { // -p123456 和 -p 123456 等效
-			key := key[0:1]
-			val := key[1:]
+			key, val := key[0:1], key[1:]
 			_, ok := f.GetInfo(key)
 			if !ok {
 				return errors.Errorf("unknown key [%v]", key)
