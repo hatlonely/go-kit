@@ -16,13 +16,14 @@ type Options struct {
 
 type Info struct {
 	Type         reflect.Type
-	Name         string
-	Required     bool
-	Assigned     bool
 	Usage        string
+	Name         string
+	Key          string
 	Shorthand    string
 	DefaultValue string
 	IsArgument   bool
+	Required     bool
+	Assigned     bool
 	OnParse      func(val string) error
 }
 
