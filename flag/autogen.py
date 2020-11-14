@@ -51,7 +51,12 @@ bind_item_tpl = """
 func (f *Flag) {name}Var(p *{type}, name string, defaultValue {type}, usage string) {{
 	var v {type}
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {{
+	if err := f.addFlagWithOptions(&AddFlagOptions{{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}}); err != nil {{
 		panic(err)
 	}}
 	info, _ := f.GetInfo(name)

@@ -12,7 +12,12 @@ import (
 func (f *Flag) BoolVar(p *bool, name string, defaultValue bool, usage string) {
 	var v bool
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -30,7 +35,12 @@ func (f *Flag) Bool(name string, defaultValue bool, usage string) *bool {
 func (f *Flag) IntVar(p *int, name string, defaultValue int, usage string) {
 	var v int
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -48,7 +58,12 @@ func (f *Flag) Int(name string, defaultValue int, usage string) *int {
 func (f *Flag) UintVar(p *uint, name string, defaultValue uint, usage string) {
 	var v uint
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -66,7 +81,12 @@ func (f *Flag) Uint(name string, defaultValue uint, usage string) *uint {
 func (f *Flag) Int64Var(p *int64, name string, defaultValue int64, usage string) {
 	var v int64
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -84,7 +104,12 @@ func (f *Flag) Int64(name string, defaultValue int64, usage string) *int64 {
 func (f *Flag) Int32Var(p *int32, name string, defaultValue int32, usage string) {
 	var v int32
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -102,7 +127,12 @@ func (f *Flag) Int32(name string, defaultValue int32, usage string) *int32 {
 func (f *Flag) Int16Var(p *int16, name string, defaultValue int16, usage string) {
 	var v int16
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -120,7 +150,12 @@ func (f *Flag) Int16(name string, defaultValue int16, usage string) *int16 {
 func (f *Flag) Int8Var(p *int8, name string, defaultValue int8, usage string) {
 	var v int8
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -138,7 +173,12 @@ func (f *Flag) Int8(name string, defaultValue int8, usage string) *int8 {
 func (f *Flag) Uint64Var(p *uint64, name string, defaultValue uint64, usage string) {
 	var v uint64
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -156,7 +196,12 @@ func (f *Flag) Uint64(name string, defaultValue uint64, usage string) *uint64 {
 func (f *Flag) Uint32Var(p *uint32, name string, defaultValue uint32, usage string) {
 	var v uint32
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -174,7 +219,12 @@ func (f *Flag) Uint32(name string, defaultValue uint32, usage string) *uint32 {
 func (f *Flag) Uint16Var(p *uint16, name string, defaultValue uint16, usage string) {
 	var v uint16
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -192,7 +242,12 @@ func (f *Flag) Uint16(name string, defaultValue uint16, usage string) *uint16 {
 func (f *Flag) Uint8Var(p *uint8, name string, defaultValue uint8, usage string) {
 	var v uint8
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -210,7 +265,12 @@ func (f *Flag) Uint8(name string, defaultValue uint8, usage string) *uint8 {
 func (f *Flag) Float64Var(p *float64, name string, defaultValue float64, usage string) {
 	var v float64
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -228,7 +288,12 @@ func (f *Flag) Float64(name string, defaultValue float64, usage string) *float64
 func (f *Flag) Float32Var(p *float32, name string, defaultValue float32, usage string) {
 	var v float32
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -246,7 +311,12 @@ func (f *Flag) Float32(name string, defaultValue float32, usage string) *float32
 func (f *Flag) StringVar(p *string, name string, defaultValue string, usage string) {
 	var v string
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -264,7 +334,12 @@ func (f *Flag) String(name string, defaultValue string, usage string) *string {
 func (f *Flag) DurationVar(p *time.Duration, name string, defaultValue time.Duration, usage string) {
 	var v time.Duration
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -282,7 +357,12 @@ func (f *Flag) Duration(name string, defaultValue time.Duration, usage string) *
 func (f *Flag) TimeVar(p *time.Time, name string, defaultValue time.Time, usage string) {
 	var v time.Time
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -300,7 +380,12 @@ func (f *Flag) Time(name string, defaultValue time.Time, usage string) *time.Tim
 func (f *Flag) IPVar(p *net.IP, name string, defaultValue net.IP, usage string) {
 	var v net.IP
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -318,7 +403,12 @@ func (f *Flag) IP(name string, defaultValue net.IP, usage string) *net.IP {
 func (f *Flag) BoolSliceVar(p *[]bool, name string, defaultValue []bool, usage string) {
 	var v []bool
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -336,7 +426,12 @@ func (f *Flag) BoolSlice(name string, defaultValue []bool, usage string) *[]bool
 func (f *Flag) IntSliceVar(p *[]int, name string, defaultValue []int, usage string) {
 	var v []int
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -354,7 +449,12 @@ func (f *Flag) IntSlice(name string, defaultValue []int, usage string) *[]int {
 func (f *Flag) UintSliceVar(p *[]uint, name string, defaultValue []uint, usage string) {
 	var v []uint
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -372,7 +472,12 @@ func (f *Flag) UintSlice(name string, defaultValue []uint, usage string) *[]uint
 func (f *Flag) Int64SliceVar(p *[]int64, name string, defaultValue []int64, usage string) {
 	var v []int64
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -390,7 +495,12 @@ func (f *Flag) Int64Slice(name string, defaultValue []int64, usage string) *[]in
 func (f *Flag) Int32SliceVar(p *[]int32, name string, defaultValue []int32, usage string) {
 	var v []int32
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -408,7 +518,12 @@ func (f *Flag) Int32Slice(name string, defaultValue []int32, usage string) *[]in
 func (f *Flag) Int16SliceVar(p *[]int16, name string, defaultValue []int16, usage string) {
 	var v []int16
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -426,7 +541,12 @@ func (f *Flag) Int16Slice(name string, defaultValue []int16, usage string) *[]in
 func (f *Flag) Int8SliceVar(p *[]int8, name string, defaultValue []int8, usage string) {
 	var v []int8
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -444,7 +564,12 @@ func (f *Flag) Int8Slice(name string, defaultValue []int8, usage string) *[]int8
 func (f *Flag) Uint64SliceVar(p *[]uint64, name string, defaultValue []uint64, usage string) {
 	var v []uint64
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -462,7 +587,12 @@ func (f *Flag) Uint64Slice(name string, defaultValue []uint64, usage string) *[]
 func (f *Flag) Uint32SliceVar(p *[]uint32, name string, defaultValue []uint32, usage string) {
 	var v []uint32
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -480,7 +610,12 @@ func (f *Flag) Uint32Slice(name string, defaultValue []uint32, usage string) *[]
 func (f *Flag) Uint16SliceVar(p *[]uint16, name string, defaultValue []uint16, usage string) {
 	var v []uint16
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -498,7 +633,12 @@ func (f *Flag) Uint16Slice(name string, defaultValue []uint16, usage string) *[]
 func (f *Flag) Uint8SliceVar(p *[]uint8, name string, defaultValue []uint8, usage string) {
 	var v []uint8
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -516,7 +656,12 @@ func (f *Flag) Uint8Slice(name string, defaultValue []uint8, usage string) *[]ui
 func (f *Flag) Float64SliceVar(p *[]float64, name string, defaultValue []float64, usage string) {
 	var v []float64
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -534,7 +679,12 @@ func (f *Flag) Float64Slice(name string, defaultValue []float64, usage string) *
 func (f *Flag) Float32SliceVar(p *[]float32, name string, defaultValue []float32, usage string) {
 	var v []float32
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -552,7 +702,12 @@ func (f *Flag) Float32Slice(name string, defaultValue []float32, usage string) *
 func (f *Flag) StringSliceVar(p *[]string, name string, defaultValue []string, usage string) {
 	var v []string
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -570,7 +725,12 @@ func (f *Flag) StringSlice(name string, defaultValue []string, usage string) *[]
 func (f *Flag) DurationSliceVar(p *[]time.Duration, name string, defaultValue []time.Duration, usage string) {
 	var v []time.Duration
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -588,7 +748,12 @@ func (f *Flag) DurationSlice(name string, defaultValue []time.Duration, usage st
 func (f *Flag) TimeSliceVar(p *[]time.Time, name string, defaultValue []time.Time, usage string) {
 	var v []time.Time
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)
@@ -606,7 +771,12 @@ func (f *Flag) TimeSlice(name string, defaultValue []time.Time, usage string) *[
 func (f *Flag) IPSliceVar(p *[]net.IP, name string, defaultValue []net.IP, usage string) {
 	var v []net.IP
 	*p = defaultValue
-	if err := f.addFlag(name, usage, reflect.TypeOf(v), false, "", cast.ToString(defaultValue), false); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         reflect.TypeOf(v),
+		DefaultValue: cast.ToString(defaultValue),
+	}); err != nil {
 		panic(err)
 	}
 	info, _ := f.GetInfo(name)

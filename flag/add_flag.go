@@ -140,15 +140,3 @@ func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
 
 	return nil
 }
-
-func (f *Flag) addFlag(name string, usage string, rtype reflect.Type, required bool, shorthand string, defaultValue string, isArgument bool) error {
-	return f.addFlagWithOptions(&AddFlagOptions{
-		Name:         name,
-		Usage:        usage,
-		Type:         rtype,
-		Required:     required,
-		Shorthand:    shorthand,
-		DefaultValue: defaultValue,
-		IsArgument:   isArgument,
-	})
-}
