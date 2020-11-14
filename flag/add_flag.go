@@ -9,13 +9,14 @@ import (
 )
 
 type AddFlagOptions struct {
-	Shorthand    string
 	Type         reflect.Type
-	Required     bool
-	DefaultValue string
 	Usage        string
 	Name         string
+	Key          string
+	Shorthand    string
+	DefaultValue string
 	IsArgument   bool
+	Required     bool
 }
 
 type AddFlagOption func(*AddFlagOptions)
@@ -104,19 +105,21 @@ func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
 			return errors.Errorf("conflict shorthand [%v]", options.Shorthand)
 		}
 	}
-
 	if options.DefaultValue != "" {
 		options.Required = false
 	}
+	if options.Key == "" {
+		options.Key = options.Name
+	}
 	info := &Info{
 		Type:         options.Type,
-		Name:         options.Name,
-		Required:     options.Required,
-		Assigned:     false,
-		Shorthand:    options.Shorthand,
 		Usage:        options.Usage,
+		Name:         options.Name,
+		Shorthand:    options.Shorthand,
 		DefaultValue: options.DefaultValue,
 		IsArgument:   options.IsArgument,
+		Required:     options.Required,
+		Assigned:     false,
 	}
 
 	if options.DefaultValue != "" {
