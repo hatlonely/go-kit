@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/hatlonely/go-kit/flag"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 func TestExample1(t *testing.T) {
@@ -17,18 +18,19 @@ func TestExample1(t *testing.T) {
 	}
 
 	type MyFlags struct {
-		I        int        `flag:"--int, -i; required; default: 123; usage: int flag"`
-		S        string     `flag:"--str, -s; required; usage: str flag"`
-		IntSlice []int      `flag:"--int-slice; default: 1,2,3; usage: int slice flag"`
-		IP       net.IP     `flag:"--ip; usage: ip flag"`
-		Time     time.Time  `flag:"--time; usage: time flag; default: 2019-11-27"`
-		Pos      string     `flag:"pos; usage: pos flag"`
-		Sub      MySubFlags `flag:"sub"`
+		I        int       `flag:"--int, -i; required; default: 123; usage: int flag"`
+		S        string    `flag:"--str, -s; required; usage: str flag"`
+		IntSlice []int     `flag:"--int-slice; default: 1,2,3; usage: int slice flag"`
+		IP       net.IP    `flag:"--ip; usage: ip flag"`
+		Time     time.Time `flag:"--time; usage: time flag; default: 2019-11-27"`
+		Pos      string    `flag:"pos; usage: pos flag"`
+		Sub      MySubFlags
+		Sub2     *MySubFlags
 	}
 
 	mf := &MyFlags{}
 	flag1 := flag.NewFlag("test")
-	if err := flag1.Struct(mf); err != nil {
+	if err := flag1.Struct(mf, refx.WithCamelName()); err != nil {
 		panic(err)
 	}
 	if err := flag1.ParseArgs(strings.Split("-str abc -ip 192.168.0.1 --int-slice 4,5,6 posflag -sub-f1 140", " ")); err != nil {
@@ -36,6 +38,7 @@ func TestExample1(t *testing.T) {
 		panic(err)
 	}
 
+	fmt.Println(flag1.Usage())
 	fmt.Println("int =>", mf.I)
 	fmt.Println("str =>", mf.S)
 	fmt.Println("int-slice =>", mf.IntSlice)

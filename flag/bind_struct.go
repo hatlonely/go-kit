@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/pkg/errors"
+
 	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/strx"
 )
@@ -15,10 +17,10 @@ func (f *Flag) Struct(v interface{}, opts ...refx.Option) error {
 	for _, opt := range opts {
 		opt(&options)
 	}
-	return f.bindStructRecursive(v, "", &options)
+	return f.bindStructRecursive(v, "", "", &options)
 }
 
-func (f *Flag) bindStructRecursive(v interface{}, prefix string, options *refx.Options) error {
+func (f *Flag) bindStructRecursive(v interface{}, prefixKey, prefixName string, options *refx.Options) error {
 	if reflect.ValueOf(v).Kind() != reflect.Ptr {
 		return fmt.Errorf("expected a pointer, got [%v]", reflect.TypeOf(v))
 	}
@@ -35,52 +37,39 @@ func (f *Flag) bindStructRecursive(v interface{}, prefix string, options *refx.O
 			continue
 		}
 		tag := rt.Field(i).Tag.Get("flag")
-		t := rt.Field(i).Type
+		typ := rt.Field(i).Type
+		key := rt.Field(i).Name
 
 		if tag == "-" {
 			continue
 		}
-		if t.Kind() == reflect.Struct && t != reflect.TypeOf(time.Time{}) {
-			key := tag
-			if key == "" {
-				key = strx.KebabName(rt.Field(i).Name)
-			}
+		if typ.Kind() == reflect.Struct && typ != reflect.TypeOf(time.Time{}) {
 			if rv.Type().Field(i).Anonymous {
-				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefix, options); err != nil {
+				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixKey, prefixName, options); err != nil {
 					return err
 				}
 			} else {
-				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, key), options); err != nil {
+				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefixKey, refx.FormatKeyWithOptions(key, options)), prefixAppendName(prefixName, strx.KebabName(key)), options); err != nil {
 					return err
 				}
 			}
-		} else if t.Kind() == reflect.Ptr && t.Elem().Kind() == reflect.Struct && t != reflect.TypeOf(&time.Time{}) {
+		} else if typ.Kind() == reflect.Ptr && typ.Elem().Kind() == reflect.Struct && typ != reflect.TypeOf(&time.Time{}) {
 			rv.Field(i).Set(reflect.New(rv.Field(i).Type().Elem()))
-			key := tag
-			if key == "" {
-				key = strx.KebabName(rt.Field(i).Name)
-			}
 			if rv.Type().Field(i).Anonymous {
-				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefix, options); err != nil {
+				if err := f.bindStructRecursive(rv.Field(i).Interface(), prefixKey, prefixName, options); err != nil {
 					return err
 				}
 			} else {
-				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, key), options); err != nil {
+				if err := f.bindStructRecursive(rv.Field(i).Interface(), prefixAppendKey(prefixKey, refx.FormatKeyWithOptions(key, options)), prefixAppendName(prefixName, strx.KebabName(key)), options); err != nil {
 					return err
 				}
 			}
 		} else {
-			name, shorthand, usage, required, defaultValue, isArgument, err := parseTag(tag)
+			options, err := parseTag(tag, key, prefixKey, prefixName, typ, options)
 			if err != nil {
 				return err
 			}
-			if name == "" {
-				name = strx.KebabName(rt.Field(i).Name)
-			}
-			if prefix != "" {
-				name = prefix + "-" + name
-			}
-			if err := f.BindFlag(rv.Field(i).Addr().Interface(), name, usage, rv.Field(i).Type(), required, shorthand, defaultValue, isArgument); err != nil {
+			if err := f.BindFlagWithOptions(rv.Field(i).Addr().Interface(), options); err != nil {
 				return err
 			}
 		}
@@ -89,28 +78,24 @@ func (f *Flag) bindStructRecursive(v interface{}, prefix string, options *refx.O
 	return nil
 }
 
-func parseTag(tag string) (name string, shorthand string, usage string, required bool, defaultValue string, isArgument bool, err error) {
-	if strings.Trim(tag, " ") == "" {
-		isArgument = false
-		return
-	}
+func parseTag(tag string, key string, prefixKey string, prefixName string, typ reflect.Type, ropt *refx.Options) (*AddFlagOptions, error) {
+	var options AddFlagOptions
+	tag = strings.TrimSpace(tag)
 	for _, field := range strings.Split(tag, ";") {
 		field = strings.Trim(field, " ")
 		if field == "required" { // required
-			required = true
+			options.Required = true
 		} else if strings.HasPrefix(field, "--") { // --int-option, -i
 			names := strings.Split(field, ",")
-			name = strings.Trim(names[0], " ")[2:]
+			options.Name = strings.Trim(names[0], " ")[2:]
 			if len(names) > 2 {
-				err = fmt.Errorf("expected name field format is '--<name>[, -<shorthand>]', got [%v]", field)
-				return
+				return nil, errors.Errorf("expected name field format is '--<name>[, -<shorthand>]', got [%v]", field)
 			} else if len(names) == 2 {
-				shorthand = strings.Trim(names[1], " ")
-				if !strings.HasPrefix(shorthand, "-") {
-					err = fmt.Errorf("expected name field format is '--<name>[, -<shorthand>]', got [%v]", field)
-					return
+				options.Shorthand = strings.TrimSpace(names[1])
+				if !strings.HasPrefix(options.Shorthand, "-") {
+					return nil, errors.Errorf("expected name field format is '--<name>[, -<shorthand>]', got [%v]", field)
 				}
-				shorthand = shorthand[1:]
+				options.Shorthand = options.Shorthand[1:]
 			}
 		} else if strings.Contains(field, ":") { // default: 10; usage: int flag
 			idx := strings.Index(field, ":")
@@ -118,20 +103,34 @@ func parseTag(tag string) (name string, shorthand string, usage string, required
 			val := strings.Trim(field[idx+1:], " ")
 			switch key {
 			case "default":
-				defaultValue = val
+				options.DefaultValue = val
 			case "usage":
-				usage = val
+				options.Usage = val
 			}
 		} else { // pos
-			name = strings.Trim(field, " ")
-			isArgument = true
+			options.Name = strings.Trim(field, " ")
+			options.IsArgument = true
 		}
 	}
 
-	return
+	options.Key = prefixAppendKey(prefixKey, refx.FormatKeyWithOptions(key, ropt))
+	if options.Name == "" {
+		options.Name = strx.KebabName(key)
+	}
+	options.Name = prefixAppendName(prefixName, options.Name)
+	options.Type = typ
+
+	return &options, nil
 }
 
 func prefixAppendKey(prefix string, key string) string {
+	if prefix == "" {
+		return key
+	}
+	return fmt.Sprintf("%v.%v", prefix, key)
+}
+
+func prefixAppendName(prefix string, key string) string {
 	if prefix == "" {
 		return key
 	}
