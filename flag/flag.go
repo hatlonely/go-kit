@@ -70,9 +70,11 @@ func (f *Flag) Set(key string, val string) error {
 	if err := refx.InterfaceSet(&f.kvs, key, val); err != nil {
 		return errors.WithMessage(err, "InterfaceSet failed")
 	}
-	f.keyFlagInfosMap[key].Assigned = true
-	if fun := f.keyFlagInfosMap[key].OnParse; fun != nil {
-		return fun(val)
+	if _, ok := f.keyFlagInfosMap[key]; ok {
+		f.keyFlagInfosMap[key].Assigned = true
+		if fun := f.keyFlagInfosMap[key].OnParse; fun != nil {
+			return fun(val)
+		}
 	}
 	return nil
 }

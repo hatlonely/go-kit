@@ -23,8 +23,7 @@ func (f *Flag) ParseArgs(args []string) error {
 		}
 		if strings.Contains(key, "=") { // 选项中含有等号，按照等号分割成 name val
 			idx := strings.Index(key, "=")
-			val := key[idx+1:]
-			key := key[0:idx]
+			key, val := key[0:idx], key[idx+1:]
 			_, ok := f.GetInfo(key)
 			if !ok {
 				return errors.Errorf("unknown key [%v]", key)
@@ -58,7 +57,7 @@ func (f *Flag) ParseArgs(args []string) error {
 					return errors.WithMessage(err, "parse failed")
 				}
 			}
-		} else { // -p123456 和 -p 123456 等效
+		} else if _, ok := f.GetInfo(key[0:1]); ok { // -p123456 和 -p 123456 等效
 			key, val := key[0:1], key[1:]
 			_, ok := f.GetInfo(key)
 			if !ok {
@@ -67,6 +66,14 @@ func (f *Flag) ParseArgs(args []string) error {
 			if err := f.Set(key, val); err != nil {
 				return errors.WithMessage(err, "parse failed")
 			}
+		} else {
+			if i+1 >= len(args) {
+				return errors.Errorf("miss argument for non boolean key [%v]", key)
+			}
+			if err := f.Set(key, args[i+1]); err != nil {
+				return errors.WithMessage(err, fmt.Sprintf("parse failed, key [%v]", key))
+			}
+			i++
 		}
 	}
 

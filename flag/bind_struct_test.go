@@ -1,7 +1,6 @@
 package flag
 
 import (
-	"fmt"
 	"net"
 	"strings"
 	"testing"
@@ -35,10 +34,8 @@ func TestBind(t *testing.T) {
 		if err := f.Struct(&options); err != nil {
 			panic(err)
 		}
-		fmt.Println(f.Usage())
 		if err := f.ParseArgs(strings.Split("-i 456 -str abc -ip 192.168.0.1 --int-slice 1,2,3 posflag "+
-			"-sub1-f1 30 -f1 40 --sub2-f2 hello", " ")); err != nil {
-			fmt.Println(f.Usage())
+			"-sub1-f1 30 -f1 40 --sub2-f2 hello  --not-exist-key val", " ")); err != nil {
 			panic(err)
 		}
 
@@ -53,6 +50,8 @@ func TestBind(t *testing.T) {
 		So(options.Sub2.F1, ShouldEqual, 20)
 		So(options.Sub2.F2, ShouldEqual, "hello")
 		So(options.F1, ShouldEqual, 40)
+
+		So(f.GetString("not-exist-key"), ShouldEqual, "val")
 	})
 
 }
