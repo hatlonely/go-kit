@@ -9,56 +9,75 @@ import (
 )
 
 type AddFlagOptions struct {
-	shorthand    string
-	rtype        reflect.Type
-	required     bool
-	defaultValue string
+	Shorthand    string
+	Type         reflect.Type
+	Required     bool
+	DefaultValue string
+	Usage        string
+	Name         string
+	IsArgument   bool
 }
 
 type AddFlagOption func(*AddFlagOptions)
 
 func Required() AddFlagOption {
 	return func(o *AddFlagOptions) {
-		o.required = true
+		o.Required = true
 	}
 }
 
 func DefaultValue(val string) AddFlagOption {
 	return func(o *AddFlagOptions) {
-		o.defaultValue = val
+		o.DefaultValue = val
 	}
 }
 
 func Shorthand(shorthand string) AddFlagOption {
 	return func(o *AddFlagOptions) {
-		o.shorthand = shorthand
+		o.Shorthand = shorthand
 	}
 }
 
 func Type(v interface{}) AddFlagOption {
 	return func(o *AddFlagOptions) {
-		o.rtype = reflect.TypeOf(v)
+		o.Type = reflect.TypeOf(v)
 	}
 }
 
 func (f *Flag) AddFlag(name string, usage string, opts ...AddFlagOption) error {
-	o := &AddFlagOptions{}
-	for _, opt := range opts {
-		opt(o)
+	options := &AddFlagOptions{
+		Name:       name,
+		Usage:      usage,
+		IsArgument: false,
 	}
-	return f.addFlag(name, usage, o.rtype, o.required, o.shorthand, o.defaultValue, false)
+	for _, opt := range opts {
+		opt(options)
+	}
+	return f.addFlagWithOptions(options)
 }
 
 func (f *Flag) AddArgument(name string, usage string, opts ...AddFlagOption) error {
-	o := &AddFlagOptions{}
-	for _, opt := range opts {
-		opt(o)
+	options := &AddFlagOptions{
+		Name:       name,
+		Usage:      usage,
+		IsArgument: true,
 	}
-	return f.addFlag(name, usage, o.rtype, o.required, o.shorthand, o.defaultValue, true)
+	for _, opt := range opts {
+		opt(options)
+	}
+	return f.addFlagWithOptions(options)
 }
 
 func (f *Flag) BindFlag(v interface{}, name string, usage string, rtype reflect.Type, required bool, shorthand string, defaultValue string, isArgument bool) error {
-	if err := f.addFlag(name, usage, rtype, required, shorthand, defaultValue, isArgument); err != nil {
+	if err := f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         rtype,
+		Required:     required,
+		Shorthand:    shorthand,
+		DefaultValue: defaultValue,
+		IsArgument:   isArgument,
+	}); err != nil {
 		return err
 	}
 	info, _ := f.GetInfo(name)
@@ -76,42 +95,54 @@ func (f *Flag) BindFlag(v interface{}, name string, usage string, rtype reflect.
 	return nil
 }
 
-func (f *Flag) addFlag(name string, usage string, rtype reflect.Type, required bool, shorthand string, defaultValue string, isArgument bool) error {
-	if _, ok := f.flagInfos[name]; ok {
-		return errors.Errorf("conflict flag [%v]", name)
+func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
+	if _, ok := f.flagInfos[options.Name]; ok {
+		return errors.Errorf("conflict flag [%v]", options.Name)
 	}
-	if shorthand != "" {
-		if _, ok := f.shorthand[shorthand]; ok {
-			return errors.Errorf("conflict shorthand [%v]", shorthand)
+	if options.Shorthand != "" {
+		if _, ok := f.shorthand[options.Shorthand]; ok {
+			return errors.Errorf("conflict shorthand [%v]", options.Shorthand)
 		}
 	}
 
-	if defaultValue != "" {
-		required = false
+	if options.DefaultValue != "" {
+		options.Required = false
 	}
 	info := &Info{
-		Type:         rtype,
-		Name:         name,
-		Required:     required,
+		Type:         options.Type,
+		Name:         options.Name,
+		Required:     options.Required,
 		Assigned:     false,
-		Shorthand:    shorthand,
-		Usage:        usage,
-		DefaultValue: defaultValue,
-		IsArgument:   isArgument,
+		Shorthand:    options.Shorthand,
+		Usage:        options.Usage,
+		DefaultValue: options.DefaultValue,
+		IsArgument:   options.IsArgument,
 	}
 
-	if defaultValue != "" {
-		f.kvs[name] = defaultValue
+	if options.DefaultValue != "" {
+		f.kvs[options.Name] = options.DefaultValue
 	}
 
-	f.flagInfos[name] = info
-	if isArgument {
-		f.arguments = append(f.arguments, name)
+	f.flagInfos[options.Name] = info
+	if options.IsArgument {
+		f.arguments = append(f.arguments, options.Name)
 	} else {
-		if shorthand != "" {
-			f.shorthand[shorthand] = name
+		if options.Shorthand != "" {
+			f.shorthand[options.Shorthand] = options.Name
 		}
 	}
 
 	return nil
+}
+
+func (f *Flag) addFlag(name string, usage string, rtype reflect.Type, required bool, shorthand string, defaultValue string, isArgument bool) error {
+	return f.addFlagWithOptions(&AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         rtype,
+		Required:     required,
+		Shorthand:    shorthand,
+		DefaultValue: defaultValue,
+		IsArgument:   isArgument,
+	})
 }
