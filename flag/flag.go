@@ -2,12 +2,10 @@ package flag
 
 import (
 	"reflect"
-	"strings"
 
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/refx"
-	"github.com/hatlonely/go-kit/strx"
 )
 
 type Options struct {
@@ -80,10 +78,6 @@ func (f *Flag) Set(key string, val string) error {
 }
 
 func (f *Flag) Get(key string) (interface{}, bool) {
-	key = strx.KebabName(key)
-	key = strings.Replace(key, ".", "-", -1)
-	key = strings.Replace(key, "--", "-", -1)
-
 	if val, err := refx.InterfaceGet(f.kvs, key); err != nil {
 		return nil, false
 	} else {
