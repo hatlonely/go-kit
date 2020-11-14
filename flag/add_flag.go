@@ -95,17 +95,17 @@ func (f *Flag) BindFlagWithOptions(v interface{}, options *AddFlagOptions) error
 	return nil
 }
 
-func (f *Flag) BindFlag(v interface{}, name string, usage string, rtype reflect.Type, required bool, shorthand string, defaultValue string, isArgument bool) error {
-	return f.BindFlagWithOptions(v, &AddFlagOptions{
-		Name:         name,
-		Usage:        usage,
-		Type:         rtype,
-		Required:     required,
-		Shorthand:    shorthand,
-		DefaultValue: defaultValue,
-		IsArgument:   isArgument,
-	})
-}
+//func (f *Flag) BindFlag(v interface{}, name string, usage string, rtype reflect.Type, required bool, shorthand string, defaultValue string, isArgument bool) error {
+//	return f.BindFlagWithOptions(v, &AddFlagOptions{
+//		Name:         name,
+//		Usage:        usage,
+//		Type:         rtype,
+//		Required:     required,
+//		Shorthand:    shorthand,
+//		DefaultValue: defaultValue,
+//		IsArgument:   isArgument,
+//	})
+//}
 
 func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
 	if _, ok := f.keyFlagInfosMap[options.Name]; ok {

@@ -4,7 +4,6 @@ package flag
 import (
 	"net"
 	"os"
-	"reflect"
 	"time"
 
 	"github.com/hatlonely/go-kit/refx"
@@ -586,10 +585,6 @@ func AddArgument(name string, usage string, opts ...AddFlagOption) error {
 
 func BindFlagWithOptions(v interface{}, options *AddFlagOptions) error {
 	return gflag.BindFlagWithOptions(v, options)
-}
-
-func BindFlag(v interface{}, name string, usage string, rtype reflect.Type, required bool, shorthand string, defaultValue string, isArgument bool) error {
-	return gflag.BindFlag(v, name, usage, rtype, required, shorthand, defaultValue, isArgument)
 }
 
 func Struct(v interface{}, opts ...refx.Option) error {
