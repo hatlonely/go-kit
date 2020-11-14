@@ -6,40 +6,53 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
-type MySubFlags struct {
-	F1 int    `flag:"--f1; default:20; usage:f1 flag"`
-	F2 string `flag:"--f2; default:hatlonely; usage:f2 flag"`
-}
-
-type MyFlags struct {
-	I        int        `flag:"--int, -i; required; default: 123; usage: int flag"`
-	S        string     `flag:"--str, -s; required; usage: str flag"`
-	IntSlice []int      `flag:"--int-slice; default: 1,2,3; usage: int slice flag"`
-	IP       net.IP     `flag:"--ip; usage: ip flag"`
-	Time     time.Time  `flag:"--time; usage: time flag; default: 2019-11-27"`
-	Pos      string     `flag:"pos; usage: pos flag"`
-	Sub      MySubFlags `flag:"sub"`
-}
-
 func TestBind(t *testing.T) {
-	mf := &MyFlags{}
-	f := NewFlag("hello")
-	if err := f.Struct(mf); err != nil {
-		panic(err)
-	}
-	fmt.Println(f.Usage())
-	if err := f.ParseArgs(strings.Split("-str abc -ip 192.168.0.1 --int-slice 1,2,3 posflag -sub-f1 140", " ")); err != nil {
-		fmt.Println(f.Usage())
-		panic(err)
-	}
+	Convey("TestBind", t, func() {
+		type Sub struct {
+			F1 int    `flag:"--f1; default:20; usage:f1 flag"`
+			F2 string `flag:"--f2; default:hatlonely; usage:f2 flag"`
+		}
 
-	fmt.Println("int =>", mf.I)
-	fmt.Println("str =>", mf.S)
-	fmt.Println("int-slice =>", mf.IntSlice)
-	fmt.Println("ip =>", mf.IP)
-	fmt.Println("time =>", mf.Time)
-	fmt.Println("sub.f1 =>", mf.Sub.F1)
-	fmt.Println("sub.f2 =>", mf.Sub.F2)
+		type Options struct {
+			I        int       `flag:"--int, -i; required; default: 123; usage: int flag"`
+			S        string    `flag:"--str, -s; required; usage: str flag"`
+			IntSlice []int     `flag:"--int-slice; default: 1,2,3; usage: int slice flag"`
+			IP       net.IP    `flag:"--ip; usage: ip flag"`
+			Time     time.Time `flag:"--time; usage: time flag; default: 2020-11-14T23:46:14+08:00"`
+			Pos      string    `flag:"pos; usage: pos flag"`
+			Sub1     Sub
+			Sub2     *Sub
+			Sub
+			ignoreF string
+		}
+
+		var options Options
+		f := NewFlag("hello")
+		if err := f.Struct(&options); err != nil {
+			panic(err)
+		}
+		fmt.Println(f.Usage())
+		if err := f.ParseArgs(strings.Split("-i 456 -str abc -ip 192.168.0.1 --int-slice 1,2,3 posflag "+
+			"-sub1-f1 30 -f1 40 --sub2-f2 hello", " ")); err != nil {
+			fmt.Println(f.Usage())
+			panic(err)
+		}
+
+		So(options.I, ShouldEqual, 456)
+		So(options.S, ShouldEqual, "abc")
+		So(options.IP, ShouldResemble, net.ParseIP("192.168.0.1"))
+		So(options.IntSlice, ShouldResemble, []int{1, 2, 3})
+		So(options.Time, ShouldEqual, time.Unix(1605368774, 0))
+		So(options.Pos, ShouldEqual, "posflag")
+		So(options.Sub1.F1, ShouldEqual, 30)
+		So(options.Sub1.F2, ShouldEqual, "hatlonely")
+		So(options.Sub2.F1, ShouldEqual, 20)
+		So(options.Sub2.F2, ShouldEqual, "hello")
+		So(options.F1, ShouldEqual, 40)
+	})
+
 }
