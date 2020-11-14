@@ -6,14 +6,19 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/strx"
 )
 
-func (f *Flag) Struct(v interface{}) error {
-	return f.bindStructRecursive(v, "")
+func (f *Flag) Struct(v interface{}, opts ...refx.Option) error {
+	var options refx.Options
+	for _, opt := range opts {
+		opt(&options)
+	}
+	return f.bindStructRecursive(v, "", &options)
 }
 
-func (f *Flag) bindStructRecursive(v interface{}, prefix string) error {
+func (f *Flag) bindStructRecursive(v interface{}, prefix string, options *refx.Options) error {
 	if reflect.ValueOf(v).Kind() != reflect.Ptr {
 		return fmt.Errorf("expected a pointer, got [%v]", reflect.TypeOf(v))
 	}
@@ -41,11 +46,11 @@ func (f *Flag) bindStructRecursive(v interface{}, prefix string) error {
 				key = strx.KebabName(rt.Field(i).Name)
 			}
 			if rv.Type().Field(i).Anonymous {
-				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefix); err != nil {
+				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefix, options); err != nil {
 					return err
 				}
 			} else {
-				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, key)); err != nil {
+				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, key), options); err != nil {
 					return err
 				}
 			}
@@ -56,11 +61,11 @@ func (f *Flag) bindStructRecursive(v interface{}, prefix string) error {
 				key = strx.KebabName(rt.Field(i).Name)
 			}
 			if rv.Type().Field(i).Anonymous {
-				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefix); err != nil {
+				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefix, options); err != nil {
 					return err
 				}
 			} else {
-				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, key)); err != nil {
+				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, key), options); err != nil {
 					return err
 				}
 			}

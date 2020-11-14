@@ -70,21 +70,13 @@ func (f *Flag) AddArgument(name string, usage string, opts ...AddFlagOption) err
 	return f.addFlagWithOptions(options)
 }
 
-func (f *Flag) BindFlag(v interface{}, name string, usage string, rtype reflect.Type, required bool, shorthand string, defaultValue string, isArgument bool) error {
-	if err := f.addFlagWithOptions(&AddFlagOptions{
-		Name:         name,
-		Usage:        usage,
-		Type:         rtype,
-		Required:     required,
-		Shorthand:    shorthand,
-		DefaultValue: defaultValue,
-		IsArgument:   isArgument,
-	}); err != nil {
+func (f *Flag) BindFlagWithOptions(v interface{}, options *AddFlagOptions) error {
+	if err := f.addFlagWithOptions(options); err != nil {
 		return err
 	}
-	info, _ := f.GetInfo(name)
-	if defaultValue != "" {
-		if err := cast.SetInterface(v, defaultValue); err != nil {
+	info, _ := f.GetInfo(options.Key)
+	if options.DefaultValue != "" {
+		if err := cast.SetInterface(v, options.DefaultValue); err != nil {
 			return err
 		}
 	}
@@ -95,6 +87,18 @@ func (f *Flag) BindFlag(v interface{}, name string, usage string, rtype reflect.
 		return nil
 	}
 	return nil
+}
+
+func (f *Flag) BindFlag(v interface{}, name string, usage string, rtype reflect.Type, required bool, shorthand string, defaultValue string, isArgument bool) error {
+	return f.BindFlagWithOptions(v, &AddFlagOptions{
+		Name:         name,
+		Usage:        usage,
+		Type:         rtype,
+		Required:     required,
+		Shorthand:    shorthand,
+		DefaultValue: defaultValue,
+		IsArgument:   isArgument,
+	})
 }
 
 func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {

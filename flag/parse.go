@@ -7,6 +7,8 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/strx"
 )
 
 func (f *Flag) ParseArgs(args []string) error {
@@ -85,6 +87,8 @@ func (f *Flag) ParseArgs(args []string) error {
 			return errors.Errorf("option [%v] is required, but not assigned", key)
 		}
 	}
+
+	fmt.Println(strx.JsonMarshalIndent(f.kvs))
 
 	return nil
 }

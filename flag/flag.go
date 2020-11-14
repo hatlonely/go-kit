@@ -49,11 +49,9 @@ type Flag struct {
 }
 
 func (f *Flag) GetInfo(key string) (*Info, bool) {
+	key = f.findKey(key)
 	if info, ok := f.keyFlagInfosMap[key]; ok {
 		return info, true
-	}
-	if k, ok := f.shorthandKeyMap[key]; ok {
-		return f.keyFlagInfosMap[k], true
 	}
 	return nil, false
 }
