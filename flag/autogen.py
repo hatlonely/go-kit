@@ -84,7 +84,6 @@ package flag
 import (
 	"net"
 	"os"
-	"reflect"
 	"time"
 
 	"github.com/hatlonely/go-kit/refx"
