@@ -17,11 +17,7 @@ import (
 )
 
 var mutex sync.RWMutex
-var validators map[reflect.Type]*Validator
-
-func init() {
-	validators = map[reflect.Type]*Validator{}
-}
+var validators = map[reflect.Type]*Validator{}
 
 func Validate(v interface{}) error {
 	mutex.RLock()

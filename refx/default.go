@@ -2,6 +2,7 @@ package refx
 
 import (
 	"reflect"
+	"sync"
 	"time"
 
 	"github.com/pkg/errors"
@@ -9,11 +10,34 @@ import (
 	"github.com/hatlonely/go-kit/cast"
 )
 
+var mutex sync.RWMutex
+var defaultValueMap = map[reflect.Type]reflect.Value{}
+
 func SetDefaultValue(v interface{}) error {
 	if reflect.ValueOf(v).IsNil() {
 		return nil
 	}
 
+	rt := reflect.TypeOf(v)
+	mutex.RLock()
+	if rv, ok := defaultValueMap[rt]; ok {
+		mutex.RUnlock()
+		reflect.ValueOf(v).Elem().Set(rv)
+		return nil
+	}
+	mutex.RUnlock()
+
+	if err := setDefaultValue(v); err != nil {
+		return err
+	}
+
+	mutex.Lock()
+	defaultValueMap[rt] = reflect.ValueOf(v).Elem()
+	mutex.Unlock()
+	return nil
+}
+
+func setDefaultValue(v interface{}) error {
 	if reflect.TypeOf(v).Kind() != reflect.Ptr || reflect.TypeOf(v).Elem().Kind() != reflect.Struct {
 		return nil
 	}
