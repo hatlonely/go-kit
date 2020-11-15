@@ -40,6 +40,7 @@ func NewFlag(name string) *Flag {
 type Flag struct {
 	name            string
 	arguments       []string
+	names           []string
 	keyInfoMap      map[string]*Info
 	shorthandKeyMap map[string]string
 	nameKeyMap      map[string]string

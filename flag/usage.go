@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"path"
-	"sort"
+	"strings"
 )
 
 func (f *Flag) Usage() string {
@@ -37,13 +37,9 @@ func (f *Flag) Usage() string {
 	}
 
 	var keys []string
-	for key, info := range f.keyInfoMap {
-		if info.IsArgument {
-			continue
-		}
-		keys = append(keys, key)
+	for _, key := range f.names {
+		keys = append(keys, f.nameKeyMap[key])
 	}
-	sort.Strings(keys)
 	for _, key := range keys {
 		finfo := f.keyInfoMap[key]
 		defaultValue := finfo.Type.String()
@@ -106,15 +102,17 @@ func (f *Flag) Usage() string {
 
 	if len(argumentInfos) != 0 {
 		buffer.WriteString("\narguments:\n")
-		posFormat := fmt.Sprintf("  %%%dv  %%-%dv  %%-%dv  %%v\n", shorthandWidth, nameWidth, typeDefaultWidth)
+		posFormat := fmt.Sprintf("  %%%dv  %%-%dv  %%-%dv  %%v", shorthandWidth, nameWidth, typeDefaultWidth)
 		for _, i := range argumentInfos {
-			buffer.WriteString(fmt.Sprintf(posFormat, i.shorthand, i.name, i.typeDefault, i.usage))
+			buffer.WriteString(strings.TrimRight(fmt.Sprintf(posFormat, i.shorthand, i.name, i.typeDefault, i.usage), " "))
+			buffer.WriteString("\n")
 		}
 	}
 	buffer.WriteString("\noptions:\n")
-	format := fmt.Sprintf("  %%%dv, %%-%dv  %%-%dv  %%v\n", shorthandWidth, nameWidth, typeDefaultWidth)
+	format := fmt.Sprintf("  %%%dv, %%-%dv  %%-%dv  %%v", shorthandWidth, nameWidth, typeDefaultWidth)
 	for _, i := range flagInfos {
-		buffer.WriteString(fmt.Sprintf(format, i.shorthand, i.name, i.typeDefault, i.usage))
+		buffer.WriteString(strings.TrimRight(fmt.Sprintf(format, i.shorthand, i.name, i.typeDefault, i.usage), " "))
+		buffer.WriteString("\n")
 	}
 
 	return buffer.String()
