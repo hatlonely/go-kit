@@ -29,8 +29,8 @@ type Options struct {
 	KebabName     bool     `flag:"usage: base file key format, for example [redis-expiration]"`
 	PascalName    bool     `flag:"usage: base file key format: for example [RedisExpiration]"`
 	Key           string   `flag:"usage: key for set or diff"`
-	Val           string   `flag:"usage: val for set or diff, val will auto convert to json"`
-	RawVal        string   `flag:"usage: raw string value"`
+	Val           string   `flag:"usage: val for set or diff"`
+	JsonVal       string   `flag:"usage: json val to set or diff"`
 	SetCipherKeys []string `flag:"usage: set cipher keys when put"`
 	AddCipherKeys []string `flag:"usage: add cipher keys when put"`
 	NoCipher      bool     `flag:"usage: decrypt all keys when put"`
@@ -50,8 +50,8 @@ func main() {
   cfg --camelName --inBaseFile base.json -a get --key mysql
   cfg --camelName --inBaseFile base.json -a get --key mysql.password
   cfg --camelName --inBaseFile base.json -a diff --key mysql.username --val hatlonely
-  cfg --camelName --inBaseFile base.json -a diff --key mysql.password --rawVal 12345678
-  cfg --camelName --inBaseFile base.json -a diff --key mysql --val '{
+  cfg --camelName --inBaseFile base.json -a diff --key mysql.password --val 12345678
+  cfg --camelName --inBaseFile base.json -a diff --key mysql --jsonVal '{
       "connMaxLifeTime": "60s",
       "database": "testdb2",
       "host": "127.0.0.1",
@@ -62,8 +62,8 @@ func main() {
       "username": "hatlonely"
   }'
   cfg --camelName --inBaseFile base.json -a set --key mysql.username --val hatlonely
-  cfg --camelName --inBaseFile base.json -a set --key mysql.password --rawVal 12345678
-  cfg --camelName --inBaseFile base.json -a set --key mysql --val '{
+  cfg --camelName --inBaseFile base.json -a set --key mysql.password --val 12345678
+  cfg --camelName --inBaseFile base.json -a set --key mysql --jsonVal '{
       "connMaxLifeTime": "60s",
       "database": "testdb2",
       "host": "127.0.0.1",
@@ -139,15 +139,12 @@ func main() {
 		Must(err)
 
 		if options.Key != "" {
-			if options.RawVal != "" {
-				Must(icfg.UnsafeSet(options.Key, options.RawVal))
-			} else {
+			if options.JsonVal != "" {
 				var v interface{}
-				if err := json.Unmarshal([]byte(options.Val), &v); err != nil {
-					Must(icfg.UnsafeSet(options.Key, options.Val))
-				} else {
-					Must(icfg.UnsafeSet(options.Key, v))
-				}
+				Must(json.Unmarshal([]byte(options.JsonVal), &v))
+				Must(ocfg.UnsafeSet(options.Key, v))
+			} else {
+				Must(icfg.UnsafeSet(options.Key, options.Val))
 			}
 		}
 
@@ -167,15 +164,12 @@ func main() {
 			return
 		}
 
-		if options.RawVal != "" {
-			Must(ocfg.UnsafeSet(options.Key, options.RawVal))
-		} else {
+		if options.JsonVal != "" {
 			var v interface{}
-			if err := json.Unmarshal([]byte(options.Val), &v); err != nil {
-				Must(ocfg.UnsafeSet(options.Key, options.Val))
-			} else {
-				Must(ocfg.UnsafeSet(options.Key, v))
-			}
+			Must(json.Unmarshal([]byte(options.JsonVal), &v))
+			Must(ocfg.UnsafeSet(options.Key, v))
+		} else {
+			Must(ocfg.UnsafeSet(options.Key, options.Val))
 		}
 		Must(ocfg.Save())
 
