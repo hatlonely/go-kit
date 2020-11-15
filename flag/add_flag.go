@@ -100,7 +100,7 @@ func (f *Flag) BindFlagWithOptions(v interface{}, options *AddFlagOptions) error
 }
 
 func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
-	if _, ok := f.keyFlagInfosMap[options.Name]; ok {
+	if _, ok := f.keyInfoMap[options.Name]; ok {
 		return errors.Errorf("conflict flag [%v]", options.Name)
 	}
 	if options.Shorthand != "" {
@@ -130,12 +130,12 @@ func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
 	}
 
 	if options.DefaultValue != "" {
-		if err := refx.InterfaceSet(&f.kvs, options.Key, options.DefaultValue); err != nil {
+		if err := refx.InterfaceSet(&f.root, options.Key, options.DefaultValue); err != nil {
 			return errors.WithMessage(err, "InterfaceSet failed")
 		}
 	}
 
-	f.keyFlagInfosMap[options.Key] = info
+	f.keyInfoMap[options.Key] = info
 	if options.IsArgument {
 		f.arguments = append(f.arguments, options.Key)
 	} else {

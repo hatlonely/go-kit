@@ -86,7 +86,7 @@ func (f *Flag) ParseArgs(args []string) error {
 		}
 	}
 
-	for key, info := range f.keyFlagInfosMap {
+	for key, info := range f.keyInfoMap {
 		if info.Required && !info.Assigned {
 			return errors.Errorf("option [%v] is required, but not assigned", key)
 		}

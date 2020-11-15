@@ -30,7 +30,7 @@ type Info struct {
 func NewFlag(name string) *Flag {
 	return &Flag{
 		name:            name,
-		keyFlagInfosMap: map[string]*Info{},
+		keyInfoMap:      map[string]*Info{},
 		shorthandKeyMap: map[string]string{},
 		nameKeyMap:      map[string]string{},
 	}
@@ -39,15 +39,15 @@ func NewFlag(name string) *Flag {
 type Flag struct {
 	name            string
 	arguments       []string
-	keyFlagInfosMap map[string]*Info
+	keyInfoMap      map[string]*Info
 	shorthandKeyMap map[string]string
 	nameKeyMap      map[string]string
-	kvs             interface{}
+	root            interface{}
 }
 
 func (f *Flag) GetInfo(key string) (*Info, bool) {
 	key = f.findKey(key)
-	if info, ok := f.keyFlagInfosMap[key]; ok {
+	if info, ok := f.keyInfoMap[key]; ok {
 		return info, true
 	}
 	return nil, false
@@ -65,12 +65,12 @@ func (f *Flag) findKey(key string) string {
 
 func (f *Flag) Set(key string, val string) error {
 	key = f.findKey(key)
-	if err := refx.InterfaceSet(&f.kvs, key, val); err != nil {
+	if err := refx.InterfaceSet(&f.root, key, val); err != nil {
 		return errors.WithMessage(err, "InterfaceSet failed")
 	}
-	if _, ok := f.keyFlagInfosMap[key]; ok {
-		f.keyFlagInfosMap[key].Assigned = true
-		if fun := f.keyFlagInfosMap[key].OnParse; fun != nil {
+	if _, ok := f.keyInfoMap[key]; ok {
+		f.keyInfoMap[key].Assigned = true
+		if fun := f.keyInfoMap[key].OnParse; fun != nil {
 			return fun(val)
 		}
 	}
@@ -79,7 +79,7 @@ func (f *Flag) Set(key string, val string) error {
 
 func (f *Flag) Get(key string) (interface{}, bool) {
 	key = f.findKey(key)
-	if val, err := refx.InterfaceGet(f.kvs, key); err != nil {
+	if val, err := refx.InterfaceGet(f.root, key); err != nil {
 		return nil, false
 	} else {
 		return val, true

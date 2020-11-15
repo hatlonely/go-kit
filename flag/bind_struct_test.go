@@ -61,7 +61,7 @@ func TestBind(t *testing.T) {
 			"int-slice": "IntSlice",
 			"f1":        "F1",
 		})
-		So(flag.kvs, ShouldResemble, map[string]interface{}{
+		So(flag.root, ShouldResemble, map[string]interface{}{
 			"F2":       "hatlonely",
 			"S":        "abc",
 			"I":        "456",

@@ -19,7 +19,7 @@ func (f *Flag) Usage() string {
 	var flagInfos []*info
 
 	for _, name := range f.arguments {
-		finfo := f.keyFlagInfosMap[name]
+		finfo := f.keyInfoMap[name]
 		defaultValue := finfo.Type.String()
 		if finfo.DefaultValue != "" {
 			defaultValue = defaultValue + "=" + finfo.DefaultValue
@@ -33,7 +33,7 @@ func (f *Flag) Usage() string {
 	}
 
 	var keys []string
-	for key, info := range f.keyFlagInfosMap {
+	for key, info := range f.keyInfoMap {
 		if info.IsArgument {
 			continue
 		}
@@ -41,7 +41,7 @@ func (f *Flag) Usage() string {
 	}
 	sort.Strings(keys)
 	for _, key := range keys {
-		finfo := f.keyFlagInfosMap[key]
+		finfo := f.keyInfoMap[key]
 		defaultValue := finfo.Type.String()
 		if finfo.DefaultValue != "" {
 			defaultValue = defaultValue + "=" + finfo.DefaultValue
@@ -80,17 +80,17 @@ func (f *Flag) Usage() string {
 	}
 
 	for _, key := range keys {
-		finfo := f.keyFlagInfosMap[key]
-		nameShorthand := finfo.Name
-		if finfo.Shorthand != "" {
-			nameShorthand = finfo.Shorthand + "," + finfo.Name
+		info := f.keyInfoMap[key]
+		nameShorthand := info.Name
+		if info.Shorthand != "" {
+			nameShorthand = info.Shorthand + "," + info.Name
 		}
-		if finfo.DefaultValue != "" {
-			buffer.WriteString(fmt.Sprintf(" [-%v %v=%v]", nameShorthand, finfo.Type, finfo.DefaultValue))
-		} else if finfo.Required {
-			buffer.WriteString(fmt.Sprintf(" <-%v %v>", nameShorthand, finfo.Type))
+		if info.DefaultValue != "" {
+			buffer.WriteString(fmt.Sprintf(" [-%v %v=%v]", nameShorthand, info.Type, info.DefaultValue))
+		} else if info.Required {
+			buffer.WriteString(fmt.Sprintf(" <-%v %v>", nameShorthand, info.Type))
 		} else {
-			buffer.WriteString(fmt.Sprintf(" [-%v %v]", nameShorthand, finfo.Type))
+			buffer.WriteString(fmt.Sprintf(" [-%v %v]", nameShorthand, info.Type))
 		}
 	}
 	buffer.WriteString("\n")

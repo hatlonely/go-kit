@@ -17,7 +17,7 @@ func TestFlag(t *testing.T) {
 				"key":    "opt.key",
 				"action": "opt.action",
 			},
-			kvs: map[string]interface{}{
+			root: map[string]interface{}{
 				"opt": map[string]interface{}{
 					"key":    "val1",
 					"action": "add",
