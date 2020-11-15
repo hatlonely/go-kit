@@ -1,6 +1,7 @@
 package flag
 
 import (
+	"encoding/json"
 	"reflect"
 
 	"github.com/pkg/errors"
@@ -63,10 +64,28 @@ func (f *Flag) findKey(key string) string {
 	return key
 }
 
-func (f *Flag) Set(key string, val string) error {
+func (f *Flag) Set(key string, val string, opts ...ParseOption) error {
+	var options ParseOptions
+	for _, opt := range opts {
+		opt(&options)
+	}
+	return f.SetWithOptions(key, val, &options)
+}
+
+func (f *Flag) SetWithOptions(key string, val string, options *ParseOptions) error {
 	key = f.findKey(key)
-	if err := refx.InterfaceSet(&f.root, key, val); err != nil {
-		return errors.WithMessage(err, "InterfaceSet failed")
+	if options.RawVal {
+		if err := refx.InterfaceSet(&f.root, key, val); err != nil {
+			return errors.WithMessage(err, "InterfaceSet failed")
+		}
+	} else {
+		var v interface{}
+		if err := json.Unmarshal([]byte(val), &v); err != nil {
+			v = val
+		}
+		if err := refx.InterfaceSet(&f.root, key, val); err != nil {
+			return errors.WithMessage(err, "InterfaceSet failed")
+		}
 	}
 	if _, ok := f.keyInfoMap[key]; ok {
 		f.keyInfoMap[key].Assigned = true

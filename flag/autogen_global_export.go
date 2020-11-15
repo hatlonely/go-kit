@@ -23,8 +23,12 @@ func GetInfo(key string) (*Info, bool) {
 	return gflag.GetInfo(key)
 }
 
-func Set(key string, val string) error {
-	return gflag.Set(key, val)
+func Set(key string, val string, opts ...ParseOption) error {
+	return gflag.Set(key, val, opts...)
+}
+
+func SetWithOptions(key string, val string, options *ParseOptions) error {
+	return gflag.SetWithOptions(key, val, options)
 }
 
 func Get(key string) (interface{}, bool) {
@@ -867,6 +871,6 @@ func IPSlice(name string, defaultValue []net.IP, usage string) *[]net.IP {
 	return gflag.IPSlice(name, defaultValue, usage)
 }
 
-func ParseArgs(args []string) error {
-	return gflag.ParseArgs(args)
+func ParseArgs(args []string, opts ...ParseOption) error {
+	return gflag.ParseArgs(args, opts...)
 }

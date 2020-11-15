@@ -9,7 +9,24 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (f *Flag) ParseArgs(args []string) error {
+type ParseOptions struct {
+	RawVal bool
+}
+
+type ParseOption func(options *ParseOptions)
+
+func WithRawVal() ParseOption {
+	return func(options *ParseOptions) {
+		options.RawVal = true
+	}
+}
+
+func (f *Flag) ParseArgs(args []string, opts ...ParseOption) error {
+	var options ParseOptions
+	for _, opt := range opts {
+		opt(&options)
+	}
+
 	var arguments []string
 	for i := 0; i < len(args); i++ {
 		arg := args[i]
@@ -24,7 +41,7 @@ func (f *Flag) ParseArgs(args []string) error {
 		if strings.Contains(key, "=") { // 选项中含有等号，按照等号分割成 name val
 			idx := strings.Index(key, "=")
 			key, val := key[0:idx], key[idx+1:]
-			if err := f.Set(key, val); err != nil {
+			if err := f.SetWithOptions(key, val, &options); err != nil {
 				return errors.WithMessage(err, fmt.Sprintf("parse failed, key [%v]", key))
 			}
 		} else if info, ok := f.GetInfo(key); ok {
@@ -32,7 +49,7 @@ func (f *Flag) ParseArgs(args []string) error {
 				if i+1 >= len(args) {
 					return errors.Errorf("miss argument for non boolean key [%v]", key)
 				}
-				if err := f.Set(key, args[i+1]); err != nil {
+				if err := f.SetWithOptions(key, args[i+1], &options); err != nil {
 					return errors.WithMessage(err, fmt.Sprintf("parse failed, key [%v]", key))
 				}
 				i++
@@ -42,27 +59,27 @@ func (f *Flag) ParseArgs(args []string) error {
 					val = args[i+1]
 					i++
 				}
-				if err := f.Set(key, val); err != nil {
+				if err := f.SetWithOptions(key, val, &options); err != nil {
 					return errors.WithMessage(err, "parse failed")
 				}
 			}
 		} else if f.allBoolFlag(key) { // -aux 全是 bool 选项，-aux 和 -a -u -x 等效
 			for i := 0; i < len(key); i++ {
 				k := key[i : i+1]
-				if err := f.Set(k, "true"); err != nil {
+				if err := f.SetWithOptions(k, "true", &options); err != nil {
 					return errors.WithMessage(err, "parse failed")
 				}
 			}
 		} else if _, ok := f.GetInfo(key[0:1]); ok { // -p123456 和 -p 123456 等效
 			key, val := key[0:1], key[1:]
-			if err := f.Set(key, val); err != nil {
+			if err := f.SetWithOptions(key, val, &options); err != nil {
 				return errors.WithMessage(err, "parse failed")
 			}
 		} else {
 			if i+1 >= len(args) {
 				return errors.Errorf("miss argument for non boolean key [%v]", key)
 			}
-			if err := f.Set(key, args[i+1]); err != nil {
+			if err := f.SetWithOptions(key, args[i+1], &options); err != nil {
 				return errors.WithMessage(err, fmt.Sprintf("parse failed, key [%v]", key))
 			}
 			i++
@@ -73,7 +90,7 @@ func (f *Flag) ParseArgs(args []string) error {
 		if i >= len(f.arguments) {
 			break
 		}
-		if err := f.Set(f.nameKeyMap[f.arguments[i]], val); err != nil {
+		if err := f.SetWithOptions(f.nameKeyMap[f.arguments[i]], val, &options); err != nil {
 			return errors.WithMessage(err, "parse failed")
 		}
 	}

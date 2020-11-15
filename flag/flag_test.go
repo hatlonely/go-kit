@@ -44,13 +44,13 @@ func TestFlag(t *testing.T) {
 
 		Convey("Set", func() {
 			{
-				So(flag.Set("k", "val2"), ShouldBeNil)
+				So(flag.SetWithOptions("k", "val2", &ParseOptions{true}), ShouldBeNil)
 				val, ok := flag.Get("k")
 				So(ok, ShouldBeTrue)
 				So(val, ShouldEqual, "val2")
 			}
 			{
-				So(flag.Set("opt.key3", "val3"), ShouldBeNil)
+				So(flag.SetWithOptions("opt.key3", "val3", &ParseOptions{true}), ShouldBeNil)
 				val, ok := flag.Get("opt.key3")
 				So(ok, ShouldBeTrue)
 				So(val, ShouldEqual, "val3")
