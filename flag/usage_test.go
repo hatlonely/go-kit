@@ -58,17 +58,23 @@ func TestFlag_Usage2(t *testing.T) {
 			Key8 *struct {
 				Key9 string `flag:"args; usage: key8 usage; required"`
 			}
+			Key10 struct {
+				Key11 string `flag:"isArgument"`
+				Key12 int
+			}
 		}
 
 		flag := NewFlag("test")
 		So(flag.Struct(&B{}), ShouldBeNil)
-		So(flag.Usage(), ShouldEqual, `usage: test [args] [-Key1 string] [-Key2 int] [-a,action string=hello] [-o,operation int] <-Key3.Key6.Key7 string>
+		So(flag.Usage(), ShouldEqual, `usage: test [args] [Key10.Key11] [-Key1 string] [-Key10.Key12 int] [-Key2 int] [-a,action string=hello] [-o,operation int] <-Key3.Key6.Key7 string>
 
 arguments:
-      args                      [string]        key8 usage
+      args, Key8.Key9           [string]        key8 usage
+      Key10.Key11               [string]        
 
 options:
     , --Key1                    [string]        key1 usage
+    , --Key10.Key12             [int]           
     , --Key2                    [int]           key2 usage
   -a, --action, --Key3.Key4     [string=hello]  key4 usage
   -o, --operation, --Key3.Key5  [int]           key5 usage

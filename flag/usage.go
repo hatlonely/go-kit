@@ -24,9 +24,13 @@ func (f *Flag) Usage() string {
 		if finfo.DefaultValue != "" {
 			defaultValue = defaultValue + "=" + finfo.DefaultValue
 		}
+		name := finfo.Name
+		if finfo.Name != finfo.Key {
+			name += ", " + finfo.Key
+		}
 		argumentInfos = append(argumentInfos, &info{
 			shorthand:   "",
-			name:        finfo.Name,
+			name:        name,
 			typeDefault: "[" + defaultValue + "]",
 			usage:       finfo.Usage,
 		})
