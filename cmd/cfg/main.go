@@ -23,7 +23,7 @@ func Must(err error) {
 type Options struct {
 	flag.Options
 
-	Action        string   `flag:"--action,-a; usage: actions, one of [get/set/put/diff/rollback]"`
+	Action        string   `flag:"-a; usage: actions, one of [get/set/put/diff/rollback]"`
 	CamelName     bool     `flag:"usage: base file key format, for example [redisExpiration]"`
 	SnakeName     bool     `flag:"usage: base file key format, for example [redis_expiration]"`
 	KebabName     bool     `flag:"usage: base file key format, for example [redis-expiration]"`
@@ -41,17 +41,17 @@ type Options struct {
 
 func main() {
 	var options Options
-	Must(flag.Struct(&options))
+	Must(flag.Struct(&options, refx.WithCamelName()))
 	Must(flag.Parse())
 	if options.Help || options.Action == "" {
 		Trac(flag.Usage())
 		Trac(`examples:
-  cfg --camel-name --in-base-file base.json -a get
-  cfg --camel-name --in-base-file base.json -a get --key mysql
-  cfg --camel-name --in-base-file base.json -a get --key mysql.password
-  cfg --camel-name --in-base-file base.json -a diff --key mysql.username --val hatlonely
-  cfg --camel-name --in-base-file base.json -a diff --key mysql.password --raw-val 12345678
-  cfg --camel-name --in-base-file base.json -a diff --key mysql --val '{
+  cfg --camelName --inBaseFile base.json -a get
+  cfg --camelName --inBaseFile base.json -a get --key mysql
+  cfg --camelName --inBaseFile base.json -a get --key mysql.password
+  cfg --camelName --inBaseFile base.json -a diff --key mysql.username --val hatlonely
+  cfg --camelName --inBaseFile base.json -a diff --key mysql.password --rawVal 12345678
+  cfg --camelName --inBaseFile base.json -a diff --key mysql --val '{
       "connMaxLifeTime": "60s",
       "database": "testdb2",
       "host": "127.0.0.1",
@@ -61,9 +61,9 @@ func main() {
       "port": 3306,
       "username": "hatlonely"
   }'
-  cfg --camel-name --in-base-file base.json -a set --key mysql.username --val hatlonely
-  cfg --camel-name --in-base-file base.json -a set --key mysql.password --raw-val 12345678
-  cfg --camel-name --in-base-file base.json -a set --key mysql --val '{
+  cfg --camelName --inBaseFile base.json -a set --key mysql.username --val hatlonely
+  cfg --camelName --inBaseFile base.json -a set --key mysql.password --rawVal 12345678
+  cfg --camelName --inBaseFile base.json -a set --key mysql --val '{
       "connMaxLifeTime": "60s",
       "database": "testdb2",
       "host": "127.0.0.1",
@@ -73,12 +73,12 @@ func main() {
       "port": 3306,
       "username": "hatlonely"
   }'
-  cfg --camel-name --in-base-file base.json -a rollback --backup-file cfg.backup.json.20201113.224234
-  cfg --camel-name --in-base-file base.json -a put --set-cipher-keys mysql.password,redis.password
-  cfg --camel-name --in-base-file base.json -a put --add-cipher-keys email.password
-  cfg --camel-name --in-base-file base.json -a put --no-cipher
-  cfg --camel-name --in-base-file base.json -a diff --out-base-file base_ots.json
-  cfg --camel-name --in-base-file base.json -a put --out-base-file base_ots.json`)
+  cfg --camelName --inBaseFile base.json -a rollback --backupFile cfg.backup.json.20201113.224234
+  cfg --camelName --inBaseFile base.json -a put --setCipherKeys mysql.password,redis.password
+  cfg --camelName --inBaseFile base.json -a put --addCipherKeys email.password
+  cfg --camelName --inBaseFile base.json -a put --noCipher
+  cfg --camelName --inBaseFile base.json -a diff --outBaseFile base_ots.json
+  cfg --camelName --inBaseFile base.json -a put --outBaseFile base_ots.json`)
 		return
 	}
 	if options.Version {
@@ -140,13 +140,13 @@ func main() {
 
 		if options.Key != "" {
 			if options.RawVal != "" {
-				Must(ocfg.UnsafeSet(options.Key, options.RawVal))
+				Must(icfg.UnsafeSet(options.Key, options.RawVal))
 			} else {
 				var v interface{}
 				if err := json.Unmarshal([]byte(options.Val), &v); err != nil {
-					Must(ocfg.UnsafeSet(options.Key, options.Val))
+					Must(icfg.UnsafeSet(options.Key, options.Val))
 				} else {
-					Must(ocfg.UnsafeSet(options.Key, v))
+					Must(icfg.UnsafeSet(options.Key, v))
 				}
 			}
 		}
@@ -224,18 +224,18 @@ func main() {
 
 func RollbackCommand(options *Options) string {
 	if options.CamelName {
-		return fmt.Sprintf("cfg --camel-name --in-base-file %v -a rollback --backup-file %v", options.OutBaseFile, options.BackupFile)
+		return fmt.Sprintf("cfg --camelName --inBaseFile %v -a rollback --backupFile %v", options.OutBaseFile, options.BackupFile)
 	}
 	if options.PascalName {
-		return fmt.Sprintf("cfg --pascal-name --in-base-file %v -a rollback --backup-file %v", options.OutBaseFile, options.BackupFile)
+		return fmt.Sprintf("cfg --pascalName --inBaseFile %v -a rollback --backupFile %v", options.OutBaseFile, options.BackupFile)
 	}
 	if options.KebabName {
-		return fmt.Sprintf("cfg --kebab-name --in-base-file %v -a rollback --backup-file %v", options.OutBaseFile, options.BackupFile)
+		return fmt.Sprintf("cfg --kebabName --inBaseFile %v -a rollback --backupFile %v", options.OutBaseFile, options.BackupFile)
 	}
 	if options.SnakeName {
-		return fmt.Sprintf("cfg --snake-name --in-base-file %v -a rollback --backup-file %v", options.OutBaseFile, options.BackupFile)
+		return fmt.Sprintf("cfg --snakeName --inBaseFile %v -a rollback --backupFile %v", options.OutBaseFile, options.BackupFile)
 	}
-	return fmt.Sprintf("cfg --in-base-file %v -a rollback --backup-file %v", options.OutBaseFile, options.BackupFile)
+	return fmt.Sprintf("cfg --inBaseFile %v -a rollback --backupFile %v", options.OutBaseFile, options.BackupFile)
 }
 
 func BackUpCurrentConfig(cfg *config.Config, name string) {

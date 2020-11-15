@@ -10,9 +10,9 @@ import (
 )
 
 type Options struct {
-	Help       bool   `flag:"--help,-h; usage: show help info"`
-	Version    bool   `flag:"--version,-v; usage: show version"`
-	ConfigPath string `flag:"--config-path,-c; usage: config path"`
+	Help       bool   `flag:"-h; usage: show help info"`
+	Version    bool   `flag:"-v; usage: show version"`
+	ConfigPath string `flag:"-c; usage: config path"`
 }
 
 type Info struct {
