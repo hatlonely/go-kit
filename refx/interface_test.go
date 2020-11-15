@@ -535,6 +535,71 @@ func TestInterfaceToStructWithPascalName(t *testing.T) {
 	})
 }
 
+func TestInterfaceToStructWithDefaultValue(t *testing.T) {
+	Convey("TestInterfaceToStruct snake name", t, func() {
+		type Options struct {
+			Key1Key1 int    `dft:"1"`
+			Key2Key2 string `dft:"val2"`
+			Key3Key3 []struct {
+				Key4Key4 string `dft:"val4"`
+				Key5Key5 string `dft:"val5"`
+				Key6Key6 struct {
+					Key7Key7 string  `dft:"val7"`
+					Key8Key8 []int64 `dft:"1,2,3"`
+				}
+			}
+		}
+
+		Convey("test default 1", func() {
+			v := map[interface{}]interface{}{
+				"key3Key3": []interface{}{
+					map[string]interface{}{},
+				},
+			}
+
+			var options Options
+			So(InterfaceToStruct(v, &options, WithCamelName(), WithDefaultValue()), ShouldBeNil)
+			So(options.Key1Key1, ShouldEqual, 1)
+			So(options.Key2Key2, ShouldEqual, "val2")
+			So(options.Key3Key3[0].Key4Key4, ShouldEqual, "val4")
+			So(options.Key3Key3[0].Key5Key5, ShouldEqual, "val5")
+			So(options.Key3Key3[0].Key6Key6.Key7Key7, ShouldEqual, "val7")
+			So(options.Key3Key3[0].Key6Key6.Key8Key8, ShouldResemble, []int64{1, 2, 3})
+		})
+
+		Convey("test default 2", func() {
+			v := map[interface{}]interface{}{
+				"key1Key1": 11,
+				"key2Key2": "val22",
+				"key3Key3": []interface{}{
+					map[string]interface{}{
+						"key4Key4": "val44",
+						"key5Key5": "val55",
+						"key6Key6": map[interface{}]interface{}{
+							"key7Key7": "val77",
+							"key8Key8": []interface{}{11, 22, 33},
+						},
+					},
+					map[string]interface{}{},
+				},
+			}
+
+			var options Options
+			So(InterfaceToStruct(v, &options, WithCamelName(), WithDefaultValue()), ShouldBeNil)
+			So(options.Key1Key1, ShouldEqual, 11)
+			So(options.Key2Key2, ShouldEqual, "val22")
+			So(options.Key3Key3[0].Key4Key4, ShouldEqual, "val44")
+			So(options.Key3Key3[0].Key5Key5, ShouldEqual, "val55")
+			So(options.Key3Key3[0].Key6Key6.Key7Key7, ShouldEqual, "val77")
+			So(options.Key3Key3[0].Key6Key6.Key8Key8, ShouldResemble, []int64{11, 22, 33})
+			So(options.Key3Key3[1].Key4Key4, ShouldEqual, "val4")
+			So(options.Key3Key3[1].Key5Key5, ShouldEqual, "val5")
+			So(options.Key3Key3[1].Key6Key6.Key7Key7, ShouldEqual, "val7")
+			So(options.Key3Key3[1].Key6Key6.Key8Key8, ShouldResemble, []int64{1, 2, 3})
+		})
+	})
+}
+
 func TestInterfaceTravel(t *testing.T) {
 	Convey("TestInterfaceTravel", t, func() {
 		v := map[interface{}]interface{}{

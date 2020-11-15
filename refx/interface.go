@@ -13,10 +13,11 @@ import (
 )
 
 type Options struct {
-	CamelName  bool
-	SnakeName  bool
-	KebabName  bool
-	PascalName bool
+	CamelName    bool
+	SnakeName    bool
+	KebabName    bool
+	PascalName   bool
+	DefaultValue bool
 }
 
 type Option func(opt *Options)
@@ -42,6 +43,12 @@ func WithKebabName() Option {
 func WithPascalName() Option {
 	return func(opt *Options) {
 		opt.PascalName = true
+	}
+}
+
+func WithDefaultValue() Option {
+	return func(opt *Options) {
+		opt.DefaultValue = true
 	}
 }
 
@@ -254,6 +261,11 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 	srt := reflect.TypeOf(src)
 	switch rt.Kind() {
 	case reflect.Struct:
+		if options.DefaultValue {
+			if err := SetDefaultValue(dst); err != nil {
+				return errors.WithMessage(err, "SetDefaultValue failed")
+			}
+		}
 		for i := 0; i < rv.NumField(); i++ {
 			key := FormatKeyWithOptions(rt.Field(i).Name, options)
 			var val interface{}
