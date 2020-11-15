@@ -558,13 +558,30 @@ func TestInterfaceToStructWithDefaultValue(t *testing.T) {
 			}
 
 			var options Options
-			So(InterfaceToStruct(v, &options, WithCamelName(), WithDefaultValue()), ShouldBeNil)
+			So(InterfaceToStruct(v, &options, WithCamelName()), ShouldBeNil)
 			So(options.Key1Key1, ShouldEqual, 1)
 			So(options.Key2Key2, ShouldEqual, "val2")
 			So(options.Key3Key3[0].Key4Key4, ShouldEqual, "val4")
 			So(options.Key3Key3[0].Key5Key5, ShouldEqual, "val5")
 			So(options.Key3Key3[0].Key6Key6.Key7Key7, ShouldEqual, "val7")
 			So(options.Key3Key3[0].Key6Key6.Key8Key8, ShouldResemble, []int64{1, 2, 3})
+		})
+
+		Convey("test default disable default value", func() {
+			v := map[interface{}]interface{}{
+				"key3Key3": []interface{}{
+					map[string]interface{}{},
+				},
+			}
+
+			var options Options
+			So(InterfaceToStruct(v, &options, WithCamelName(), WithDisableDefaultValue()), ShouldBeNil)
+			So(options.Key1Key1, ShouldEqual, 0)
+			So(options.Key2Key2, ShouldEqual, "")
+			So(options.Key3Key3[0].Key4Key4, ShouldEqual, "")
+			So(options.Key3Key3[0].Key5Key5, ShouldEqual, "")
+			So(options.Key3Key3[0].Key6Key6.Key7Key7, ShouldEqual, "")
+			So(options.Key3Key3[0].Key6Key6.Key8Key8, ShouldBeEmpty)
 		})
 
 		Convey("test default 2", func() {
@@ -585,7 +602,7 @@ func TestInterfaceToStructWithDefaultValue(t *testing.T) {
 			}
 
 			var options Options
-			So(InterfaceToStruct(v, &options, WithCamelName(), WithDefaultValue()), ShouldBeNil)
+			So(InterfaceToStruct(v, &options, WithCamelName()), ShouldBeNil)
 			So(options.Key1Key1, ShouldEqual, 11)
 			So(options.Key2Key2, ShouldEqual, "val22")
 			So(options.Key3Key3[0].Key4Key4, ShouldEqual, "val44")
