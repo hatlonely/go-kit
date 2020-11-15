@@ -210,37 +210,37 @@ go get -u github.com/hatlonely/go-kit/cmd/cfg
 
 
 ```shell
-cfg --camel-name --in-base-file base.json -a get
-cfg --camel-name --in-base-file base.json -a get --key mysql
-cfg --camel-name --in-base-file base.json -a get --key mysql.password
-cfg --camel-name --in-base-file base.json -a diff --key mysql.username --val hatlonely
-cfg --camel-name --in-base-file base.json -a diff --key mysql.password --raw-val 12345678
-cfg --camel-name --in-base-file base.json -a diff --key mysql --val '{
-  "connMaxLifeTime": "60s",
-  "database": "testdb2",
-  "host": "127.0.0.1",
-  "maxIdleConns": 10,
-  "maxOpenConns": 20,
-  "password": "",
-  "port": 3306,
-  "username": "hatlonely"
+cfg --camelName --inBaseFile base.json -a get
+cfg --camelName --inBaseFile base.json -a get --key mysql
+cfg --camelName --inBaseFile base.json -a get --key mysql.password
+cfg --camelName --inBaseFile base.json -a diff --key mysql.username --val hatlonely
+cfg --camelName --inBaseFile base.json -a diff --key mysql.password --val 12345678
+cfg --camelName --inBaseFile base.json -a diff --key mysql --jsonVal '{
+    "connMaxLifeTime": "60s",
+    "database": "testdb2",
+    "host": "127.0.0.1",
+    "maxIdleConns": 10,
+    "maxOpenConns": 20,
+    "password": "",
+    "port": 3306,
+    "username": "hatlonely"
 }'
-cfg --camel-name --in-base-file base.json -a set --key mysql.username --val hatlonely
-cfg --camel-name --in-base-file base.json -a set --key mysql.password --raw-val 12345678
-cfg --camel-name --in-base-file base.json -a set --key mysql --val '{
-  "connMaxLifeTime": "60s",
-  "database": "testdb2",
-  "host": "127.0.0.1",
-  "maxIdleConns": 10,
-  "maxOpenConns": 20,
-  "password": "",
-  "port": 3306,
-  "username": "hatlonely"
+cfg --camelName --inBaseFile base.json -a set --key mysql.username --val hatlonely
+cfg --camelName --inBaseFile base.json -a set --key mysql.password --val 12345678
+cfg --camelName --inBaseFile base.json -a set --key mysql --jsonVal '{
+    "connMaxLifeTime": "60s",
+    "database": "testdb2",
+    "host": "127.0.0.1",
+    "maxIdleConns": 10,
+    "maxOpenConns": 20,
+    "password": "",
+    "port": 3306,
+    "username": "hatlonely"
 }'
-cfg --camel-name --in-base-file base.json -a rollback --backup-file cfg.backup.json.20201113.224234
-cfg --camel-name --in-base-file base.json -a put --set-cipher-keys mysql.password,redis.password
-cfg --camel-name --in-base-file base.json -a put --add-cipher-keys email.password
-cfg --camel-name --in-base-file base.json -a put --no-cipher
-cfg --camel-name --in-base-file base.json -a diff --out-base-file base_ots.json
-cfg --camel-name --in-base-file base.json -a put --out-base-file base_ots.json
+cfg --camelName --inBaseFile base.json -a rollback --backupFile cfg.backup.json.20201113.224234
+cfg --camelName --inBaseFile base.json -a put --setCipherKeys mysql.password,redis.password
+cfg --camelName --inBaseFile base.json -a put --addCipherKeys email.password
+cfg --camelName --inBaseFile base.json -a put --noCipher
+cfg --camelName --inBaseFile base.json -a diff --outBaseFile base_ots.json
+cfg --camelName --inBaseFile base.json -a put --outBaseFile base_ots.json
 ```
