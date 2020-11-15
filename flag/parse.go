@@ -10,14 +10,14 @@ import (
 )
 
 type ParseOptions struct {
-	RawVal bool
+	JsonVal bool
 }
 
 type ParseOption func(options *ParseOptions)
 
-func WithRawVal() ParseOption {
+func WithJsonVal() ParseOption {
 	return func(options *ParseOptions) {
-		options.RawVal = true
+		options.JsonVal = true
 	}
 }
 

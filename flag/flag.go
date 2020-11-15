@@ -74,15 +74,15 @@ func (f *Flag) Set(key string, val string, opts ...ParseOption) error {
 
 func (f *Flag) SetWithOptions(key string, val string, options *ParseOptions) error {
 	key = f.findKey(key)
-	if options.RawVal {
-		if err := refx.InterfaceSet(&f.root, key, val); err != nil {
-			return errors.WithMessage(err, "InterfaceSet failed")
-		}
-	} else {
+	if options.JsonVal {
 		var v interface{}
 		if err := json.Unmarshal([]byte(val), &v); err != nil {
 			v = val
 		}
+		if err := refx.InterfaceSet(&f.root, key, v); err != nil {
+			return errors.WithMessage(err, "InterfaceSet failed")
+		}
+	} else {
 		if err := refx.InterfaceSet(&f.root, key, val); err != nil {
 			return errors.WithMessage(err, "InterfaceSet failed")
 		}

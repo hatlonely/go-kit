@@ -42,18 +42,37 @@ func TestFlag(t *testing.T) {
 			}
 		})
 
-		Convey("Set", func() {
+		Convey("SetWithOptions", func() {
 			{
-				So(flag.SetWithOptions("k", "val2", &ParseOptions{true}), ShouldBeNil)
+				So(flag.SetWithOptions("k", "val2", &ParseOptions{false}), ShouldBeNil)
 				val, ok := flag.Get("k")
 				So(ok, ShouldBeTrue)
 				So(val, ShouldEqual, "val2")
 			}
 			{
-				So(flag.SetWithOptions("opt.key3", "val3", &ParseOptions{true}), ShouldBeNil)
+				So(flag.SetWithOptions("opt.key3", "val3", &ParseOptions{false}), ShouldBeNil)
 				val, ok := flag.Get("opt.key3")
 				So(ok, ShouldBeTrue)
 				So(val, ShouldEqual, "val3")
+			}
+		})
+
+		Convey("Set", func() {
+			{
+				So(flag.Set("key1.key2", `{"key3":{"key4": "val4"}}`, WithJsonVal()), ShouldBeNil)
+				val, ok := flag.Get("key1.key2")
+				So(ok, ShouldBeTrue)
+				So(val, ShouldEqual, `{"key3":{"key4": "val4"}}`)
+			}
+			{
+				So(flag.Set("key1.key2", `{"key3": {"key4": "val4"}}`), ShouldBeNil)
+				val, ok := flag.Get("key1.key2")
+				So(ok, ShouldBeTrue)
+				So(val, ShouldResemble, map[string]interface{}{
+					"key3": map[string]interface{}{
+						"key4": "val4",
+					},
+				})
 			}
 		})
 	})
