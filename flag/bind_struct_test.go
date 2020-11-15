@@ -1,7 +1,6 @@
 package flag
 
 import (
-	"fmt"
 	"net"
 	"strings"
 	"testing"
@@ -9,7 +8,7 @@ import (
 
 	. "github.com/smartystreets/goconvey/convey"
 
-	"github.com/hatlonely/go-kit/strx"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 func TestBind(t *testing.T) {
@@ -34,25 +33,21 @@ func TestBind(t *testing.T) {
 		}
 
 		flag := NewFlag("test")
-		So(flag.Struct(&B{}), ShouldBeNil)
-
-		fmt.Println(strx.JsonMarshalIndent(flag.shorthandKeyMap))
-		fmt.Println(strx.JsonMarshalIndent(flag.nameKeyMap))
-		fmt.Println(strx.JsonMarshalIndent(flag.arguments))
+		So(flag.Struct(&B{}, refx.WithCamelName()), ShouldBeNil)
 
 		So(flag.shorthandKeyMap, ShouldResemble, map[string]string{
-			"a": "Key3.Key4",
-			"o": "Key3.Key5",
+			"a": "key3.key4",
+			"o": "key3.key5",
 		})
 		So(flag.nameKeyMap, ShouldResemble, map[string]string{
-			"key3-operation": "Key3.Key5",
-			"key3-key6-key7": "Key3.Key6.Key7",
-			"key1":           "Key1",
-			"key2":           "Key2",
-			"key3-action":    "Key3.Key4",
-			"key8-args":      "Key8.Key9",
+			"key1":           "key1",
+			"key2":           "key2",
+			"key3.action":    "key3.key4",
+			"key3.operation": "key3.key5",
+			"key3.key6.key7": "key3.key6.key7",
+			"key8.args":      "key8.key9",
 		})
-		So(flag.arguments, ShouldResemble, []string{"Key8.Key9"})
+		So(flag.arguments, ShouldResemble, []string{"key8.key9"})
 	})
 }
 
@@ -83,8 +78,8 @@ func TestBind2(t *testing.T) {
 			panic(err)
 		}
 		if err := flag.ParseArgs(strings.Split("-i 456 -str abc -ip 192.168.0.1 --int-slice 1,2,3 posflag "+
-			"-sub1-f1 30 -f1 40 --sub2-f2 hello "+
-			"--Sub3.F1 50 -Sub3.F2=world "+
+			"-Sub1.f1 30 -f1 40 --Sub2.f2 hello "+
+			"--Sub3.f1 50 -Sub3.f2=world "+
 			"--not-exist-key val", " ")); err != nil {
 			panic(err)
 		}
@@ -94,42 +89,44 @@ func TestBind2(t *testing.T) {
 			"s": "S",
 		})
 		So(flag.nameKeyMap, ShouldResemble, map[string]string{
-			"sub3-f2":   "Sub3.F2",
-			"f2":        "F2",
 			"int":       "I",
-			"sub1-f2":   "Sub1.F2",
-			"ip":        "IP",
 			"time":      "Time",
-			"sub1-f1":   "Sub1.F1",
-			"sub2-f1":   "Sub2.F1",
-			"sub2-f2":   "Sub2.F2",
-			"sub3-f1":   "Sub3.F1",
-			"str":       "S",
-			"int-slice": "IntSlice",
+			"Sub1.f1":   "Sub1.F1",
+			"Sub2.f2":   "Sub2.F2",
+			"pos":       "Pos",
+			"Sub2.f1":   "Sub2.F1",
+			"Sub3.f1":   "Sub3.F1",
+			"Sub3.f2":   "Sub3.F2",
 			"f1":        "F1",
+			"int-slice": "IntSlice",
+			"ip":        "IP",
+			"str":       "S",
+			"Sub1.f2":   "Sub1.F2",
+			"f2":        "F2",
 		})
+
 		So(flag.root, ShouldResemble, map[string]interface{}{
-			"F2":       "hatlonely",
-			"S":        "abc",
-			"I":        "456",
-			"IntSlice": "1,2,3",
-			"Time":     "2020-11-14T23:46:14+08:00",
+			"Time": "2020-11-14T23:46:14+08:00",
 			"Sub1": map[string]interface{}{
 				"F1": "30",
 				"F2": "hatlonely",
-			},
-			"Sub2": map[string]interface{}{
-				"F1": "20",
-				"F2": "hello",
 			},
 			"Sub3": map[string]interface{}{
 				"F1": "50",
 				"F2": "world",
 			},
+			"F1":       "40",
+			"F2":       "hatlonely",
+			"IP":       "192.168.0.1",
+			"Pos":      "posflag",
+			"I":        "456",
+			"IntSlice": "1,2,3",
+			"Sub2": map[string]interface{}{
+				"F1": "20",
+				"F2": "hello",
+			},
+			"S":             "abc",
 			"not-exist-key": "val",
-			"Pos":           "posflag",
-			"F1":            "40",
-			"IP":            "192.168.0.1",
 		})
 
 		So(options.I, ShouldEqual, 456)

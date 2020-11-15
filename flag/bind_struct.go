@@ -10,7 +10,6 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/refx"
-	"github.com/hatlonely/go-kit/strx"
 )
 
 func (f *Flag) Struct(v interface{}, opts ...refx.Option) error {
@@ -18,10 +17,10 @@ func (f *Flag) Struct(v interface{}, opts ...refx.Option) error {
 	for _, opt := range opts {
 		opt(&options)
 	}
-	return f.bindStructRecursive(v, "", "", &options)
+	return f.bindStructRecursive(v, "", &options)
 }
 
-func (f *Flag) bindStructRecursive(v interface{}, prefixKey, prefixName string, options *refx.Options) error {
+func (f *Flag) bindStructRecursive(v interface{}, prefixKey string, options *refx.Options) error {
 	if reflect.ValueOf(v).Kind() != reflect.Ptr {
 		return fmt.Errorf("expected a pointer, got [%v]", reflect.TypeOf(v))
 	}
@@ -46,27 +45,27 @@ func (f *Flag) bindStructRecursive(v interface{}, prefixKey, prefixName string, 
 		}
 		if typ.Kind() == reflect.Struct && typ != reflect.TypeOf(time.Time{}) {
 			if rv.Type().Field(i).Anonymous {
-				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixKey, prefixName, options); err != nil {
+				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixKey, options); err != nil {
 					return err
 				}
 			} else {
-				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefixKey, refx.FormatKeyWithOptions(key, options)), prefixAppendName(prefixName, strx.KebabName(key)), options); err != nil {
+				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefixKey, refx.FormatKeyWithOptions(key, options)), options); err != nil {
 					return err
 				}
 			}
 		} else if typ.Kind() == reflect.Ptr && typ.Elem().Kind() == reflect.Struct && typ != reflect.TypeOf(&time.Time{}) {
 			rv.Field(i).Set(reflect.New(rv.Field(i).Type().Elem()))
 			if rv.Type().Field(i).Anonymous {
-				if err := f.bindStructRecursive(rv.Field(i).Interface(), prefixKey, prefixName, options); err != nil {
+				if err := f.bindStructRecursive(rv.Field(i).Interface(), prefixKey, options); err != nil {
 					return err
 				}
 			} else {
-				if err := f.bindStructRecursive(rv.Field(i).Interface(), prefixAppendKey(prefixKey, refx.FormatKeyWithOptions(key, options)), prefixAppendName(prefixName, strx.KebabName(key)), options); err != nil {
+				if err := f.bindStructRecursive(rv.Field(i).Interface(), prefixAppendKey(prefixKey, refx.FormatKeyWithOptions(key, options)), options); err != nil {
 					return err
 				}
 			}
 		} else {
-			options, err := parseTag(tag, key, prefixKey, prefixName, typ, options)
+			options, err := parseTag(tag, key, prefixKey, typ, options)
 			if err != nil {
 				return err
 			}
@@ -81,7 +80,7 @@ func (f *Flag) bindStructRecursive(v interface{}, prefixKey, prefixName string, 
 
 var reKey = regexp.MustCompile(`[.\w_-]+`)
 
-func parseTag(tag string, key string, prefixKey string, prefixName string, typ reflect.Type, ropt *refx.Options) (*AddFlagOptions, error) {
+func parseTag(tag string, key string, prefixKey string, typ reflect.Type, ropt *refx.Options) (*AddFlagOptions, error) {
 	var options AddFlagOptions
 	options.Key = prefixAppendKey(prefixKey, refx.FormatKeyWithOptions(key, ropt))
 
@@ -130,9 +129,9 @@ func parseTag(tag string, key string, prefixKey string, prefixName string, typ r
 	}
 
 	if options.Name == "" {
-		options.Name = strx.KebabName(key)
+		options.Name = refx.FormatKeyWithOptions(key, ropt)
 	}
-	options.Name = prefixAppendName(prefixName, options.Name)
+	options.Name = prefixAppendKey(prefixKey, options.Name)
 	options.Type = typ
 
 	return &options, nil
