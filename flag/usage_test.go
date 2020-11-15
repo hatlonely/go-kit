@@ -62,17 +62,17 @@ func TestFlag_Usage2(t *testing.T) {
 
 		flag := NewFlag("test")
 		So(flag.Struct(&B{}), ShouldBeNil)
-		So(flag.Usage(), ShouldEqual, `usage: test [Key8.Key9] [-Key1 string] [-Key2 int] [-a,Key3.action string=hello] [-o,Key3.operation int] <-Key3.Key6.Key7 string>
+		So(flag.Usage(), ShouldEqual, `usage: test [args] [-Key1 string] [-Key2 int] [-a,action string=hello] [-o,operation int] <-Key3.Key6.Key7 string>
 
 arguments:
-      Key8.args                      [string]        key8 usage
+      args                      [string]        key8 usage
 
 options:
-    , --Key1                         [string]        key1 usage
-    , --Key2                         [int]           key2 usage
-  -a, --Key3.action, --Key3.Key4     [string=hello]  key4 usage
-  -o, --Key3.operation, --Key3.Key5  [int]           key5 usage
-    , --Key3.Key6.Key7               [string]        key6 usage
+    , --Key1                    [string]        key1 usage
+    , --Key2                    [int]           key2 usage
+  -a, --action, --Key3.Key4     [string=hello]  key4 usage
+  -o, --operation, --Key3.Key5  [int]           key5 usage
+    , --Key3.Key6.Key7          [string]        key6 usage
 `)
 	})
 }

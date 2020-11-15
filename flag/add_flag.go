@@ -142,7 +142,7 @@ func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
 	}
 	f.nameKeyMap[options.Name] = options.Key
 	if options.IsArgument {
-		f.arguments = append(f.arguments, options.Key)
+		f.arguments = append(f.arguments, options.Name)
 	}
 
 	return nil

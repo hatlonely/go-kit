@@ -19,7 +19,7 @@ func (f *Flag) Usage() string {
 	var flagInfos []*info
 
 	for _, name := range f.arguments {
-		finfo := f.keyInfoMap[name]
+		finfo := f.keyInfoMap[f.nameKeyMap[name]]
 		defaultValue := finfo.Type.String()
 		if finfo.DefaultValue != "" {
 			defaultValue = defaultValue + "=" + finfo.DefaultValue

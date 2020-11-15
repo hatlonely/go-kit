@@ -30,6 +30,10 @@ func TestBind(t *testing.T) {
 			Key8 *struct {
 				Key9 string `flag:"args; usage: key8 usage; required"`
 			}
+			Key10 struct {
+				Key11 string
+				Key12 int
+			}
 		}
 
 		flag := NewFlag("test")
@@ -41,21 +45,23 @@ func TestBind(t *testing.T) {
 		})
 		So(flag.nameKeyMap, ShouldResemble, map[string]string{
 			"key1":           "key1",
-			"key2":           "key2",
-			"key3.action":    "key3.key4",
-			"key3.operation": "key3.key5",
+			"action":         "key3.key4",
+			"operation":      "key3.key5",
 			"key3.key6.key7": "key3.key6.key7",
-			"key8.args":      "key8.key9",
+			"args":           "key8.key9",
+			"key10.key11":    "key10.key11",
+			"key10.key12":    "key10.key12",
+			"key2":           "key2",
 		})
-		So(flag.arguments, ShouldResemble, []string{"key8.key9"})
+		So(flag.arguments, ShouldResemble, []string{"args"})
 	})
 }
 
 func TestBind2(t *testing.T) {
 	Convey("TestBind", t, func() {
 		type Sub struct {
-			F1 int    `flag:"--f1; default:20; usage:f1 flag"`
-			F2 string `flag:"--f2; default:hatlonely; usage:f2 flag"`
+			F1 int
+			F2 string
 		}
 
 		type Options struct {
@@ -73,13 +79,14 @@ func TestBind2(t *testing.T) {
 		}
 
 		var options Options
-		flag := NewFlag("hello")
+		flag := NewFlag("test")
 		if err := flag.Struct(&options); err != nil {
 			panic(err)
 		}
+
 		if err := flag.ParseArgs(strings.Split("-i 456 -str abc -ip 192.168.0.1 --int-slice 1,2,3 posflag "+
-			"-Sub1.f1 30 -f1 40 --Sub2.f2 hello "+
-			"--Sub3.f1 50 -Sub3.f2=world "+
+			"-Sub1.F1 30 -F1 40 --Sub2.F2 hello "+
+			"--Sub3.F1 50 -Sub3.F2=world "+
 			"--not-exist-key val", " ")); err != nil {
 			panic(err)
 		}
@@ -89,44 +96,41 @@ func TestBind2(t *testing.T) {
 			"s": "S",
 		})
 		So(flag.nameKeyMap, ShouldResemble, map[string]string{
-			"int":       "I",
-			"time":      "Time",
-			"Sub1.f1":   "Sub1.F1",
-			"Sub2.f2":   "Sub2.F2",
-			"pos":       "Pos",
-			"Sub2.f1":   "Sub2.F1",
-			"Sub3.f1":   "Sub3.F1",
-			"Sub3.f2":   "Sub3.F2",
-			"f1":        "F1",
-			"int-slice": "IntSlice",
 			"ip":        "IP",
+			"time":      "Time",
+			"Sub2.F1":   "Sub2.F1",
+			"Sub3.F1":   "Sub3.F1",
+			"F1":        "F1",
 			"str":       "S",
-			"Sub1.f2":   "Sub1.F2",
-			"f2":        "F2",
+			"pos":       "Pos",
+			"Sub1.F2":   "Sub1.F2",
+			"Sub2.F2":   "Sub2.F2",
+			"Sub3.F2":   "Sub3.F2",
+			"F2":        "F2",
+			"int":       "I",
+			"int-slice": "IntSlice",
+			"Sub1.F1":   "Sub1.F1",
 		})
 
 		So(flag.root, ShouldResemble, map[string]interface{}{
 			"Time": "2020-11-14T23:46:14+08:00",
-			"Sub1": map[string]interface{}{
-				"F1": "30",
-				"F2": "hatlonely",
-			},
+			"S":    "abc",
+			"F1":   "40",
 			"Sub3": map[string]interface{}{
 				"F1": "50",
 				"F2": "world",
 			},
-			"F1":       "40",
-			"F2":       "hatlonely",
-			"IP":       "192.168.0.1",
-			"Pos":      "posflag",
-			"I":        "456",
-			"IntSlice": "1,2,3",
+			"not-exist-key": "val",
+			"I":             "456",
+			"IntSlice":      "1,2,3",
+			"IP":            "192.168.0.1",
+			"Sub1": map[string]interface{}{
+				"F1": "30",
+			},
 			"Sub2": map[string]interface{}{
-				"F1": "20",
 				"F2": "hello",
 			},
-			"S":             "abc",
-			"not-exist-key": "val",
+			"Pos": "posflag",
 		})
 
 		So(options.I, ShouldEqual, 456)
@@ -136,8 +140,6 @@ func TestBind2(t *testing.T) {
 		So(options.Time, ShouldEqual, time.Unix(1605368774, 0))
 		So(options.Pos, ShouldEqual, "posflag")
 		So(options.Sub1.F1, ShouldEqual, 30)
-		So(options.Sub1.F2, ShouldEqual, "hatlonely")
-		So(options.Sub2.F1, ShouldEqual, 20)
 		So(options.Sub2.F2, ShouldEqual, "hello")
 		So(options.F1, ShouldEqual, 40)
 		So(options.Sub3.F1, ShouldEqual, 50)

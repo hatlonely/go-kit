@@ -87,6 +87,9 @@ func parseTag(tag string, key string, prefixKey string, typ reflect.Type, ropt *
 	tag = strings.TrimSpace(tag)
 	for _, field := range strings.Split(tag, ";") {
 		field = strings.TrimSpace(field)
+		if field == "" {
+			continue
+		}
 		if field == "required" { // required
 			options.Required = true
 		} else if strings.HasPrefix(field, "-") { // --int-option, -i
@@ -129,9 +132,8 @@ func parseTag(tag string, key string, prefixKey string, typ reflect.Type, ropt *
 	}
 
 	if options.Name == "" {
-		options.Name = refx.FormatKeyWithOptions(key, ropt)
+		options.Name = options.Key
 	}
-	options.Name = prefixAppendKey(prefixKey, options.Name)
 	options.Type = typ
 
 	return &options, nil
