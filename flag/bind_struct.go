@@ -3,6 +3,7 @@ package flag
 import (
 	"fmt"
 	"reflect"
+	"regexp"
 	"strings"
 	"time"
 
@@ -78,24 +79,37 @@ func (f *Flag) bindStructRecursive(v interface{}, prefixKey, prefixName string, 
 	return nil
 }
 
+var reKey = regexp.MustCompile(`[.\w_-]+`)
+
 func parseTag(tag string, key string, prefixKey string, prefixName string, typ reflect.Type, ropt *refx.Options) (*AddFlagOptions, error) {
 	var options AddFlagOptions
+	options.Key = prefixAppendKey(prefixKey, refx.FormatKeyWithOptions(key, ropt))
+
 	tag = strings.TrimSpace(tag)
 	for _, field := range strings.Split(tag, ";") {
-		field = strings.Trim(field, " ")
+		field = strings.TrimSpace(field)
 		if field == "required" { // required
 			options.Required = true
-		} else if strings.HasPrefix(field, "--") { // --int-option, -i
-			names := strings.Split(field, ",")
-			options.Name = strings.Trim(names[0], " ")[2:]
-			if len(names) > 2 {
-				return nil, errors.Errorf("expected name field format is '--<name>[, -<shorthand>]', got [%v]", field)
-			} else if len(names) == 2 {
-				options.Shorthand = strings.TrimSpace(names[1])
-				if !strings.HasPrefix(options.Shorthand, "-") {
-					return nil, errors.Errorf("expected name field format is '--<name>[, -<shorthand>]', got [%v]", field)
+		} else if strings.HasPrefix(field, "-") { // --int-option, -i
+			for _, name := range strings.Split(field, ",") {
+				name = strings.TrimSpace(name)
+				if strings.HasPrefix(name, "--") {
+					name = name[2:]
+					if !reKey.Match([]byte(name)) {
+						return nil, errors.Errorf("invalid key format, key [%v], name [%v]", options.Key, name)
+					}
+					options.Name = name
+					continue
 				}
-				options.Shorthand = options.Shorthand[1:]
+				if strings.HasPrefix(field, "-") {
+					name = name[1:]
+					if !reKey.Match([]byte(name)) {
+						return nil, errors.Errorf("invalid key format, key [%v], name [%v]", options.Key, name)
+					}
+					options.Shorthand = name
+					continue
+				}
+				return nil, errors.Errorf("invalid key format, key [%v], name [%v]", options.Key, name)
 			}
 		} else if strings.Contains(field, ":") { // default: 10; usage: int flag
 			idx := strings.Index(field, ":")
@@ -107,13 +121,14 @@ func parseTag(tag string, key string, prefixKey string, prefixName string, typ r
 			case "usage":
 				options.Usage = val
 			}
-		} else { // pos
-			options.Name = strings.Trim(field, " ")
+		} else if reKey.Match([]byte(field)) { // pos
+			options.Name = field
 			options.IsArgument = true
+		} else {
+			return nil, errors.Errorf("invalid key format, key [%v], field [%v]", options.Key, field)
 		}
 	}
 
-	options.Key = prefixAppendKey(prefixKey, refx.FormatKeyWithOptions(key, ropt))
 	if options.Name == "" {
 		options.Name = strx.KebabName(key)
 	}

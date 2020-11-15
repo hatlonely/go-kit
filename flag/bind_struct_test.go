@@ -1,15 +1,62 @@
 package flag
 
 import (
+	"fmt"
 	"net"
 	"strings"
 	"testing"
 	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
+
+	"github.com/hatlonely/go-kit/strx"
 )
 
 func TestBind(t *testing.T) {
+	Convey("TestBind", t, func() {
+		type A struct {
+			Key1 string `flag:"usage: key1 usage"`
+			Key2 int    `flag:"usage: key2 usage"`
+		}
+
+		type B struct {
+			A
+			Key3 struct {
+				Key4 string `flag:"--action, -a; usage: key4 usage; default: hello"`
+				Key5 int    `flag:"-o, --operation; usage: key5 usage"`
+				Key6 struct {
+					Key7 string `flag:"usage: key6 usage; required"`
+				}
+			}
+			Key8 *struct {
+				Key9 string `flag:"args; usage: key8 usage; required"`
+			}
+		}
+
+		flag := NewFlag("test")
+		So(flag.Struct(&B{}), ShouldBeNil)
+
+		fmt.Println(strx.JsonMarshalIndent(flag.shorthandKeyMap))
+		fmt.Println(strx.JsonMarshalIndent(flag.nameKeyMap))
+		fmt.Println(strx.JsonMarshalIndent(flag.arguments))
+
+		So(flag.shorthandKeyMap, ShouldResemble, map[string]string{
+			"a": "Key3.Key4",
+			"o": "Key3.Key5",
+		})
+		So(flag.nameKeyMap, ShouldResemble, map[string]string{
+			"key3-operation": "Key3.Key5",
+			"key3-key6-key7": "Key3.Key6.Key7",
+			"key1":           "Key1",
+			"key2":           "Key2",
+			"key3-action":    "Key3.Key4",
+			"key8-args":      "Key8.Key9",
+		})
+		So(flag.arguments, ShouldResemble, []string{"Key8.Key9"})
+	})
+}
+
+func TestBind2(t *testing.T) {
 	Convey("TestBind", t, func() {
 		type Sub struct {
 			F1 int    `flag:"--f1; default:20; usage:f1 flag"`

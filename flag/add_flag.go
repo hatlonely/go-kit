@@ -136,13 +136,13 @@ func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
 	}
 
 	f.keyInfoMap[options.Key] = info
+
+	if options.Shorthand != "" {
+		f.shorthandKeyMap[options.Shorthand] = options.Key
+	}
+	f.nameKeyMap[options.Name] = options.Key
 	if options.IsArgument {
 		f.arguments = append(f.arguments, options.Key)
-	} else {
-		if options.Shorthand != "" {
-			f.shorthandKeyMap[options.Shorthand] = options.Key
-		}
-		f.nameKeyMap[options.Name] = options.Key
 	}
 
 	return nil

@@ -50,12 +50,17 @@ func (f *Flag) Usage() string {
 		if finfo.Shorthand != "" {
 			shorthand = "-" + finfo.Shorthand
 		}
+		name := "--" + finfo.Name
+		if finfo.Name != finfo.Key {
+			name += ", --" + finfo.Key
+		}
 		flagInfos = append(flagInfos, &info{
 			shorthand:   shorthand,
-			name:        "--" + finfo.Name,
+			name:        name,
 			typeDefault: "[" + defaultValue + "]",
 			usage:       finfo.Usage,
 		})
+
 	}
 
 	max := func(a, b int) int {
@@ -80,17 +85,17 @@ func (f *Flag) Usage() string {
 	}
 
 	for _, key := range keys {
-		info := f.keyInfoMap[key]
-		nameShorthand := info.Name
-		if info.Shorthand != "" {
-			nameShorthand = info.Shorthand + "," + info.Name
+		finfo := f.keyInfoMap[key]
+		nameShorthand := finfo.Name
+		if finfo.Shorthand != "" {
+			nameShorthand = finfo.Shorthand + "," + finfo.Name
 		}
-		if info.DefaultValue != "" {
-			buffer.WriteString(fmt.Sprintf(" [-%v %v=%v]", nameShorthand, info.Type, info.DefaultValue))
-		} else if info.Required {
-			buffer.WriteString(fmt.Sprintf(" <-%v %v>", nameShorthand, info.Type))
+		if finfo.DefaultValue != "" {
+			buffer.WriteString(fmt.Sprintf(" [-%v %v=%v]", nameShorthand, finfo.Type, finfo.DefaultValue))
+		} else if finfo.Required {
+			buffer.WriteString(fmt.Sprintf(" <-%v %v>", nameShorthand, finfo.Type))
 		} else {
-			buffer.WriteString(fmt.Sprintf(" [-%v %v]", nameShorthand, info.Type))
+			buffer.WriteString(fmt.Sprintf(" [-%v %v]", nameShorthand, finfo.Type))
 		}
 	}
 	buffer.WriteString("\n")
