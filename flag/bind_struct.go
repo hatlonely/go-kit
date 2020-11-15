@@ -92,6 +92,8 @@ func parseTag(tag string, key string, prefixKey string, typ reflect.Type, ropt *
 		}
 		if field == "required" { // required
 			options.Required = true
+		} else if field == "isArgument" {
+			options.IsArgument = true
 		} else if strings.HasPrefix(field, "-") { // --int-option, -i
 			for _, name := range strings.Split(field, ",") {
 				name = strings.TrimSpace(name)

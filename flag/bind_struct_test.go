@@ -31,7 +31,7 @@ func TestBind(t *testing.T) {
 				Key9 string `flag:"args; usage: key8 usage; required"`
 			}
 			Key10 struct {
-				Key11 string
+				Key11 string `flag:"isArgument"`
 				Key12 int
 			}
 		}
@@ -53,7 +53,7 @@ func TestBind(t *testing.T) {
 			"key10.key12":    "key10.key12",
 			"key2":           "key2",
 		})
-		So(flag.arguments, ShouldResemble, []string{"args"})
+		So(flag.arguments, ShouldResemble, []string{"args", "key10.key11"})
 	})
 }
 
