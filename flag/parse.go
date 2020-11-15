@@ -73,7 +73,7 @@ func (f *Flag) ParseArgs(args []string) error {
 		if i >= len(f.arguments) {
 			break
 		}
-		if err := f.Set(f.arguments[i], val); err != nil {
+		if err := f.Set(f.nameKeyMap[f.arguments[i]], val); err != nil {
 			return errors.WithMessage(err, "parse failed")
 		}
 	}
