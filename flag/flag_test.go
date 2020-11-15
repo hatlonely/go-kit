@@ -1,26 +1,60 @@
-package flag_test
+package flag
 
 import (
-	"fmt"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
-
-	"github.com/hatlonely/go-kit/cli"
-	"github.com/hatlonely/go-kit/flag"
 )
-
-type Options struct {
-	flag.Options
-
-	Redis cli.RedisOptions `bind:"redis"`
-	Mysql cli.MySQLOptions `bind:"mysql"`
-}
 
 func TestFlag(t *testing.T) {
 	Convey("TestFlag", t, func() {
-		options := &Options{}
-		flag.Struct(options)
-		fmt.Println(flag.Usage())
+		flag := Flag{
+			shorthandKeyMap: map[string]string{
+				"k": "opt.key",
+				"a": "opt.action",
+			},
+			nameKeyMap: map[string]string{
+				"key":    "opt.key",
+				"action": "opt.action",
+			},
+			kvs: map[string]interface{}{
+				"opt": map[string]interface{}{
+					"key":    "val1",
+					"action": "add",
+				},
+			},
+		}
+		Convey("Get", func() {
+			{
+				val, ok := flag.Get("k")
+				So(ok, ShouldBeTrue)
+				So(val, ShouldEqual, "val1")
+			}
+			{
+				val, ok := flag.Get("key")
+				So(ok, ShouldBeTrue)
+				So(val, ShouldEqual, "val1")
+			}
+			{
+				val, ok := flag.Get("opt.key")
+				So(ok, ShouldBeTrue)
+				So(val, ShouldEqual, "val1")
+			}
+		})
+
+		Convey("Set", func() {
+			{
+				So(flag.Set("k", "val2"), ShouldBeNil)
+				val, ok := flag.Get("k")
+				So(ok, ShouldBeTrue)
+				So(val, ShouldEqual, "val2")
+			}
+			{
+				So(flag.Set("opt.key3", "val3"), ShouldBeNil)
+				val, ok := flag.Get("opt.key3")
+				So(ok, ShouldBeTrue)
+				So(val, ShouldEqual, "val3")
+			}
+		})
 	})
 }

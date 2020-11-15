@@ -78,6 +78,7 @@ func (f *Flag) Set(key string, val string) error {
 }
 
 func (f *Flag) Get(key string) (interface{}, bool) {
+	key = f.findKey(key)
 	if val, err := refx.InterfaceGet(f.kvs, key); err != nil {
 		return nil, false
 	} else {

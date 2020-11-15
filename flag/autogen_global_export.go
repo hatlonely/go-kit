@@ -575,12 +575,12 @@ func GetIPSliceP(key string) []net.IP {
 	return gflag.GetIPSliceP(key)
 }
 
-func AddFlag(name string, usage string, opts ...AddFlagOption) error {
-	return gflag.AddFlag(name, usage, opts...)
+func AddFlag(name string, usage string, opts ...AddFlagOption) {
+	gflag.AddFlag(name, usage, opts...)
 }
 
-func AddArgument(name string, usage string, opts ...AddFlagOption) error {
-	return gflag.AddArgument(name, usage, opts...)
+func AddArgument(name string, usage string, opts ...AddFlagOption) {
+	gflag.AddArgument(name, usage, opts...)
 }
 
 func BindFlagWithOptions(v interface{}, options *AddFlagOptions) error {

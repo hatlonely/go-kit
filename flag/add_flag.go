@@ -52,7 +52,7 @@ func Key(key string) AddFlagOption {
 	}
 }
 
-func (f *Flag) AddFlag(name string, usage string, opts ...AddFlagOption) error {
+func (f *Flag) AddFlag(name string, usage string, opts ...AddFlagOption) {
 	options := &AddFlagOptions{
 		Name:       name,
 		Usage:      usage,
@@ -61,10 +61,12 @@ func (f *Flag) AddFlag(name string, usage string, opts ...AddFlagOption) error {
 	for _, opt := range opts {
 		opt(options)
 	}
-	return f.addFlagWithOptions(options)
+	if err := f.addFlagWithOptions(options); err != nil {
+		panic(err)
+	}
 }
 
-func (f *Flag) AddArgument(name string, usage string, opts ...AddFlagOption) error {
+func (f *Flag) AddArgument(name string, usage string, opts ...AddFlagOption) {
 	options := &AddFlagOptions{
 		Name:       name,
 		Usage:      usage,
@@ -73,7 +75,9 @@ func (f *Flag) AddArgument(name string, usage string, opts ...AddFlagOption) err
 	for _, opt := range opts {
 		opt(options)
 	}
-	return f.addFlagWithOptions(options)
+	if err := f.addFlagWithOptions(options); err != nil {
+		panic(err)
+	}
 }
 
 func (f *Flag) BindFlagWithOptions(v interface{}, options *AddFlagOptions) error {
@@ -109,6 +113,9 @@ func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
 	}
 	if options.Key == "" {
 		options.Key = options.Name
+	}
+	if options.Type == nil {
+		options.Type = reflect.TypeOf("")
 	}
 	info := &Info{
 		Type:         options.Type,
