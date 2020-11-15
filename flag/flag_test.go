@@ -59,13 +59,13 @@ func TestFlag(t *testing.T) {
 
 		Convey("Set", func() {
 			{
-				So(flag.Set("key1.key2", `{"key3":{"key4": "val4"}}`, WithJsonVal()), ShouldBeNil)
+				So(flag.Set("key1.key2", `{"key3":{"key4": "val4"}}`), ShouldBeNil)
 				val, ok := flag.Get("key1.key2")
 				So(ok, ShouldBeTrue)
 				So(val, ShouldEqual, `{"key3":{"key4": "val4"}}`)
 			}
 			{
-				So(flag.Set("key1.key2", `{"key3": {"key4": "val4"}}`), ShouldBeNil)
+				So(flag.Set("key1.key2", `{"key3": {"key4": "val4"}}`, WithJsonVal()), ShouldBeNil)
 				val, ok := flag.Get("key1.key2")
 				So(ok, ShouldBeTrue)
 				So(val, ShouldResemble, map[string]interface{}{
