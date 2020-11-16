@@ -1,7 +1,7 @@
 ## Feature
 
 1. 支持 `Get<T>` 风格 api
-2. 支持 `Unmarshal` 到结构体，包括数组，map 的嵌套，支持不同风格的 key
+2. 支持 `Unmarshal` 到结构体，包括数组，map 的嵌套，支持默认值，支持不同风格的 key
 3. 支持将配置项动态绑定到原子变量
 4. 支持监听配置变更事件
 5. 支持子配置，子配置依然是一个完全的配置对象
@@ -202,14 +202,14 @@ func main() {
 
 你可以通过如下命令获取配置工具
 
-```shell script
+```sh
 go get -u github.com/hatlonely/go-kit/cmd/cfg
 ```
 
 通过[配置工具](docs/配置工具.md)可以方便地管理你配置，包括配置的获取，更新，迁移，回滚，备份
 
 
-```shell
+```sh
 cfg --camelName --inBaseFile base.json -a get
 cfg --camelName --inBaseFile base.json -a get --key mysql
 cfg --camelName --inBaseFile base.json -a get --key mysql.password
