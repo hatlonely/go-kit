@@ -182,6 +182,10 @@ func (c *Config) Sub(key string) *Config {
 }
 
 func (c *Config) SubArr(key string) ([]*Config, error) {
+	if c.parent != nil {
+		return c.parent.SubArr(prefixAppendKey(c.prefix, key))
+	}
+
 	vs, err := c.storage.SubArr(key)
 	if err != nil {
 		return nil, err
@@ -194,6 +198,10 @@ func (c *Config) SubArr(key string) ([]*Config, error) {
 }
 
 func (c *Config) SubMap(key string) (map[string]*Config, error) {
+	if c.parent != nil {
+		return c.parent.SubMap(prefixAppendKey(c.prefix, key))
+	}
+
 	kvs, err := c.storage.SubMap(key)
 	if err != nil {
 		return nil, err
@@ -211,6 +219,10 @@ func (c *Config) Stop() {
 }
 
 func (c *Config) Watch() error {
+	if c.parent != nil {
+		return errors.New("children can not watch")
+	}
+
 	traveled := map[string]bool{}
 	_ = c.storage.Travel(func(key string, val interface{}) error {
 		for key != "" {
