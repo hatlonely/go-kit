@@ -100,8 +100,8 @@ func Instance() *Flag {
 	return gflag
 }
 
-func Parse() error {
-	return ParseArgs(os.Args[1:])
+func Parse(opts ...ParseOption) error {
+	return ParseArgs(os.Args[1:], opts...)
 }
 """
 
