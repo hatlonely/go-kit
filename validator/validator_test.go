@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
+	"gopkg.in/go-playground/validator.v9"
 
 	"github.com/hatlonely/go-kit/strx"
 )
@@ -115,6 +116,45 @@ func BenchmarkValidate(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			err := v.Validate(obj)
 			_ = err
+		}
+	})
+}
+
+// https://github.com/go-playground/validator/blob/master/_examples/simple/main.go
+//BenchmarkValidatorV10/github.com/go-playground/validator.v9-12         	 3848056	       308 ns/op
+//BenchmarkValidatorV10/github.com/hatlonely/go-kit/validator-12         	  579918	      1944 ns/op
+//BenchmarkValidatorV10/raw_operation-12                                 	16793824	        71.0 ns/op
+func BenchmarkValidatorV10(b *testing.B) {
+	type User struct {
+		Age  uint8  `validate:"gte=0,lte=130" rule:"x >= 0 && x <= 130"`
+		Name string `validate:"oneof=hello world" rule:"x in ['hello', 'world']"`
+	}
+
+	user := &User{
+		Age:  130,
+		Name: "hello",
+	}
+
+	b.Run("github.com/go-playground/validator.v9", func(b *testing.B) {
+		validate := validator.New()
+
+		for i := 0; i < b.N; i++ {
+			_ = validate.Struct(user)
+		}
+	})
+
+	b.Run("github.com/hatlonely/go-kit/validator", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_ = Validate(user)
+		}
+	})
+
+	b.Run("raw operation", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			b1 := user.Age > 0 && user.Age <= 130
+			_, b2 := map[string]struct{}{"hello": {}, "world": {}}[user.Name]
+			b := b1 && b2
+			_ = b
 		}
 	})
 }
