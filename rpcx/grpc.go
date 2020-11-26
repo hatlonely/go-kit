@@ -24,9 +24,7 @@ func MetaDataGetRequestID(ctx context.Context) string {
 
 func MetaDataIncomingGet(ctx context.Context, key string) string {
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
-		if vals, ok := md[key]; ok {
-			return strings.Join(vals, ",")
-		}
+		return strings.Join(md.Get(key), ",")
 	}
 	return ""
 }
@@ -62,16 +60,12 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		var requestID, remoteIP string
 		if md, ok := metadata.FromIncomingContext(ctx); ok {
-			if vals, ok := md["x-request-id"]; ok {
-				requestID = strings.Join(vals, ",")
-			}
+			requestID = strings.Join(md.Get("x-request-id"), ",")
 			if requestID == "" {
 				requestID = uuid.NewV4().String()
 				md.Set("x-request-id", requestID)
 			}
-			if vals, ok := md["x-remote-addr"]; ok {
-				remoteIP = strings.Split(strings.Join(vals, ","), ":")[0]
-			}
+			remoteIP = strings.Split(strings.Join(md.Get("x-remote-addr"), ","), ":")[0]
 		}
 
 		ctx = NewRPCXContext(ctx)
@@ -83,9 +77,9 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 			if perr := recover(); perr != nil {
 				err = errors.Wrap(fmt.Errorf("%v\n%v", string(debug.Stack()), perr), "panic")
 			}
-			p, ok := peer.FromContext(ctx)
+
 			clientIP := ""
-			if ok && p != nil {
+			if p, ok := peer.FromContext(ctx); ok && p != nil {
 				clientIP = p.Addr.String()
 			}
 
