@@ -44,9 +44,17 @@ func TestLogger(t *testing.T) {
 
 func TestNewStdoutLogger(t *testing.T) {
 	Convey("TestNewStdoutLogger", t, func() {
-		log := NewStdoutLogger()
+		log := NewStdoutJsonLogger()
 		log.Info("hello world")
 		log.Warn("hello golang")
+		log.WithFunc("key1", func() interface{} {
+			return time.Now().UnixNano()
+		}).Info("")
+		log.WithFunc("key2", func() interface{} {
+			return time.Now().UnixNano()
+		}).Info("")
+		log.With("Key1", "Val1").With("Key2", "Val2").Info("")
+		log.With("Key3", "Val3").With("Key4", "Val4").Info("")
 	})
 }
 

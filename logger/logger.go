@@ -33,6 +33,24 @@ func NewStdoutLogger() *Logger {
 	return log
 }
 
+func NewStdoutJsonLogger() *Logger {
+	log, err := NewLoggerWithOptions(&Options{
+		Level: "Debug",
+		Writers: []WriterOptions{{
+			Type: "Stdout",
+			StdoutWriter: StdoutWriterOptions{
+				Formatter: FormatterOptions{
+					Type: "Json",
+				},
+			},
+		}},
+	})
+	if err != nil {
+		panic(err)
+	}
+	return log
+}
+
 func NewLoggerWithConfig(cfg *config.Config, opts ...refx.Option) (*Logger, error) {
 	var options Options
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
@@ -67,14 +85,57 @@ type Options struct {
 
 func NewLogger(level Level, writers ...Writer) *Logger {
 	return &Logger{
-		level:   level,
-		writers: writers,
+		level:          level,
+		writers:        writers,
+		preKeyValue:    map[string]interface{}{},
+		fieldGenerator: map[string]func() interface{}{},
 	}
 }
 
 type Logger struct {
 	writers []Writer
 	level   Level
+
+	preKeyValue    map[string]interface{}
+	fieldGenerator map[string]func() interface{}
+}
+
+func (l *Logger) With(key string, val interface{}) *Logger {
+	log := &Logger{
+		writers:        l.writers,
+		level:          l.level,
+		preKeyValue:    map[string]interface{}{},
+		fieldGenerator: map[string]func() interface{}{},
+	}
+
+	for key, val := range l.preKeyValue {
+		log.preKeyValue[key] = val
+	}
+	for key, val := range l.fieldGenerator {
+		log.fieldGenerator[key] = val
+	}
+
+	log.preKeyValue[key] = val
+	return log
+}
+
+func (l *Logger) WithFunc(key string, val func() interface{}) *Logger {
+	log := &Logger{
+		writers:        l.writers,
+		level:          l.level,
+		preKeyValue:    map[string]interface{}{},
+		fieldGenerator: map[string]func() interface{}{},
+	}
+
+	for key, val := range l.preKeyValue {
+		log.preKeyValue[key] = val
+	}
+	for key, val := range l.fieldGenerator {
+		log.fieldGenerator[key] = val
+	}
+
+	log.fieldGenerator[key] = val
+	return log
 }
 
 //go:generate enumer -type Level -trimprefix Level -text
@@ -131,14 +192,22 @@ func (l *Logger) Log(level Level, v interface{}) {
 	fun := runtime.FuncForPC(pc).Name()
 
 	now := time.Now()
+	kvs := map[string]interface{}{
+		"timestamp": now.Unix(),
+		"time":      now.Format(time.RFC3339Nano),
+		"level":     level.String(),
+		"data":      v,
+		"file":      fmt.Sprintf("%s:%v", path.Base(file), line),
+		"caller":    fun,
+	}
+	for key, val := range l.preKeyValue {
+		kvs[key] = val
+	}
+	for key, val := range l.fieldGenerator {
+		kvs[key] = val()
+	}
+
 	for _, writer := range l.writers {
-		_ = writer.Write(map[string]interface{}{
-			"timestamp": now.Unix(),
-			"time":      now.Format(time.RFC3339Nano),
-			"level":     level.String(),
-			"data":      v,
-			"file":      fmt.Sprintf("%s:%v", path.Base(file), line),
-			"caller":    fun,
-		})
+		_ = writer.Write(kvs)
 	}
 }
