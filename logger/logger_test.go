@@ -58,6 +58,25 @@ func TestNewStdoutLogger(t *testing.T) {
 	})
 }
 
+func TestNewFlatMapLogger(t *testing.T) {
+	Convey("TestNewFlatMapLogger", t, func() {
+		log, _ := NewLoggerWithOptions(&Options{
+			Level:   "Debug",
+			FlatMap: true,
+			Writers: []WriterOptions{{
+				Type: "Stdout",
+				StdoutWriter: StdoutWriterOptions{
+					Formatter: FormatterOptions{
+						Type: "Json",
+					},
+				},
+			}},
+		})
+
+		log.Info(map[string]interface{}{"key1": "val1", "hello": "world"})
+	})
+}
+
 func TestParallel(t *testing.T) {
 	w, err := NewRotateFileWriter(WithRotateFilename("log/test.log"))
 	if err != nil {

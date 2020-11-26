@@ -12,7 +12,7 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-func NewStdoutLogger() *Logger {
+func NewStdoutTextLogger() *Logger {
 	log, err := NewLoggerWithOptions(&Options{
 		Level: "Debug",
 		Writers: []WriterOptions{{
@@ -75,11 +75,13 @@ func NewLoggerWithOptions(options *Options) (*Logger, error) {
 	return &Logger{
 		level:   level,
 		writers: writers,
+		flatMap: options.FlatMap,
 	}, nil
 }
 
 type Options struct {
 	Level   string `rule:"x in ['Info', 'Warn', 'Debug', 'Error']"`
+	FlatMap bool
 	Writers []WriterOptions
 }
 
@@ -87,35 +89,37 @@ func NewLogger(level Level, writers ...Writer) *Logger {
 	return &Logger{
 		level:          level,
 		writers:        writers,
-		preKeyValue:    map[string]interface{}{},
-		fieldGenerator: map[string]func() interface{}{},
+		withValues:     map[string]interface{}{},
+		withValueFuncs: map[string]func() interface{}{},
 	}
 }
 
 type Logger struct {
 	writers []Writer
 	level   Level
+	flatMap bool
 
-	preKeyValue    map[string]interface{}
-	fieldGenerator map[string]func() interface{}
+	withValues     map[string]interface{}
+	withValueFuncs map[string]func() interface{}
 }
 
 func (l *Logger) With(key string, val interface{}) *Logger {
 	log := &Logger{
 		writers:        l.writers,
 		level:          l.level,
-		preKeyValue:    map[string]interface{}{},
-		fieldGenerator: map[string]func() interface{}{},
+		flatMap:        l.flatMap,
+		withValues:     map[string]interface{}{},
+		withValueFuncs: map[string]func() interface{}{},
 	}
 
-	for key, val := range l.preKeyValue {
-		log.preKeyValue[key] = val
+	for key, val := range l.withValues {
+		log.withValues[key] = val
 	}
-	for key, val := range l.fieldGenerator {
-		log.fieldGenerator[key] = val
+	for key, val := range l.withValueFuncs {
+		log.withValueFuncs[key] = val
 	}
 
-	log.preKeyValue[key] = val
+	log.withValues[key] = val
 	return log
 }
 
@@ -123,18 +127,19 @@ func (l *Logger) WithFunc(key string, val func() interface{}) *Logger {
 	log := &Logger{
 		writers:        l.writers,
 		level:          l.level,
-		preKeyValue:    map[string]interface{}{},
-		fieldGenerator: map[string]func() interface{}{},
+		flatMap:        l.flatMap,
+		withValues:     map[string]interface{}{},
+		withValueFuncs: map[string]func() interface{}{},
 	}
 
-	for key, val := range l.preKeyValue {
-		log.preKeyValue[key] = val
+	for key, val := range l.withValues {
+		log.withValues[key] = val
 	}
-	for key, val := range l.fieldGenerator {
-		log.fieldGenerator[key] = val
+	for key, val := range l.withValueFuncs {
+		log.withValueFuncs[key] = val
 	}
 
-	log.fieldGenerator[key] = val
+	log.withValueFuncs[key] = val
 	return log
 }
 
@@ -196,14 +201,20 @@ func (l *Logger) Log(level Level, v interface{}) {
 		"timestamp": now.Unix(),
 		"time":      now.Format(time.RFC3339Nano),
 		"level":     level.String(),
-		"data":      v,
 		"file":      fmt.Sprintf("%s:%v", path.Base(file), line),
 		"caller":    fun,
 	}
-	for key, val := range l.preKeyValue {
+	if l.flatMap {
+		for key, val := range v.(map[string]interface{}) {
+			kvs[key] = val
+		}
+	} else {
+		kvs["data"] = v
+	}
+	for key, val := range l.withValues {
 		kvs[key] = val
 	}
-	for key, val := range l.fieldGenerator {
+	for key, val := range l.withValueFuncs {
 		kvs[key] = val()
 	}
 

@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/hatlonely/go-kit/config"
-	"github.com/hatlonely/go-kit/logger"
 	"github.com/hatlonely/go-kit/refx"
 )
 
@@ -131,7 +130,7 @@ func TestExample1(t *testing.T) {
 	if err := config.InitWithSimpleFile("test.json"); err != nil {
 		panic(err)
 	}
-	config.SetLogger(logger.NewStdoutLogger())
+	config.SetLogger(config.StdoutLogger{})
 	if err := config.Watch(); err != nil {
 		panic(err)
 	}
@@ -163,7 +162,7 @@ func TestExample2(t *testing.T) {
 	if err := config.InitWithSimpleFile("test.json"); err != nil {
 		panic(err)
 	}
-	config.SetLogger(logger.NewStdoutLogger())
+	config.SetLogger(config.StdoutLogger{})
 	if err := config.Watch(); err != nil {
 		panic(err)
 	}
@@ -198,7 +197,7 @@ func TestExample3(t *testing.T) {
 	if err := config.InitWithSimpleFile("test.json"); err != nil {
 		panic(err)
 	}
-	config.SetLogger(logger.NewStdoutLogger())
+	config.SetLogger(config.StdoutLogger{})
 	if err := config.Watch(); err != nil {
 		panic(err)
 	}
@@ -250,7 +249,7 @@ func TestExample4(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	cfg.SetLogger(logger.NewStdoutLogger())
+	cfg.SetLogger(config.StdoutLogger{})
 	cfg.AddOnChangeHandler(func(conf *config.Config) {
 		RedisAddr.Set(conf.GetString("redis.addr"))
 		MysqlHost.Set(conf.GetString("mysql.host"))
@@ -298,7 +297,7 @@ func TestExample5(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	cfg.SetLogger(logger.NewStdoutLogger())
+	cfg.SetLogger(config.StdoutLogger{})
 	cfg.AddOnItemChangeHandler("redis", func(conf *config.Config) {
 		var opt Options
 		if err := conf.Unmarshal(&opt, refx.WithCamelName()); err != nil {
@@ -340,7 +339,7 @@ func TestExample6(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	cfg.SetLogger(logger.NewStdoutLogger())
+	cfg.SetLogger(config.StdoutLogger{})
 	if err := cfg.Watch(); err != nil {
 		panic(err)
 	}
@@ -455,7 +454,7 @@ func TestExample8(t *testing.T) {
 	if err := config.InitWithSimpleFile("test.json"); err != nil {
 		panic(err)
 	}
-	config.SetLogger(logger.NewStdoutLogger())
+	config.SetLogger(config.StdoutLogger{})
 	if err := config.Watch(); err != nil {
 		panic(err)
 	}
