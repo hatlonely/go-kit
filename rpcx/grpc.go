@@ -89,11 +89,13 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 				clientIP = p.Addr.String()
 			}
 
+			meta, _ := metadata.FromIncomingContext(ctx)
 			log.Info(map[string]interface{}{
 				"requestID": requestID,
 				"remoteIP":  remoteIP,
 				"clientIP":  clientIP,
 				"method":    info.FullMethod,
+				"meta":      meta,
 				"req":       req,
 				"ctx":       ctx.Value(grpcCtxKey{}),
 				"res":       res,
