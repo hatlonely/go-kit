@@ -47,28 +47,28 @@ func WithMuxProtoErrorHandler(opts ...MuxOption) runtime.ServeMuxOption {
 		opt(&options)
 	}
 
-	return runtime.WithProtoErrorHandler(func(ctx context.Context, mux *runtime.ServeMux, marshaler runtime.Marshaler, writer http.ResponseWriter, request *http.Request, err error) {
-		writer.Header().Set("Content-Type", options.ContentType)
+	return runtime.WithProtoErrorHandler(func(ctx context.Context, mux *runtime.ServeMux, m runtime.Marshaler, res http.ResponseWriter, req *http.Request, err error) {
+		res.Header().Set("Content-Type", options.ContentType)
 		for _, header := range options.Headers {
-			writer.Header().Set(header, request.Header.Get(header))
+			res.Header().Set(header, req.Header.Get(header))
 		}
 
 		s := status.Convert(err)
 		if len(s.Details()) >= 1 {
 			if e, ok := s.Details()[0].(*EInfo); ok {
 				e.Status = int64(runtime.HTTPStatusFromCode(codes.Code(e.Status)))
-				writer.WriteHeader(int(e.Status))
+				res.WriteHeader(int(e.Status))
 				buf, _ := json.Marshal(e)
-				_, _ = writer.Write(buf)
+				_, _ = res.Write(buf)
 				return
 			}
 		}
-		e := NewInternalError(err, request.Header.Get("X-Request-Id")).Info
+		e := NewInternalError(err).SetRequestID(req.Header.Get("X-Request-Id")).Info
 		e.Status = int64(runtime.HTTPStatusFromCode(s.Code()))
 		e.Code = http.StatusText(int(e.Status))
-		writer.WriteHeader(int(e.Status))
+		res.WriteHeader(int(e.Status))
 		buf, _ := json.Marshal(e)
-		_, _ = writer.Write(buf)
+		_, _ = res.Write(buf)
 	})
 }
 

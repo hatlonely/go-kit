@@ -112,7 +112,7 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 		}()
 
 		if err = validator.Validate(req); err != nil {
-			err = NewErrorWithoutRefer(err, codes.InvalidArgument, requestID, "InvalidArgument", err.Error())
+			err = NewErrorWithoutRefer(err, codes.InvalidArgument, "InvalidArgument", err.Error())
 		} else {
 			res, err = handler(ctx, req)
 		}
@@ -120,9 +120,9 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 		if err != nil {
 			switch e := err.(type) {
 			case *Error:
-				return res, e.ToStatus().Err()
+				return res, e.SetRequestID(requestID).ToStatus().Err()
 			}
-			return res, NewInternalError(err, requestID).ToStatus().Err()
+			return res, NewInternalError(err).SetRequestID(requestID).ToStatus().Err()
 		}
 		return res, nil
 	})

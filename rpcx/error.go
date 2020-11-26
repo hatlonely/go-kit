@@ -11,50 +11,47 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func NewErrorWithoutRefer(err error, status codes.Code, requestID string, code string, message string) error {
-	return NewError(err, status, requestID, code, message, "")
+func NewErrorWithoutRefer(err error, status codes.Code, code string, message string) error {
+	return NewError(err, status, code, message, "")
 }
 
-func NewError(err error, status codes.Code, requestID string, code string, message string, refer string) error {
+func NewError(err error, status codes.Code, code string, message string, refer string) error {
 	return &Error{
 		Err: err,
 		Info: &EInfo{
-			Status:    int64(status),
-			RequestID: requestID,
-			Code:      code,
-			Message:   message,
-			Refer:     refer,
+			Status:  int64(status),
+			Code:    code,
+			Message: message,
+			Refer:   refer,
 		},
 	}
 }
 
-func NewErrorWithoutReferf(status codes.Code, requestID string, code string, format string, args ...interface{}) error {
-	return NewErrorf(status, requestID, code, "", format, args...)
+func NewErrorWithoutReferf(status codes.Code, code string, format string, args ...interface{}) error {
+	return NewErrorf(status, code, "", format, args...)
 }
 
-func NewErrorf(status codes.Code, requestID string, code string, refer string, format string, args ...interface{}) error {
+func NewErrorf(status codes.Code, code string, refer string, format string, args ...interface{}) error {
 	str := fmt.Sprintf(format, args...)
 	err := errors.New(str)
 	return &Error{
 		Err: err,
 		Info: &EInfo{
-			Status:    int64(status),
-			RequestID: requestID,
-			Code:      code,
-			Message:   str,
-			Refer:     refer,
+			Status:  int64(status),
+			Code:    code,
+			Message: str,
+			Refer:   refer,
 		},
 	}
 }
 
-func NewInternalError(err error, requestID string) *Error {
+func NewInternalError(err error) *Error {
 	return &Error{
 		Err: err,
 		Info: &EInfo{
-			Status:    int64(codes.Internal),
-			RequestID: requestID,
-			Code:      "InternalError",
-			Message:   err.Error(),
+			Status:  int64(codes.Internal),
+			Code:    "InternalError",
+			Message: err.Error(),
 		},
 	}
 }
@@ -62,6 +59,11 @@ func NewInternalError(err error, requestID string) *Error {
 type Error struct {
 	Err  error
 	Info *EInfo
+}
+
+func (e *Error) SetRequestID(requestID string) *Error {
+	e.Info.RequestID = requestID
+	return e
 }
 
 func (e *Error) Error() string {
