@@ -2,6 +2,8 @@ package config
 
 import (
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/kms"
+
+	"github.com/hatlonely/go-kit/alics"
 )
 
 func NewKMSCipherWithOptions(options *KMSCipherOptions) (*KMSCipher, error) {
@@ -9,9 +11,25 @@ func NewKMSCipherWithOptions(options *KMSCipherOptions) (*KMSCipher, error) {
 }
 
 func NewKMSCipherWithAccessKey(ak, sk, regionID string, keyID string) (*KMSCipher, error) {
-	kmsCli, err := kms.NewClientWithAccessKey(ak, sk, regionID)
-	if err != nil {
-		return nil, err
+	var kmsCli *kms.Client
+	var err error
+	if regionID == "" {
+		if regionID, err = alics.ECSMetaDataRegionID(); err != nil {
+			return nil, err
+		}
+	}
+	if ak == "" {
+		role, err := alics.ECSMetaDataRamSecurityCredentialsRole()
+		if err != nil {
+			return nil, err
+		}
+		if kmsCli, err = kms.NewClientWithEcsRamRole(regionID, role); err != nil {
+			return nil, err
+		}
+	} else {
+		if kmsCli, err = kms.NewClientWithAccessKey(ak, sk, regionID); err != nil {
+			return nil, err
+		}
 	}
 	return NewKMSCipher(kmsCli, keyID)
 }

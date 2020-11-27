@@ -11,14 +11,32 @@ import (
 
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/kms"
 	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/alics"
 )
 
 const AESMaxKeyLen = 32
 
 func NewAESWithKMSKeyCipherWithAccessKey(ak, sk, regionID string, cipherText string) (*AESCipher, error) {
-	kmsCli, err := kms.NewClientWithAccessKey(regionID, ak, sk)
-	if err != nil {
-		return nil, err
+	var kmsCli *kms.Client
+	var err error
+	if regionID == "" {
+		if regionID, err = alics.ECSMetaDataRegionID(); err != nil {
+			return nil, err
+		}
+	}
+	if ak == "" {
+		role, err := alics.ECSMetaDataRamSecurityCredentialsRole()
+		if err != nil {
+			return nil, err
+		}
+		if kmsCli, err = kms.NewClientWithEcsRamRole(regionID, role); err != nil {
+			return nil, err
+		}
+	} else {
+		if kmsCli, err = kms.NewClientWithAccessKey(ak, sk, regionID); err != nil {
+			return nil, err
+		}
 	}
 	return NewAESWithKMSKeyCipher(kmsCli, cipherText)
 }
