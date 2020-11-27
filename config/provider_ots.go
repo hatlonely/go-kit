@@ -22,21 +22,21 @@ type OTSProviderOptions struct {
 	Interval        time.Duration
 }
 
-func newOTSClient(options *OTSProviderOptions) (*tablestore.TableStoreClient, error) {
-	if options.AccessKeyID != "" {
-		return tablestore.NewClient(options.Endpoint, options.Instance, options.AccessKeyID, options.AccessKeySecret), nil
+func newOTSClient(endpoint string, instance string, accessKeyID string, accessKeySecret string) (*tablestore.TableStoreClient, error) {
+	if accessKeyID != "" {
+		return tablestore.NewClient(endpoint, instance, accessKeyID, accessKeySecret), nil
 	}
 	res, err := alics.ECSMetaDataRamSecurityCredentials()
 	if err != nil {
 		return nil, err
 	}
-	return tablestore.NewClientWithConfig(options.Endpoint, options.Instance, res.AccessKeyID, res.AccessKeySecret, res.SecurityToken, nil), nil
+	return tablestore.NewClientWithConfig(endpoint, instance, res.AccessKeyID, res.AccessKeySecret, res.SecurityToken, nil), nil
 }
 
 func NewOTSProviderWithOptions(options *OTSProviderOptions) (*OTSProvider, error) {
-	otsCli, err := newOTSClient(options)
+	otsCli, err := newOTSClient(options.Endpoint, options.Instance, options.AccessKeyID, options.AccessKeySecret)
 	if err != nil {
-		return nil, errors.Wrap(err, "NewOTSClient failed")
+		return nil, errors.Wrap(err, "newOTSClient failed")
 	}
 
 	if res, err := otsCli.DescribeTable(&tablestore.DescribeTableRequest{
@@ -108,9 +108,9 @@ func (p *OTSProvider) Load() ([]byte, error) {
 }
 
 func (p *OTSProvider) otsGetRow() ([]byte, int64, error) {
-	otsCli, err := newOTSClient(p.options)
+	otsCli, err := newOTSClient(p.options.Endpoint, p.options.Instance, p.options.AccessKeyID, p.options.AccessKeySecret)
 	if err != nil {
-		return nil, 0, errors.Wrap(err, "NewOTSClient failed")
+		return nil, 0, errors.Wrap(err, "newOTSClient failed")
 	}
 	res, err := otsCli.GetRow(&tablestore.GetRowRequest{
 		SingleRowQueryCriteria: &tablestore.SingleRowQueryCriteria{
@@ -140,9 +140,9 @@ func (p *OTSProvider) otsGetRow() ([]byte, int64, error) {
 }
 
 func (p *OTSProvider) otsPutRow(buf []byte) error {
-	otsCli, err := newOTSClient(p.options)
+	otsCli, err := newOTSClient(p.options.Endpoint, p.options.Instance, p.options.AccessKeyID, p.options.AccessKeySecret)
 	if err != nil {
-		return errors.Wrap(err, "NewOTSClient failed")
+		return errors.Wrap(err, "newOTSClient failed")
 	}
 	_, err = otsCli.PutRow(&tablestore.PutRowRequest{
 		PutRowChange: &tablestore.PutRowChange{

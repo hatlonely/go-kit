@@ -36,7 +36,11 @@ type OTSLegacyProvider struct {
 }
 
 func NewOTSLegacyProviderWithOptions(options *OTSLegacyProviderOptions) (*OTSLegacyProvider, error) {
-	otsCli := tablestore.NewClient(options.Endpoint, options.Instance, options.AccessKeyID, options.AccessKeySecret)
+	otsCli, err := newOTSClient(options.Endpoint, options.Instance, options.AccessKeyID, options.AccessKeySecret)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewOTSClient failed")
+	}
+
 	if res, err := otsCli.DescribeTable(&tablestore.DescribeTableRequest{
 		TableName: options.Table,
 	}); err != nil {
