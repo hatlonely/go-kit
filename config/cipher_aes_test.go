@@ -27,6 +27,23 @@ func TestAESCipher(t *testing.T) {
 	})
 
 	Convey("TestAESCipher 2", t, func() {
+		cipher, err := NewCipherWithOptions(&CipherOptions{
+			Type: "AES",
+			AESCipher: AESCipherOptions{
+				Key:         "123456",
+				PaddingType: "Zero",
+			},
+		})
+		So(err, ShouldBeNil)
+
+		buf, err := cipher.Encrypt([]byte("hello world"))
+		So(err, ShouldBeNil)
+		buf, err = cipher.Decrypt(buf)
+		So(err, ShouldBeNil)
+		So(string(buf), ShouldEqual, "hello world")
+	})
+
+	Convey("TestAESCipher 3", t, func() {
 		patches := ApplyMethod(reflect.TypeOf(&kms.Client{}), "Decrypt", func(
 			cli *kms.Client, request *kms.DecryptRequest) (*kms.DecryptResponse, error) {
 			return &kms.DecryptResponse{

@@ -15,15 +15,15 @@ import (
 
 const AESMaxKeyLen = 32
 
-func NewAESWithKMSKeyCipherWithAccessKey(accessKeyID string, accessKeySecret string, regionID string, cipherText string) (*AESCipher, error) {
+func NewAESWithKMSKeyCipherWithAccessKey(accessKeyID string, accessKeySecret string, regionID string, cipherText string, paddingType string) (*AESCipher, error) {
 	kmsCli, err := newKMSClient(accessKeyID, accessKeySecret, regionID)
 	if err != nil {
 		return nil, err
 	}
-	return NewAESWithKMSKeyCipher(kmsCli, cipherText)
+	return NewAESWithKMSKeyCipher(kmsCli, cipherText, paddingType)
 }
 
-func NewAESWithKMSKeyCipher(kmsCli *kms.Client, cipherText string) (*AESCipher, error) {
+func NewAESWithKMSKeyCipher(kmsCli *kms.Client, cipherText string, paddingType string) (*AESCipher, error) {
 	req := kms.CreateDecryptRequest()
 	req.Scheme = "https"
 	req.CiphertextBlob = cipherText
@@ -37,10 +37,10 @@ func NewAESWithKMSKeyCipher(kmsCli *kms.Client, cipherText string) (*AESCipher, 
 		return nil, err
 	}
 
-	return NewAESCipher(buf)
+	return NewAESCipher(buf, paddingType)
 }
 
-func NewAESCipher(key []byte) (*AESCipher, error) {
+func NewAESCipher(key []byte, paddingType string) (*AESCipher, error) {
 	if len(key) > AESMaxKeyLen {
 		return nil, fmt.Errorf("key len should less or equal to %v", AESMaxKeyLen)
 	}
@@ -51,35 +51,49 @@ func NewAESCipher(key []byte) (*AESCipher, error) {
 		return nil, err
 	}
 
+	if paddingType == "Zero" {
+		return &AESCipher{
+			cb:        block,
+			padding:   zeroPadding,
+			unPadding: zeroUnPadding,
+		}, nil
+	}
 	return &AESCipher{
-		cb: block,
+		cb:        block,
+		padding:   pkcs7Padding,
+		unPadding: pkcs7UnPadding,
 	}, nil
 }
 
 func NewAESCipherWithOptions(options *AESCipherOptions) (*AESCipher, error) {
 	if options.Key != "" {
-		return NewAESCipher([]byte(options.Key))
+		return NewAESCipher([]byte(options.Key), options.PaddingType)
 	}
 	if options.Base64Key != "" {
 		buf, err := base64.StdEncoding.DecodeString(options.Base64Key)
 		if err != nil {
 			return nil, errors.Wrap(err, "base64 decode key failed.")
 		}
-		return NewAESCipher(buf)
+		return NewAESCipher(buf, options.PaddingType)
 	}
 	if options.KMSKey != "" {
-		return NewAESWithKMSKeyCipherWithAccessKey(options.KMS.AccessKeyID, options.KMS.AccessKeySecret, options.KMS.RegionID, options.KMSKey)
+		return NewAESWithKMSKeyCipherWithAccessKey(
+			options.KMS.AccessKeyID, options.KMS.AccessKeySecret,
+			options.KMS.RegionID, options.KMSKey, options.PaddingType,
+		)
 	}
 	return nil, errors.New("no key found")
 }
 
 type AESCipher struct {
 	cb cipher.Block
+
+	padding   func(textToPadding []byte, blockSize int) []byte
+	unPadding func(textToUnPadding []byte) []byte
 }
 
 func (c *AESCipher) Encrypt(textToEncrypt []byte) ([]byte, error) {
-	plainText := make([]byte, len(textToEncrypt)+aes.BlockSize+(-len(textToEncrypt)%aes.BlockSize))
-	copy(plainText, textToEncrypt)
+	plainText := c.padding(textToEncrypt, aes.BlockSize)
 	encryptText := make([]byte, aes.BlockSize+len(plainText))
 	iv := encryptText[:aes.BlockSize]
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
@@ -102,16 +116,42 @@ func (c *AESCipher) Decrypt(textToDecrypt []byte) ([]byte, error) {
 	mode := cipher.NewCBCDecrypter(c.cb, iv)
 	mode.CryptBlocks(textToDecrypt, textToDecrypt)
 
-	return bytes.TrimRight(textToDecrypt, "\x00"), nil
+	return c.unPadding(textToDecrypt), nil
 }
 
 type AESCipherOptions struct {
-	Key       string
-	Base64Key string
-	KMSKey    string
-	KMS       struct {
+	Key         string
+	Base64Key   string
+	KMSKey      string
+	PaddingType string
+	KMS         struct {
 		AccessKeyID     string
 		AccessKeySecret string
 		RegionID        string
 	}
+}
+
+func pkcs7Padding(textToPadding []byte, blockSize int) []byte {
+	n := blockSize - len(textToPadding)%blockSize
+	return append(textToPadding, bytes.Repeat([]byte{byte(n)}, n)...)
+}
+
+func pkcs7UnPadding(textToUnPadding []byte) []byte {
+	n := len(textToUnPadding)
+	if n == 0 {
+		return textToUnPadding
+	}
+	return textToUnPadding[:n-int(textToUnPadding[n-1])]
+}
+
+func zeroPadding(textToPadding []byte, blockSize int) []byte {
+	n := len(textToPadding)
+	if n%blockSize == 0 {
+		return textToPadding
+	}
+	return append(textToPadding, bytes.Repeat([]byte{'\x00'}, blockSize-n%blockSize)...)
+}
+
+func zeroUnPadding(textToUnPadding []byte) []byte {
+	return bytes.TrimRight(textToUnPadding, "\x00")
 }

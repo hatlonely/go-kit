@@ -47,7 +47,7 @@ func TestStorage_Encrypt(t *testing.T) {
 			},
 		})
 		So(err, ShouldBeNil)
-		cipher, _ := NewAESCipher([]byte("123456"))
+		cipher, _ := NewAESCipher([]byte("123456"), "Zero")
 		storage.SetCipherKeys([]string{"Key2", "Key3[0].Key4", "Key3[0].Key5", "Key3[0].Key6.Key7"})
 		So(storage.Encrypt(NewCipherGroup(cipher, NewBase64Cipher())), ShouldBeNil)
 		So(storage.root, ShouldResemble, map[interface{}]interface{}{
@@ -89,7 +89,7 @@ func TestStorage_Decrypt(t *testing.T) {
 			},
 		})
 		So(err, ShouldBeNil)
-		cipher, _ := NewAESCipher([]byte("123456"))
+		cipher, _ := NewAESCipher([]byte("123456"), "")
 		So(storage.Decrypt(NewCipherGroup(cipher, NewBase64Cipher())), ShouldBeNil)
 		So(storage.root, ShouldResemble, map[interface{}]interface{}{
 			"Key1": 1,
