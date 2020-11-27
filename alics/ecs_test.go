@@ -2,6 +2,7 @@ package alics
 
 import (
 	"bytes"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -193,5 +194,31 @@ func TestECSDynamicInstanceIdentityDocument(t *testing.T) {
 		So(res.Mac, ShouldEqual, "00:16:3e:13:9a:81")
 		So(res.ImageID, ShouldEqual, "centos_7_8_x64_20G_alibase_20200914.vhd")
 		So(res.InstanceType, ShouldEqual, "ecs.s6-c1m1.small")
+	})
+}
+
+func TestError(t *testing.T) {
+	Convey("case 1", t, func() {
+		patches := ApplyFunc(http.Get, func(url string) (*http.Response, error) {
+			return nil, errors.New("error")
+		})
+		defer patches.Reset()
+
+		res, err := ECSMetaDataRamSecurityCredentials()
+		So(err, ShouldNotBeNil)
+		So(res, ShouldBeNil)
+	})
+
+	Convey("case 2", t, func() {
+		patches := ApplyFunc(http.Get, func(url string) (*http.Response, error) {
+			return &http.Response{
+				Body: ioutil.NopCloser(bytes.NewBuffer([]byte(``))),
+			}, nil
+		})
+		defer patches.Reset()
+
+		res, err := ECSMetaDataRamSecurityCredentials()
+		So(err, ShouldNotBeNil)
+		So(res, ShouldBeNil)
 	})
 }
