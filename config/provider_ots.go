@@ -8,6 +8,7 @@ import (
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
 	"github.com/pkg/errors"
 
+	"github.com/hatlonely/go-kit/alics"
 	"github.com/hatlonely/go-kit/strx"
 )
 
@@ -21,8 +22,23 @@ type OTSProviderOptions struct {
 	Interval        time.Duration
 }
 
+func NewOTSClient(options *OTSProviderOptions) (*tablestore.TableStoreClient, error) {
+	if options.AccessKeyID != "" {
+		return tablestore.NewClient(options.Endpoint, options.Instance, options.AccessKeyID, options.AccessKeySecret), nil
+	}
+	res, err := alics.ECSMetaDataRamSecurityCredentials()
+	if err != nil {
+		return nil, err
+	}
+	return tablestore.NewClientWithConfig(options.Endpoint, options.Instance, res.AccessKeyID, res.AccessKeySecret, res.SecurityToken, nil), nil
+}
+
 func NewOTSProviderWithOptions(options *OTSProviderOptions) (*OTSProvider, error) {
-	otsCli := tablestore.NewClient(options.Endpoint, options.Instance, options.AccessKeyID, options.AccessKeySecret)
+	otsCli, err := NewOTSClient(options)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewOTSClient failed")
+	}
+
 	if res, err := otsCli.DescribeTable(&tablestore.DescribeTableRequest{
 		TableName: options.Table,
 	}); err != nil {
@@ -57,14 +73,11 @@ func NewOTSProviderWithOptions(options *OTSProviderOptions) (*OTSProvider, error
 	}
 
 	provider := &OTSProvider{
-		otsCli:   otsCli,
-		table:    options.Table,
-		key:      options.Key,
-		interval: options.Interval,
-		events:   make(chan struct{}, 10),
-		errors:   make(chan error, 10),
+		options: options,
+		events:  make(chan struct{}, 10),
+		errors:  make(chan error, 10),
 	}
-	buf, ts, err := provider.otsGetRow(otsCli, options.Table, options.Key)
+	buf, ts, err := provider.otsGetRow()
 	if err != nil {
 		return nil, errors.Wrap(err, "otsGetRow failed")
 	}
@@ -75,15 +88,11 @@ func NewOTSProviderWithOptions(options *OTSProviderOptions) (*OTSProvider, error
 }
 
 type OTSProvider struct {
-	otsCli   *tablestore.TableStoreClient
-	events   chan struct{}
-	errors   chan error
-	table    string
-	key      string
-	interval time.Duration
-
-	buf []byte
-	ts  int64
+	events  chan struct{}
+	errors  chan error
+	buf     []byte
+	ts      int64
+	options *OTSProviderOptions
 }
 
 func (p *OTSProvider) Events() <-chan struct{} {
@@ -98,13 +107,17 @@ func (p *OTSProvider) Load() ([]byte, error) {
 	return p.buf, nil
 }
 
-func (p *OTSProvider) otsGetRow(otsCli *tablestore.TableStoreClient, table string, key string) ([]byte, int64, error) {
+func (p *OTSProvider) otsGetRow() ([]byte, int64, error) {
+	otsCli, err := NewOTSClient(p.options)
+	if err != nil {
+		return nil, 0, errors.Wrap(err, "NewOTSClient failed")
+	}
 	res, err := otsCli.GetRow(&tablestore.GetRowRequest{
 		SingleRowQueryCriteria: &tablestore.SingleRowQueryCriteria{
-			TableName: table,
+			TableName: p.options.Table,
 			PrimaryKey: &tablestore.PrimaryKey{
 				PrimaryKeys: []*tablestore.PrimaryKeyColumn{
-					{ColumnName: "Key", Value: key},
+					{ColumnName: "Key", Value: p.options.Key},
 				},
 			},
 			MaxVersion: 1,
@@ -126,13 +139,17 @@ func (p *OTSProvider) otsGetRow(otsCli *tablestore.TableStoreClient, table strin
 	return []byte(val), ts, nil
 }
 
-func (p *OTSProvider) otsPutRow(otsCli *tablestore.TableStoreClient, table string, key string, buf []byte) error {
-	_, err := otsCli.PutRow(&tablestore.PutRowRequest{
+func (p *OTSProvider) otsPutRow(buf []byte) error {
+	otsCli, err := NewOTSClient(p.options)
+	if err != nil {
+		return errors.Wrap(err, "NewOTSClient failed")
+	}
+	_, err = otsCli.PutRow(&tablestore.PutRowRequest{
 		PutRowChange: &tablestore.PutRowChange{
-			TableName: table,
+			TableName: p.options.Table,
 			PrimaryKey: &tablestore.PrimaryKey{
 				PrimaryKeys: []*tablestore.PrimaryKeyColumn{
-					{ColumnName: "Key", Value: key},
+					{ColumnName: "Key", Value: p.options.Key},
 				},
 			},
 			Columns: []tablestore.AttributeColumn{
@@ -146,19 +163,19 @@ func (p *OTSProvider) otsPutRow(otsCli *tablestore.TableStoreClient, table strin
 }
 
 func (p *OTSProvider) Dump(buf []byte) error {
-	return p.otsPutRow(p.otsCli, p.table, p.key, buf)
+	return p.otsPutRow(buf)
 }
 
 func (p *OTSProvider) EventLoop(ctx context.Context) error {
 	go func() {
-		ticker := time.NewTicker(p.interval)
+		ticker := time.NewTicker(p.options.Interval)
 		defer ticker.Stop()
 
 	out:
 		for {
 			select {
 			case <-ticker.C:
-				buf, ts, err := p.otsGetRow(p.otsCli, p.table, p.key)
+				buf, ts, err := p.otsGetRow()
 				if err != nil {
 					p.errors <- err
 					continue

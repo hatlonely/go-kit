@@ -80,7 +80,7 @@ func TestOTSProvider(t *testing.T) {
 		So(err, ShouldBeNil)
 		{
 			So(provider.Dump([]byte("hello world")), ShouldBeNil)
-			buf, _, err := provider.otsGetRow(provider.otsCli, "TestConfig", "test")
+			buf, _, err := provider.otsGetRow()
 			So(err, ShouldBeNil)
 			So(string(buf), ShouldContainSubstring, "hello world")
 		}
@@ -93,7 +93,7 @@ func TestOTSProvider(t *testing.T) {
 			}
 
 			for i := 0; i < 5; i++ {
-				So(provider.otsPutRow(provider.otsCli, "TestConfig", "test", []byte(fmt.Sprintf("hello world %v", i))), ShouldBeNil)
+				So(provider.otsPutRow([]byte(fmt.Sprintf("hello world %v", i))), ShouldBeNil)
 				<-provider.Events()
 				buf, err := provider.Load()
 				So(err, ShouldBeNil)
