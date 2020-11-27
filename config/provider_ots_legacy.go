@@ -24,15 +24,11 @@ type OTSLegacyProviderOptions struct {
 }
 
 type OTSLegacyProvider struct {
-	otsCli      *tablestore.TableStoreClient
-	events      chan struct{}
-	errors      chan error
-	table       string
-	primaryKeys []string
-	interval    time.Duration
-
-	buf []byte
-	ts  int64
+	events  chan struct{}
+	errors  chan error
+	buf     []byte
+	ts      int64
+	options *OTSLegacyProviderOptions
 }
 
 func NewOTSLegacyProviderWithOptions(options *OTSLegacyProviderOptions) (*OTSLegacyProvider, error) {
@@ -78,14 +74,11 @@ func NewOTSLegacyProviderWithOptions(options *OTSLegacyProviderOptions) (*OTSLeg
 	}
 
 	provider := &OTSLegacyProvider{
-		otsCli:      otsCli,
-		table:       options.Table,
-		primaryKeys: options.PrimaryKeys,
-		interval:    options.Interval,
-		events:      make(chan struct{}, 10),
-		errors:      make(chan error, 10),
+		options: options,
+		events:  make(chan struct{}, 10),
+		errors:  make(chan error, 10),
 	}
-	buf, ts, err := provider.otsGetRange(otsCli, options.Table, options.PrimaryKeys)
+	buf, ts, err := provider.otsGetRange()
 	if err != nil {
 		return nil, errors.Wrap(err, "otsGetRange failed")
 	}
@@ -108,19 +101,19 @@ func (p *OTSLegacyProvider) Load() ([]byte, error) {
 }
 
 func (p *OTSLegacyProvider) Dump(buf []byte) error {
-	return p.otsPutRow(p.otsCli, p.table, p.primaryKeys, buf)
+	return p.otsPutRow(buf)
 }
 
 func (p *OTSLegacyProvider) EventLoop(ctx context.Context) error {
 	go func() {
-		ticker := time.NewTicker(p.interval)
+		ticker := time.NewTicker(p.options.Interval)
 		defer ticker.Stop()
 
 	out:
 		for {
 			select {
 			case <-ticker.C:
-				buf, ts, err := p.otsGetRange(p.otsCli, p.table, p.primaryKeys)
+				buf, ts, err := p.otsGetRange()
 				if err != nil {
 					p.errors <- err
 					continue
@@ -140,10 +133,15 @@ func (p *OTSLegacyProvider) EventLoop(ctx context.Context) error {
 	return nil
 }
 
-func (p *OTSLegacyProvider) otsGetRange(otsCli *tablestore.TableStoreClient, table string, primaryKeys []string) ([]byte, int64, error) {
+func (p *OTSLegacyProvider) otsGetRange() ([]byte, int64, error) {
+	otsCli, err := newOTSClient(p.options.Endpoint, p.options.Instance, p.options.AccessKeyID, p.options.AccessKeySecret)
+	if err != nil {
+		return nil, 0, errors.Wrap(err, "newOTSClient failed")
+	}
+
 	req := &tablestore.GetRangeRequest{
 		RangeRowQueryCriteria: &tablestore.RangeRowQueryCriteria{
-			TableName:       table,
+			TableName:       p.options.Table,
 			MaxVersion:      1,
 			Direction:       tablestore.FORWARD,
 			Limit:           20,
@@ -151,7 +149,7 @@ func (p *OTSLegacyProvider) otsGetRange(otsCli *tablestore.TableStoreClient, tab
 			StartPrimaryKey: &tablestore.PrimaryKey{},
 		},
 	}
-	for _, key := range primaryKeys {
+	for _, key := range p.options.PrimaryKeys {
 		req.RangeRowQueryCriteria.StartPrimaryKey.AddPrimaryKeyColumnWithMinValue(key)
 		req.RangeRowQueryCriteria.EndPrimaryKey.AddPrimaryKeyColumnWithMaxValue(key)
 	}
@@ -224,14 +222,18 @@ func (p *OTSLegacyProvider) otsGetRange(otsCli *tablestore.TableStoreClient, tab
 	return buf, ts, nil
 }
 
-func (p *OTSLegacyProvider) otsPutRow(otsCli *tablestore.TableStoreClient, table string, primaryKeys []string, buf []byte) error {
+func (p *OTSLegacyProvider) otsPutRow(buf []byte) error {
+	otsCli, err := newOTSClient(p.options.Endpoint, p.options.Instance, p.options.AccessKeyID, p.options.AccessKeySecret)
+	if err != nil {
+		return errors.Wrap(err, "newOTSClient failed")
+	}
 	var v interface{}
 	d := json.NewDecoder(bytes.NewBuffer(buf))
 	d.UseNumber()
 	if err := d.Decode(&v); err != nil {
 		return errors.Wrap(err, "unmarshal failed")
 	}
-	return p.otsPutRowRecursive(otsCli, table, primaryKeys, []string{}, v, len(primaryKeys))
+	return p.otsPutRowRecursive(otsCli, p.options.Table, p.options.PrimaryKeys, []string{}, v, len(p.options.PrimaryKeys))
 }
 
 func (p *OTSLegacyProvider) otsPutRowRecursive(otsCli *tablestore.TableStoreClient, table string, primaryKeys []string, values []string, v interface{}, idx int) error {
