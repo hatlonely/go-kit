@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"testing"
@@ -8,7 +9,56 @@ import (
 	. "github.com/agiledragon/gomonkey"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/kms"
 	. "github.com/smartystreets/goconvey/convey"
+
+	"github.com/hatlonely/go-kit/alics"
 )
+
+func TestNewKMSCipher(t *testing.T) {
+	Convey("TestNewKMSCipher", t, func() {
+		patches := ApplyFunc(alics.ECSMetaDataRegionID, func() (string, error) {
+			return "cn-beijing", nil
+		}).ApplyFunc(alics.ECSMetaDataRamSecurityCredentialsRole, func() (string, error) {
+			return "test-role", nil
+		})
+		defer patches.Reset()
+
+		kmsCli, err := NewKMSCipherWithOptions(&KMSCipherOptions{
+			KeyID: "test-id",
+		})
+		So(err, ShouldBeNil)
+		So(kmsCli, ShouldNotBeNil)
+	})
+
+	Convey("case region id error", t, func() {
+		patches := ApplyFunc(alics.ECSMetaDataRegionID, func() (string, error) {
+			return "", errors.New("error")
+		}).ApplyFunc(alics.ECSMetaDataRamSecurityCredentialsRole, func() (string, error) {
+			return "test-role", nil
+		})
+		defer patches.Reset()
+
+		kmsCli, err := NewKMSCipherWithOptions(&KMSCipherOptions{
+			KeyID: "test-id",
+		})
+		So(err, ShouldNotBeNil)
+		So(kmsCli, ShouldBeNil)
+	})
+
+	Convey("case credential error", t, func() {
+		patches := ApplyFunc(alics.ECSMetaDataRegionID, func() (string, error) {
+			return "cn-beijing", nil
+		}).ApplyFunc(alics.ECSMetaDataRamSecurityCredentialsRole, func() (string, error) {
+			return "", errors.New("error")
+		})
+		defer patches.Reset()
+
+		kmsCli, err := NewKMSCipherWithOptions(&KMSCipherOptions{
+			KeyID: "test-id",
+		})
+		So(err, ShouldNotBeNil)
+		So(kmsCli, ShouldBeNil)
+	})
+}
 
 func TestKMSCipher(t *testing.T) {
 	Convey("TestKMSCipher", t, func() {
@@ -53,6 +103,5 @@ func TestKMSCipher(t *testing.T) {
 		So(err, ShouldBeNil)
 		So(plain, ShouldEqual, "plain")
 		So(blob, ShouldEqual, "blob")
-
 	})
 }
