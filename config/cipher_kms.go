@@ -10,26 +10,26 @@ func NewKMSCipherWithOptions(options *KMSCipherOptions) (*KMSCipher, error) {
 	return NewKMSCipherWithAccessKey(options.AccessKeyID, options.AccessKeySecret, options.RegionID, options.KeyID)
 }
 
-func NewKMSCipherWithAccessKey(ak, sk, regionID string, keyID string) (*KMSCipher, error) {
-	var kmsCli *kms.Client
-	var err error
+func newKMSClient(accessKeyID string, accessKeySecret string, regionID string) (kmsCli *kms.Client, err error) {
 	if regionID == "" {
 		if regionID, err = alics.ECSMetaDataRegionID(); err != nil {
 			return nil, err
 		}
 	}
-	if ak == "" {
+	if accessKeyID == "" {
 		role, err := alics.ECSMetaDataRamSecurityCredentialsRole()
 		if err != nil {
 			return nil, err
 		}
-		if kmsCli, err = kms.NewClientWithEcsRamRole(regionID, role); err != nil {
-			return nil, err
-		}
-	} else {
-		if kmsCli, err = kms.NewClientWithAccessKey(ak, sk, regionID); err != nil {
-			return nil, err
-		}
+		return kms.NewClientWithEcsRamRole(regionID, role)
+	}
+	return kms.NewClientWithAccessKey(regionID, accessKeyID, accessKeySecret)
+}
+
+func NewKMSCipherWithAccessKey(accessKeyID string, accessKeySecret string, regionID string, keyID string) (*KMSCipher, error) {
+	kmsCli, err := newKMSClient(accessKeyID, accessKeySecret, regionID)
+	if err != nil {
+		return nil, err
 	}
 	return NewKMSCipher(kmsCli, keyID)
 }
