@@ -22,7 +22,7 @@ type OTSProviderOptions struct {
 	Interval        time.Duration
 }
 
-func NewOTSClient(options *OTSProviderOptions) (*tablestore.TableStoreClient, error) {
+func newOTSClient(options *OTSProviderOptions) (*tablestore.TableStoreClient, error) {
 	if options.AccessKeyID != "" {
 		return tablestore.NewClient(options.Endpoint, options.Instance, options.AccessKeyID, options.AccessKeySecret), nil
 	}
@@ -34,7 +34,7 @@ func NewOTSClient(options *OTSProviderOptions) (*tablestore.TableStoreClient, er
 }
 
 func NewOTSProviderWithOptions(options *OTSProviderOptions) (*OTSProvider, error) {
-	otsCli, err := NewOTSClient(options)
+	otsCli, err := newOTSClient(options)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewOTSClient failed")
 	}
@@ -108,7 +108,7 @@ func (p *OTSProvider) Load() ([]byte, error) {
 }
 
 func (p *OTSProvider) otsGetRow() ([]byte, int64, error) {
-	otsCli, err := NewOTSClient(p.options)
+	otsCli, err := newOTSClient(p.options)
 	if err != nil {
 		return nil, 0, errors.Wrap(err, "NewOTSClient failed")
 	}
@@ -140,7 +140,7 @@ func (p *OTSProvider) otsGetRow() ([]byte, int64, error) {
 }
 
 func (p *OTSProvider) otsPutRow(buf []byte) error {
-	otsCli, err := NewOTSClient(p.options)
+	otsCli, err := newOTSClient(p.options)
 	if err != nil {
 		return errors.Wrap(err, "NewOTSClient failed")
 	}
