@@ -2,6 +2,7 @@ package config
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
@@ -22,6 +23,7 @@ type OTSProviderOptions struct {
 	Interval        time.Duration
 }
 
+// ecs ram 返回的是 sts token 有过期时间，无法常驻内存，随用随创建
 func newOTSClient(endpoint string, instance string, accessKeyID string, accessKeySecret string) (*tablestore.TableStoreClient, error) {
 	if accessKeyID != "" {
 		return tablestore.NewClient(endpoint, instance, accessKeyID, accessKeySecret), nil
@@ -34,6 +36,17 @@ func newOTSClient(endpoint string, instance string, accessKeyID string, accessKe
 }
 
 func NewOTSProviderWithOptions(options *OTSProviderOptions) (*OTSProvider, error) {
+	if options.Instance == "" {
+		return nil, errors.New("OTSProviderOptions.Instance is required")
+	}
+	if options.Endpoint == "" {
+		regionID, err := alics.ECSMetaDataRegionID()
+		if err != nil {
+			return nil, errors.Wrap(err, "ECSMetaDataRegionID failed")
+		}
+		options.Endpoint = fmt.Sprintf("https://%s.%s.ots.aliyuncs.com", options.Instance, regionID)
+	}
+
 	otsCli, err := newOTSClient(options.Endpoint, options.Instance, options.AccessKeyID, options.AccessKeySecret)
 	if err != nil {
 		return nil, errors.Wrap(err, "newOTSClient failed")

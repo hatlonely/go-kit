@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
 
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
 	"github.com/pkg/errors"
 
+	"github.com/hatlonely/go-kit/alics"
 	"github.com/hatlonely/go-kit/strx"
 )
 
@@ -32,6 +34,17 @@ type OTSLegacyProvider struct {
 }
 
 func NewOTSLegacyProviderWithOptions(options *OTSLegacyProviderOptions) (*OTSLegacyProvider, error) {
+	if options.Instance == "" {
+		return nil, errors.New("OTSProviderOptions.Instance is required")
+	}
+	if options.Endpoint == "" {
+		regionID, err := alics.ECSMetaDataRegionID()
+		if err != nil {
+			return nil, errors.Wrap(err, "ECSMetaDataRegionID failed")
+		}
+		options.Endpoint = fmt.Sprintf("https://%s.%s.ots.aliyuncs.com", options.Instance, regionID)
+	}
+
 	otsCli, err := newOTSClient(options.Endpoint, options.Instance, options.AccessKeyID, options.AccessKeySecret)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewOTSClient failed")
