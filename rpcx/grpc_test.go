@@ -2,6 +2,7 @@ package rpcx
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -39,5 +40,12 @@ func TestCtxGetSet(t *testing.T) {
 		CtxSet(ctx, "key2", 2)
 		So(CtxGet(ctx, "key1"), ShouldEqual, "val1")
 		So(CtxGet(ctx, "key2"), ShouldEqual, 2)
+	})
+}
+
+func TestPrivateIP(t *testing.T) {
+	Convey("TestPrivateIP", t, func() {
+		fmt.Println(privateIP())
+		fmt.Println(hostname())
 	})
 }

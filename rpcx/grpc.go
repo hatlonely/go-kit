@@ -3,7 +3,9 @@ package rpcx
 import (
 	"context"
 	"fmt"
+	"net"
 	"net/http"
+	"os"
 	"runtime/debug"
 	"strings"
 	"time"
@@ -58,6 +60,12 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 	for _, opt := range opts {
 		opt(&options)
 	}
+	if options.Hostname == "" {
+		options.Hostname = hostname()
+	}
+	if options.PrivateIP == "" {
+		options.PrivateIP = privateIP()
+	}
 
 	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		var requestID, remoteIP string
@@ -98,6 +106,8 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 			meta, _ := metadata.FromIncomingContext(ctx)
 			log.Info(map[string]interface{}{
 				"requestID": requestID,
+				"hostname":  options.Hostname,
+				"privateIP": options.PrivateIP,
 				"remoteIP":  remoteIP,
 				"clientIP":  clientIP,
 				"method":    info.FullMethod,
@@ -142,7 +152,9 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 }
 
 type GRPCOptions struct {
-	Headers []string
+	Headers   []string
+	PrivateIP string
+	Hostname  string
 }
 
 var defaultGRPCOptions = GRPCOptions{
@@ -155,4 +167,39 @@ func WithGRPCHeaders(headers ...string) GRPCOption {
 	return func(options *GRPCOptions) {
 		options.Headers = headers
 	}
+}
+
+func WithPrivateIP(privateIP string) GRPCOption {
+	return func(options *GRPCOptions) {
+		options.PrivateIP = privateIP
+	}
+}
+
+func WithHostname(hostname string) GRPCOption {
+	return func(options *GRPCOptions) {
+		options.Hostname = hostname
+	}
+}
+
+func privateIP() string {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return "unknown"
+	}
+	for _, a := range addrs {
+		if ipNet, ok := a.(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
+			if ipNet.IP.To4() != nil {
+				return ipNet.IP.String()
+			}
+		}
+	}
+	return "unknown"
+}
+
+func hostname() string {
+	name, err := os.Hostname()
+	if err != nil {
+		return ""
+	}
+	return name
 }
