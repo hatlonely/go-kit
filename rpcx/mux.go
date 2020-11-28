@@ -8,7 +8,6 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	uuid "github.com/satori/go.uuid"
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
@@ -53,23 +52,21 @@ func WithMuxProtoErrorHandler(opts ...MuxOption) runtime.ServeMuxOption {
 			res.Header().Set(header, req.Header.Get(header))
 		}
 
-		s := status.Convert(err)
-		if len(s.Details()) >= 1 {
-			if e, ok := s.Details()[0].(*ErrorDetail); ok {
-				e.Status = int64(runtime.HTTPStatusFromCode(codes.Code(e.Status)))
-				res.WriteHeader(int(e.Status))
-				buf, _ := json.Marshal(e)
-				_, _ = res.Write(buf)
-				return
-			}
-		}
-		e := NewInternalError(err).SetRequestID(req.Header.Get("X-Request-Id")).Detail
-		e.Status = int64(runtime.HTTPStatusFromCode(s.Code()))
-		e.Code = http.StatusText(int(e.Status))
+		e := StatusErrorDetail(err, req.Header.Get("X-Request-Id"))
 		res.WriteHeader(int(e.Status))
 		buf, _ := json.Marshal(e)
 		_, _ = res.Write(buf)
 	})
+}
+
+func StatusErrorDetail(err error, requestID string) *ErrorDetail {
+	s := status.Convert(err)
+	if len(s.Details()) >= 1 {
+		if e, ok := s.Details()[0].(*ErrorDetail); ok {
+			return e
+		}
+	}
+	return NewInternalError(err).SetRequestID(requestID).Detail
 }
 
 type MuxOptions struct {

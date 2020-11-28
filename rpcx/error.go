@@ -68,8 +68,13 @@ func (e *Error) SetStatus(status int64) *Error {
 	return e
 }
 
+func (e *Error) SetMessage(message string) *Error {
+	e.Detail.Message = message
+	return e
+}
+
 func (e *Error) Error() string {
-	return e.Detail.Message
+	return e.err.Error()
 }
 
 func (e *Error) Format(s fmt.State, verb rune) {
