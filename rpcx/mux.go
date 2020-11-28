@@ -10,6 +10,8 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+
+	"github.com/hatlonely/go-kit/refx"
 )
 
 func WithMuxMetadata() runtime.ServeMuxOption {
@@ -41,7 +43,8 @@ func WithMuxOutgoingHeaderMatcher() runtime.ServeMuxOption {
 }
 
 func WithMuxProtoErrorHandler(opts ...MuxOption) runtime.ServeMuxOption {
-	options := defaultMuxOptions
+	var options MuxOptions
+	_ = refx.SetDefaultValue(&options)
 	for _, opt := range opts {
 		opt(&options)
 	}
@@ -70,13 +73,8 @@ func StatusErrorDetail(err error, requestID string) *ErrorDetail {
 }
 
 type MuxOptions struct {
-	Headers     []string
-	ContentType string
-}
-
-var defaultMuxOptions = MuxOptions{
-	Headers:     []string{"X-Request-Id"},
-	ContentType: "application/json",
+	Headers     []string `dft:"X-Request-Id"`
+	ContentType string   `dft:"application/json"`
 }
 
 type MuxOption func(options *MuxOptions)
