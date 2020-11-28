@@ -11,11 +11,11 @@ import (
 )
 
 func Bind(v interface{}, getters []Getter, opts ...refx.Option) error {
-	_, err := bindRecursive(v, "", getters, "", refx.NewOptions(opts...))
+	_, err := bindRecursive(v, "", getters, refx.NewOptions(opts...))
 	return err
 }
 
-func bindRecursive(v interface{}, prefix string, getters []Getter, dft string, options *refx.Options) (int, error) {
+func bindRecursive(v interface{}, prefix string, getters []Getter, options *refx.Options) (int, error) {
 	rv := reflect.ValueOf(v)
 	if rv.Kind() != reflect.Ptr || rv.IsNil() {
 		return 0, &Error{Code: ErrInvalidDstType, Err: errors.Errorf("invalid value [%v] type or value is nil", reflect.TypeOf(v)), Key: prefix}
@@ -23,6 +23,12 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, dft string, o
 	rv = rv.Elem()
 
 	if rv.Kind() == reflect.Struct {
+		if !options.DisableDefaultValue {
+			if err := refx.SetDefaultValue(v); err != nil {
+				return 0, errors.Wrap(err, "SetDefaultValue failed")
+			}
+		}
+
 		count := 0
 		for i := 0; i < rv.NumField(); i++ {
 			// ignore unexported field
@@ -30,7 +36,6 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, dft string, o
 				continue
 			}
 			key := rv.Type().Field(i).Name
-			dft := rv.Type().Field(i).Tag.Get("dft")
 			switch rv.Field(i).Type().Kind() {
 			case reflect.Ptr:
 				if rv.Field(i).IsNil() {
@@ -38,13 +43,13 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, dft string, o
 					rv.Field(i).Set(nv)
 				}
 				if rv.Type().Field(i).Anonymous {
-					if cnt, err := bindRecursive(rv.Field(i).Interface(), prefix, getters, dft, options); err != nil {
+					if cnt, err := bindRecursive(rv.Field(i).Interface(), prefix, getters, options); err != nil {
 						return 0, err
 					} else {
 						count += cnt
 					}
 				} else {
-					if cnt, err := bindRecursive(rv.Field(i).Interface(), prefixAppendKey(prefix, refx.FormatKeyWithOptions(key, options)), getters, dft, options); err != nil {
+					if cnt, err := bindRecursive(rv.Field(i).Interface(), prefixAppendKey(prefix, refx.FormatKeyWithOptions(key, options)), getters, options); err != nil {
 						return 0, err
 					} else {
 						count += cnt
@@ -52,13 +57,13 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, dft string, o
 				}
 			default:
 				if rv.Type().Field(i).Anonymous {
-					if cnt, err := bindRecursive(rv.Field(i).Addr().Interface(), prefix, getters, dft, options); err != nil {
+					if cnt, err := bindRecursive(rv.Field(i).Addr().Interface(), prefix, getters, options); err != nil {
 						return 0, err
 					} else {
 						count += cnt
 					}
 				} else {
-					if cnt, err := bindRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, refx.FormatKeyWithOptions(key, options)), getters, dft, options); err != nil {
+					if cnt, err := bindRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, refx.FormatKeyWithOptions(key, options)), getters, options); err != nil {
 						return 0, err
 					} else {
 						count += cnt
@@ -74,7 +79,7 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, dft string, o
 			switch rt.Elem().Kind() {
 			case reflect.Ptr:
 				nv := reflect.New(rt.Elem().Elem())
-				if cnt, err := bindRecursive(nv.Interface(), prefixAppendIdx(prefix, i), getters, "", options); err != nil {
+				if cnt, err := bindRecursive(nv.Interface(), prefixAppendIdx(prefix, i), getters, options); err != nil {
 					return 0, err
 				} else if cnt != 0 {
 					count += cnt
@@ -84,7 +89,7 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, dft string, o
 				}
 			default:
 				nv := reflect.New(rt.Elem())
-				if cnt, err := bindRecursive(nv.Interface(), prefixAppendIdx(prefix, i), getters, "", options); err != nil {
+				if cnt, err := bindRecursive(nv.Interface(), prefixAppendIdx(prefix, i), getters, options); err != nil {
 					return 0, err
 				} else if cnt != 0 {
 					count += cnt
@@ -108,12 +113,6 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, dft string, o
 			return 0, &Error{Code: ErrInvalidFormat, Key: prefix, Err: errors.Wrap(err, "set interface failed")}
 		}
 		return 1, nil
-	}
-
-	if dft != "" {
-		if err := cast.SetInterface(v, dft); err != nil {
-			return 0, &Error{Code: ErrInvalidFormat, Key: prefix, Err: errors.Wrap(err, "set interface failed")}
-		}
 	}
 
 	return 0, nil

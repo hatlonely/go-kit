@@ -16,6 +16,7 @@ func TestBind(t *testing.T) {
 			Key1 string
 			Key2 string
 			Key4 time.Duration `dft:"4s"`
+			Key6 []string      `dft:"hello,world"`
 		}
 
 		type B struct {
@@ -66,5 +67,6 @@ func TestBind(t *testing.T) {
 		So(b.Key2, ShouldEqual, "val15")
 		So(b.Key4, ShouldEqual, 1*time.Minute)
 		So(b.A1.Key4, ShouldEqual, 4*time.Second)
+		So(b.A1.Key6, ShouldResemble, []string{"hello", "world"})
 	})
 }

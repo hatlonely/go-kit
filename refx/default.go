@@ -19,6 +19,10 @@ func SetDefaultValue(v interface{}) error {
 	}
 
 	rt := reflect.TypeOf(v)
+	if rt.Kind() != reflect.Ptr || rt.Elem().Kind() != reflect.Struct {
+		return nil
+	}
+
 	mutex.RLock()
 	if rv, ok := defaultValueMap[rt]; ok {
 		mutex.RUnlock()
@@ -31,8 +35,11 @@ func SetDefaultValue(v interface{}) error {
 		return err
 	}
 
+	nv := reflect.New(reflect.TypeOf(v).Elem())
+	nv.Elem().Set(reflect.ValueOf(v).Elem())
+
 	mutex.Lock()
-	defaultValueMap[rt] = reflect.ValueOf(v).Elem()
+	defaultValueMap[rt] = nv.Elem()
 	mutex.Unlock()
 	return nil
 }
