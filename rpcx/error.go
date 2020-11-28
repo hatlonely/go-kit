@@ -5,6 +5,7 @@ package rpcx
 import (
 	"fmt"
 	"io"
+	"net/http"
 
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
@@ -39,6 +40,7 @@ func NewInternalError(err error) *Error {
 		err:  err,
 		code: codes.Internal,
 		Detail: &ErrorDetail{
+			Status:  http.StatusInternalServerError,
 			Code:    "InternalError",
 			Message: err.Error(),
 		},

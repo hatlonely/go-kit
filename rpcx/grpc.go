@@ -3,10 +3,12 @@ package rpcx
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"runtime/debug"
 	"strings"
 	"time"
 
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 	"google.golang.org/grpc"
@@ -75,12 +77,22 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 		ts := time.Now()
 		defer func() {
 			if perr := recover(); perr != nil {
-				err = errors.Wrap(fmt.Errorf("%v\n%v", string(debug.Stack()), perr), "panic")
+				err = NewInternalError(errors.Wrap(fmt.Errorf("%v\n%v", string(debug.Stack()), perr), "panic"))
 			}
 
 			clientIP := ""
 			if p, ok := peer.FromContext(ctx); ok && p != nil {
 				clientIP = p.Addr.String()
+			}
+
+			rpcCode := codes.OK.String()
+			errCode := "OK"
+			status := http.StatusOK
+			if err != nil {
+				e := err.(*Error)
+				rpcCode = e.code.String()
+				errCode = e.Detail.Code
+				status = int(e.Detail.Status)
 			}
 
 			meta, _ := metadata.FromIncomingContext(ctx)
@@ -89,6 +101,9 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 				"remoteIP":  remoteIP,
 				"clientIP":  clientIP,
 				"method":    info.FullMethod,
+				"rpcCode":   rpcCode,
+				"errCode":   errCode,
+				"status":    status,
 				"meta":      meta,
 				"req":       req,
 				"ctx":       ctx.Value(grpcCtxKey{}),
@@ -114,9 +129,13 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 		if err != nil {
 			switch e := err.(type) {
 			case *Error:
-				return res, e.SetRequestID(requestID).ToStatus().Err()
+				if e.Detail.Status == 0 {
+					e.Detail.Status = int64(runtime.HTTPStatusFromCode(e.code))
+				}
+			default:
+				err = NewInternalError(err)
 			}
-			return res, NewInternalError(err).SetRequestID(requestID).ToStatus().Err()
+			return res, err.(*Error).SetRequestID(requestID).ToStatus().Err()
 		}
 		return res, nil
 	})
