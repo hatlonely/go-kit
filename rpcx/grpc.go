@@ -142,11 +142,12 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 		}
 
 		if err != nil {
-			switch e := err.(type) {
+			switch e := errors.Cause(err).(type) {
 			case *Error:
 				if e.Detail.Status == 0 {
 					e.Detail.Status = int32(runtime.HTTPStatusFromCode(e.code))
 				}
+				err = NewError(e.code, e.Detail.Code, e.Detail.Message, err).SetStatus(int(e.Detail.Status)).SetRequestID(e.Detail.RequestID).SetRefer(e.Detail.Refer)
 			default:
 				err = NewInternalError(err)
 			}

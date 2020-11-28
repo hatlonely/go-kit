@@ -1,7 +1,9 @@
 package rpcx
 
 import (
+	"fmt"
 	"net/http"
+	"reflect"
 	"testing"
 
 	"github.com/pkg/errors"
@@ -81,5 +83,36 @@ func TestError_ToStatus(t *testing.T) {
 		So(detail.RequestID, ShouldEqual, "test-request-id")
 		So(detail.Code, ShouldEqual, "InvalidArgument")
 		So(detail.Message, ShouldEqual, "invalid argument")
+	})
+}
+
+func TestError_Format(t *testing.T) {
+	fun0 := func() error {
+		return errors.New("error0")
+	}
+	fun1 := func() error {
+		return errors.WithMessage(fun0(), "error1")
+	}
+	fun2 := func() error {
+		return NewInternalError(fun1())
+	}
+	fun3 := func() error {
+		return errors.WithMessage(fun2(), "error3")
+	}
+	fun4 := func() error {
+		return NewInternalError(fun3())
+	}
+	fun5 := func() error {
+		return errors.WithMessage(fun4(), "error5")
+	}
+
+	Convey("TestError_Format", t, func() {
+		fmt.Println(reflect.TypeOf(errors.Cause(fun1())))
+		fmt.Println(reflect.TypeOf(errors.Cause(fun2())))
+		fmt.Println(reflect.TypeOf(errors.Cause(fun3())))
+		fmt.Println(reflect.TypeOf(errors.Cause(fun4())))
+		fmt.Println(reflect.TypeOf(errors.Cause(fun5())))
+		fmt.Printf("%v\n", fun5())
+		fmt.Printf("%+v\n", fun5())
 	})
 }
