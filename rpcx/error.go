@@ -11,45 +11,34 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func NewErrorWithoutRefer(err error, status codes.Code, code string, message string) error {
-	return NewError(err, status, code, message, "")
-}
-
-func NewError(err error, status codes.Code, code string, message string, refer string) error {
+func NewError(err error, status codes.Code, code string, message string) *Error {
 	return &Error{
-		Err: err,
+		err:  err,
+		code: status,
 		Detail: &ErrorDetail{
-			Status:  int64(status),
 			Code:    code,
 			Message: message,
-			Refer:   refer,
 		},
 	}
 }
 
-func NewErrorWithoutReferf(status codes.Code, code string, format string, args ...interface{}) error {
-	return NewErrorf(status, code, "", format, args...)
-}
-
-func NewErrorf(status codes.Code, code string, refer string, format string, args ...interface{}) error {
+func NewErrorf(status codes.Code, code string, format string, args ...interface{}) *Error {
 	str := fmt.Sprintf(format, args...)
-	err := errors.New(str)
 	return &Error{
-		Err: err,
+		err:  errors.New(str),
+		code: status,
 		Detail: &ErrorDetail{
-			Status:  int64(status),
 			Code:    code,
 			Message: str,
-			Refer:   refer,
 		},
 	}
 }
 
 func NewInternalError(err error) *Error {
 	return &Error{
-		Err: err,
+		err:  err,
+		code: codes.Internal,
 		Detail: &ErrorDetail{
-			Status:  int64(codes.Internal),
 			Code:    "InternalError",
 			Message: err.Error(),
 		},
@@ -57,12 +46,23 @@ func NewInternalError(err error) *Error {
 }
 
 type Error struct {
-	Err    error
+	err    error
+	code   codes.Code
 	Detail *ErrorDetail
 }
 
 func (e *Error) SetRequestID(requestID string) *Error {
 	e.Detail.RequestID = requestID
+	return e
+}
+
+func (e *Error) SetRefer(refer string) *Error {
+	e.Detail.Refer = refer
+	return e
+}
+
+func (e *Error) SetStatus(status int64) *Error {
+	e.Detail.Status = status
 	return e
 }
 
@@ -74,7 +74,7 @@ func (e *Error) Format(s fmt.State, verb rune) {
 	switch verb {
 	case 'v':
 		if s.Flag('+') {
-			_, _ = fmt.Fprintf(s, "%+v\n", e.Err)
+			_, _ = fmt.Fprintf(s, "%+v\n", e.err)
 			return
 		}
 		fallthrough
@@ -84,6 +84,6 @@ func (e *Error) Format(s fmt.State, verb rune) {
 }
 
 func (e *Error) ToStatus() *status.Status {
-	s, _ := status.New(codes.Code(e.Detail.Status), e.Detail.Message).WithDetails(e.Detail)
+	s, _ := status.New(e.code, e.err.Error()).WithDetails(e.Detail)
 	return s
 }

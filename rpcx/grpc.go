@@ -106,7 +106,7 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 		}()
 
 		if err = validator.Validate(req); err != nil {
-			err = NewErrorWithoutRefer(err, codes.InvalidArgument, "InvalidArgument", err.Error())
+			err = NewError(err, codes.InvalidArgument, "InvalidArgument", err.Error())
 		} else {
 			res, err = handler(ctx, req)
 		}
