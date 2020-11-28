@@ -50,7 +50,7 @@ func NewInternalError(err error) *Error {
 type Error struct {
 	err    error
 	code   codes.Code
-	Detail *ErrorDetail
+	Detail *ErrorDetail `json:"detail,omitempty"`
 }
 
 func (e *Error) SetRequestID(requestID string) *Error {
@@ -63,8 +63,8 @@ func (e *Error) SetRefer(refer string) *Error {
 	return e
 }
 
-func (e *Error) SetStatus(status int64) *Error {
-	e.Detail.Status = status
+func (e *Error) SetStatus(status int) *Error {
+	e.Detail.Status = int32(status)
 	return e
 }
 

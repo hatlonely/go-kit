@@ -145,7 +145,7 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 			switch e := err.(type) {
 			case *Error:
 				if e.Detail.Status == 0 {
-					e.Detail.Status = int64(runtime.HTTPStatusFromCode(e.code))
+					e.Detail.Status = int32(runtime.HTTPStatusFromCode(e.code))
 				}
 			default:
 				err = NewInternalError(err)
