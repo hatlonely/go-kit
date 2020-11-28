@@ -2,11 +2,11 @@ package rpcx
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"strings"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	jsoniter "github.com/json-iterator/go"
 	uuid "github.com/satori/go.uuid"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
@@ -48,6 +48,10 @@ func WithMuxProtoErrorHandler(opts ...MuxOption) runtime.ServeMuxOption {
 	for _, opt := range opts {
 		opt(&options)
 	}
+	detailMarshal := jsonMarshalErrorDetail
+	if options.UseFieldKey {
+		detailMarshal = jsonMarshalErrorDetailWithFieldKey
+	}
 
 	return runtime.WithProtoErrorHandler(func(ctx context.Context, mux *runtime.ServeMux, m runtime.Marshaler, res http.ResponseWriter, req *http.Request, err error) {
 		res.Header().Set("Content-Type", options.ContentType)
@@ -57,9 +61,34 @@ func WithMuxProtoErrorHandler(opts ...MuxOption) runtime.ServeMuxOption {
 
 		e := StatusErrorDetail(err, req.Header.Get("X-Request-Id"))
 		res.WriteHeader(int(e.Status))
-		buf, _ := json.Marshal(e)
-		_, _ = res.Write(buf)
+		_, _ = res.Write(detailMarshal(e))
 	})
+}
+
+func jsonMarshalErrorDetail(detail *ErrorDetail) []byte {
+	buf, _ := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(detail)
+	return buf
+}
+
+func jsonMarshalErrorDetailWithFieldKey(detail *ErrorDetail) []byte {
+	m := map[string]interface{}{}
+	if detail.Status != 0 {
+		m["Status"] = detail.Status
+	}
+	if detail.RequestID != "" {
+		m["RequestID"] = detail.RequestID
+	}
+	if detail.Code != "" {
+		m["Code"] = detail.Code
+	}
+	if detail.Message != "" {
+		m["Message"] = detail.Message
+	}
+	if detail.Refer != "" {
+		m["Refer"] = detail.Refer
+	}
+	buf, _ := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(m)
+	return buf
 }
 
 func StatusErrorDetail(err error, requestID string) *ErrorDetail {
@@ -75,6 +104,7 @@ func StatusErrorDetail(err error, requestID string) *ErrorDetail {
 type MuxOptions struct {
 	Headers     []string `dft:"X-Request-Id"`
 	ContentType string   `dft:"application/json"`
+	UseFieldKey bool
 }
 
 type MuxOption func(options *MuxOptions)
@@ -88,5 +118,11 @@ func WithMuxHeaders(headers ...string) MuxOption {
 func WithMuxContentType(contentType string) MuxOption {
 	return func(options *MuxOptions) {
 		options.ContentType = contentType
+	}
+}
+
+func WithMuxUseFieldKey() MuxOption {
+	return func(options *MuxOptions) {
+		options.UseFieldKey = true
 	}
 }
