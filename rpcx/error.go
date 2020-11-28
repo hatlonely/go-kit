@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func NewError(err error, status codes.Code, code string, message string) *Error {
+func NewError(status codes.Code, code string, message string, err error) *Error {
 	return &Error{
 		err:  err,
 		code: status,

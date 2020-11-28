@@ -131,7 +131,7 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 		}()
 
 		if err = validator.Validate(req); err != nil {
-			err = NewError(err, codes.InvalidArgument, "InvalidArgument", err.Error())
+			err = NewError(codes.InvalidArgument, "InvalidArgument", err.Error(), err)
 		} else {
 			res, err = handler(ctx, req)
 		}
