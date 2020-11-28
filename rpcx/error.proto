@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package rpcx;
 
-message EInfo {
+message ErrorDetail {
   int64 status = 1;
   string requestID = 2;
   string code = 3;

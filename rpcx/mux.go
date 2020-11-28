@@ -55,7 +55,7 @@ func WithMuxProtoErrorHandler(opts ...MuxOption) runtime.ServeMuxOption {
 
 		s := status.Convert(err)
 		if len(s.Details()) >= 1 {
-			if e, ok := s.Details()[0].(*EInfo); ok {
+			if e, ok := s.Details()[0].(*ErrorDetail); ok {
 				e.Status = int64(runtime.HTTPStatusFromCode(codes.Code(e.Status)))
 				res.WriteHeader(int(e.Status))
 				buf, _ := json.Marshal(e)
@@ -63,7 +63,7 @@ func WithMuxProtoErrorHandler(opts ...MuxOption) runtime.ServeMuxOption {
 				return
 			}
 		}
-		e := NewInternalError(err).SetRequestID(req.Header.Get("X-Request-Id")).Info
+		e := NewInternalError(err).SetRequestID(req.Header.Get("X-Request-Id")).Detail
 		e.Status = int64(runtime.HTTPStatusFromCode(s.Code()))
 		e.Code = http.StatusText(int(e.Status))
 		res.WriteHeader(int(e.Status))

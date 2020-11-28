@@ -18,7 +18,7 @@ func NewErrorWithoutRefer(err error, status codes.Code, code string, message str
 func NewError(err error, status codes.Code, code string, message string, refer string) error {
 	return &Error{
 		Err: err,
-		Info: &EInfo{
+		Detail: &ErrorDetail{
 			Status:  int64(status),
 			Code:    code,
 			Message: message,
@@ -36,7 +36,7 @@ func NewErrorf(status codes.Code, code string, refer string, format string, args
 	err := errors.New(str)
 	return &Error{
 		Err: err,
-		Info: &EInfo{
+		Detail: &ErrorDetail{
 			Status:  int64(status),
 			Code:    code,
 			Message: str,
@@ -48,7 +48,7 @@ func NewErrorf(status codes.Code, code string, refer string, format string, args
 func NewInternalError(err error) *Error {
 	return &Error{
 		Err: err,
-		Info: &EInfo{
+		Detail: &ErrorDetail{
 			Status:  int64(codes.Internal),
 			Code:    "InternalError",
 			Message: err.Error(),
@@ -57,17 +57,17 @@ func NewInternalError(err error) *Error {
 }
 
 type Error struct {
-	Err  error
-	Info *EInfo
+	Err    error
+	Detail *ErrorDetail
 }
 
 func (e *Error) SetRequestID(requestID string) *Error {
-	e.Info.RequestID = requestID
+	e.Detail.RequestID = requestID
 	return e
 }
 
 func (e *Error) Error() string {
-	return e.Info.Message
+	return e.Detail.Message
 }
 
 func (e *Error) Format(s fmt.State, verb rune) {
@@ -84,6 +84,6 @@ func (e *Error) Format(s fmt.State, verb rune) {
 }
 
 func (e *Error) ToStatus() *status.Status {
-	s, _ := status.New(codes.Code(e.Info.Status), e.Info.Message).WithDetails(e.Info)
+	s, _ := status.New(codes.Code(e.Detail.Status), e.Detail.Message).WithDetails(e.Detail)
 	return s
 }
