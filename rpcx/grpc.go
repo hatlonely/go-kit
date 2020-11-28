@@ -103,7 +103,12 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 				status = int(e.Detail.Status)
 			}
 
-			meta, _ := metadata.FromIncomingContext(ctx)
+			md, _ := metadata.FromIncomingContext(ctx)
+			meta := map[string]string{}
+			for key, val := range md {
+				meta[key] = strings.Join(val, ",")
+			}
+
 			log.Info(map[string]interface{}{
 				"requestID": requestID,
 				"hostname":  options.Hostname,
