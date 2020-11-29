@@ -57,16 +57,16 @@ func CtxGet(ctx context.Context, key string) interface{} {
 	return m[key]
 }
 
-func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption {
+func GRPCUnaryInterceptor(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption {
 	var options GRPCOptions
 	_ = refx.SetDefaultValue(&options)
 	for _, opt := range opts {
 		opt(&options)
 	}
-	return WithGRPCDecoratorWithOptions(log, &options)
+	return GRPCUnaryInterceptorWithOptions(log, &options)
 }
 
-func WithGRPCDecoratorWithOptions(log *logger.Logger, options *GRPCOptions) grpc.ServerOption {
+func GRPCUnaryInterceptorWithOptions(log *logger.Logger, options *GRPCOptions) grpc.ServerOption {
 	if options.Hostname == "" {
 		options.Hostname = hostname()
 	}
@@ -156,9 +156,19 @@ func WithGRPCDecoratorWithOptions(log *logger.Logger, options *GRPCOptions) grpc
 			_ = grpc.SendHeader(ctx, metadata.New(headers))
 		}()
 
-		if err = options.validator(req); err != nil {
-			err = NewError(codes.InvalidArgument, "InvalidArgument", err.Error(), err)
-		} else {
+		for _, h := range options.preHandlers {
+			if err = h(ctx, req); err != nil {
+				break
+			}
+		}
+
+		if err == nil {
+			if err = options.validator(req); err != nil {
+				err = NewError(codes.InvalidArgument, "InvalidArgument", err.Error(), err)
+			}
+		}
+
+		if err == nil {
 			res, err = handler(ctx, req)
 		}
 
@@ -184,10 +194,17 @@ type GRPCOptions struct {
 	Hostname  string
 	Validator string
 
-	validator func(interface{}) error
+	validator   func(interface{}) error
+	preHandlers []func(ctx context.Context, req interface{}) error
 }
 
 type GRPCOption func(options *GRPCOptions)
+
+func WithGRPCPreHandlers(handlers ...func(ctx context.Context, req interface{}) error) GRPCOption {
+	return func(options *GRPCOptions) {
+		options.preHandlers = append(options.preHandlers, handlers...)
+	}
+}
 
 func WithGRPCHeaders(headers ...string) GRPCOption {
 	return func(options *GRPCOptions) {
