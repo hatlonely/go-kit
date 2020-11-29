@@ -17,8 +17,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/peer"
+	playgroundValidator "gopkg.in/go-playground/validator.v9"
 
 	"github.com/hatlonely/go-kit/logger"
+	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/validator"
 )
 
@@ -56,15 +58,34 @@ func CtxGet(ctx context.Context, key string) interface{} {
 }
 
 func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption {
-	options := defaultGRPCOptions
+	var options GRPCOptions
+	_ = refx.SetDefaultValue(&options)
 	for _, opt := range opts {
 		opt(&options)
 	}
+	return WithGRPCDecoratorWithOptions(log, &options)
+}
+
+func WithGRPCDecoratorWithOptions(log *logger.Logger, options *GRPCOptions) grpc.ServerOption {
 	if options.Hostname == "" {
 		options.Hostname = hostname()
 	}
 	if options.PrivateIP == "" {
 		options.PrivateIP = privateIP()
+	}
+	if options.validator == nil {
+		switch options.Validator {
+		case "playground":
+			WithPlaygroundValidator()(options)
+		case "default":
+			WithDefaultValidator()(options)
+		case "":
+			options.validator = func(i interface{}) error {
+				return nil
+			}
+		default:
+			panic(fmt.Sprintf("invalid validator [%v], should be one of [playground, default]", options.Validator))
+		}
 	}
 
 	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
@@ -135,7 +156,7 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 			_ = grpc.SendHeader(ctx, metadata.New(headers))
 		}()
 
-		if err = validator.Validate(req); err != nil {
+		if err = options.validator(req); err != nil {
 			err = NewError(codes.InvalidArgument, "InvalidArgument", err.Error(), err)
 		} else {
 			res, err = handler(ctx, req)
@@ -158,13 +179,12 @@ func WithGRPCDecorator(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption
 }
 
 type GRPCOptions struct {
-	Headers   []string
+	Headers   []string `dft:"X-Request-Id"`
 	PrivateIP string
 	Hostname  string
-}
+	Validator string
 
-var defaultGRPCOptions = GRPCOptions{
-	Headers: []string{"X-Request-Id"},
+	validator func(interface{}) error
 }
 
 type GRPCOption func(options *GRPCOptions)
@@ -184,6 +204,25 @@ func WithPrivateIP(privateIP string) GRPCOption {
 func WithHostname(hostname string) GRPCOption {
 	return func(options *GRPCOptions) {
 		options.Hostname = hostname
+	}
+}
+
+func WithPlaygroundValidator() GRPCOption {
+	validate := playgroundValidator.New()
+	return func(options *GRPCOptions) {
+		options.validator = validate.Struct
+	}
+}
+
+func WithDefaultValidator() GRPCOption {
+	return func(options *GRPCOptions) {
+		options.validator = validator.Validate
+	}
+}
+
+func WithValidator(fun func(interface{}) error) GRPCOption {
+	return func(options *GRPCOptions) {
+		options.validator = fun
 	}
 }
 
