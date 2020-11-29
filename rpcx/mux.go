@@ -14,7 +14,7 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-func WithMuxMetadata() runtime.ServeMuxOption {
+func MuxWithMetadata() runtime.ServeMuxOption {
 	return runtime.WithMetadata(func(ctx context.Context, req *http.Request) metadata.MD {
 		requestID := req.Header.Get("X-Request-Id")
 		if requestID == "" {
@@ -26,7 +26,7 @@ func WithMuxMetadata() runtime.ServeMuxOption {
 	})
 }
 
-func WithMuxIncomingHeaderMatcher() runtime.ServeMuxOption {
+func MuxWithIncomingHeaderMatcher() runtime.ServeMuxOption {
 	return runtime.WithIncomingHeaderMatcher(func(key string) (string, bool) {
 		if strings.HasPrefix(key, "X-") || strings.HasPrefix(key, "x-") {
 			return key, true
@@ -36,14 +36,14 @@ func WithMuxIncomingHeaderMatcher() runtime.ServeMuxOption {
 	})
 }
 
-func WithMuxOutgoingHeaderMatcher() runtime.ServeMuxOption {
+func MuxWithOutgoingHeaderMatcher() runtime.ServeMuxOption {
 	return runtime.WithOutgoingHeaderMatcher(func(key string) (string, bool) {
 		return key, true
 	})
 }
 
-func WithMuxProtoErrorHandler(opts ...MuxOption) runtime.ServeMuxOption {
-	var options MuxOptions
+func MuxWithProtoErrorHandler(opts ...MuxWithProtoErrorHandlerOption) runtime.ServeMuxOption {
+	var options MuxWithProtoErrorHandlerOptions
 	_ = refx.SetDefaultValue(&options)
 	for _, opt := range opts {
 		opt(&options)
@@ -101,28 +101,28 @@ func StatusErrorDetail(err error, requestID string) *ErrorDetail {
 	return NewInternalError(err).SetRequestID(requestID).Detail
 }
 
-type MuxOptions struct {
+type MuxWithProtoErrorHandlerOptions struct {
 	Headers     []string `dft:"X-Request-Id"`
 	ContentType string   `dft:"application/json"`
 	UseFieldKey bool
 }
 
-type MuxOption func(options *MuxOptions)
+type MuxWithProtoErrorHandlerOption func(options *MuxWithProtoErrorHandlerOptions)
 
-func WithMuxHeaders(headers ...string) MuxOption {
-	return func(options *MuxOptions) {
+func WithMuxHeaders(headers ...string) MuxWithProtoErrorHandlerOption {
+	return func(options *MuxWithProtoErrorHandlerOptions) {
 		options.Headers = headers
 	}
 }
 
-func WithMuxContentType(contentType string) MuxOption {
-	return func(options *MuxOptions) {
+func WithMuxContentType(contentType string) MuxWithProtoErrorHandlerOption {
+	return func(options *MuxWithProtoErrorHandlerOptions) {
 		options.ContentType = contentType
 	}
 }
 
-func WithMuxUseFieldKey() MuxOption {
-	return func(options *MuxOptions) {
+func WithMuxUseFieldKey() MuxWithProtoErrorHandlerOption {
+	return func(options *MuxWithProtoErrorHandlerOptions) {
 		options.UseFieldKey = true
 	}
 }
