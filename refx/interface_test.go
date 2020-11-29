@@ -6,12 +6,187 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestFormatKey(t *testing.T) {
-	Convey("TestFormatKey", t, func() {
+func TestOptions_FormatKey(t *testing.T) {
+	Convey("TestOptions_FormatKey", t, func() {
 		So(NewOptions(WithCamelName()).FormatKey("hello-world"), ShouldEqual, "helloWorld")
 		So(NewOptions(WithSnakeName()).FormatKey("hello-world"), ShouldEqual, "hello_world")
 		So(NewOptions(WithKebabName()).FormatKey("helloWorld"), ShouldEqual, "hello-world")
 		So(NewOptions(WithPascalName()).FormatKey("helloWorld"), ShouldEqual, "HelloWorld")
+	})
+}
+
+func TestInterfaceToStruct_WithValidate(t *testing.T) {
+	Convey("TestInterfaceToStruct_WithValidate", t, func() {
+		type A struct {
+			Key1 string `rule:"x in ['world', 'hello']"`
+			Key2 int    `rule:"x>=5 && x<=6"`
+		}
+		var a A
+
+		Convey("case normal", func() {
+			v := map[string]interface{}{
+				"Key1": "hello",
+				"Key2": 5,
+			}
+			So(InterfaceToStruct(v, &a), ShouldBeNil)
+			So(InterfaceToStruct(v, &a, WithDefaultValidator()), ShouldBeNil)
+		})
+
+		Convey("case error", func() {
+			v := map[string]interface{}{
+				"Key1": "hello",
+				"Key2": 1,
+			}
+			So(InterfaceToStruct(v, &a), ShouldBeNil)
+			So(InterfaceToStruct(v, &a, WithDefaultValidator()), ShouldNotBeNil)
+		})
+	})
+}
+
+func TestOptions_PlaygroundValidate(t *testing.T) {
+	Convey("TestOptions_PlaygroundValidate", t, func() {
+		type A struct {
+			Key8 int `rule:"x in [5, 7]"`
+		}
+		type B struct {
+			Key1 string `rule:"x in ['world', 'hello']"`
+			Key2 int    `rule:"x>=5 && x<=6"`
+			Key3 string `rule:"x =~ '^[0-9]{6}$'"`
+			Key4 string `rule:"isEmail(x)"`
+			Key5 int64  `rule:"x in [0, 1, 2]"`
+			key6 int
+			Key7 A
+		}
+
+		b := &B{
+			Key1: "hello",
+			Key2: 5,
+			Key3: "123456",
+			Key4: "hatlonely@foxmail.com",
+			Key5: 1,
+			Key7: A{
+				Key8: 7,
+			},
+		}
+
+		options := NewOptions(WithDefaultValidator())
+		So(options.Validate(b), ShouldBeNil)
+
+		Convey("invalid key1", func() {
+			b.Key1 = "xxx"
+			err := options.Validate(b)
+			So(err, ShouldNotBeNil)
+			So(err.Error(), ShouldContainSubstring, "Key1")
+		})
+
+		Convey("invalid key2", func() {
+			b.Key2 = 123
+			err := options.Validate(b)
+			So(err, ShouldNotBeNil)
+			So(err.Error(), ShouldContainSubstring, "Key2")
+		})
+
+		Convey("invalid key3", func() {
+			b.Key3 = "xxx"
+			err := options.Validate(b)
+			So(err, ShouldNotBeNil)
+			So(err.Error(), ShouldContainSubstring, "Key3")
+		})
+
+		Convey("invalid key4", func() {
+			b.Key4 = "xxx"
+			err := options.Validate(b)
+			So(err, ShouldNotBeNil)
+			So(err.Error(), ShouldContainSubstring, "Key4")
+		})
+
+		Convey("invalid key5", func() {
+			b.Key5 = 3
+			err := options.Validate(b)
+			So(err, ShouldNotBeNil)
+			So(err.Error(), ShouldContainSubstring, "Key5")
+		})
+
+		Convey("invalid key8", func() {
+			b.Key7.Key8 = 3
+			err := options.Validate(b)
+			So(err, ShouldNotBeNil)
+			So(err.Error(), ShouldContainSubstring, "Key7.Key8")
+		})
+	})
+}
+
+// https://godoc.org/github.com/go-playground/validator
+func TestOptions_DefaultValidate(t *testing.T) {
+	Convey("TestOptions_DefaultValidate", t, func() {
+		type A struct {
+			Key8 int `validate:"oneof=5 7"`
+		}
+		type B struct {
+			Key1 string `validate:"oneof=hello world"`
+			Key2 int    `validate:"gte=5,lte=6"`
+			Key3 string `validate:"len=6"`
+			Key4 string `validate:"email"`
+			Key5 int64  `validate:"oneof=0 1 2"`
+			key6 int
+			Key7 A
+		}
+
+		b := &B{
+			Key1: "hello",
+			Key2: 5,
+			Key3: "123456",
+			Key4: "hatlonely@foxmail.com",
+			Key5: 1,
+			Key7: A{
+				Key8: 7,
+			},
+		}
+
+		options := NewOptions(WithPlaygroundValidator())
+		So(options.Validate(b), ShouldBeNil)
+
+		Convey("invalid key1", func() {
+			b.Key1 = "xxx"
+			err := options.Validate(b)
+			So(err, ShouldNotBeNil)
+			So(err.Error(), ShouldContainSubstring, "B.Key1")
+		})
+
+		Convey("invalid key2", func() {
+			b.Key2 = 123
+			err := options.Validate(b)
+			So(err, ShouldNotBeNil)
+			So(err.Error(), ShouldContainSubstring, "B.Key2")
+		})
+
+		Convey("invalid key3", func() {
+			b.Key3 = "xxx"
+			err := options.Validate(b)
+			So(err, ShouldNotBeNil)
+			So(err.Error(), ShouldContainSubstring, "B.Key3")
+		})
+
+		Convey("invalid key4", func() {
+			b.Key4 = "xxx"
+			err := options.Validate(b)
+			So(err, ShouldNotBeNil)
+			So(err.Error(), ShouldContainSubstring, "B.Key4")
+		})
+
+		Convey("invalid key5", func() {
+			b.Key5 = 3
+			err := options.Validate(b)
+			So(err, ShouldNotBeNil)
+			So(err.Error(), ShouldContainSubstring, "B.Key5")
+		})
+
+		Convey("invalid key8", func() {
+			b.Key7.Key8 = 3
+			err := options.Validate(b)
+			So(err, ShouldNotBeNil)
+			So(err.Error(), ShouldContainSubstring, "B.Key7.Key8")
+		})
 	})
 }
 
