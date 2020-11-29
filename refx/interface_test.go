@@ -43,8 +43,8 @@ func TestInterfaceToStruct_WithValidate(t *testing.T) {
 	})
 }
 
-func TestOptions_PlaygroundValidate(t *testing.T) {
-	Convey("TestOptions_PlaygroundValidate", t, func() {
+func TestOptions_DefaultValidate(t *testing.T) {
+	Convey("TestOptions_DefaultValidate", t, func() {
 		type A struct {
 			Key8 int `rule:"x in [5, 7]"`
 		}
@@ -117,8 +117,8 @@ func TestOptions_PlaygroundValidate(t *testing.T) {
 }
 
 // https://godoc.org/github.com/go-playground/validator
-func TestOptions_DefaultValidate(t *testing.T) {
-	Convey("TestOptions_DefaultValidate", t, func() {
+func TestOptions_PlaygroundValidate(t *testing.T) {
+	Convey("TestOptions_PlaygroundValidate", t, func() {
 		type A struct {
 			Key8 int `validate:"oneof=5 7"`
 		}
