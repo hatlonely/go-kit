@@ -11,8 +11,12 @@ import (
 )
 
 func Bind(v interface{}, getters []Getter, opts ...refx.Option) error {
-	_, err := bindRecursive(v, "", getters, refx.NewOptions(opts...))
-	return err
+	options := refx.NewOptions(opts...)
+	if _, err := bindRecursive(v, "", getters, options); err != nil {
+		return err
+	}
+
+	return options.Validate(v)
 }
 
 func bindRecursive(v interface{}, prefix string, getters []Getter, options *refx.Options) (int, error) {

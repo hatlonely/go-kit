@@ -7,9 +7,11 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	playgroundValidator "gopkg.in/go-playground/validator.v9"
 
 	"github.com/hatlonely/go-kit/cast"
 	"github.com/hatlonely/go-kit/strx"
+	"github.com/hatlonely/go-kit/validator"
 )
 
 type Options struct {
@@ -18,31 +20,46 @@ type Options struct {
 	KebabName           bool
 	PascalName          bool
 	DisableDefaultValue bool
+
+	validators []func(v interface{}) error
 }
 
-type Option func(opt *Options)
+type Option func(options *Options)
 
 func WithCamelName() Option {
-	return func(opt *Options) {
-		opt.CamelName = true
+	return func(options *Options) {
+		options.CamelName = true
 	}
 }
 
 func WithSnakeName() Option {
-	return func(opt *Options) {
-		opt.SnakeName = true
+	return func(options *Options) {
+		options.SnakeName = true
 	}
 }
 
 func WithKebabName() Option {
-	return func(opt *Options) {
-		opt.KebabName = true
+	return func(options *Options) {
+		options.KebabName = true
 	}
 }
 
 func WithPascalName() Option {
-	return func(opt *Options) {
-		opt.PascalName = true
+	return func(options *Options) {
+		options.PascalName = true
+	}
+}
+
+func WithPlaygroundValidator() Option {
+	validate := playgroundValidator.New()
+	return func(options *Options) {
+		options.validators = append(options.validators, validate.Struct)
+	}
+}
+
+func WithDefaultValidator() Option {
+	return func(options *Options) {
+		options.validators = append(options.validators, validator.Validate)
 	}
 }
 
@@ -60,24 +77,37 @@ func NewOptions(opts ...Option) *Options {
 	return &options
 }
 
-func FormatKey(str string, opts ...Option) string {
-	return FormatKeyWithOptions(str, NewOptions(opts...))
-}
-
-func FormatKeyWithOptions(str string, options *Options) string {
-	if options.CamelName {
+func (o *Options) FormatKey(str string) string {
+	if o.CamelName {
 		return strx.CamelName(str)
 	}
-	if options.SnakeName {
+	if o.SnakeName {
 		return strx.SnakeName(str)
 	}
-	if options.KebabName {
+	if o.KebabName {
 		return strx.KebabName(str)
 	}
-	if options.PascalName {
+	if o.PascalName {
 		return strx.PascalName(str)
 	}
 	return str
+}
+
+func (o *Options) Validate(v interface{}) error {
+	for _, validate := range o.validators {
+		if err := validate(v); err != nil {
+			return errors.Wrap(err, "validate failed")
+		}
+	}
+	return nil
+}
+
+func FormatKey(str string, opts ...Option) string {
+	return NewOptions(opts...).FormatKey(str)
+}
+
+func FormatKeyWithOptions(str string, options *Options) string {
+	return options.FormatKey(str)
 }
 
 func InterfaceGet(v interface{}, key string) (interface{}, error) {
@@ -93,7 +123,12 @@ func InterfaceToStruct(src interface{}, dst interface{}, opts ...Option) error {
 	for _, opt := range opts {
 		opt(&options)
 	}
-	return interfaceToStructRecursive(src, dst, "", &options)
+
+	if err := interfaceToStructRecursive(src, dst, "", &options); err != nil {
+		return err
+	}
+
+	return options.Validate(dst)
 }
 
 func InterfaceDiff(v1 interface{}, v2 interface{}) ([]string, error) {
