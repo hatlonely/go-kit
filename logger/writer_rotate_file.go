@@ -66,18 +66,22 @@ func NewRotateFileWriter(opts ...RotateFileWriterOption) (*RotateFileWriter, err
 	return NewRotateFileWriterWithOptions(&options)
 }
 
-func (r *RotateFileWriter) Write(kvs map[string]interface{}) error {
+func (w *RotateFileWriter) Write(kvs map[string]interface{}) error {
 	buf, err := json.Marshal(kvs)
 	if err != nil {
 		return err
 	}
 	b := bytes.NewBuffer(buf)
 	b.WriteString("\n")
-	_, err = r.out.Write(b.Bytes())
+	_, err = w.out.Write(b.Bytes())
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (w *RotateFileWriter) Close() error {
+	return w.out.Close()
 }
 
 type RotateFileWriterOptions struct {

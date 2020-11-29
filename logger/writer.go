@@ -9,6 +9,7 @@ import (
 
 type Writer interface {
 	Write(kvs map[string]interface{}) error
+	Close() error
 }
 
 func NewWriterWithConfig(cfg *config.Config, opts ...refx.Option) (Writer, error) {
