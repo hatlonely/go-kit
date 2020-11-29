@@ -5,7 +5,7 @@ import (
 )
 
 type Formatter interface {
-	Format(v interface{}) ([]byte, error)
+	Format(kvs map[string]interface{}) ([]byte, error)
 }
 
 func NewFormatterWithOptions(options *FormatterOptions) (Formatter, error) {

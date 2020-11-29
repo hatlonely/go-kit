@@ -21,11 +21,7 @@ type TextFormatter struct {
 	tpl *template.Template
 }
 
-func (f *TextFormatter) Format(v interface{}) ([]byte, error) {
-	kvs, ok := v.(map[string]interface{})
-	if !ok {
-		return nil, errors.Errorf("convert [%#v] to map[string]interface{} failed", v)
-	}
+func (f *TextFormatter) Format(kvs map[string]interface{}) ([]byte, error) {
 	var buf bytes.Buffer
 
 	err := f.tpl.Execute(&buf, kvs)

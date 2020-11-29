@@ -23,7 +23,6 @@ func TestStdoutWriter(t *testing.T) {
 			"key1": "val1",
 			"key2": "val2",
 		})
-		_ = writer.Write("hello world")
 	})
 }
 
@@ -45,6 +44,5 @@ func TestRotateFileWriter(t *testing.T) {
 			"key1": "val1",
 			"key2": "val2",
 		})
-		_ = writer.Write("hello world")
 	})
 }

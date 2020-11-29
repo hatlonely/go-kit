@@ -31,8 +31,8 @@ type StdoutWriter struct {
 	formatter Formatter
 }
 
-func (r *StdoutWriter) Write(v interface{}) error {
-	buf, err := r.formatter.Format(v)
+func (r *StdoutWriter) Write(kvs map[string]interface{}) error {
+	buf, err := r.formatter.Format(kvs)
 	if err != nil {
 		return err
 	}

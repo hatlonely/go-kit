@@ -8,6 +8,6 @@ var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 type JsonFormatter struct{}
 
-func (f JsonFormatter) Format(v interface{}) ([]byte, error) {
-	return json.Marshal(v)
+func (f JsonFormatter) Format(kvs map[string]interface{}) ([]byte, error) {
+	return json.Marshal(kvs)
 }
