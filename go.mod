@@ -8,6 +8,7 @@ require (
 	github.com/agiledragon/gomonkey v2.0.1+incompatible
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.623
 	github.com/aliyun/aliyun-tablestore-go-sdk v4.1.3+incompatible
+	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/coocood/freecache v1.1.1
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
 	github.com/fsnotify/fsnotify v1.4.9

@@ -26,12 +26,15 @@ func NewWriterWithOptions(options *WriterOptions) (Writer, error) {
 		return NewRotateFileWriterWithOptions(&options.RotateFileWriter)
 	case "Stdout":
 		return NewStdoutWriterWithOptions(&options.StdoutWriter)
+	case "ElasticSearch":
+		return NewElasticSearchWriterWithOptions(&options.ElasticSearchWriter)
 	}
 	return nil, errors.Errorf("unsupported writer type [%v]", options.Type)
 }
 
 type WriterOptions struct {
-	Type             string `dft:"Stdout" rule:"x in ['RotateFile', 'Stdout']"`
-	RotateFileWriter RotateFileWriterOptions
-	StdoutWriter     StdoutWriterOptions
+	Type                string `dft:"Stdout" rule:"x in ['RotateFile', 'Stdout', 'ElasticSearch']"`
+	StdoutWriter        StdoutWriterOptions
+	RotateFileWriter    RotateFileWriterOptions
+	ElasticSearchWriter ElasticSearchWriterOptions
 }

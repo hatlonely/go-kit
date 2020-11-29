@@ -222,3 +222,11 @@ func (l *Logger) Log(level Level, v interface{}) {
 		_ = writer.Write(kvs)
 	}
 }
+
+func (l *Logger) Close() error {
+	var err error
+	for _, w := range l.writers {
+		err = w.Close()
+	}
+	return err
+}
