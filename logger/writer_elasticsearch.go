@@ -2,6 +2,7 @@ package logger
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
@@ -56,12 +57,7 @@ func NewElasticSearchWriterWithOptions(options *ElasticSearchWriterOptions) (*El
 }
 
 func (w *ElasticSearchWriter) Write(kvs map[string]interface{}) error {
-	ctx, cancel := context.WithTimeout(context.Background(), w.options.Timeout)
-	defer cancel()
-	if _, err := w.esCli.Index().Index(w.options.Index).Id(cast.ToString(kvs[w.options.IDField])).BodyJson(kvs).Do(ctx); err != nil {
-		return errors.WithMessagef(err, "elasticsearch.PutDocument failed")
-	}
-
+	w.messages <- kvs
 	return nil
 }
 
@@ -77,7 +73,7 @@ func (w *ElasticSearchWriter) work() {
 		if _, ok := kvs[w.options.IDField]; !ok {
 			kvs[w.options.IDField] = uuid.NewV4().String()
 		}
-		retry.Do(func() error {
+		err := retry.Do(func() error {
 			ctx, cancel := context.WithTimeout(context.Background(), w.options.Timeout)
 			defer cancel()
 			if _, err := w.esCli.Index().Index(w.options.Index).Id(cast.ToString(kvs[w.options.IDField])).BodyJson(kvs).Do(ctx); err != nil {
@@ -85,5 +81,8 @@ func (w *ElasticSearchWriter) work() {
 			}
 			return nil
 		}, retry.Attempts(6), retry.DelayType(retry.BackOffDelay), retry.LastErrorOnly(true))
+		if err != nil {
+			fmt.Printf("ElasticSearchWriter write log failed, err: [%v]\n", err)
+		}
 	}
 }
