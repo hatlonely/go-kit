@@ -73,18 +73,14 @@ func GRPCUnaryInterceptorWithOptions(log *logger.Logger, options *GRPCOptions) g
 	if options.PrivateIP == "" {
 		options.PrivateIP = privateIP()
 	}
-	if options.validator == nil {
-		switch options.Validator {
+	for _, validate := range options.Validators {
+		switch validate {
 		case "playground":
 			WithPlaygroundValidator()(options)
 		case "default":
 			WithDefaultValidator()(options)
-		case "":
-			options.validator = func(i interface{}) error {
-				return nil
-			}
 		default:
-			panic(fmt.Sprintf("invalid validator [%v], should be one of [playground, default]", options.Validator))
+			panic(fmt.Sprintf("invalid validator [%v], should be one of [playground, default]", validate))
 		}
 	}
 
@@ -156,15 +152,20 @@ func GRPCUnaryInterceptorWithOptions(log *logger.Logger, options *GRPCOptions) g
 			_ = grpc.SendHeader(ctx, metadata.New(headers))
 		}()
 
-		for _, h := range options.preHandlers {
-			if err = h(ctx, req); err != nil {
-				break
+		if err == nil {
+			for _, h := range options.preHandlers {
+				if err = h(ctx, req); err != nil {
+					break
+				}
 			}
 		}
 
 		if err == nil {
-			if err = options.validator(req); err != nil {
-				err = NewError(codes.InvalidArgument, "InvalidArgument", err.Error(), err)
+			for _, validate := range options.validators {
+				if err = validate(req); err != nil {
+					err = NewError(codes.InvalidArgument, "InvalidArgument", err.Error(), err)
+					break
+				}
 			}
 		}
 
@@ -184,17 +185,18 @@ func GRPCUnaryInterceptorWithOptions(log *logger.Logger, options *GRPCOptions) g
 			}
 			return res, err.(*Error).SetRequestID(requestID).ToStatus().Err()
 		}
+
 		return res, nil
 	})
 }
 
 type GRPCOptions struct {
-	Headers   []string `dft:"X-Request-Id"`
-	PrivateIP string
-	Hostname  string
-	Validator string
+	Headers    []string `dft:"X-Request-Id"`
+	PrivateIP  string
+	Hostname   string
+	Validators []string
 
-	validator   func(interface{}) error
+	validators  []func(interface{}) error
 	preHandlers []func(ctx context.Context, req interface{}) error
 }
 
@@ -227,19 +229,19 @@ func WithHostname(hostname string) GRPCOption {
 func WithPlaygroundValidator() GRPCOption {
 	validate := playgroundValidator.New()
 	return func(options *GRPCOptions) {
-		options.validator = validate.Struct
+		options.validators = append(options.validators, validate.Struct)
 	}
 }
 
 func WithDefaultValidator() GRPCOption {
 	return func(options *GRPCOptions) {
-		options.validator = validator.Validate
+		options.validators = append(options.validators, validator.Validate)
 	}
 }
 
-func WithValidator(fun func(interface{}) error) GRPCOption {
+func WithValidators(fun ...func(interface{}) error) GRPCOption {
 	return func(options *GRPCOptions) {
-		options.validator = fun
+		options.validators = append(options.validators, fun...)
 	}
 }
 
