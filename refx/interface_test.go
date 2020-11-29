@@ -8,10 +8,10 @@ import (
 
 func TestFormatKey(t *testing.T) {
 	Convey("TestFormatKey", t, func() {
-		So(FormatKey("hello-world", WithCamelName()), ShouldEqual, "helloWorld")
-		So(FormatKey("hello-world", WithSnakeName()), ShouldEqual, "hello_world")
-		So(FormatKey("helloWorld", WithKebabName()), ShouldEqual, "hello-world")
-		So(FormatKey("helloWorld", WithPascalName()), ShouldEqual, "HelloWorld")
+		So(NewOptions(WithCamelName()).FormatKey("hello-world"), ShouldEqual, "helloWorld")
+		So(NewOptions(WithSnakeName()).FormatKey("hello-world"), ShouldEqual, "hello_world")
+		So(NewOptions(WithKebabName()).FormatKey("helloWorld"), ShouldEqual, "hello-world")
+		So(NewOptions(WithPascalName()).FormatKey("helloWorld"), ShouldEqual, "HelloWorld")
 	})
 }
 

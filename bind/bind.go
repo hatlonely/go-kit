@@ -53,7 +53,7 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, options *refx
 						count += cnt
 					}
 				} else {
-					if cnt, err := bindRecursive(rv.Field(i).Interface(), prefixAppendKey(prefix, refx.FormatKeyWithOptions(key, options)), getters, options); err != nil {
+					if cnt, err := bindRecursive(rv.Field(i).Interface(), prefixAppendKey(prefix, options.FormatKey(key)), getters, options); err != nil {
 						return 0, err
 					} else {
 						count += cnt
@@ -67,7 +67,7 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, options *refx
 						count += cnt
 					}
 				} else {
-					if cnt, err := bindRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, refx.FormatKeyWithOptions(key, options)), getters, options); err != nil {
+					if cnt, err := bindRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, options.FormatKey(key)), getters, options); err != nil {
 						return 0, err
 					} else {
 						count += cnt

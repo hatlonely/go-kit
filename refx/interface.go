@@ -102,14 +102,6 @@ func (o *Options) Validate(v interface{}) error {
 	return nil
 }
 
-func FormatKey(str string, opts ...Option) string {
-	return NewOptions(opts...).FormatKey(str)
-}
-
-func FormatKeyWithOptions(str string, options *Options) string {
-	return options.FormatKey(str)
-}
-
 func InterfaceGet(v interface{}, key string) (interface{}, error) {
 	return interfaceGetRecursive(v, key, "")
 }
@@ -302,7 +294,7 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 			}
 		}
 		for i := 0; i < rv.NumField(); i++ {
-			key := FormatKeyWithOptions(rt.Field(i).Name, options)
+			key := options.FormatKey(rt.Field(i).Name)
 			var val interface{}
 			switch srt.Kind() {
 			case reflect.Map:
