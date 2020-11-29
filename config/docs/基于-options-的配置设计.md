@@ -5,16 +5,15 @@
 以一个 MySQL client 为例，我们可以定义如下选项:
 
 ```go
-type MySQLOptions struct {
+type MysqlOptions struct {
 	Username        string
 	Password        string
 	Database        string
-	Host            string
-	Port            int
-	ConnMaxLifeTime time.Duration
-	MaxIdleConns    int
-	MaxOpenConns    int
-	LogMode         bool
+	Host            string        `dft:"localhost"`
+	Port            string        `dft:"3306"`
+	ConnMaxLifeTime time.Duration `dft:"5m"`
+	MaxIdleConns    int           `dft:"10" rule:"x <= 100 && x >= 0" validate:"gte=0,lte=100"`
+	MaxOpenConns    int           `dft:"30"`
 }
 ```
 
@@ -37,7 +36,7 @@ type Options struct {
 
 ```go
 var options Options
-if err := cfg.Unmarshal(&options); err != nil {
+if err := cfg.Unmarshal(&options, refx.WithCamelName(), refx.WithPlaygroundValidator()); err != nil {
     panic(err)
 }
 mysqlCli, err := cli.NewMySQLWithOptions(&options.MySQL)
@@ -59,7 +58,7 @@ if err != nil {
 ```go
 func (c *MySQLCli) OnChangeHandler(cfg *config.Config) {
     var options MysqlOptions
-    if err := cfg.Unmarshal(&options); err != nil {
+    if err := cfg.Unmarshal(&options, refx.WithCamelName(), refx.WithPlaygroundValidator()); err != nil {
         fmt.Println(err)
         return
     }
@@ -77,9 +76,9 @@ cfg.AddOnItemChangeHandler("redis", redisCli.OnChangeHandler)
 2. 提供基于 config 的构造函数
 
 ```go
-func NewMySQLWithConfig(cfg *config.Config) (*MySQLCli, error) {
+func NewMySQLWithConfig(cfg *config.Config, opts ...refx.Options) (*MySQLCli, error) {
     var options MySQLOptions
-    if err := cfg.Unmarshal(&options); err != nil {
+    if err := cfg.Unmarshal(&options, opts...); err != nil {
         return nil, err
     }
     cli, err := NewMySQLWithOptions(&options)
@@ -88,7 +87,7 @@ func NewMySQLWithConfig(cfg *config.Config) (*MySQLCli, error) {
     }
     cfg.AddOnChangeHandler(func (cfg *config.Config) {
         var options MySQLOptions
-        if err := cfg.Unmarshal(&options); err != nil {
+        if err := cfg.Unmarshal(&options, opts...); err != nil {
             return nil, err
         }
         cli.options = &options

@@ -52,11 +52,11 @@ type MysqlOptions struct {
 	Username        string
 	Password        string
 	Database        string
-	Host            string
-	Port            string
-	ConnMaxLifeTime time.Duration
-	MaxIdleConns    int
-	MaxOpenConns    int
+	Host            string        `dft:"localhost"`
+	Port            string        `dft:"3306"`
+	ConnMaxLifeTime time.Duration `dft:"5m"`
+	MaxIdleConns    int           `dft:"10" rule:"x <= 100 && x >= 0" validate:"gte=0,lte=100"`
+	MaxOpenConns    int           `dft:"30"`
 }
 
 type Options struct {
@@ -70,7 +70,7 @@ func main() {
 	}
 
 	var options Options
-	if err := cfg.Unmarshal(&options, refx.WithCamelName()); err != nil {
+	if err := cfg.Unmarshal(&options, refx.WithCamelName(), refx.WithPlaygroundValidator()); err != nil {
 		panic(err)
 	}
 
@@ -136,11 +136,11 @@ type MysqlOptions struct {
 	Username        string
 	Password        string
 	Database        string
-	Host            string
-	Port            string
-	ConnMaxLifeTime time.Duration
-	MaxIdleConns    int
-	MaxOpenConns    int
+	Host            string        `dft:"localhost"`
+	Port            string        `dft:"3306"`
+	ConnMaxLifeTime time.Duration `dft:"5m"`
+	MaxIdleConns    int           `dft:"10" rule:"x <= 100 && x >= 0" validate:"gte=0,lte=100"`
+	MaxOpenConns    int           `dft:"30"`
 }
 
 var options *MysqlOptions
@@ -153,7 +153,7 @@ func main() {
 
 	cfg.AddOnItemChangeHandler("mysql", func(cfg *config.Config) {
 		var opt MysqlOptions
-		if err := cfg.Unmarshal(&opt, refx.WithCamelName()); err != nil {
+		if err := cfg.Unmarshal(&opt, refx.WithCamelName(), refx.WithPlaygroundValidator()); err != nil {
 			fmt.Println(err)
 			return
 		}
