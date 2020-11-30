@@ -12,7 +12,7 @@ import (
 	"github.com/hatlonely/go-kit/strx"
 )
 
-var Version string
+var Version = "1.0.0"
 
 func Must(err error) {
 	if err != nil {
@@ -43,6 +43,10 @@ func main() {
 	var options Options
 	Must(flag.Struct(&options, refx.WithCamelName()))
 	Must(flag.Parse())
+	if options.Version {
+		Trac(Version)
+		return
+	}
 	if options.Help || options.Action == "" {
 		Trac(flag.Usage())
 		Trac(`examples:
@@ -79,10 +83,6 @@ func main() {
   cfg --camelName --inBaseFile base.json -a put --noCipher
   cfg --camelName --inBaseFile base.json -a diff --outBaseFile base_ots.json
   cfg --camelName --inBaseFile base.json -a put --outBaseFile base_ots.json`)
-		return
-	}
-	if options.Version {
-		Trac(Version)
 		return
 	}
 

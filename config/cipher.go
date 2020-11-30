@@ -36,7 +36,7 @@ func NewCipherWithOptions(options *CipherOptions) (Cipher, error) {
 }
 
 type CipherOptions struct {
-	Type         string
+	Type         string `dft:"Empty" rule:"x in ['Empty', 'AES', 'Base64', 'KMS', 'Group']"`
 	AESCipher    AESCipherOptions
 	KMSCipher    KMSCipherOptions
 	CipherGroup  CipherGroupOptions
