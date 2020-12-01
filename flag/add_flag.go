@@ -9,7 +9,7 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-type AddOptionOptions struct {
+type AddFlagOptions struct {
 	Type         reflect.Type
 	Usage        string
 	Name         string
@@ -20,40 +20,40 @@ type AddOptionOptions struct {
 	Required     bool
 }
 
-type AddOptionOption func(*AddOptionOptions)
+type AddFlagOption func(*AddFlagOptions)
 
-func Required() AddOptionOption {
-	return func(options *AddOptionOptions) {
+func Required() AddFlagOption {
+	return func(options *AddFlagOptions) {
 		options.Required = true
 	}
 }
 
-func DefaultValue(val string) AddOptionOption {
-	return func(options *AddOptionOptions) {
+func DefaultValue(val string) AddFlagOption {
+	return func(options *AddFlagOptions) {
 		options.DefaultValue = val
 	}
 }
 
-func Shorthand(shorthand string) AddOptionOption {
-	return func(options *AddOptionOptions) {
+func Shorthand(shorthand string) AddFlagOption {
+	return func(options *AddFlagOptions) {
 		options.Shorthand = shorthand
 	}
 }
 
-func Type(v interface{}) AddOptionOption {
-	return func(options *AddOptionOptions) {
+func Type(v interface{}) AddFlagOption {
+	return func(options *AddFlagOptions) {
 		options.Type = reflect.TypeOf(v)
 	}
 }
 
-func Key(key string) AddOptionOption {
-	return func(options *AddOptionOptions) {
+func Key(key string) AddFlagOption {
+	return func(options *AddFlagOptions) {
 		options.Key = key
 	}
 }
 
-func (f *Flag) AddOption(name string, usage string, opts ...AddOptionOption) {
-	options := &AddOptionOptions{
+func (f *Flag) AddOption(name string, usage string, opts ...AddFlagOption) {
+	options := &AddFlagOptions{
 		Name:       name,
 		Usage:      usage,
 		IsArgument: false,
@@ -66,8 +66,8 @@ func (f *Flag) AddOption(name string, usage string, opts ...AddOptionOption) {
 	}
 }
 
-func (f *Flag) AddArgument(name string, usage string, opts ...AddOptionOption) {
-	options := &AddOptionOptions{
+func (f *Flag) AddArgument(name string, usage string, opts ...AddFlagOption) {
+	options := &AddFlagOptions{
 		Name:       name,
 		Usage:      usage,
 		IsArgument: true,
@@ -80,7 +80,7 @@ func (f *Flag) AddArgument(name string, usage string, opts ...AddOptionOption) {
 	}
 }
 
-func (f *Flag) BindFlagWithOptions(v interface{}, options *AddOptionOptions) error {
+func (f *Flag) BindFlagWithOptions(v interface{}, options *AddFlagOptions) error {
 	if err := f.addFlagWithOptions(options); err != nil {
 		return err
 	}
@@ -99,7 +99,7 @@ func (f *Flag) BindFlagWithOptions(v interface{}, options *AddOptionOptions) err
 	return nil
 }
 
-func (f *Flag) addFlagWithOptions(options *AddOptionOptions) error {
+func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
 	if _, ok := f.keyInfoMap[options.Name]; ok {
 		return errors.Errorf("conflict flag [%v]", options.Name)
 	}
