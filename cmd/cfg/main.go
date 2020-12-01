@@ -44,12 +44,12 @@ func main() {
 	Must(flag.Struct(&options, refx.WithCamelName()))
 	Must(flag.Parse())
 	if options.Version {
-		Trac(Version)
+		strx.Trac(Version)
 		return
 	}
 	if options.Help || options.Action == "" {
-		Trac(flag.Usage())
-		Trac(`examples:
+		strx.Trac(flag.Usage())
+		strx.Trac(`examples:
   cfg --camelName --inBaseFile base.json -a get
   cfg --camelName --inBaseFile base.json -a get --key mysql
   cfg --camelName --inBaseFile base.json -a get --key mysql.password
@@ -160,7 +160,7 @@ func main() {
 		BackUpCurrentConfig(ocfg, options.BackupFile)
 
 		if options.Key == "" {
-			Warn("[key] is required in set action")
+			strx.Warn("[key] is required in set action")
 			return
 		}
 
@@ -173,8 +173,8 @@ func main() {
 		}
 		Must(ocfg.Save())
 
-		Trac("Save success. Use follow command to rollback:")
-		Info(RollbackCommand(&options))
+		strx.Trac("Save success. Use follow command to rollback:")
+		strx.Info(RollbackCommand(&options))
 
 		return
 	}
@@ -194,8 +194,8 @@ func main() {
 		Must(err)
 		Must(ocfg.Save())
 
-		Trac("Save success. Use follow command to rollback:")
-		Info(RollbackCommand(&options))
+		strx.Trac("Save success. Use follow command to rollback:")
+		strx.Info(RollbackCommand(&options))
 
 		return
 	}
@@ -207,12 +207,12 @@ func main() {
 		Must(err)
 		Must(ocfg.Save())
 
-		Info("Rollback success")
+		strx.Info("Rollback success")
 
 		return
 	}
 
-	Warn("Unknown action %v", options.Action)
+	strx.Warn("Unknown action %v", options.Action)
 	os.Exit(1)
 }
 
@@ -243,17 +243,4 @@ func BackUpCurrentConfig(cfg *config.Config, name string) {
 	})
 	Must(err)
 	Must(cfg.Save())
-}
-
-func Info(format string, args ...interface{}) {
-	fmt.Println(strx.Render(fmt.Sprintf(format, args...), strx.FormatSetBold, strx.ForegroundGreen))
-}
-
-func Warn(format string, args ...interface{}) {
-	fmt.Println(strx.Render(fmt.Sprintf(format, args...), strx.FormatSetBold, strx.ForegroundRed))
-}
-
-func Trac(format string, args ...interface{}) {
-	fmt.Printf(format, args...)
-	fmt.Println()
 }
