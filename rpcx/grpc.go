@@ -19,7 +19,6 @@ import (
 	"google.golang.org/grpc/peer"
 	playgroundValidator "gopkg.in/go-playground/validator.v9"
 
-	"github.com/hatlonely/go-kit/logger"
 	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/validator"
 )
@@ -61,7 +60,11 @@ func FromRPCXContext(ctx context.Context) map[string]interface{} {
 	return ctx.Value(grpcCtxKey{}).(map[string]interface{})
 }
 
-func GRPCUnaryInterceptor(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption {
+type Logger interface {
+	Info(v interface{})
+}
+
+func GRPCUnaryInterceptor(log Logger, opts ...GRPCOption) grpc.ServerOption {
 	var options GRPCOptions
 	_ = refx.SetDefaultValue(&options)
 	for _, opt := range opts {
@@ -70,7 +73,7 @@ func GRPCUnaryInterceptor(log *logger.Logger, opts ...GRPCOption) grpc.ServerOpt
 	return GRPCUnaryInterceptorWithOptions(log, &options)
 }
 
-func GRPCUnaryInterceptorWithOptions(log *logger.Logger, options *GRPCOptions) grpc.ServerOption {
+func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.ServerOption {
 	if options.Hostname == "" {
 		options.Hostname = Hostname()
 	}
