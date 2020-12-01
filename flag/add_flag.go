@@ -52,7 +52,7 @@ func Key(key string) AddFlagOption {
 	}
 }
 
-func (f *Flag) AddFlag(name string, usage string, opts ...AddFlagOption) {
+func (f *Flag) AddOption(name string, usage string, opts ...AddFlagOption) {
 	options := &AddFlagOptions{
 		Name:       name,
 		Usage:      usage,

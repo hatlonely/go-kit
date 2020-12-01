@@ -580,7 +580,7 @@ func GetIPSliceP(key string) []net.IP {
 }
 
 func AddFlag(name string, usage string, opts ...AddFlagOption) {
-	gflag.AddFlag(name, usage, opts...)
+	gflag.AddOption(name, usage, opts...)
 }
 
 func AddArgument(name string, usage string, opts ...AddFlagOption) {

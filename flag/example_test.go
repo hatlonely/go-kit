@@ -70,11 +70,11 @@ func TestExample2(t *testing.T) {
 func TestExample3(t *testing.T) {
 	flag3 := flag.NewFlag("test")
 
-	flag3.AddFlag("int", "int flag", flag.Required(), flag.Shorthand("i"), flag.Type(0), flag.DefaultValue("123"))
-	flag3.AddFlag("str", "str flag", flag.Shorthand("s"), flag.Required())
-	flag3.AddFlag("int-slice", "int slice flag", flag.Type([]int{}), flag.DefaultValue("1,2,3"))
-	flag3.AddFlag("ip", "ip flag", flag.Type(net.IP{}))
-	flag3.AddFlag("time", "time flag", flag.Type(time.Time{}), flag.DefaultValue("2019-11-27"))
+	flag3.AddOption("int", "int flag", flag.Required(), flag.Shorthand("i"), flag.Type(0), flag.DefaultValue("123"))
+	flag3.AddOption("str", "str flag", flag.Shorthand("s"), flag.Required())
+	flag3.AddOption("int-slice", "int slice flag", flag.Type([]int{}), flag.DefaultValue("1,2,3"))
+	flag3.AddOption("ip", "ip flag", flag.Type(net.IP{}))
+	flag3.AddOption("time", "time flag", flag.Type(time.Time{}), flag.DefaultValue("2019-11-27"))
 	flag3.AddArgument("pos", "pos flag")
 	if err := flag3.ParseArgs(strings.Split("-str abc -ip 192.168.0.1 --int-slice 4,5,6 posflag", " ")); err != nil {
 		panic(err)

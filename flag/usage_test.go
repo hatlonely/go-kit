@@ -12,13 +12,13 @@ import (
 func TestFlag_Usage(t *testing.T) {
 	Convey("TestFlag_Usage", t, func() {
 		flag := NewFlag("test")
-		flag.AddFlag("bool-val", "bool val flag", Type(true))
-		flag.AddFlag("int-val", "int val flag", DefaultValue("20"), Type(0))
-		flag.AddFlag("int8-val", "int8 val flag", Type(int8(0)), Shorthand("i"))
-		flag.AddFlag("int16-val", "int16 val flag", Type(int16(0)))
-		flag.AddFlag("time-val", "time val flag", Type(time.Time{}))
-		flag.AddFlag("duration-val", "", Type(time.Duration(0)))
-		flag.AddFlag("ip-val", "", Type(net.IP{}))
+		flag.AddOption("bool-val", "bool val flag", Type(true))
+		flag.AddOption("int-val", "int val flag", DefaultValue("20"), Type(0))
+		flag.AddOption("int8-val", "int8 val flag", Type(int8(0)), Shorthand("i"))
+		flag.AddOption("int16-val", "int16 val flag", Type(int16(0)))
+		flag.AddOption("time-val", "time val flag", Type(time.Time{}))
+		flag.AddOption("duration-val", "", Type(time.Duration(0)))
+		flag.AddOption("ip-val", "", Type(net.IP{}))
 		flag.AddArgument("p1", "pos flag", DefaultValue("123"))
 		flag.AddArgument("p2", "pos flag")
 
