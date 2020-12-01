@@ -36,12 +36,8 @@ func (f *Flag) Usage() string {
 		})
 	}
 
-	var keys []string
-	for _, key := range f.options {
-		keys = append(keys, f.nameKeyMap[key])
-	}
-	for _, key := range keys {
-		finfo := f.keyInfoMap[key]
+	for _, option := range f.options {
+		finfo := f.keyInfoMap[f.nameKeyMap[option]]
 		defaultValue := finfo.Type.String()
 		if finfo.DefaultValue != "" {
 			defaultValue = defaultValue + "=" + finfo.DefaultValue
@@ -80,12 +76,12 @@ func (f *Flag) Usage() string {
 
 	buffer.WriteString("usage: ")
 	buffer.WriteString(path.Base(f.name))
-	for _, key := range f.arguments {
-		buffer.WriteString(fmt.Sprintf(" [%v]", key))
+	for _, argument := range f.arguments {
+		buffer.WriteString(fmt.Sprintf(" [%v]", argument))
 	}
 
-	for _, key := range keys {
-		finfo := f.keyInfoMap[key]
+	for _, option := range f.options {
+		finfo := f.keyInfoMap[f.nameKeyMap[option]]
 		nameShorthand := finfo.Name
 		if finfo.Shorthand != "" {
 			nameShorthand = finfo.Shorthand + "," + finfo.Name
