@@ -46,6 +46,6 @@ func TestCtxGetSet(t *testing.T) {
 func TestPrivateIP(t *testing.T) {
 	Convey("TestPrivateIP", t, func() {
 		fmt.Println(PrivateIP())
-		fmt.Println(hostname())
+		fmt.Println(Hostname())
 	})
 }

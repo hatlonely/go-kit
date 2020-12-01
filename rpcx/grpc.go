@@ -72,7 +72,7 @@ func GRPCUnaryInterceptor(log *logger.Logger, opts ...GRPCOption) grpc.ServerOpt
 
 func GRPCUnaryInterceptorWithOptions(log *logger.Logger, options *GRPCOptions) grpc.ServerOption {
 	if options.Hostname == "" {
-		options.Hostname = hostname()
+		options.Hostname = Hostname()
 	}
 	if options.PrivateIP == "" {
 		options.PrivateIP = PrivateIP()
@@ -264,7 +264,7 @@ func PrivateIP() string {
 	return "unknown"
 }
 
-func hostname() string {
+func Hostname() string {
 	name, err := os.Hostname()
 	if err != nil {
 		return ""
