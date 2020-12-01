@@ -20,6 +20,7 @@ import (
 	playgroundValidator "gopkg.in/go-playground/validator.v9"
 
 	"github.com/hatlonely/go-kit/refx"
+	"github.com/hatlonely/go-kit/strx"
 	"github.com/hatlonely/go-kit/validator"
 )
 
@@ -91,6 +92,31 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.Serv
 		}
 	}
 
+	requestIDKey := "requestID"
+	hostnameKey := "hostname"
+	privateIPKey := "privateIP"
+	remoteIPKey := "remoteIP"
+	clientIPKey := "clientIP"
+	methodKey := "method"
+	rpcCodeKey := "rpcCode"
+	errCodeKey := "errCode"
+	statusKey := "status"
+	metaKey := "meta"
+	reqKey := "req"
+	ctxKey := "ctx"
+	resKey := "res"
+	errKey := "err"
+	errStackKey := "errStack"
+	resTimeMsKey := "resTimeMs"
+	if options.PascalNameKey {
+		for _, key := range []*string{
+			&requestIDKey, &hostnameKey, &privateIPKey, &remoteIPKey, &clientIPKey, &methodKey, &rpcCodeKey, &errCodeKey,
+			&statusKey, &metaKey, &reqKey, &ctxKey, &resKey, &errKey, &errStackKey, &resTimeMsKey,
+		} {
+			*key = strx.PascalName(*key)
+		}
+	}
+
 	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		var requestID, remoteIP string
 		if md, ok := metadata.FromIncomingContext(ctx); ok {
@@ -134,22 +160,22 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.Serv
 			}
 
 			log.Info(map[string]interface{}{
-				"requestID": requestID,
-				"hostname":  options.Hostname,
-				"privateIP": options.PrivateIP,
-				"remoteIP":  remoteIP,
-				"clientIP":  clientIP,
-				"method":    info.FullMethod,
-				"rpcCode":   rpcCode,
-				"errCode":   errCode,
-				"status":    status,
-				"meta":      meta,
-				"req":       req,
-				"ctx":       ctx.Value(grpcCtxKey{}),
-				"res":       res,
-				"err":       err,
-				"errStack":  fmt.Sprintf("%+v", err),
-				"resTimeMs": time.Now().Sub(ts).Milliseconds(),
+				requestIDKey: requestID,
+				hostnameKey:  options.Hostname,
+				privateIPKey: options.PrivateIP,
+				remoteIPKey:  remoteIP,
+				clientIPKey:  clientIP,
+				methodKey:    info.FullMethod,
+				rpcCodeKey:   rpcCode,
+				errCodeKey:   errCode,
+				statusKey:    status,
+				metaKey:      meta,
+				reqKey:       req,
+				ctxKey:       ctx.Value(grpcCtxKey{}),
+				resKey:       res,
+				errKey:       err,
+				errStackKey:  fmt.Sprintf("%+v", err),
+				resTimeMsKey: time.Now().Sub(ts).Milliseconds(),
 			})
 
 			headers := map[string]string{}
@@ -198,10 +224,11 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.Serv
 }
 
 type GRPCOptions struct {
-	Headers    []string `dft:"X-Request-Id"`
-	PrivateIP  string
-	Hostname   string
-	Validators []string
+	Headers       []string `dft:"X-Request-Id"`
+	PrivateIP     string
+	Hostname      string
+	Validators    []string
+	PascalNameKey bool
 
 	validators  []func(interface{}) error
 	preHandlers []func(ctx context.Context, req interface{}) error
@@ -249,6 +276,12 @@ func WithDefaultValidator() GRPCOption {
 func WithValidators(fun ...func(interface{}) error) GRPCOption {
 	return func(options *GRPCOptions) {
 		options.validators = append(options.validators, fun...)
+	}
+}
+
+func WithPascalNameKey() GRPCOption {
+	return func(options *GRPCOptions) {
+		options.PascalNameKey = true
 	}
 }
 
