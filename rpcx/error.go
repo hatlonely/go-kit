@@ -12,10 +12,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func NewError(status codes.Code, code string, message string, err error) *Error {
+func NewError(rpcCode codes.Code, code string, message string, err error) *Error {
 	return &Error{
 		err:  err,
-		code: status,
+		Code: rpcCode,
 		Detail: &ErrorDetail{
 			Code:    code,
 			Message: message,
@@ -23,11 +23,11 @@ func NewError(status codes.Code, code string, message string, err error) *Error 
 	}
 }
 
-func NewErrorf(status codes.Code, code string, format string, args ...interface{}) *Error {
+func NewErrorf(rpcCode codes.Code, code string, format string, args ...interface{}) *Error {
 	str := fmt.Sprintf(format, args...)
 	return &Error{
 		err:  errors.New(str),
-		code: status,
+		Code: rpcCode,
 		Detail: &ErrorDetail{
 			Code:    code,
 			Message: str,
@@ -38,7 +38,7 @@ func NewErrorf(status codes.Code, code string, format string, args ...interface{
 func NewInternalError(err error) *Error {
 	return &Error{
 		err:  err,
-		code: codes.Internal,
+		Code: codes.Internal,
 		Detail: &ErrorDetail{
 			Status:  http.StatusInternalServerError,
 			Code:    "InternalError",
@@ -49,7 +49,7 @@ func NewInternalError(err error) *Error {
 
 type Error struct {
 	err    error
-	code   codes.Code
+	Code   codes.Code
 	Detail *ErrorDetail `json:"detail,omitempty"`
 }
 
@@ -91,6 +91,6 @@ func (e *Error) Format(s fmt.State, verb rune) {
 }
 
 func (e *Error) ToStatus() *status.Status {
-	s, _ := status.New(e.code, e.err.Error()).WithDetails(e.Detail)
+	s, _ := status.New(e.Code, e.err.Error()).WithDetails(e.Detail)
 	return s
 }

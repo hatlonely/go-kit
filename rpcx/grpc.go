@@ -57,6 +57,10 @@ func CtxGet(ctx context.Context, key string) interface{} {
 	return m[key]
 }
 
+func FromRPCXContext(ctx context.Context) map[string]interface{} {
+	return ctx.Value(grpcCtxKey{}).(map[string]interface{})
+}
+
 func GRPCUnaryInterceptor(log *logger.Logger, opts ...GRPCOption) grpc.ServerOption {
 	var options GRPCOptions
 	_ = refx.SetDefaultValue(&options)
@@ -71,7 +75,7 @@ func GRPCUnaryInterceptorWithOptions(log *logger.Logger, options *GRPCOptions) g
 		options.Hostname = hostname()
 	}
 	if options.PrivateIP == "" {
-		options.PrivateIP = privateIP()
+		options.PrivateIP = PrivateIP()
 	}
 	for _, validate := range options.Validators {
 		switch validate {
@@ -115,7 +119,7 @@ func GRPCUnaryInterceptorWithOptions(log *logger.Logger, options *GRPCOptions) g
 			status := http.StatusOK
 			if err != nil {
 				e := err.(*Error)
-				rpcCode = e.code.String()
+				rpcCode = e.Code.String()
 				errCode = e.Detail.Code
 				status = int(e.Detail.Status)
 			}
@@ -177,9 +181,9 @@ func GRPCUnaryInterceptorWithOptions(log *logger.Logger, options *GRPCOptions) g
 			switch e := errors.Cause(err).(type) {
 			case *Error:
 				if e.Detail.Status == 0 {
-					e.Detail.Status = int32(runtime.HTTPStatusFromCode(e.code))
+					e.Detail.Status = int32(runtime.HTTPStatusFromCode(e.Code))
 				}
-				err = NewError(e.code, e.Detail.Code, e.Detail.Message, err).SetStatus(int(e.Detail.Status)).SetRequestID(e.Detail.RequestID).SetRefer(e.Detail.Refer)
+				err = NewError(e.Code, e.Detail.Code, e.Detail.Message, err).SetStatus(int(e.Detail.Status)).SetRequestID(e.Detail.RequestID).SetRefer(e.Detail.Refer)
 			default:
 				err = NewInternalError(err)
 			}
@@ -245,7 +249,7 @@ func WithValidators(fun ...func(interface{}) error) GRPCOption {
 	}
 }
 
-func privateIP() string {
+func PrivateIP() string {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
 		return "unknown"

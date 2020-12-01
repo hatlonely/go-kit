@@ -14,7 +14,7 @@ import (
 func TestNewError(t *testing.T) {
 	Convey("test NewError", t, func() {
 		err := NewError(codes.InvalidArgument, "InvalidArgument", "invalid argument", errors.New("error"))
-		So(err.code, ShouldEqual, codes.InvalidArgument)
+		So(err.Code, ShouldEqual, codes.InvalidArgument)
 		So(err.err.Error(), ShouldEqual, "error")
 		So(err.Detail.Code, ShouldEqual, "InvalidArgument")
 		So(err.Detail.Message, ShouldEqual, "invalid argument")
@@ -25,7 +25,7 @@ func TestNewError(t *testing.T) {
 
 	Convey("test NewErrorf", t, func() {
 		err := NewErrorf(codes.InvalidArgument, "InvalidArgument", "invalid argument field %s", "text")
-		So(err.code, ShouldEqual, codes.InvalidArgument)
+		So(err.Code, ShouldEqual, codes.InvalidArgument)
 		So(err.err.Error(), ShouldEqual, "invalid argument field text")
 		So(err.Detail.Code, ShouldEqual, "InvalidArgument")
 		So(err.Detail.Message, ShouldEqual, "invalid argument field text")
@@ -36,7 +36,7 @@ func TestNewError(t *testing.T) {
 
 	Convey("test NewInternalError", t, func() {
 		err := NewInternalError(errors.New("mysql error"))
-		So(err.code, ShouldEqual, codes.Internal)
+		So(err.Code, ShouldEqual, codes.Internal)
 		So(err.err.Error(), ShouldEqual, "mysql error")
 		So(err.Detail.Code, ShouldEqual, "InternalError")
 		So(err.Detail.Message, ShouldEqual, "mysql error")
