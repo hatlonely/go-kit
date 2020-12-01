@@ -579,15 +579,15 @@ func GetIPSliceP(key string) []net.IP {
 	return gflag.GetIPSliceP(key)
 }
 
-func AddFlag(name string, usage string, opts ...AddFlagOption) {
+func AddOption(name string, usage string, opts ...AddOptionOption) {
 	gflag.AddOption(name, usage, opts...)
 }
 
-func AddArgument(name string, usage string, opts ...AddFlagOption) {
+func AddArgument(name string, usage string, opts ...AddOptionOption) {
 	gflag.AddArgument(name, usage, opts...)
 }
 
-func BindFlagWithOptions(v interface{}, options *AddFlagOptions) error {
+func BindFlagWithOptions(v interface{}, options *AddOptionOptions) error {
 	return gflag.BindFlagWithOptions(v, options)
 }
 
