@@ -48,9 +48,9 @@ func MuxWithProtoErrorHandler(opts ...MuxWithProtoErrorHandlerOption) runtime.Se
 	for _, opt := range opts {
 		opt(&options)
 	}
-	detailMarshal := jsonMarshalErrorDetail
+	detailMarshal := JsonMarshalErrorDetail
 	if options.UseFieldKey {
-		detailMarshal = jsonMarshalErrorDetailWithFieldKey
+		detailMarshal = JsonMarshalErrorDetailWithFieldKey
 	}
 
 	return runtime.WithProtoErrorHandler(func(ctx context.Context, mux *runtime.ServeMux, m runtime.Marshaler, res http.ResponseWriter, req *http.Request, err error) {
@@ -65,12 +65,12 @@ func MuxWithProtoErrorHandler(opts ...MuxWithProtoErrorHandlerOption) runtime.Se
 	})
 }
 
-func jsonMarshalErrorDetail(detail *ErrorDetail) []byte {
+func JsonMarshalErrorDetail(detail *ErrorDetail) []byte {
 	buf, _ := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(detail)
 	return buf
 }
 
-func jsonMarshalErrorDetailWithFieldKey(detail *ErrorDetail) []byte {
+func JsonMarshalErrorDetailWithFieldKey(detail *ErrorDetail) []byte {
 	m := map[string]interface{}{}
 	if detail.Status != 0 {
 		m["Status"] = detail.Status
