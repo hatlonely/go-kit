@@ -5,9 +5,23 @@ package strx
 
 import (
 	"bytes"
+	"fmt"
 	"strconv"
 	"strings"
 )
+
+func Info(format string, args ...interface{}) {
+	fmt.Println(Render(fmt.Sprintf(format, args...), FormatSetBold, ForegroundGreen))
+}
+
+func Warn(format string, args ...interface{}) {
+	fmt.Println(Render(fmt.Sprintf(format, args...), FormatSetBold, ForegroundRed))
+}
+
+func Trac(format string, args ...interface{}) {
+	fmt.Printf(format, args...)
+	fmt.Println()
+}
 
 func Render(str string, effects ...Effect) string {
 	buf := &bytes.Buffer{}
