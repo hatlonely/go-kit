@@ -16,7 +16,7 @@ func (f *Flag) Usage() string {
 	}
 
 	var argumentInfos []*info
-	var flagInfos []*info
+	var optionInfos []*info
 
 	for _, name := range f.arguments {
 		finfo := f.keyInfoMap[f.nameKeyMap[name]]
@@ -37,7 +37,7 @@ func (f *Flag) Usage() string {
 	}
 
 	var keys []string
-	for _, key := range f.names {
+	for _, key := range f.options {
 		keys = append(keys, f.nameKeyMap[key])
 	}
 	for _, key := range keys {
@@ -54,7 +54,7 @@ func (f *Flag) Usage() string {
 		if finfo.Name != finfo.Key {
 			name += ", --" + finfo.Key
 		}
-		flagInfos = append(flagInfos, &info{
+		optionInfos = append(optionInfos, &info{
 			shorthand:   shorthand,
 			name:        name,
 			typeDefault: "[" + defaultValue + "]",
@@ -70,7 +70,7 @@ func (f *Flag) Usage() string {
 		return b
 	}
 	var shorthandWidth, nameWidth, typeDefaultWidth int
-	for _, i := range append(argumentInfos, flagInfos...) {
+	for _, i := range append(argumentInfos, optionInfos...) {
 		shorthandWidth = max(len(i.shorthand), shorthandWidth)
 		nameWidth = max(len(i.name), nameWidth)
 		typeDefaultWidth = max(len(i.typeDefault), typeDefaultWidth)
@@ -110,7 +110,7 @@ func (f *Flag) Usage() string {
 	}
 	buffer.WriteString("\noptions:\n")
 	format := fmt.Sprintf("  %%%dv, %%-%dv  %%-%dv  %%v", shorthandWidth, nameWidth, typeDefaultWidth)
-	for _, i := range flagInfos {
+	for _, i := range optionInfos {
 		buffer.WriteString(strings.TrimRight(fmt.Sprintf(format, i.shorthand, i.name, i.typeDefault, i.usage), " "))
 		buffer.WriteString("\n")
 	}

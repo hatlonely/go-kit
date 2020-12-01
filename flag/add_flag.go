@@ -144,7 +144,7 @@ func (f *Flag) addFlagWithOptions(options *AddFlagOptions) error {
 	if options.IsArgument {
 		f.arguments = append(f.arguments, options.Name)
 	} else {
-		f.names = append(f.names, options.Name)
+		f.options = append(f.options, options.Name)
 	}
 
 	return nil
