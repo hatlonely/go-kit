@@ -22,13 +22,13 @@ func TestFlag_Usage(t *testing.T) {
 		flag.AddArgument("p1", "pos flag", DefaultValue("123"))
 		flag.AddArgument("p2", "pos flag")
 
-		So(flag.Usage(), ShouldEqual, `usage: test [p1] [p2] [-bool-val bool] [-int-val int=20] [-i,int8-val int8] [-int16-val int16] [-time-val time.Time] [-duration-val time.Duration] [-ip-val net.IP]
+		So(flag.Usage(), ShouldEqual, `Usage: test [p1] [p2] [-bool-val bool] [-int-val int=20] [-i,int8-val int8] [-int16-val int16] [-time-val time.Time] [-duration-val time.Duration] [-ip-val net.IP]
 
-arguments:
+Arguments:
       p1              [string=123]     pos flag
       p2              [string]         pos flag
 
-options:
+Options:
     , --bool-val      [bool]           bool val flag
     , --int-val       [int=20]         int val flag
   -i, --int8-val      [int8]           int8 val flag
@@ -68,13 +68,13 @@ func TestFlag_Usage2(t *testing.T) {
 		flag := NewFlag("test")
 		So(flag.Struct(&B{}), ShouldBeNil)
 		fmt.Println(flag.Usage())
-		So(flag.Usage(), ShouldEqual, `usage: test [args] [Key10.Key11] [-Key1 string] [-Key2 int] [-a,action string=hello] [-o,operation int] <-Key3.Key6.Key7 string> [-Key10.Key12 int]
+		So(flag.Usage(), ShouldEqual, `Usage: test [args] [Key10.Key11] [-Key1 string] [-Key2 int] [-a,action string=hello] [-o,operation int] <-Key3.Key6.Key7 string> [-Key10.Key12 int]
 
-arguments:
+Arguments:
       args, Key8.Key9           [string]        key8 usage
       Key10.Key11               [string]
 
-options:
+Options:
     , --Key1                    [string]        key1 usage
     , --Key2                    [int]           key2 usage
   -a, --action, --Key3.Key4     [string=hello]  key4 usage

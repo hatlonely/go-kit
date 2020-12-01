@@ -74,7 +74,7 @@ func (f *Flag) Usage() string {
 
 	var buffer bytes.Buffer
 
-	buffer.WriteString("usage: ")
+	buffer.WriteString("Usage: ")
 	buffer.WriteString(path.Base(f.name))
 	for _, argument := range f.arguments {
 		buffer.WriteString(fmt.Sprintf(" [%v]", argument))
@@ -97,14 +97,14 @@ func (f *Flag) Usage() string {
 	buffer.WriteString("\n")
 
 	if len(argumentInfos) != 0 {
-		buffer.WriteString("\narguments:\n")
+		buffer.WriteString("\nArguments:\n")
 		posFormat := fmt.Sprintf("  %%%dv  %%-%dv  %%-%dv  %%v", shorthandWidth, nameWidth, typeDefaultWidth)
 		for _, i := range argumentInfos {
 			buffer.WriteString(strings.TrimRight(fmt.Sprintf(posFormat, i.shorthand, i.name, i.typeDefault, i.usage), " "))
 			buffer.WriteString("\n")
 		}
 	}
-	buffer.WriteString("\noptions:\n")
+	buffer.WriteString("\nOptions:\n")
 	format := fmt.Sprintf("  %%%dv, %%-%dv  %%-%dv  %%v", shorthandWidth, nameWidth, typeDefaultWidth)
 	for _, i := range optionInfos {
 		buffer.WriteString(strings.TrimRight(fmt.Sprintf(format, i.shorthand, i.name, i.typeDefault, i.usage), " "))
