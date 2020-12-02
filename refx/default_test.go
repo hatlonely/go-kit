@@ -91,6 +91,14 @@ func TestSetDefaultValue(t *testing.T) {
 			fmt.Println(v)
 			So(SetDefaultValue(v), ShouldBeNil)
 		})
+
+		Convey("case non point", func() {
+			var v B
+			So(setDefaultValue(v), ShouldNotBeNil)
+			So(func() {
+				SetDefaultValueP(v)
+			}, ShouldPanic)
+		})
 	})
 }
 

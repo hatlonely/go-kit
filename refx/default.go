@@ -13,6 +13,12 @@ import (
 var mutex sync.RWMutex
 var defaultValueMap = map[reflect.Type]reflect.Value{}
 
+func SetDefaultValueP(v interface{}) {
+	if err := SetDefaultValue(v); err != nil {
+		panic(err)
+	}
+}
+
 func SetDefaultValue(v interface{}) error {
 	if reflect.ValueOf(v).IsNil() {
 		return nil
@@ -20,7 +26,7 @@ func SetDefaultValue(v interface{}) error {
 
 	rt := reflect.TypeOf(v)
 	if rt.Kind() != reflect.Ptr || rt.Elem().Kind() != reflect.Struct {
-		return nil
+		return errors.Errorf("expect a struct point. got [%v]", rt)
 	}
 
 	mutex.RLock()
@@ -46,7 +52,7 @@ func SetDefaultValue(v interface{}) error {
 
 func setDefaultValue(v interface{}) error {
 	if reflect.TypeOf(v).Kind() != reflect.Ptr || reflect.TypeOf(v).Elem().Kind() != reflect.Struct {
-		return nil
+		return errors.Errorf("expect a struct point. got [%v]", reflect.TypeOf(v))
 	}
 	rt := reflect.TypeOf(v).Elem()
 	rv := reflect.ValueOf(v).Elem()
