@@ -87,8 +87,8 @@ func NewOTSProviderWithOptions(options *OTSProviderOptions) (*OTSProvider, error
 
 	provider := &OTSProvider{
 		options: options,
-		events:  make(chan struct{}, 10),
-		errors:  make(chan error, 10),
+		events:  make(chan struct{}, 8),
+		errors:  make(chan error, 8),
 	}
 	buf, ts, err := provider.otsGetRow()
 	if err != nil {
