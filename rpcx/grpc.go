@@ -48,17 +48,27 @@ func NewRPCXContext(ctx context.Context) context.Context {
 }
 
 func CtxSet(ctx context.Context, key string, val interface{}) {
-	m := ctx.Value(grpcCtxKey{}).(map[string]interface{})
-	m[key] = val
+	m := ctx.Value(grpcCtxKey{})
+	if m == nil {
+		return
+	}
+	m.(map[string]interface{})[key] = val
 }
 
 func CtxGet(ctx context.Context, key string) interface{} {
-	m := ctx.Value(grpcCtxKey{}).(map[string]interface{})
-	return m[key]
+	m := ctx.Value(grpcCtxKey{})
+	if m == nil {
+		return nil
+	}
+	return m.(map[string]interface{})[key]
 }
 
-func FromRPCXContext(ctx context.Context) map[string]interface{} {
-	return ctx.Value(grpcCtxKey{}).(map[string]interface{})
+func FromExecutorContext(ctx context.Context) map[string]interface{} {
+	m := ctx.Value(grpcCtxKey{})
+	if m == nil {
+		return nil
+	}
+	return m.(map[string]interface{})
 }
 
 type Logger interface {
