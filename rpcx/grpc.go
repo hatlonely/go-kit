@@ -63,7 +63,7 @@ func CtxGet(ctx context.Context, key string) interface{} {
 	return m.(map[string]interface{})[key]
 }
 
-func FromExecutorContext(ctx context.Context) map[string]interface{} {
+func FromRPCXContext(ctx context.Context) map[string]interface{} {
 	m := ctx.Value(grpcCtxKey{})
 	if m == nil {
 		return nil
