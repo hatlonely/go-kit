@@ -42,7 +42,7 @@ func NewInternalError(err error) *Error {
 		Detail: &ErrorDetail{
 			Status:  http.StatusInternalServerError,
 			Code:    "InternalError",
-			Message: err.Error(),
+			Message: "unknown error",
 		},
 	}
 }
