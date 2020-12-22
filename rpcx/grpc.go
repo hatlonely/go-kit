@@ -191,6 +191,9 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.Serv
 				headers[header] = MetaDataIncomingGet(ctx, strings.ToLower(header))
 			}
 			_ = grpc.SendHeader(ctx, metadata.New(headers))
+			if err != nil {
+				err = err.(*Error).SetRequestID(requestID).ToStatus().Err()
+			}
 		}()
 
 		if err == nil {
@@ -224,7 +227,7 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.Serv
 			default:
 				err = NewInternalError(err)
 			}
-			return res, err.(*Error).SetRequestID(requestID).ToStatus().Err()
+			return res, err
 		}
 
 		return res, nil
