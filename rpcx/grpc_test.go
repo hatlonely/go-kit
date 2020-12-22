@@ -3,8 +3,10 @@ package rpcx
 import (
 	"context"
 	"fmt"
+	"runtime/debug"
 	"testing"
 
+	"github.com/pkg/errors"
 	. "github.com/smartystreets/goconvey/convey"
 	"google.golang.org/grpc/metadata"
 )
@@ -47,5 +49,19 @@ func TestPrivateIP(t *testing.T) {
 	Convey("TestPrivateIP", t, func() {
 		fmt.Println(PrivateIP())
 		fmt.Println(Hostname())
+	})
+}
+
+func TestGRPCUnaryInterceptor(t *testing.T) {
+	Convey("TestGRPCUnaryInterceptor", t, func() {
+		fun := func() (err error) {
+			defer func() {
+				if perr := recover(); perr != nil {
+					err = NewInternalError(errors.Wrap(fmt.Errorf("%v\n%v", string(debug.Stack()), perr), "panic"))
+				}
+			}()
+			panic("hello")
+		}
+		So(fun(), ShouldNotBeNil)
 	})
 }

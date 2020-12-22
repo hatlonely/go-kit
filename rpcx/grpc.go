@@ -127,7 +127,7 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.Serv
 		}
 	}
 
-	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (res interface{}, err error) {
 		var requestID, remoteIP string
 		if md, ok := metadata.FromIncomingContext(ctx); ok {
 			requestID = strings.Join(md.Get("x-request-id"), ",")
@@ -140,8 +140,6 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.Serv
 
 		ctx = NewRPCXContext(ctx)
 
-		var res interface{}
-		var err error
 		ts := time.Now()
 		defer func() {
 			if perr := recover(); perr != nil {
