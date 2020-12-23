@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -17,6 +18,7 @@ func NewError(rpcCode codes.Code, code string, message string, err error) *Error
 		err:  err,
 		Code: rpcCode,
 		Detail: &ErrorDetail{
+			Status:  int32(runtime.HTTPStatusFromCode(rpcCode)),
 			Code:    code,
 			Message: message,
 		},
@@ -29,6 +31,7 @@ func NewErrorf(rpcCode codes.Code, code string, format string, args ...interface
 		err:  errors.New(str),
 		Code: rpcCode,
 		Detail: &ErrorDetail{
+			Status:  int32(runtime.HTTPStatusFromCode(rpcCode)),
 			Code:    code,
 			Message: str,
 		},
