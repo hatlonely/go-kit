@@ -14,16 +14,34 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-func MuxWithMetadata() runtime.ServeMuxOption {
+func MuxWithMetadata(opts ...MuxWithMetadataOption) runtime.ServeMuxOption {
+	var options MuxWithMetadataOptions
+	refx.SetDefaultValueP(&options)
+	for _, opt := range opts {
+		opt(&options)
+	}
+
 	return runtime.WithMetadata(func(ctx context.Context, req *http.Request) metadata.MD {
-		requestID := req.Header.Get("X-Request-Id")
+		requestID := req.Header.Get(options.RequestIDMetaKey)
 		if requestID == "" {
 			requestID = uuid.NewV4().String()
-			req.Header.Set("X-Request-Id", requestID)
-			return metadata.Pairs("X-Remote-Addr", req.RemoteAddr, "X-Request-Id", requestID)
+			req.Header.Set(options.RequestIDMetaKey, requestID)
+			return metadata.Pairs("X-Remote-Addr", req.RemoteAddr, options.RequestIDMetaKey, requestID)
 		}
 		return metadata.Pairs("X-Remote-Addr", req.RemoteAddr)
 	})
+}
+
+type MuxWithMetadataOptions struct {
+	RequestIDMetaKey string `dft:"X-Request-Id"`
+}
+
+type MuxWithMetadataOption func(options *MuxWithMetadataOptions)
+
+func WithMuxMetadataRequestIDMetaKey(requestIDMetaKey string) MuxWithMetadataOption {
+	return func(options *MuxWithMetadataOptions) {
+		options.RequestIDMetaKey = requestIDMetaKey
+	}
 }
 
 func MuxWithIncomingHeaderMatcher() runtime.ServeMuxOption {
@@ -44,7 +62,7 @@ func MuxWithOutgoingHeaderMatcher() runtime.ServeMuxOption {
 
 func MuxWithProtoErrorHandler(opts ...MuxWithProtoErrorHandlerOption) runtime.ServeMuxOption {
 	var options MuxWithProtoErrorHandlerOptions
-	_ = refx.SetDefaultValue(&options)
+	refx.SetDefaultValueP(&options)
 	for _, opt := range opts {
 		opt(&options)
 	}
@@ -113,25 +131,25 @@ type MuxWithProtoErrorHandlerOptions struct {
 
 type MuxWithProtoErrorHandlerOption func(options *MuxWithProtoErrorHandlerOptions)
 
-func WithMuxHeaders(headers ...string) MuxWithProtoErrorHandlerOption {
+func WithMuxProtoErrorHandlerHeaders(headers ...string) MuxWithProtoErrorHandlerOption {
 	return func(options *MuxWithProtoErrorHandlerOptions) {
 		options.Headers = headers
 	}
 }
 
-func WithMuxContentType(contentType string) MuxWithProtoErrorHandlerOption {
+func WithMuxProtoErrorHandlerContentType(contentType string) MuxWithProtoErrorHandlerOption {
 	return func(options *MuxWithProtoErrorHandlerOptions) {
 		options.ContentType = contentType
 	}
 }
 
-func WithMuxUseFieldKey() MuxWithProtoErrorHandlerOption {
+func WithMuxProtoErrorHandlerUseFieldKey() MuxWithProtoErrorHandlerOption {
 	return func(options *MuxWithProtoErrorHandlerOptions) {
 		options.UseFieldKey = true
 	}
 }
 
-func WithMuxRequestIDMetaKey(requestIDMetaKey string) MuxWithProtoErrorHandlerOption {
+func WithMuxProtoErrorHandlerRequestIDMetaKey(requestIDMetaKey string) MuxWithProtoErrorHandlerOption {
 	return func(options *MuxWithProtoErrorHandlerOptions) {
 		options.RequestIDMetaKey = requestIDMetaKey
 	}

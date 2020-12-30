@@ -71,16 +71,16 @@ type Logger interface {
 	Info(v interface{})
 }
 
-func GRPCUnaryInterceptor(log Logger, opts ...GRPCOption) grpc.ServerOption {
-	var options GRPCOptions
-	_ = refx.SetDefaultValue(&options)
+func GRPCUnaryInterceptor(log Logger, opts ...GRPCUnaryInterceptorOption) grpc.ServerOption {
+	var options GRPCUnaryInterceptorOptions
+	refx.SetDefaultValueP(&options)
 	for _, opt := range opts {
 		opt(&options)
 	}
 	return GRPCUnaryInterceptorWithOptions(log, &options)
 }
 
-func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.ServerOption {
+func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCUnaryInterceptorOptions) grpc.ServerOption {
 	if options.Hostname == "" {
 		options.Hostname = Hostname()
 	}
@@ -90,9 +90,9 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.Serv
 	for _, validate := range options.Validators {
 		switch validate {
 		case "playground":
-			WithGRPCPlaygroundValidator()(options)
+			WithGRPCUnaryInterceptorPlaygroundValidator()(options)
 		case "default":
-			WithGRPCDefaultValidator()(options)
+			WithGRPCUnaryInterceptorDefaultValidator()(options)
 		default:
 			panic(fmt.Sprintf("invalid validator [%v], should be one of [playground, default]", validate))
 		}
@@ -231,7 +231,7 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.Serv
 	})
 }
 
-type GRPCOptions struct {
+type GRPCUnaryInterceptorOptions struct {
 	Headers          []string `dft:"X-Request-Id"`
 	PrivateIP        string
 	Hostname         string
@@ -243,59 +243,59 @@ type GRPCOptions struct {
 	preHandlers []func(ctx context.Context, req interface{}) error
 }
 
-type GRPCOption func(options *GRPCOptions)
+type GRPCUnaryInterceptorOption func(options *GRPCUnaryInterceptorOptions)
 
-func WithGRPCPreHandlers(handlers ...func(ctx context.Context, req interface{}) error) GRPCOption {
-	return func(options *GRPCOptions) {
+func WithGRPCUnaryInterceptorPreHandlers(handlers ...func(ctx context.Context, req interface{}) error) GRPCUnaryInterceptorOption {
+	return func(options *GRPCUnaryInterceptorOptions) {
 		options.preHandlers = append(options.preHandlers, handlers...)
 	}
 }
 
-func WithGRPCHeaders(headers ...string) GRPCOption {
-	return func(options *GRPCOptions) {
+func WithGRPCUnaryInterceptorHeaders(headers ...string) GRPCUnaryInterceptorOption {
+	return func(options *GRPCUnaryInterceptorOptions) {
 		options.Headers = headers
 	}
 }
 
-func WithGRPCPrivateIP(privateIP string) GRPCOption {
-	return func(options *GRPCOptions) {
+func WithGRPCUnaryInterceptorPrivateIP(privateIP string) GRPCUnaryInterceptorOption {
+	return func(options *GRPCUnaryInterceptorOptions) {
 		options.PrivateIP = privateIP
 	}
 }
 
-func WithGRPCHostname(hostname string) GRPCOption {
-	return func(options *GRPCOptions) {
+func WithGRPCUnaryInterceptorHostname(hostname string) GRPCUnaryInterceptorOption {
+	return func(options *GRPCUnaryInterceptorOptions) {
 		options.Hostname = hostname
 	}
 }
 
-func WithGRPCRequestIDMetaKey(requestIDMetaKey string) GRPCOption {
-	return func(options *GRPCOptions) {
+func WithGRPCUnaryInterceptorRequestIDMetaKey(requestIDMetaKey string) GRPCUnaryInterceptorOption {
+	return func(options *GRPCUnaryInterceptorOptions) {
 		options.RequestIDMetaKey = requestIDMetaKey
 	}
 }
 
-func WithGRPCPlaygroundValidator() GRPCOption {
+func WithGRPCUnaryInterceptorPlaygroundValidator() GRPCUnaryInterceptorOption {
 	validate := playgroundValidator.New()
-	return func(options *GRPCOptions) {
+	return func(options *GRPCUnaryInterceptorOptions) {
 		options.validators = append(options.validators, validate.Struct)
 	}
 }
 
-func WithGRPCDefaultValidator() GRPCOption {
-	return func(options *GRPCOptions) {
+func WithGRPCUnaryInterceptorDefaultValidator() GRPCUnaryInterceptorOption {
+	return func(options *GRPCUnaryInterceptorOptions) {
 		options.validators = append(options.validators, validator.Validate)
 	}
 }
 
-func WithGRPCValidators(fun ...func(interface{}) error) GRPCOption {
-	return func(options *GRPCOptions) {
+func WithGRPCUnaryInterceptorValidators(fun ...func(interface{}) error) GRPCUnaryInterceptorOption {
+	return func(options *GRPCUnaryInterceptorOptions) {
 		options.validators = append(options.validators, fun...)
 	}
 }
 
-func WithGRPCPascalNameKey() GRPCOption {
-	return func(options *GRPCOptions) {
+func WithGRPCUnaryInterceptorPascalNameKey() GRPCUnaryInterceptorOption {
+	return func(options *GRPCUnaryInterceptorOptions) {
 		options.PascalNameKey = true
 	}
 }
