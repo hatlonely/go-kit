@@ -14,6 +14,6 @@ func TestStatusErrorDetail(t *testing.T) {
 		So(detail.Status, ShouldEqual, http.StatusInternalServerError)
 		So(detail.RequestID, ShouldEqual, "test-request-id")
 		So(detail.Message, ShouldEqual, "hello world")
-		So(detail.Code, ShouldEqual, "InternalError")
+		So(detail.Code, ShouldEqual, "Internal Server Error")
 	})
 }

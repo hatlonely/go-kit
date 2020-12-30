@@ -90,9 +90,9 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.Serv
 	for _, validate := range options.Validators {
 		switch validate {
 		case "playground":
-			WithPlaygroundValidator()(options)
+			WithGRPCPlaygroundValidator()(options)
 		case "default":
-			WithDefaultValidator()(options)
+			WithGRPCDefaultValidator()(options)
 		default:
 			panic(fmt.Sprintf("invalid validator [%v], should be one of [playground, default]", validate))
 		}
@@ -257,44 +257,44 @@ func WithGRPCHeaders(headers ...string) GRPCOption {
 	}
 }
 
-func WithPrivateIP(privateIP string) GRPCOption {
+func WithGRPCPrivateIP(privateIP string) GRPCOption {
 	return func(options *GRPCOptions) {
 		options.PrivateIP = privateIP
 	}
 }
 
-func WithHostname(hostname string) GRPCOption {
+func WithGRPCHostname(hostname string) GRPCOption {
 	return func(options *GRPCOptions) {
 		options.Hostname = hostname
 	}
 }
 
-func WithRequestIDMetaKey(requestIDMetaKey string) GRPCOption {
+func WithGRPCRequestIDMetaKey(requestIDMetaKey string) GRPCOption {
 	return func(options *GRPCOptions) {
 		options.RequestIDMetaKey = requestIDMetaKey
 	}
 }
 
-func WithPlaygroundValidator() GRPCOption {
+func WithGRPCPlaygroundValidator() GRPCOption {
 	validate := playgroundValidator.New()
 	return func(options *GRPCOptions) {
 		options.validators = append(options.validators, validate.Struct)
 	}
 }
 
-func WithDefaultValidator() GRPCOption {
+func WithGRPCDefaultValidator() GRPCOption {
 	return func(options *GRPCOptions) {
 		options.validators = append(options.validators, validator.Validate)
 	}
 }
 
-func WithValidators(fun ...func(interface{}) error) GRPCOption {
+func WithGRPCValidators(fun ...func(interface{}) error) GRPCOption {
 	return func(options *GRPCOptions) {
 		options.validators = append(options.validators, fun...)
 	}
 }
 
-func WithPascalNameKey() GRPCOption {
+func WithGRPCPascalNameKey() GRPCOption {
 	return func(options *GRPCOptions) {
 		options.PascalNameKey = true
 	}
