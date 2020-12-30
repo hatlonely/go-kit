@@ -59,7 +59,7 @@ func MuxWithProtoErrorHandler(opts ...MuxWithProtoErrorHandlerOption) runtime.Se
 			res.Header().Set(header, req.Header.Get(header))
 		}
 
-		e := StatusErrorDetail(err, req.Header.Get("X-Request-Id"))
+		e := StatusErrorDetail(err, req.Header.Get(options.RequestIDMetaKey))
 		res.WriteHeader(int(e.Status))
 		_, _ = res.Write(detailMarshal(e))
 	})
@@ -105,9 +105,10 @@ func StatusErrorDetail(err error, requestID string) *ErrorDetail {
 }
 
 type MuxWithProtoErrorHandlerOptions struct {
-	Headers     []string `dft:"X-Request-Id"`
-	ContentType string   `dft:"application/json"`
-	UseFieldKey bool
+	Headers          []string `dft:"X-Request-Id"`
+	ContentType      string   `dft:"application/json"`
+	UseFieldKey      bool
+	RequestIDMetaKey string `dft:"X-Request-Id"`
 }
 
 type MuxWithProtoErrorHandlerOption func(options *MuxWithProtoErrorHandlerOptions)
@@ -127,5 +128,11 @@ func WithMuxContentType(contentType string) MuxWithProtoErrorHandlerOption {
 func WithMuxUseFieldKey() MuxWithProtoErrorHandlerOption {
 	return func(options *MuxWithProtoErrorHandlerOptions) {
 		options.UseFieldKey = true
+	}
+}
+
+func WithMuxRequestIDMetaKey(requestIDMetaKey string) MuxWithProtoErrorHandlerOption {
+	return func(options *MuxWithProtoErrorHandlerOptions) {
+		options.RequestIDMetaKey = requestIDMetaKey
 	}
 }
