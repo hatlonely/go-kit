@@ -24,10 +24,6 @@ import (
 	"github.com/hatlonely/go-kit/validator"
 )
 
-func MetaDataGetRequestID(ctx context.Context) string {
-	return MetaDataIncomingGet(ctx, "x-request-id")
-}
-
 func MetaDataIncomingGet(ctx context.Context, key string) string {
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
 		return strings.Join(md.Get(key), ",")
@@ -101,6 +97,7 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.Serv
 			panic(fmt.Sprintf("invalid validator [%v], should be one of [playground, default]", validate))
 		}
 	}
+	options.RequestIDMetaKey = strings.ToLower(options.RequestIDMetaKey)
 
 	requestIDKey := "requestID"
 	hostnameKey := "hostname"
@@ -130,10 +127,10 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.Serv
 	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (res interface{}, err error) {
 		var requestID, remoteIP string
 		if md, ok := metadata.FromIncomingContext(ctx); ok {
-			requestID = strings.Join(md.Get("x-request-id"), ",")
+			requestID = strings.Join(md.Get(options.RequestIDMetaKey), ",")
 			if requestID == "" {
 				requestID = uuid.NewV4().String()
-				md.Set("x-request-id", requestID)
+				md.Set(options.RequestIDMetaKey, requestID)
 			}
 			remoteIP = strings.Split(strings.Join(md.Get("x-remote-addr"), ","), ":")[0]
 		}
@@ -235,11 +232,12 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCOptions) grpc.Serv
 }
 
 type GRPCOptions struct {
-	Headers       []string `dft:"X-Request-Id"`
-	PrivateIP     string
-	Hostname      string
-	Validators    []string
-	PascalNameKey bool
+	Headers          []string `dft:"X-Request-Id"`
+	PrivateIP        string
+	Hostname         string
+	Validators       []string
+	PascalNameKey    bool
+	RequestIDMetaKey string `dft:"x-request-id"`
 
 	validators  []func(interface{}) error
 	preHandlers []func(ctx context.Context, req interface{}) error
