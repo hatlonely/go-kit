@@ -269,6 +269,12 @@ func WithHostname(hostname string) GRPCOption {
 	}
 }
 
+func WithRequestIDMetaKey(requestIDMetaKey string) GRPCOption {
+	return func(options *GRPCOptions) {
+		options.RequestIDMetaKey = requestIDMetaKey
+	}
+}
+
 func WithPlaygroundValidator() GRPCOption {
 	validate := playgroundValidator.New()
 	return func(options *GRPCOptions) {
