@@ -32,6 +32,8 @@ func NewProviderWithOptions(options *ProviderOptions) (Provider, error) {
 		return NewOTSProviderWithOptions(&options.OTSProvider)
 	case "OTSLegacy":
 		return NewOTSLegacyProviderWithOptions(&options.OTSLegacyProvider)
+	case "Memory":
+		return NewMemoryProviderWithOptions(&options.MemoryProvider), nil
 	}
 	return nil, errors.Errorf("unsupported provider type [%v]", options.Type)
 }
@@ -41,4 +43,5 @@ type ProviderOptions struct {
 	LocalProvider     LocalProviderOptions
 	OTSProvider       OTSProviderOptions
 	OTSLegacyProvider OTSLegacyProviderOptions
+	MemoryProvider    MemoryProviderOptions
 }
