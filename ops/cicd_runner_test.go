@@ -1,0 +1,125 @@
+package ops
+
+import (
+	"io/ioutil"
+	"os"
+	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
+)
+
+func TestParseEnvironment(t *testing.T) {
+	Convey("TestParseEnvironment", t, func() {
+		environment, err := ParseEnvironment(map[string]map[string]string{
+			"default": {
+				"NAMESPACE":        "prod",
+				"NAME":             "rpc-cicd",
+				"IMAGE_REPOSITORY": "${NAME}",
+				"IMAGE_TAG":        "$(echo hello world)",
+			},
+			"prod": {
+				"NAME":              "rpc-cicd-1",
+				"REGISTRY_USERNAME": "{{.registry.username}}",
+				"REGISTRY_PASSWORD": "{{.registry.password}}",
+			},
+		}, "prod")
+
+		So(err, ShouldBeNil)
+		So(environment, ShouldResemble, []string{
+			"IMAGE_REPOSITORY=\"rpc-cicd-1\"",
+			"IMAGE_TAG=\"hello world\n\"",
+			"NAME=\"rpc-cicd-1\"",
+			"NAMESPACE=\"prod\"",
+			"REGISTRY_PASSWORD=\"{{.registry.password}}\"",
+			"REGISTRY_USERNAME=\"{{.registry.username}}\"",
+		})
+	})
+}
+
+func TestExecCommand(t *testing.T) {
+	Convey("TestExecCommand", t, func() {
+		status, stdout, stderr, err := ExecCommand("echo ${EXEC_COMMAND_KEY}=${EXEC_COMMAND_VALUE}", []string{
+			"EXEC_COMMAND_KEY=key", "EXEC_COMMAND_VALUE=val",
+		})
+		So(status, ShouldEqual, 0)
+		So(stdout, ShouldEqual, "key=val\n")
+		So(stderr, ShouldEqual, "")
+		So(err, ShouldBeNil)
+	})
+}
+
+func TestNewCICDRunner(t *testing.T) {
+	Convey("TestNewCICDRunner", t, func() {
+		os.MkdirAll("tmp", 0755)
+		ioutil.WriteFile(`tmp/test.yaml`, []byte(`name: rpc-cicd
+env:
+  default:
+    NAMESPACE: "prod"
+    NAME: "rpc-cicd"
+    ELASTICSEARCH_SERVER: "elasticsearch-master:9200"
+    IMAGE_PULL_SECRET: "hatlonely-pull-secrets"
+    IMAGE_REPOSITORY: "${NAME}"
+    IMAGE_TAG: "$(cd .. && git describe --tags | awk '{print(substr($0,2,length($0)))}')"
+    REPLICA_COUNT: 3
+    INGRESS_HOST: "k8s.cicd.hatlonely.com"
+    INGRESS_SECRET: "k8s-secret"
+    K8S_CONTEXT: "homek8s"
+  prod:
+    REGISTRY_SERVER: "{{.registry.server}}"
+    REGISTRY_USERNAME: "{{.registry.username}}"
+    REGISTRY_PASSWORD: "{{.registry.password}}"
+    REGISTRY_NAMESPACE: "{{.registry.namespace}}"
+    MONGO_URI: "mongodb://{{.mongo.username}}:{{.mongo.password}}@{{.mongo.server}}"
+
+task:
+  image:
+    - make test
+    - make image
+  test:
+    - make test
+`), 0644)
+		ioutil.WriteFile(`tmp/root.json`, []byte(`{
+  "registry": {
+	"server": "registry.cn-beijing.aliyuncs.com",
+	"username": "hatlonely@foxmail.com",
+	"password": "123456",
+	"namespace": "hatlonely"
+  },
+  "mongo": {
+	"server": "mongo-mongodb.prod.svc.cluster.local",
+	"username": "root",
+	"password": "RF7A7UVPET"
+  },
+}`), 0644)
+
+		yamlRunner, err := NewCICDRunner(`tmp/test.yaml`, `tmp/root.json`, "prod")
+		So(err, ShouldBeNil)
+		So(yamlRunner.environment, ShouldResemble, []string{
+			`ELASTICSEARCH_SERVER="elasticsearch-master:9200"`,
+			`IMAGE_PULL_SECRET="hatlonely-pull-secrets"`,
+			`IMAGE_REPOSITORY="rpc-cicd"`,
+			yamlRunner.environment[3],
+			`INGRESS_HOST="k8s.cicd.hatlonely.com"`,
+			`INGRESS_SECRET="k8s-secret"`, `K8S_CONTEXT="homek8s"`,
+			`MONGO_URI="mongodb://root:RF7A7UVPET@mongo-mongodb.prod.svc.cluster.local"`,
+			`NAME="rpc-cicd"`,
+			`NAMESPACE="prod"`,
+			`REGISTRY_NAMESPACE="hatlonely"`,
+			`REGISTRY_PASSWORD="123456"`,
+			`REGISTRY_SERVER="registry.cn-beijing.aliyuncs.com"`,
+			`REGISTRY_USERNAME="hatlonely@foxmail.com"`,
+			`REPLICA_COUNT="3"`,
+		})
+		So(yamlRunner.tasks, ShouldResemble, map[string][]string{
+			"image": {
+				"make test",
+				"make image",
+			},
+			"test": {
+				"make test",
+			},
+		})
+
+		os.RemoveAll("tmp")
+	})
+}

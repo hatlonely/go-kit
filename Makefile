@@ -9,3 +9,4 @@ test:
 	go test -gcflags=all=-l -cover ./rpcx
 	go test -gcflags=all=-l -cover ./strx
 	go test -gcflags=all=-l -cover ./validator
+	go test -gcflags=all=-l -cover ./ops
