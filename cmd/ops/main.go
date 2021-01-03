@@ -16,11 +16,11 @@ import (
 type Options struct {
 	flag.Options
 
-	Action string `flag:"-a; usage: actions, one of [run/env/list/listTask]"`
-	Yaml   string `flag:"usage: workflow file; default: .ops.yaml"`
-	Vars   string `flag:"usage: variable file;"`
-	Env    string `flag:"usage: environment, one of key in env; default: default"`
-	Task   string `flag:"usage: task, one of key in task"`
+	Action   string `flag:"-a; usage: actions, one of [run/env/list/listTask]"`
+	Playbook string `flag:"-p; usage: playbook file; default: .ops.yaml"`
+	Variable string `flag:"-v; usage: variable file;"`
+	Env      string `flag:"-e; usage: environment, one of key in env; default: default"`
+	Task     string `flag:"-t; usage: task, one of key in task"`
 }
 
 var Version string
@@ -38,10 +38,10 @@ func main() {
 	if options.Help {
 		strx.Trac(flag.Usage())
 		strx.Trac(`
-  ops --yaml .ops.yaml -a list
-  ops --yaml .ops.yaml -a listTask
-  ops --yaml .ops.yaml --vars ~/.gomplate/prod.json -a env --env test
-  ops --yaml .ops.yaml --vars ~/.gomplate/prod.json -a run --env test --task test
+  ops --playbook .ops.yaml -a list
+  ops --playbook .ops.yaml -a listTask
+  ops --playbook .ops.yaml --variable ~/.gomplate/prod.json -a env --env test
+  ops --playbook .ops.yaml --variable ~/.gomplate/prod.json -a run --env test --task test
 `)
 		return
 	}
@@ -50,7 +50,7 @@ func main() {
 		return
 	}
 
-	cfg, err := config.NewConfigWithSimpleFile(options.Yaml, config.WithSimpleFileType("Yaml"))
+	cfg, err := config.NewConfigWithSimpleFile(options.Playbook, config.WithSimpleFileType("Yaml"))
 	if err != nil {
 		strx.Warn(fmt.Sprintf("open yaml failed. err: [%v]", err.Error()))
 		return
@@ -76,7 +76,7 @@ func main() {
 		return
 	}
 
-	runner, err := ops.NewCICDRunner(options.Yaml, options.Vars, options.Env)
+	runner, err := ops.NewCICDRunner(options.Playbook, options.Variable, options.Env)
 	if err != nil {
 		strx.Warn(err.Error())
 		return
