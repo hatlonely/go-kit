@@ -26,12 +26,12 @@ func TestParseEnvironment(t *testing.T) {
 
 		So(err, ShouldBeNil)
 		So(environment, ShouldResemble, []string{
-			"IMAGE_REPOSITORY=\"rpc-cicd-1\"",
-			"IMAGE_TAG=\"hello world\n\"",
-			"NAME=\"rpc-cicd-1\"",
-			"NAMESPACE=\"prod\"",
-			"REGISTRY_PASSWORD=\"{{.registry.password}}\"",
-			"REGISTRY_USERNAME=\"{{.registry.username}}\"",
+			"IMAGE_REPOSITORY=rpc-cicd-1",
+			"IMAGE_TAG=hello world",
+			"NAME=rpc-cicd-1",
+			"NAMESPACE=prod",
+			"REGISTRY_PASSWORD={{.registry.password}}",
+			"REGISTRY_USERNAME={{.registry.username}}",
 		})
 	})
 }
@@ -95,20 +95,21 @@ task:
 		yamlRunner, err := NewCICDRunner(`tmp/test.yaml`, `tmp/root.json`, "prod")
 		So(err, ShouldBeNil)
 		So(yamlRunner.environment, ShouldResemble, []string{
-			`ELASTICSEARCH_SERVER="elasticsearch-master:9200"`,
-			`IMAGE_PULL_SECRET="hatlonely-pull-secrets"`,
-			`IMAGE_REPOSITORY="rpc-cicd"`,
+			`ELASTICSEARCH_SERVER=elasticsearch-master:9200`,
+			`IMAGE_PULL_SECRET=hatlonely-pull-secrets`,
+			`IMAGE_REPOSITORY=rpc-cicd`,
 			yamlRunner.environment[3],
-			`INGRESS_HOST="k8s.cicd.hatlonely.com"`,
-			`INGRESS_SECRET="k8s-secret"`, `K8S_CONTEXT="homek8s"`,
-			`MONGO_URI="mongodb://root:RF7A7UVPET@mongo-mongodb.prod.svc.cluster.local"`,
-			`NAME="rpc-cicd"`,
-			`NAMESPACE="prod"`,
-			`REGISTRY_NAMESPACE="hatlonely"`,
-			`REGISTRY_PASSWORD="123456"`,
-			`REGISTRY_SERVER="registry.cn-beijing.aliyuncs.com"`,
-			`REGISTRY_USERNAME="hatlonely@foxmail.com"`,
-			`REPLICA_COUNT="3"`,
+			`INGRESS_HOST=k8s.cicd.hatlonely.com`,
+			`INGRESS_SECRET=k8s-secret`,
+			`K8S_CONTEXT=homek8s`,
+			`MONGO_URI=mongodb://root:RF7A7UVPET@mongo-mongodb.prod.svc.cluster.local`,
+			`NAME=rpc-cicd`,
+			`NAMESPACE=prod`,
+			`REGISTRY_NAMESPACE=hatlonely`,
+			`REGISTRY_PASSWORD=123456`,
+			`REGISTRY_SERVER=registry.cn-beijing.aliyuncs.com`,
+			`REGISTRY_USERNAME=hatlonely@foxmail.com`,
+			`REPLICA_COUNT=3`,
 		})
 		So(yamlRunner.tasks, ShouldResemble, map[string][]string{
 			"image": {

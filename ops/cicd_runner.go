@@ -183,7 +183,7 @@ func ParseEnvironment(environmentMap map[string]map[string]string, name string) 
 	}
 	var envs []string
 	for key, val := range envMap {
-		envs = append(envs, fmt.Sprintf(`%s="%s"`, key, val))
+		envs = append(envs, fmt.Sprintf(`%s=%s`, key, val))
 	}
 	sort.Strings(envs)
 	return envs, nil
