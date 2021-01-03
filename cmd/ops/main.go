@@ -38,10 +38,10 @@ func main() {
 	if options.Help {
 		strx.Trac(flag.Usage())
 		strx.Trac(`
-  ops -a list
-  ops -a listTask
-  ops --vars ~/.gomplate/prod.json --yaml .ops.yaml -a env --env test
-  ops --vars ~/.gomplate/prod.json --yaml .ops.yaml -a run --env test --task test
+  ops --yaml .ops.yaml -a list
+  ops --yaml .ops.yaml -a listTask
+  ops --yaml .ops.yaml --vars ~/.gomplate/prod.json -a env --env test
+  ops --yaml .ops.yaml --vars ~/.gomplate/prod.json -a run --env test --task test
 `)
 		return
 	}
