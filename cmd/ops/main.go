@@ -18,7 +18,7 @@ type Options struct {
 
 	Action   string `flag:"-a; usage: actions, one of [run/env/list/listTask]"`
 	Playbook string `flag:"usage: playbook file; default: .ops.yaml"`
-	Variable string `flag:"usage: variable file;"`
+	Variable string `flag:"usage: variable file; default: ~/.gomplate/root.json"`
 	Env      string `flag:"usage: environment, one of key in env; default: default"`
 	Task     string `flag:"usage: task, one of key in task"`
 }
@@ -40,8 +40,8 @@ func main() {
 		strx.Trac(`
   ops --playbook .ops.yaml -a list
   ops --playbook .ops.yaml -a listTask
-  ops --playbook .ops.yaml --variable ~/.gomplate/prod.json -a env --env test
-  ops --playbook .ops.yaml --variable ~/.gomplate/prod.json -a run --env test --task test
+  ops --playbook .ops.yaml --variable ~/.gomplate/root.json -a env --env test
+  ops --playbook .ops.yaml --variable ~/.gomplate/root.json -a run --env test --task test
 `)
 		return
 	}
