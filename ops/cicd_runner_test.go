@@ -94,7 +94,7 @@ task:
   },
 }`), 0644)
 
-		yamlRunner, err := NewCICDRunner(`tmp/test.yaml`, `tmp/root.json`, "prod")
+		yamlRunner, err := NewPlaybookRunner(`tmp/test.yaml`, `tmp/root.json`, "prod")
 		So(err, ShouldBeNil)
 		So(yamlRunner.environment, ShouldResemble, []string{
 			`ELASTICSEARCH_SERVER=elasticsearch-master:9200`,

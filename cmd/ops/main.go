@@ -76,7 +76,7 @@ func main() {
 		return
 	}
 
-	runner, err := ops.NewCICDRunner(options.Playbook, options.Variable, options.Env)
+	runner, err := ops.NewPlaybookRunner(options.Playbook, options.Variable, options.Env)
 	if err != nil {
 		strx.Warn(err.Error())
 		return

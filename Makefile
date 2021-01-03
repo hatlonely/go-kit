@@ -21,10 +21,10 @@ test:
 	go test -gcflags=all=-l -cover ./validator
 	go test -gcflags=all=-l -cover ./ops
 
-cfg: cmd/cfg/main.go Makefile vendor
+cfg: cmd/cfg/main.go $(wildcard config/*.go) Makefile vendor
 	mkdir -p build/bin
 	go build -ldflags "-X 'main.Version=$$BUILD_VERSION'" -o build/bin/cfg $<
 
-ops: cmd/ops/main.go Makefile vendor
+ops: cmd/ops/main.go $(wildcard ops/*.go) Makefile vendor
 	mkdir -p build/bin
 	go build -ldflags "-X 'main.Version=$$BUILD_VERSION'" -o build/bin/ops $<

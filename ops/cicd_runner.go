@@ -19,7 +19,7 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-type CICDRunner struct {
+type PlaybookRunner struct {
 	environment []string
 	tasks       map[string][]string
 }
@@ -30,16 +30,16 @@ type Playbook struct {
 	Task map[string][]string
 }
 
-func NewCICDRunner(yaml string, varFile string, envName string) (*CICDRunner, error) {
+func NewPlaybookRunner(yaml string, varFile string, envName string) (*PlaybookRunner, error) {
 	cfg, err := config.NewConfigWithSimpleFile(varFile, config.WithSimpleFileType("Json"))
 	if err != nil {
 		return nil, errors.Wrapf(err, "config.NewConfigWithSimpleFile failed. file: [%v]", varFile)
 	}
 	v, _ := cfg.Get("")
-	return NewCICDRunnerWithVariable(yaml, v, envName)
+	return NewPlaybookRunnerWithVariable(yaml, v, envName)
 }
 
-func NewCICDRunnerWithVariable(yaml string, v interface{}, envName string) (*CICDRunner, error) {
+func NewPlaybookRunnerWithVariable(yaml string, v interface{}, envName string) (*PlaybookRunner, error) {
 	buf, err := ioutil.ReadFile(yaml)
 	if err != nil {
 		return nil, errors.Wrapf(err, "ioutil.ReadFile failed. file: [%v]", yaml)
@@ -77,7 +77,7 @@ func NewCICDRunnerWithVariable(yaml string, v interface{}, envName string) (*CIC
 		return nil, errors.Wrap(err, "ParseEnvironment failed")
 	}
 
-	return &CICDRunner{
+	return &PlaybookRunner{
 		environment: environment,
 		tasks:       playbook.Task,
 	}, nil
@@ -90,15 +90,15 @@ type ExecCommandResult struct {
 	Error  error
 }
 
-func (y *CICDRunner) Environment() []string {
+func (y *PlaybookRunner) Environment() []string {
 	return y.environment
 }
 
-func (y *CICDRunner) Task() map[string][]string {
+func (y *PlaybookRunner) Task() map[string][]string {
 	return y.tasks
 }
 
-func (y *CICDRunner) RunTaskWithOutput(
+func (y *PlaybookRunner) RunTaskWithOutput(
 	name string, stdout io.Writer, stderr io.Writer,
 	onStart func(idx int, length int, command string) error,
 	onSuccess func(idx int, length int, command string, status int) error,
@@ -123,7 +123,7 @@ func (y *CICDRunner) RunTaskWithOutput(
 	return nil
 }
 
-func (y *CICDRunner) RunTask(name string, callback func(result *ExecCommandResult) error) error {
+func (y *PlaybookRunner) RunTask(name string, callback func(result *ExecCommandResult) error) error {
 	for _, cmd := range y.tasks[name] {
 		status, stdout, stderr, err := ExecCommand(cmd, y.environment)
 		if err := callback(&ExecCommandResult{
