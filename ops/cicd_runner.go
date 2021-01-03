@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"regexp"
 	"sort"
+	"strings"
 	"syscall"
 
 	"github.com/pkg/errors"
@@ -89,6 +90,14 @@ type ExecCommandResult struct {
 	Error  error
 }
 
+func (y *CICDRunner) Environment() []string {
+	return y.environment
+}
+
+func (y *CICDRunner) Task() map[string][]string {
+	return y.tasks
+}
+
 func (y *CICDRunner) RunTaskWithOutput(
 	name string, stdout io.Writer, stderr io.Writer,
 	onStart func(idx int, length int, command string) error,
@@ -141,11 +150,14 @@ func evaluate(envMap map[string]string, key string) (string, error) {
 		return evaluate(envMap, ShellVarRegex.FindStringSubmatch(val)[1])
 	}
 	if ShellCmdRegex.MatchString(val) {
-		_, stdout, _, err := ExecCommand(ShellCmdRegex.FindStringSubmatch(val)[1], nil)
+		status, stdout, _, err := ExecCommand(ShellCmdRegex.FindStringSubmatch(val)[1], nil)
 		if err != nil {
 			return "", errors.Wrap(err, "ExecCommand failed")
 		}
-		return stdout, nil
+		if status != 0 {
+			return "", errors.Errorf("ExecCommand failed. exit: [%v]", status)
+		}
+		return strings.TrimSpace(stdout), nil
 	}
 
 	return val, nil
@@ -156,13 +168,16 @@ func ParseEnvironment(environmentMap map[string]map[string]string, name string) 
 	for key, val := range environmentMap["default"] {
 		envMap[key] = val
 	}
+	if _, ok := environmentMap[name]; !ok {
+		return nil, errors.Errorf("unknown environment. name: [%v]", name)
+	}
 	for key, val := range environmentMap[name] {
 		envMap[key] = val
 	}
 	for key := range envMap {
 		val, err := evaluate(envMap, key)
 		if err != nil {
-			return nil, errors.Wrap(err, "evaluate failed")
+			return nil, errors.Wrapf(err, "evaluate failed. key: [%v], val: [%v]", key, envMap[key])
 		}
 		envMap[key] = val
 	}
