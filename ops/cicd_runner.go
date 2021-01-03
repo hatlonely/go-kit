@@ -24,7 +24,7 @@ type CICDRunner struct {
 	tasks       map[string][]string
 }
 
-type YamlOptions struct {
+type Playbook struct {
 	Name string
 	Env  map[string]map[string]string
 	Task map[string][]string
@@ -68,18 +68,18 @@ func NewCICDRunnerWithVariable(yaml string, v interface{}, envName string) (*CIC
 	if err != nil {
 		return nil, errors.Wrap(err, "config.NewConfigWithSimpleFile failed")
 	}
-	var options YamlOptions
-	if err := cfg.Unmarshal(&options, refx.WithCamelName()); err != nil {
+	var playbook Playbook
+	if err := cfg.Unmarshal(&playbook, refx.WithCamelName()); err != nil {
 		return nil, errors.Wrap(err, "cfg.Unmarshal failed")
 	}
-	environment, err := ParseEnvironment(options.Env, envName)
+	environment, err := ParseEnvironment(playbook.Env, envName)
 	if err != nil {
 		return nil, errors.Wrap(err, "ParseEnvironment failed")
 	}
 
 	return &CICDRunner{
 		environment: environment,
-		tasks:       options.Task,
+		tasks:       playbook.Task,
 	}, nil
 }
 
@@ -185,6 +185,8 @@ func ParseEnvironment(environmentMap map[string]map[string]string, name string) 
 	for key, val := range envMap {
 		envs = append(envs, fmt.Sprintf(`%s=%s`, key, val))
 	}
+	envs = append(envs, fmt.Sprintf(`ENVIRONMENT=%s`, name))
+	envs = append(envs, fmt.Sprintf(`TMP=tmp/%s`, name))
 	sort.Strings(envs)
 	return envs, nil
 }

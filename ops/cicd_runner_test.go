@@ -26,12 +26,14 @@ func TestParseEnvironment(t *testing.T) {
 
 		So(err, ShouldBeNil)
 		So(environment, ShouldResemble, []string{
+			"ENVIRONMENT=prod",
 			"IMAGE_REPOSITORY=rpc-cicd-1",
 			"IMAGE_TAG=hello world",
 			"NAME=rpc-cicd-1",
 			"NAMESPACE=prod",
 			"REGISTRY_PASSWORD={{.registry.password}}",
 			"REGISTRY_USERNAME={{.registry.username}}",
+			"TMP=tmp/prod",
 		})
 	})
 }
@@ -96,9 +98,10 @@ task:
 		So(err, ShouldBeNil)
 		So(yamlRunner.environment, ShouldResemble, []string{
 			`ELASTICSEARCH_SERVER=elasticsearch-master:9200`,
+			"ENVIRONMENT=prod",
 			`IMAGE_PULL_SECRET=hatlonely-pull-secrets`,
 			`IMAGE_REPOSITORY=rpc-cicd`,
-			yamlRunner.environment[3],
+			yamlRunner.environment[4],
 			`INGRESS_HOST=k8s.cicd.hatlonely.com`,
 			`INGRESS_SECRET=k8s-secret`,
 			`K8S_CONTEXT=homek8s`,
@@ -110,6 +113,7 @@ task:
 			`REGISTRY_SERVER=registry.cn-beijing.aliyuncs.com`,
 			`REGISTRY_USERNAME=hatlonely@foxmail.com`,
 			`REPLICA_COUNT=3`,
+			"TMP=tmp/prod",
 		})
 		So(yamlRunner.tasks, ShouldResemble, map[string][]string{
 			"image": {
