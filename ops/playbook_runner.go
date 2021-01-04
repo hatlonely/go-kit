@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path"
 	"regexp"
 	"sort"
 	"strings"
@@ -20,26 +21,29 @@ import (
 )
 
 type PlaybookRunner struct {
-	environment []string
-	tasks       map[string][]string
+	environment map[string][]string
+
+	playbook *Playbook
 }
 
 type Playbook struct {
 	Name string
+	Tmp  string
 	Env  map[string]map[string]string
+	Dep  map[string]map[string]string
 	Task map[string][]string
 }
 
-func NewPlaybookRunner(yaml string, varFile string, envName string) (*PlaybookRunner, error) {
+func NewPlaybookRunner(yaml string, varFile string) (*PlaybookRunner, error) {
 	cfg, err := config.NewConfigWithSimpleFile(varFile, config.WithSimpleFileType("Json"))
 	if err != nil {
 		return nil, errors.Wrapf(err, "config.NewConfigWithSimpleFile failed. file: [%v]", varFile)
 	}
 	v, _ := cfg.Get("")
-	return NewPlaybookRunnerWithVariable(yaml, v, envName)
+	return NewPlaybookRunnerWithVariable(yaml, v)
 }
 
-func NewPlaybookRunnerWithVariable(yaml string, v interface{}, envName string) (*PlaybookRunner, error) {
+func NewPlaybookRunnerWithVariable(yaml string, v interface{}) (*PlaybookRunner, error) {
 	buf, err := ioutil.ReadFile(yaml)
 	if err != nil {
 		return nil, errors.Wrapf(err, "ioutil.ReadFile failed. file: [%v]", yaml)
@@ -72,14 +76,10 @@ func NewPlaybookRunnerWithVariable(yaml string, v interface{}, envName string) (
 	if err := cfg.Unmarshal(&playbook, refx.WithCamelName()); err != nil {
 		return nil, errors.Wrap(err, "cfg.Unmarshal failed")
 	}
-	environment, err := ParseEnvironment(playbook.Env, envName)
-	if err != nil {
-		return nil, errors.Wrap(err, "ParseEnvironment failed")
-	}
 
 	return &PlaybookRunner{
-		environment: environment,
-		tasks:       playbook.Task,
+		playbook:    &playbook,
+		environment: map[string][]string{},
 	}, nil
 }
 
@@ -90,29 +90,98 @@ type ExecCommandResult struct {
 	Error  error
 }
 
-func (r *PlaybookRunner) Environment() []string {
-	return r.environment
-}
-
-func (r *PlaybookRunner) Task() map[string][]string {
-	return r.tasks
-}
-
-func (r *PlaybookRunner) CmdWithOutput(cmd string, stdout io.Writer, stderr io.Writer) (int, error) {
-	return ExecCommandWithOutput(cmd, r.environment, stdout, stderr)
-}
-
-func (r *PlaybookRunner) RunTaskWithOutput(
-	name string, stdout io.Writer, stderr io.Writer,
+func (r *PlaybookRunner) DownloadDependency(
+	stdout io.Writer, stderr io.Writer,
 	onStart func(idx int, length int, command string) error,
 	onSuccess func(idx int, length int, command string, status int) error,
-	onError func(idx int, length int, command string, err error)) error {
-	length := len(r.tasks[name])
-	for i, cmd := range r.tasks[name] {
+	onError func(idx int, length int, command string, err error),
+	forceUpdate bool) error {
+	length := len(r.playbook.Dep)
+	i := 0
+	for key, val := range r.playbook.Dep {
+		if !forceUpdate {
+			if _, err := os.Stat(path.Join(r.playbook.Tmp, "dep", key)); os.IsNotExist(err) {
+				continue
+			}
+		}
+
+		if forceUpdate {
+			_ = os.RemoveAll(path.Join(r.playbook.Tmp, "dep", key))
+		}
+
+		var cmd string
+		switch val["type"] {
+		case "git", "":
+			if len(val["url"]) == 0 {
+				return errors.New("url is required")
+			}
+			version := "master"
+			if len(val["version"]) == 0 {
+				version = val["version"]
+			}
+			cmd = fmt.Sprintf(`git clone --depth=1 --branch "%s" "%s" "%s"`, version, val["url"], key)
+		default:
+			return errors.Errorf("unsupported dependency type [%v]", val["type"])
+		}
 		if err := onStart(i, length, cmd); err != nil {
 			return errors.Wrap(err, "onStart failed")
 		}
-		status, err := ExecCommandWithOutput(cmd, r.environment, stdout, stderr)
+		status, err := ExecCommandWithOutput(cmd, nil, stdout, stderr)
+		if err := onSuccess(i, length, cmd, status); err != nil {
+			return errors.Wrap(err, "onSuccess failed")
+		}
+		if err != nil {
+			onError(i, length, cmd, err)
+			return errors.Wrap(err, "ExecCommand failed. cmd [%v]")
+		}
+		if status != 0 {
+			return errors.Errorf("ExecCommand failed. cmd [%v], exit: [%v]", cmd, status)
+		}
+		i++
+	}
+	return nil
+}
+
+func (r *PlaybookRunner) Playbook() *Playbook {
+	return r.playbook
+}
+
+func (r *PlaybookRunner) Environment(env string) ([]string, error) {
+	if r.environment[env] == nil {
+		environment, err := ParseEnvironment(r.playbook.Env, env)
+		if err != nil {
+			return nil, errors.Wrap(err, "ParseEnvironment failed")
+		}
+		r.environment[env] = environment
+	}
+
+	return r.environment[env], nil
+}
+
+func (r *PlaybookRunner) CmdWithOutput(env string, cmd string, stdout io.Writer, stderr io.Writer) (int, error) {
+	_, err := r.Environment(env)
+	if err != nil {
+		return 0, err
+	}
+	return ExecCommandWithOutput(cmd, r.environment[env], stdout, stderr)
+}
+
+func (r *PlaybookRunner) RunTaskWithOutput(
+	env string, taskName string, stdout io.Writer, stderr io.Writer,
+	onStart func(idx int, length int, command string) error,
+	onSuccess func(idx int, length int, command string, status int) error,
+	onError func(idx int, length int, command string, err error)) error {
+	_, err := r.Environment(env)
+	if err != nil {
+		return err
+	}
+
+	length := len(r.playbook.Task[taskName])
+	for i, cmd := range r.playbook.Task[taskName] {
+		if err := onStart(i, length, cmd); err != nil {
+			return errors.Wrap(err, "onStart failed")
+		}
+		status, err := ExecCommandWithOutput(cmd, r.environment[env], stdout, stderr)
 		if err := onSuccess(i, length, cmd, status); err != nil {
 			return errors.Wrap(err, "onSuccess failed")
 		}
@@ -127,9 +196,14 @@ func (r *PlaybookRunner) RunTaskWithOutput(
 	return nil
 }
 
-func (r *PlaybookRunner) RunTask(name string, callback func(result *ExecCommandResult) error) error {
-	for _, cmd := range r.tasks[name] {
-		status, stdout, stderr, err := ExecCommand(cmd, r.environment)
+func (r *PlaybookRunner) RunTask(env string, taskName string, callback func(result *ExecCommandResult) error) error {
+	_, err := r.Environment(env)
+	if err != nil {
+		return err
+	}
+
+	for _, cmd := range r.playbook.Task[taskName] {
+		status, stdout, stderr, err := ExecCommand(cmd, r.environment[env])
 		if err := callback(&ExecCommandResult{
 			Status: status,
 			Stdout: stdout,

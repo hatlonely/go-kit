@@ -16,7 +16,7 @@ import (
 type Options struct {
 	flag.Options
 
-	Action   string `flag:"-a; usage: actions, one of [run/cmd/env/list/listTask]"`
+	Action   string `flag:"-a; usage: actions, one of [dep/run/cmd/env/list/listTask]"`
 	Playbook string `flag:"usage: playbook file; default: .ops.yaml"`
 	Variable string `flag:"usage: variable file; default: ~/.gomplate/root.json"`
 	Env      string `flag:"usage: environment, one of key in env; default: default"`
@@ -77,7 +77,7 @@ func main() {
 		return
 	}
 
-	runner, err := ops.NewPlaybookRunner(options.Playbook, options.Variable, options.Env)
+	runner, err := ops.NewPlaybookRunner(options.Playbook, options.Variable)
 	if err != nil {
 		strx.Warn(err.Error())
 		return
@@ -85,7 +85,7 @@ func main() {
 
 	if options.Action == "cmd" {
 		strx.Info(fmt.Sprintf("[1/1] step: [%v] start", options.Command))
-		status, err := runner.CmdWithOutput(options.Command, os.Stdout, os.Stderr)
+		status, err := runner.CmdWithOutput(options.Env, options.Command, os.Stdout, os.Stderr)
 		if err != nil {
 			strx.Warn(fmt.Sprintf("[1/1] step: [%v] failed. err: [%v]", options.Command, err.Error()))
 		}
@@ -103,7 +103,7 @@ func main() {
 		}
 
 		if err := runner.RunTaskWithOutput(
-			options.Task, os.Stdout, os.Stderr,
+			options.Env, options.Task, os.Stdout, os.Stderr,
 			func(idx int, length int, command string) error {
 				strx.Info(fmt.Sprintf("[%v/%v] step: [%v] start", idx+1, length, command))
 				return nil
@@ -125,18 +125,30 @@ func main() {
 	}
 
 	if options.Action == "env" {
-		for _, env := range runner.Environment() {
+		envs, err := runner.Environment(options.Env)
+		if err != nil {
+			strx.Warn(err.Error())
+			return
+		}
+		for _, env := range envs {
 			strx.Trac(env)
 		}
 		return
 	}
 
-	if options.Action == "list" {
-		buf, err := yaml.Marshal(runner.Task())
+	if options.Action == "listTask" {
+		buf, err := yaml.Marshal(runner.Playbook().Task)
 		if err != nil {
 			panic(err)
 		}
 		strx.Trac(string(buf))
+		return
+	}
+
+	if options.Action == "listEnv" {
+		for key := range runner.Playbook().Env {
+			strx.Trac(key)
+		}
 		return
 	}
 
