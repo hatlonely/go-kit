@@ -16,11 +16,12 @@ import (
 type Options struct {
 	flag.Options
 
-	Action   string `flag:"-a; usage: actions, one of [run/env/list/listTask]"`
+	Action   string `flag:"-a; usage: actions, one of [run/cmd/env/list/listTask]"`
 	Playbook string `flag:"usage: playbook file; default: .ops.yaml"`
 	Variable string `flag:"usage: variable file; default: ~/.gomplate/root.json"`
 	Env      string `flag:"usage: environment, one of key in env; default: default"`
 	Task     string `flag:"usage: task, one of key in task"`
+	Command  string `flag:"usage: run command"`
 }
 
 var Version string
@@ -79,6 +80,19 @@ func main() {
 	runner, err := ops.NewPlaybookRunner(options.Playbook, options.Variable, options.Env)
 	if err != nil {
 		strx.Warn(err.Error())
+		return
+	}
+
+	if options.Action == "cmd" {
+		strx.Info(fmt.Sprintf("[1/1] step: [%v] start", options.Command))
+		status, err := runner.CmdWithOutput(options.Command, os.Stdout, os.Stderr)
+		if err != nil {
+			strx.Warn(fmt.Sprintf("[1/1] step: [%v] failed. err: [%v]", options.Command, err.Error()))
+		}
+		if status != 0 {
+			strx.Warn(fmt.Sprintf("[1/1] step: [%v] failed. exit [%v]", options.Command, status))
+		}
+		strx.Info(fmt.Sprintf("[1/1] step: [%v] success", options.Command))
 		return
 	}
 

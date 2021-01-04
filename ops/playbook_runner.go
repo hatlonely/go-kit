@@ -90,25 +90,29 @@ type ExecCommandResult struct {
 	Error  error
 }
 
-func (y *PlaybookRunner) Environment() []string {
-	return y.environment
+func (r *PlaybookRunner) Environment() []string {
+	return r.environment
 }
 
-func (y *PlaybookRunner) Task() map[string][]string {
-	return y.tasks
+func (r *PlaybookRunner) Task() map[string][]string {
+	return r.tasks
 }
 
-func (y *PlaybookRunner) RunTaskWithOutput(
+func (r *PlaybookRunner) CmdWithOutput(cmd string, stdout io.Writer, stderr io.Writer) (int, error) {
+	return ExecCommandWithOutput(cmd, r.environment, stdout, stderr)
+}
+
+func (r *PlaybookRunner) RunTaskWithOutput(
 	name string, stdout io.Writer, stderr io.Writer,
 	onStart func(idx int, length int, command string) error,
 	onSuccess func(idx int, length int, command string, status int) error,
 	onError func(idx int, length int, command string, err error)) error {
-	length := len(y.tasks[name])
-	for i, cmd := range y.tasks[name] {
+	length := len(r.tasks[name])
+	for i, cmd := range r.tasks[name] {
 		if err := onStart(i, length, cmd); err != nil {
 			return errors.Wrap(err, "onStart failed")
 		}
-		status, err := ExecCommandWithOutput(cmd, y.environment, stdout, stderr)
+		status, err := ExecCommandWithOutput(cmd, r.environment, stdout, stderr)
 		if err := onSuccess(i, length, cmd, status); err != nil {
 			return errors.Wrap(err, "onSuccess failed")
 		}
@@ -123,9 +127,9 @@ func (y *PlaybookRunner) RunTaskWithOutput(
 	return nil
 }
 
-func (y *PlaybookRunner) RunTask(name string, callback func(result *ExecCommandResult) error) error {
-	for _, cmd := range y.tasks[name] {
-		status, stdout, stderr, err := ExecCommand(cmd, y.environment)
+func (r *PlaybookRunner) RunTask(name string, callback func(result *ExecCommandResult) error) error {
+	for _, cmd := range r.tasks[name] {
+		status, stdout, stderr, err := ExecCommand(cmd, r.environment)
 		if err := callback(&ExecCommandResult{
 			Status: status,
 			Stdout: stdout,
