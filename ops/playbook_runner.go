@@ -222,13 +222,32 @@ func (r *PlaybookRunner) RunTask(env string, taskName string, callback func(resu
 	return nil
 }
 
-var ShellVarRegex = regexp.MustCompile(`^\s*\${(.*)}\s*$`)
-var ShellCmdRegex = regexp.MustCompile(`^\s*\$\((.*)\)\s*$`)
+var ShellVarRegex = regexp.MustCompile(`\${(\w+)}`)
+var ShellCmdRegex = regexp.MustCompile(`\s*\$\((.*)\)\s*`)
 
 func evaluate(envMap map[string]string, key string) (string, error) {
-	val := envMap[key]
+	val, ok := envMap[key]
+	if !ok {
+		return "", errors.Errorf("evalute failed. no such key: [%v]", key)
+	}
 	if ShellVarRegex.MatchString(val) {
-		return evaluate(envMap, ShellVarRegex.FindStringSubmatch(val)[1])
+		var err error
+		val := ShellVarRegex.ReplaceAllStringFunc(val, func(item string) string {
+			key := ShellVarRegex.FindStringSubmatch(item)[1]
+
+			val, e := evaluate(envMap, key)
+			if e != nil {
+				err = errors.Wrapf(e, "evaluate variable failed. key: [%v]", key)
+				return item
+			}
+
+			return val
+		})
+		if err != nil {
+			return "", err
+		}
+		envMap[key] = val
+		return val, nil
 	}
 	if ShellCmdRegex.MatchString(val) {
 		status, stdout, _, err := ExecCommand(ShellCmdRegex.FindStringSubmatch(val)[1], nil)
@@ -238,6 +257,7 @@ func evaluate(envMap map[string]string, key string) (string, error) {
 		if status != 0 {
 			return "", errors.Errorf("ExecCommand failed. exit: [%v]", status)
 		}
+		envMap[key] = strings.TrimSpace(stdout)
 		return strings.TrimSpace(stdout), nil
 	}
 
@@ -255,20 +275,23 @@ func ParseEnvironment(environmentMap map[string]map[string]string, env string) (
 	for key, val := range environmentMap[env] {
 		envMap[key] = val
 	}
+	tmpDir := fmt.Sprintf(`tmp/env/%s`, env)
+	envMap["ENV"] = env
+	envMap["TMP"] = tmpDir
+	envMap["DEP"] = "tmp/dep"
+	if err := os.MkdirAll(tmpDir, 0755); err != nil {
+		return nil, errors.Wrapf(err, "os.MkdirAll failed. dir: [%v]", tmpDir)
+	}
 	for key := range envMap {
-		val, err := evaluate(envMap, key)
+		_, err := evaluate(envMap, key)
 		if err != nil {
 			return nil, errors.Wrapf(err, "evaluate failed. key: [%v], val: [%v]", key, envMap[key])
 		}
-		envMap[key] = val
 	}
 	var envs []string
 	for key, val := range envMap {
 		envs = append(envs, fmt.Sprintf(`%s=%s`, key, val))
 	}
-	envs = append(envs, fmt.Sprintf(`ENVIRONMENT=%s`, env))
-	envs = append(envs, fmt.Sprintf(`TMP=tmp/env/%s`, env))
-	envs = append(envs, `DEP=tmp/dep`)
 	sort.Strings(envs)
 	return envs, nil
 }

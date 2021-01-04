@@ -16,9 +16,13 @@ func TestParseEnvironment(t *testing.T) {
 				"NAME":             "rpc-cicd",
 				"IMAGE_REPOSITORY": "${NAME}",
 				"IMAGE_TAG":        "$(echo hello world)",
+				"CLUSTER_NAME_1":   "XX_${NAME}_${REGION_ID}_YY",
+				"CLUSTER_NAME_2":   "${NAME}_${REGION_ID}",
+				"CLUSTER_NAME_3":   "${CLUSTER_NAME_2}_${NAME}_${REGION_ID}",
 			},
 			"prod": {
 				"NAME":              "rpc-cicd-1",
+				"REGION_ID":         "cn-shanghai",
 				"REGISTRY_USERNAME": "{{.registry.username}}",
 				"REGISTRY_PASSWORD": "{{.registry.password}}",
 			},
@@ -26,14 +30,19 @@ func TestParseEnvironment(t *testing.T) {
 
 		So(err, ShouldBeNil)
 		So(environment, ShouldResemble, []string{
-			"ENVIRONMENT=prod",
+			"CLUSTER_NAME_1=XX_rpc-cicd-1_cn-shanghai_YY",
+			"CLUSTER_NAME_2=rpc-cicd-1_cn-shanghai",
+			"CLUSTER_NAME_3=rpc-cicd-1_cn-shanghai_rpc-cicd-1_cn-shanghai",
+			"DEP=tmp/dep",
+			"ENV=prod",
 			"IMAGE_REPOSITORY=rpc-cicd-1",
 			"IMAGE_TAG=hello world",
 			"NAME=rpc-cicd-1",
 			"NAMESPACE=prod",
+			"REGION_ID=cn-shanghai",
 			"REGISTRY_PASSWORD={{.registry.password}}",
 			"REGISTRY_USERNAME={{.registry.username}}",
-			"TMP=tmp/prod",
+			"TMP=tmp/env/prod",
 		})
 	})
 }
@@ -94,14 +103,17 @@ task:
   },
 }`), 0644)
 
-		yamlRunner, err := NewPlaybookRunner(`tmp/test.yaml`, `tmp/root.json`, "prod")
+		runner, err := NewPlaybookRunner(`tmp/test.yaml`, `tmp/root.json`)
 		So(err, ShouldBeNil)
-		So(yamlRunner.environment, ShouldResemble, []string{
+		_, err = runner.Environment("prod")
+		So(err, ShouldBeNil)
+		So(runner.environment["prod"], ShouldResemble, []string{
+			`DEP=tmp/dep`,
 			`ELASTICSEARCH_SERVER=elasticsearch-master:9200`,
-			"ENVIRONMENT=prod",
+			"ENV=prod",
 			`IMAGE_PULL_SECRET=hatlonely-pull-secrets`,
 			`IMAGE_REPOSITORY=rpc-cicd`,
-			yamlRunner.environment[4],
+			runner.environment["prod"][5],
 			`INGRESS_HOST=k8s.cicd.hatlonely.com`,
 			`INGRESS_SECRET=k8s-secret`,
 			`K8S_CONTEXT=homek8s`,
@@ -113,9 +125,9 @@ task:
 			`REGISTRY_SERVER=registry.cn-beijing.aliyuncs.com`,
 			`REGISTRY_USERNAME=hatlonely@foxmail.com`,
 			`REPLICA_COUNT=3`,
-			"TMP=tmp/prod",
+			"TMP=tmp/env/prod",
 		})
-		So(yamlRunner.tasks, ShouldResemble, map[string][]string{
+		So(runner.playbook.Task, ShouldResemble, map[string][]string{
 			"image": {
 				"make test",
 				"make image",
