@@ -22,6 +22,7 @@ type Options struct {
 	Env      string `flag:"usage: environment, one of key in env; default: default"`
 	Task     string `flag:"usage: task, one of key in task"`
 	Command  string `flag:"usage: run command"`
+	Force    bool   `flag:"usage: force update dependency"`
 }
 
 var Version string
@@ -83,9 +84,33 @@ func main() {
 		return
 	}
 
+	if options.Action == "dep" {
+		if err := runner.DownloadDependencyWithOutput(
+			os.Stdout, os.Stderr,
+			func(idx int, length int, command string) error {
+				strx.Info(fmt.Sprintf("[%v/%v] step: [%v] start", idx+1, length, command))
+				return nil
+			}, func(idx int, length int, command string, status int) error {
+				if status != 0 {
+					strx.Warn(fmt.Sprintf("[%v/%v] step: [%v] failed. exit [%v]", idx+1, length, command, status))
+				} else {
+					strx.Info(fmt.Sprintf("[%v/%v] step: [%v] success", idx+1, length, command))
+				}
+				strx.Trac("")
+				return nil
+			}, func(idx int, length int, command string, err error) {
+				strx.Warn(fmt.Sprintf("[%v/%v] step: [%v] failed. err: [%v]", idx+1, length, command, err.Error()))
+			},
+			options.Force,
+		); err != nil {
+			strx.Warn(err.Error())
+		}
+		return
+	}
+
 	if options.Action == "cmd" {
 		strx.Info(fmt.Sprintf("[1/1] step: [%v] start", options.Command))
-		status, err := runner.CmdWithOutput(options.Env, options.Command, os.Stdout, os.Stderr)
+		status, err := runner.ExecCmdWithOutput(options.Env, options.Command, os.Stdout, os.Stderr)
 		if err != nil {
 			strx.Warn(fmt.Sprintf("[1/1] step: [%v] failed. err: [%v]", options.Command, err.Error()))
 		}

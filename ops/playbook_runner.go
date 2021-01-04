@@ -90,7 +90,7 @@ type ExecCommandResult struct {
 	Error  error
 }
 
-func (r *PlaybookRunner) DownloadDependency(
+func (r *PlaybookRunner) DownloadDependencyWithOutput(
 	stdout io.Writer, stderr io.Writer,
 	onStart func(idx int, length int, command string) error,
 	onSuccess func(idx int, length int, command string, status int) error,
@@ -99,14 +99,17 @@ func (r *PlaybookRunner) DownloadDependency(
 	length := len(r.playbook.Dep)
 	i := 0
 	for key, val := range r.playbook.Dep {
+		output := path.Join(r.playbook.Tmp, "dep", key)
 		if !forceUpdate {
-			if _, err := os.Stat(path.Join(r.playbook.Tmp, "dep", key)); os.IsNotExist(err) {
+			if _, err := os.Stat(output); err == nil {
 				continue
+			} else if !os.IsNotExist(err) {
+				return errors.Wrap(err, "os.Stat failed")
 			}
 		}
 
 		if forceUpdate {
-			_ = os.RemoveAll(path.Join(r.playbook.Tmp, "dep", key))
+			_ = os.RemoveAll(output)
 		}
 
 		var cmd string
@@ -119,7 +122,7 @@ func (r *PlaybookRunner) DownloadDependency(
 			if len(val["version"]) == 0 {
 				version = val["version"]
 			}
-			cmd = fmt.Sprintf(`git clone --depth=1 --branch "%s" "%s" "%s"`, version, val["url"], key)
+			cmd = fmt.Sprintf(`git clone --depth=1 --branch "%s" "%s" "%s"`, version, val["url"], output)
 		default:
 			return errors.Errorf("unsupported dependency type [%v]", val["type"])
 		}
@@ -158,7 +161,7 @@ func (r *PlaybookRunner) Environment(env string) ([]string, error) {
 	return r.environment[env], nil
 }
 
-func (r *PlaybookRunner) CmdWithOutput(env string, cmd string, stdout io.Writer, stderr io.Writer) (int, error) {
+func (r *PlaybookRunner) ExecCmdWithOutput(env string, cmd string, stdout io.Writer, stderr io.Writer) (int, error) {
 	_, err := r.Environment(env)
 	if err != nil {
 		return 0, err
@@ -241,15 +244,15 @@ func evaluate(envMap map[string]string, key string) (string, error) {
 	return val, nil
 }
 
-func ParseEnvironment(environmentMap map[string]map[string]string, name string) ([]string, error) {
+func ParseEnvironment(environmentMap map[string]map[string]string, env string) ([]string, error) {
 	envMap := map[string]string{}
 	for key, val := range environmentMap["default"] {
 		envMap[key] = val
 	}
-	if _, ok := environmentMap[name]; !ok {
-		return nil, errors.Errorf("unknown environment. name: [%v]", name)
+	if _, ok := environmentMap[env]; !ok {
+		return nil, errors.Errorf("unknown environment. env: [%v]", env)
 	}
-	for key, val := range environmentMap[name] {
+	for key, val := range environmentMap[env] {
 		envMap[key] = val
 	}
 	for key := range envMap {
@@ -263,8 +266,9 @@ func ParseEnvironment(environmentMap map[string]map[string]string, name string) 
 	for key, val := range envMap {
 		envs = append(envs, fmt.Sprintf(`%s=%s`, key, val))
 	}
-	envs = append(envs, fmt.Sprintf(`ENVIRONMENT=%s`, name))
-	envs = append(envs, fmt.Sprintf(`TMP=tmp/%s`, name))
+	envs = append(envs, fmt.Sprintf(`ENVIRONMENT=%s`, env))
+	envs = append(envs, fmt.Sprintf(`TMP=tmp/env/%s`, env))
+	envs = append(envs, `DEP=tmp/dep`)
 	sort.Strings(envs)
 	return envs, nil
 }
