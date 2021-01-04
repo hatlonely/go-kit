@@ -28,7 +28,7 @@ type PlaybookRunner struct {
 
 type Playbook struct {
 	Name string
-	Tmp  string
+	Tmp  string `dft:"tmp"`
 	Env  map[string]map[string]string
 	Dep  map[string]map[string]string
 	Task map[string][]string
