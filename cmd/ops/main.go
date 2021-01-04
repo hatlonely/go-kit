@@ -40,8 +40,10 @@ func main() {
 	if options.Help {
 		strx.Trac(flag.Usage())
 		strx.Trac(`
-  ops --playbook .ops.yaml -a list
-  ops --playbook .ops.yaml -a listTask
+  ops --playbook .ops.yaml --variable ~/.gomplate/root.json -a listEnv
+  ops --playbook .ops.yaml --variable ~/.gomplate/root.json -a listTask
+  ops --playbook .ops.yaml --variable ~/.gomplate/root.json -a dep
+  ops --playbook .ops.yaml --variable ~/.gomplate/root.json -a dep --force
   ops --playbook .ops.yaml --variable ~/.gomplate/root.json -a env --env test
   ops --playbook .ops.yaml --variable ~/.gomplate/root.json -a run --env test --task test
 `)
