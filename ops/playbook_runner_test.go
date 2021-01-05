@@ -84,10 +84,14 @@ env:
 
 task:
   image:
-    - make test
-    - make image
+    args:
+      key1: val1
+    step:
+      - make test
+      - make image
   test:
-    - make test
+    step:
+      - make test
 `), 0644)
 		ioutil.WriteFile(`tmp/root.json`, []byte(`{
   "registry": {
@@ -127,13 +131,23 @@ task:
 			`REPLICA_COUNT=3`,
 			"TMP=tmp/env/prod",
 		})
-		So(runner.playbook.Task, ShouldResemble, map[string][]string{
+		So(runner.playbook.Task, ShouldResemble, map[string]struct {
+			Args map[string]string
+			Step []string
+		}{
 			"image": {
-				"make test",
-				"make image",
+				Args: map[string]string{
+					"key1": "val1",
+				},
+				Step: []string{
+					"make test",
+					"make image",
+				},
 			},
 			"test": {
-				"make test",
+				Step: []string{
+					"make test",
+				},
 			},
 		})
 

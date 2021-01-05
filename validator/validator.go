@@ -36,7 +36,7 @@ func Validate(v interface{}) error {
 	return rule.Validate(v)
 }
 
-var lang = gval.NewLanguage(
+var Lang = gval.NewLanguage(
 	gval.Arithmetic(),
 	gval.Bitmask(),
 	gval.Text(),
@@ -115,7 +115,7 @@ var lang = gval.NewLanguage(
 )
 
 func RegisterFunction(name string, fun interface{}) {
-	lang = gval.NewLanguage(lang, gval.Function(name, fun))
+	Lang = gval.NewLanguage(Lang, gval.Function(name, fun))
 }
 
 func MustCompile(v interface{}) *Validator {
@@ -227,7 +227,7 @@ func interfaceToRuleRecursive(rules map[string]gval.Evaluable, tags map[string]s
 		if tag == "" {
 			continue
 		}
-		eval, err := lang.NewEvaluable(tag)
+		eval, err := Lang.NewEvaluable(tag)
 		if err != nil {
 			return errors.Wrapf(err, "create evaluable failed. key [%v], tag [%v]", key, tag)
 		}

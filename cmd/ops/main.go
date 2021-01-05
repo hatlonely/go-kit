@@ -103,7 +103,7 @@ func main() {
 		}
 
 		if err := runner.RunTaskWithOutput(
-			options.Env, options.Task, os.Stdout, os.Stderr,
+			options.Env, flag.Instance(), options.Task, os.Stdout, os.Stderr,
 			func(idx int, length int, command string) error {
 				strx.Info(fmt.Sprintf("[%v/%v] step: [%v] start", idx+1, length, command))
 				return nil

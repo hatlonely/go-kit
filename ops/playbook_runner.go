@@ -2,6 +2,7 @@ package ops
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"html/template"
 	"io"
@@ -16,8 +17,10 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/hatlonely/go-kit/bind"
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/refx"
+	"github.com/hatlonely/go-kit/validator"
 )
 
 type PlaybookRunner struct {
@@ -31,7 +34,10 @@ type Playbook struct {
 	Tmp  string `dft:"tmp"`
 	Env  map[string]map[string]string
 	Dep  map[string]map[string]string
-	Task map[string][]string
+	Task map[string]struct {
+		Args map[string]string
+		Step []string
+	}
 }
 
 func NewPlaybookRunner(yaml string, varFile string) (*PlaybookRunner, error) {
@@ -170,7 +176,7 @@ func (r *PlaybookRunner) ExecCmdWithOutput(env string, cmd string, stdout io.Wri
 }
 
 func (r *PlaybookRunner) RunTaskWithOutput(
-	env string, taskName string, stdout io.Writer, stderr io.Writer,
+	env string, getter bind.Getter, taskName string, stdout io.Writer, stderr io.Writer,
 	onStart func(idx int, length int, command string) error,
 	onSuccess func(idx int, length int, command string, status int) error,
 	onError func(idx int, length int, command string, err error)) error {
@@ -178,13 +184,34 @@ func (r *PlaybookRunner) RunTaskWithOutput(
 	if err != nil {
 		return err
 	}
+	environment := r.environment[env]
 
-	length := len(r.playbook.Task[taskName])
-	for i, cmd := range r.playbook.Task[taskName] {
+	for name, validate := range r.playbook.Task[taskName].Args {
+		v, ok := getter.Get(name)
+		var val string
+		if ok {
+			val = v.(string)
+		}
+		if validate != "" {
+			eval, err := validator.Lang.NewEvaluable(validate)
+			if err != nil {
+				return errors.Wrapf(err, "create evaluable failed. key: [%v], validate: [%v]", name, validate)
+			}
+			if ok, err := eval.EvalBool(context.Background(), map[string]interface{}{"x": val}); err != nil {
+				return errors.Wrapf(err, "eval.EvalBool failed")
+			} else if !ok {
+				return errors.Errorf("validate failed. key: [%v], validate: [%v]", name, validate)
+			}
+		}
+		environment = append(environment, fmt.Sprintf("%s=%v", name, val))
+	}
+
+	length := len(r.playbook.Task[taskName].Step)
+	for i, cmd := range r.playbook.Task[taskName].Step {
 		if err := onStart(i, length, cmd); err != nil {
 			return errors.Wrap(err, "onStart failed")
 		}
-		status, err := ExecCommandWithOutput(cmd, r.environment[env], stdout, stderr)
+		status, err := ExecCommandWithOutput(cmd, environment, stdout, stderr)
 		if err := onSuccess(i, length, cmd, status); err != nil {
 			return errors.Wrap(err, "onSuccess failed")
 		}
@@ -205,7 +232,7 @@ func (r *PlaybookRunner) RunTask(env string, taskName string, callback func(resu
 		return err
 	}
 
-	for _, cmd := range r.playbook.Task[taskName] {
+	for _, cmd := range r.playbook.Task[taskName].Step {
 		status, stdout, stderr, err := ExecCommand(cmd, r.environment[env])
 		if err := callback(&ExecCommandResult{
 			Status: status,
