@@ -6,7 +6,6 @@ import (
 
 	"github.com/ghodss/yaml"
 
-	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/flag"
 	"github.com/hatlonely/go-kit/ops"
 	"github.com/hatlonely/go-kit/refx"
@@ -51,32 +50,6 @@ func main() {
 	}
 	if options.Version {
 		strx.Trac(Version)
-		return
-	}
-
-	cfg, err := config.NewConfigWithSimpleFile(options.Playbook, config.WithSimpleFileType("Yaml"))
-	if err != nil {
-		strx.Warn(fmt.Sprintf("open yaml failed. err: [%v]", err.Error()))
-		return
-	}
-	if options.Action == "list" {
-		cfgMap, err := cfg.SubMap("env")
-		if err != nil {
-			strx.Warn(fmt.Sprintf("parse workflow failed. err: [%v]", err.Error()))
-		}
-		for key := range cfgMap {
-			strx.Trac(key)
-		}
-		return
-	}
-
-	if options.Action == "listTask" {
-		v, _ := cfg.Sub("task").Get(options.Task)
-		buf, err := yaml.Marshal(v)
-		if err != nil {
-			panic(err)
-		}
-		strx.Trac(string(buf))
 		return
 	}
 
