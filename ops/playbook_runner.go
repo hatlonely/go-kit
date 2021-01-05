@@ -175,14 +175,10 @@ func (r *PlaybookRunner) ExecCmdWithOutput(env string, cmd string, stdout io.Wri
 	return ExecCommandWithOutput(cmd, r.environment[env], stdout, stderr)
 }
 
-func (r *PlaybookRunner) RunTaskWithOutput(
-	env string, getter bind.Getter, taskName string, stdout io.Writer, stderr io.Writer,
-	onStart func(idx int, length int, command string) error,
-	onSuccess func(idx int, length int, command string, status int) error,
-	onError func(idx int, length int, command string, err error)) error {
+func (r *PlaybookRunner) taskEnvironment(env string, taskName string, getter bind.Getter) ([]string, error) {
 	_, err := r.Environment(env)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	environment := r.environment[env]
 
@@ -195,19 +191,57 @@ func (r *PlaybookRunner) RunTaskWithOutput(
 		if validate != "" {
 			eval, err := validator.Lang.NewEvaluable(validate)
 			if err != nil {
-				return errors.Wrapf(err, "create evaluable failed. key: [%v], validate: [%v]", name, validate)
+				return nil, errors.Wrapf(err, "create evaluable failed. key: [%v], validate: [%v]", name, validate)
 			}
 			if ok, err := eval.EvalBool(context.Background(), map[string]interface{}{"x": val}); err != nil {
-				return errors.Wrapf(err, "eval.EvalBool failed")
+				return nil, errors.Wrapf(err, "eval.EvalBool failed")
 			} else if !ok {
-				return errors.Errorf("validate failed. key: [%v], validate: [%v]", name, validate)
+				return nil, errors.Errorf("validate failed. key: [%v], validate: [%v]", name, validate)
 			}
 		}
 		environment = append(environment, fmt.Sprintf("%s=%v", name, val))
 	}
+	return environment, nil
+}
 
+func (r *PlaybookRunner) DescTask(env string, taskName string, getter bind.Getter) (
+	[]string, []string, error) {
+	environment, err := r.taskEnvironment(env, taskName, getter)
+	if err != nil {
+		return nil, nil, err
+	}
+	return environment, r.playbook.Task[taskName].Step, nil
+}
+
+func (r *PlaybookRunner) RunTaskWithOutput(
+	env string, getter bind.Getter, taskName string,
+	startStep int, endStep int,
+	stdout io.Writer, stderr io.Writer,
+	onStart func(idx int, length int, command string) error,
+	onSuccess func(idx int, length int, command string, status int) error,
+	onError func(idx int, length int, command string, err error)) error {
+	if startStep < 1 {
+		return errors.Errorf("start step [%v] should start 1", startStep)
+	}
 	length := len(r.playbook.Task[taskName].Step)
-	for i, cmd := range r.playbook.Task[taskName].Step {
+	if endStep == -1 {
+		endStep = length
+	}
+	if startStep > endStep {
+		return errors.Errorf("start step [%v] should less than end step [%v]", startStep, endStep)
+	}
+	if endStep > length {
+		return errors.Errorf("end step [%v] should less than length [%v]", endStep, length)
+	}
+
+	environment, err := r.taskEnvironment(env, taskName, getter)
+	if err != nil {
+		return err
+	}
+
+	startIdx, endIdx := startStep-1, endStep
+	for i := startIdx; i < endIdx; i++ {
+		cmd := r.playbook.Task[taskName].Step[i]
 		if err := onStart(i, length, cmd); err != nil {
 			return errors.Wrap(err, "onStart failed")
 		}

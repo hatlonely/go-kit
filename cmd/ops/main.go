@@ -15,13 +15,15 @@ import (
 type Options struct {
 	flag.Options
 
-	Action   string `flag:"-a; usage: actions, one of [dep/run/cmd/env/list/listTask]"`
-	Playbook string `flag:"usage: playbook file; default: .ops.yaml"`
-	Variable string `flag:"usage: variable file; default: ~/.gomplate/root.json"`
-	Env      string `flag:"usage: environment, one of key in env; default: default"`
-	Task     string `flag:"usage: task, one of key in task"`
-	Command  string `flag:"usage: run command"`
-	Force    bool   `flag:"usage: force update dependency"`
+	Action    string `flag:"-a; usage: actions, one of [dep/run/cmd/env/desc/listEnv/listTask]"`
+	Playbook  string `flag:"usage: playbook file; default: .ops.yaml"`
+	Variable  string `flag:"usage: variable file; default: ~/.ops/root.json"`
+	Env       string `flag:"usage: environment, one of key in env; default: default"`
+	Task      string `flag:"usage: task, one of key in task"`
+	StartStep int    `flag:"usage: run task start step. start from 1; default: 1"`
+	EndStep   int    `flag:"usage: run task end step. set -1 to the end; default: -1"`
+	Command   string `flag:"usage: run command"`
+	Force     bool   `flag:"usage: force update dependency"`
 }
 
 var Version string
@@ -103,7 +105,9 @@ func main() {
 		}
 
 		if err := runner.RunTaskWithOutput(
-			options.Env, flag.Instance(), options.Task, os.Stdout, os.Stderr,
+			options.Env, flag.Instance(), options.Task,
+			options.StartStep, options.EndStep,
+			os.Stdout, os.Stderr,
 			func(idx int, length int, command string) error {
 				strx.Info(fmt.Sprintf("[%v/%v] step: [%v] start", idx+1, length, command))
 				return nil
@@ -136,11 +140,50 @@ func main() {
 		return
 	}
 
+	if options.Action == "desc" {
+		envs, steps, err := runner.DescTask(options.Env, options.Task, flag.Instance())
+		if err != nil {
+			strx.Warn(err.Error())
+			return
+		}
+
+		if options.StartStep < 1 {
+			strx.Warn(fmt.Sprintf("start step [%v] should start 1", options.StartStep))
+			return
+		}
+		length := len(steps)
+		if options.EndStep == -1 {
+			options.EndStep = len(steps)
+		}
+		if options.StartStep > options.EndStep {
+			strx.Warn(fmt.Sprintf("start step [%v] should less than end step [%v]", options.StartStep, options.EndStep))
+			return
+		}
+		if options.EndStep > length {
+			strx.Warn(fmt.Sprintf("end step [%v] should less than length [%v]", options.StartStep, options.EndStep))
+			return
+		}
+
+		for _, env := range envs {
+			strx.Trac(env)
+		}
+		startIdx, endIdx := options.StartStep-1, options.EndStep
+		for i, step := range steps {
+			if i >= startIdx && i < endIdx {
+				strx.Info(fmt.Sprintf("[%v/%v] step: [%v]", i+1, len(steps), step))
+			} else {
+				strx.Trac(fmt.Sprintf("[%v/%v] step: [%v]", i+1, len(steps), step))
+			}
+		}
+		return
+	}
+
 	if options.Action == "listTask" {
 		buf, err := yaml.Marshal(runner.Playbook().Task)
 		if err != nil {
 			panic(err)
 		}
+
 		strx.Trac(string(buf))
 		return
 	}
