@@ -26,7 +26,7 @@ func TestParseEnvironment(t *testing.T) {
 				"REGISTRY_USERNAME": "{{.registry.username}}",
 				"REGISTRY_PASSWORD": "{{.registry.password}}",
 			},
-		}, "prod")
+		}, "tmp", "prod")
 
 		So(err, ShouldBeNil)
 		So(environment, ShouldResemble, []string{

@@ -151,7 +151,7 @@ func (r *PlaybookRunner) Playbook() *Playbook {
 
 func (r *PlaybookRunner) Environment(env string) ([]string, error) {
 	if r.environment[env] == nil {
-		environment, err := ParseEnvironment(r.playbook.Env, env)
+		environment, err := ParseEnvironment(r.playbook.Env, r.playbook.Tmp, env)
 		if err != nil {
 			return nil, errors.Wrap(err, "ParseEnvironment failed")
 		}
@@ -264,7 +264,7 @@ func evaluate(envMap map[string]string, key string) (string, error) {
 	return val, nil
 }
 
-func ParseEnvironment(environmentMap map[string]map[string]string, env string) ([]string, error) {
+func ParseEnvironment(environmentMap map[string]map[string]string, tmp string, env string) ([]string, error) {
 	envMap := map[string]string{}
 	for key, val := range environmentMap["default"] {
 		envMap[key] = val
@@ -275,10 +275,13 @@ func ParseEnvironment(environmentMap map[string]map[string]string, env string) (
 	for key, val := range environmentMap[env] {
 		envMap[key] = val
 	}
-	tmpDir := fmt.Sprintf(`tmp/env/%s`, env)
+	if tmp == "" {
+		tmp = "tmp"
+	}
+	tmpDir := fmt.Sprintf(`%s/env/%s`, tmp, env)
 	envMap["ENV"] = env
 	envMap["TMP"] = tmpDir
-	envMap["DEP"] = "tmp/dep"
+	envMap["DEP"] = fmt.Sprintf("%s/dep", tmp)
 	if err := os.MkdirAll(tmpDir, 0755); err != nil {
 		return nil, errors.Wrapf(err, "os.MkdirAll failed. dir: [%v]", tmpDir)
 	}
