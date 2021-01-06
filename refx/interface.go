@@ -275,24 +275,27 @@ func interfaceGetRecursive(v interface{}, key string, prefix string) (interface{
 }
 
 func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string, options *Options) error {
-	if src == nil {
-		return nil
-	}
 	if reflect.ValueOf(dst).Kind() != reflect.Ptr || dst == nil {
 		return fmt.Errorf("invalid dst type or dst is nil. dst: [%v]", reflect.TypeOf(dst))
 	}
 
 	rv := reflect.ValueOf(dst).Elem()
 	rt := reflect.TypeOf(dst).Elem()
+
+	if rt.Kind() == reflect.Struct && !options.DisableDefaultValue {
+		if err := SetDefaultValue(dst); err != nil {
+			return errors.WithMessage(err, "SetDefaultValue failed")
+		}
+	}
+
+	if src == nil {
+		return nil
+	}
+
 	srv := reflect.ValueOf(src)
 	srt := reflect.TypeOf(src)
 	switch rt.Kind() {
 	case reflect.Struct:
-		if !options.DisableDefaultValue {
-			if err := SetDefaultValue(dst); err != nil {
-				return errors.WithMessage(err, "SetDefaultValue failed")
-			}
-		}
 		for i := 0; i < rv.NumField(); i++ {
 			key := options.FormatKey(rt.Field(i).Name)
 			var val interface{}

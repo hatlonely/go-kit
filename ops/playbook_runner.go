@@ -18,6 +18,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/bind"
+	"github.com/hatlonely/go-kit/cast"
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/validator"
@@ -35,24 +36,28 @@ type Playbook struct {
 	Env  map[string]map[string]string
 	Dep  map[string]map[string]string
 	Task map[string]struct {
-		Args map[string]string
+		Args map[string]struct {
+			Validation string
+			Type       string `dft:"string"`
+			Default    string
+		}
 		Step []string
 	}
 }
 
-func NewPlaybookRunner(yaml string, varFile string) (*PlaybookRunner, error) {
+func NewPlaybookRunner(playbook string, varFile string) (*PlaybookRunner, error) {
 	cfg, err := config.NewConfigWithSimpleFile(varFile, config.WithSimpleFileType("Json"))
 	if err != nil {
 		return nil, errors.Wrapf(err, "config.NewConfigWithSimpleFile failed. file: [%v]", varFile)
 	}
 	v, _ := cfg.Get("")
-	return NewPlaybookRunnerWithVariable(yaml, v)
+	return NewPlaybookRunnerWithVariable(playbook, v)
 }
 
-func NewPlaybookRunnerWithVariable(yaml string, v interface{}) (*PlaybookRunner, error) {
-	buf, err := ioutil.ReadFile(yaml)
+func NewPlaybookRunnerWithVariable(playbookFile string, v interface{}) (*PlaybookRunner, error) {
+	buf, err := ioutil.ReadFile(playbookFile)
 	if err != nil {
-		return nil, errors.Wrapf(err, "ioutil.ReadFile failed. file: [%v]", yaml)
+		return nil, errors.Wrapf(err, "ioutil.ReadFile failed. file: [%v]", playbookFile)
 	}
 	tpl, err := template.New("").Parse(string(buf))
 	if err != nil {
@@ -182,24 +187,36 @@ func (r *PlaybookRunner) taskEnvironment(env string, taskName string, getter bin
 	}
 	environment := r.environment[env]
 
-	for name, validate := range r.playbook.Task[taskName].Args {
-		v, ok := getter.Get(name)
-		var val string
-		if ok {
-			val = v.(string)
+	for key, info := range r.playbook.Task[taskName].Args {
+		v, ok := getter.Get(key)
+		if !ok {
+			v = info.Default
 		}
-		if validate != "" {
-			eval, err := validator.Lang.NewEvaluable(validate)
+		switch info.Type {
+		case "int":
+			v, err = cast.ToIntE(v)
+		case "bool":
+			v, err = cast.ToBoolE(v)
+		case "string":
+			v, err = cast.ToStringE(v)
+		default:
+			err = errors.Errorf("unsupported type [%v]", info.Type)
+		}
+		if err != nil {
+			return nil, errors.Wrapf(err, "cast failed. key: [%v], val: [%v], type: [%v]", key, v, info.Type)
+		}
+		if info.Validation != "" {
+			eval, err := validator.Lang.NewEvaluable(info.Validation)
 			if err != nil {
-				return nil, errors.Wrapf(err, "create evaluable failed. key: [%v], validate: [%v]", name, validate)
+				return nil, errors.Wrapf(err, "create evaluable failed. key: [%v], validate: [%v]", key, info.Validation)
 			}
-			if ok, err := eval.EvalBool(context.Background(), map[string]interface{}{"x": val}); err != nil {
+			if ok, err := eval.EvalBool(context.Background(), map[string]interface{}{"x": v}); err != nil {
 				return nil, errors.Wrapf(err, "eval.EvalBool failed")
 			} else if !ok {
-				return nil, errors.Errorf("validate failed. key: [%v], validate: [%v]", name, validate)
+				return nil, errors.Errorf("validate failed. key: [%v], validate: [%v]", key, info.Validation)
 			}
 		}
-		environment = append(environment, fmt.Sprintf("%s=%v", name, val))
+		environment = append(environment, fmt.Sprintf("%s=%v", key, v))
 	}
 	return environment, nil
 }
