@@ -306,26 +306,11 @@ var ShellCmdRegex = regexp.MustCompile(`\s*\$\((.*)\)\s*`)
 func evaluate(envMap map[string]string, key string) (string, error) {
 	val, ok := envMap[key]
 	if !ok {
-		return "", errors.Errorf("evalute failed. no such key: [%v]", key)
-	}
-	if ShellVarRegex.MatchString(val) {
-		var err error
-		val := ShellVarRegex.ReplaceAllStringFunc(val, func(item string) string {
-			key := ShellVarRegex.FindStringSubmatch(item)[1]
-
-			val, e := evaluate(envMap, key)
-			if e != nil {
-				err = errors.Wrapf(e, "evaluate variable failed. key: [%v]", key)
-				return item
-			}
-
-			return val
-		})
-		if err != nil {
-			return "", err
+		val = os.Getenv(key)
+		if val != "" {
+			return val, nil
 		}
-		envMap[key] = val
-		return val, nil
+		return "", errors.Errorf("evalute failed. no such key: [%v]", key)
 	}
 	if ShellCmdRegex.MatchString(val) {
 		status, stdout, _, err := ExecCommand(ShellCmdRegex.FindStringSubmatch(val)[1], nil, "")
@@ -337,6 +322,28 @@ func evaluate(envMap map[string]string, key string) (string, error) {
 		}
 		envMap[key] = strings.TrimSpace(stdout)
 		return strings.TrimSpace(stdout), nil
+	}
+	if ShellVarRegex.MatchString(val) {
+		var err error
+		val := ShellVarRegex.ReplaceAllStringFunc(val, func(item string) string {
+			k := ShellVarRegex.FindStringSubmatch(item)[1]
+			if k == key {
+				return os.Getenv(key)
+			}
+
+			val, e := evaluate(envMap, k)
+			if e != nil {
+				err = errors.Wrapf(e, "evaluate variable failed. key: [%v]", k)
+				return item
+			}
+
+			return val
+		})
+		if err != nil {
+			return "", err
+		}
+		envMap[key] = val
+		return val, nil
 	}
 
 	return val, nil
