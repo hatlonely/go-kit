@@ -140,7 +140,7 @@ func (r *PlaybookRunner) DownloadDependencyWithOutput(
 		if err := onStart(i, length, cmd); err != nil {
 			return errors.Wrap(err, "onStart failed")
 		}
-		status, err := ExecCommandWithOutput(cmd, nil, stdout, stderr)
+		status, err := ExecCommandWithOutput(cmd, nil, "", stdout, stderr)
 		if err := onSuccess(i, length, cmd, status); err != nil {
 			return errors.Wrap(err, "onSuccess failed")
 		}
@@ -177,7 +177,7 @@ func (r *PlaybookRunner) ExecCmdWithOutput(env string, cmd string, stdout io.Wri
 	if err != nil {
 		return 0, err
 	}
-	return ExecCommandWithOutput(cmd, r.environment[env], stdout, stderr)
+	return ExecCommandWithOutput(cmd, r.environment[env], "", stdout, stderr)
 }
 
 func (r *PlaybookRunner) taskEnvironment(env string, taskName string, getter bind.Getter) ([]string, error) {
@@ -262,7 +262,7 @@ func (r *PlaybookRunner) RunTaskWithOutput(
 		if err := onStart(i, length, cmd); err != nil {
 			return errors.Wrap(err, "onStart failed")
 		}
-		status, err := ExecCommandWithOutput(cmd, environment, stdout, stderr)
+		status, err := ExecCommandWithOutput(cmd, environment, "", stdout, stderr)
 		if err := onSuccess(i, length, cmd, status); err != nil {
 			return errors.Wrap(err, "onSuccess failed")
 		}
@@ -284,7 +284,7 @@ func (r *PlaybookRunner) RunTask(env string, taskName string, callback func(resu
 	}
 
 	for _, cmd := range r.playbook.Task[taskName].Step {
-		status, stdout, stderr, err := ExecCommand(cmd, r.environment[env])
+		status, stdout, stderr, err := ExecCommand(cmd, r.environment[env], "")
 		if err := callback(&ExecCommandResult{
 			Status: status,
 			Stdout: stdout,
@@ -328,7 +328,7 @@ func evaluate(envMap map[string]string, key string) (string, error) {
 		return val, nil
 	}
 	if ShellCmdRegex.MatchString(val) {
-		status, stdout, _, err := ExecCommand(ShellCmdRegex.FindStringSubmatch(val)[1], nil)
+		status, stdout, _, err := ExecCommand(ShellCmdRegex.FindStringSubmatch(val)[1], nil, "")
 		if err != nil {
 			return "", errors.Wrap(err, "ExecCommand failed")
 		}
@@ -377,11 +377,14 @@ func ParseEnvironment(environmentMap map[string]map[string]string, tmp string, e
 	return envs, nil
 }
 
-func ExecCommandWithOutput(command string, environment []string, stdout io.Writer, stderr io.Writer) (int, error) {
+func ExecCommandWithOutput(command string, environment []string, workDir string, stdout io.Writer, stderr io.Writer) (int, error) {
 	cmd := exec.Command("bash", "-c", command)
 	cmd.Env = os.Environ()
 	cmd.Env = append(cmd.Env, environment...)
 
+	if workDir != "" {
+		cmd.Dir = workDir
+	}
 	cmd.Stdout = stdout
 	cmd.Stderr = stderr
 
@@ -402,9 +405,9 @@ func ExecCommandWithOutput(command string, environment []string, stdout io.Write
 	return 0, nil
 }
 
-func ExecCommand(command string, environment []string) (int, string, string, error) {
+func ExecCommand(command string, environment []string, workDir string) (int, string, string, error) {
 	var stdout = &bytes.Buffer{}
 	var stderr = &bytes.Buffer{}
-	status, err := ExecCommandWithOutput(command, environment, stdout, stderr)
+	status, err := ExecCommandWithOutput(command, environment, workDir, stdout, stderr)
 	return status, stdout.String(), stderr.String(), err
 }
