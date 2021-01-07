@@ -124,6 +124,7 @@ func (r *PlaybookRunner) DownloadDependencyWithOutput(
 		}
 
 		var cmd string
+		workDir := ""
 		switch val["type"] {
 		case "git", "":
 			if len(val["url"]) == 0 {
@@ -134,13 +135,17 @@ func (r *PlaybookRunner) DownloadDependencyWithOutput(
 				version = val["version"]
 			}
 			cmd = fmt.Sprintf(`git clone --depth=1 --branch "%s" "%s" "%s"`, version, val["url"], output)
+		case "cmd":
+			cmd = val["command"]
+			workDir = output
+			_ = os.MkdirAll(workDir, 0755)
 		default:
 			return errors.Errorf("unsupported dependency type [%v]", val["type"])
 		}
 		if err := onStart(i, length, cmd); err != nil {
 			return errors.Wrap(err, "onStart failed")
 		}
-		status, err := ExecCommandWithOutput(cmd, nil, "", stdout, stderr)
+		status, err := ExecCommandWithOutput(cmd, nil, workDir, stdout, stderr)
 		if err := onSuccess(i, length, cmd, status); err != nil {
 			return errors.Wrap(err, "onSuccess failed")
 		}
