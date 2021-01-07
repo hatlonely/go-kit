@@ -51,7 +51,7 @@ func TestExecCommand(t *testing.T) {
 	Convey("TestExecCommand", t, func() {
 		status, stdout, stderr, err := ExecCommand("echo ${EXEC_COMMAND_KEY}=${EXEC_COMMAND_VALUE}", []string{
 			"EXEC_COMMAND_KEY=key", "EXEC_COMMAND_VALUE=val",
-		})
+		}, "")
 		So(status, ShouldEqual, 0)
 		So(stdout, ShouldEqual, "key=val\n")
 		So(stderr, ShouldEqual, "")
@@ -85,7 +85,8 @@ env:
 task:
   image:
     args:
-      key1: val1
+      key1:
+        default: val1
     step:
       - make test
       - make image
@@ -132,12 +133,23 @@ task:
 			"TMP=tmp/env/prod",
 		})
 		So(runner.playbook.Task, ShouldResemble, map[string]struct {
-			Args map[string]string
+			Args map[string]struct {
+				Validation string
+				Type       string `dft:"string"`
+				Default    string
+			}
 			Step []string
 		}{
 			"image": {
-				Args: map[string]string{
-					"key1": "val1",
+				Args: map[string]struct {
+					Validation string
+					Type       string `dft:"string"`
+					Default    string
+				}{
+					"key1": {
+						Type:    "string",
+						Default: "val1",
+					},
 				},
 				Step: []string{
 					"make test",

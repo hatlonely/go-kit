@@ -1,3 +1,6 @@
+export GOPROXY=https://goproxy.cn
+export GOPRIVATE=gitlab.alibaba-inc.com
+
 define BUILD_VERSION
   version: $(shell git describe --tags)
 gitremote: $(shell git remote -v | grep fetch | awk '{print $$2}')
@@ -8,7 +11,7 @@ goversion: $(shell go version)
 endef
 export BUILD_VERSION
 
-test:
+test: vendor
 	go test -gcflags=all=-l -cover ./alics
 	go test -gcflags=all=-l -cover ./bind
 	go test -gcflags=all=-l -cover ./cast
@@ -20,6 +23,10 @@ test:
 	go test -gcflags=all=-l -cover ./strx
 	go test -gcflags=all=-l -cover ./validator
 	go test -gcflags=all=-l -cover ./ops
+
+vendor:
+	go mod tidy
+	go mod vendor
 
 build: build/bin/cfg build/bin/ops
 
