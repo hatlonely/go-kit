@@ -33,7 +33,7 @@ func TestElasticSearchWriter_Write(t *testing.T) {
 				MsgChanLen: 200,
 				WorkerNum:  2,
 				ElasticSearch: cli.ElasticSearchOptions{
-					URI: "http://127.0.0.2:9200",
+					URI: "http://127.0.0.1:9200",
 				},
 			},
 		})
