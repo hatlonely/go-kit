@@ -305,7 +305,7 @@ func (r *PlaybookRunner) RunTask(env string, taskName string, callback func(resu
 	return nil
 }
 
-var ShellVarRegex = regexp.MustCompile(`\${(\w+).*}`)
+var ShellVarRegex = regexp.MustCompile(`\${(\w+).*?}`)
 
 func topOrderEnvMap(envMap map[string]string) ([]string, error) {
 	allKey := map[string]bool{}
@@ -320,6 +320,9 @@ func topOrderEnvMap(envMap map[string]string) ([]string, error) {
 			find := false
 			for _, vs := range ShellVarRegex.FindAllStringSubmatch(envMap[key], -1) {
 				k := vs[1]
+				if k == key {
+					continue
+				}
 				if allKey[k] {
 					find = true
 				}
