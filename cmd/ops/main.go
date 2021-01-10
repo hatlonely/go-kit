@@ -6,6 +6,7 @@ import (
 
 	"github.com/ghodss/yaml"
 
+	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/flag"
 	"github.com/hatlonely/go-kit/ops"
 	"github.com/hatlonely/go-kit/refx"
@@ -24,6 +25,8 @@ type Options struct {
 	EndStep   int    `flag:"usage: run task end step. set -1 to the end; default: -1"`
 	Command   string `flag:"usage: run command"`
 	Force     bool   `flag:"usage: force update dependency"`
+	BaseFile  string
+	Base      config.Options
 }
 
 var Version string
@@ -55,7 +58,22 @@ func main() {
 		return
 	}
 
-	runner, err := ops.NewPlaybookRunner(options.Playbook, options.Variable)
+	var cfg *config.Config
+	var err error
+	if len(options.Variable) != 0 {
+		cfg, err = config.NewConfigWithSimpleFile(options.Variable)
+	} else if len(options.BaseFile) != 0 {
+		cfg, err = config.NewConfigWithBaseFile(options.BaseFile)
+	} else {
+		cfg, err = config.NewConfigWithOptions(&options.Base)
+	}
+	if err != nil {
+		strx.Warn(err.Error())
+		return
+	}
+
+	v, _ := cfg.Get("")
+	runner, err := ops.NewPlaybookRunnerWithVariable(options.Playbook, v)
 	if err != nil {
 		strx.Warn(err.Error())
 		return
