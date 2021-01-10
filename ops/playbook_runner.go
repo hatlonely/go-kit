@@ -305,53 +305,37 @@ func (r *PlaybookRunner) RunTask(env string, taskName string, callback func(resu
 	return nil
 }
 
-var ShellVarRegex = regexp.MustCompile(`\${(\w+)}`)
-var ShellCmdRegex = regexp.MustCompile(`\s*\$\((.*)\)\s*`)
+var ShellVarRegex = regexp.MustCompile(`\${(\w+).*}`)
 
-func evaluate(envMap map[string]string, key string) (string, error) {
-	val, ok := envMap[key]
-	if !ok {
-		val = os.Getenv(key)
-		if val != "" {
-			return val, nil
-		}
-		return "", errors.Errorf("evalute failed. no such key: [%v]", key)
+func topOrderEnvMap(envMap map[string]string) ([]string, error) {
+	allKey := map[string]bool{}
+	for key := range envMap {
+		allKey[key] = true
 	}
-	if ShellCmdRegex.MatchString(val) {
-		status, stdout, _, err := ExecCommand(ShellCmdRegex.FindStringSubmatch(val)[1], nil, "")
-		if err != nil {
-			return "", errors.Wrap(err, "ExecCommand failed")
-		}
-		if status != 0 {
-			return "", errors.Errorf("ExecCommand failed. exit: [%v]", status)
-		}
-		envMap[key] = strings.TrimSpace(stdout)
-		return strings.TrimSpace(stdout), nil
-	}
-	if ShellVarRegex.MatchString(val) {
-		var err error
-		val := ShellVarRegex.ReplaceAllStringFunc(val, func(item string) string {
-			k := ShellVarRegex.FindStringSubmatch(item)[1]
-			if k == key {
-				return os.Getenv(key)
+
+	var keys []string
+	for len(allKey) != 0 {
+		length := len(allKey)
+		for key := range allKey {
+			find := false
+			for _, vs := range ShellVarRegex.FindAllStringSubmatch(envMap[key], -1) {
+				k := vs[1]
+				if allKey[k] {
+					find = true
+				}
 			}
-
-			val, e := evaluate(envMap, k)
-			if e != nil {
-				err = errors.Wrapf(e, "evaluate variable failed. key: [%v]", k)
-				return item
+			if find {
+				continue
 			}
-
-			return val
-		})
-		if err != nil {
-			return "", err
+			keys = append(keys, key)
+			delete(allKey, key)
 		}
-		envMap[key] = val
-		return val, nil
+		if length == len(allKey) {
+			return nil, errors.Errorf("loop graph. keys: [%v]", allKey)
+		}
 	}
 
-	return val, nil
+	return keys, nil
 }
 
 func ParseEnvironment(environmentMap map[string]map[string]string, tmp string, env string) ([]string, error) {
@@ -375,16 +359,23 @@ func ParseEnvironment(environmentMap map[string]map[string]string, tmp string, e
 	if err := os.MkdirAll(tmpDir, 0755); err != nil {
 		return nil, errors.Wrapf(err, "os.MkdirAll failed. dir: [%v]", tmpDir)
 	}
-	for key := range envMap {
-		_, err := evaluate(envMap, key)
-		if err != nil {
-			return nil, errors.Wrapf(err, "evaluate failed. key: [%v], val: [%v]", key, envMap[key])
-		}
+
+	keys, err := topOrderEnvMap(envMap)
+	if err != nil {
+		return nil, errors.Wrap(err, "topOrderEnvMap failed")
 	}
 	var envs []string
-	for key, val := range envMap {
-		envs = append(envs, fmt.Sprintf(`%s=%s`, key, val))
+	for _, key := range keys {
+		status, stdout, _, err := ExecCommand(fmt.Sprintf("eval echo %v", envMap[key]), envs, "")
+		if err != nil {
+			return nil, errors.Wrap(err, "ExecCommand failed")
+		}
+		if status != 0 {
+			return nil, errors.Errorf("ExecCommand failed. exit: [%v]", status)
+		}
+		envs = append(envs, fmt.Sprintf(`%s=%s`, key, strings.TrimSpace(stdout)))
 	}
+
 	sort.Strings(envs)
 	return envs, nil
 }

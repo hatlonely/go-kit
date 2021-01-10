@@ -1,12 +1,38 @@
 package ops
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
+
+func TestTopOrder(t *testing.T) {
+	Convey("TestTopOrder", t, func() {
+		m := map[string]string{
+			"NAMESPACE":         "prod",
+			"NAME":              "rpc-cicd",
+			"IMAGE_REPOSITORY":  "${NAME}",
+			"IMAGE_TAG":         "$(echo ${CLUSTER_NAME_1})",
+			"CLUSTER_NAME_1":    "XX_${NAME}_${REGION_ID}_YY",
+			"CLUSTER_NAME_2":    "${NAME}_${REGION_ID}",
+			"CLUSTER_NAME_3":    "${CLUSTER_NAME_2}_${NAME}_${REGION_ID}",
+			"REGION_ID":         "cn-shanghai",
+			"REGISTRY_USERNAME": "{{.registry.username}}",
+			"REGISTRY_PASSWORD": "{{.registry.password}}",
+		}
+		order, err := topOrderEnvMap(m)
+		So(err, ShouldBeNil)
+		So(len(order), ShouldEqual, 10)
+		for _, key := range order {
+			_, ok := m[key]
+			So(ok, ShouldBeTrue)
+		}
+		fmt.Println(order)
+	})
+}
 
 func TestParseEnvironment(t *testing.T) {
 	Convey("TestParseEnvironment", t, func() {
@@ -25,6 +51,7 @@ func TestParseEnvironment(t *testing.T) {
 				"REGION_ID":         "cn-shanghai",
 				"REGISTRY_USERNAME": "{{.registry.username}}",
 				"REGISTRY_PASSWORD": "{{.registry.password}}",
+				"NAME1":             "${NAME//-/_}",
 			},
 		}, "tmp", "prod")
 
@@ -37,6 +64,7 @@ func TestParseEnvironment(t *testing.T) {
 			"ENV=prod",
 			"IMAGE_REPOSITORY=rpc-cicd-1",
 			"IMAGE_TAG=hello world",
+			"NAME1=rpc_cicd_1",
 			"NAME=rpc-cicd-1",
 			"NAMESPACE=prod",
 			"REGION_ID=cn-shanghai",
