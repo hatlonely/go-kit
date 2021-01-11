@@ -30,6 +30,8 @@ func NewProviderWithOptions(options *ProviderOptions) (Provider, error) {
 		return NewLocalProviderWithOptions(&options.LocalProvider)
 	case "OTS":
 		return NewOTSProviderWithOptions(&options.OTSProvider)
+	case "ACM":
+		return NewACMProviderWithOptions(&options.ACMProvider)
 	case "OTSLegacy":
 		return NewOTSLegacyProviderWithOptions(&options.OTSLegacyProvider)
 	case "Memory":
@@ -42,6 +44,7 @@ type ProviderOptions struct {
 	Type              string
 	LocalProvider     LocalProviderOptions
 	OTSProvider       OTSProviderOptions
+	ACMProvider       ACMProviderOptions
 	OTSLegacyProvider OTSLegacyProviderOptions
 	MemoryProvider    MemoryProviderOptions
 }
