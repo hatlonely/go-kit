@@ -24,7 +24,7 @@ require (
 	github.com/lestrrat-go/file-rotatelogs v2.3.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.1 // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
-	github.com/nacos-group/nacos-sdk-go v1.0.3
+	github.com/nacos-group/nacos-sdk-go v1.0.4-0.20210103134747-b1d375a29789
 	github.com/olivere/elastic/v7 v7.0.19
 	github.com/pkg/errors v0.9.1
 	github.com/satori/go.uuid v1.2.0

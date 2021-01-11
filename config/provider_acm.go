@@ -34,7 +34,7 @@ type ACMProvider struct {
 func NewACMProviderWithOptions(options *ACMProviderOptions) (*ACMProvider, error) {
 	client, err := clients.CreateConfigClient(map[string]interface{}{
 		"clientConfig": constant.ClientConfig{
-			Endpoint:    options.Endpoint,
+			Endpoint:    options.Endpoint + ":8080",
 			NamespaceId: options.Namespace,
 			AccessKey:   options.AccessKeyID,
 			SecretKey:   options.AccessKeySecret,
@@ -48,6 +48,8 @@ func NewACMProviderWithOptions(options *ACMProviderOptions) (*ACMProvider, error
 	p := &ACMProvider{
 		client:  client,
 		options: options,
+		events:  make(chan struct{}, 8),
+		errors:  make(chan error, 8),
 	}
 
 	buf, err := p.load()
@@ -103,6 +105,7 @@ func (p *ACMProvider) EventLoop(ctx context.Context) error {
 		Group:  p.options.Group,
 		OnChange: func(namespace, group, dataId, data string) {
 			p.buf = []byte(data)
+			p.events <- struct{}{}
 		},
 	})
 }
