@@ -12,6 +12,7 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/opentracing/opentracing-go"
+	"github.com/opentracing/opentracing-go/ext"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 	"google.golang.org/grpc"
@@ -126,18 +127,24 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCUnaryInterceptorOp
 	}
 
 	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (res interface{}, err error) {
-		span, ctx := opentracing.StartSpanFromContext(ctx, "grpc")
-		span.SetTag(methodKey, info.FullMethod)
-		defer span.Finish()
-
 		var requestID, remoteIP string
-		if md, ok := metadata.FromIncomingContext(ctx); ok {
+		md, ok := metadata.FromIncomingContext(ctx)
+		if ok {
 			requestID = strings.Join(md.Get(options.RequestIDMetaKey), ",")
 			if requestID == "" {
 				requestID = uuid.NewV4().String()
 				md.Set(options.RequestIDMetaKey, requestID)
 			}
 			remoteIP = strings.Split(strings.Join(md.Get("x-remote-addr"), ","), ":")[0]
+		}
+
+		//span, ctx := opentracing.StartSpanFromContext(ctx, "grpc")
+		spanCtx, err := opentracing.GlobalTracer().Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(md))
+		if err == nil || err == opentracing.ErrSpanContextNotFound {
+			span := opentracing.GlobalTracer().StartSpan("grpc", ext.RPCServerOption(spanCtx))
+			span.SetTag(methodKey, info.FullMethod)
+			ctx = opentracing.ContextWithSpan(ctx, span)
+			defer span.Finish()
 		}
 
 		ctx = NewRPCXContext(ctx)
