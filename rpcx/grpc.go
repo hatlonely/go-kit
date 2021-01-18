@@ -126,7 +126,7 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCUnaryInterceptorOp
 	}
 
 	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (res interface{}, err error) {
-		span, _ := opentracing.StartSpanFromContext(ctx, "grpc")
+		span, ctx := opentracing.StartSpanFromContext(ctx, "grpc")
 		span.SetTag(methodKey, info.FullMethod)
 		defer span.Finish()
 
