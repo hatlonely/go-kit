@@ -26,6 +26,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/nacos-group/nacos-sdk-go v1.0.4-0.20210103134747-b1d375a29789
 	github.com/olivere/elastic/v7 v7.0.19
+	github.com/opentracing/opentracing-go v1.2.0
 	github.com/pkg/errors v0.9.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/smartystreets/goconvey v1.6.4
