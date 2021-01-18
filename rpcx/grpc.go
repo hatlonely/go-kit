@@ -138,13 +138,14 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCUnaryInterceptorOp
 			remoteIP = strings.Split(strings.Join(md.Get("x-remote-addr"), ","), ":")[0]
 		}
 
-		//span, ctx := opentracing.StartSpanFromContext(ctx, "grpc")
-		spanCtx, err := opentracing.GlobalTracer().Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(md))
-		if err == nil || err == opentracing.ErrSpanContextNotFound {
-			span := opentracing.GlobalTracer().StartSpan("grpc", ext.RPCServerOption(spanCtx))
-			span.SetTag(methodKey, info.FullMethod)
-			ctx = opentracing.ContextWithSpan(ctx, span)
-			defer span.Finish()
+		if options.EnableTracing {
+			spanCtx, err := opentracing.GlobalTracer().Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(md))
+			if err == nil || err == opentracing.ErrSpanContextNotFound {
+				span := opentracing.GlobalTracer().StartSpan("GrpcInterceptor", ext.RPCServerOption(spanCtx))
+				span.SetTag(methodKey, info.FullMethod)
+				ctx = opentracing.ContextWithSpan(ctx, span)
+				defer span.Finish()
+			}
 		}
 
 		ctx = NewRPCXContext(ctx)
@@ -250,6 +251,7 @@ type GRPCUnaryInterceptorOptions struct {
 	Validators       []string
 	PascalNameKey    bool
 	RequestIDMetaKey string `dft:"x-request-id"`
+	EnableTracing    bool
 
 	validators  []func(interface{}) error
 	preHandlers []func(ctx context.Context, req interface{}) error
@@ -309,6 +311,12 @@ func WithGRPCUnaryInterceptorValidators(fun ...func(interface{}) error) GRPCUnar
 func WithGRPCUnaryInterceptorPascalNameKey() GRPCUnaryInterceptorOption {
 	return func(options *GRPCUnaryInterceptorOptions) {
 		options.PascalNameKey = true
+	}
+}
+
+func WithGRPCUnaryInterceptorEnableTracing() GRPCUnaryInterceptorOption {
+	return func(options *GRPCUnaryInterceptorOptions) {
+		options.EnableTracing = true
 	}
 }
 
