@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 	"google.golang.org/grpc"
@@ -125,6 +126,10 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCUnaryInterceptorOp
 	}
 
 	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (res interface{}, err error) {
+		span, _ := opentracing.StartSpanFromContext(ctx, "grpc")
+		span.SetTag(methodKey, info.FullMethod)
+		defer span.Finish()
+
 		var requestID, remoteIP string
 		if md, ok := metadata.FromIncomingContext(ctx); ok {
 			requestID = strings.Join(md.Get(options.RequestIDMetaKey), ",")
