@@ -8,7 +8,7 @@ import (
 )
 
 func TestParseFunction(t *testing.T) {
-	fs, err := ParseFunction("../vendor/github.com/aliyun/aliyun-tablestore-go-sdk/tablestore")
+	fs, err := ParseFunction("../vendor/github.com/aliyun/aliyun-tablestore-go-sdk/tablestore", "tablestore")
 	fmt.Println(err)
 	fmt.Println(strx.JsonMarshalIndent(fs))
 }

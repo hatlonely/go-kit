@@ -47,7 +47,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	if options.Output != "" {
+	if options.Output == "" {
+		options.Output = fmt.Sprintf("%s_%s", options.Package, options.Class)
+	}
+	if options.Output != "stdout" {
 		_ = ioutil.WriteFile(options.Output, []byte(str), 0644)
 	} else {
 		fmt.Println(str)
