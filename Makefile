@@ -28,7 +28,7 @@ vendor:
 	go mod tidy
 	go mod vendor
 
-build: build/bin/cfg build/bin/ops
+build: build/bin/cfg build/bin/ops build/bin/gen
 
 build/bin/cfg: cmd/cfg/main.go $(wildcard config/*.go) Makefile vendor
 	mkdir -p build/bin
@@ -37,3 +37,7 @@ build/bin/cfg: cmd/cfg/main.go $(wildcard config/*.go) Makefile vendor
 build/bin/ops: cmd/ops/main.go $(wildcard ops/*.go) Makefile vendor
 	mkdir -p build/bin
 	go build -ldflags "-X 'main.Version=$$BUILD_VERSION'" -o build/bin/ops $<
+
+build/bin/gen: cmd/gen/main.go $(wildcard astx/*.go) Makefile vendor
+	mkdir -p build/bin
+	go build -ldflags "-X 'main.Version=$$BUILD_VERSION'" -o build/bin/gen $<
