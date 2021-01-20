@@ -14,11 +14,7 @@ import (
 type Options struct {
 	flag.Options
 
-	GoPath  string
-	PkgPath string
-	Package string
-	Class   string
-	Output  string
+	astx.WrapperGeneratorOptions
 }
 
 var Version string
@@ -42,7 +38,8 @@ func main() {
 `)
 	}
 
-	str, err := astx.GenerateWrapper(options.GoPath, options.PkgPath, options.Package, options.Class)
+	generator := astx.NewWrapperGeneratorWithOptions(&options.WrapperGeneratorOptions)
+	str, err := generator.Generate()
 	if err != nil {
 		strx.Warn(err.Error())
 		os.Exit(1)
