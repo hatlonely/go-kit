@@ -117,7 +117,7 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 					kvs := strings.Split(t, ".")
 					f.Params = append(f.Params, &Field{
 						Type: t,
-						Name: strx.CamelName(strings.TrimLeft(kvs[len(kvs)-1], "*")),
+						Name: strx.CamelName(strings.TrimLeft(kvs[len(kvs)-1], "*[]")),
 					})
 				}
 			}
@@ -141,7 +141,7 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 					kvs := strings.Split(t, ".")
 					f.Results = append(f.Results, &Field{
 						Type: t,
-						Name: strx.CamelName(strings.TrimLeft(kvs[len(kvs)-1], "*")),
+						Name: strx.CamelName(strings.TrimLeft(kvs[len(kvs)-1], "*[]")),
 					})
 				}
 			}
@@ -247,7 +247,7 @@ func generateWrapperFunctionDeclare(function *Function, cls string) string {
 		params = append(params, fmt.Sprintf("%s %s", i.Name, i.Type))
 	}
 	buf.WriteString(strings.Join(params, ", "))
-	buf.WriteString(")")
+	buf.WriteString(") ")
 
 	var results []string
 	for _, i := range function.Results {
@@ -275,15 +275,18 @@ func generateWrapperFunctionBody(function *Function, pkg string, cls string) str
 
 	if len(function.Results) != 0 && function.Results[len(function.Results)-1].Type == "error" {
 		function.Results[len(function.Results)-1].Name = "err"
-	}
-
-	for _, field := range function.Results {
-		buf.WriteString(fmt.Sprintf("\n	var %s %s", field.Name, field.Type))
+		for _, field := range function.Results {
+			buf.WriteString(fmt.Sprintf("\n	var %s %s", field.Name, field.Type))
+		}
 	}
 
 	var params []string
 	for _, i := range function.Params {
-		params = append(params, fmt.Sprintf("%s", i.Name))
+		if strings.HasPrefix(i.Type, "...") {
+			params = append(params, fmt.Sprintf("%s...", i.Name))
+		} else {
+			params = append(params, i.Name)
+		}
 	}
 
 	var results []string
@@ -291,7 +294,9 @@ func generateWrapperFunctionBody(function *Function, pkg string, cls string) str
 		results = append(results, fmt.Sprintf("%s", i.Name))
 	}
 
-	if len(results) != 0 && function.Results[len(function.Results)-1].Type == "error" {
+	if len(results) == 0 {
+		buf.WriteString(fmt.Sprintf("	c.client.%s(%s)\n", function.Name, strings.Join(params, ", ")))
+	} else if function.Results[len(function.Results)-1].Type == "error" {
 		buf.WriteString(fmt.Sprintf(`
 	err = retry.Do(func() error {
 		%s = %s.client.%s(%s)

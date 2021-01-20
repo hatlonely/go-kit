@@ -38,6 +38,7 @@ func main() {
 		strx.Trac(flag.Usage())
 		strx.Trac(`
   gen --goPath vendor --pkgPath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" --package tablestore --class TableStoreClient
+  gen --goPath vendor --pkgPath "github.com/olivere/elastic/v7" --package elastic --class Client
 `)
 	}
 
