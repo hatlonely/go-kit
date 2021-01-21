@@ -162,6 +162,10 @@ func (g *WrapperGenerator) generateWrapperDeclareReturnVariables(function *Funct
 }
 
 func (g *WrapperGenerator) generateWrapperRetry(function *Function) string {
+	if !function.IsReturnError {
+		panic(fmt.Sprintf("generateWrapperRetry with no error function. function: [%v]", function.Name))
+	}
+
 	var params []string
 	for _, i := range function.Params {
 		if strings.HasPrefix(i.Type, "...") {
@@ -185,6 +189,10 @@ func (g *WrapperGenerator) generateWrapperRetry(function *Function) string {
 }
 
 func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) string {
+	if function.IsReturnVoid {
+		panic(fmt.Sprintf("generateWrapperReturnVariables with void function. function [%v]", function.Name))
+	}
+
 	var results []string
 	for _, i := range function.Results {
 		results = append(results, fmt.Sprintf("%s", i.Name))
@@ -194,6 +202,10 @@ func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) st
 }
 
 func (g *WrapperGenerator) generateWrapperReturnFunction(function *Function) string {
+	if function.IsReturnVoid {
+		panic(fmt.Sprintf("generateWrapperReturnFunction with void function. function [%v]", function.Name))
+	}
+
 	var params []string
 	for _, i := range function.Params {
 		if strings.HasPrefix(i.Type, "...") {
