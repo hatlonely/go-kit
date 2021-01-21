@@ -25,6 +25,9 @@ type Function struct {
 	Recv    *Field
 	Params  []*Field
 	Results []*Field
+
+	IsReturnVoid  bool
+	IsReturnError bool
 }
 
 func calculateTypeName(fset *token.FileSet, field *ast.Field, typeRegexMap map[string]*regexp.Regexp, pkg string) (string, error) {
@@ -139,6 +142,12 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 					})
 				}
 			}
+		}
+
+		f.IsReturnVoid = len(f.Results) == 0
+		if len(f.Results) != 0 && f.Results[len(f.Results)-1].Type == "error" {
+			f.Results[len(f.Results)-1].Name = "err"
+			f.IsReturnError = true
 		}
 
 		functions = append(functions, &f)

@@ -224,14 +224,13 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) strin
 
 	buf.WriteString(g.generateWrapperOpentracing(function))
 
-	if len(function.Results) != 0 && function.Results[len(function.Results)-1].Type == "error" {
-		function.Results[len(function.Results)-1].Name = "err"
+	if function.IsReturnError {
 		buf.WriteString(g.generateWrapperDeclareReturnVariables(function))
 	}
 
-	if len(function.Results) == 0 {
+	if function.IsReturnVoid {
 		buf.WriteString(g.generateWrapperReturnVoid(function))
-	} else if function.Results[len(function.Results)-1].Type == "error" {
+	} else if function.IsReturnError {
 		buf.WriteString(g.generateWrapperRetry(function))
 		buf.WriteString(g.generateWrapperReturnVariables(function))
 	} else {
