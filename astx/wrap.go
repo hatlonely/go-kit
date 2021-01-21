@@ -176,9 +176,9 @@ func (g *WrapperGenerator) generateWrapperDeclareReturnVariables(function *Funct
 	return buf.String()
 }
 
-func (g *WrapperGenerator) generateWrapperRetry(function *Function) string {
+func (g *WrapperGenerator) generateWrapperCallWithRetry(function *Function) string {
 	if !function.IsReturnError {
-		panic(fmt.Sprintf("generateWrapperRetry with no error function. function: [%v]", function.Name))
+		panic(fmt.Sprintf("generateWrapperCallWithRetry with no error function. function: [%v]", function.Name))
 	}
 
 	var params []string
@@ -201,6 +201,24 @@ func (g *WrapperGenerator) generateWrapperRetry(function *Function) string {
 		return %s
 	})
 `, strings.Join(results, ", "), function.Name, strings.Join(params, ", "), results[len(results)-1])
+}
+
+func (g *WrapperGenerator) generateWrapperCallWithoutRetry(function *Function) string {
+	var params []string
+	for _, i := range function.Params {
+		if strings.HasPrefix(i.Type, "...") {
+			params = append(params, fmt.Sprintf("%s...", i.Name))
+		} else {
+			params = append(params, i.Name)
+		}
+	}
+
+	var results []string
+	for _, i := range function.Results {
+		results = append(results, fmt.Sprintf("%s", i.Name))
+	}
+
+	return fmt.Sprintf("\t%s := w.obj.%s(%s)", strings.Join(results, ", "), function.Name, strings.Join(params, ", "))
 }
 
 func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) string {
@@ -268,18 +286,22 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) strin
 
 	buf.WriteString(g.generateWrapperOpentracing(function))
 
-	if function.IsReturnError {
-		buf.WriteString(g.generateWrapperDeclareReturnVariables(function))
-	}
-
 	if function.IsReturnVoid {
 		buf.WriteString(g.generateWrapperReturnVoid(function))
-	} else if function.IsReturnError {
-		buf.WriteString(g.generateWrapperRetry(function))
-		buf.WriteString(g.generateWrapperReturnVariables(function))
-	} else {
-		buf.WriteString(g.generateWrapperReturnFunction(function))
+		return buf.String()
 	}
+
+	if function.IsReturnError {
+		buf.WriteString(g.generateWrapperDeclareReturnVariables(function))
+		buf.WriteString(g.generateWrapperCallWithRetry(function))
+		buf.WriteString(g.generateWrapperReturnVariables(function))
+		return buf.String()
+	}
+
+	buf.WriteString("\n")
+	buf.WriteString(g.generateWrapperCallWithoutRetry(function))
+	buf.WriteString("\n")
+	buf.WriteString(g.generateWrapperReturnVariables(function))
 
 	return buf.String()
 }
