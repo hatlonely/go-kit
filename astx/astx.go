@@ -7,6 +7,7 @@ import (
 	"go/parser"
 	"go/printer"
 	"go/token"
+	"regexp"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -26,7 +27,7 @@ type Function struct {
 	Results []*Field
 }
 
-func calculateTypeName(fset *token.FileSet, field *ast.Field, typeset map[string]bool, pkg string) (string, error) {
+func calculateTypeName(fset *token.FileSet, field *ast.Field, typeRegexMap map[string]*regexp.Regexp, pkg string) (string, error) {
 	var buf bytes.Buffer
 	err := printer.Fprint(&buf, fset, field.Type)
 	if err != nil {
@@ -34,14 +35,9 @@ func calculateTypeName(fset *token.FileSet, field *ast.Field, typeset map[string
 	}
 
 	t := buf.String()
-	if strings.HasPrefix(t, "*") {
-		if typeset[t[1:]] {
-			return fmt.Sprintf("*%s.%s", pkg, t[1:]), nil
-		}
-	} else {
-		if typeset[t] {
-			return fmt.Sprintf("%s.%s", pkg, t), nil
-		}
+
+	for key, re := range typeRegexMap {
+		t = re.ReplaceAllString(t, fmt.Sprintf("%s.%s", pkg, key))
 	}
 
 	return t, nil
@@ -69,12 +65,12 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 		}
 	}
 
-	typeset := map[string]bool{}
+	typeRegexMap := map[string]*regexp.Regexp{}
 	for _, decl := range genDecls {
 		for _, spec := range decl.Specs {
 			switch spec := spec.(type) {
 			case *ast.TypeSpec:
-				typeset[spec.Name.String()] = true
+				typeRegexMap[spec.Name.String()] = regexp.MustCompile(fmt.Sprintf("\\b%s\\b", spec.Name.String()))
 			}
 		}
 	}
@@ -87,7 +83,7 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 		var f Function
 		f.Name = fn.Name.String()
 		if fn.Recv != nil {
-			t, err := calculateTypeName(fset, fn.Recv.List[0], typeset, pkg)
+			t, err := calculateTypeName(fset, fn.Recv.List[0], typeRegexMap, pkg)
 			if err != nil {
 				return nil, errors.Wrap(err, "printer.Fprint failed")
 			}
@@ -99,7 +95,7 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 
 		if fn.Type.Params != nil {
 			for _, i := range fn.Type.Params.List {
-				t, err := calculateTypeName(fset, i, typeset, pkg)
+				t, err := calculateTypeName(fset, i, typeRegexMap, pkg)
 				if err != nil {
 					return nil, errors.Wrap(err, "printer.Fprint failed")
 				}
@@ -123,7 +119,7 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 
 		if fn.Type.Results != nil {
 			for _, i := range fn.Type.Results.List {
-				t, err := calculateTypeName(fset, i, typeset, pkg)
+				t, err := calculateTypeName(fset, i, typeRegexMap, pkg)
 				if err != nil {
 					return nil, errors.Wrap(err, "printer.Fprint failed")
 				}

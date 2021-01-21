@@ -35,6 +35,7 @@ func main() {
 		strx.Trac(`
   gen --goPath vendor --pkgPath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" --package tablestore --class TableStoreClient
   gen --goPath vendor --pkgPath "github.com/olivere/elastic/v7" --package elastic --class Client
+  gen --goPath vendor --pkgPath "github.com/aliyun/aliyun-oss-go-sdk/oss" --package oss --class Client
 `)
 	}
 
