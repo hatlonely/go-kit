@@ -15,6 +15,8 @@ type Options struct {
 	flag.Options
 
 	astx.WrapperGeneratorOptions
+
+	Output string `flag:"output path"`
 }
 
 var Version string
@@ -33,9 +35,9 @@ func main() {
 	if options.Help {
 		strx.Trac(flag.Usage())
 		strx.Trac(`
-  gen --goPath vendor --pkgPath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" --package tablestore --class TableStoreClient
-  gen --goPath vendor --pkgPath "github.com/olivere/elastic/v7" --package elastic --class Client
-  gen --goPath vendor --pkgPath "github.com/aliyun/aliyun-oss-go-sdk/oss" --package oss --class Client
+  gen --goPath vendor --pkgPath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" --package tablestore --classes TableStoreClient --classPrefix OTS
+  gen --goPath vendor --pkgPath "github.com/olivere/elastic/v7" --package elastic --classes Client --classPrefix ES
+  gen --goPath vendor --pkgPath "github.com/aliyun/aliyun-oss-go-sdk/oss" --package oss --classes Client --classPrefix OSS
 `)
 	}
 

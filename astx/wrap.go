@@ -17,12 +17,11 @@ type WrapperGenerator struct {
 }
 
 type WrapperGeneratorOptions struct {
-	GoPath      string
-	PkgPath     string
-	Package     string
-	Classes     []string
-	ClassPrefix string
-	Output      string
+	GoPath      string   `flag:"usage: gopath; default: vendor"`
+	PkgPath     string   `flag:"usage: source path"`
+	Package     string   `flag:"usage: package name"`
+	Classes     []string `flag:"usage: classes to wrap"`
+	ClassPrefix string   `flag:"usage: wrap class name"`
 }
 
 func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGenerator {
