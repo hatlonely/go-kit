@@ -110,7 +110,7 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 
 	buf.WriteString("func ")
 	if function.Recv != nil {
-		buf.WriteString(fmt.Sprintf("(%s %s)", function.Recv.Name, g.options.WrapClass))
+		buf.WriteString(fmt.Sprintf("(w *%s)", g.options.WrapClass))
 	}
 
 	buf.WriteString(" ")
@@ -179,10 +179,10 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) strin
 	} else if function.Results[len(function.Results)-1].Type == "error" {
 		buf.WriteString(fmt.Sprintf(`
 	err = retry.Do(func() error {
-		%s = %s.client.%s(%s)
+		%s = w.client.%s(%s)
 		return %s
 	})
-`, strings.Join(results, ", "), function.Recv.Name, function.Name, strings.Join(params, ", "), results[len(results)-1]))
+`, strings.Join(results, ", "), function.Name, strings.Join(params, ", "), results[len(results)-1]))
 		buf.WriteString(fmt.Sprintf("	return %s\n", strings.Join(results, ", ")))
 	} else {
 		buf.WriteString(fmt.Sprintf("	return c.client.%s(%s)\n", function.Name, strings.Join(params, ", ")))
