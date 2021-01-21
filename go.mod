@@ -7,9 +7,10 @@ require (
 	github.com/PaesslerAG/gval v1.1.0
 	github.com/agiledragon/gomonkey v2.0.1+incompatible
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.710
-	github.com/aliyun/aliyun-oss-go-sdk v2.1.6+incompatible // indirect
+	github.com/aliyun/aliyun-oss-go-sdk v2.1.6+incompatible
 	github.com/aliyun/aliyun-tablestore-go-sdk v4.1.3+incompatible
 	github.com/avast/retry-go v3.0.0+incompatible
+	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/coocood/freecache v1.1.1
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/generikvault/gvalstrings v0.0.0-20180926130504-471f38f0112a
@@ -36,8 +37,8 @@ require (
 	github.com/tebeka/strftime v0.1.4 // indirect
 	github.com/yosuke-furukawa/json5 v0.1.1
 	go.mongodb.org/mongo-driver v1.4.3
-	golang.org/x/sys v0.0.0-20201126233918-771906719818 // indirect
 	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324 // indirect
+	golang.org/x/tools v0.1.0 // indirect
 	google.golang.org/grpc v1.32.0
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
