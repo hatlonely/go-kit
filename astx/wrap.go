@@ -93,8 +93,8 @@ import (
 func (g *WrapperGenerator) generateWrapperStruct(cls string) string {
 	const tplStr = `
 type {{.wrapClass}} struct {
-	client *{{.package}}.{{.class}}
-	retry  *Retry
+	obj   *{{.package}}.{{.class}}
+	retry *Retry
 }
 `
 
@@ -197,7 +197,7 @@ func (g *WrapperGenerator) generateWrapperRetry(function *Function) string {
 
 	return fmt.Sprintf(`
 	err = w.retry.Do(func() error {
-		%s = w.client.%s(%s)
+		%s = w.obj.%s(%s)
 		return %s
 	})
 `, strings.Join(results, ", "), function.Name, strings.Join(params, ", "), results[len(results)-1])
@@ -218,7 +218,7 @@ func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) st
 
 		cls = strings.TrimPrefix(cls, g.options.Package+".")
 		if wrapCls, ok := g.wrapClassMap[cls]; ok {
-			results = append(results, fmt.Sprintf(`&%s{client: %s, retry: w.retry}`, wrapCls, i.Name))
+			results = append(results, fmt.Sprintf(`&%s{obj: %s, retry: w.retry}`, wrapCls, i.Name))
 			continue
 		}
 
@@ -242,7 +242,7 @@ func (g *WrapperGenerator) generateWrapperReturnFunction(function *Function) str
 		}
 	}
 
-	return fmt.Sprintf("	return w.client.%s(%s)\n", function.Name, strings.Join(params, ", "))
+	return fmt.Sprintf("	return w.obj.%s(%s)\n", function.Name, strings.Join(params, ", "))
 }
 
 func (g *WrapperGenerator) generateWrapperReturnVoid(function *Function) string {
@@ -255,7 +255,7 @@ func (g *WrapperGenerator) generateWrapperReturnVoid(function *Function) string 
 		}
 	}
 
-	return fmt.Sprintf("	c.client.%s(%s)\n", function.Name, strings.Join(params, ", "))
+	return fmt.Sprintf("	c.obj.%s(%s)\n", function.Name, strings.Join(params, ", "))
 }
 
 func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) string {
