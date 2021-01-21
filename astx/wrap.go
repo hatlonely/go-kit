@@ -15,17 +15,18 @@ type WrapperGenerator struct {
 }
 
 type WrapperGeneratorOptions struct {
-	GoPath    string
-	PkgPath   string
-	Package   string
-	Class     string
-	WrapClass string
-	Output    string
+	GoPath      string
+	PkgPath     string
+	Package     string
+	Class       string
+	WrapClass   string
+	ClassPrefix string
+	Output      string
 }
 
 func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGenerator {
 	if options.WrapClass == "" {
-		options.WrapClass = options.Class + "Wrapper"
+		options.WrapClass = fmt.Sprintf("%s%sWrapper", options.ClassPrefix, options.Class)
 	}
 	return &WrapperGenerator{
 		options: options,
