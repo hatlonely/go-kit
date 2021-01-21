@@ -77,7 +77,6 @@ import (
 	"context"
 
 	"{{.pkgPath}}"
-	"github.com/avast/retry-go"
 	"github.com/opentracing/opentracing-go"
 )
 `
@@ -138,6 +137,17 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 
 	var results []string
 	for _, i := range function.Results {
+		cls := strings.TrimLeft(i.Type, "*")
+		if !strings.HasPrefix(cls, g.options.Package) {
+			results = append(results, i.Type)
+			continue
+		}
+
+		cls = strings.TrimPrefix(cls, g.options.Package+".")
+		if wrapCls, ok := g.wrapClassMap[cls]; ok {
+			results = append(results, fmt.Sprintf(`*%s`, wrapCls))
+			continue
+		}
 		results = append(results, i.Type)
 	}
 
@@ -201,6 +211,18 @@ func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) st
 
 	var results []string
 	for _, i := range function.Results {
+		cls := strings.TrimLeft(i.Type, "*")
+		if !strings.HasPrefix(cls, g.options.Package) {
+			results = append(results, fmt.Sprintf("%s", i.Name))
+			continue
+		}
+
+		cls = strings.TrimPrefix(cls, g.options.Package+".")
+		if wrapCls, ok := g.wrapClassMap[cls]; ok {
+			results = append(results, fmt.Sprintf(`&%s{client: %s, retry: w.retry}`, wrapCls, i.Name))
+			continue
+		}
+
 		results = append(results, fmt.Sprintf("%s", i.Name))
 	}
 
