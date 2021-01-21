@@ -146,21 +146,22 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 	return buf.String()
 }
 
-func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) string {
-	var buf bytes.Buffer
-
-	buf.WriteString(fmt.Sprintf(`
+func (g *WrapperGenerator) generateWrapperOpentracing(function *Function) string {
+	return fmt.Sprintf(`
 	span, _ := opentracing.StartSpanFromContext(ctx, "%s.%s.%s")
 	defer span.Finish()
-`, g.options.Package, g.options.Class, function.Name))
+`, g.options.Package, g.options.Class, function.Name)
+}
 
-	if len(function.Results) != 0 && function.Results[len(function.Results)-1].Type == "error" {
-		function.Results[len(function.Results)-1].Name = "err"
-		for _, field := range function.Results {
-			buf.WriteString(fmt.Sprintf("\n	var %s %s", field.Name, field.Type))
-		}
+func (g *WrapperGenerator) generateWrapperDeclareReturnVariables(function *Function) string {
+	var buf bytes.Buffer
+	for _, field := range function.Results {
+		buf.WriteString(fmt.Sprintf("\n	var %s %s", field.Name, field.Type))
 	}
+	return buf.String()
+}
 
+func (g *WrapperGenerator) generateWrapperRetry(function *Function) string {
 	var params []string
 	for _, i := range function.Params {
 		if strings.HasPrefix(i.Type, "...") {
@@ -175,18 +176,66 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) strin
 		results = append(results, fmt.Sprintf("%s", i.Name))
 	}
 
-	if len(results) == 0 {
-		buf.WriteString(fmt.Sprintf("	c.client.%s(%s)\n", function.Name, strings.Join(params, ", ")))
-	} else if function.Results[len(function.Results)-1].Type == "error" {
-		buf.WriteString(fmt.Sprintf(`
+	return fmt.Sprintf(`
 	err = w.retry.Do(func() error {
 		%s = w.client.%s(%s)
 		return %s
 	})
-`, strings.Join(results, ", "), function.Name, strings.Join(params, ", "), results[len(results)-1]))
-		buf.WriteString(fmt.Sprintf("	return %s\n", strings.Join(results, ", ")))
+`, strings.Join(results, ", "), function.Name, strings.Join(params, ", "), results[len(results)-1])
+}
+
+func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) string {
+	var results []string
+	for _, i := range function.Results {
+		results = append(results, fmt.Sprintf("%s", i.Name))
+	}
+
+	return fmt.Sprintf("	return %s\n", strings.Join(results, ", "))
+}
+
+func (g *WrapperGenerator) generateWrapperReturnFunction(function *Function) string {
+	var params []string
+	for _, i := range function.Params {
+		if strings.HasPrefix(i.Type, "...") {
+			params = append(params, fmt.Sprintf("%s...", i.Name))
+		} else {
+			params = append(params, i.Name)
+		}
+	}
+
+	return fmt.Sprintf("	return c.client.%s(%s)\n", function.Name, strings.Join(params, ", "))
+}
+
+func (g *WrapperGenerator) generateWrapperReturnVoid(function *Function) string {
+	var params []string
+	for _, i := range function.Params {
+		if strings.HasPrefix(i.Type, "...") {
+			params = append(params, fmt.Sprintf("%s...", i.Name))
+		} else {
+			params = append(params, i.Name)
+		}
+	}
+
+	return fmt.Sprintf("	c.client.%s(%s)\n", function.Name, strings.Join(params, ", "))
+}
+
+func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) string {
+	var buf bytes.Buffer
+
+	buf.WriteString(g.generateWrapperOpentracing(function))
+
+	if len(function.Results) != 0 && function.Results[len(function.Results)-1].Type == "error" {
+		function.Results[len(function.Results)-1].Name = "err"
+		buf.WriteString(g.generateWrapperDeclareReturnVariables(function))
+	}
+
+	if len(function.Results) == 0 {
+		buf.WriteString(g.generateWrapperReturnVoid(function))
+	} else if function.Results[len(function.Results)-1].Type == "error" {
+		buf.WriteString(g.generateWrapperRetry(function))
+		buf.WriteString(g.generateWrapperReturnVariables(function))
 	} else {
-		buf.WriteString(fmt.Sprintf("	return c.client.%s(%s)\n", function.Name, strings.Join(params, ", ")))
+		buf.WriteString(g.generateWrapperReturnFunction(function))
 	}
 
 	return buf.String()
