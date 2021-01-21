@@ -17,10 +17,11 @@ set_interface_header = """// this file is auto generate by autogen.py. do not ed
 package cast
 
 import (
-	"fmt"
 	"net"
 	"reflect"
 	"time"
+
+	"github.com/pkg/errors"
 )
 """
 
@@ -29,7 +30,7 @@ func SetInterface(dst interface{{}}, src interface{{}}) error {{
 	switch dst.(type) {{
 {items}
 	default:
-		return fmt.Errorf("unsupport dst type [%v]", reflect.TypeOf(dst))
+		return errors.Errorf("unsupport dst type [%v]", reflect.TypeOf(dst))
 	}}
 
 	return nil
