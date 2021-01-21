@@ -12,24 +12,28 @@ import (
 
 type WrapperGenerator struct {
 	options *WrapperGeneratorOptions
+
+	wrapClassMap map[string]string
 }
 
 type WrapperGeneratorOptions struct {
 	GoPath      string
 	PkgPath     string
 	Package     string
-	Class       string
-	WrapClass   string
+	Classes     []string
 	ClassPrefix string
 	Output      string
 }
 
 func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGenerator {
-	if options.WrapClass == "" {
-		options.WrapClass = fmt.Sprintf("%s%sWrapper", options.ClassPrefix, options.Class)
+	wrapClassMap := map[string]string{}
+	for _, cls := range options.Classes {
+		wrapClassMap[cls] = fmt.Sprintf("%s%sWrapper", options.ClassPrefix, cls)
 	}
+
 	return &WrapperGenerator{
-		options: options,
+		options:      options,
+		wrapClassMap: wrapClassMap,
 	}
 }
 
@@ -42,14 +46,16 @@ func (g *WrapperGenerator) Generate() (string, error) {
 	var buf bytes.Buffer
 
 	buf.WriteString(g.generateWrapperHeader())
-	buf.WriteString(g.generateWrapperStruct())
+
+	for _, cls := range g.options.Classes {
+		buf.WriteString(g.generateWrapperStruct(cls))
+	}
 
 	for _, function := range functions {
-		if function.Recv == nil {
+		if !function.IsMethod {
 			continue
 		}
-		if function.Recv.Type != fmt.Sprintf("%s.%s", g.options.Package, g.options.Class) &&
-			function.Recv.Type != fmt.Sprintf("*%s.%s", g.options.Package, g.options.Class) {
+		if _, ok := g.wrapClassMap[function.Class]; !ok {
 			continue
 		}
 
@@ -86,7 +92,7 @@ import (
 	return buf.String()
 }
 
-func (g *WrapperGenerator) generateWrapperStruct() string {
+func (g *WrapperGenerator) generateWrapperStruct(cls string) string {
 	const tplStr = `
 type {{.wrapClass}} struct {
 	client *{{.package}}.{{.class}}
@@ -99,8 +105,8 @@ type {{.wrapClass}} struct {
 	var buf bytes.Buffer
 	_ = tpl.Execute(&buf, map[string]string{
 		"package":   g.options.Package,
-		"class":     g.options.Class,
-		"wrapClass": g.options.WrapClass,
+		"class":     cls,
+		"wrapClass": g.wrapClassMap[cls],
 	})
 
 	return buf.String()
@@ -111,7 +117,7 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 
 	buf.WriteString("func ")
 	if function.Recv != nil {
-		buf.WriteString(fmt.Sprintf("(w *%s)", g.options.WrapClass))
+		buf.WriteString(fmt.Sprintf("(w *%s)", g.wrapClassMap[function.Class]))
 	}
 
 	buf.WriteString(" ")
@@ -150,7 +156,7 @@ func (g *WrapperGenerator) generateWrapperOpentracing(function *Function) string
 	return fmt.Sprintf(`
 	span, _ := opentracing.StartSpanFromContext(ctx, "%s.%s.%s")
 	defer span.Finish()
-`, g.options.Package, g.options.Class, function.Name)
+`, g.options.Package, function.Class, function.Name)
 }
 
 func (g *WrapperGenerator) generateWrapperDeclareReturnVariables(function *Function) string {
@@ -215,7 +221,7 @@ func (g *WrapperGenerator) generateWrapperReturnFunction(function *Function) str
 		}
 	}
 
-	return fmt.Sprintf("	return c.client.%s(%s)\n", function.Name, strings.Join(params, ", "))
+	return fmt.Sprintf("	return w.client.%s(%s)\n", function.Name, strings.Join(params, ", "))
 }
 
 func (g *WrapperGenerator) generateWrapperReturnVoid(function *Function) string {

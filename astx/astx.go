@@ -28,6 +28,8 @@ type Function struct {
 
 	IsReturnVoid  bool
 	IsReturnError bool
+	IsMethod      bool
+	Class         string
 }
 
 func calculateTypeName(fset *token.FileSet, field *ast.Field, typeRegexMap map[string]*regexp.Regexp, pkg string) (string, error) {
@@ -94,6 +96,11 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 				Type: t,
 				Name: fn.Recv.List[0].Names[0].String(),
 			}
+
+			f.IsMethod = true
+			var buf bytes.Buffer
+			_ = printer.Fprint(&buf, fset, fn.Recv.List[0].Type)
+			f.Class = strings.TrimLeft(buf.String(), "*")
 		}
 
 		if fn.Type.Params != nil {
