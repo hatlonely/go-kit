@@ -36,9 +36,9 @@ func main() {
 	if options.Help {
 		strx.Trac(flag.Usage())
 		strx.Trac(`
-  gen --goPath vendor --pkgPath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" --package tablestore --classes TableStoreClient --classPrefix OTS
-  gen --goPath vendor --pkgPath "github.com/olivere/elastic/v7" --package elastic --classes Client --classPrefix ES
-  gen --goPath vendor --pkgPath "github.com/aliyun/aliyun-oss-go-sdk/oss" --package oss --classes Client --classPrefix OSS
+  gen --goPath vendor --pkgPath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" --package tablestore --classPrefix OTS --classes TableStoreClient
+  gen --goPath vendor --pkgPath "github.com/olivere/elastic/v7" --package elastic --classPrefix ES --classes Client
+  gen --goPath vendor --pkgPath "github.com/aliyun/aliyun-oss-go-sdk/oss" --package oss --classPrefix OSS --classes Client
 `)
 	}
 

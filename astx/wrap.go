@@ -225,7 +225,7 @@ func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) st
 		results = append(results, fmt.Sprintf("%s", i.Name))
 	}
 
-	return fmt.Sprintf("	return %s\n", strings.Join(results, ", "))
+	return fmt.Sprintf("\treturn %s\n", strings.Join(results, ", "))
 }
 
 func (g *WrapperGenerator) generateWrapperReturnFunction(function *Function) string {
@@ -242,7 +242,7 @@ func (g *WrapperGenerator) generateWrapperReturnFunction(function *Function) str
 		}
 	}
 
-	return fmt.Sprintf("	return w.obj.%s(%s)\n", function.Name, strings.Join(params, ", "))
+	return fmt.Sprintf("\treturn w.obj.%s(%s)\n", function.Name, strings.Join(params, ", "))
 }
 
 func (g *WrapperGenerator) generateWrapperReturnVoid(function *Function) string {
@@ -255,11 +255,16 @@ func (g *WrapperGenerator) generateWrapperReturnVoid(function *Function) string 
 		}
 	}
 
-	return fmt.Sprintf("	c.obj.%s(%s)\n", function.Name, strings.Join(params, ", "))
+	return fmt.Sprintf("\tw.obj.%s(%s)\n", function.Name, strings.Join(params, ", "))
 }
 
 func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) string {
 	var buf bytes.Buffer
+	if function.IsChain {
+		buf.WriteString(g.generateWrapperReturnVoid(function))
+		buf.WriteString("\treturn w")
+		return buf.String()
+	}
 
 	buf.WriteString(g.generateWrapperOpentracing(function))
 

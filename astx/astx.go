@@ -29,6 +29,7 @@ type Function struct {
 	IsReturnVoid  bool
 	IsReturnError bool
 	IsMethod      bool
+	IsChain       bool
 	Class         string
 }
 
@@ -156,6 +157,7 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 			f.Results[len(f.Results)-1].Name = "err"
 			f.IsReturnError = true
 		}
+		f.IsChain = f.IsMethod && len(f.Results) == 1 && f.Recv.Type[0] == '*' && f.Recv.Type == f.Results[0].Type
 
 		functions = append(functions, &f)
 	}
