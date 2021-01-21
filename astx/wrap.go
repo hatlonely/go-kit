@@ -178,7 +178,7 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) strin
 		buf.WriteString(fmt.Sprintf("	c.client.%s(%s)\n", function.Name, strings.Join(params, ", ")))
 	} else if function.Results[len(function.Results)-1].Type == "error" {
 		buf.WriteString(fmt.Sprintf(`
-	err = retry.Do(func() error {
+	err = w.retry.Do(func() error {
 		%s = w.client.%s(%s)
 		return %s
 	})
