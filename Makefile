@@ -42,9 +42,9 @@ build/bin/gen: cmd/gen/main.go $(wildcard astx/*.go) Makefile vendor
 	mkdir -p build/bin
 	go build -ldflags "-X 'main.Version=$$BUILD_VERSION'" -o $@ $<
 
-wrap: wrap/tablestore.go wrap/kms.go wrap/acm.go
+wrap: wrap/autogen_ots.go wrap/autogen_kms.go wrap/autogen_acm.go
 
-wrap/tablestore.go: build/bin/gen vendor $(wildcard astx/*.go)
+wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 	build/bin/gen --goPath vendor \
 		--pkgPath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" \
 		--package tablestore \
@@ -52,7 +52,7 @@ wrap/tablestore.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--classes TableStoreClient \
 		--output $@
 
-wrap/kms.go: build/bin/gen vendor $(wildcard astx/*.go)
+wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
 	build/bin/gen --goPath vendor \
 		--pkgPath "github.com/aliyun/alibaba-cloud-sdk-go/services/kms" \
 		--package kms \
@@ -60,7 +60,7 @@ wrap/kms.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--classes Client \
 		--output $@
 
-wrap/acm.go: build/bin/gen vendor $(wildcard astx/*.go)
+wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
 	build/bin/gen --goPath vendor \
 		--pkgPath "github.com/nacos-group/nacos-sdk-go/clients/config_client" \
 		--package config_client \
