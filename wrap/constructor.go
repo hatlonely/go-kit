@@ -47,14 +47,17 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 	}
 	go func() {
 		for {
-			select {
-			case <-time.After(time.Second):
-				res, err = alics.ECSMetaDataRamSecurityCredentials()
-				if err != nil {
-					log.Errorf("ECSMetaDataRamSecurityCredentials failed. err: [%+v]", err)
-				}
-				wrapper.obj = tablestore.NewClient(options.Credential.Endpoint, options.InstanceName, res.AccessKeyID, res.AccessKeySecret)
+			d := res.ExpirationTime.Sub(time.Now()) - 5*time.Minute
+			if d < 0 {
+				d = 5 * time.Second
 			}
+			<-time.After(d)
+			res, err = alics.ECSMetaDataRamSecurityCredentials()
+			if err != nil {
+				log.Errorf("ECSMetaDataRamSecurityCredentials failed. err: [%+v]", err)
+				continue
+			}
+			wrapper.obj = tablestore.NewClient(options.Credential.Endpoint, options.InstanceName, res.AccessKeyID, res.AccessKeySecret)
 		}
 	}()
 
