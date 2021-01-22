@@ -173,7 +173,9 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 
 	var params []string
 	if len(function.Params) == 0 || function.Params[0].Type != "context.Context" {
-		params = append(params, "ctx context.Context")
+		if g.MatchRule(function, g.rule.trace[function.Class]) || g.MatchRule(function, g.rule.retry[function.Class]) {
+			params = append(params, "ctx context.Context")
+		}
 	}
 
 	for _, i := range function.Params {

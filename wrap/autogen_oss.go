@@ -1002,7 +1002,7 @@ func (w *OSSBucketWrapper) UploadPartFromFile(ctx context.Context, imur oss.Init
 	return res0, err
 }
 
-func (w *OSSClientWrapper) Bucket(ctx context.Context, bucketName string) (*OSSBucketWrapper, error) {
+func (w *OSSClientWrapper) Bucket(bucketName string) (*OSSBucketWrapper, error) {
 	res0, err := w.obj.Bucket(bucketName)
 	return &OSSBucketWrapper{obj: res0, retry: w.retry}, err
 }
