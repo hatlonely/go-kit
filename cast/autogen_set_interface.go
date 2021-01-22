@@ -113,6 +113,12 @@ func SetInterface(dst interface{}, src interface{}) error {
 			return err
 		}
 		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *map[string]string:
+		v, err := ToMapStringStringE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
 	case *[]bool:
 		v, err := ToBoolSliceE(src)
 		if err != nil {
@@ -211,6 +217,12 @@ func SetInterface(dst interface{}, src interface{}) error {
 		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
 	case *[]net.IP:
 		v, err := ToIPSliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]map[string]string:
+		v, err := ToMapStringStringSliceE(src)
 		if err != nil {
 			return err
 		}

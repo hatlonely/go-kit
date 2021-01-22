@@ -397,6 +397,29 @@ func ToIPP(val interface{}) net.IP {
 	return v
 }
 
+func ToMapStringString(val interface{}) map[string]string {
+	if v, err := ToMapStringStringE(val); err == nil {
+		return v
+	}
+	var v map[string]string
+	return v
+}
+
+func ToMapStringStringD(val interface{}, defaultValue map[string]string) map[string]string {
+	if v, err := ToMapStringStringE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToMapStringStringP(val interface{}) map[string]string {
+	v, err := ToMapStringStringE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
 func ToBoolSlice(val interface{}) []bool {
 	if v, err := ToBoolSliceE(val); err == nil {
 		return v
@@ -782,6 +805,29 @@ func ToIPSliceD(val interface{}, defaultValue []net.IP) []net.IP {
 
 func ToIPSliceP(val interface{}) []net.IP {
 	v, err := ToIPSliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToMapStringStringSlice(val interface{}) []map[string]string {
+	if v, err := ToMapStringStringSliceE(val); err == nil {
+		return v
+	}
+	var v []map[string]string
+	return v
+}
+
+func ToMapStringStringSliceD(val interface{}, defaultValue []map[string]string) []map[string]string {
+	if v, err := ToMapStringStringSliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToMapStringStringSliceP(val interface{}) []map[string]string {
+	v, err := ToMapStringStringSliceE(val)
 	if err != nil {
 		panic(err)
 	}

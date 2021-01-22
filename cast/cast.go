@@ -2,11 +2,12 @@
 package cast
 
 import (
-	"fmt"
+	"encoding/json"
 	"net"
 	"reflect"
 	"time"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/cast"
 )
 
@@ -75,16 +76,31 @@ func ToTimeE(v interface{}) (time.Time, error) {
 }
 
 func ToIPE(v interface{}) (net.IP, error) {
-	switch v.(type) {
+	switch val := v.(type) {
 	case string:
-		ip := net.ParseIP(v.(string))
+		ip := net.ParseIP(val)
 		if ip == nil {
-			return nil, fmt.Errorf("pase ip failed. val [%v]", v)
+			return nil, errors.Errorf("pase ip failed. val [%v]", v)
 		}
 		return ip, nil
 	case net.IP:
-		return v.(net.IP), nil
+		return val, nil
 	default:
-		return nil, fmt.Errorf("convert type [%v] to ip failed", reflect.TypeOf(v))
+		return nil, errors.Errorf("convert type [%v] to ip failed", reflect.TypeOf(v))
+	}
+}
+
+func ToMapStringStringE(v interface{}) (map[string]string, error) {
+	switch val := v.(type) {
+	case string:
+		m := map[string]string{}
+		if err := json.Unmarshal([]byte(val), &m); err != nil {
+			return nil, errors.Wrap(err, "json.Unmarshal failed")
+		}
+		return m, nil
+	case map[string]string:
+		return val, nil
+	default:
+		return nil, errors.Errorf("unsupported type [%v] to map[string]string", reflect.TypeOf(v))
 	}
 }
