@@ -170,6 +170,8 @@ func TestECSMetaDataRamSecurityCredentials(t *testing.T) {
 		So(res.SecurityToken, ShouldEqual, "test-token")
 		So(res.LastUpdated, ShouldEqual, "2020-11-27T14:08:18Z")
 		So(res.Code, ShouldEqual, "Success")
+		So(res.ExpirationTime.Unix(), ShouldEqual, 1606507698)
+		So(res.LastUpdatedTime.Unix(), ShouldEqual, 1606486098)
 	})
 }
 

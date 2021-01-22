@@ -5,6 +5,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
+
+	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/strx"
 )
 
 // @see https://help.aliyun.com/document_detail/108460.html
@@ -72,6 +77,9 @@ type ECSMetaDataRamSecurityCredentialsRes struct {
 	SecurityToken   string
 	LastUpdated     string
 	Code            string
+
+	LastUpdatedTime time.Time
+	ExpirationTime  time.Time
 }
 
 // @see https://help.aliyun.com/document_detail/127171.html
@@ -87,6 +95,15 @@ func ECSMetaDataRamSecurityCredentials() (*ECSMetaDataRamSecurityCredentialsRes,
 		&res,
 	); err != nil {
 		return nil, err
+	}
+
+	res.ExpirationTime, err = time.Parse(time.RFC3339, res.Expiration)
+	if err != nil {
+		return nil, errors.Errorf("time.Parse expiration failed. res: [%s]", strx.JsonMarshal(res))
+	}
+	res.LastUpdatedTime, err = time.Parse(time.RFC3339, res.LastUpdated)
+	if err != nil {
+		return nil, errors.Errorf("time.Parse lastUpdated failed. res: [%v]", strx.JsonMarshal(res))
 	}
 
 	return &res, nil
