@@ -40,6 +40,7 @@ func main() {
   gen --goPath vendor --pkgPath "github.com/olivere/elastic/v7" --package elastic --classPrefix ES --classes Client
   gen --goPath vendor --pkgPath "github.com/aliyun/aliyun-oss-go-sdk/oss" --package oss --classPrefix OSS --classes Client
 `)
+		return
 	}
 
 	generator := astx.NewWrapperGeneratorWithOptions(&options.WrapperGeneratorOptions)
