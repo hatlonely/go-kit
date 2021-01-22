@@ -42,9 +42,9 @@ build/bin/gen: cmd/gen/main.go $(wildcard astx/*.go) Makefile vendor
 	mkdir -p build/bin
 	go build -ldflags "-X 'main.Version=$$BUILD_VERSION'" -o $@ $<
 
-wrap: wrap/tablestore.go
+wrap: wrap/tablestore.go wrap/kms.go
 
-wrap/tablestore.go: build vendor
+wrap/tablestore.go: build/bin/gen vendor $(wildcard astx/*.go)
 	build/bin/gen --goPath vendor \
 		--pkgPath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" \
 		--package tablestore \
@@ -52,3 +52,11 @@ wrap/tablestore.go: build vendor
 		--classes TableStoreClient \
 		--output $@
 
+wrap/kms.go: build/bin/gen vendor $(wildcard astx/*.go)
+	build/bin/gen --goPath vendor \
+		--pkgPath "github.com/aliyun/alibaba-cloud-sdk-go/services/kms" \
+		--package kms \
+		--classPrefix KMS \
+		--classes Client \
+		--rule.trace.Client.exclude ".*WithChan" \
+		--output $@

@@ -129,24 +129,23 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 		}
 
 		if fn.Type.Results != nil {
-			for _, i := range fn.Type.Results.List {
-				t, err := calculateTypeName(fset, i, typeRegexMap, pkg)
+			for i, val := range fn.Type.Results.List {
+				t, err := calculateTypeName(fset, val, typeRegexMap, pkg)
 				if err != nil {
 					return nil, errors.Wrap(err, "printer.Fprint failed")
 				}
 
-				if len(i.Names) != 0 {
-					for _, name := range i.Names {
+				if len(val.Names) != 0 {
+					for _, name := range val.Names {
 						f.Results = append(f.Results, &Field{
 							Type: t,
 							Name: name.String(),
 						})
 					}
 				} else {
-					kvs := strings.Split(t, ".")
 					f.Results = append(f.Results, &Field{
 						Type: t,
-						Name: strx.CamelName(strings.TrimLeft(kvs[len(kvs)-1], "*[]")),
+						Name: fmt.Sprintf("res%v", i),
 					})
 				}
 			}
