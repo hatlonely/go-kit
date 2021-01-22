@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/kms"
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/clients/config_client"
@@ -149,7 +150,7 @@ func NewACMConfigClientWrapperWithOptions(options *ACMConfigClientWrapperOptions
 
 	res, err := alics.ECSMetaDataRamSecurityCredentials()
 	if err != nil {
-		return nil, errors.Wrap(err, "ECSMetaDataRamSecurityCredentials failed")
+		return nil, errors.Wrap(err, "alics.ECSMetaDataRamSecurityCredentials failed")
 	}
 	client, err := clients.CreateConfigClient(map[string]interface{}{
 		"clientConfig": constant.ClientConfig{
@@ -178,7 +179,7 @@ func NewACMConfigClientWrapperWithOptions(options *ACMConfigClientWrapperOptions
 			<-time.After(d)
 			res, err = alics.ECSMetaDataRamSecurityCredentials()
 			if err != nil {
-				log.Errorf("ECSMetaDataRamSecurityCredentials failed. err: [%+v]", err)
+				log.Errorf("alics.ECSMetaDataRamSecurityCredentials failed. err: [%+v]", err)
 				continue
 			}
 			client, err = clients.CreateConfigClient(map[string]interface{}{
@@ -195,6 +196,70 @@ func NewACMConfigClientWrapperWithOptions(options *ACMConfigClientWrapperOptions
 				continue
 			}
 			wrapper.obj = client.(*config_client.ConfigClient)
+		}
+	}()
+
+	return wrapper, nil
+}
+
+type OSSClientWrapperOptions struct {
+	Retry           RetryOptions
+	Wrapper         WrapperOptions
+	Endpoint        string
+	AccessKeyID     string
+	AccessKeySecret string
+}
+
+func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClientWrapper, error) {
+	retry, err := NewRetryWithOptions(&options.Retry)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
+	}
+
+	if options.AccessKeyID != "" {
+		client, err := oss.New(options.Endpoint, options.AccessKeyID, options.AccessKeySecret)
+		if err != nil {
+			return nil, errors.Wrap(err, "oss.New failed")
+		}
+		return &OSSClientWrapper{
+			obj:     client,
+			retry:   retry,
+			options: &options.Wrapper,
+		}, nil
+	}
+
+	res, err := alics.ECSMetaDataRamSecurityCredentials()
+	if err != nil {
+		return nil, errors.Wrap(err, "alics.ECSMetaDataRamSecurityCredentials failed")
+	}
+	client, err := oss.New(options.Endpoint, res.AccessKeyID, res.AccessKeySecret)
+	if err != nil {
+		return nil, errors.Wrap(err, "oss.New failed")
+	}
+	wrapper := &OSSClientWrapper{
+		obj:     client,
+		retry:   retry,
+		options: &options.Wrapper,
+	}
+
+	go func() {
+		for {
+			d := res.ExpirationTime.Sub(time.Now()) - 5*time.Minute
+			if d < 0 {
+				d = 5 * time.Second
+			}
+			<-time.After(d)
+			res, err = alics.ECSMetaDataRamSecurityCredentials()
+			if err != nil {
+				log.Errorf("alics.ECSMetaDataRamSecurityCredentials failed. err: [%+v]", err)
+				continue
+			}
+			client, err = oss.New(options.Endpoint, res.AccessKeyID, res.AccessKeySecret)
+			if err != nil {
+				log.Errorf("clients.CreateConfigClient failed. err: [%+v]", err)
+				continue
+			}
+			wrapper.obj = client
 		}
 	}()
 
