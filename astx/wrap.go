@@ -117,7 +117,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 
 func (g *WrapperGenerator) generateWrapperHeader() string {
 	const tplStr = `// autogen by github.com/hatlonely/go-kit/astx/wrap.go. do not edit!
-package wrapper
+package wrap
 
 import (
 	"context"
