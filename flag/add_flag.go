@@ -1,6 +1,7 @@
 package flag
 
 import (
+	"encoding/json"
 	"reflect"
 
 	"github.com/pkg/errors"
@@ -92,7 +93,12 @@ func (f *Flag) BindFlagWithOptions(v interface{}, options *AddFlagOptions) error
 	}
 	info.OnParse = func(val string) error {
 		if val != "" {
-			return cast.SetInterface(v, val)
+			if err := cast.SetInterface(v, val); err == nil {
+				return nil
+			}
+			if err := json.Unmarshal([]byte(val), &v); err != nil {
+				return errors.WithMessage(err, "json.Unmarshal failed")
+			}
 		}
 		return nil
 	}

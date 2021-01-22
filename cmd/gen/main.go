@@ -24,7 +24,7 @@ var Version string
 
 func Must(err error) {
 	if err != nil {
-		panic(err)
+		panic(fmt.Sprintf("%+v", err))
 	}
 }
 
