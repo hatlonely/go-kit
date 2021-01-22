@@ -8,6 +8,7 @@ import (
 	"go/printer"
 	"go/token"
 	"regexp"
+	"sort"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -161,5 +162,20 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 		functions = append(functions, &f)
 	}
 
+	sort.Slice(functions, func(i, j int) bool {
+		if functions[i].Class < functions[j].Class {
+			return true
+		}
+		if functions[i].Class > functions[j].Class {
+			return false
+		}
+		if functions[i].Name < functions[j].Name {
+			return true
+		}
+		if functions[i].Name > functions[j].Name {
+			return false
+		}
+		return true
+	})
 	return functions, nil
 }

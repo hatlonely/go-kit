@@ -58,5 +58,12 @@ wrap/kms.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--package kms \
 		--classPrefix KMS \
 		--classes Client \
-		--rule.trace.Client.exclude ".*WithChan" \
+		--output $@
+
+wrap/acm.go: build/bin/gen vendor $(wildcard astx/*.go)
+	build/bin/gen --goPath vendor \
+		--pkgPath "github.com/nacos-group/nacos-sdk-go/clients/config_client" \
+		--package config_client \
+		--classPrefix ACM \
+		--classes ConfigClient \
 		--output $@
