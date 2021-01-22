@@ -9,16 +9,12 @@ import (
 	"github.com/hatlonely/go-kit/alics"
 )
 
-type Credential struct {
+type OTSTableStoreClientWrapperOptions struct {
 	Endpoint        string
 	AccessKeyID     string
 	AccessKeySecret string
-}
-
-type OTSTableStoreClientWrapperOptions struct {
-	Credential   Credential
-	InstanceName string
-	Retry        RetryOptions
+	InstanceName    string
+	Retry           RetryOptions
 }
 
 func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrapperOptions) (*OTSTableStoreClientWrapper, error) {
@@ -27,8 +23,8 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
 
-	if options.Credential.AccessKeyID != "" {
-		client := tablestore.NewClient(options.Credential.Endpoint, options.InstanceName, options.Credential.AccessKeyID, options.Credential.AccessKeySecret)
+	if options.AccessKeyID != "" {
+		client := tablestore.NewClient(options.Endpoint, options.InstanceName, options.AccessKeyID, options.AccessKeySecret)
 		return &OTSTableStoreClientWrapper{
 			obj:   client,
 			retry: retry,
@@ -39,7 +35,7 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 	if err != nil {
 		return nil, errors.Wrap(err, "ECSMetaDataRamSecurityCredentials failed")
 	}
-	client := tablestore.NewClient(options.Credential.Endpoint, options.InstanceName, res.AccessKeyID, res.AccessKeySecret)
+	client := tablestore.NewClient(options.Endpoint, options.InstanceName, res.AccessKeyID, res.AccessKeySecret)
 
 	wrapper := &OTSTableStoreClientWrapper{
 		obj:   client,
@@ -57,7 +53,7 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 				log.Errorf("ECSMetaDataRamSecurityCredentials failed. err: [%+v]", err)
 				continue
 			}
-			wrapper.obj = tablestore.NewClient(options.Credential.Endpoint, options.InstanceName, res.AccessKeyID, res.AccessKeySecret)
+			wrapper.obj = tablestore.NewClient(options.Endpoint, options.InstanceName, res.AccessKeyID, res.AccessKeySecret)
 		}
 	}()
 
