@@ -140,8 +140,9 @@ import (
 func (g *WrapperGenerator) generateWrapperStruct(cls string) string {
 	const tplStr = `
 type {{.wrapClass}} struct {
-	obj   *{{.package}}.{{.class}}
-	retry *Retry
+	obj     *{{.package}}.{{.class}}
+	retry   *Retry
+	options *WrapperOptions
 }
 `
 
@@ -210,8 +211,10 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 
 func (g *WrapperGenerator) generateWrapperOpentracing(function *Function) string {
 	return fmt.Sprintf(`
-	span, _ := opentracing.StartSpanFromContext(ctx, "%s.%s.%s")
-	defer span.Finish()
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "%s.%s.%s")
+		defer span.Finish()
+	}
 `, g.options.Package, function.Class, function.Name)
 }
 

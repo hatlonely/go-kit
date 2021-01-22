@@ -11,13 +11,16 @@ import (
 )
 
 type ACMConfigClientWrapper struct {
-	obj   *config_client.ConfigClient
-	retry *Retry
+	obj     *config_client.ConfigClient
+	retry   *Retry
+	options *WrapperOptions
 }
 
 func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param vo.ConfigParam) error {
-	span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.CancelListenConfig")
-	defer span.Finish()
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.CancelListenConfig")
+		defer span.Finish()
+	}
 
 	var err error
 	err = w.retry.Do(func() error {
@@ -28,8 +31,10 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 }
 
 func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.ConfigParam) (bool, error) {
-	span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.DeleteConfig")
-	defer span.Finish()
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.DeleteConfig")
+		defer span.Finish()
+	}
 
 	var deleted bool
 	var err error
@@ -41,8 +46,10 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 }
 
 func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigParam) (string, error) {
-	span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.GetConfig")
-	defer span.Finish()
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.GetConfig")
+		defer span.Finish()
+	}
 
 	var content string
 	var err error
@@ -54,8 +61,10 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 }
 
 func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.ConfigParam) error {
-	span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.ListenConfig")
-	defer span.Finish()
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.ListenConfig")
+		defer span.Finish()
+	}
 
 	var err error
 	err = w.retry.Do(func() error {
@@ -66,8 +75,10 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 }
 
 func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.ConfigParam) (bool, error) {
-	span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.PublishConfig")
-	defer span.Finish()
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.PublishConfig")
+		defer span.Finish()
+	}
 
 	var published bool
 	var err error
@@ -79,8 +90,10 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 }
 
 func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.SearchConfigParm) (*model.ConfigPage, error) {
-	span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.SearchConfig")
-	defer span.Finish()
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.SearchConfig")
+		defer span.Finish()
+	}
 
 	var res0 *model.ConfigPage
 	var err error

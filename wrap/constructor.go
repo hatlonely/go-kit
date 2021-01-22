@@ -16,6 +16,7 @@ type OTSTableStoreClientWrapperOptions struct {
 	AccessKeySecret string
 	InstanceName    string
 	Retry           RetryOptions
+	Wrapper         WrapperOptions
 }
 
 func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrapperOptions) (*OTSTableStoreClientWrapper, error) {
@@ -27,8 +28,9 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 	if options.AccessKeyID != "" {
 		client := tablestore.NewClient(options.Endpoint, options.InstanceName, options.AccessKeyID, options.AccessKeySecret)
 		return &OTSTableStoreClientWrapper{
-			obj:   client,
-			retry: retry,
+			obj:     client,
+			retry:   retry,
+			options: &options.Wrapper,
 		}, nil
 	}
 
@@ -39,8 +41,9 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 	client := tablestore.NewClient(options.Endpoint, options.InstanceName, res.AccessKeyID, res.AccessKeySecret)
 
 	wrapper := &OTSTableStoreClientWrapper{
-		obj:   client,
-		retry: retry,
+		obj:     client,
+		retry:   retry,
+		options: &options.Wrapper,
 	}
 	go func() {
 		for {
@@ -66,6 +69,7 @@ type KMSClientWrapperOptions struct {
 	AccessKeyID     string
 	AccessKeySecret string
 	Retry           RetryOptions
+	Wrapper         WrapperOptions
 }
 
 func NewKMSClientWrapperWithOptions(options *KMSClientWrapperOptions) (*KMSClientWrapper, error) {
@@ -80,8 +84,9 @@ func NewKMSClientWrapperWithOptions(options *KMSClientWrapperOptions) (*KMSClien
 			return nil, errors.Wrap(err, "kms.NewClientWithAccessKey failed")
 		}
 		return &KMSClientWrapper{
-			obj:   client,
-			retry: retry,
+			obj:     client,
+			retry:   retry,
+			options: &options.Wrapper,
 		}, nil
 	}
 
@@ -96,7 +101,8 @@ func NewKMSClientWrapperWithOptions(options *KMSClientWrapperOptions) (*KMSClien
 	}
 
 	return &KMSClientWrapper{
-		obj:   client,
-		retry: retry,
+		obj:     client,
+		retry:   retry,
+		options: &options.Wrapper,
 	}, nil
 }
