@@ -1004,7 +1004,7 @@ func (w *OSSBucketWrapper) UploadPartFromFile(ctx context.Context, imur oss.Init
 
 func (w *OSSClientWrapper) Bucket(bucketName string) (*OSSBucketWrapper, error) {
 	res0, err := w.obj.Bucket(bucketName)
-	return &OSSBucketWrapper{obj: res0, retry: w.retry}, err
+	return &OSSBucketWrapper{obj: res0, retry: w.retry, options: w.options}, err
 }
 
 func (w *OSSClientWrapper) CreateBucket(ctx context.Context, bucketName string, options ...oss.Option) error {

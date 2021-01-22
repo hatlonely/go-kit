@@ -288,7 +288,7 @@ func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) st
 
 		cls = strings.TrimPrefix(cls, g.options.Package+".")
 		if wrapCls, ok := g.wrapClassMap[cls]; ok {
-			results = append(results, fmt.Sprintf(`&%s{obj: %s, retry: w.retry}`, wrapCls, i.Name))
+			results = append(results, fmt.Sprintf(`&%s{obj: %s, retry: w.retry, options: w.options}`, wrapCls, i.Name))
 			continue
 		}
 
