@@ -42,7 +42,7 @@ build/bin/gen: cmd/gen/main.go $(wildcard astx/*.go) Makefile vendor
 	mkdir -p build/bin
 	go build -ldflags "-X 'main.Version=$$BUILD_VERSION'" -o $@ $<
 
-wrap: wrap/autogen_ots.go wrap/autogen_kms.go wrap/autogen_acm.go
+wrap: wrap/autogen_ots.go wrap/autogen_kms.go wrap/autogen_acm.go wrap/autogen_oss.go
 
 wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 	build/bin/gen --goPath vendor \
@@ -66,4 +66,14 @@ wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--package config_client \
 		--classPrefix ACM \
 		--classes ConfigClient \
+		--output $@
+
+wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
+	build/bin/gen --goPath ~/hatlonely/gitlab.alibaba-inc.com/hatlonely.hl/convert-wrapper/vendor \
+		--pkgPath "github.com/aliyun/aliyun-oss-go-sdk/oss" \
+		--package oss \
+		--classPrefix OSS \
+		--classes Client,Bucket \
+		--rule.trace '{"Client": {"exclude": "^Bucket$$"}}' \
+		--rule.retry '{"Client": {"exclude": "^Bucket$$"}}' \
 		--output $@
