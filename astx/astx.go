@@ -94,9 +94,13 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 			if err != nil {
 				return nil, errors.Wrap(err, "printer.Fprint failed")
 			}
+			var name string
+			if len(fn.Recv.List[0].Names) != 0 {
+				name = fn.Recv.List[0].Names[0].String()
+			}
 			f.Recv = &Field{
 				Type: t,
-				Name: fn.Recv.List[0].Names[0].String(),
+				Name: name,
 			}
 
 			f.IsMethod = true
