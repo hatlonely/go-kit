@@ -30,8 +30,9 @@ type WrapperGeneratorOptions struct {
 	ClassPrefix string   `flag:"usage: wrap class name"`
 
 	Rule struct {
-		Trace map[string]Rule
-		Retry map[string]Rule
+		Function map[string]Rule
+		Trace    map[string]Rule
+		Retry    map[string]Rule
 	}
 }
 
@@ -66,6 +67,9 @@ func (g *WrapperGenerator) Generate() (string, error) {
 			continue
 		}
 		if _, ok := g.wrapClassMap[function.Class]; !ok {
+			continue
+		}
+		if !g.MatchRule(function, g.options.Rule.Function[function.Class]) {
 			continue
 		}
 

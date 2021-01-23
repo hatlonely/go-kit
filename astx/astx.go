@@ -44,7 +44,12 @@ func calculateTypeName(fset *token.FileSet, field *ast.Field, typeRegexMap map[s
 	t := buf.String()
 
 	for key, re := range typeRegexMap {
-		t = re.ReplaceAllString(t, fmt.Sprintf("%s.%s", pkg, key))
+		t = re.ReplaceAllStringFunc(t, func(s string) string {
+			if s[0] == '.' && s[1] != '.' {
+				return s
+			}
+			return fmt.Sprintf("%s%s.%s", s[:len(s)-len(key)], pkg, key)
+		})
 	}
 
 	return t, nil
@@ -77,7 +82,7 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 		for _, spec := range decl.Specs {
 			switch spec := spec.(type) {
 			case *ast.TypeSpec:
-				typeRegexMap[spec.Name.String()] = regexp.MustCompile(fmt.Sprintf("\\b%s\\b", spec.Name.String()))
+				typeRegexMap[spec.Name.String()] = regexp.MustCompile(fmt.Sprintf(`\.*\b%s\b`, spec.Name.String()))
 			}
 		}
 	}
