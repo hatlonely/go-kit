@@ -42,7 +42,7 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 	if err != nil {
 		return nil, errors.Wrap(err, "ECSMetaDataRamSecurityCredentials failed")
 	}
-	client := tablestore.NewClient(options.Endpoint, options.InstanceName, res.AccessKeyID, res.AccessKeySecret)
+	client := tablestore.NewClientWithConfig(options.Endpoint, options.InstanceName, res.AccessKeyID, res.AccessKeySecret, res.SecurityToken, nil)
 
 	wrapper := &OTSTableStoreClientWrapper{
 		obj:     client,
@@ -61,7 +61,7 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 				log.Errorf("ECSMetaDataRamSecurityCredentials failed. err: [%+v]", err)
 				continue
 			}
-			wrapper.obj = tablestore.NewClient(options.Endpoint, options.InstanceName, res.AccessKeyID, res.AccessKeySecret)
+			wrapper.obj = tablestore.NewClientWithConfig(options.Endpoint, options.InstanceName, res.AccessKeyID, res.AccessKeySecret, res.SecurityToken, nil)
 		}
 	}()
 
@@ -232,7 +232,7 @@ func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClien
 	if err != nil {
 		return nil, errors.Wrap(err, "alics.ECSMetaDataRamSecurityCredentials failed")
 	}
-	client, err := oss.New(options.Endpoint, res.AccessKeyID, res.AccessKeySecret)
+	client, err := oss.New(options.Endpoint, res.AccessKeyID, res.AccessKeySecret, oss.SecurityToken(res.SecurityToken))
 	if err != nil {
 		return nil, errors.Wrap(err, "oss.New failed")
 	}
@@ -254,7 +254,7 @@ func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClien
 				log.Errorf("alics.ECSMetaDataRamSecurityCredentials failed. err: [%+v]", err)
 				continue
 			}
-			client, err = oss.New(options.Endpoint, res.AccessKeyID, res.AccessKeySecret)
+			client, err = oss.New(options.Endpoint, res.AccessKeyID, res.AccessKeySecret, oss.SecurityToken(res.SecurityToken))
 			if err != nil {
 				log.Errorf("clients.CreateConfigClient failed. err: [%+v]", err)
 				continue
