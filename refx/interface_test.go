@@ -528,6 +528,7 @@ func TestInterfaceToStruct(t *testing.T) {
 	Convey("TestInterfaceToStruct 4", t, func() {
 		type Options struct {
 			Key3 []map[string]interface{}
+			key3 []map[string]interface{}
 		}
 		var options Options
 		So(InterfaceToStruct(v, &options), ShouldBeNil)

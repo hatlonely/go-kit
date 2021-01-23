@@ -325,6 +325,11 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 	switch rt.Kind() {
 	case reflect.Struct:
 		for i := 0; i < rv.NumField(); i++ {
+			// ignore unexported field
+			if !rv.Field(i).CanInterface() {
+				continue
+			}
+
 			key := options.FormatKey(rt.Field(i).Name)
 			var val interface{}
 			switch srt.Kind() {
@@ -341,8 +346,15 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 				nv := reflect.New(rv.Field(i).Type().Elem())
 				rv.Field(i).Set(nv)
 			}
-			if err := interfaceToStructRecursive(val, rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, key), options); err != nil {
-				return err
+			// support inherit
+			if rv.Type().Field(i).Anonymous {
+				if err := interfaceToStructRecursive(val, rv.Field(i).Addr().Interface(), prefix, options); err != nil {
+					return err
+				}
+			} else {
+				if err := interfaceToStructRecursive(val, rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, key), options); err != nil {
+					return err
+				}
 			}
 		}
 	case reflect.Slice:
