@@ -281,8 +281,11 @@ func interfaceGetRecursive(v interface{}, key string, prefix string) (interface{
 }
 
 func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string, options *Options) error {
-	if reflect.ValueOf(dst).Kind() != reflect.Ptr || dst == nil {
-		return fmt.Errorf("invalid dst type or dst is nil. dst: [%v]", reflect.TypeOf(dst))
+	if reflect.ValueOf(dst).Kind() != reflect.Ptr {
+		return errors.Errorf("invalid dst type [%v] or dst is nil. prefix: [%v]", reflect.TypeOf(dst), prefix)
+	}
+	if dst == nil {
+		return errors.Errorf("dst should not be nil. prefix: [%v]", prefix)
 	}
 
 	rv := reflect.ValueOf(dst).Elem()
@@ -290,7 +293,7 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 
 	if rt.Kind() == reflect.Struct && !options.DisableDefaultValue {
 		if err := SetDefaultValue(dst); err != nil {
-			return errors.WithMessage(err, "SetDefaultValue failed")
+			return errors.WithMessagef(err, "SetDefaultValue failed. prefix: [%v]", prefix)
 		}
 	}
 
@@ -301,7 +304,7 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 	switch dst.(type) {
 	case *time.Time, **regexp.Regexp:
 		if err := cast.SetInterface(dst, src); err != nil {
-			return fmt.Errorf("set interface failed. prefix: [%v], err: [%v]", prefix, err)
+			return errors.WithMessagef(err, "cast.SetInterface failed. prefix: [%v]", prefix)
 		}
 		return nil
 	}
@@ -331,7 +334,7 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 				}
 				val = srv.MapIndex(reflect.ValueOf(key)).Interface()
 			default:
-				return fmt.Errorf("convert src to map[string]interface{} or map[interface{}]interface{} failed. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(src))
+				return errors.Errorf("cannot convert type [%v] to [%v]. prefix: [%v]", reflect.TypeOf(src), reflect.TypeOf(dst), prefix)
 			}
 
 			if rv.Field(i).Kind() == reflect.Ptr && rv.Field(i).IsNil() {
@@ -344,7 +347,7 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 		}
 	case reflect.Slice:
 		if srt.Kind() != reflect.Slice {
-			return fmt.Errorf("convert src is not slice. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(src))
+			return errors.Errorf("cannot convert type [%v] to [%v]. prefix: [%v]", reflect.TypeOf(src), reflect.TypeOf(dst), prefix)
 		}
 		rv.Set(reflect.MakeSlice(rt, 0, srv.Len()))
 
@@ -362,7 +365,7 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 		for _, key := range srv.MapKeys() {
 			newKey := reflect.New(rt.Key())
 			if err := cast.SetInterface(newKey.Interface(), key.Interface()); err != nil {
-				return err
+				return errors.WithMessage(err, "cast.SetInterface failed")
 			}
 
 			val := srv.MapIndex(key).Interface()
@@ -374,7 +377,7 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 		}
 	default:
 		if err := cast.SetInterface(dst, src); err != nil {
-			return fmt.Errorf("set interface failed. prefix: [%v], err: [%v]", prefix, err)
+			return errors.WithMessagef(err, "cast.SetInterface failed. prefix: [%v]", prefix)
 		}
 	}
 
