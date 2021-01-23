@@ -34,6 +34,7 @@ type Function struct {
 	Class         string
 }
 
+// 给包内部的结构增加包名前缀
 func calculateTypeName(fset *token.FileSet, field *ast.Field, typeRegexMap map[string]*regexp.Regexp, pkg string) (string, error) {
 	var buf bytes.Buffer
 	err := printer.Fprint(&buf, fset, field.Type)
@@ -44,6 +45,10 @@ func calculateTypeName(fset *token.FileSet, field *ast.Field, typeRegexMap map[s
 	t := buf.String()
 
 	for key, re := range typeRegexMap {
+		// DB => gorm.DB
+		// sql.DB => sql.DB
+		// XDB => XDB
+		// ...Options => ...oss.Options
 		t = re.ReplaceAllStringFunc(t, func(s string) string {
 			if s[0] == '.' && s[1] != '.' {
 				return s
@@ -89,6 +94,7 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 
 	var functions []*Function
 	for _, fn := range funcDecls {
+		// 跳过私有函数
 		if strx.IsLower(fn.Name.String()[0]) {
 			continue
 		}
@@ -145,6 +151,7 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 					return nil, errors.Wrap(err, "printer.Fprint failed")
 				}
 
+				// 如果有返回值名字，直接使用返回值的名字，如果没有，命名为 res{i}
 				if len(val.Names) != 0 {
 					for _, name := range val.Names {
 						f.Results = append(f.Results, &Field{
@@ -162,6 +169,7 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 		}
 
 		f.IsReturnVoid = len(f.Results) == 0
+		// 如果最后一个返回值是 error，并且参数中没有 error，把返回命名为 err
 		if len(f.Results) != 0 && f.Results[len(f.Results)-1].Type == "error" {
 			var hasErrParam bool
 			for _, param := range f.Params {
@@ -180,6 +188,7 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 		functions = append(functions, &f)
 	}
 
+	// 排序，以保证生成代码是一致的
 	sort.Slice(functions, func(i, j int) bool {
 		if functions[i].Class < functions[j].Class {
 			return true
