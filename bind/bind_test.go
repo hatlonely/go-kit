@@ -25,14 +25,14 @@ func TestBind(t *testing.T) {
 			A2   *A
 			A3   []A
 			A4   []*A
-			A5   map[string]A // 不支持，因为无法知道有哪些 key
+			A5   map[string]A
 			A6   []A
 			Key3 string
 			key5 int // ignore unexported field
 		}
 
 		var b B
-		err := Bind(&b, []Getter{MapGetter(map[string]interface{}{
+		err := Bind(&b, []Getter{NewMapGetter(map[string]interface{}{
 			"A1.Key1":       "val1",
 			"A1.Key2":       "val2",
 			"A2.Key1":       "val3",
@@ -68,5 +68,7 @@ func TestBind(t *testing.T) {
 		So(b.Key4, ShouldEqual, 1*time.Minute)
 		So(b.A1.Key4, ShouldEqual, 4*time.Second)
 		So(b.A1.Key6, ShouldResemble, []string{"hello", "world"})
+		So(b.A5["hello"].Key1, ShouldEqual, "val12")
+		So(b.A5["hello"].Key2, ShouldEqual, "val13")
 	})
 }
