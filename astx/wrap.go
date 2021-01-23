@@ -16,6 +16,7 @@ type WrapperGenerator struct {
 	options *WrapperGeneratorOptions
 
 	wrapClassMap map[string]string
+	starClassSet map[string]bool
 }
 
 type Rule struct {
@@ -28,25 +29,33 @@ type WrapperGeneratorOptions struct {
 	PkgPath     string   `flag:"usage: source path"`
 	Package     string   `flag:"usage: package name"`
 	Classes     []string `flag:"usage: classes to wrap"`
+	StarClasses []string `flag:"usage: star classes to wrap"`
 	ClassPrefix string   `flag:"usage: wrap class name"`
 
 	Rule struct {
-		Class    Rule
-		Function map[string]Rule
-		Trace    map[string]Rule
-		Retry    map[string]Rule
+		Class     Rule
+		StarClass Rule
+		Function  map[string]Rule
+		Trace     map[string]Rule
+		Retry     map[string]Rule
 	}
 }
 
 func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGenerator {
 	wrapClassMap := map[string]string{}
+	starClassSet := map[string]bool{}
 	for _, cls := range options.Classes {
 		wrapClassMap[cls] = fmt.Sprintf("%s%sWrapper", options.ClassPrefix, cls)
+	}
+	for _, cls := range options.StarClasses {
+		wrapClassMap[cls] = fmt.Sprintf("%s%sWrapper", options.ClassPrefix, cls)
+		starClassSet[cls] = true
 	}
 
 	return &WrapperGenerator{
 		options:      options,
 		wrapClassMap: wrapClassMap,
+		starClassSet: starClassSet,
 	}
 }
 
@@ -60,8 +69,14 @@ func (g *WrapperGenerator) Generate() (string, error) {
 
 	buf.WriteString(g.generateWrapperHeader())
 
-	var classes []string
-	if len(g.options.Classes) == 0 {
+	classes := append(g.options.Classes, g.options.StarClasses...)
+	if len(classes) == 0 {
+		if g.options.Rule.StarClass.Exclude == nil {
+			g.options.Rule.StarClass.Exclude = regexp.MustCompile(`.*`)
+		}
+		if g.options.Rule.Class.Exclude == nil {
+			g.options.Rule.Class.Exclude = regexp.MustCompile(`.*`)
+		}
 		for _, function := range functions {
 			if !function.IsMethod {
 				continue
@@ -69,14 +84,18 @@ func (g *WrapperGenerator) Generate() (string, error) {
 			if _, ok := g.wrapClassMap[function.Class]; ok {
 				continue
 			}
-			if !g.MatchRule(function.Class, g.options.Rule.Class) {
+			if g.MatchRule(function.Class, g.options.Rule.StarClass) {
+				g.wrapClassMap[function.Class] = fmt.Sprintf("%s%sWrapper", g.options.ClassPrefix, function.Class)
+				classes = append(classes, function.Class)
+				g.starClassSet[function.Class] = true
 				continue
 			}
-			g.wrapClassMap[function.Class] = fmt.Sprintf("%s%sWrapper", g.options.ClassPrefix, function.Class)
-			classes = append(classes, function.Class)
+			if g.MatchRule(function.Class, g.options.Rule.Class) {
+				g.wrapClassMap[function.Class] = fmt.Sprintf("%s%sWrapper", g.options.ClassPrefix, function.Class)
+				classes = append(classes, function.Class)
+				continue
+			}
 		}
-	} else {
-		classes = g.options.Classes
 	}
 
 	sort.Strings(classes)
@@ -153,7 +172,11 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 
 	buf.WriteString("func ")
 	if function.Recv != nil {
-		buf.WriteString(fmt.Sprintf("(w *%s)", g.wrapClassMap[function.Class]))
+		if g.starClassSet[function.Class] {
+			buf.WriteString(fmt.Sprintf("(w *%s)", g.wrapClassMap[function.Class]))
+		} else {
+			buf.WriteString(fmt.Sprintf("(w %s)", g.wrapClassMap[function.Class]))
+		}
 	}
 
 	buf.WriteString(" ")
@@ -184,7 +207,11 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 
 		cls = strings.TrimPrefix(cls, g.options.Package+".")
 		if wrapCls, ok := g.wrapClassMap[cls]; ok {
-			results = append(results, fmt.Sprintf(`*%s`, wrapCls))
+			if g.starClassSet[cls] {
+				results = append(results, fmt.Sprintf(`*%s`, wrapCls))
+			} else {
+				results = append(results, fmt.Sprintf(`%s`, wrapCls))
+			}
 			continue
 		}
 		results = append(results, i.Type)
@@ -278,7 +305,11 @@ func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) st
 
 		cls = strings.TrimPrefix(cls, g.options.Package+".")
 		if wrapCls, ok := g.wrapClassMap[cls]; ok {
-			results = append(results, fmt.Sprintf(`&%s{obj: %s, retry: w.retry, options: w.options}`, wrapCls, i.Name))
+			if g.starClassSet[cls] {
+				results = append(results, fmt.Sprintf(`&%s{obj: %s, retry: w.retry, options: w.options}`, wrapCls, i.Name))
+			} else {
+				results = append(results, fmt.Sprintf(`%s{obj: %s, retry: w.retry, options: w.options}`, wrapCls, i.Name))
+			}
 			continue
 		}
 
