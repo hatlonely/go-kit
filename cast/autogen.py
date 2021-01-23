@@ -19,6 +19,7 @@ package cast
 import (
 	"net"
 	"reflect"
+	"regexp"
 	"time"
 
 	"github.com/pkg/errors"
@@ -60,6 +61,7 @@ package cast
 
 import (
 	"net"
+	"regexp"
 	"time"
 )
 """
@@ -106,6 +108,7 @@ package cast
 import (
 	"net"
 	"reflect"
+	"regexp"
 	"strings"
 	"time"
 

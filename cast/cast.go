@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net"
 	"reflect"
+	"regexp"
 	"time"
 
 	"github.com/pkg/errors"
@@ -87,6 +88,21 @@ func ToIPE(v interface{}) (net.IP, error) {
 		return val, nil
 	default:
 		return nil, errors.Errorf("convert type [%v] to ip failed", reflect.TypeOf(v))
+	}
+}
+
+func ToRegexE(v interface{}) (*regexp.Regexp, error) {
+	switch val := v.(type) {
+	case string:
+		re, err := regexp.Compile(val)
+		if err != nil {
+			return nil, errors.Wrapf(err, "regexp.Compile failed. val: [%v]", val)
+		}
+		return re, nil
+	case *regexp.Regexp:
+		return val, nil
+	default:
+		return nil, errors.Errorf("convert type [%v] to regex failed", reflect.TypeOf(v))
 	}
 }
 

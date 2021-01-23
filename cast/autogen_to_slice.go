@@ -4,6 +4,7 @@ package cast
 import (
 	"net"
 	"reflect"
+	"regexp"
 	"strings"
 	"time"
 
@@ -677,6 +678,46 @@ func ToIPSliceE(v interface{}) ([]net.IP, error) {
 		return vs, nil
 	default:
 		return nil, errors.Errorf("type %v cannot convert []net.IP", reflect.TypeOf(v))
+	}
+}
+
+func ToRegexSliceE(v interface{}) ([]*regexp.Regexp, error) {
+	switch v.(type) {
+	case []*regexp.Regexp:
+		return v.([]*regexp.Regexp), nil
+	case []interface{}:
+		vs := make([]*regexp.Regexp, 0, len(v.([]interface{})))
+		for _, i := range v.([]interface{}) {
+			val, err := ToRegexE(i)
+			if err != nil {
+				return nil, errors.WithMessage(err, "cast failed")
+			}
+			vs = append(vs, val)
+		}
+		return vs, nil
+	case []string:
+		vs := make([]*regexp.Regexp, 0, len(v.([]string)))
+		for _, i := range v.([]string) {
+			val, err := ToRegexE(i)
+			if err != nil {
+				return nil, errors.WithMessage(err, "cast failed")
+			}
+			vs = append(vs, val)
+		}
+		return vs, nil
+	case string:
+		var vs []*regexp.Regexp
+		for _, i := range strings.Split(v.(string), ",") {
+			i = strings.TrimSpace(i)
+			val, err := ToRegexE(i)
+			if err != nil {
+				return nil, errors.WithMessage(err, "cast failed")
+			}
+			vs = append(vs, val)
+		}
+		return vs, nil
+	default:
+		return nil, errors.Errorf("type %v cannot convert []*regexp.Regexp", reflect.TypeOf(v))
 	}
 }
 

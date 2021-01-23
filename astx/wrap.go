@@ -27,8 +27,8 @@ type rule struct {
 }
 
 type Rule struct {
-	Include string
-	Exclude string
+	Include *regexp.Regexp
+	Exclude *regexp.Regexp
 }
 
 type WrapperGeneratorOptions struct {
@@ -46,19 +46,20 @@ type WrapperGeneratorOptions struct {
 
 func parseRule(rules map[string]Rule) map[string]rule {
 	m := map[string]rule{}
+	fmt.Println(rules)
 	for key, val := range rules {
-		var include *regexp.Regexp
-		var exclude *regexp.Regexp
-		if val.Include != "" {
-			include = regexp.MustCompile(val.Include)
-		}
-		if val.Exclude != "" {
-			exclude = regexp.MustCompile(val.Exclude)
-		}
+		//var include *regexp.Regexp
+		//var exclude *regexp.Regexp
+		//if val.Include != "" {
+		//	include = regexp.MustCompile(val.Include)
+		//}
+		//if val.Exclude != "" {
+		//	exclude = regexp.MustCompile(val.Exclude)
+		//}
 
 		m[key] = rule{
-			include: include,
-			exclude: exclude,
+			include: val.Include,
+			exclude: val.Exclude,
 		}
 	}
 	return m
@@ -69,6 +70,8 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 	for _, cls := range options.Classes {
 		wrapClassMap[cls] = fmt.Sprintf("%s%sWrapper", options.ClassPrefix, cls)
 	}
+
+	fmt.Println(options.Rule)
 
 	return &WrapperGenerator{
 		options:      options,

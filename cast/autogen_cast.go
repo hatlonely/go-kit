@@ -3,6 +3,7 @@ package cast
 
 import (
 	"net"
+	"regexp"
 	"time"
 )
 
@@ -391,6 +392,29 @@ func ToIPD(val interface{}, defaultValue net.IP) net.IP {
 
 func ToIPP(val interface{}) net.IP {
 	v, err := ToIPE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToRegex(val interface{}) *regexp.Regexp {
+	if v, err := ToRegexE(val); err == nil {
+		return v
+	}
+	var v *regexp.Regexp
+	return v
+}
+
+func ToRegexD(val interface{}, defaultValue *regexp.Regexp) *regexp.Regexp {
+	if v, err := ToRegexE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToRegexP(val interface{}) *regexp.Regexp {
+	v, err := ToRegexE(val)
 	if err != nil {
 		panic(err)
 	}
@@ -805,6 +829,29 @@ func ToIPSliceD(val interface{}, defaultValue []net.IP) []net.IP {
 
 func ToIPSliceP(val interface{}) []net.IP {
 	v, err := ToIPSliceE(val)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func ToRegexSlice(val interface{}) []*regexp.Regexp {
+	if v, err := ToRegexSliceE(val); err == nil {
+		return v
+	}
+	var v []*regexp.Regexp
+	return v
+}
+
+func ToRegexSliceD(val interface{}, defaultValue []*regexp.Regexp) []*regexp.Regexp {
+	if v, err := ToRegexSliceE(val); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func ToRegexSliceP(val interface{}) []*regexp.Regexp {
+	v, err := ToRegexSliceE(val)
 	if err != nil {
 		panic(err)
 	}

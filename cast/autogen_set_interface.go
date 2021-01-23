@@ -4,6 +4,7 @@ package cast
 import (
 	"net"
 	"reflect"
+	"regexp"
 	"time"
 
 	"github.com/pkg/errors"
@@ -113,6 +114,12 @@ func SetInterface(dst interface{}, src interface{}) error {
 			return err
 		}
 		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case **regexp.Regexp:
+		v, err := ToRegexE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
 	case *map[string]string:
 		v, err := ToMapStringStringE(src)
 		if err != nil {
@@ -217,6 +224,12 @@ func SetInterface(dst interface{}, src interface{}) error {
 		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
 	case *[]net.IP:
 		v, err := ToIPSliceE(src)
+		if err != nil {
+			return err
+		}
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(v))
+	case *[]*regexp.Regexp:
+		v, err := ToRegexSliceE(src)
 		if err != nil {
 			return err
 		}

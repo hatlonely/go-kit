@@ -68,11 +68,11 @@ func (f *Flag) bindStructRecursive(v interface{}, prefixKey string, options *ref
 				}
 			}
 		} else {
-			options, err := parseTag(tag, key, prefixKey, typ, options)
+			addFlagOptions, err := parseTag(tag, key, prefixKey, typ, options)
 			if err != nil {
 				return err
 			}
-			if err := f.BindFlagWithOptions(rv.Field(i).Addr().Interface(), options); err != nil {
+			if err := f.BindFlagWithOptions(rv.Field(i).Addr().Interface(), addFlagOptions); err != nil {
 				return err
 			}
 		}
@@ -85,6 +85,7 @@ var reKey = regexp.MustCompile(`[.\w_-]+`)
 
 func parseTag(tag string, key string, prefixKey string, typ reflect.Type, ropt *refx.Options) (*AddFlagOptions, error) {
 	var options AddFlagOptions
+	options.Refx = *ropt
 	options.Key = prefixAppendKey(prefixKey, ropt.FormatKey(key))
 
 	tag = strings.TrimSpace(tag)

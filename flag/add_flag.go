@@ -19,6 +19,8 @@ type AddFlagOptions struct {
 	DefaultValue string
 	IsArgument   bool
 	Required     bool
+
+	Refx refx.Options
 }
 
 type AddFlagOption func(*AddFlagOptions)
@@ -96,8 +98,12 @@ func (f *Flag) BindFlagWithOptions(v interface{}, options *AddFlagOptions) error
 			if err := cast.SetInterface(v, val); err == nil {
 				return nil
 			}
-			if err := json.Unmarshal([]byte(val), &v); err != nil {
-				return errors.WithMessage(err, "json.Unmarshal failed")
+			var w interface{}
+			if err := json.Unmarshal([]byte(val), &w); err != nil {
+				return errors.Wrap(err, "json.Unmarshal failed")
+			}
+			if err := refx.InterfaceToStructWithOptions(w, v, &options.Refx); err != nil {
+				return errors.WithMessage(err, "InterfaceSet failed")
 			}
 		}
 		return nil

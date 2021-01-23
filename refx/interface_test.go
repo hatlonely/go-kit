@@ -1,6 +1,8 @@
 package refx
 
 import (
+	"fmt"
+	"regexp"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -925,4 +927,34 @@ func sliceToSet(keys []string) map[string]bool {
 		set[key] = true
 	}
 	return set
+}
+
+func TestRegex(t *testing.T) {
+	Convey("TestRegex", t, func() {
+		type Rule struct {
+			Include *regexp.Regexp
+			Exclude *regexp.Regexp
+		}
+
+		type Rules struct {
+			Trace map[string]Rule
+			Retry map[string]Rule
+		}
+
+		v := map[string]interface{}{
+			"trace": map[string]interface{}{
+				"A": map[string]interface{}{
+					"include": ".*",
+					"exclude": "abc",
+				},
+				"B": map[string]interface{}{
+					"include": "def",
+				},
+			},
+		}
+
+		var rules Rules
+		So(InterfaceToStruct(v, &rules, WithCamelName()), ShouldBeNil)
+		fmt.Println(rules)
+	})
 }
