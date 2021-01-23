@@ -312,6 +312,10 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 		}
 		return interfaceToStructRecursive(src, rv.Interface(), prefix, options)
 	}
+	if rt.Kind() == reflect.Interface {
+		rv.Set(reflect.ValueOf(src))
+		return nil
+	}
 
 	srv := reflect.ValueOf(src)
 	srt := reflect.TypeOf(src)
@@ -330,21 +334,12 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 				return fmt.Errorf("convert src to map[string]interface{} or map[interface{}]interface{} failed. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(src))
 			}
 
-			switch rv.Field(i).Type().Kind() {
-			case reflect.Ptr:
-				if rv.Field(i).IsNil() {
-					nv := reflect.New(rv.Field(i).Type().Elem())
-					rv.Field(i).Set(nv)
-				}
-				if err := interfaceToStructRecursive(val, rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, key), options); err != nil {
-					return err
-				}
-			case reflect.Interface:
-				rv.Field(i).Set(reflect.ValueOf(val))
-			default:
-				if err := interfaceToStructRecursive(val, rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, key), options); err != nil {
-					return err
-				}
+			if rv.Field(i).Kind() == reflect.Ptr && rv.Field(i).IsNil() {
+				nv := reflect.New(rv.Field(i).Type().Elem())
+				rv.Field(i).Set(nv)
+			}
+			if err := interfaceToStructRecursive(val, rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, key), options); err != nil {
+				return err
 			}
 		}
 	case reflect.Slice:
@@ -354,22 +349,11 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 		rv.Set(reflect.MakeSlice(rt, 0, srv.Len()))
 
 		for idx := 0; idx < srv.Len(); idx++ {
-			switch rt.Elem().Kind() {
-			case reflect.Ptr:
-				nv := reflect.New(rt.Elem())
-				if err := interfaceToStructRecursive(srv.Index(idx).Interface(), nv.Interface(), prefixAppendIdx(prefix, idx), options); err != nil {
-					return err
-				}
-				rv.Set(reflect.Append(rv, nv.Elem()))
-			case reflect.Interface:
-				rv.Set(reflect.Append(rv, srv.Index(idx)))
-			default:
-				nv := reflect.New(rt.Elem())
-				if err := interfaceToStructRecursive(srv.Index(idx).Interface(), nv.Interface(), prefixAppendIdx(prefix, idx), options); err != nil {
-					return err
-				}
-				rv.Set(reflect.Append(rv, nv.Elem()))
+			nv := reflect.New(rt.Elem())
+			if err := interfaceToStructRecursive(srv.Index(idx).Interface(), nv.Interface(), prefixAppendIdx(prefix, idx), options); err != nil {
+				return err
 			}
+			rv.Set(reflect.Append(rv, nv.Elem()))
 		}
 	case reflect.Map:
 		if rv.IsNil() {
@@ -382,22 +366,11 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 			}
 
 			val := srv.MapIndex(key).Interface()
-			switch rt.Elem().Kind() {
-			case reflect.Ptr:
-				nv := reflect.New(rt.Elem())
-				if err := interfaceToStructRecursive(val, nv.Interface(), prefixAppendKey(prefix, cast.ToString(newKey.Elem().Interface())), options); err != nil {
-					return err
-				}
-				rv.SetMapIndex(newKey.Elem(), nv.Elem())
-			case reflect.Interface:
-				rv.SetMapIndex(newKey.Elem(), srv.MapIndex(key))
-			default:
-				nv := reflect.New(rt.Elem())
-				if err := interfaceToStructRecursive(val, nv.Interface(), prefixAppendKey(prefix, cast.ToString(newKey.Elem().Interface())), options); err != nil {
-					return err
-				}
-				rv.SetMapIndex(newKey.Elem(), nv.Elem())
+			nv := reflect.New(rt.Elem())
+			if err := interfaceToStructRecursive(val, nv.Interface(), prefixAppendKey(prefix, cast.ToString(newKey.Elem().Interface())), options); err != nil {
+				return err
 			}
+			rv.SetMapIndex(newKey.Elem(), nv.Elem())
 		}
 	default:
 		if err := cast.SetInterface(dst, src); err != nil {
