@@ -12,14 +12,14 @@ import (
 	"github.com/opentracing/opentracing-go"
 )
 
-type OSSClientWrapper struct {
-	obj     *oss.Client
+type OSSBucketWrapper struct {
+	obj     *oss.Bucket
 	retry   *Retry
 	options *WrapperOptions
 }
 
-type OSSBucketWrapper struct {
-	obj     *oss.Bucket
+type OSSClientWrapper struct {
+	obj     *oss.Client
 	retry   *Retry
 	options *WrapperOptions
 }
@@ -671,6 +671,21 @@ func (w *OSSBucketWrapper) ListObjects(ctx context.Context, options ...oss.Optio
 	return res0, err
 }
 
+func (w *OSSBucketWrapper) ListObjectsV2(ctx context.Context, options ...oss.Option) (oss.ListObjectsResultV2, error) {
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListObjectsV2")
+		defer span.Finish()
+	}
+
+	var res0 oss.ListObjectsResultV2
+	var err error
+	err = w.retry.Do(func() error {
+		res0, err = w.obj.ListObjectsV2(options...)
+		return err
+	})
+	return res0, err
+}
+
 func (w *OSSBucketWrapper) ListUploadedParts(ctx context.Context, imur oss.InitiateMultipartUploadResult, options ...oss.Option) (oss.ListUploadedPartsResult, error) {
 	if w.options.EnableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListUploadedParts")
@@ -856,6 +871,20 @@ func (w *OSSBucketWrapper) RestoreObjectDetail(ctx context.Context, objectKey st
 	return err
 }
 
+func (w *OSSBucketWrapper) RestoreObjectXML(ctx context.Context, objectKey string, configXML string, options ...oss.Option) error {
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.RestoreObjectXML")
+		defer span.Finish()
+	}
+
+	var err error
+	err = w.retry.Do(func() error {
+		err = w.obj.RestoreObjectXML(objectKey, configXML, options...)
+		return err
+	})
+	return err
+}
+
 func (w *OSSBucketWrapper) SelectObject(ctx context.Context, key string, selectReq oss.SelectRequest, options ...oss.Option) (io.ReadCloser, error) {
 	if w.options.EnableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.SelectObject")
@@ -1002,9 +1031,37 @@ func (w *OSSBucketWrapper) UploadPartFromFile(ctx context.Context, imur oss.Init
 	return res0, err
 }
 
+func (w *OSSClientWrapper) AbortBucketWorm(ctx context.Context, bucketName string, options ...oss.Option) error {
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.AbortBucketWorm")
+		defer span.Finish()
+	}
+
+	var err error
+	err = w.retry.Do(func() error {
+		err = w.obj.AbortBucketWorm(bucketName, options...)
+		return err
+	})
+	return err
+}
+
 func (w *OSSClientWrapper) Bucket(bucketName string) (*OSSBucketWrapper, error) {
 	res0, err := w.obj.Bucket(bucketName)
 	return &OSSBucketWrapper{obj: res0, retry: w.retry, options: w.options}, err
+}
+
+func (w *OSSClientWrapper) CompleteBucketWorm(ctx context.Context, bucketName string, wormID string, options ...oss.Option) error {
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.CompleteBucketWorm")
+		defer span.Finish()
+	}
+
+	var err error
+	err = w.retry.Do(func() error {
+		err = w.obj.CompleteBucketWorm(bucketName, wormID, options...)
+		return err
+	})
+	return err
 }
 
 func (w *OSSClientWrapper) CreateBucket(ctx context.Context, bucketName string, options ...oss.Option) error {
@@ -1156,6 +1213,20 @@ func (w *OSSClientWrapper) DeleteBucketWebsite(ctx context.Context, bucketName s
 	var err error
 	err = w.retry.Do(func() error {
 		err = w.obj.DeleteBucketWebsite(bucketName)
+		return err
+	})
+	return err
+}
+
+func (w *OSSClientWrapper) ExtendBucketWorm(ctx context.Context, bucketName string, retentionDays int, wormID string, options ...oss.Option) error {
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.ExtendBucketWorm")
+		defer span.Finish()
+	}
+
+	var err error
+	err = w.retry.Do(func() error {
+		err = w.obj.ExtendBucketWorm(bucketName, retentionDays, wormID, options...)
 		return err
 	})
 	return err
@@ -1416,6 +1487,21 @@ func (w *OSSClientWrapper) GetBucketWebsite(ctx context.Context, bucketName stri
 	return res0, err
 }
 
+func (w *OSSClientWrapper) GetBucketWorm(ctx context.Context, bucketName string, options ...oss.Option) (oss.WormConfiguration, error) {
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketWorm")
+		defer span.Finish()
+	}
+
+	var res0 oss.WormConfiguration
+	var err error
+	err = w.retry.Do(func() error {
+		res0, err = w.obj.GetBucketWorm(bucketName, options...)
+		return err
+	})
+	return res0, err
+}
+
 func (w *OSSClientWrapper) GetUserQoSInfo(ctx context.Context, options ...oss.Option) (oss.UserQoSConfiguration, error) {
 	if w.options.EnableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetUserQoSInfo")
@@ -1426,6 +1512,21 @@ func (w *OSSClientWrapper) GetUserQoSInfo(ctx context.Context, options ...oss.Op
 	var err error
 	err = w.retry.Do(func() error {
 		res0, err = w.obj.GetUserQoSInfo(options...)
+		return err
+	})
+	return res0, err
+}
+
+func (w *OSSClientWrapper) InitiateBucketWorm(ctx context.Context, bucketName string, retentionDays int, options ...oss.Option) (string, error) {
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.InitiateBucketWorm")
+		defer span.Finish()
+	}
+
+	var res0 string
+	var err error
+	err = w.retry.Do(func() error {
+		res0, err = w.obj.InitiateBucketWorm(bucketName, retentionDays, options...)
 		return err
 	})
 	return res0, err
