@@ -163,8 +163,17 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 
 		f.IsReturnVoid = len(f.Results) == 0
 		if len(f.Results) != 0 && f.Results[len(f.Results)-1].Type == "error" {
-			f.Results[len(f.Results)-1].Name = "err"
-			f.IsReturnError = true
+			var hasErrParam bool
+			for _, param := range f.Params {
+				if param.Name == "err" {
+					hasErrParam = true
+					break
+				}
+			}
+			if !hasErrParam {
+				f.Results[len(f.Results)-1].Name = "err"
+				f.IsReturnError = true
+			}
 		}
 		f.IsChain = f.IsMethod && len(f.Results) == 1 && f.Recv.Type[0] == '*' && f.Recv.Type == f.Results[0].Type
 
