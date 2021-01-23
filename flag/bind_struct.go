@@ -56,7 +56,7 @@ func (f *Flag) bindStructRecursive(v interface{}, prefixKey string, options *ref
 					return err
 				}
 			}
-		} else if typ.Kind() == reflect.Ptr && typ.Elem().Kind() == reflect.Struct && typ != reflect.TypeOf(&time.Time{}) {
+		} else if typ.Kind() == reflect.Ptr && typ.Elem().Kind() == reflect.Struct && typ != reflect.TypeOf(&regexp.Regexp{}) {
 			rv.Field(i).Set(reflect.New(rv.Field(i).Type().Elem()))
 			if rv.Type().Field(i).Anonymous {
 				if err := f.bindStructRecursive(rv.Field(i).Interface(), prefixKey, options); err != nil {

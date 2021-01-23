@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/hatlonely/go-kit/astx"
+	"github.com/hatlonely/go-kit/bind"
 	"github.com/hatlonely/go-kit/flag"
 	"github.com/hatlonely/go-kit/ops"
 	"github.com/hatlonely/go-kit/refx"
@@ -32,6 +33,7 @@ func main() {
 	var options Options
 	Must(flag.Struct(&options, refx.WithCamelName()))
 	Must(flag.Parse(flag.WithJsonVal()))
+	Must(bind.Bind(&options, []bind.Getter{flag.Instance()}, refx.WithCamelName()))
 
 	if options.Help {
 		strx.Trac(flag.Usage())

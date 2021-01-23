@@ -3,6 +3,8 @@ package bind
 import (
 	"fmt"
 	"reflect"
+	"regexp"
+	"time"
 
 	"github.com/pkg/errors"
 
@@ -26,40 +28,31 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, options *refx
 	}
 	rv = rv.Elem()
 
-	if rv.Kind() == reflect.Struct {
-		if !options.DisableDefaultValue {
-			if err := refx.SetDefaultValue(v); err != nil {
-				return 0, errors.Wrap(err, "SetDefaultValue failed")
+	switch v.(type) {
+	case *time.Time, **regexp.Regexp:
+	default:
+		if rv.Kind() == reflect.Ptr {
+			if rv.IsNil() {
+				rv.Set(reflect.New(rv.Type().Elem()))
 			}
+			return bindRecursive(rv.Interface(), prefix, getters, options)
 		}
 
-		count := 0
-		for i := 0; i < rv.NumField(); i++ {
-			// ignore unexported field
-			if !rv.Field(i).CanInterface() {
-				continue
+		switch rv.Kind() {
+		case reflect.Struct:
+			if !options.DisableDefaultValue {
+				if err := refx.SetDefaultValue(v); err != nil {
+					return 0, errors.Wrap(err, "SetDefaultValue failed")
+				}
 			}
-			key := rv.Type().Field(i).Name
-			switch rv.Field(i).Type().Kind() {
-			case reflect.Ptr:
-				if rv.Field(i).IsNil() {
-					nv := reflect.New(rv.Field(i).Type().Elem())
-					rv.Field(i).Set(nv)
+
+			count := 0
+			for i := 0; i < rv.NumField(); i++ {
+				// ignore unexported field
+				if !rv.Field(i).CanInterface() {
+					continue
 				}
-				if rv.Type().Field(i).Anonymous {
-					if cnt, err := bindRecursive(rv.Field(i).Interface(), prefix, getters, options); err != nil {
-						return 0, err
-					} else {
-						count += cnt
-					}
-				} else {
-					if cnt, err := bindRecursive(rv.Field(i).Interface(), prefixAppendKey(prefix, options.FormatKey(key)), getters, options); err != nil {
-						return 0, err
-					} else {
-						count += cnt
-					}
-				}
-			default:
+				key := rv.Type().Field(i).Name
 				if rv.Type().Field(i).Anonymous {
 					if cnt, err := bindRecursive(rv.Field(i).Addr().Interface(), prefix, getters, options); err != nil {
 						return 0, err
@@ -74,24 +67,11 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, options *refx
 					}
 				}
 			}
-		}
-		return count, nil
-	} else if rv.Kind() == reflect.Slice {
-		count := 0
-		rt := rv.Type()
-		for i := 0; ; i++ {
-			switch rt.Elem().Kind() {
-			case reflect.Ptr:
-				nv := reflect.New(rt.Elem().Elem())
-				if cnt, err := bindRecursive(nv.Interface(), prefixAppendIdx(prefix, i), getters, options); err != nil {
-					return 0, err
-				} else if cnt != 0 {
-					count += cnt
-					rv.Set(reflect.Append(rv, nv.Elem().Addr()))
-				} else {
-					return count, nil
-				}
-			default:
+			return count, nil
+		case reflect.Slice:
+			count := 0
+			rt := rv.Type()
+			for i := 0; ; i++ {
 				nv := reflect.New(rt.Elem())
 				if cnt, err := bindRecursive(nv.Interface(), prefixAppendIdx(prefix, i), getters, options); err != nil {
 					return 0, err
@@ -102,6 +82,35 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, options *refx
 					return count, nil
 				}
 			}
+			//case reflect.Map:
+			//	rt := rv.Type()
+			//	if rv.IsNil() {
+			//		rv.Set(reflect.MakeMap(rt))
+			//	}
+			//	for _, key := range srv.MapKeys() {
+			//		newKey := reflect.New(rt.Key())
+			//		if err := cast.SetInterface(newKey.Interface(), key.Interface()); err != nil {
+			//			return err
+			//		}
+			//
+			//		val := srv.MapIndex(key).Interface()
+			//		switch rt.Elem().Kind() {
+			//		case reflect.Ptr:
+			//			nv := reflect.New(rt.Elem())
+			//			if err := interfaceToStructRecursive(val, nv.Interface(), prefixAppendKey(prefix, cast.ToString(newKey.Elem().Interface())), options); err != nil {
+			//				return err
+			//			}
+			//			rv.SetMapIndex(newKey.Elem(), nv.Elem())
+			//		case reflect.Interface:
+			//			rv.SetMapIndex(newKey.Elem(), srv.MapIndex(key))
+			//		default:
+			//			nv := reflect.New(rt.Elem())
+			//			if err := interfaceToStructRecursive(val, nv.Interface(), prefixAppendKey(prefix, cast.ToString(newKey.Elem().Interface())), options); err != nil {
+			//				return err
+			//			}
+			//			rv.SetMapIndex(newKey.Elem(), nv.Elem())
+			//		}
+			//	}
 		}
 	}
 

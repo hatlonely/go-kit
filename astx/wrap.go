@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"path"
 	"regexp"
+	"sort"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -30,6 +31,7 @@ type WrapperGeneratorOptions struct {
 	ClassPrefix string   `flag:"usage: wrap class name"`
 
 	Rule struct {
+		Class    Rule
 		Function map[string]Rule
 		Trace    map[string]Rule
 		Retry    map[string]Rule
@@ -58,7 +60,28 @@ func (g *WrapperGenerator) Generate() (string, error) {
 
 	buf.WriteString(g.generateWrapperHeader())
 
-	for _, cls := range g.options.Classes {
+	var classes []string
+	if len(g.options.Classes) == 0 {
+		for _, function := range functions {
+			if !function.IsMethod {
+				continue
+			}
+			if _, ok := g.wrapClassMap[function.Class]; ok {
+				continue
+			}
+			if !g.MatchRule(function.Class, g.options.Rule.Class) {
+				continue
+			}
+			g.wrapClassMap[function.Class] = fmt.Sprintf("%s%sWrapper", g.options.ClassPrefix, function.Class)
+			classes = append(classes, function.Class)
+		}
+	} else {
+		classes = g.options.Classes
+	}
+	fmt.Println(classes, g.wrapClassMap)
+
+	sort.Strings(classes)
+	for _, cls := range classes {
 		buf.WriteString(g.generateWrapperStruct(cls))
 	}
 
@@ -69,7 +92,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		if _, ok := g.wrapClassMap[function.Class]; !ok {
 			continue
 		}
-		if !g.MatchRule(function, g.options.Rule.Function[function.Class]) {
+		if !g.MatchRule(function.Name, g.options.Rule.Function[function.Class]) {
 			continue
 		}
 
@@ -141,7 +164,7 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 
 	var params []string
 	if len(function.Params) == 0 || function.Params[0].Type != "context.Context" {
-		if g.MatchRule(function, g.options.Rule.Trace[function.Class]) || g.MatchRule(function, g.options.Rule.Retry[function.Class]) {
+		if g.MatchRule(function.Name, g.options.Rule.Trace[function.Class]) || g.MatchRule(function.Name, g.options.Rule.Retry[function.Class]) {
 			params = append(params, "ctx context.Context")
 		}
 	}
@@ -304,7 +327,7 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) strin
 		return buf.String()
 	}
 
-	if g.MatchRule(function, g.options.Rule.Trace[function.Class]) {
+	if g.MatchRule(function.Name, g.options.Rule.Trace[function.Class]) {
 		buf.WriteString(g.generateWrapperOpentracing(function))
 	}
 
@@ -313,7 +336,7 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) strin
 		return buf.String()
 	}
 
-	if function.IsReturnError && g.MatchRule(function, g.options.Rule.Retry[function.Class]) {
+	if function.IsReturnError && g.MatchRule(function.Name, g.options.Rule.Retry[function.Class]) {
 		buf.WriteString(g.generateWrapperDeclareReturnVariables(function))
 		buf.WriteString(g.generateWrapperCallWithRetry(function))
 		buf.WriteString(g.generateWrapperReturnVariables(function))
@@ -328,15 +351,15 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) strin
 	return buf.String()
 }
 
-func (g *WrapperGenerator) MatchRule(function *Function, rule Rule) bool {
+func (g *WrapperGenerator) MatchRule(key string, rule Rule) bool {
 	if rule.Include != nil {
-		if rule.Include.MatchString(function.Name) {
+		if rule.Include.MatchString(key) {
 			return true
 		}
 	}
 
 	if rule.Exclude != nil {
-		if rule.Exclude.MatchString(function.Name) {
+		if rule.Exclude.MatchString(key) {
 			return false
 		}
 	}

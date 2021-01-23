@@ -49,7 +49,7 @@ wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--pkgPath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" \
 		--package tablestore \
 		--classPrefix OTS \
-		--classes TableStoreClient \
+		--rule.class '{"include": "TableStoreClient", "exclude": ".*"}' \
 		--output $@
 
 wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
@@ -69,7 +69,7 @@ wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen --goPath ~/hatlonely/gitlab.alibaba-inc.com/hatlonely.hl/convert-wrapper/vendor \
+	build/bin/gen --goPath vendor \
 		--pkgPath "github.com/aliyun/aliyun-oss-go-sdk/oss" \
 		--package oss \
 		--classPrefix OSS \
@@ -79,10 +79,20 @@ wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen --goPath ~/hatlonely/gitlab.alibaba-inc.com/hatlonely.hl/convert-wrapper/vendor \
+	build/bin/gen --goPath vendor \
 		--pkgPath "github.com/jinzhu/gorm" \
 		--package gorm \
 		--classPrefix GORM \
 		--classes DB \
 		--rule.function '{"DB": {"exclude": "^SetLogger$$"}}' \
+		--output $@
+
+wrap/autogen_elasticsearch.go: build/bin/gen vendor $(wildcard astx/*.go)
+	build/bin/gen --goPath vendor \
+		--pkgPath "github.com/olivere/elastic/v7" \
+		--package elastic \
+		--classPrefix ES \
+		--classes Client,SearchService,IndexService \
+		--rule.trace '{"Client": {"exclude": ".*"}}' \
+		--rule.retry '{"Client": {"exclude": ".*"}}' \
 		--output $@
