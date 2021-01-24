@@ -10,12 +10,14 @@ import (
 )
 
 type OTSTableStoreClientWrapperOptions struct {
-	Endpoint        string
-	AccessKeyID     string
-	AccessKeySecret string
-	InstanceName    string
-	Retry           RetryOptions
-	Wrapper         WrapperOptions
+	Retry   RetryOptions
+	Wrapper WrapperOptions
+	OTS     struct {
+		Endpoint        string
+		AccessKeyID     string
+		AccessKeySecret string
+		InstanceName    string
+	}
 }
 
 func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrapperOptions) (*OTSTableStoreClientWrapper, error) {
@@ -24,8 +26,8 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
 
-	if options.AccessKeyID != "" {
-		client := tablestore.NewClient(options.Endpoint, options.InstanceName, options.AccessKeyID, options.AccessKeySecret)
+	if options.OTS.AccessKeyID != "" {
+		client := tablestore.NewClient(options.OTS.Endpoint, options.OTS.InstanceName, options.OTS.AccessKeyID, options.OTS.AccessKeySecret)
 		return &OTSTableStoreClientWrapper{
 			obj:     client,
 			retry:   retry,
@@ -37,7 +39,7 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 	if err != nil {
 		return nil, errors.Wrap(err, "ECSMetaDataRamSecurityCredentials failed")
 	}
-	client := tablestore.NewClientWithConfig(options.Endpoint, options.InstanceName, res.AccessKeyID, res.AccessKeySecret, res.SecurityToken, nil)
+	client := tablestore.NewClientWithConfig(options.OTS.Endpoint, options.OTS.InstanceName, res.AccessKeyID, res.AccessKeySecret, res.SecurityToken, nil)
 
 	wrapper := &OTSTableStoreClientWrapper{
 		obj:     client,
@@ -56,7 +58,7 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 				log.Errorf("ECSMetaDataRamSecurityCredentials failed. err: [%+v]", err)
 				continue
 			}
-			wrapper.obj = tablestore.NewClientWithConfig(options.Endpoint, options.InstanceName, res.AccessKeyID, res.AccessKeySecret, res.SecurityToken, nil)
+			wrapper.obj = tablestore.NewClientWithConfig(options.OTS.Endpoint, options.OTS.InstanceName, res.AccessKeyID, res.AccessKeySecret, res.SecurityToken, nil)
 		}
 	}()
 

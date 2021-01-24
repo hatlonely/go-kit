@@ -10,11 +10,13 @@ import (
 )
 
 type OSSClientWrapperOptions struct {
-	Retry           RetryOptions
-	Wrapper         WrapperOptions
-	Endpoint        string
-	AccessKeyID     string
-	AccessKeySecret string
+	Retry   RetryOptions
+	Wrapper WrapperOptions
+	OSS     struct {
+		Endpoint        string
+		AccessKeyID     string
+		AccessKeySecret string
+	}
 }
 
 func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClientWrapper, error) {
@@ -23,8 +25,8 @@ func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClien
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
 
-	if options.AccessKeyID != "" {
-		client, err := oss.New(options.Endpoint, options.AccessKeyID, options.AccessKeySecret)
+	if options.OSS.AccessKeyID != "" {
+		client, err := oss.New(options.OSS.Endpoint, options.OSS.AccessKeyID, options.OSS.AccessKeySecret)
 		if err != nil {
 			return nil, errors.Wrap(err, "oss.New failed")
 		}
@@ -39,7 +41,7 @@ func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClien
 	if err != nil {
 		return nil, errors.Wrap(err, "alics.ECSMetaDataRamSecurityCredentials failed")
 	}
-	client, err := oss.New(options.Endpoint, res.AccessKeyID, res.AccessKeySecret, oss.SecurityToken(res.SecurityToken))
+	client, err := oss.New(options.OSS.Endpoint, res.AccessKeyID, res.AccessKeySecret, oss.SecurityToken(res.SecurityToken))
 	if err != nil {
 		return nil, errors.Wrap(err, "oss.New failed")
 	}
@@ -61,7 +63,7 @@ func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClien
 				log.Errorf("alics.ECSMetaDataRamSecurityCredentials failed. err: [%+v]", err)
 				continue
 			}
-			client, err = oss.New(options.Endpoint, res.AccessKeyID, res.AccessKeySecret, oss.SecurityToken(res.SecurityToken))
+			client, err = oss.New(options.OSS.Endpoint, res.AccessKeyID, res.AccessKeySecret, oss.SecurityToken(res.SecurityToken))
 			if err != nil {
 				log.Errorf("clients.CreateConfigClient failed. err: [%+v]", err)
 				continue
