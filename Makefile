@@ -121,7 +121,7 @@ wrap/autogen_mongo.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packagePath "go.mongodb.org/mongo-driver/mongo" \
 		--packageName mongo \
 		--classPrefix Mongo \
-		--rule.starClass '{"include": "^(Client)|(Database)|(Collection)$$", "exclude": ".*"}' \
+		--rule.starClass '{"include": "^(?i:(Client)|(Database)|(Collection))$$", "exclude": ".*"}' \
 		--rule.onWrapperChange '{"include": "^Client$$"}' \
 		--rule.onRetryChange '{"include": "^Client$$"}' \
 		--rule.trace '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \

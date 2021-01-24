@@ -6,8 +6,6 @@ import (
 
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readconcern"
@@ -20,12 +18,6 @@ import (
 
 type MongoClientWrapper struct {
 	obj     *mongo.Client
-	retry   *Retry
-	options *WrapperOptions
-}
-
-type MongoClientEncryptionWrapper struct {
-	obj     *mongo.ClientEncryption
 	retry   *Retry
 	options *WrapperOptions
 }
@@ -43,10 +35,6 @@ type MongoDatabaseWrapper struct {
 }
 
 func (w *MongoClientWrapper) Unwrap() *mongo.Client {
-	return w.obj
-}
-
-func (w *MongoClientEncryptionWrapper) Unwrap() *mongo.ClientEncryption {
 	return w.obj
 }
 
@@ -224,65 +212,6 @@ func (w *MongoClientWrapper) Watch(ctx context.Context, pipeline interface{}, op
 	var err error
 	err = w.retry.Do(func() error {
 		res0, err = w.obj.Watch(ctx, pipeline, opts...)
-		return err
-	})
-	return res0, err
-}
-
-func (w *MongoClientEncryptionWrapper) Close(ctx context.Context) error {
-	if w.options.EnableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.ClientEncryption.Close")
-		defer span.Finish()
-	}
-
-	var err error
-	err = w.retry.Do(func() error {
-		err = w.obj.Close(ctx)
-		return err
-	})
-	return err
-}
-
-func (w *MongoClientEncryptionWrapper) CreateDataKey(ctx context.Context, kmsProvider string, opts ...*options.DataKeyOptions) (primitive.Binary, error) {
-	if w.options.EnableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.ClientEncryption.CreateDataKey")
-		defer span.Finish()
-	}
-
-	var res0 primitive.Binary
-	var err error
-	err = w.retry.Do(func() error {
-		res0, err = w.obj.CreateDataKey(ctx, kmsProvider, opts...)
-		return err
-	})
-	return res0, err
-}
-
-func (w *MongoClientEncryptionWrapper) Decrypt(ctx context.Context, val primitive.Binary) (bson.RawValue, error) {
-	if w.options.EnableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.ClientEncryption.Decrypt")
-		defer span.Finish()
-	}
-
-	var res0 bson.RawValue
-	var err error
-	err = w.retry.Do(func() error {
-		res0, err = w.obj.Decrypt(ctx, val)
-		return err
-	})
-	return res0, err
-}
-
-func (w *MongoClientEncryptionWrapper) Encrypt(ctx context.Context, val bson.RawValue, opts ...*options.EncryptOptions) (primitive.Binary, error) {
-	if w.options.EnableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.ClientEncryption.Encrypt")
-		defer span.Finish()
-	}
-
-	var res0 primitive.Binary
-	var err error
-	err = w.retry.Do(func() error {
-		res0, err = w.obj.Encrypt(ctx, val, opts...)
 		return err
 	})
 	return res0, err

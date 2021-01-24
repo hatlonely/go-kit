@@ -31,4 +31,12 @@ func TestRegex(t *testing.T) {
 		So(re.ReplaceAllStringFunc(`DB`, f), ShouldEqual, `gorm.DB`)
 		So(re.ReplaceAllStringFunc(`...DB`, f), ShouldEqual, `...gorm.DB`)
 	})
+
+	Convey("case2", t, func() {
+		re := regexp.MustCompile(`^(?i:(Client)|(Database)|(Collection))$`)
+		So(re.MatchString("ClientEncryption"), ShouldBeFalse)
+		So(re.MatchString("Client"), ShouldBeTrue)
+		So(re.MatchString("Database"), ShouldBeTrue)
+		So(re.MatchString("Collection"), ShouldBeTrue)
+	})
 }
