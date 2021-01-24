@@ -64,11 +64,11 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 func NewOTSTableStoreClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*OTSTableStoreClientWrapper, error) {
 	var options OTSTableStoreClientWrapperOptions
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "config.Config.Unmarshal failed")
 	}
 	w, err := NewOTSTableStoreClientWrapperWithOptions(&options)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "NewOTSTableStoreClientWrapperWithOptions failed")
 	}
 
 	refxOptions := refx.NewOptions(opts...)

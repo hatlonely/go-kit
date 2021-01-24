@@ -69,11 +69,11 @@ func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClien
 func NewOSSClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*OSSClientWrapper, error) {
 	var options OSSClientWrapperOptions
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "config.Config.Unmarshal failed")
 	}
 	w, err := NewOSSClientWrapperWithOptions(&options)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "NewOSSClientWrapperWithOptions failed")
 	}
 
 	refxOptions := refx.NewOptions(opts...)

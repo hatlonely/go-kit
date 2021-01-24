@@ -62,11 +62,11 @@ func NewGORMDBWrapperWithOptions(options *GORMDBWrapperOptions) (*GORMDBWrapper,
 func NewGORMDBWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*GORMDBWrapper, error) {
 	var options GORMDBWrapperOptions
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "config.Config.Unmarshal failed")
 	}
 	w, err := NewGORMDBWrapperWithOptions(&options)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "NewGORMDBWrapperWithOptions failed")
 	}
 
 	refxOptions := refx.NewOptions(opts...)
