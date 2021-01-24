@@ -35,11 +35,13 @@ type WrapperGeneratorOptions struct {
 	EnableRuleForChainFunc bool     `flag:"usage: enable trace on chain function"`
 
 	Rule struct {
-		Class     Rule
-		StarClass Rule
-		Function  map[string]Rule
-		Trace     map[string]Rule
-		Retry     map[string]Rule
+		Class           Rule
+		StarClass       Rule
+		OnWrapperChange Rule
+		OnRetryChange   Rule
+		Function        map[string]Rule
+		Trace           map[string]Rule
+		Retry           map[string]Rule
 	}
 }
 
@@ -71,13 +73,21 @@ func (g *WrapperGenerator) Generate() (string, error) {
 
 	buf.WriteString(g.generateWrapperHeader())
 
+	excludeAllRegex := regexp.MustCompile(`.*`)
+	if g.options.Rule.OnWrapperChange.Exclude == nil {
+		g.options.Rule.OnWrapperChange.Exclude = excludeAllRegex
+	}
+	if g.options.Rule.OnRetryChange.Exclude == nil {
+		g.options.Rule.OnRetryChange.Exclude = excludeAllRegex
+	}
+
 	classes := append(g.options.Classes, g.options.StarClasses...)
 	if len(classes) == 0 {
 		if g.options.Rule.StarClass.Exclude == nil {
-			g.options.Rule.StarClass.Exclude = regexp.MustCompile(`.*`)
+			g.options.Rule.StarClass.Exclude = excludeAllRegex
 		}
 		if g.options.Rule.Class.Exclude == nil {
-			g.options.Rule.Class.Exclude = regexp.MustCompile(`.*`)
+			g.options.Rule.Class.Exclude = excludeAllRegex
 		}
 		for _, function := range functions {
 			if !function.IsMethod {
@@ -106,6 +116,15 @@ func (g *WrapperGenerator) Generate() (string, error) {
 	}
 	for _, cls := range classes {
 		buf.WriteString(g.generateWrapperGet(cls))
+	}
+
+	for _, cls := range classes {
+		if g.MatchRule(cls, g.options.Rule.OnWrapperChange) {
+			buf.WriteString(g.generateWrapperOnWrapperChange(cls))
+		}
+		if g.MatchRule(cls, g.options.Rule.OnRetryChange) {
+			buf.WriteString(g.generateWrapperOnRetryChange(cls))
+		}
 	}
 
 	for _, function := range functions {
@@ -192,6 +211,62 @@ func (w {{.wrapClass}}) {{.unwrapFunc}}() *{{.package}}.{{.class}} {
 		"class":      cls,
 		"wrapClass":  wrapClass,
 		"unwrapFunc": g.options.UnwrapFunc,
+	})
+
+	return buf.String()
+}
+
+func (g *WrapperGenerator) generateWrapperOnWrapperChange(cls string) string {
+	const tplStr = `
+func (w *{{.wrapClass}}) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options WrapperOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		w.options = &options
+		return nil
+	}
+}
+`
+
+	tpl, _ := template.New("").Parse(tplStr)
+
+	var buf bytes.Buffer
+	_ = tpl.Execute(&buf, map[string]string{
+		"package":   g.options.Package,
+		"class":     cls,
+		"wrapClass": g.wrapClassMap[cls],
+	})
+
+	return buf.String()
+}
+
+func (g *WrapperGenerator) generateWrapperOnRetryChange(cls string) string {
+	const tplStr = `
+func (w *{{.wrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options RetryOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		retry, err := NewRetryWithOptions(&options)
+		if err != nil {
+			return errors.Wrap(err, "NewRetryWithOptions failed")
+		}
+		w.retry = retry
+		return nil
+	}
+}
+`
+
+	tpl, _ := template.New("").Parse(tplStr)
+
+	var buf bytes.Buffer
+	_ = tpl.Execute(&buf, map[string]string{
+		"package":   g.options.Package,
+		"class":     cls,
+		"wrapClass": g.wrapClassMap[cls],
 	})
 
 	return buf.String()

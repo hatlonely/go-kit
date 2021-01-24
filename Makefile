@@ -55,6 +55,8 @@ wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--package tablestore \
 		--classPrefix OTS \
 		--starClasses TableStoreClient \
+		--rule.onWrapperChange '{"include": "TableStoreClient"}' \
+		--rule.onRetryChange '{"include": "TableStoreClient"}' \
 		--output $@
 
 wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
@@ -63,6 +65,8 @@ wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--package kms \
 		--classPrefix KMS \
 		--starClasses Client \
+		--rule.onWrapperChange '{"include": "Client"}' \
+		--rule.onRetryChange '{"include": "Client"}' \
 		--output $@
 
 wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
