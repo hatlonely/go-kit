@@ -250,9 +250,10 @@ func TestExample4(t *testing.T) {
 		panic(err)
 	}
 	cfg.SetLogger(config.StdoutLogger{})
-	cfg.AddOnChangeHandler(func(conf *config.Config) {
+	cfg.AddOnChangeHandler(func(conf *config.Config) error {
 		RedisAddr.Set(conf.GetString("redis.addr"))
 		MysqlHost.Set(conf.GetString("mysql.host"))
+		return nil
 	})
 	if err := cfg.Watch(); err != nil {
 		panic(err)
@@ -298,12 +299,13 @@ func TestExample5(t *testing.T) {
 		panic(err)
 	}
 	cfg.SetLogger(config.StdoutLogger{})
-	cfg.AddOnItemChangeHandler("redis", func(conf *config.Config) {
+	cfg.AddOnItemChangeHandler("redis", func(conf *config.Config) error {
 		var opt Options
 		if err := conf.Unmarshal(&opt, refx.WithCamelName()); err != nil {
-			return
+			return err
 		}
 		options.Store(opt)
+		return nil
 	})
 	if err := cfg.Watch(); err != nil {
 		panic(err)

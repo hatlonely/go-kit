@@ -41,6 +41,7 @@ package config
 
 import (
 	"net"
+	"regexp"
 	"time"
 	
 	"github.com/hatlonely/go-kit/cast"
@@ -104,6 +105,7 @@ package config
 
 import (
 	"net"
+	"regexp"
 	"sync/atomic"
 	"time"
 )
@@ -141,19 +143,20 @@ func (c *Config) {name}Var(key string, av *Atomic{name}, opts ...BindOption) {{
 		v = c.Get{name}(key)
 	}}
 	av.Set(v)
-	c.AddOnItemChangeHandler(key, func(cfg *Config) {{
+	c.AddOnItemChangeHandler(key, func(cfg *Config) error {{
 		var err error
 		v, err = cfg.Get{name}E("")
 		if err != nil {{
 			if options.OnFail != nil {{
 				options.OnFail(err)
 			}}
-			return
+			return err
 		}}
 		av.Set(v)
 		if options.OnSucc != nil {{
 			options.OnSucc(cfg)
 		}}
+		return nil
 	}})
 }}
 """
@@ -184,6 +187,7 @@ package config
 
 import (
 	"net"
+	"regexp"
 	"sync/atomic"
 	"time"
 

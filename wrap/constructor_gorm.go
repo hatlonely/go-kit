@@ -6,6 +6,9 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 type GORMDBWrapperOptions struct {
@@ -53,3 +56,33 @@ func NewGORMDBWrapperWithOptions(options *GORMDBWrapperOptions) (*GORMDBWrapper,
 		options: &options.Wrapper,
 	}, nil
 }
+
+func NewGORMDBWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*GORMDBWrapper, error) {
+	var options GORMDBWrapperOptions
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
+		return nil, err
+	}
+	w, err := NewGORMDBWrapperWithOptions(&options)
+	if err != nil {
+		return nil, err
+	}
+
+	refxOptions := refx.NewOptions(opts...)
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), func(cfg *config.Config) error {
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		return nil
+	})
+
+	return w, err
+}
+
+//func (w *GORMDBWrapper) OnChangeHandler(cfg *config.Config, opts ...refx.Option) {
+//	var options GORMDBWrapperOptions
+//	if err := cfg.Unmarshal(&options, opts...); err != nil {
+//		fmt.Println(err)
+//		return
+//	}
+//	c.options = &options
+//}

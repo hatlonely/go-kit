@@ -3,8 +3,9 @@ package config
 
 import (
 	"net"
+	"regexp"
 	"time"
-	
+
 	"github.com/hatlonely/go-kit/cast"
 )
 
@@ -90,6 +91,16 @@ func (c *Config) GetTime(key string) time.Time {
 
 func (c *Config) GetIP(key string) net.IP {
 	v, _ := c.GetIPE(key)
+	return v
+}
+
+func (c *Config) GetRegex(key string) *regexp.Regexp {
+	v, _ := c.GetRegexE(key)
+	return v
+}
+
+func (c *Config) GetMapStringString(key string) map[string]string {
+	v, _ := c.GetMapStringStringE(key)
 	return v
 }
 
@@ -246,6 +257,24 @@ func (c *Config) GetIPE(key string) (net.IP, error) {
 	return cast.ToIPE(v)
 }
 
+func (c *Config) GetRegexE(key string) (*regexp.Regexp, error) {
+	v, err := c.GetE(key)
+	if err != nil {
+		var res *regexp.Regexp
+		return res, err
+	}
+	return cast.ToRegexE(v)
+}
+
+func (c *Config) GetMapStringStringE(key string) (map[string]string, error) {
+	v, err := c.GetE(key)
+	if err != nil {
+		var res map[string]string
+		return res, err
+	}
+	return cast.ToMapStringStringE(v)
+}
+
 func (c *Config) GetBoolP(key string) bool {
 	v, err := c.GetBoolE(key)
 	if err != nil {
@@ -382,6 +411,22 @@ func (c *Config) GetIPP(key string) net.IP {
 	return v
 }
 
+func (c *Config) GetRegexP(key string) *regexp.Regexp {
+	v, err := c.GetRegexE(key)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
+func (c *Config) GetMapStringStringP(key string) map[string]string {
+	v, err := c.GetMapStringStringE(key)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
 func (c *Config) GetBoolD(key string, dftVal bool) bool {
 	v, err := c.GetBoolE(key)
 	if err != nil {
@@ -512,6 +557,22 @@ func (c *Config) GetTimeD(key string, dftVal time.Time) time.Time {
 
 func (c *Config) GetIPD(key string, dftVal net.IP) net.IP {
 	v, err := c.GetIPE(key)
+	if err != nil {
+		return dftVal
+	}
+	return v
+}
+
+func (c *Config) GetRegexD(key string, dftVal *regexp.Regexp) *regexp.Regexp {
+	v, err := c.GetRegexE(key)
+	if err != nil {
+		return dftVal
+	}
+	return v
+}
+
+func (c *Config) GetMapStringStringD(key string, dftVal map[string]string) map[string]string {
+	v, err := c.GetMapStringStringE(key)
 	if err != nil {
 		return dftVal
 	}

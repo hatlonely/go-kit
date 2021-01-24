@@ -3,6 +3,7 @@ package config
 
 import (
 	"net"
+	"regexp"
 	"sync/atomic"
 	"time"
 
@@ -93,8 +94,8 @@ func Save() error {
 	return gcfg.Save()
 }
 
-func Diff(o *Config, key string) {
-	gcfg.Diff(o, key)
+func Diff(o *Config, key string) string {
+	return gcfg.Diff(o, key)
 }
 
 func ToString() string {
@@ -177,6 +178,14 @@ func GetIP(key string) net.IP {
 	return gcfg.GetIP(key)
 }
 
+func GetRegex(key string) *regexp.Regexp {
+	return gcfg.GetRegex(key)
+}
+
+func GetMapStringString(key string) map[string]string {
+	return gcfg.GetMapStringString(key)
+}
+
 func GetBoolE(key string) (bool, error) {
 	return gcfg.GetBoolE(key)
 }
@@ -243,6 +252,14 @@ func GetTimeE(key string) (time.Time, error) {
 
 func GetIPE(key string) (net.IP, error) {
 	return gcfg.GetIPE(key)
+}
+
+func GetRegexE(key string) (*regexp.Regexp, error) {
+	return gcfg.GetRegexE(key)
+}
+
+func GetMapStringStringE(key string) (map[string]string, error) {
+	return gcfg.GetMapStringStringE(key)
 }
 
 func GetBoolP(key string) bool {
@@ -313,6 +330,14 @@ func GetIPP(key string) net.IP {
 	return gcfg.GetIPP(key)
 }
 
+func GetRegexP(key string) *regexp.Regexp {
+	return gcfg.GetRegexP(key)
+}
+
+func GetMapStringStringP(key string) map[string]string {
+	return gcfg.GetMapStringStringP(key)
+}
+
 func GetBoolD(key string, dftVal bool) bool {
 	return gcfg.GetBoolD(key, dftVal)
 }
@@ -379,6 +404,14 @@ func GetTimeD(key string, dftVal time.Time) time.Time {
 
 func GetIPD(key string, dftVal net.IP) net.IP {
 	return gcfg.GetIPD(key, dftVal)
+}
+
+func GetRegexD(key string, dftVal *regexp.Regexp) *regexp.Regexp {
+	return gcfg.GetRegexD(key, dftVal)
+}
+
+func GetMapStringStringD(key string, dftVal map[string]string) map[string]string {
+	return gcfg.GetMapStringStringD(key, dftVal)
 }
 
 func Bind(key string, v interface{}, opts ...BindOption) *atomic.Value {
@@ -457,6 +490,14 @@ func IPVar(key string, av *AtomicIP, opts ...BindOption) {
 	gcfg.IPVar(key, av, opts...)
 }
 
+func RegexVar(key string, av *AtomicRegex, opts ...BindOption) {
+	gcfg.RegexVar(key, av, opts...)
+}
+
+func MapStringStringVar(key string, av *AtomicMapStringString, opts ...BindOption) {
+	gcfg.MapStringStringVar(key, av, opts...)
+}
+
 func Bool(key string, opts ...BindOption) *AtomicBool {
 	return gcfg.Bool(key, opts...)
 }
@@ -523,4 +564,12 @@ func Time(key string, opts ...BindOption) *AtomicTime {
 
 func IP(key string, opts ...BindOption) *AtomicIP {
 	return gcfg.IP(key, opts...)
+}
+
+func Regex(key string, opts ...BindOption) *AtomicRegex {
+	return gcfg.Regex(key, opts...)
+}
+
+func MapStringString(key string, opts ...BindOption) *AtomicMapStringString {
+	return gcfg.MapStringString(key, opts...)
 }

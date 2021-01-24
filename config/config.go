@@ -229,19 +229,23 @@ func (c *Config) Watch() error {
 			if !traveled[key] {
 				traveled[key] = true
 				for _, handler := range c.itemHandlers[key] {
-					handler(c.Sub(key))
+					if err := handler(c.Sub(key)); err != nil {
+						c.log.Warnf("OnItemChangeHandler failed. key [%v], err: [%+v]", key, err)
+					}
 				}
 			}
 
 			var err error
 			_, key, err = getLastToken(key)
 			if err != nil {
-				c.log.Warnf("get token failed. key [%v]", key)
+				c.log.Warnf("getLastToken failed. key [%v], err: [%+v]", key, err)
 			}
 		}
 
 		for _, handler := range c.itemHandlers[""] {
-			handler(c)
+			if err := handler(c); err != nil {
+				c.log.Warnf("OnChangeHandler failed. err: [%+v]", err)
+			}
 		}
 		return nil
 	})
@@ -265,25 +269,25 @@ func (c *Config) Watch() error {
 				}
 				buf, err := c.provider.Load()
 				if err != nil {
-					c.log.Warnf("provider load failed. err: [%v]", err)
+					c.log.Warnf("provider.Load failed. err: [%+v]", err)
 					continue
 				}
 				storage, err := c.decoder.Decode(buf)
 				if err != nil {
-					c.log.Warnf("decoder decode failed. err: [%v]", err)
+					c.log.Warnf("decoder.Decode failed. err: [%+v]", err)
 					continue
 				}
 				if err := storage.Decrypt(c.cipher); err != nil {
-					c.log.Warnf("storage decrypt failed. err: [%v]", err)
+					c.log.Warnf("storage.Decrypt failed. err: [%+v]", err)
 					continue
 				}
 				diffKeys, err := storage.Diff(*c.storage)
 				if err != nil {
-					c.log.Warnf("storage diff failed. err: [%v]", err)
+					c.log.Warnf("storage.Diff failed. err: [%+v]", err)
 					continue
 				}
 				c.storage = storage
-				c.log.Infof("reload config success. storage: %v", strx.JsonMarshal(c.storage.Interface()))
+				c.log.Infof("reload config success. storage: [%v]", strx.JsonMarshal(c.storage.Interface()))
 
 				traveled := map[string]bool{}
 				for _, key := range diffKeys {
@@ -291,20 +295,24 @@ func (c *Config) Watch() error {
 						if !traveled[key] {
 							traveled[key] = true
 							for _, handler := range c.itemHandlers[key] {
-								handler(c.Sub(key))
+								if err := handler(c.Sub(key)); err != nil {
+									c.log.Warnf("OnItemChangeHandler failed. key [%v], err: [%+v]", key, err)
+								}
 							}
 						}
 						_, key, err = getLastToken(key)
 						if err != nil {
-							c.log.Warnf("get token failed. key [%v]", key)
+							c.log.Warnf("getLastToken failed. key [%v], err: [%+v]", key, err)
 						}
 					}
 				}
 				for _, handler := range c.itemHandlers[""] {
-					handler(c)
+					if err := handler(c); err != nil {
+						c.log.Warnf("OnChangeHandler failed. err: [%+v]", err)
+					}
 				}
 			case err := <-c.provider.Errors():
-				c.log.Warnf("provider error [%v]", err)
+				c.log.Warnf("provider error. err: [%+v]", err)
 			case <-ticker.C:
 				c.log.Infof("tick")
 			case <-c.ctx.Done():
@@ -318,7 +326,7 @@ func (c *Config) Watch() error {
 	return nil
 }
 
-type OnChangeHandler func(cfg *Config)
+type OnChangeHandler func(cfg *Config) error
 
 func (c *Config) AddOnChangeHandler(handler OnChangeHandler) {
 	if c.parent != nil {

@@ -76,7 +76,7 @@ cfg.AddOnItemChangeHandler("redis", redisCli.OnChangeHandler)
 2. 提供基于 config 的构造函数
 
 ```go
-func NewMySQLWithConfig(cfg *config.Config, opts ...refx.Options) (*MySQLCli, error) {
+func NewMySQLWithConfig(cfg *config.Config, opts ...refx.Option) (*MySQLCli, error) {
     var options MySQLOptions
     if err := cfg.Unmarshal(&options, opts...); err != nil {
         return nil, err
