@@ -86,8 +86,8 @@ wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName oss \
 		--classPrefix OSS \
 		--starClasses Client,Bucket \
-		--rule.onWrapperChange '{"include": "^Client$$"}' \
-		--rule.onRetryChange '{"include": "^Client$$"}' \
+		--rule.onWrapperChange.include "^Client$$" \
+		--rule.onRetryChange.include "^Client$$" \
 		--rule.trace '{"Client": {"exclude": "^Bucket$$"}}' \
 		--rule.retry '{"Client": {"exclude": "^Bucket$$"}}' \
 		--output $@
@@ -109,7 +109,7 @@ wrap/autogen_elasticsearch.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packagePath "github.com/olivere/elastic/v7" \
 		--packageName elastic \
 		--classPrefix ES \
-		--rule.starClass '{"include": "(Client)|(.*Service)", "exclude": ".*"}' \
+		--rule.starClass '{"include": "^(?i:(Client)|(.*Service))$$", "exclude": ".*"}' \
 		--rule.onWrapperChange '{"include": "^Client$$"}' \
 		--rule.onRetryChange '{"include": "^Client$$"}' \
 		--rule.trace '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
