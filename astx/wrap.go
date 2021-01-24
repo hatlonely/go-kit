@@ -17,6 +17,8 @@ type WrapperGenerator struct {
 
 	wrapClassMap map[string]string
 	starClassSet map[string]bool
+
+	wrapPackagePrefix string
 }
 
 type Rule struct {
@@ -57,10 +59,30 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 		starClassSet[cls] = true
 	}
 
+	excludeAllRegex := regexp.MustCompile(`.*`)
+	if options.Rule.OnWrapperChange.Exclude == nil {
+		options.Rule.OnWrapperChange.Exclude = excludeAllRegex
+	}
+	if options.Rule.OnRetryChange.Exclude == nil {
+		options.Rule.OnRetryChange.Exclude = excludeAllRegex
+	}
+	if options.Rule.StarClass.Exclude == nil {
+		options.Rule.StarClass.Exclude = excludeAllRegex
+	}
+	if options.Rule.Class.Exclude == nil {
+		options.Rule.Class.Exclude = excludeAllRegex
+	}
+
+	var wrapPackagePrefix string
+	if options.OutputPackage != "wrap" {
+		wrapPackagePrefix = "wrap."
+	}
+
 	return &WrapperGenerator{
-		options:      options,
-		wrapClassMap: wrapClassMap,
-		starClassSet: starClassSet,
+		options:           options,
+		wrapClassMap:      wrapClassMap,
+		starClassSet:      starClassSet,
+		wrapPackagePrefix: wrapPackagePrefix,
 	}
 }
 
@@ -74,22 +96,8 @@ func (g *WrapperGenerator) Generate() (string, error) {
 
 	buf.WriteString(g.generateWrapperHeader())
 
-	excludeAllRegex := regexp.MustCompile(`.*`)
-	if g.options.Rule.OnWrapperChange.Exclude == nil {
-		g.options.Rule.OnWrapperChange.Exclude = excludeAllRegex
-	}
-	if g.options.Rule.OnRetryChange.Exclude == nil {
-		g.options.Rule.OnRetryChange.Exclude = excludeAllRegex
-	}
-
 	classes := append(g.options.Classes, g.options.StarClasses...)
 	if len(classes) == 0 {
-		if g.options.Rule.StarClass.Exclude == nil {
-			g.options.Rule.StarClass.Exclude = excludeAllRegex
-		}
-		if g.options.Rule.Class.Exclude == nil {
-			g.options.Rule.Class.Exclude = excludeAllRegex
-		}
 		for _, function := range functions {
 			if !function.IsMethod {
 				continue
@@ -175,8 +183,8 @@ func (g *WrapperGenerator) generateWrapperStruct(cls string) string {
 	const tplStr = `
 type {{.wrapClass}} struct {
 	obj     *{{.package}}.{{.class}}
-	retry   *Retry
-	options *WrapperOptions
+	retry   *{{.wrapPackagePrefix}}Retry
+	options *{{.wrapPackagePrefix}}WrapperOptions
 }
 `
 
@@ -184,9 +192,10 @@ type {{.wrapClass}} struct {
 
 	var buf bytes.Buffer
 	_ = tpl.Execute(&buf, map[string]string{
-		"package":   g.options.PackageName,
-		"class":     cls,
-		"wrapClass": g.wrapClassMap[cls],
+		"package":           g.options.PackageName,
+		"class":             cls,
+		"wrapClass":         g.wrapClassMap[cls],
+		"wrapPackagePrefix": g.wrapPackagePrefix,
 	})
 
 	return buf.String()
@@ -221,7 +230,7 @@ func (g *WrapperGenerator) generateWrapperOnWrapperChange(cls string) string {
 	const tplStr = `
 func (w *{{.wrapClass}}) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options WrapperOptions
+		var options {{.wrapPackagePrefix}}WrapperOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
@@ -235,9 +244,8 @@ func (w *{{.wrapClass}}) OnWrapperChange(opts ...refx.Option) config.OnChangeHan
 
 	var buf bytes.Buffer
 	_ = tpl.Execute(&buf, map[string]string{
-		"package":   g.options.PackageName,
-		"class":     cls,
-		"wrapClass": g.wrapClassMap[cls],
+		"wrapClass":         g.wrapClassMap[cls],
+		"wrapPackagePrefix": g.wrapPackagePrefix,
 	})
 
 	return buf.String()
@@ -247,11 +255,11 @@ func (g *WrapperGenerator) generateWrapperOnRetryChange(cls string) string {
 	const tplStr = `
 func (w *{{.wrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options RetryOptions
+		var options {{.wrapPackagePrefix}}RetryOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		retry, err := NewRetryWithOptions(&options)
+		retry, err := {{.wrapPackagePrefix}}NewRetryWithOptions(&options)
 		if err != nil {
 			return errors.Wrap(err, "NewRetryWithOptions failed")
 		}
@@ -265,9 +273,8 @@ func (w *{{.wrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandl
 
 	var buf bytes.Buffer
 	_ = tpl.Execute(&buf, map[string]string{
-		"package":   g.options.PackageName,
-		"class":     cls,
-		"wrapClass": g.wrapClassMap[cls],
+		"wrapClass":         g.wrapClassMap[cls],
+		"wrapPackagePrefix": g.wrapPackagePrefix,
 	})
 
 	return buf.String()
