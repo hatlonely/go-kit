@@ -6,8 +6,11 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 	"github.com/jinzhu/gorm"
 	"github.com/opentracing/opentracing-go"
+	"github.com/pkg/errors"
 )
 
 type GORMDBWrapper struct {
@@ -18,6 +21,32 @@ type GORMDBWrapper struct {
 
 func (w GORMDBWrapper) Unwrap() *gorm.DB {
 	return w.obj
+}
+
+func (w *GORMDBWrapper) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options WrapperOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		w.options = &options
+		return nil
+	}
+}
+
+func (w *GORMDBWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options RetryOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		retry, err := NewRetryWithOptions(&options)
+		if err != nil {
+			return errors.Wrap(err, "NewRetryWithOptions failed")
+		}
+		w.retry = retry
+		return nil
+	}
 }
 
 func (w GORMDBWrapper) AddError(ctx context.Context, err error) error {

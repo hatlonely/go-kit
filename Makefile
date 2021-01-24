@@ -65,8 +65,8 @@ wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--package kms \
 		--classPrefix KMS \
 		--starClasses Client \
-		--rule.onWrapperChange '{"include": "Client"}' \
-		--rule.onRetryChange '{"include": "Client"}' \
+		--rule.onWrapperChange '{"include": "^Client$$"}' \
+		--rule.onRetryChange '{"include": "^Client$$"}' \
 		--output $@
 
 wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
@@ -75,6 +75,8 @@ wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--package config_client \
 		--classPrefix ACM \
 		--starClasses ConfigClient \
+		--rule.onWrapperChange '{"include": "^ConfigClient$$"}' \
+		--rule.onRetryChange '{"include": "^ConfigClient$$"}' \
 		--output $@
 
 wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
@@ -83,6 +85,8 @@ wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--package oss \
 		--classPrefix OSS \
 		--starClasses Client,Bucket \
+		--rule.onWrapperChange '{"include": "^Client$$"}' \
+		--rule.onRetryChange '{"include": "^Client$$"}' \
 		--rule.trace '{"Client": {"exclude": "^Bucket$$"}}' \
 		--rule.retry '{"Client": {"exclude": "^Bucket$$"}}' \
 		--output $@
@@ -94,6 +98,8 @@ wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--classPrefix GORM \
 		--enableRuleForChainFunc \
 		--classes DB \
+		--rule.onWrapperChange '{"include": "^DB$$"}' \
+		--rule.onRetryChange '{"include": "^DB$$"}' \
 		--rule.function '{"DB": {"exclude": "^SetLogger$$"}}' \
 		--output $@
 
@@ -103,6 +109,8 @@ wrap/autogen_elasticsearch.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--package elastic \
 		--classPrefix ES \
 		--rule.starClass '{"include": "(Client)|(.*Service)", "exclude": ".*"}' \
+		--rule.onWrapperChange '{"include": "^Client$$"}' \
+		--rule.onRetryChange '{"include": "^Client$$"}' \
 		--rule.trace '{"default": {"exclude": ".*", "include": "Do"}, "Client": {"exclude": ".*"}}' \
 		--rule.retry '{"default": {"exclude": ".*", "include": "Do"}, "Client": {"exclude": ".*"}}' \
 		--output $@

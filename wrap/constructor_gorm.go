@@ -59,32 +59,6 @@ func NewGORMDBWrapperWithOptions(options *GORMDBWrapperOptions) (*GORMDBWrapper,
 	}, nil
 }
 
-func (w *GORMDBWrapper) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {
-	return func(cfg *config.Config) error {
-		var options WrapperOptions
-		if err := cfg.Unmarshal(&options, opts...); err != nil {
-			return errors.Wrap(err, "cfg.Unmarshal failed")
-		}
-		w.options = &options
-		return nil
-	}
-}
-
-func (w *GORMDBWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
-	return func(cfg *config.Config) error {
-		var options RetryOptions
-		if err := cfg.Unmarshal(&options, opts...); err != nil {
-			return errors.Wrap(err, "cfg.Unmarshal failed")
-		}
-		retry, err := NewRetryWithOptions(&options)
-		if err != nil {
-			return errors.Wrap(err, "NewRetryWithOptions failed")
-		}
-		w.retry = retry
-		return nil
-	}
-}
-
 func NewGORMDBWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*GORMDBWrapper, error) {
 	var options GORMDBWrapperOptions
 	if err := cfg.Unmarshal(&options, opts...); err != nil {

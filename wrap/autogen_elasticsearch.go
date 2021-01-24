@@ -6,8 +6,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 	"github.com/olivere/elastic/v7"
 	"github.com/opentracing/opentracing-go"
+	"github.com/pkg/errors"
 )
 
 type ESAliasServiceWrapper struct {
@@ -1108,6 +1111,32 @@ func (w *ESXPackWatcherStatsServiceWrapper) Unwrap() *elastic.XPackWatcherStatsS
 
 func (w *ESXPackWatcherStopServiceWrapper) Unwrap() *elastic.XPackWatcherStopService {
 	return w.obj
+}
+
+func (w *ESClientWrapper) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options WrapperOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		w.options = &options
+		return nil
+	}
+}
+
+func (w *ESClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options RetryOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		retry, err := NewRetryWithOptions(&options)
+		if err != nil {
+			return errors.Wrap(err, "NewRetryWithOptions failed")
+		}
+		w.retry = retry
+		return nil
+	}
 }
 
 func (w *ESAliasServiceWrapper) Action(action ...elastic.AliasAction) *ESAliasServiceWrapper {

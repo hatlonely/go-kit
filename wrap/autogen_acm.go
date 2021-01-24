@@ -4,10 +4,13 @@ package wrap
 import (
 	"context"
 
+	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 	"github.com/nacos-group/nacos-sdk-go/clients/config_client"
 	"github.com/nacos-group/nacos-sdk-go/model"
 	"github.com/nacos-group/nacos-sdk-go/vo"
 	"github.com/opentracing/opentracing-go"
+	"github.com/pkg/errors"
 )
 
 type ACMConfigClientWrapper struct {
@@ -18,6 +21,32 @@ type ACMConfigClientWrapper struct {
 
 func (w *ACMConfigClientWrapper) Unwrap() *config_client.ConfigClient {
 	return w.obj
+}
+
+func (w *ACMConfigClientWrapper) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options WrapperOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		w.options = &options
+		return nil
+	}
+}
+
+func (w *ACMConfigClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options RetryOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		retry, err := NewRetryWithOptions(&options)
+		if err != nil {
+			return errors.Wrap(err, "NewRetryWithOptions failed")
+		}
+		w.retry = retry
+		return nil
+	}
 }
 
 func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param vo.ConfigParam) error {

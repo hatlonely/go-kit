@@ -9,7 +9,10 @@ import (
 	"time"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
+	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 	"github.com/opentracing/opentracing-go"
+	"github.com/pkg/errors"
 )
 
 type OSSBucketWrapper struct {
@@ -30,6 +33,32 @@ func (w *OSSBucketWrapper) Unwrap() *oss.Bucket {
 
 func (w *OSSClientWrapper) Unwrap() *oss.Client {
 	return w.obj
+}
+
+func (w *OSSClientWrapper) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options WrapperOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		w.options = &options
+		return nil
+	}
+}
+
+func (w *OSSClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options RetryOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		retry, err := NewRetryWithOptions(&options)
+		if err != nil {
+			return errors.Wrap(err, "NewRetryWithOptions failed")
+		}
+		w.retry = retry
+		return nil
+	}
 }
 
 func (w *OSSBucketWrapper) AbortMultipartUpload(ctx context.Context, imur oss.InitiateMultipartUploadResult, options ...oss.Option) error {
