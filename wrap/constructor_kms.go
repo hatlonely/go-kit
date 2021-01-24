@@ -75,7 +75,7 @@ func NewKMSClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*KM
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
-	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Gorm"), func(cfg *config.Config) error {
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("KMS"), func(cfg *config.Config) error {
 		var options KMSOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")

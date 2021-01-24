@@ -74,7 +74,7 @@ func NewOTSTableStoreClientWrapperWithConfig(cfg *config.Config, opts ...refx.Op
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
-	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Gorm"), func(cfg *config.Config) error {
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("OTS"), func(cfg *config.Config) error {
 		var options OTSOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
@@ -96,9 +96,7 @@ func NewOTSTableStoreClientWrapperWithConfig(cfg *config.Config, opts ...refx.Op
 		if _, err := client.ListTable(); err != nil {
 			return errors.Wrap(err, "tablestore.TableStoreClient.ListTable failed")
 		}
-
 		w.obj = client
-
 		go w.UpdateCredentialByECSRole(res, &options)
 
 		return nil
