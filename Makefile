@@ -47,7 +47,8 @@ wrap: wrap/autogen_ots.go \
 	wrap/autogen_acm.go \
 	wrap/autogen_oss.go \
 	wrap/autogen_gorm.go \
-	wrap/autogen_elasticsearch.go
+	wrap/autogen_elasticsearch.go \
+	wrap/autogen_mongo.go
 
 wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 	build/bin/gen --sourcePath vendor \
@@ -113,4 +114,15 @@ wrap/autogen_elasticsearch.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.onRetryChange '{"include": "^Client$$"}' \
 		--rule.trace '{"default": {"exclude": ".*", "include": "Do"}, "Client": {"exclude": ".*"}}' \
 		--rule.retry '{"default": {"exclude": ".*", "include": "Do"}, "Client": {"exclude": ".*"}}' \
+		--output $@
+
+wrap/autogen_mongo.go: build/bin/gen vendor $(wildcard astx/*.go)
+	build/bin/gen --sourcePath vendor \
+		--packagePath "go.mongodb.org/mongo-driver/mongo" \
+		--packageName mongo \
+		--classPrefix Mongo \
+		--rule.starClass '{"include": "^(Client)|(Database)|(Collection)$$", "exclude": ".*"}' \
+		--rule.onWrapperChange '{"include": "^Client$$"}' \
+		--rule.onRetryChange '{"include": "^Client$$"}' \
+		--rule.trace '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
 		--output $@
