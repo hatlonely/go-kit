@@ -5837,7 +5837,7 @@ func (w *ESIndicesRolloverServiceWrapper) AddMaxIndexAgeCondition(time string) *
 	return w
 }
 
-func (w *ESIndicesRolloverServiceWrapper) AddMaxIndexDocsCondition(ctx context.Context, docs int64) *ESIndicesRolloverServiceWrapper {
+func (w *ESIndicesRolloverServiceWrapper) AddMaxIndexDocsCondition(docs int64) *ESIndicesRolloverServiceWrapper {
 	w.obj = w.obj.AddMaxIndexDocsCondition(docs)
 	return w
 }
