@@ -48,7 +48,8 @@ wrap: wrap/autogen_ots.go \
 	wrap/autogen_oss.go \
 	wrap/autogen_gorm.go \
 	wrap/autogen_elasticsearch.go \
-	wrap/autogen_mongo.go
+	wrap/autogen_mongo.go \
+	wrap/autogen_redis.go
 
 wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 	build/bin/gen --sourcePath vendor \
@@ -125,4 +126,14 @@ wrap/autogen_mongo.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.onWrapperChange '{"include": "^Client$$"}' \
 		--rule.onRetryChange '{"include": "^Client$$"}' \
 		--rule.trace '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
+		--output $@
+
+wrap/autogen_redis.go: build/bin/gen vendor $(wildcard astx/*.go)
+	build/bin/gen --sourcePath vendor \
+		--packagePath "github.com/go-redis/redis" \
+		--packageName redis \
+		--classPrefix Redis \
+		--starClasses Client,ClusterClient \
+		--rule.onWrapperChange '{"include": "^(?i:(Client)|(ClusterClient))$$"}' \
+		--rule.onRetryChange '{"include": "^(?i:(Client)|(ClusterClient))$$"}' \
 		--output $@
