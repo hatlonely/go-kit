@@ -16,6 +16,10 @@ type GORMDBWrapper struct {
 	options *WrapperOptions
 }
 
+func (w *GORMDBWrapper) Unwrap() *gorm.DB {
+	return w.obj
+}
+
 func (w GORMDBWrapper) AddError(ctx context.Context, err error) error {
 	if w.options.EnableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AddError")

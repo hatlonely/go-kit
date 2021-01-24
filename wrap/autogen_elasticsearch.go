@@ -670,6 +670,446 @@ type ESXPackWatcherStopServiceWrapper struct {
 	options *WrapperOptions
 }
 
+func (w *ESAliasServiceWrapper) Unwrap() *elastic.AliasService {
+	return w.obj
+}
+
+func (w *ESAliasesServiceWrapper) Unwrap() *elastic.AliasesService {
+	return w.obj
+}
+
+func (w *ESBulkProcessorServiceWrapper) Unwrap() *elastic.BulkProcessorService {
+	return w.obj
+}
+
+func (w *ESBulkServiceWrapper) Unwrap() *elastic.BulkService {
+	return w.obj
+}
+
+func (w *ESCatAliasesServiceWrapper) Unwrap() *elastic.CatAliasesService {
+	return w.obj
+}
+
+func (w *ESCatAllocationServiceWrapper) Unwrap() *elastic.CatAllocationService {
+	return w.obj
+}
+
+func (w *ESCatCountServiceWrapper) Unwrap() *elastic.CatCountService {
+	return w.obj
+}
+
+func (w *ESCatHealthServiceWrapper) Unwrap() *elastic.CatHealthService {
+	return w.obj
+}
+
+func (w *ESCatIndicesServiceWrapper) Unwrap() *elastic.CatIndicesService {
+	return w.obj
+}
+
+func (w *ESCatShardsServiceWrapper) Unwrap() *elastic.CatShardsService {
+	return w.obj
+}
+
+func (w *ESClearScrollServiceWrapper) Unwrap() *elastic.ClearScrollService {
+	return w.obj
+}
+
+func (w *ESClientWrapper) Unwrap() *elastic.Client {
+	return w.obj
+}
+
+func (w *ESClusterHealthServiceWrapper) Unwrap() *elastic.ClusterHealthService {
+	return w.obj
+}
+
+func (w *ESClusterRerouteServiceWrapper) Unwrap() *elastic.ClusterRerouteService {
+	return w.obj
+}
+
+func (w *ESClusterStateServiceWrapper) Unwrap() *elastic.ClusterStateService {
+	return w.obj
+}
+
+func (w *ESClusterStatsServiceWrapper) Unwrap() *elastic.ClusterStatsService {
+	return w.obj
+}
+
+func (w *ESCountServiceWrapper) Unwrap() *elastic.CountService {
+	return w.obj
+}
+
+func (w *ESDeleteByQueryServiceWrapper) Unwrap() *elastic.DeleteByQueryService {
+	return w.obj
+}
+
+func (w *ESDeleteScriptServiceWrapper) Unwrap() *elastic.DeleteScriptService {
+	return w.obj
+}
+
+func (w *ESDeleteServiceWrapper) Unwrap() *elastic.DeleteService {
+	return w.obj
+}
+
+func (w *ESExistsServiceWrapper) Unwrap() *elastic.ExistsService {
+	return w.obj
+}
+
+func (w *ESExplainServiceWrapper) Unwrap() *elastic.ExplainService {
+	return w.obj
+}
+
+func (w *ESFieldCapsServiceWrapper) Unwrap() *elastic.FieldCapsService {
+	return w.obj
+}
+
+func (w *ESGetScriptServiceWrapper) Unwrap() *elastic.GetScriptService {
+	return w.obj
+}
+
+func (w *ESGetServiceWrapper) Unwrap() *elastic.GetService {
+	return w.obj
+}
+
+func (w *ESIndexServiceWrapper) Unwrap() *elastic.IndexService {
+	return w.obj
+}
+
+func (w *ESIndicesAnalyzeServiceWrapper) Unwrap() *elastic.IndicesAnalyzeService {
+	return w.obj
+}
+
+func (w *ESIndicesClearCacheServiceWrapper) Unwrap() *elastic.IndicesClearCacheService {
+	return w.obj
+}
+
+func (w *ESIndicesCloseServiceWrapper) Unwrap() *elastic.IndicesCloseService {
+	return w.obj
+}
+
+func (w *ESIndicesCreateServiceWrapper) Unwrap() *elastic.IndicesCreateService {
+	return w.obj
+}
+
+func (w *ESIndicesDeleteServiceWrapper) Unwrap() *elastic.IndicesDeleteService {
+	return w.obj
+}
+
+func (w *ESIndicesDeleteTemplateServiceWrapper) Unwrap() *elastic.IndicesDeleteTemplateService {
+	return w.obj
+}
+
+func (w *ESIndicesExistsServiceWrapper) Unwrap() *elastic.IndicesExistsService {
+	return w.obj
+}
+
+func (w *ESIndicesExistsTemplateServiceWrapper) Unwrap() *elastic.IndicesExistsTemplateService {
+	return w.obj
+}
+
+func (w *ESIndicesFlushServiceWrapper) Unwrap() *elastic.IndicesFlushService {
+	return w.obj
+}
+
+func (w *ESIndicesForcemergeServiceWrapper) Unwrap() *elastic.IndicesForcemergeService {
+	return w.obj
+}
+
+func (w *ESIndicesFreezeServiceWrapper) Unwrap() *elastic.IndicesFreezeService {
+	return w.obj
+}
+
+func (w *ESIndicesGetFieldMappingServiceWrapper) Unwrap() *elastic.IndicesGetFieldMappingService {
+	return w.obj
+}
+
+func (w *ESIndicesGetMappingServiceWrapper) Unwrap() *elastic.IndicesGetMappingService {
+	return w.obj
+}
+
+func (w *ESIndicesGetServiceWrapper) Unwrap() *elastic.IndicesGetService {
+	return w.obj
+}
+
+func (w *ESIndicesGetSettingsServiceWrapper) Unwrap() *elastic.IndicesGetSettingsService {
+	return w.obj
+}
+
+func (w *ESIndicesGetTemplateServiceWrapper) Unwrap() *elastic.IndicesGetTemplateService {
+	return w.obj
+}
+
+func (w *ESIndicesOpenServiceWrapper) Unwrap() *elastic.IndicesOpenService {
+	return w.obj
+}
+
+func (w *ESIndicesPutMappingServiceWrapper) Unwrap() *elastic.IndicesPutMappingService {
+	return w.obj
+}
+
+func (w *ESIndicesPutSettingsServiceWrapper) Unwrap() *elastic.IndicesPutSettingsService {
+	return w.obj
+}
+
+func (w *ESIndicesPutTemplateServiceWrapper) Unwrap() *elastic.IndicesPutTemplateService {
+	return w.obj
+}
+
+func (w *ESIndicesRolloverServiceWrapper) Unwrap() *elastic.IndicesRolloverService {
+	return w.obj
+}
+
+func (w *ESIndicesSegmentsServiceWrapper) Unwrap() *elastic.IndicesSegmentsService {
+	return w.obj
+}
+
+func (w *ESIndicesShrinkServiceWrapper) Unwrap() *elastic.IndicesShrinkService {
+	return w.obj
+}
+
+func (w *ESIndicesStatsServiceWrapper) Unwrap() *elastic.IndicesStatsService {
+	return w.obj
+}
+
+func (w *ESIndicesSyncedFlushServiceWrapper) Unwrap() *elastic.IndicesSyncedFlushService {
+	return w.obj
+}
+
+func (w *ESIndicesUnfreezeServiceWrapper) Unwrap() *elastic.IndicesUnfreezeService {
+	return w.obj
+}
+
+func (w *ESIngestDeletePipelineServiceWrapper) Unwrap() *elastic.IngestDeletePipelineService {
+	return w.obj
+}
+
+func (w *ESIngestGetPipelineServiceWrapper) Unwrap() *elastic.IngestGetPipelineService {
+	return w.obj
+}
+
+func (w *ESIngestPutPipelineServiceWrapper) Unwrap() *elastic.IngestPutPipelineService {
+	return w.obj
+}
+
+func (w *ESIngestSimulatePipelineServiceWrapper) Unwrap() *elastic.IngestSimulatePipelineService {
+	return w.obj
+}
+
+func (w *ESMgetServiceWrapper) Unwrap() *elastic.MgetService {
+	return w.obj
+}
+
+func (w *ESMultiSearchServiceWrapper) Unwrap() *elastic.MultiSearchService {
+	return w.obj
+}
+
+func (w *ESMultiTermvectorServiceWrapper) Unwrap() *elastic.MultiTermvectorService {
+	return w.obj
+}
+
+func (w *ESNodesInfoServiceWrapper) Unwrap() *elastic.NodesInfoService {
+	return w.obj
+}
+
+func (w *ESNodesStatsServiceWrapper) Unwrap() *elastic.NodesStatsService {
+	return w.obj
+}
+
+func (w *ESPingServiceWrapper) Unwrap() *elastic.PingService {
+	return w.obj
+}
+
+func (w *ESPutScriptServiceWrapper) Unwrap() *elastic.PutScriptService {
+	return w.obj
+}
+
+func (w *ESRefreshServiceWrapper) Unwrap() *elastic.RefreshService {
+	return w.obj
+}
+
+func (w *ESReindexServiceWrapper) Unwrap() *elastic.ReindexService {
+	return w.obj
+}
+
+func (w *ESScrollServiceWrapper) Unwrap() *elastic.ScrollService {
+	return w.obj
+}
+
+func (w *ESSearchServiceWrapper) Unwrap() *elastic.SearchService {
+	return w.obj
+}
+
+func (w *ESSearchShardsServiceWrapper) Unwrap() *elastic.SearchShardsService {
+	return w.obj
+}
+
+func (w *ESSnapshotCreateRepositoryServiceWrapper) Unwrap() *elastic.SnapshotCreateRepositoryService {
+	return w.obj
+}
+
+func (w *ESSnapshotCreateServiceWrapper) Unwrap() *elastic.SnapshotCreateService {
+	return w.obj
+}
+
+func (w *ESSnapshotDeleteRepositoryServiceWrapper) Unwrap() *elastic.SnapshotDeleteRepositoryService {
+	return w.obj
+}
+
+func (w *ESSnapshotDeleteServiceWrapper) Unwrap() *elastic.SnapshotDeleteService {
+	return w.obj
+}
+
+func (w *ESSnapshotGetRepositoryServiceWrapper) Unwrap() *elastic.SnapshotGetRepositoryService {
+	return w.obj
+}
+
+func (w *ESSnapshotGetServiceWrapper) Unwrap() *elastic.SnapshotGetService {
+	return w.obj
+}
+
+func (w *ESSnapshotRestoreServiceWrapper) Unwrap() *elastic.SnapshotRestoreService {
+	return w.obj
+}
+
+func (w *ESSnapshotStatusServiceWrapper) Unwrap() *elastic.SnapshotStatusService {
+	return w.obj
+}
+
+func (w *ESSnapshotVerifyRepositoryServiceWrapper) Unwrap() *elastic.SnapshotVerifyRepositoryService {
+	return w.obj
+}
+
+func (w *ESTasksCancelServiceWrapper) Unwrap() *elastic.TasksCancelService {
+	return w.obj
+}
+
+func (w *ESTasksGetTaskServiceWrapper) Unwrap() *elastic.TasksGetTaskService {
+	return w.obj
+}
+
+func (w *ESTasksListServiceWrapper) Unwrap() *elastic.TasksListService {
+	return w.obj
+}
+
+func (w *ESTermvectorsServiceWrapper) Unwrap() *elastic.TermvectorsService {
+	return w.obj
+}
+
+func (w *ESUpdateByQueryServiceWrapper) Unwrap() *elastic.UpdateByQueryService {
+	return w.obj
+}
+
+func (w *ESUpdateServiceWrapper) Unwrap() *elastic.UpdateService {
+	return w.obj
+}
+
+func (w *ESValidateServiceWrapper) Unwrap() *elastic.ValidateService {
+	return w.obj
+}
+
+func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmDeleteLifecycleService {
+	return w.obj
+}
+
+func (w *ESXPackIlmGetLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmGetLifecycleService {
+	return w.obj
+}
+
+func (w *ESXPackIlmPutLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmPutLifecycleService {
+	return w.obj
+}
+
+func (w *ESXPackInfoServiceWrapper) Unwrap() *elastic.XPackInfoService {
+	return w.obj
+}
+
+func (w *ESXPackSecurityChangePasswordServiceWrapper) Unwrap() *elastic.XPackSecurityChangePasswordService {
+	return w.obj
+}
+
+func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteRoleMappingService {
+	return w.obj
+}
+
+func (w *ESXPackSecurityDeleteRoleServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteRoleService {
+	return w.obj
+}
+
+func (w *ESXPackSecurityDeleteUserServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteUserService {
+	return w.obj
+}
+
+func (w *ESXPackSecurityDisableUserServiceWrapper) Unwrap() *elastic.XPackSecurityDisableUserService {
+	return w.obj
+}
+
+func (w *ESXPackSecurityEnableUserServiceWrapper) Unwrap() *elastic.XPackSecurityEnableUserService {
+	return w.obj
+}
+
+func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityGetRoleMappingService {
+	return w.obj
+}
+
+func (w *ESXPackSecurityGetRoleServiceWrapper) Unwrap() *elastic.XPackSecurityGetRoleService {
+	return w.obj
+}
+
+func (w *ESXPackSecurityGetUserServiceWrapper) Unwrap() *elastic.XPackSecurityGetUserService {
+	return w.obj
+}
+
+func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityPutRoleMappingService {
+	return w.obj
+}
+
+func (w *ESXPackSecurityPutRoleServiceWrapper) Unwrap() *elastic.XPackSecurityPutRoleService {
+	return w.obj
+}
+
+func (w *ESXPackSecurityPutUserServiceWrapper) Unwrap() *elastic.XPackSecurityPutUserService {
+	return w.obj
+}
+
+func (w *ESXPackWatcherAckWatchServiceWrapper) Unwrap() *elastic.XPackWatcherAckWatchService {
+	return w.obj
+}
+
+func (w *ESXPackWatcherActivateWatchServiceWrapper) Unwrap() *elastic.XPackWatcherActivateWatchService {
+	return w.obj
+}
+
+func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Unwrap() *elastic.XPackWatcherDeactivateWatchService {
+	return w.obj
+}
+
+func (w *ESXPackWatcherDeleteWatchServiceWrapper) Unwrap() *elastic.XPackWatcherDeleteWatchService {
+	return w.obj
+}
+
+func (w *ESXPackWatcherExecuteWatchServiceWrapper) Unwrap() *elastic.XPackWatcherExecuteWatchService {
+	return w.obj
+}
+
+func (w *ESXPackWatcherGetWatchServiceWrapper) Unwrap() *elastic.XPackWatcherGetWatchService {
+	return w.obj
+}
+
+func (w *ESXPackWatcherPutWatchServiceWrapper) Unwrap() *elastic.XPackWatcherPutWatchService {
+	return w.obj
+}
+
+func (w *ESXPackWatcherStartServiceWrapper) Unwrap() *elastic.XPackWatcherStartService {
+	return w.obj
+}
+
+func (w *ESXPackWatcherStatsServiceWrapper) Unwrap() *elastic.XPackWatcherStatsService {
+	return w.obj
+}
+
+func (w *ESXPackWatcherStopServiceWrapper) Unwrap() *elastic.XPackWatcherStopService {
+	return w.obj
+}
+
 func (w *ESAliasServiceWrapper) Action(action ...elastic.AliasAction) *ESAliasServiceWrapper {
 	w.obj = w.obj.Action(action...)
 	return w

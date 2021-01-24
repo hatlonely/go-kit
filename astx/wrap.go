@@ -31,6 +31,7 @@ type WrapperGeneratorOptions struct {
 	Classes     []string `flag:"usage: classes to wrap"`
 	StarClasses []string `flag:"usage: star classes to wrap"`
 	ClassPrefix string   `flag:"usage: wrap class name"`
+	UnwrapFunc  string   `flag:"usage: unwrap function name; default: Unwrap" dft:"Unwrap"`
 
 	Rule struct {
 		Class     Rule
@@ -102,6 +103,9 @@ func (g *WrapperGenerator) Generate() (string, error) {
 	for _, cls := range classes {
 		buf.WriteString(g.generateWrapperStruct(cls))
 	}
+	for _, cls := range classes {
+		buf.WriteString(g.generateWrapperGet(cls))
+	}
 
 	for _, function := range functions {
 		if !function.IsMethod {
@@ -162,6 +166,26 @@ type {{.wrapClass}} struct {
 		"package":   g.options.Package,
 		"class":     cls,
 		"wrapClass": g.wrapClassMap[cls],
+	})
+
+	return buf.String()
+}
+
+func (g *WrapperGenerator) generateWrapperGet(cls string) string {
+	const tplStr = `
+func (w *{{.wrapClass}}) {{.unwrapFunc}}() *{{.package}}.{{.class}} {
+	return w.obj
+}
+`
+
+	tpl, _ := template.New("").Parse(tplStr)
+
+	var buf bytes.Buffer
+	_ = tpl.Execute(&buf, map[string]string{
+		"package":    g.options.Package,
+		"class":      cls,
+		"wrapClass":  g.wrapClassMap[cls],
+		"unwrapFunc": g.options.UnwrapFunc,
 	})
 
 	return buf.String()

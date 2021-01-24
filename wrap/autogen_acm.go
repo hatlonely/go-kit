@@ -16,6 +16,10 @@ type ACMConfigClientWrapper struct {
 	options *WrapperOptions
 }
 
+func (w *ACMConfigClientWrapper) Unwrap() *config_client.ConfigClient {
+	return w.obj
+}
+
 func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param vo.ConfigParam) error {
 	if w.options.EnableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.CancelListenConfig")

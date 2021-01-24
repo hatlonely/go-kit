@@ -24,6 +24,14 @@ type OSSClientWrapper struct {
 	options *WrapperOptions
 }
 
+func (w *OSSBucketWrapper) Unwrap() *oss.Bucket {
+	return w.obj
+}
+
+func (w *OSSClientWrapper) Unwrap() *oss.Client {
+	return w.obj
+}
+
 func (w *OSSBucketWrapper) AbortMultipartUpload(ctx context.Context, imur oss.InitiateMultipartUploadResult, options ...oss.Option) error {
 	if w.options.EnableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.AbortMultipartUpload")

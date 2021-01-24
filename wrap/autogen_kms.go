@@ -14,6 +14,10 @@ type KMSClientWrapper struct {
 	options *WrapperOptions
 }
 
+func (w *KMSClientWrapper) Unwrap() *kms.Client {
+	return w.obj
+}
+
 func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.AsymmetricDecryptRequest) (*kms.AsymmetricDecryptResponse, error) {
 	if w.options.EnableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricDecrypt")

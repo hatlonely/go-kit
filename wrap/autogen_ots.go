@@ -14,6 +14,10 @@ type OTSTableStoreClientWrapper struct {
 	options *WrapperOptions
 }
 
+func (w *OTSTableStoreClientWrapper) Unwrap() *tablestore.TableStoreClient {
+	return w.obj
+}
+
 func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, request *tablestore.AbortTransactionRequest) (*tablestore.AbortTransactionResponse, error) {
 	if w.options.EnableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.AbortTransaction")
