@@ -6,11 +6,12 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/hatlonely/go-kit/config"
-	"github.com/hatlonely/go-kit/refx"
 	"github.com/jinzhu/gorm"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 type GORMDBWrapper struct {

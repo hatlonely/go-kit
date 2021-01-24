@@ -4,13 +4,14 @@ package wrap
 import (
 	"context"
 
-	"github.com/hatlonely/go-kit/config"
-	"github.com/hatlonely/go-kit/refx"
 	"github.com/nacos-group/nacos-sdk-go/clients/config_client"
 	"github.com/nacos-group/nacos-sdk-go/model"
 	"github.com/nacos-group/nacos-sdk-go/vo"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 type ACMConfigClientWrapper struct {

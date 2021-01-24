@@ -6,11 +6,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/hatlonely/go-kit/config"
-	"github.com/hatlonely/go-kit/refx"
 	"github.com/olivere/elastic/v7"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 type ESAliasServiceWrapper struct {

@@ -158,23 +158,25 @@ func (g *WrapperGenerator) Generate() (string, error) {
 }
 
 func (g *WrapperGenerator) generateWrapperHeader() string {
-	const tplStr = `// autogen by github.com/hatlonely/go-kit/astx/wrap.go. do not edit!
-package wrap
-
-import (
-	"context"
-
-	"{{.pkgPath}}"
-	"github.com/opentracing/opentracing-go"
-)
-`
-
-	tpl, _ := template.New("").Parse(tplStr)
-
 	var buf bytes.Buffer
-	_ = tpl.Execute(&buf, map[string]string{
-		"pkgPath": g.options.PackagePath,
-	})
+
+	buf.WriteString("// autogen by github.com/hatlonely/go-kit/astx/wrap.go. do not edit!\n")
+	buf.WriteString(fmt.Sprintf("package %s\n\n", g.options.OutputPackage))
+	buf.WriteString("import (\n")
+	buf.WriteString("\t\"context\"\n")
+	buf.WriteString("")
+	buf.WriteString(fmt.Sprintf("\t\"%s\"\n", g.options.PackagePath))
+	buf.WriteString(fmt.Sprintf("\t\"github.com/opentracing/opentracing-go\"\n\n"))
+
+	if g.options.OutputPackage != "wrap" {
+		buf.WriteString(fmt.Sprintf("\t\"github.com/hatlonely/go-kit/wrap\"\n"))
+	}
+	if g.options.Rule.OnWrapperChange.Include != nil || g.options.Rule.OnRetryChange.Include != nil {
+		buf.WriteString(fmt.Sprintf("\t\"github.com/hatlonely/go-kit/config\"\n"))
+		buf.WriteString(fmt.Sprintf("\t\"github.com/hatlonely/go-kit/rpcx\"\n"))
+	}
+
+	buf.WriteString(")\n")
 
 	return buf.String()
 }

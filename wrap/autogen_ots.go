@@ -5,10 +5,11 @@ import (
 	"context"
 
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
-	"github.com/hatlonely/go-kit/config"
-	"github.com/hatlonely/go-kit/refx"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 type OTSTableStoreClientWrapper struct {
