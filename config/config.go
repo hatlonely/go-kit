@@ -300,7 +300,9 @@ func (c *Config) Watch() error {
 									continue out
 								}
 							}
-							c.log.Infof("OnItemChangeHandler success. key: [%v]", key)
+							if len(c.itemHandlers[key]) != 0 {
+								c.log.Infof("OnItemChangeHandler success. key: [%v], handlersNum: [%v]", key, len(c.itemHandlers[key]))
+							}
 						}
 						_, key, err = getLastToken(key)
 						if err != nil {
@@ -315,7 +317,7 @@ func (c *Config) Watch() error {
 						continue out
 					}
 				}
-				c.log.Infof("OnChangeHandler success")
+				c.log.Infof("OnChangeHandler success. handlerNum: [%v]", len(c.itemHandlers[""]))
 			case err := <-c.provider.Errors():
 				c.log.Warnf("provider error. err: [%+v]", err)
 			case <-ticker.C:
