@@ -65,11 +65,11 @@ func NewKMSClientWrapperWithOptions(options *KMSClientWrapperOptions) (*KMSClien
 func NewKMSClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*KMSClientWrapper, error) {
 	var options KMSClientWrapperOptions
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "config.Config.Unmarshal failed")
 	}
 	w, err := NewKMSClientWrapperWithOptions(&options)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "NewKMSClientWrapperWithOptions failed")
 	}
 
 	refxOptions := refx.NewOptions(opts...)

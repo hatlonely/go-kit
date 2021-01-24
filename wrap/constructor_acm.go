@@ -5,6 +5,9 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/clients/config_client"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 type ACMConfigClientWrapperOptions struct {
@@ -31,4 +34,34 @@ func NewACMConfigClientWrapperWithOptions(options *ACMConfigClientWrapperOptions
 		retry:   retry,
 		options: &options.Wrapper,
 	}, nil
+}
+
+func NewACMConfigClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*ACMConfigClientWrapper, error) {
+	var options ACMConfigClientWrapperOptions
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
+		return nil, errors.Wrap(err, "config.Config.Unmarshal failed")
+	}
+	w, err := NewACMConfigClientWrapperWithOptions(&options)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewACMConfigClientWrapperWithOptions failed")
+	}
+
+	refxOptions := refx.NewOptions(opts...)
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("ACM"), func(cfg *config.Config) error {
+		var options constant.ClientConfig
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		client, err := clients.CreateConfigClient(map[string]interface{}{
+			"clientConfig": options,
+		})
+		if err != nil {
+			return errors.Wrap(err, "clients.CreateConfigClient failed")
+		}
+		w.obj = client.(*config_client.ConfigClient)
+	})
+
+	return w, err
 }
