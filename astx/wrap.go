@@ -173,18 +173,23 @@ type {{.wrapClass}} struct {
 
 func (g *WrapperGenerator) generateWrapperGet(cls string) string {
 	const tplStr = `
-func (w *{{.wrapClass}}) {{.unwrapFunc}}() *{{.package}}.{{.class}} {
+func (w {{.wrapClass}}) {{.unwrapFunc}}() *{{.package}}.{{.class}} {
 	return w.obj
 }
 `
 
 	tpl, _ := template.New("").Parse(tplStr)
 
+	wrapClass := g.wrapClassMap[cls]
+	if g.starClassSet[cls] {
+		wrapClass = fmt.Sprintf("*%s", wrapClass)
+	}
+
 	var buf bytes.Buffer
 	_ = tpl.Execute(&buf, map[string]string{
 		"package":    g.options.Package,
 		"class":      cls,
-		"wrapClass":  g.wrapClassMap[cls],
+		"wrapClass":  wrapClass,
 		"unwrapFunc": g.options.UnwrapFunc,
 	})
 

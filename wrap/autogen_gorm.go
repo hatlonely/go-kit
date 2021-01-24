@@ -16,7 +16,7 @@ type GORMDBWrapper struct {
 	options *WrapperOptions
 }
 
-func (w *GORMDBWrapper) Unwrap() *gorm.DB {
+func (w GORMDBWrapper) Unwrap() *gorm.DB {
 	return w.obj
 }
 
