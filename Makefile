@@ -50,9 +50,9 @@ wrap: wrap/autogen_ots.go \
 	wrap/autogen_elasticsearch.go
 
 wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen --goPath vendor \
-		--pkgPath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" \
-		--package tablestore \
+	build/bin/gen --sourcePath vendor \
+		--packagePath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" \
+		--packageName tablestore \
 		--classPrefix OTS \
 		--starClasses TableStoreClient \
 		--rule.onWrapperChange '{"include": "TableStoreClient"}' \
@@ -60,9 +60,9 @@ wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen --goPath vendor \
-		--pkgPath "github.com/aliyun/alibaba-cloud-sdk-go/services/kms" \
-		--package kms \
+	build/bin/gen --sourcePath vendor \
+		--packagePath "github.com/aliyun/alibaba-cloud-sdk-go/services/kms" \
+		--packageName kms \
 		--classPrefix KMS \
 		--starClasses Client \
 		--rule.onWrapperChange '{"include": "^Client$$"}' \
@@ -70,9 +70,9 @@ wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen --goPath vendor \
-		--pkgPath "github.com/nacos-group/nacos-sdk-go/clients/config_client" \
-		--package config_client \
+	build/bin/gen --sourcePath vendor \
+		--packagePath "github.com/nacos-group/nacos-sdk-go/clients/config_client" \
+		--packageName config_client \
 		--classPrefix ACM \
 		--starClasses ConfigClient \
 		--rule.onWrapperChange '{"include": "^ConfigClient$$"}' \
@@ -80,9 +80,9 @@ wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen --goPath vendor \
-		--pkgPath "github.com/aliyun/aliyun-oss-go-sdk/oss" \
-		--package oss \
+	build/bin/gen --sourcePath vendor \
+		--packagePath "github.com/aliyun/aliyun-oss-go-sdk/oss" \
+		--packageName oss \
 		--classPrefix OSS \
 		--starClasses Client,Bucket \
 		--rule.onWrapperChange '{"include": "^Client$$"}' \
@@ -92,9 +92,9 @@ wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen --goPath vendor \
-		--pkgPath "github.com/jinzhu/gorm" \
-		--package gorm \
+	build/bin/gen --sourcePath vendor \
+		--packagePath "github.com/jinzhu/gorm" \
+		--packageName gorm \
 		--classPrefix GORM \
 		--enableRuleForChainFunc \
 		--classes DB \
@@ -104,9 +104,9 @@ wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_elasticsearch.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen --goPath vendor \
-		--pkgPath "github.com/olivere/elastic/v7" \
-		--package elastic \
+	build/bin/gen --sourcePath vendor \
+		--packagePath "github.com/olivere/elastic/v7" \
+		--packageName elastic \
 		--classPrefix ES \
 		--rule.starClass '{"include": "(Client)|(.*Service)", "exclude": ".*"}' \
 		--rule.onWrapperChange '{"include": "^Client$$"}' \

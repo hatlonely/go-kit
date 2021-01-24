@@ -25,9 +25,10 @@ type Rule struct {
 }
 
 type WrapperGeneratorOptions struct {
-	GoPath                 string   `flag:"usage: gopath; default: vendor"`
-	PkgPath                string   `flag:"usage: source path"`
-	Package                string   `flag:"usage: package name"`
+	SourcePath             string   `flag:"usage: gopath; default: vendor"`
+	PackagePath            string   `flag:"usage: package path"`
+	PackageName            string   `flag:"usage: package name"`
+	OutputPackage          string   `flag:"usage: output package name; default: wrap" dft:"wrap"`
 	Classes                []string `flag:"usage: classes to wrap"`
 	StarClasses            []string `flag:"usage: star classes to wrap"`
 	ClassPrefix            string   `flag:"usage: wrap class name"`
@@ -64,7 +65,7 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 }
 
 func (g *WrapperGenerator) Generate() (string, error) {
-	functions, err := ParseFunction(path.Join(g.options.GoPath, g.options.PkgPath), g.options.Package)
+	functions, err := ParseFunction(path.Join(g.options.SourcePath, g.options.PackagePath), g.options.PackageName)
 	if err != nil {
 		return "", errors.Wrap(err, "ParseFunction failed")
 	}
@@ -164,7 +165,7 @@ import (
 
 	var buf bytes.Buffer
 	_ = tpl.Execute(&buf, map[string]string{
-		"pkgPath": g.options.PkgPath,
+		"pkgPath": g.options.PackagePath,
 	})
 
 	return buf.String()
@@ -183,7 +184,7 @@ type {{.wrapClass}} struct {
 
 	var buf bytes.Buffer
 	_ = tpl.Execute(&buf, map[string]string{
-		"package":   g.options.Package,
+		"package":   g.options.PackageName,
 		"class":     cls,
 		"wrapClass": g.wrapClassMap[cls],
 	})
@@ -207,7 +208,7 @@ func (w {{.wrapClass}}) {{.unwrapFunc}}() *{{.package}}.{{.class}} {
 
 	var buf bytes.Buffer
 	_ = tpl.Execute(&buf, map[string]string{
-		"package":    g.options.Package,
+		"package":    g.options.PackageName,
 		"class":      cls,
 		"wrapClass":  wrapClass,
 		"unwrapFunc": g.options.UnwrapFunc,
@@ -234,7 +235,7 @@ func (w *{{.wrapClass}}) OnWrapperChange(opts ...refx.Option) config.OnChangeHan
 
 	var buf bytes.Buffer
 	_ = tpl.Execute(&buf, map[string]string{
-		"package":   g.options.Package,
+		"package":   g.options.PackageName,
 		"class":     cls,
 		"wrapClass": g.wrapClassMap[cls],
 	})
@@ -264,7 +265,7 @@ func (w *{{.wrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandl
 
 	var buf bytes.Buffer
 	_ = tpl.Execute(&buf, map[string]string{
-		"package":   g.options.Package,
+		"package":   g.options.PackageName,
 		"class":     cls,
 		"wrapClass": g.wrapClassMap[cls],
 	})
@@ -305,12 +306,12 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 	var results []string
 	for _, i := range function.Results {
 		cls := strings.TrimLeft(i.Type, "*")
-		if !strings.HasPrefix(cls, g.options.Package) {
+		if !strings.HasPrefix(cls, g.options.PackageName) {
 			results = append(results, i.Type)
 			continue
 		}
 
-		cls = strings.TrimPrefix(cls, g.options.Package+".")
+		cls = strings.TrimPrefix(cls, g.options.PackageName+".")
 		if wrapCls, ok := g.wrapClassMap[cls]; ok {
 			if g.starClassSet[cls] {
 				results = append(results, fmt.Sprintf(`*%s`, wrapCls))
@@ -339,7 +340,7 @@ func (g *WrapperGenerator) generateWrapperOpentracing(function *Function) string
 		span, _ := opentracing.StartSpanFromContext(ctx, "%s.%s.%s")
 		defer span.Finish()
 	}
-`, g.options.Package, function.Class, function.Name)
+`, g.options.PackageName, function.Class, function.Name)
 }
 
 func (g *WrapperGenerator) generateWrapperDeclareReturnVariables(function *Function) string {
@@ -403,12 +404,12 @@ func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) st
 	var results []string
 	for _, i := range function.Results {
 		cls := strings.TrimLeft(i.Type, "*")
-		if !strings.HasPrefix(cls, g.options.Package) {
+		if !strings.HasPrefix(cls, g.options.PackageName) {
 			results = append(results, fmt.Sprintf("%s", i.Name))
 			continue
 		}
 
-		cls = strings.TrimPrefix(cls, g.options.Package+".")
+		cls = strings.TrimPrefix(cls, g.options.PackageName+".")
 		if wrapCls, ok := g.wrapClassMap[cls]; ok {
 			if g.starClassSet[cls] {
 				results = append(results, fmt.Sprintf(`&%s{obj: %s, retry: w.retry, options: w.options}`, wrapCls, i.Name))
