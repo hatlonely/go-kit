@@ -88,6 +88,7 @@ wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--pkgPath "github.com/jinzhu/gorm" \
 		--package gorm \
 		--classPrefix GORM \
+		--enableRuleForChainFunc \
 		--classes DB \
 		--rule.function '{"DB": {"exclude": "^SetLogger$$"}}' \
 		--output $@

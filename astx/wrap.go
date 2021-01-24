@@ -25,13 +25,14 @@ type Rule struct {
 }
 
 type WrapperGeneratorOptions struct {
-	GoPath      string   `flag:"usage: gopath; default: vendor"`
-	PkgPath     string   `flag:"usage: source path"`
-	Package     string   `flag:"usage: package name"`
-	Classes     []string `flag:"usage: classes to wrap"`
-	StarClasses []string `flag:"usage: star classes to wrap"`
-	ClassPrefix string   `flag:"usage: wrap class name"`
-	UnwrapFunc  string   `flag:"usage: unwrap function name; default: Unwrap" dft:"Unwrap"`
+	GoPath                 string   `flag:"usage: gopath; default: vendor"`
+	PkgPath                string   `flag:"usage: source path"`
+	Package                string   `flag:"usage: package name"`
+	Classes                []string `flag:"usage: classes to wrap"`
+	StarClasses            []string `flag:"usage: star classes to wrap"`
+	ClassPrefix            string   `flag:"usage: wrap class name"`
+	UnwrapFunc             string   `flag:"usage: unwrap function name; default: Unwrap" dft:"Unwrap"`
+	EnableRuleForChainFunc bool     `flag:"usage: enable trace on chain function"`
 
 	Rule struct {
 		Class     Rule
@@ -394,6 +395,12 @@ func (g *WrapperGenerator) generateWrapperReturnChain(function *Function) string
 func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) string {
 	var buf bytes.Buffer
 	if function.IsChain {
+		if g.options.EnableRuleForChainFunc {
+			if g.MatchFunctionRule(function, g.options.Rule.Trace) {
+				buf.WriteString(g.generateWrapperOpentracing(function))
+				buf.WriteString("\n")
+			}
+		}
 		buf.WriteString(g.generateWrapperReturnChain(function))
 		buf.WriteString("\treturn w")
 		return buf.String()
