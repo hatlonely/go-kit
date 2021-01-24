@@ -112,8 +112,8 @@ wrap/autogen_elasticsearch.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.starClass '{"include": "(Client)|(.*Service)", "exclude": ".*"}' \
 		--rule.onWrapperChange '{"include": "^Client$$"}' \
 		--rule.onRetryChange '{"include": "^Client$$"}' \
-		--rule.trace '{"default": {"exclude": ".*", "include": "Do"}, "Client": {"exclude": ".*"}}' \
-		--rule.retry '{"default": {"exclude": ".*", "include": "Do"}, "Client": {"exclude": ".*"}}' \
+		--rule.trace '{"default": {"exclude": ".*", "include": "^Do$$"}, "Client": {"exclude": ".*"}}' \
+		--rule.retry '{"default": {"exclude": ".*", "include": "^Do$$"}, "Client": {"exclude": ".*"}}' \
 		--output $@
 
 wrap/autogen_mongo.go: build/bin/gen vendor $(wildcard astx/*.go)
