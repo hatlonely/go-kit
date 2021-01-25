@@ -99,7 +99,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 
 	var buf bytes.Buffer
 
-	buf.WriteString(g.generateWrapperHeader())
+	buf.WriteString(g.generateWrapperImport())
 
 	classes := append(g.options.Classes, g.options.StarClasses...)
 	if len(classes) == 0 {
@@ -205,7 +205,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 	return buf.String(), nil
 }
 
-func (g *WrapperGenerator) generateWrapperHeader() string {
+func (g *WrapperGenerator) generateWrapperImport() string {
 	var buf bytes.Buffer
 
 	buf.WriteString("// autogen by github.com/hatlonely/go-kit/astx/wrap.go. do not edit!\n")
