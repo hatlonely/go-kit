@@ -54,7 +54,7 @@ func (w *GORMDBWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHandle
 	}
 }
 
-func (w *GORMDBWrapper) NewMetric(options *WrapperOptions) {
+func (w *GORMDBWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "gorm_DB_durationMs",
 		Help:        "gorm DB response time milliseconds",

@@ -80,7 +80,7 @@ func (w *MongoClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeH
 	}
 }
 
-func (w *MongoClientWrapper) NewMetric(options *WrapperOptions) {
+func (w *MongoClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "mongo_Client_durationMs",
 		Help:        "mongo Client response time milliseconds",

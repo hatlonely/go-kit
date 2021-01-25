@@ -68,7 +68,7 @@ func (w *OSSClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHan
 	}
 }
 
-func (w *OSSClientWrapper) NewMetric(options *WrapperOptions) {
+func (w *OSSClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "oss_Client_durationMs",
 		Help:        "oss Client response time milliseconds",

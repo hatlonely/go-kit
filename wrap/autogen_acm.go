@@ -54,7 +54,7 @@ func (w *ACMConfigClientWrapper) OnRetryChange(opts ...refx.Option) config.OnCha
 	}
 }
 
-func (w *ACMConfigClientWrapper) NewMetric(options *WrapperOptions) {
+func (w *ACMConfigClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "config_client_ConfigClient_durationMs",
 		Help:        "config_client ConfigClient response time milliseconds",

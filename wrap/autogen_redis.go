@@ -64,7 +64,7 @@ func (w *RedisClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeH
 	}
 }
 
-func (w *RedisClientWrapper) NewMetric(options *WrapperOptions) {
+func (w *RedisClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "redis_Client_durationMs",
 		Help:        "redis Client response time milliseconds",
@@ -104,7 +104,7 @@ func (w *RedisClusterClientWrapper) OnRetryChange(opts ...refx.Option) config.On
 	}
 }
 
-func (w *RedisClusterClientWrapper) NewMetric(options *WrapperOptions) {
+func (w *RedisClusterClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "redis_ClusterClient_durationMs",
 		Help:        "redis ClusterClient response time milliseconds",

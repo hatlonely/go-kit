@@ -42,7 +42,7 @@ type WrapperGeneratorOptions struct {
 		StarClass       Rule
 		OnWrapperChange Rule
 		OnRetryChange   Rule
-		NewMetric       Rule
+		CreateMetric    Rule
 		Function        map[string]Rule
 		Trace           map[string]Rule
 		Retry           map[string]Rule
@@ -74,8 +74,8 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 	if options.Rule.Class.Exclude == nil {
 		options.Rule.Class.Exclude = excludeAllRegex
 	}
-	if options.Rule.NewMetric.Exclude == nil {
-		options.Rule.NewMetric.Exclude = excludeAllRegex
+	if options.Rule.CreateMetric.Exclude == nil {
+		options.Rule.CreateMetric.Exclude = excludeAllRegex
 	}
 
 	var wrapPackagePrefix string
@@ -139,8 +139,8 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		if g.MatchRule(cls, g.options.Rule.OnRetryChange) {
 			buf.WriteString(g.generateWrapperOnRetryChange(cls))
 		}
-		if g.MatchRule(cls, g.options.Rule.NewMetric) {
-			buf.WriteString(g.generateWrapperNewMetric(cls))
+		if g.MatchRule(cls, g.options.Rule.CreateMetric) {
+			buf.WriteString(g.generateWrapperCreateMetric(cls))
 		}
 	}
 
@@ -292,9 +292,9 @@ func (w *{{.wrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandl
 	return buf.String()
 }
 
-func (g *WrapperGenerator) generateWrapperNewMetric(cls string) string {
+func (g *WrapperGenerator) generateWrapperCreateMetric(cls string) string {
 	const tplStr = `
-func (w *{{.wrapClass}}) NewMetric(options *{{.wrapPackagePrefix}}WrapperOptions) {
+func (w *{{.wrapClass}}) CreateMetric(options *{{.wrapPackagePrefix}}WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "{{.package}}_{{.class}}_durationMs",
 		Help:        "{{.package}} {{.class}} response time milliseconds",

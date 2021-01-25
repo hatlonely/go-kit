@@ -52,11 +52,18 @@ func NewGORMDBWrapperWithOptions(options *GORMDBWrapperOptions) (*GORMDBWrapper,
 		cli.DB().SetMaxIdleConns(options.Gorm.MaxIdleConns)
 	}
 	cli.LogMode(options.Gorm.LogMode)
-	return &GORMDBWrapper{
+
+	w := &GORMDBWrapper{
 		obj:     cli,
 		retry:   retry,
 		options: &options.Wrapper,
-	}, nil
+	}
+
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
+	}
+
+	return w, nil
 }
 
 func NewGORMDBWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*GORMDBWrapper, error) {

@@ -1398,7 +1398,7 @@ func (w *ESClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHand
 	}
 }
 
-func (w *ESClientWrapper) NewMetric(options *WrapperOptions) {
+func (w *ESClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "elastic_Client_durationMs",
 		Help:        "elastic Client response time milliseconds",

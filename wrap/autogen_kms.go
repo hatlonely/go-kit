@@ -52,7 +52,7 @@ func (w *KMSClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHan
 	}
 }
 
-func (w *KMSClientWrapper) NewMetric(options *WrapperOptions) {
+func (w *KMSClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "kms_Client_durationMs",
 		Help:        "kms Client response time milliseconds",

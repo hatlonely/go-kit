@@ -52,7 +52,7 @@ func (w *OTSTableStoreClientWrapper) OnRetryChange(opts ...refx.Option) config.O
 	}
 }
 
-func (w *OTSTableStoreClientWrapper) NewMetric(options *WrapperOptions) {
+func (w *OTSTableStoreClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "tablestore_TableStoreClient_durationMs",
 		Help:        "tablestore TableStoreClient response time milliseconds",
