@@ -342,21 +342,13 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 	return buf.String()
 }
 
-func (g *WrapperGenerator) generateWrapperOpentracing(vals map[string]interface{}) string {
-	const tplStr = `
+const WrapperFunctionBodyOpentracingTpl = `
 	if w.options.EnableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "{{.package}}.{{.class}}.{{.function.name}}")
 		defer span.Finish()
 	}
 `
-	tpl, _ := template.New("").Parse(tplStr)
-	var buf bytes.Buffer
-	_ = tpl.Execute(&buf, vals)
-	return buf.String()
-}
-
-func (g *WrapperGenerator) generateWrapperMetric(function *Function) string {
-	const tplStr = `
+const WrapperFunctionBodyMetricTpl = `
 	if w.options.EnableMetric {
 		ts := time.Now()
 		defer func() {
@@ -365,22 +357,6 @@ func (g *WrapperGenerator) generateWrapperMetric(function *Function) string {
 		}()
 	}
 `
-
-	tpl, _ := template.New("").Parse(tplStr)
-
-	var buf bytes.Buffer
-	_ = tpl.Execute(&buf, map[string]interface{}{
-		"package":           g.options.PackageName,
-		"class":             function.Class,
-		"wrapPackagePrefix": g.wrapPackagePrefix,
-		"function": map[string]string{
-			"class": function.Class,
-			"name":  function.Name,
-		},
-	})
-
-	return buf.String()
-}
 
 func (g *WrapperGenerator) generateWrapperDeclareReturnVariables(function *Function) string {
 	var buf bytes.Buffer
@@ -512,7 +488,7 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface
 	if function.IsChain {
 		if g.options.EnableRuleForChainFunc {
 			if g.MatchFunctionRule(function, g.options.Rule.Trace) {
-				buf.WriteString(g.generateWrapperOpentracing(vals))
+				buf.WriteString(renderTemplate(WrapperFunctionBodyOpentracingTpl, vals))
 				buf.WriteString("\n")
 			}
 		}
@@ -522,7 +498,7 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface
 	}
 
 	if g.MatchFunctionRule(function, g.options.Rule.Trace) {
-		buf.WriteString(g.generateWrapperOpentracing(vals))
+		buf.WriteString(renderTemplate(WrapperFunctionBodyOpentracingTpl, vals))
 	}
 
 	if function.IsReturnVoid {
