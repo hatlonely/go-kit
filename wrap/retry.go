@@ -1,9 +1,13 @@
 package wrap
 
 import (
+	"net/http"
 	"strings"
 	"time"
 
+	alierr "github.com/aliyun/alibaba-cloud-sdk-go/sdk/errors"
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
+	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
 	"github.com/avast/retry-go"
 	"github.com/pkg/errors"
 )
@@ -14,7 +18,61 @@ var retryDelayTypeMap = map[string]retry.DelayTypeFunc{
 	"Random":  retry.RandomDelay,
 }
 
-var retryRetryIfMap = map[string]retry.RetryIfFunc{}
+var retryRetryIfMap = map[string]retry.RetryIfFunc{
+	"oss": func(err error) bool {
+		if !retry.IsRecoverable(err) {
+			return false
+		}
+		switch e := err.(type) {
+		case oss.ServiceError:
+			if e.StatusCode >= http.StatusInternalServerError {
+				return true
+			}
+			if strings.Contains(e.Error(), "timeout") {
+				return true
+			}
+		}
+		return false
+	},
+	"ots": func(err error) bool {
+		if !retry.IsRecoverable(err) {
+			return false
+		}
+		switch e := err.(type) {
+		case *tablestore.OtsError:
+			if e.HttpStatusCode >= http.StatusInternalServerError {
+				return true
+			}
+			if strings.Contains(e.Error(), "timeout") {
+				return true
+			}
+		}
+		return false
+	},
+	"pop": func(err error) bool {
+		if !retry.IsRecoverable(err) {
+			return false
+		}
+		switch e := err.(type) {
+		case *alierr.ServerError:
+			if e.HttpStatus() >= http.StatusInternalServerError {
+				return true
+			}
+			if strings.Contains(e.Error(), "timeout") {
+				return true
+			}
+		}
+		return false
+	},
+}
+
+func RegisterRetryDelayTypeFunc(key string, delayTypeFunc retry.DelayTypeFunc) {
+	retryDelayTypeMap[key] = delayTypeFunc
+}
+
+func RegisterRetryRetryIf(key string, retryIfFunc retry.RetryIfFunc) {
+	retryRetryIfMap[key] = retryIfFunc
+}
 
 type RetryOptions struct {
 	Attempts      uint
