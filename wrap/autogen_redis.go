@@ -470,6 +470,7 @@ func (w *RedisClusterClientWrapper) WrapProcess(ctx context.Context, fn func(old
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.WrapProcess")
 		defer span.Finish()
 	}
+
 	w.obj.WrapProcess(fn)
 }
 
@@ -478,5 +479,6 @@ func (w *RedisClusterClientWrapper) WrapProcessPipeline(ctx context.Context, fn 
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.WrapProcessPipeline")
 		defer span.Finish()
 	}
+
 	w.obj.WrapProcessPipeline(fn)
 }

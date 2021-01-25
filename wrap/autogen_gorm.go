@@ -786,6 +786,7 @@ func (w GORMDBWrapper) SetJoinTableHandler(ctx context.Context, source interface
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.SetJoinTableHandler")
 		defer span.Finish()
 	}
+
 	w.obj.SetJoinTableHandler(source, column, handler)
 }
 
@@ -804,6 +805,7 @@ func (w GORMDBWrapper) SingularTable(ctx context.Context, enable bool) {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.SingularTable")
 		defer span.Finish()
 	}
+
 	w.obj.SingularTable(enable)
 }
 

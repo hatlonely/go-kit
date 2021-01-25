@@ -424,35 +424,9 @@ func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) st
 	return fmt.Sprintf("\treturn %s\n", strings.Join(results, ", "))
 }
 
-func (g *WrapperGenerator) generateWrapperReturnFunction(function *Function) string {
-	if function.IsReturnVoid {
-		panic(fmt.Sprintf("generateWrapperReturnFunction with void function. function [%v]", function.Name))
-	}
-
-	var params []string
-	for _, i := range function.Params {
-		if strings.HasPrefix(i.Type, "...") {
-			params = append(params, fmt.Sprintf("%s...", i.Name))
-		} else {
-			params = append(params, i.Name)
-		}
-	}
-
-	return fmt.Sprintf("\treturn w.obj.%s(%s)\n", function.Name, strings.Join(params, ", "))
-}
-
-func (g *WrapperGenerator) generateWrapperReturnVoid(function *Function) string {
-	var params []string
-	for _, i := range function.Params {
-		if strings.HasPrefix(i.Type, "...") {
-			params = append(params, fmt.Sprintf("%s...", i.Name))
-		} else {
-			params = append(params, i.Name)
-		}
-	}
-
-	return fmt.Sprintf("\tw.obj.%s(%s)\n", function.Name, strings.Join(params, ", "))
-}
+const WrapperFunctionBodyReturnVoidTpl = `
+	w.obj.{{.function.name}}({{.function.paramList}})
+`
 
 func (g *WrapperGenerator) generateWrapperReturnChain(function *Function) string {
 	var params []string
@@ -486,7 +460,7 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface
 	}
 
 	if function.IsReturnVoid {
-		buf.WriteString(g.generateWrapperReturnVoid(function))
+		buf.WriteString(renderTemplate(WrapperFunctionBodyReturnVoidTpl, vals))
 		return buf.String()
 	}
 
