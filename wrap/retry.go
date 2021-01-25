@@ -8,13 +8,22 @@ import (
 	"github.com/pkg/errors"
 )
 
+var retryDelayTypeMap = map[string]retry.DelayTypeFunc{
+	"BackOff": retry.BackOffDelay,
+	"Fixed":   retry.FixedDelay,
+	"Random":  retry.RandomDelay,
+}
+
+var retryRetryIfMap = map[string]retry.RetryIfFunc{}
+
 type RetryOptions struct {
 	Attempts      uint
 	Delay         time.Duration
 	MaxDelay      time.Duration
 	MaxJitter     time.Duration
 	LastErrorOnly bool
-	DelayType     string
+	DelayType     string `dft:"BackOff"`
+	RetryIf       string
 }
 
 type Retry struct {
@@ -31,10 +40,20 @@ func NewRetryWithOptions(options *RetryOptions) (*Retry, error) {
 		return nil, errors.Wrap(err, "NewRetry failed")
 	}
 
-	return &Retry{
+	r := &Retry{
 		options:   options,
 		DelayType: delayType,
-	}, nil
+	}
+
+	if options.RetryIf != "" {
+		if retryIf, ok := retryRetryIfMap[options.RetryIf]; ok {
+			r.RetryIf = retryIf
+		} else {
+			return nil, errors.Errorf("unsupported retryIf [%v] func", options.RetryIf)
+		}
+	}
+
+	return r, nil
 }
 
 func parseDelayType(dt string) (retry.DelayTypeFunc, error) {
@@ -44,16 +63,10 @@ func parseDelayType(dt string) (retry.DelayTypeFunc, error) {
 
 	vs := strings.Split(dt, ",")
 	if len(vs) == 1 {
-		switch dt {
-		case "BackOff":
-			return retry.BackOffDelay, nil
-		case "Fixed":
-			return retry.FixedDelay, nil
-		case "Random":
-			return retry.RandomDelay, nil
-		default:
-			return nil, errors.Errorf("unsupported delayType [%v]", dt)
+		if delayType, ok := retryDelayTypeMap[dt]; ok {
+			return delayType, nil
 		}
+		return nil, errors.Errorf("unsupported delayType [%v]", dt)
 	}
 
 	var funs []retry.DelayTypeFunc
