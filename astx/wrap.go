@@ -167,10 +167,29 @@ func (g *WrapperGenerator) Generate() (string, error) {
 
 		vals["class"] = function.Class
 		vals["wrapClass"] = g.wrapClassMap[function.Class]
-		vals["function"] = map[string]string{
+		fmap := map[string]string{
 			"name": function.Name,
 		}
 
+		var params []string
+		for _, i := range function.Params {
+			if strings.HasPrefix(i.Type, "...") {
+				params = append(params, fmt.Sprintf("%s...", i.Name))
+			} else {
+				params = append(params, i.Name)
+			}
+		}
+		fmap["paramList"] = strings.Join(params, ", ")
+		var results []string
+		for _, i := range function.Results {
+			results = append(results, fmt.Sprintf("%s", i.Name))
+		}
+		fmap["resultList"] = strings.Join(results, ", ")
+		if len(results) != 0 {
+			fmap["lastResult"] = results[len(results)-1]
+		}
+
+		vals["function"] = fmap
 		buf.WriteString("\n")
 		buf.WriteString(g.generateWrapperFunctionDeclare(function))
 		buf.WriteString(" {")
@@ -366,50 +385,15 @@ func (g *WrapperGenerator) generateWrapperDeclareReturnVariables(function *Funct
 	return buf.String()
 }
 
-func (g *WrapperGenerator) generateWrapperCallWithRetry(function *Function) string {
-	if !function.IsReturnError {
-		panic(fmt.Sprintf("generateWrapperCallWithRetry with no error function. function: [%v]", function.Name))
-	}
-
-	var params []string
-	for _, i := range function.Params {
-		if strings.HasPrefix(i.Type, "...") {
-			params = append(params, fmt.Sprintf("%s...", i.Name))
-		} else {
-			params = append(params, i.Name)
-		}
-	}
-
-	var results []string
-	for _, i := range function.Results {
-		results = append(results, fmt.Sprintf("%s", i.Name))
-	}
-
-	return fmt.Sprintf(`
+const WrapperFunctionBodyRetryTpl = `
 	err = w.retry.Do(func() error {
-		%s = w.obj.%s(%s)
-		return %s
+		{{.function.resultList}} = w.obj.{{.function.name}}({{.function.paramList}})
+		return {{.function.lastResult}}
 	})
-`, strings.Join(results, ", "), function.Name, strings.Join(params, ", "), results[len(results)-1])
-}
-
-func (g *WrapperGenerator) generateWrapperCallWithoutRetry(function *Function) string {
-	var params []string
-	for _, i := range function.Params {
-		if strings.HasPrefix(i.Type, "...") {
-			params = append(params, fmt.Sprintf("%s...", i.Name))
-		} else {
-			params = append(params, i.Name)
-		}
-	}
-
-	var results []string
-	for _, i := range function.Results {
-		results = append(results, fmt.Sprintf("%s", i.Name))
-	}
-
-	return fmt.Sprintf("\t%s := w.obj.%s(%s)", strings.Join(results, ", "), function.Name, strings.Join(params, ", "))
-}
+`
+const WrapperFunctionBodyCallTpl = `
+	{{.function.resultList}} := w.obj.{{.function.name}}({{.function.paramList}})
+`
 
 func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) string {
 	if function.IsReturnVoid {
@@ -508,14 +492,12 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface
 
 	if function.IsReturnError && g.MatchFunctionRule(function, g.options.Rule.Retry) {
 		buf.WriteString(g.generateWrapperDeclareReturnVariables(function))
-		buf.WriteString(g.generateWrapperCallWithRetry(function))
+		buf.WriteString(renderTemplate(WrapperFunctionBodyRetryTpl, vals))
 		buf.WriteString(g.generateWrapperReturnVariables(function))
 		return buf.String()
 	}
 
-	buf.WriteString("\n")
-	buf.WriteString(g.generateWrapperCallWithoutRetry(function))
-	buf.WriteString("\n")
+	buf.WriteString(renderTemplate(WrapperFunctionBodyCallTpl, vals))
 	buf.WriteString(g.generateWrapperReturnVariables(function))
 
 	return buf.String()
