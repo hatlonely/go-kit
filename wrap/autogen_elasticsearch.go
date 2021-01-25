@@ -194,6 +194,12 @@ type ESIndicesCreateServiceWrapper struct {
 	options *WrapperOptions
 }
 
+type ESIndicesDeleteIndexTemplateServiceWrapper struct {
+	obj     *elastic.IndicesDeleteIndexTemplateService
+	retry   *Retry
+	options *WrapperOptions
+}
+
 type ESIndicesDeleteServiceWrapper struct {
 	obj     *elastic.IndicesDeleteService
 	retry   *Retry
@@ -242,6 +248,12 @@ type ESIndicesGetFieldMappingServiceWrapper struct {
 	options *WrapperOptions
 }
 
+type ESIndicesGetIndexTemplateServiceWrapper struct {
+	obj     *elastic.IndicesGetIndexTemplateService
+	retry   *Retry
+	options *WrapperOptions
+}
+
 type ESIndicesGetMappingServiceWrapper struct {
 	obj     *elastic.IndicesGetMappingService
 	retry   *Retry
@@ -268,6 +280,12 @@ type ESIndicesGetTemplateServiceWrapper struct {
 
 type ESIndicesOpenServiceWrapper struct {
 	obj     *elastic.IndicesOpenService
+	retry   *Retry
+	options *WrapperOptions
+}
+
+type ESIndicesPutIndexTemplateServiceWrapper struct {
+	obj     *elastic.IndicesPutIndexTemplateService
 	retry   *Retry
 	options *WrapperOptions
 }
@@ -794,6 +812,10 @@ func (w *ESIndicesCreateServiceWrapper) Unwrap() *elastic.IndicesCreateService {
 	return w.obj
 }
 
+func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesDeleteIndexTemplateService {
+	return w.obj
+}
+
 func (w *ESIndicesDeleteServiceWrapper) Unwrap() *elastic.IndicesDeleteService {
 	return w.obj
 }
@@ -826,6 +848,10 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Unwrap() *elastic.IndicesGetFie
 	return w.obj
 }
 
+func (w *ESIndicesGetIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesGetIndexTemplateService {
+	return w.obj
+}
+
 func (w *ESIndicesGetMappingServiceWrapper) Unwrap() *elastic.IndicesGetMappingService {
 	return w.obj
 }
@@ -843,6 +869,10 @@ func (w *ESIndicesGetTemplateServiceWrapper) Unwrap() *elastic.IndicesGetTemplat
 }
 
 func (w *ESIndicesOpenServiceWrapper) Unwrap() *elastic.IndicesOpenService {
+	return w.obj
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesPutIndexTemplateService {
 	return w.obj
 }
 
@@ -2119,6 +2149,11 @@ func (w *ESClientWrapper) IndexAnalyze() *ESIndicesAnalyzeServiceWrapper {
 	return &ESIndicesAnalyzeServiceWrapper{obj: res0, retry: w.retry, options: w.options}
 }
 
+func (w *ESClientWrapper) IndexDeleteIndexTemplate(name string) *ESIndicesDeleteIndexTemplateServiceWrapper {
+	res0 := w.obj.IndexDeleteIndexTemplate(name)
+	return &ESIndicesDeleteIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options}
+}
+
 func (w *ESClientWrapper) IndexDeleteTemplate(name string) *ESIndicesDeleteTemplateServiceWrapper {
 	res0 := w.obj.IndexDeleteTemplate(name)
 	return &ESIndicesDeleteTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options}
@@ -2134,6 +2169,11 @@ func (w *ESClientWrapper) IndexGet(indices ...string) *ESIndicesGetServiceWrappe
 	return &ESIndicesGetServiceWrapper{obj: res0, retry: w.retry, options: w.options}
 }
 
+func (w *ESClientWrapper) IndexGetIndexTemplate(name string) *ESIndicesGetIndexTemplateServiceWrapper {
+	res0 := w.obj.IndexGetIndexTemplate(name)
+	return &ESIndicesGetIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options}
+}
+
 func (w *ESClientWrapper) IndexGetSettings(indices ...string) *ESIndicesGetSettingsServiceWrapper {
 	res0 := w.obj.IndexGetSettings(indices...)
 	return &ESIndicesGetSettingsServiceWrapper{obj: res0, retry: w.retry, options: w.options}
@@ -2147,6 +2187,11 @@ func (w *ESClientWrapper) IndexGetTemplate(names ...string) *ESIndicesGetTemplat
 func (w *ESClientWrapper) IndexNames() ([]string, error) {
 	res0, err := w.obj.IndexNames()
 	return res0, err
+}
+
+func (w *ESClientWrapper) IndexPutIndexTemplate(name string) *ESIndicesPutIndexTemplateServiceWrapper {
+	res0 := w.obj.IndexPutIndexTemplate(name)
+	return &ESIndicesPutIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options}
 }
 
 func (w *ESClientWrapper) IndexPutSettings(indices ...string) *ESIndicesPutSettingsServiceWrapper {
@@ -2410,6 +2455,21 @@ func (w *ESClientWrapper) WaitForStatus(status string, timeout string) error {
 func (w *ESClientWrapper) WaitForYellowStatus(timeout string) error {
 	err := w.obj.WaitForYellowStatus(timeout)
 	return err
+}
+
+func (w *ESClientWrapper) XPackAsyncSearchDelete() *elastic.XPackAsyncSearchDelete {
+	res0 := w.obj.XPackAsyncSearchDelete()
+	return res0
+}
+
+func (w *ESClientWrapper) XPackAsyncSearchGet() *elastic.XPackAsyncSearchGet {
+	res0 := w.obj.XPackAsyncSearchGet()
+	return res0
+}
+
+func (w *ESClientWrapper) XPackAsyncSearchSubmit() *elastic.XPackAsyncSearchSubmit {
+	res0 := w.obj.XPackAsyncSearchSubmit()
+	return res0
 }
 
 func (w *ESClientWrapper) XPackIlmDeleteLifecycle() *ESXPackIlmDeleteLifecycleServiceWrapper {
@@ -2964,6 +3024,11 @@ func (w *ESCountServiceWrapper) Headers(headers http.Header) *ESCountServiceWrap
 
 func (w *ESCountServiceWrapper) Human(human bool) *ESCountServiceWrapper {
 	w.obj = w.obj.Human(human)
+	return w
+}
+
+func (w *ESCountServiceWrapper) IgnoreThrottled(ignoreThrottled bool) *ESCountServiceWrapper {
+	w.obj = w.obj.IgnoreThrottled(ignoreThrottled)
 	return w
 }
 
@@ -4542,6 +4607,71 @@ func (w *ESIndicesCreateServiceWrapper) Timeout(timeout string) *ESIndicesCreate
 	return w
 }
 
+func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Do(ctx context.Context) (*elastic.IndicesDeleteIndexTemplateResponse, error) {
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesDeleteIndexTemplateService.Do")
+		defer span.Finish()
+	}
+
+	var res0 *elastic.IndicesDeleteIndexTemplateResponse
+	var err error
+	err = w.retry.Do(func() error {
+		res0, err = w.obj.Do(ctx)
+		return err
+	})
+	return res0, err
+}
+
+func (w *ESIndicesDeleteIndexTemplateServiceWrapper) ErrorTrace(errorTrace bool) *ESIndicesDeleteIndexTemplateServiceWrapper {
+	w.obj = w.obj.ErrorTrace(errorTrace)
+	return w
+}
+
+func (w *ESIndicesDeleteIndexTemplateServiceWrapper) FilterPath(filterPath ...string) *ESIndicesDeleteIndexTemplateServiceWrapper {
+	w.obj = w.obj.FilterPath(filterPath...)
+	return w
+}
+
+func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Header(name string, value string) *ESIndicesDeleteIndexTemplateServiceWrapper {
+	w.obj = w.obj.Header(name, value)
+	return w
+}
+
+func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Headers(headers http.Header) *ESIndicesDeleteIndexTemplateServiceWrapper {
+	w.obj = w.obj.Headers(headers)
+	return w
+}
+
+func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Human(human bool) *ESIndicesDeleteIndexTemplateServiceWrapper {
+	w.obj = w.obj.Human(human)
+	return w
+}
+
+func (w *ESIndicesDeleteIndexTemplateServiceWrapper) MasterTimeout(masterTimeout string) *ESIndicesDeleteIndexTemplateServiceWrapper {
+	w.obj = w.obj.MasterTimeout(masterTimeout)
+	return w
+}
+
+func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Name(name string) *ESIndicesDeleteIndexTemplateServiceWrapper {
+	w.obj = w.obj.Name(name)
+	return w
+}
+
+func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Pretty(pretty bool) *ESIndicesDeleteIndexTemplateServiceWrapper {
+	w.obj = w.obj.Pretty(pretty)
+	return w
+}
+
+func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Timeout(timeout string) *ESIndicesDeleteIndexTemplateServiceWrapper {
+	w.obj = w.obj.Timeout(timeout)
+	return w
+}
+
+func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Validate() error {
+	err := w.obj.Validate()
+	return err
+}
+
 func (w *ESIndicesDeleteServiceWrapper) Do(ctx context.Context) (*elastic.IndicesDeleteResponse, error) {
 	if w.options.EnableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesDeleteService.Do")
@@ -4789,6 +4919,11 @@ func (w *ESIndicesExistsTemplateServiceWrapper) Human(human bool) *ESIndicesExis
 
 func (w *ESIndicesExistsTemplateServiceWrapper) Local(local bool) *ESIndicesExistsTemplateServiceWrapper {
 	w.obj = w.obj.Local(local)
+	return w
+}
+
+func (w *ESIndicesExistsTemplateServiceWrapper) MasterTimeout(masterTimeout string) *ESIndicesExistsTemplateServiceWrapper {
+	w.obj = w.obj.MasterTimeout(masterTimeout)
 	return w
 }
 
@@ -5138,6 +5273,76 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Type(types ...string) *ESIndice
 }
 
 func (w *ESIndicesGetFieldMappingServiceWrapper) Validate() error {
+	err := w.obj.Validate()
+	return err
+}
+
+func (w *ESIndicesGetIndexTemplateServiceWrapper) Do(ctx context.Context) (*elastic.IndicesGetIndexTemplateResponse, error) {
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetIndexTemplateService.Do")
+		defer span.Finish()
+	}
+
+	var res0 *elastic.IndicesGetIndexTemplateResponse
+	var err error
+	err = w.retry.Do(func() error {
+		res0, err = w.obj.Do(ctx)
+		return err
+	})
+	return res0, err
+}
+
+func (w *ESIndicesGetIndexTemplateServiceWrapper) ErrorTrace(errorTrace bool) *ESIndicesGetIndexTemplateServiceWrapper {
+	w.obj = w.obj.ErrorTrace(errorTrace)
+	return w
+}
+
+func (w *ESIndicesGetIndexTemplateServiceWrapper) FilterPath(filterPath ...string) *ESIndicesGetIndexTemplateServiceWrapper {
+	w.obj = w.obj.FilterPath(filterPath...)
+	return w
+}
+
+func (w *ESIndicesGetIndexTemplateServiceWrapper) FlatSettings(flatSettings bool) *ESIndicesGetIndexTemplateServiceWrapper {
+	w.obj = w.obj.FlatSettings(flatSettings)
+	return w
+}
+
+func (w *ESIndicesGetIndexTemplateServiceWrapper) Header(name string, value string) *ESIndicesGetIndexTemplateServiceWrapper {
+	w.obj = w.obj.Header(name, value)
+	return w
+}
+
+func (w *ESIndicesGetIndexTemplateServiceWrapper) Headers(headers http.Header) *ESIndicesGetIndexTemplateServiceWrapper {
+	w.obj = w.obj.Headers(headers)
+	return w
+}
+
+func (w *ESIndicesGetIndexTemplateServiceWrapper) Human(human bool) *ESIndicesGetIndexTemplateServiceWrapper {
+	w.obj = w.obj.Human(human)
+	return w
+}
+
+func (w *ESIndicesGetIndexTemplateServiceWrapper) Local(local bool) *ESIndicesGetIndexTemplateServiceWrapper {
+	w.obj = w.obj.Local(local)
+	return w
+}
+
+func (w *ESIndicesGetIndexTemplateServiceWrapper) MasterTimeout(masterTimeout string) *ESIndicesGetIndexTemplateServiceWrapper {
+	w.obj = w.obj.MasterTimeout(masterTimeout)
+	return w
+}
+
+func (w *ESIndicesGetIndexTemplateServiceWrapper) Name(name ...string) *ESIndicesGetIndexTemplateServiceWrapper {
+	w.obj = w.obj.Name(name...)
+	return w
+}
+
+func (w *ESIndicesGetIndexTemplateServiceWrapper) Pretty(pretty bool) *ESIndicesGetIndexTemplateServiceWrapper {
+	w.obj = w.obj.Pretty(pretty)
+	return w
+}
+
+func (w *ESIndicesGetIndexTemplateServiceWrapper) Validate() error {
 	err := w.obj.Validate()
 	return err
 }
@@ -5535,6 +5740,86 @@ func (w *ESIndicesOpenServiceWrapper) Validate() error {
 func (w *ESIndicesOpenServiceWrapper) WaitForActiveShards(waitForActiveShards string) *ESIndicesOpenServiceWrapper {
 	w.obj = w.obj.WaitForActiveShards(waitForActiveShards)
 	return w
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) BodyJson(body interface{}) *ESIndicesPutIndexTemplateServiceWrapper {
+	w.obj = w.obj.BodyJson(body)
+	return w
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) BodyString(body string) *ESIndicesPutIndexTemplateServiceWrapper {
+	w.obj = w.obj.BodyString(body)
+	return w
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) Cause(cause string) *ESIndicesPutIndexTemplateServiceWrapper {
+	w.obj = w.obj.Cause(cause)
+	return w
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) Create(create bool) *ESIndicesPutIndexTemplateServiceWrapper {
+	w.obj = w.obj.Create(create)
+	return w
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) Do(ctx context.Context) (*elastic.IndicesPutIndexTemplateResponse, error) {
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutIndexTemplateService.Do")
+		defer span.Finish()
+	}
+
+	var res0 *elastic.IndicesPutIndexTemplateResponse
+	var err error
+	err = w.retry.Do(func() error {
+		res0, err = w.obj.Do(ctx)
+		return err
+	})
+	return res0, err
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) ErrorTrace(errorTrace bool) *ESIndicesPutIndexTemplateServiceWrapper {
+	w.obj = w.obj.ErrorTrace(errorTrace)
+	return w
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) FilterPath(filterPath ...string) *ESIndicesPutIndexTemplateServiceWrapper {
+	w.obj = w.obj.FilterPath(filterPath...)
+	return w
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) Header(name string, value string) *ESIndicesPutIndexTemplateServiceWrapper {
+	w.obj = w.obj.Header(name, value)
+	return w
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) Headers(headers http.Header) *ESIndicesPutIndexTemplateServiceWrapper {
+	w.obj = w.obj.Headers(headers)
+	return w
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) Human(human bool) *ESIndicesPutIndexTemplateServiceWrapper {
+	w.obj = w.obj.Human(human)
+	return w
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) MasterTimeout(masterTimeout string) *ESIndicesPutIndexTemplateServiceWrapper {
+	w.obj = w.obj.MasterTimeout(masterTimeout)
+	return w
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) Name(name string) *ESIndicesPutIndexTemplateServiceWrapper {
+	w.obj = w.obj.Name(name)
+	return w
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) Pretty(pretty bool) *ESIndicesPutIndexTemplateServiceWrapper {
+	w.obj = w.obj.Pretty(pretty)
+	return w
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) Validate() error {
+	err := w.obj.Validate()
+	return err
 }
 
 func (w *ESIndicesPutMappingServiceWrapper) AllowNoIndices(allowNoIndices bool) *ESIndicesPutMappingServiceWrapper {
@@ -7523,6 +7808,11 @@ func (w *ESScrollServiceWrapper) Human(human bool) *ESScrollServiceWrapper {
 	return w
 }
 
+func (w *ESScrollServiceWrapper) IgnoreThrottled(ignoreThrottled bool) *ESScrollServiceWrapper {
+	w.obj = w.obj.IgnoreThrottled(ignoreThrottled)
+	return w
+}
+
 func (w *ESScrollServiceWrapper) IgnoreUnavailable(ignoreUnavailable bool) *ESScrollServiceWrapper {
 	w.obj = w.obj.IgnoreUnavailable(ignoreUnavailable)
 	return w
@@ -7565,6 +7855,11 @@ func (w *ESScrollServiceWrapper) Pretty(pretty bool) *ESScrollServiceWrapper {
 
 func (w *ESScrollServiceWrapper) Query(query elastic.Query) *ESScrollServiceWrapper {
 	w.obj = w.obj.Query(query)
+	return w
+}
+
+func (w *ESScrollServiceWrapper) RestTotalHitsAsInt(enabled bool) *ESScrollServiceWrapper {
+	w.obj = w.obj.RestTotalHitsAsInt(enabled)
 	return w
 }
 
