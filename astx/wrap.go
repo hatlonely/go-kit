@@ -129,14 +129,15 @@ func (g *WrapperGenerator) Generate() (string, error) {
 	vals := map[string]interface{}{
 		"package":           g.options.PackageName,
 		"wrapPackagePrefix": g.wrapPackagePrefix,
+		"unwrapFunc":        g.options.UnwrapFunc,
 	}
 
 	for _, cls := range classes {
 		vals["class"] = cls
 		vals["wrapClass"] = g.wrapClassMap[cls]
 
-		buf.WriteString(g.generateWrapperStruct(cls))
-		buf.WriteString(g.generateWrapperGet(cls))
+		buf.WriteString(g.generateWrapperStruct(vals))
+		buf.WriteString(g.generateWrapperGet(vals))
 
 		if g.MatchRule(cls, g.options.Rule.OnWrapperChange) {
 			buf.WriteString(g.generateWrapperOnWrapperChange(cls))
@@ -194,7 +195,7 @@ func (g *WrapperGenerator) generateWrapperHeader() string {
 	return buf.String()
 }
 
-func (g *WrapperGenerator) generateWrapperStruct(cls string) string {
+func (g *WrapperGenerator) generateWrapperStruct(vals map[string]interface{}) string {
 	const tplStr = `
 type {{.wrapClass}} struct {
 	obj            *{{.package}}.{{.class}}
@@ -204,42 +205,34 @@ type {{.wrapClass}} struct {
 	totalMetric    *prometheus.CounterVec
 }
 `
-
 	tpl, _ := template.New("").Parse(tplStr)
 
 	var buf bytes.Buffer
-	_ = tpl.Execute(&buf, map[string]string{
-		"package":           g.options.PackageName,
-		"class":             cls,
-		"wrapClass":         g.wrapClassMap[cls],
-		"wrapPackagePrefix": g.wrapPackagePrefix,
-	})
-
+	_ = tpl.Execute(&buf, vals)
 	return buf.String()
 }
 
-func (g *WrapperGenerator) generateWrapperGet(cls string) string {
-	const tplStr = `
+func (g *WrapperGenerator) generateWrapperGet(vals map[string]interface{}) string {
+	const tplStr1 = `
+func (w *{{.wrapClass}}) {{.unwrapFunc}}() *{{.package}}.{{.class}} {
+	return w.obj
+}
+`
+	const tplStr2 = `
 func (w {{.wrapClass}}) {{.unwrapFunc}}() *{{.package}}.{{.class}} {
 	return w.obj
 }
 `
 
-	tpl, _ := template.New("").Parse(tplStr)
-
-	wrapClass := g.wrapClassMap[cls]
-	if g.starClassSet[cls] {
-		wrapClass = fmt.Sprintf("*%s", wrapClass)
+	var tpl *template.Template
+	if g.starClassSet[vals["class"].(string)] {
+		tpl, _ = template.New("").Parse(tplStr1)
+	} else {
+		tpl, _ = template.New("").Parse(tplStr2)
 	}
 
 	var buf bytes.Buffer
-	_ = tpl.Execute(&buf, map[string]string{
-		"package":    g.options.PackageName,
-		"class":      cls,
-		"wrapClass":  wrapClass,
-		"unwrapFunc": g.options.UnwrapFunc,
-	})
-
+	_ = tpl.Execute(&buf, vals)
 	return buf.String()
 }
 
