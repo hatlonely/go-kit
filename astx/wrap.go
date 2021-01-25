@@ -136,17 +136,21 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		vals["class"] = cls
 		vals["wrapClass"] = g.wrapClassMap[cls]
 
-		buf.WriteString(g.generateWrapperStruct(vals))
-		buf.WriteString(g.generateWrapperGet(vals))
+		buf.WriteString(renderTemplate(WrapperStructTpl, vals))
+		if g.starClassSet[cls] {
+			buf.WriteString(renderTemplate(WrapperFunctionGetWithStarTpl, vals))
+		} else {
+			buf.WriteString(renderTemplate(WrapperFunctionGetTpl, vals))
+		}
 
 		if g.MatchRule(cls, g.options.Rule.OnWrapperChange) {
-			buf.WriteString(g.generateWrapperOnWrapperChange(vals))
+			buf.WriteString(renderTemplate(WrapperFunctionOnWrapperChangeTpl, vals))
 		}
 		if g.MatchRule(cls, g.options.Rule.OnRetryChange) {
-			buf.WriteString(g.generateWrapperOnRetryChange(vals))
+			buf.WriteString(renderTemplate(WrapperFunctionOnRetryChangeTpl, vals))
 		}
 		if g.MatchRule(cls, g.options.Rule.CreateMetric) {
-			buf.WriteString(g.generateWrapperCreateMetric(vals))
+			buf.WriteString(renderTemplate(WrapperFunctionCreateMetricTpl, vals))
 		}
 	}
 
@@ -201,8 +205,20 @@ func (g *WrapperGenerator) generateWrapperHeader() string {
 	return buf.String()
 }
 
-func (g *WrapperGenerator) generateWrapperStruct(vals map[string]interface{}) string {
-	const tplStr = `
+func renderTemplate(tplStr string, vals interface{}) string {
+	tpl, err := template.New("").Parse(tplStr)
+	if err != nil {
+		panic(err)
+	}
+	var buf bytes.Buffer
+	if err := tpl.Execute(&buf, vals); err != nil {
+		panic(err)
+	}
+
+	return buf.String()
+}
+
+const WrapperStructTpl = `
 type {{.wrapClass}} struct {
 	obj            *{{.package}}.{{.class}}
 	retry          *{{.wrapPackagePrefix}}Retry
@@ -211,39 +227,17 @@ type {{.wrapClass}} struct {
 	totalMetric    *prometheus.CounterVec
 }
 `
-	tpl, _ := template.New("").Parse(tplStr)
-
-	var buf bytes.Buffer
-	_ = tpl.Execute(&buf, vals)
-	return buf.String()
-}
-
-func (g *WrapperGenerator) generateWrapperGet(vals map[string]interface{}) string {
-	const tplStr1 = `
+const WrapperFunctionGetWithStarTpl = `
 func (w *{{.wrapClass}}) {{.unwrapFunc}}() *{{.package}}.{{.class}} {
 	return w.obj
 }
 `
-	const tplStr2 = `
+const WrapperFunctionGetTpl = `
 func (w {{.wrapClass}}) {{.unwrapFunc}}() *{{.package}}.{{.class}} {
 	return w.obj
 }
 `
-
-	var tpl *template.Template
-	if g.starClassSet[vals["class"].(string)] {
-		tpl, _ = template.New("").Parse(tplStr1)
-	} else {
-		tpl, _ = template.New("").Parse(tplStr2)
-	}
-
-	var buf bytes.Buffer
-	_ = tpl.Execute(&buf, vals)
-	return buf.String()
-}
-
-func (g *WrapperGenerator) generateWrapperOnWrapperChange(vals map[string]interface{}) string {
-	const tplStr = `
+const WrapperFunctionOnWrapperChangeTpl = `
 func (w *{{.wrapClass}}) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
 		var options {{.wrapPackagePrefix}}WrapperOptions
@@ -255,15 +249,7 @@ func (w *{{.wrapClass}}) OnWrapperChange(opts ...refx.Option) config.OnChangeHan
 	}
 }
 `
-
-	tpl, _ := template.New("").Parse(tplStr)
-	var buf bytes.Buffer
-	_ = tpl.Execute(&buf, vals)
-	return buf.String()
-}
-
-func (g *WrapperGenerator) generateWrapperOnRetryChange(vals map[string]interface{}) string {
-	const tplStr = `
+const WrapperFunctionOnRetryChangeTpl = `
 func (w *{{.wrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
 		var options {{.wrapPackagePrefix}}RetryOptions
@@ -279,15 +265,7 @@ func (w *{{.wrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandl
 	}
 }
 `
-
-	tpl, _ := template.New("").Parse(tplStr)
-	var buf bytes.Buffer
-	_ = tpl.Execute(&buf, vals)
-	return buf.String()
-}
-
-func (g *WrapperGenerator) generateWrapperCreateMetric(vals map[string]interface{}) string {
-	const tplStr = `
+const WrapperFunctionCreateMetricTpl = `
 func (w *{{.wrapClass}}) CreateMetric(options *{{.wrapPackagePrefix}}WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "{{.package}}_{{.class}}_durationMs",
@@ -302,12 +280,6 @@ func (w *{{.wrapClass}}) CreateMetric(options *{{.wrapPackagePrefix}}WrapperOpti
 	}, []string{"method", "errCode"})
 }
 `
-
-	tpl, _ := template.New("").Parse(tplStr)
-	var buf bytes.Buffer
-	_ = tpl.Execute(&buf, vals)
-	return buf.String()
-}
 
 func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) string {
 	var buf bytes.Buffer
