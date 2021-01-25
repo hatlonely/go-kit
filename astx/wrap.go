@@ -366,22 +366,6 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 	return buf.String()
 }
 
-const WrapperFunctionBodyOpentracingTpl = `
-	if w.options.EnableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "{{.package}}.{{.class}}.{{.function.name}}")
-		defer span.Finish()
-	}
-`
-const WrapperFunctionBodyMetricTpl = `
-	if w.options.EnableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}).Inc()
-			w.durationMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-`
-
 func (g *WrapperGenerator) generateWrapperDeclareReturnVariables(function *Function) string {
 	var buf bytes.Buffer
 	for _, field := range function.Results {
@@ -389,16 +373,6 @@ func (g *WrapperGenerator) generateWrapperDeclareReturnVariables(function *Funct
 	}
 	return buf.String()
 }
-
-const WrapperFunctionBodyRetryTpl = `
-	err = w.retry.Do(func() error {
-		{{.function.resultList}} = w.obj.{{.function.name}}({{.function.paramList}})
-		return {{.function.lastResult}}
-	})
-`
-const WrapperFunctionBodyCallTpl = `
-	{{.function.resultList}} = w.obj.{{.function.name}}({{.function.paramList}})
-`
 
 func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) string {
 	if function.IsReturnVoid {
@@ -428,6 +402,31 @@ func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) st
 
 	return fmt.Sprintf("\treturn %s\n", strings.Join(results, ", "))
 }
+
+const WrapperFunctionBodyOpentracingTpl = `
+	if w.options.EnableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "{{.package}}.{{.class}}.{{.function.name}}")
+		defer span.Finish()
+	}
+`
+const WrapperFunctionBodyMetricTpl = `
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}).Inc()
+			w.durationMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+`
+const WrapperFunctionBodyRetryTpl = `
+	err = w.retry.Do(func() error {
+		{{.function.resultList}} = w.obj.{{.function.name}}({{.function.paramList}})
+		return {{.function.lastResult}}
+	})
+`
+const WrapperFunctionBodyCallTpl = `
+	{{.function.resultList}} = w.obj.{{.function.name}}({{.function.paramList}})
+`
 
 const WrapperFunctionBodyReturnVoidTpl = `
 	w.obj.{{.function.name}}({{.function.paramList}})
