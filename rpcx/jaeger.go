@@ -5,9 +5,10 @@ import (
 
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-func TracingWrapper(h http.Handler) http.Handler {
+func TraceWrapper(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		parentSpanContext, err := opentracing.GlobalTracer().Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(r.Header))
 		if err == nil || err == opentracing.ErrSpanContextNotFound {
@@ -20,5 +21,16 @@ func TracingWrapper(h http.Handler) http.Handler {
 			defer serverSpan.Finish()
 		}
 		h.ServeHTTP(w, r)
+	})
+}
+
+func MetricWrapper(h http.Handler) http.Handler {
+	promHandler := promhttp.Handler()
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/metrics" {
+			promHandler.ServeHTTP(w, r)
+		} else {
+			h.ServeHTTP(w, r)
+		}
 	})
 }
