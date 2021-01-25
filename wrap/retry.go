@@ -19,7 +19,7 @@ var retryDelayTypeMap = map[string]retry.DelayTypeFunc{
 }
 
 var retryRetryIfMap = map[string]retry.RetryIfFunc{
-	"oss": func(err error) bool {
+	"OSS": func(err error) bool {
 		if !retry.IsRecoverable(err) {
 			return false
 		}
@@ -34,7 +34,7 @@ var retryRetryIfMap = map[string]retry.RetryIfFunc{
 		}
 		return false
 	},
-	"ots": func(err error) bool {
+	"OTS": func(err error) bool {
 		if !retry.IsRecoverable(err) {
 			return false
 		}
@@ -49,7 +49,7 @@ var retryRetryIfMap = map[string]retry.RetryIfFunc{
 		}
 		return false
 	},
-	"pop": func(err error) bool {
+	"POP": func(err error) bool {
 		if !retry.IsRecoverable(err) {
 			return false
 		}
