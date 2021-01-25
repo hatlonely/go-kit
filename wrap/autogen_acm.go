@@ -3,6 +3,7 @@ package wrap
 
 import (
 	"context"
+	"time"
 
 	"github.com/nacos-group/nacos-sdk-go/clients/config_client"
 	"github.com/nacos-group/nacos-sdk-go/model"
@@ -76,6 +77,14 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("config_client.ConfigClient.CancelListenConfig", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("config_client.ConfigClient.CancelListenConfig", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.CancelListenConfig(param)
 		return err
 	})
@@ -91,6 +100,14 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 	var deleted bool
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("config_client.ConfigClient.DeleteConfig", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("config_client.ConfigClient.DeleteConfig", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		deleted, err = w.obj.DeleteConfig(param)
 		return err
 	})
@@ -106,6 +123,14 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 	var content string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("config_client.ConfigClient.GetConfig", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("config_client.ConfigClient.GetConfig", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		content, err = w.obj.GetConfig(param)
 		return err
 	})
@@ -120,6 +145,14 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("config_client.ConfigClient.ListenConfig", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("config_client.ConfigClient.ListenConfig", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.ListenConfig(param)
 		return err
 	})
@@ -135,6 +168,14 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 	var published bool
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("config_client.ConfigClient.PublishConfig", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("config_client.ConfigClient.PublishConfig", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		published, err = w.obj.PublishConfig(param)
 		return err
 	})
@@ -150,6 +191,14 @@ func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.Sear
 	var res0 *model.ConfigPage
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("config_client.ConfigClient.SearchConfig", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("config_client.ConfigClient.SearchConfig", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.SearchConfig(param)
 		return err
 	})

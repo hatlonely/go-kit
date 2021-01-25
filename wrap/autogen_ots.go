@@ -3,6 +3,7 @@ package wrap
 
 import (
 	"context"
+	"time"
 
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
 	"github.com/opentracing/opentracing-go"
@@ -75,6 +76,14 @@ func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, reque
 	var res0 *tablestore.AbortTransactionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.AbortTransaction", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.AbortTransaction", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.AbortTransaction(request)
 		return err
 	})
@@ -90,6 +99,14 @@ func (w *OTSTableStoreClientWrapper) BatchGetRow(ctx context.Context, request *t
 	var res0 *tablestore.BatchGetRowResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.BatchGetRow", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.BatchGetRow", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.BatchGetRow(request)
 		return err
 	})
@@ -105,6 +122,14 @@ func (w *OTSTableStoreClientWrapper) BatchWriteRow(ctx context.Context, request 
 	var res0 *tablestore.BatchWriteRowResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.BatchWriteRow", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.BatchWriteRow", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.BatchWriteRow(request)
 		return err
 	})
@@ -120,6 +145,14 @@ func (w *OTSTableStoreClientWrapper) CommitTransaction(ctx context.Context, requ
 	var res0 *tablestore.CommitTransactionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CommitTransaction", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CommitTransaction", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.CommitTransaction(request)
 		return err
 	})
@@ -135,6 +168,14 @@ func (w *OTSTableStoreClientWrapper) ComputeSplitPointsBySize(ctx context.Contex
 	var res0 *tablestore.ComputeSplitPointsBySizeResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ComputeSplitPointsBySize", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ComputeSplitPointsBySize", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ComputeSplitPointsBySize(req)
 		return err
 	})
@@ -150,6 +191,14 @@ func (w *OTSTableStoreClientWrapper) CreateIndex(ctx context.Context, request *t
 	var res0 *tablestore.CreateIndexResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CreateIndex", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CreateIndex", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.CreateIndex(request)
 		return err
 	})
@@ -165,6 +214,14 @@ func (w *OTSTableStoreClientWrapper) CreateSearchIndex(ctx context.Context, requ
 	var res0 *tablestore.CreateSearchIndexResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CreateSearchIndex", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CreateSearchIndex", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.CreateSearchIndex(request)
 		return err
 	})
@@ -180,6 +237,14 @@ func (w *OTSTableStoreClientWrapper) CreateTable(ctx context.Context, request *t
 	var res0 *tablestore.CreateTableResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CreateTable", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CreateTable", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.CreateTable(request)
 		return err
 	})
@@ -195,6 +260,14 @@ func (w *OTSTableStoreClientWrapper) DeleteIndex(ctx context.Context, request *t
 	var res0 *tablestore.DeleteIndexResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteIndex", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteIndex", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DeleteIndex(request)
 		return err
 	})
@@ -210,6 +283,14 @@ func (w *OTSTableStoreClientWrapper) DeleteRow(ctx context.Context, request *tab
 	var res0 *tablestore.DeleteRowResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteRow", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteRow", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DeleteRow(request)
 		return err
 	})
@@ -225,6 +306,14 @@ func (w *OTSTableStoreClientWrapper) DeleteSearchIndex(ctx context.Context, requ
 	var res0 *tablestore.DeleteSearchIndexResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteSearchIndex", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteSearchIndex", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DeleteSearchIndex(request)
 		return err
 	})
@@ -240,6 +329,14 @@ func (w *OTSTableStoreClientWrapper) DeleteTable(ctx context.Context, request *t
 	var res0 *tablestore.DeleteTableResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteTable", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteTable", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DeleteTable(request)
 		return err
 	})
@@ -255,6 +352,14 @@ func (w *OTSTableStoreClientWrapper) DescribeSearchIndex(ctx context.Context, re
 	var res0 *tablestore.DescribeSearchIndexResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DescribeSearchIndex", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DescribeSearchIndex", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DescribeSearchIndex(request)
 		return err
 	})
@@ -270,6 +375,14 @@ func (w *OTSTableStoreClientWrapper) DescribeStream(ctx context.Context, req *ta
 	var res0 *tablestore.DescribeStreamResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DescribeStream", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DescribeStream", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DescribeStream(req)
 		return err
 	})
@@ -285,6 +398,14 @@ func (w *OTSTableStoreClientWrapper) DescribeTable(ctx context.Context, request 
 	var res0 *tablestore.DescribeTableResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DescribeTable", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DescribeTable", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DescribeTable(request)
 		return err
 	})
@@ -300,6 +421,14 @@ func (w *OTSTableStoreClientWrapper) GetRange(ctx context.Context, request *tabl
 	var res0 *tablestore.GetRangeResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetRange", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetRange", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetRange(request)
 		return err
 	})
@@ -315,6 +444,14 @@ func (w *OTSTableStoreClientWrapper) GetRow(ctx context.Context, request *tables
 	var res0 *tablestore.GetRowResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetRow", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetRow", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetRow(request)
 		return err
 	})
@@ -330,6 +467,14 @@ func (w *OTSTableStoreClientWrapper) GetShardIterator(ctx context.Context, req *
 	var res0 *tablestore.GetShardIteratorResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetShardIterator", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetShardIterator", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetShardIterator(req)
 		return err
 	})
@@ -345,6 +490,14 @@ func (w *OTSTableStoreClientWrapper) GetStreamRecord(ctx context.Context, req *t
 	var res0 *tablestore.GetStreamRecordResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetStreamRecord", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetStreamRecord", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetStreamRecord(req)
 		return err
 	})
@@ -360,6 +513,14 @@ func (w *OTSTableStoreClientWrapper) ListSearchIndex(ctx context.Context, reques
 	var res0 *tablestore.ListSearchIndexResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ListSearchIndex", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ListSearchIndex", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListSearchIndex(request)
 		return err
 	})
@@ -375,6 +536,14 @@ func (w *OTSTableStoreClientWrapper) ListStream(ctx context.Context, req *tables
 	var res0 *tablestore.ListStreamResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ListStream", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ListStream", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListStream(req)
 		return err
 	})
@@ -390,6 +559,14 @@ func (w *OTSTableStoreClientWrapper) ListTable(ctx context.Context) (*tablestore
 	var res0 *tablestore.ListTableResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ListTable", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ListTable", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListTable()
 		return err
 	})
@@ -405,6 +582,14 @@ func (w *OTSTableStoreClientWrapper) PutRow(ctx context.Context, request *tables
 	var res0 *tablestore.PutRowResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.PutRow", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.PutRow", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.PutRow(request)
 		return err
 	})
@@ -420,6 +605,14 @@ func (w *OTSTableStoreClientWrapper) Search(ctx context.Context, request *tables
 	var res0 *tablestore.SearchResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.Search", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.Search", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Search(request)
 		return err
 	})
@@ -435,6 +628,14 @@ func (w *OTSTableStoreClientWrapper) StartLocalTransaction(ctx context.Context, 
 	var res0 *tablestore.StartLocalTransactionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.StartLocalTransaction", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.StartLocalTransaction", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.StartLocalTransaction(request)
 		return err
 	})
@@ -450,6 +651,14 @@ func (w *OTSTableStoreClientWrapper) UpdateRow(ctx context.Context, request *tab
 	var res0 *tablestore.UpdateRowResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.UpdateRow", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.UpdateRow", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.UpdateRow(request)
 		return err
 	})
@@ -465,6 +674,14 @@ func (w *OTSTableStoreClientWrapper) UpdateTable(ctx context.Context, request *t
 	var res0 *tablestore.UpdateTableResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.UpdateTable", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.UpdateTable", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.UpdateTable(request)
 		return err
 	})

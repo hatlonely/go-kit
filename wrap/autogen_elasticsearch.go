@@ -1436,6 +1436,14 @@ func (w *ESAliasServiceWrapper) Do(ctx context.Context) (*elastic.AliasResult, e
 	var res0 *elastic.AliasResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.AliasService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.AliasService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -1491,6 +1499,14 @@ func (w *ESAliasesServiceWrapper) Do(ctx context.Context) (*elastic.AliasesResul
 	var res0 *elastic.AliasesResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.AliasesService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.AliasesService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -1566,6 +1582,14 @@ func (w *ESBulkProcessorServiceWrapper) Do(ctx context.Context) (*elastic.BulkPr
 	var res0 *elastic.BulkProcessor
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.BulkProcessorService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.BulkProcessorService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -1611,6 +1635,14 @@ func (w *ESBulkServiceWrapper) Do(ctx context.Context) (*elastic.BulkResponse, e
 	var res0 *elastic.BulkResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.BulkService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.BulkService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -1722,6 +1754,14 @@ func (w *ESCatAliasesServiceWrapper) Do(ctx context.Context) (elastic.CatAliases
 	var res0 elastic.CatAliasesResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.CatAliasesService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.CatAliasesService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -1792,6 +1832,14 @@ func (w *ESCatAllocationServiceWrapper) Do(ctx context.Context) (elastic.CatAllo
 	var res0 elastic.CatAllocationResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.CatAllocationService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.CatAllocationService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -1862,6 +1910,14 @@ func (w *ESCatCountServiceWrapper) Do(ctx context.Context) (elastic.CatCountResp
 	var res0 elastic.CatCountResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.CatCountService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.CatCountService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -1937,6 +1993,14 @@ func (w *ESCatHealthServiceWrapper) Do(ctx context.Context) (elastic.CatHealthRe
 	var res0 elastic.CatHealthResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.CatHealthService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.CatHealthService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -2007,6 +2071,14 @@ func (w *ESCatIndicesServiceWrapper) Do(ctx context.Context) (elastic.CatIndices
 	var res0 elastic.CatIndicesResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.CatIndicesService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.CatIndicesService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -2092,6 +2164,14 @@ func (w *ESCatShardsServiceWrapper) Do(ctx context.Context) (elastic.CatShardsRe
 	var res0 elastic.CatShardsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.CatShardsService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.CatShardsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -2162,6 +2242,14 @@ func (w *ESClearScrollServiceWrapper) Do(ctx context.Context) (*elastic.ClearScr
 	var res0 *elastic.ClearScrollResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.ClearScrollService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.ClearScrollService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -2987,6 +3075,14 @@ func (w *ESClusterHealthServiceWrapper) Do(ctx context.Context) (*elastic.Cluste
 	var res0 *elastic.ClusterHealthResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.ClusterHealthService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.ClusterHealthService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -3103,6 +3199,14 @@ func (w *ESClusterRerouteServiceWrapper) Do(ctx context.Context) (*elastic.Clust
 	var res0 *elastic.ClusterRerouteResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.ClusterRerouteService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.ClusterRerouteService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -3189,6 +3293,14 @@ func (w *ESClusterStateServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 	var res0 *elastic.ClusterStateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.ClusterStateService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.ClusterStateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -3275,6 +3387,14 @@ func (w *ESClusterStatsServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 	var res0 *elastic.ClusterStatsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.ClusterStatsService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.ClusterStatsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -3371,6 +3491,14 @@ func (w *ESCountServiceWrapper) Do(ctx context.Context) (int64, error) {
 	var res0 int64
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.CountService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.CountService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -3532,6 +3660,14 @@ func (w *ESDeleteByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 	var res0 *elastic.BulkIndexByScrollResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.DeleteByQueryService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.DeleteByQueryService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -3547,6 +3683,14 @@ func (w *ESDeleteByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 	var res0 *elastic.StartTaskResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.DeleteByQueryService.DoAsync", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.DeleteByQueryService.DoAsync", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DoAsync(ctx)
 		return err
 	})
@@ -3808,6 +3952,14 @@ func (w *ESDeleteScriptServiceWrapper) Do(ctx context.Context) (*elastic.DeleteS
 	var res0 *elastic.DeleteScriptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.DeleteScriptService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.DeleteScriptService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -3874,6 +4026,14 @@ func (w *ESDeleteServiceWrapper) Do(ctx context.Context) (*elastic.DeleteRespons
 	var res0 *elastic.DeleteResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.DeleteService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.DeleteService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -3985,6 +4145,14 @@ func (w *ESExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 	var res0 bool
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.ExistsService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.ExistsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -4106,6 +4274,14 @@ func (w *ESExplainServiceWrapper) Do(ctx context.Context) (*elastic.ExplainRespo
 	var res0 *elastic.ExplainResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.ExplainService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.ExplainService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -4247,6 +4423,14 @@ func (w *ESFieldCapsServiceWrapper) Do(ctx context.Context) (*elastic.FieldCapsR
 	var res0 *elastic.FieldCapsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.FieldCapsService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.FieldCapsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -4318,6 +4502,14 @@ func (w *ESGetScriptServiceWrapper) Do(ctx context.Context) (*elastic.GetScriptR
 	var res0 *elastic.GetScriptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.GetScriptService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.GetScriptService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -4374,6 +4566,14 @@ func (w *ESGetServiceWrapper) Do(ctx context.Context) (*elastic.GetResult, error
 	var res0 *elastic.GetResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.GetService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.GetService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -4505,6 +4705,14 @@ func (w *ESIndexServiceWrapper) Do(ctx context.Context) (*elastic.IndexResponse,
 	var res0 *elastic.IndexResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndexService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndexService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -4666,6 +4874,14 @@ func (w *ESIndicesAnalyzeServiceWrapper) Do(ctx context.Context) (*elastic.Indic
 	var res0 *elastic.IndicesAnalyzeResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesAnalyzeService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesAnalyzeService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -4767,6 +4983,14 @@ func (w *ESIndicesClearCacheServiceWrapper) Do(ctx context.Context) (*elastic.In
 	var res0 *elastic.IndicesClearCacheResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesClearCacheService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesClearCacheService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -4858,6 +5082,14 @@ func (w *ESIndicesCloseServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 	var res0 *elastic.IndicesCloseResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesCloseService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesCloseService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -4949,6 +5181,14 @@ func (w *ESIndicesCreateServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 	var res0 *elastic.IndicesCreateResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesCreateService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesCreateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -5009,6 +5249,14 @@ func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Do(ctx context.Context) (*e
 	var res0 *elastic.IndicesDeleteIndexTemplateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesDeleteIndexTemplateService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesDeleteIndexTemplateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -5075,6 +5323,14 @@ func (w *ESIndicesDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 	var res0 *elastic.IndicesDeleteResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesDeleteService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesDeleteService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -5141,6 +5397,14 @@ func (w *ESIndicesDeleteTemplateServiceWrapper) Do(ctx context.Context) (*elasti
 	var res0 *elastic.IndicesDeleteTemplateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesDeleteTemplateService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesDeleteTemplateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -5212,6 +5476,14 @@ func (w *ESIndicesExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 	var res0 bool
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesExistsService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesExistsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -5283,6 +5555,14 @@ func (w *ESIndicesExistsTemplateServiceWrapper) Do(ctx context.Context) (bool, e
 	var res0 bool
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesExistsTemplateService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesExistsTemplateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -5354,6 +5634,14 @@ func (w *ESIndicesFlushServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 	var res0 *elastic.IndicesFlushResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesFlushService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesFlushService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -5435,6 +5723,14 @@ func (w *ESIndicesForcemergeServiceWrapper) Do(ctx context.Context) (*elastic.In
 	var res0 *elastic.IndicesForcemergeResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesForcemergeService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesForcemergeService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -5521,6 +5817,14 @@ func (w *ESIndicesFreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 	var res0 *elastic.IndicesFreezeResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesFreezeService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesFreezeService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -5607,6 +5911,14 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Do(ctx context.Context) (map[st
 	var res0 map[string]interface{}
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesGetFieldMappingService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesGetFieldMappingService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -5688,6 +6000,14 @@ func (w *ESIndicesGetIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 	var res0 *elastic.IndicesGetIndexTemplateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesGetIndexTemplateService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesGetIndexTemplateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -5764,6 +6084,14 @@ func (w *ESIndicesGetMappingServiceWrapper) Do(ctx context.Context) (map[string]
 	var res0 map[string]interface{}
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesGetMappingService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesGetMappingService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -5845,6 +6173,14 @@ func (w *ESIndicesGetServiceWrapper) Do(ctx context.Context) (map[string]*elasti
 	var res0 map[string]*elastic.IndicesGetResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesGetService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesGetService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -5926,6 +6262,14 @@ func (w *ESIndicesGetSettingsServiceWrapper) Do(ctx context.Context) (map[string
 	var res0 map[string]*elastic.IndicesGetSettingsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesGetSettingsService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesGetSettingsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -6007,6 +6351,14 @@ func (w *ESIndicesGetTemplateServiceWrapper) Do(ctx context.Context) (map[string
 	var res0 map[string]*elastic.IndicesGetTemplateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesGetTemplateService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesGetTemplateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -6078,6 +6430,14 @@ func (w *ESIndicesOpenServiceWrapper) Do(ctx context.Context) (*elastic.IndicesO
 	var res0 *elastic.IndicesOpenResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesOpenService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesOpenService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -6179,6 +6539,14 @@ func (w *ESIndicesPutIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 	var res0 *elastic.IndicesPutIndexTemplateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesPutIndexTemplateService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesPutIndexTemplateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -6255,6 +6623,14 @@ func (w *ESIndicesPutMappingServiceWrapper) Do(ctx context.Context) (*elastic.Pu
 	var res0 *elastic.PutMappingResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesPutMappingService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesPutMappingService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -6351,6 +6727,14 @@ func (w *ESIndicesPutSettingsServiceWrapper) Do(ctx context.Context) (*elastic.I
 	var res0 *elastic.IndicesPutSettingsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesPutSettingsService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesPutSettingsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -6447,6 +6831,14 @@ func (w *ESIndicesPutTemplateServiceWrapper) Do(ctx context.Context) (*elastic.I
 	var res0 *elastic.IndicesPutTemplateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesPutTemplateService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesPutTemplateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -6573,6 +6965,14 @@ func (w *ESIndicesRolloverServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 	var res0 *elastic.IndicesRolloverResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesRolloverService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesRolloverService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -6664,6 +7064,14 @@ func (w *ESIndicesSegmentsServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 	var res0 *elastic.IndicesSegmentsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesSegmentsService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesSegmentsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -6750,6 +7158,14 @@ func (w *ESIndicesShrinkServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 	var res0 *elastic.IndicesShrinkResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesShrinkService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesShrinkService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -6831,6 +7247,14 @@ func (w *ESIndicesStatsServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 	var res0 *elastic.IndicesStatsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesStatsService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesStatsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -6922,6 +7346,14 @@ func (w *ESIndicesSyncedFlushServiceWrapper) Do(ctx context.Context) (*elastic.I
 	var res0 *elastic.IndicesSyncedFlushResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesSyncedFlushService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesSyncedFlushService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -6993,6 +7425,14 @@ func (w *ESIndicesUnfreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 	var res0 *elastic.IndicesUnfreezeResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IndicesUnfreezeService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesUnfreezeService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -7074,6 +7514,14 @@ func (w *ESIngestDeletePipelineServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.IngestDeletePipelineResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IngestDeletePipelineService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IngestDeletePipelineService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -7140,6 +7588,14 @@ func (w *ESIngestGetPipelineServiceWrapper) Do(ctx context.Context) (elastic.Ing
 	var res0 elastic.IngestGetPipelineResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IngestGetPipelineService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IngestGetPipelineService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -7211,6 +7667,14 @@ func (w *ESIngestPutPipelineServiceWrapper) Do(ctx context.Context) (*elastic.In
 	var res0 *elastic.IngestPutPipelineResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IngestPutPipelineService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IngestPutPipelineService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -7287,6 +7751,14 @@ func (w *ESIngestSimulatePipelineServiceWrapper) Do(ctx context.Context) (*elast
 	var res0 *elastic.IngestSimulatePipelineResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.IngestSimulatePipelineService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.IngestSimulatePipelineService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -7353,6 +7825,14 @@ func (w *ESMgetServiceWrapper) Do(ctx context.Context) (*elastic.MgetResponse, e
 	var res0 *elastic.MgetResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.MgetService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.MgetService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -7435,6 +7915,14 @@ func (w *ESMultiSearchServiceWrapper) Do(ctx context.Context) (*elastic.MultiSea
 	var res0 *elastic.MultiSearchResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.MultiSearchService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.MultiSearchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -7510,6 +7998,14 @@ func (w *ESMultiTermvectorServiceWrapper) Do(ctx context.Context) (*elastic.Mult
 	var res0 *elastic.MultiTermvectorResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.MultiTermvectorService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.MultiTermvectorService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -7642,6 +8138,14 @@ func (w *ESNodesInfoServiceWrapper) Do(ctx context.Context) (*elastic.NodesInfoR
 	var res0 *elastic.NodesInfoResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.NodesInfoService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.NodesInfoService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -7713,6 +8217,14 @@ func (w *ESNodesStatsServiceWrapper) Do(ctx context.Context) (*elastic.NodesStat
 	var res0 *elastic.NodesStatsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.NodesStatsService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.NodesStatsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -7810,6 +8322,14 @@ func (w *ESPingServiceWrapper) Do(ctx context.Context) (*elastic.PingResult, int
 	var res1 int
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.PingService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.PingService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, res1, err = w.obj.Do(ctx)
 		return err
 	})
@@ -7885,6 +8405,14 @@ func (w *ESPutScriptServiceWrapper) Do(ctx context.Context) (*elastic.PutScriptR
 	var res0 *elastic.PutScriptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.PutScriptService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.PutScriptService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -7951,6 +8479,14 @@ func (w *ESRefreshServiceWrapper) Do(ctx context.Context) (*elastic.RefreshResul
 	var res0 *elastic.RefreshResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.RefreshService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.RefreshService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -8031,6 +8567,14 @@ func (w *ESReindexServiceWrapper) Do(ctx context.Context) (*elastic.BulkIndexByS
 	var res0 *elastic.BulkIndexByScrollResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.ReindexService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.ReindexService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -8046,6 +8590,14 @@ func (w *ESReindexServiceWrapper) DoAsync(ctx context.Context) (*elastic.StartTa
 	var res0 *elastic.StartTaskResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.ReindexService.DoAsync", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.ReindexService.DoAsync", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DoAsync(ctx)
 		return err
 	})
@@ -8168,6 +8720,14 @@ func (w *ESScrollServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 	var res0 *elastic.SearchResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.ScrollService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.ScrollService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -8413,6 +8973,14 @@ func (w *ESSearchServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 	var res0 *elastic.SearchResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.SearchService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.SearchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -8709,6 +9277,14 @@ func (w *ESSearchShardsServiceWrapper) Do(ctx context.Context) (*elastic.SearchS
 	var res0 *elastic.SearchShardsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.SearchShardsService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.SearchShardsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -8800,6 +9376,14 @@ func (w *ESSnapshotCreateRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 	var res0 *elastic.SnapshotCreateRepositoryResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.SnapshotCreateRepositoryService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotCreateRepositoryService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -8896,6 +9480,14 @@ func (w *ESSnapshotCreateServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 	var res0 *elastic.SnapshotCreateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.SnapshotCreateService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotCreateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -8967,6 +9559,14 @@ func (w *ESSnapshotDeleteRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 	var res0 *elastic.SnapshotDeleteRepositoryResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.SnapshotDeleteRepositoryService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotDeleteRepositoryService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -9033,6 +9633,14 @@ func (w *ESSnapshotDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 	var res0 *elastic.SnapshotDeleteResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.SnapshotDeleteService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotDeleteService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -9094,6 +9702,14 @@ func (w *ESSnapshotGetRepositoryServiceWrapper) Do(ctx context.Context) (elastic
 	var res0 elastic.SnapshotGetRepositoryResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.SnapshotGetRepositoryService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotGetRepositoryService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -9160,6 +9776,14 @@ func (w *ESSnapshotGetServiceWrapper) Do(ctx context.Context) (*elastic.Snapshot
 	var res0 *elastic.SnapshotGetResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.SnapshotGetService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotGetService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -9241,6 +9865,14 @@ func (w *ESSnapshotRestoreServiceWrapper) Do(ctx context.Context) (*elastic.Snap
 	var res0 *elastic.SnapshotRestoreResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.SnapshotRestoreService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotRestoreService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -9352,6 +9984,14 @@ func (w *ESSnapshotStatusServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 	var res0 *elastic.SnapshotStatusResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.SnapshotStatusService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotStatusService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -9418,6 +10058,14 @@ func (w *ESSnapshotVerifyRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 	var res0 *elastic.SnapshotVerifyRepositoryResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.SnapshotVerifyRepositoryService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotVerifyRepositoryService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -9489,6 +10137,14 @@ func (w *ESTasksCancelServiceWrapper) Do(ctx context.Context) (*elastic.TasksLis
 	var res0 *elastic.TasksListResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.TasksCancelService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.TasksCancelService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -9565,6 +10221,14 @@ func (w *ESTasksGetTaskServiceWrapper) Do(ctx context.Context) (*elastic.TasksGe
 	var res0 *elastic.TasksGetTaskResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.TasksGetTaskService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.TasksGetTaskService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -9641,6 +10305,14 @@ func (w *ESTasksListServiceWrapper) Do(ctx context.Context) (*elastic.TasksListR
 	var res0 *elastic.TasksListResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.TasksListService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.TasksListService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -9732,6 +10404,14 @@ func (w *ESTermvectorsServiceWrapper) Do(ctx context.Context) (*elastic.Termvect
 	var res0 *elastic.TermvectorsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.TermvectorsService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.TermvectorsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -9913,6 +10593,14 @@ func (w *ESUpdateByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 	var res0 *elastic.BulkIndexByScrollResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.UpdateByQueryService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.UpdateByQueryService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -9928,6 +10616,14 @@ func (w *ESUpdateByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 	var res0 *elastic.StartTaskResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.UpdateByQueryService.DoAsync", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.UpdateByQueryService.DoAsync", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DoAsync(ctx)
 		return err
 	})
@@ -10209,6 +10905,14 @@ func (w *ESUpdateServiceWrapper) Do(ctx context.Context) (*elastic.UpdateRespons
 	var res0 *elastic.UpdateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.UpdateService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.UpdateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -10399,6 +11103,14 @@ func (w *ESValidateServiceWrapper) Do(ctx context.Context) (*elastic.ValidateRes
 	var res0 *elastic.ValidateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.ValidateService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.ValidateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -10495,6 +11207,14 @@ func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Do(ctx context.Context) (*elas
 	var res0 *elastic.XPackIlmDeleteLifecycleResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackIlmDeleteLifecycleService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackIlmDeleteLifecycleService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -10566,6 +11286,14 @@ func (w *ESXPackIlmGetLifecycleServiceWrapper) Do(ctx context.Context) (map[stri
 	var res0 map[string]*elastic.XPackIlmGetLifecycleResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackIlmGetLifecycleService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackIlmGetLifecycleService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -10647,6 +11375,14 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackIlmPutLifecycleResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackIlmPutLifecycleService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackIlmPutLifecycleService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -10718,6 +11454,14 @@ func (w *ESXPackInfoServiceWrapper) Do(ctx context.Context) (*elastic.XPackInfoS
 	var res0 *elastic.XPackInfoServiceResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackInfoService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackInfoService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -10774,6 +11518,14 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Do(ctx context.Context) (*
 	var res0 *elastic.XPackSecurityChangeUserPasswordResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityChangePasswordService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityChangePasswordService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -10840,6 +11592,14 @@ func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Do(ctx context.Context)
 	var res0 *elastic.XPackSecurityDeleteRoleMappingResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleMappingService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleMappingService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -10896,6 +11656,14 @@ func (w *ESXPackSecurityDeleteRoleServiceWrapper) Do(ctx context.Context) (*elas
 	var res0 *elastic.XPackSecurityDeleteRoleResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -10952,6 +11720,14 @@ func (w *ESXPackSecurityDeleteUserServiceWrapper) Do(ctx context.Context) (*elas
 	var res0 *elastic.XPackSecurityDeleteUserResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityDeleteUserService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityDeleteUserService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11013,6 +11789,14 @@ func (w *ESXPackSecurityDisableUserServiceWrapper) Do(ctx context.Context) (*ela
 	var res0 *elastic.XPackSecurityDisableUserResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityDisableUserService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityDisableUserService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11074,6 +11858,14 @@ func (w *ESXPackSecurityEnableUserServiceWrapper) Do(ctx context.Context) (*elas
 	var res0 *elastic.XPackSecurityEnableUserResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityEnableUserService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityEnableUserService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11135,6 +11927,14 @@ func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Do(ctx context.Context) (*
 	var res0 *elastic.XPackSecurityGetRoleMappingResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityGetRoleMappingService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityGetRoleMappingService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11191,6 +11991,14 @@ func (w *ESXPackSecurityGetRoleServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackSecurityGetRoleResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityGetRoleService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityGetRoleService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11247,6 +12055,14 @@ func (w *ESXPackSecurityGetUserServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackSecurityGetUserResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityGetUserService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityGetUserService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11308,6 +12124,14 @@ func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Do(ctx context.Context) (*
 	var res0 *elastic.XPackSecurityPutRoleMappingResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityPutRoleMappingService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityPutRoleMappingService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11369,6 +12193,14 @@ func (w *ESXPackSecurityPutRoleServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackSecurityPutRoleResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityPutRoleService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityPutRoleService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11430,6 +12262,14 @@ func (w *ESXPackSecurityPutUserServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackSecurityPutUserResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityPutUserService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityPutUserService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11501,6 +12341,14 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackWatcherAckWatchResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherAckWatchService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherAckWatchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11562,6 +12410,14 @@ func (w *ESXPackWatcherActivateWatchServiceWrapper) Do(ctx context.Context) (*el
 	var res0 *elastic.XPackWatcherActivateWatchResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherActivateWatchService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherActivateWatchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11623,6 +12479,14 @@ func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Do(ctx context.Context) (*
 	var res0 *elastic.XPackWatcherDeactivateWatchResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherDeactivateWatchService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherDeactivateWatchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11684,6 +12548,14 @@ func (w *ESXPackWatcherDeleteWatchServiceWrapper) Do(ctx context.Context) (*elas
 	var res0 *elastic.XPackWatcherDeleteWatchResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherDeleteWatchService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherDeleteWatchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11760,6 +12632,14 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Do(ctx context.Context) (*ela
 	var res0 *elastic.XPackWatcherExecuteWatchResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherExecuteWatchService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherExecuteWatchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11816,6 +12696,14 @@ func (w *ESXPackWatcherGetWatchServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackWatcherGetWatchResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherGetWatchService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherGetWatchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11882,6 +12770,14 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackWatcherPutWatchResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherPutWatchService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherPutWatchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -11953,6 +12849,14 @@ func (w *ESXPackWatcherStartServiceWrapper) Do(ctx context.Context) (*elastic.XP
 	var res0 *elastic.XPackWatcherStartResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherStartService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherStartService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -12004,6 +12908,14 @@ func (w *ESXPackWatcherStatsServiceWrapper) Do(ctx context.Context) (*elastic.XP
 	var res0 *elastic.XPackWatcherStatsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherStatsService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherStatsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})
@@ -12065,6 +12977,14 @@ func (w *ESXPackWatcherStopServiceWrapper) Do(ctx context.Context) (*elastic.XPa
 	var res0 *elastic.XPackWatcherStopResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherStopService.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherStopService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(ctx)
 		return err
 	})

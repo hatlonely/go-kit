@@ -424,6 +424,20 @@ const WrapperFunctionBodyRetryTpl = `
 		return {{.function.lastResult}}
 	})
 `
+const WrapperFunctionBodyRetryWithMetricTpl = `
+	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}).Inc()
+				w.durationMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
+		{{.function.resultList}} = w.obj.{{.function.name}}({{.function.paramList}})
+		return {{.function.lastResult}}
+	})
+`
 const WrapperFunctionBodyCallTpl = `
 	{{.function.resultList}} = w.obj.{{.function.name}}({{.function.paramList}})
 `
@@ -463,7 +477,11 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface
 	buf.WriteString(g.generateWrapperDeclareReturnVariables(function))
 
 	if function.IsReturnError && g.MatchFunctionRule(function, g.options.Rule.Retry) {
-		buf.WriteString(renderTemplate(WrapperFunctionBodyRetryTpl, vals))
+		if g.MatchFunctionRule(function, g.options.Rule.Metric) {
+			buf.WriteString(renderTemplate(WrapperFunctionBodyRetryWithMetricTpl, vals))
+		} else {
+			buf.WriteString(renderTemplate(WrapperFunctionBodyRetryTpl, vals))
+		}
 		buf.WriteString(g.generateWrapperReturnVariables(function))
 		return buf.String()
 	}

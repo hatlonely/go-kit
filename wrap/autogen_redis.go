@@ -204,6 +204,14 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("redis.Client.Pipelined", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("redis.Client.Pipelined", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Pipelined(fn)
 		return err
 	})
@@ -281,6 +289,14 @@ func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipe
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("redis.Client.TxPipelined", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("redis.Client.TxPipelined", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.TxPipelined(fn)
 		return err
 	})
@@ -295,6 +311,14 @@ func (w *RedisClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("redis.Client.Watch", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("redis.Client.Watch", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.Watch(fn, keys...)
 		return err
 	})
@@ -314,6 +338,14 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("redis.ClusterClient.Close", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Close", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.Close()
 		return err
 	})
@@ -385,6 +417,14 @@ func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(c
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("redis.ClusterClient.ForEachMaster", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ForEachMaster", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.ForEachMaster(fn)
 		return err
 	})
@@ -399,6 +439,14 @@ func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(cli
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("redis.ClusterClient.ForEachNode", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ForEachNode", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.ForEachNode(fn)
 		return err
 	})
@@ -413,6 +461,14 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("redis.ClusterClient.ForEachSlave", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ForEachSlave", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.ForEachSlave(fn)
 		return err
 	})
@@ -485,6 +541,14 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("redis.ClusterClient.Pipelined", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Pipelined", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Pipelined(fn)
 		return err
 	})
@@ -518,6 +582,14 @@ func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("redis.ClusterClient.Process", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Process", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.Process(cmd)
 		return err
 	})
@@ -532,6 +604,14 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("redis.ClusterClient.ReloadState", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ReloadState", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.ReloadState()
 		return err
 	})
@@ -585,6 +665,14 @@ func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(red
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("redis.ClusterClient.TxPipelined", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("redis.ClusterClient.TxPipelined", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.TxPipelined(fn)
 		return err
 	})
@@ -599,6 +687,14 @@ func (w *RedisClusterClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("redis.ClusterClient.Watch", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Watch", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.Watch(fn, keys...)
 		return err
 	})

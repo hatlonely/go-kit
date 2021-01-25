@@ -76,6 +76,14 @@ func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.A
 	var response *kms.AsymmetricDecryptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.AsymmetricDecrypt", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.AsymmetricDecrypt", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.AsymmetricDecrypt(request)
 		return err
 	})
@@ -130,6 +138,14 @@ func (w *KMSClientWrapper) AsymmetricEncrypt(ctx context.Context, request *kms.A
 	var response *kms.AsymmetricEncryptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.AsymmetricEncrypt", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.AsymmetricEncrypt", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.AsymmetricEncrypt(request)
 		return err
 	})
@@ -184,6 +200,14 @@ func (w *KMSClientWrapper) AsymmetricSign(ctx context.Context, request *kms.Asym
 	var response *kms.AsymmetricSignResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.AsymmetricSign", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.AsymmetricSign", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.AsymmetricSign(request)
 		return err
 	})
@@ -238,6 +262,14 @@ func (w *KMSClientWrapper) AsymmetricVerify(ctx context.Context, request *kms.As
 	var response *kms.AsymmetricVerifyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.AsymmetricVerify", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.AsymmetricVerify", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.AsymmetricVerify(request)
 		return err
 	})
@@ -292,6 +324,14 @@ func (w *KMSClientWrapper) CancelKeyDeletion(ctx context.Context, request *kms.C
 	var response *kms.CancelKeyDeletionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.CancelKeyDeletion", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CancelKeyDeletion", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.CancelKeyDeletion(request)
 		return err
 	})
@@ -346,6 +386,14 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecrypt(ctx context.Context, req
 	var response *kms.CertificatePrivateKeyDecryptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecrypt", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecrypt", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.CertificatePrivateKeyDecrypt(request)
 		return err
 	})
@@ -400,6 +448,14 @@ func (w *KMSClientWrapper) CertificatePrivateKeySign(ctx context.Context, reques
 	var response *kms.CertificatePrivateKeySignResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeySign", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeySign", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.CertificatePrivateKeySign(request)
 		return err
 	})
@@ -454,6 +510,14 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncrypt(ctx context.Context, requ
 	var response *kms.CertificatePublicKeyEncryptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncrypt", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncrypt", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.CertificatePublicKeyEncrypt(request)
 		return err
 	})
@@ -508,6 +572,14 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerify(ctx context.Context, reque
 	var response *kms.CertificatePublicKeyVerifyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerify", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerify", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.CertificatePublicKeyVerify(request)
 		return err
 	})
@@ -562,6 +634,14 @@ func (w *KMSClientWrapper) CreateAlias(ctx context.Context, request *kms.CreateA
 	var response *kms.CreateAliasResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.CreateAlias", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CreateAlias", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.CreateAlias(request)
 		return err
 	})
@@ -616,6 +696,14 @@ func (w *KMSClientWrapper) CreateCertificate(ctx context.Context, request *kms.C
 	var response *kms.CreateCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.CreateCertificate", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CreateCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.CreateCertificate(request)
 		return err
 	})
@@ -670,6 +758,14 @@ func (w *KMSClientWrapper) CreateKey(ctx context.Context, request *kms.CreateKey
 	var response *kms.CreateKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.CreateKey", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CreateKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.CreateKey(request)
 		return err
 	})
@@ -685,6 +781,14 @@ func (w *KMSClientWrapper) CreateKeyVersion(ctx context.Context, request *kms.Cr
 	var response *kms.CreateKeyVersionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.CreateKeyVersion", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CreateKeyVersion", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.CreateKeyVersion(request)
 		return err
 	})
@@ -778,6 +882,14 @@ func (w *KMSClientWrapper) CreateSecret(ctx context.Context, request *kms.Create
 	var response *kms.CreateSecretResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.CreateSecret", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CreateSecret", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.CreateSecret(request)
 		return err
 	})
@@ -832,6 +944,14 @@ func (w *KMSClientWrapper) Decrypt(ctx context.Context, request *kms.DecryptRequ
 	var response *kms.DecryptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.Decrypt", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.Decrypt", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.Decrypt(request)
 		return err
 	})
@@ -886,6 +1006,14 @@ func (w *KMSClientWrapper) DeleteAlias(ctx context.Context, request *kms.DeleteA
 	var response *kms.DeleteAliasResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.DeleteAlias", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DeleteAlias", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.DeleteAlias(request)
 		return err
 	})
@@ -940,6 +1068,14 @@ func (w *KMSClientWrapper) DeleteCertificate(ctx context.Context, request *kms.D
 	var response *kms.DeleteCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.DeleteCertificate", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DeleteCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.DeleteCertificate(request)
 		return err
 	})
@@ -994,6 +1130,14 @@ func (w *KMSClientWrapper) DeleteKeyMaterial(ctx context.Context, request *kms.D
 	var response *kms.DeleteKeyMaterialResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.DeleteKeyMaterial", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DeleteKeyMaterial", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.DeleteKeyMaterial(request)
 		return err
 	})
@@ -1048,6 +1192,14 @@ func (w *KMSClientWrapper) DeleteSecret(ctx context.Context, request *kms.Delete
 	var response *kms.DeleteSecretResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.DeleteSecret", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DeleteSecret", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.DeleteSecret(request)
 		return err
 	})
@@ -1102,6 +1254,14 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatus(ctx context.Context, request
 	var response *kms.DescribeAccountKmsStatusResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatus", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatus", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.DescribeAccountKmsStatus(request)
 		return err
 	})
@@ -1156,6 +1316,14 @@ func (w *KMSClientWrapper) DescribeCertificate(ctx context.Context, request *kms
 	var response *kms.DescribeCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.DescribeCertificate", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DescribeCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.DescribeCertificate(request)
 		return err
 	})
@@ -1210,6 +1378,14 @@ func (w *KMSClientWrapper) DescribeKey(ctx context.Context, request *kms.Describ
 	var response *kms.DescribeKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.DescribeKey", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DescribeKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.DescribeKey(request)
 		return err
 	})
@@ -1225,6 +1401,14 @@ func (w *KMSClientWrapper) DescribeKeyVersion(ctx context.Context, request *kms.
 	var response *kms.DescribeKeyVersionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.DescribeKeyVersion", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DescribeKeyVersion", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.DescribeKeyVersion(request)
 		return err
 	})
@@ -1318,6 +1502,14 @@ func (w *KMSClientWrapper) DescribeRegions(ctx context.Context, request *kms.Des
 	var response *kms.DescribeRegionsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.DescribeRegions", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DescribeRegions", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.DescribeRegions(request)
 		return err
 	})
@@ -1372,6 +1564,14 @@ func (w *KMSClientWrapper) DescribeSecret(ctx context.Context, request *kms.Desc
 	var response *kms.DescribeSecretResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.DescribeSecret", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DescribeSecret", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.DescribeSecret(request)
 		return err
 	})
@@ -1426,6 +1626,14 @@ func (w *KMSClientWrapper) DescribeService(ctx context.Context, request *kms.Des
 	var response *kms.DescribeServiceResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.DescribeService", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DescribeService", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.DescribeService(request)
 		return err
 	})
@@ -1480,6 +1688,14 @@ func (w *KMSClientWrapper) DisableKey(ctx context.Context, request *kms.DisableK
 	var response *kms.DisableKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.DisableKey", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DisableKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.DisableKey(request)
 		return err
 	})
@@ -1534,6 +1750,14 @@ func (w *KMSClientWrapper) EnableKey(ctx context.Context, request *kms.EnableKey
 	var response *kms.EnableKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.EnableKey", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.EnableKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.EnableKey(request)
 		return err
 	})
@@ -1588,6 +1812,14 @@ func (w *KMSClientWrapper) Encrypt(ctx context.Context, request *kms.EncryptRequ
 	var response *kms.EncryptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.Encrypt", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.Encrypt", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.Encrypt(request)
 		return err
 	})
@@ -1642,6 +1874,14 @@ func (w *KMSClientWrapper) ExportCertificate(ctx context.Context, request *kms.E
 	var response *kms.ExportCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ExportCertificate", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ExportCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ExportCertificate(request)
 		return err
 	})
@@ -1696,6 +1936,14 @@ func (w *KMSClientWrapper) ExportDataKey(ctx context.Context, request *kms.Expor
 	var response *kms.ExportDataKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ExportDataKey", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ExportDataKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ExportDataKey(request)
 		return err
 	})
@@ -1750,6 +1998,14 @@ func (w *KMSClientWrapper) GenerateAndExportDataKey(ctx context.Context, request
 	var response *kms.GenerateAndExportDataKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.GenerateAndExportDataKey", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GenerateAndExportDataKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.GenerateAndExportDataKey(request)
 		return err
 	})
@@ -1804,6 +2060,14 @@ func (w *KMSClientWrapper) GenerateDataKey(ctx context.Context, request *kms.Gen
 	var response *kms.GenerateDataKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.GenerateDataKey", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GenerateDataKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.GenerateDataKey(request)
 		return err
 	})
@@ -1858,6 +2122,14 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintext(ctx context.Context, 
 	var response *kms.GenerateDataKeyWithoutPlaintextResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintext", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintext", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.GenerateDataKeyWithoutPlaintext(request)
 		return err
 	})
@@ -1912,6 +2184,14 @@ func (w *KMSClientWrapper) GetCertificate(ctx context.Context, request *kms.GetC
 	var response *kms.GetCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.GetCertificate", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GetCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.GetCertificate(request)
 		return err
 	})
@@ -1966,6 +2246,14 @@ func (w *KMSClientWrapper) GetParametersForImport(ctx context.Context, request *
 	var response *kms.GetParametersForImportResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.GetParametersForImport", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GetParametersForImport", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.GetParametersForImport(request)
 		return err
 	})
@@ -2020,6 +2308,14 @@ func (w *KMSClientWrapper) GetPublicKey(ctx context.Context, request *kms.GetPub
 	var response *kms.GetPublicKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.GetPublicKey", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GetPublicKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.GetPublicKey(request)
 		return err
 	})
@@ -2074,6 +2370,14 @@ func (w *KMSClientWrapper) GetRandomPassword(ctx context.Context, request *kms.G
 	var response *kms.GetRandomPasswordResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.GetRandomPassword", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GetRandomPassword", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.GetRandomPassword(request)
 		return err
 	})
@@ -2128,6 +2432,14 @@ func (w *KMSClientWrapper) GetSecretValue(ctx context.Context, request *kms.GetS
 	var response *kms.GetSecretValueResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.GetSecretValue", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GetSecretValue", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.GetSecretValue(request)
 		return err
 	})
@@ -2182,6 +2494,14 @@ func (w *KMSClientWrapper) ImportCertificate(ctx context.Context, request *kms.I
 	var response *kms.ImportCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ImportCertificate", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ImportCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ImportCertificate(request)
 		return err
 	})
@@ -2236,6 +2556,14 @@ func (w *KMSClientWrapper) ImportEncryptionCertificate(ctx context.Context, requ
 	var response *kms.ImportEncryptionCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ImportEncryptionCertificate", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ImportEncryptionCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ImportEncryptionCertificate(request)
 		return err
 	})
@@ -2290,6 +2618,14 @@ func (w *KMSClientWrapper) ImportKeyMaterial(ctx context.Context, request *kms.I
 	var response *kms.ImportKeyMaterialResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ImportKeyMaterial", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ImportKeyMaterial", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ImportKeyMaterial(request)
 		return err
 	})
@@ -2344,6 +2680,14 @@ func (w *KMSClientWrapper) ListAliases(ctx context.Context, request *kms.ListAli
 	var response *kms.ListAliasesResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ListAliases", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListAliases", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ListAliases(request)
 		return err
 	})
@@ -2359,6 +2703,14 @@ func (w *KMSClientWrapper) ListAliasesByKeyId(ctx context.Context, request *kms.
 	var response *kms.ListAliasesByKeyIdResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ListAliasesByKeyId", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListAliasesByKeyId", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ListAliasesByKeyId(request)
 		return err
 	})
@@ -2452,6 +2804,14 @@ func (w *KMSClientWrapper) ListCertificates(ctx context.Context, request *kms.Li
 	var response *kms.ListCertificatesResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ListCertificates", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListCertificates", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ListCertificates(request)
 		return err
 	})
@@ -2506,6 +2866,14 @@ func (w *KMSClientWrapper) ListKeyVersions(ctx context.Context, request *kms.Lis
 	var response *kms.ListKeyVersionsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ListKeyVersions", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListKeyVersions", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ListKeyVersions(request)
 		return err
 	})
@@ -2560,6 +2928,14 @@ func (w *KMSClientWrapper) ListKeys(ctx context.Context, request *kms.ListKeysRe
 	var response *kms.ListKeysResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ListKeys", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListKeys", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ListKeys(request)
 		return err
 	})
@@ -2614,6 +2990,14 @@ func (w *KMSClientWrapper) ListResourceTags(ctx context.Context, request *kms.Li
 	var response *kms.ListResourceTagsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ListResourceTags", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListResourceTags", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ListResourceTags(request)
 		return err
 	})
@@ -2668,6 +3052,14 @@ func (w *KMSClientWrapper) ListSecretVersionIds(ctx context.Context, request *km
 	var response *kms.ListSecretVersionIdsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ListSecretVersionIds", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListSecretVersionIds", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ListSecretVersionIds(request)
 		return err
 	})
@@ -2722,6 +3114,14 @@ func (w *KMSClientWrapper) ListSecrets(ctx context.Context, request *kms.ListSec
 	var response *kms.ListSecretsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ListSecrets", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListSecrets", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ListSecrets(request)
 		return err
 	})
@@ -2776,6 +3176,14 @@ func (w *KMSClientWrapper) OpenKmsService(ctx context.Context, request *kms.Open
 	var response *kms.OpenKmsServiceResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.OpenKmsService", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.OpenKmsService", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.OpenKmsService(request)
 		return err
 	})
@@ -2830,6 +3238,14 @@ func (w *KMSClientWrapper) PutSecretValue(ctx context.Context, request *kms.PutS
 	var response *kms.PutSecretValueResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.PutSecretValue", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.PutSecretValue", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.PutSecretValue(request)
 		return err
 	})
@@ -2884,6 +3300,14 @@ func (w *KMSClientWrapper) ReEncrypt(ctx context.Context, request *kms.ReEncrypt
 	var response *kms.ReEncryptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ReEncrypt", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ReEncrypt", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ReEncrypt(request)
 		return err
 	})
@@ -2938,6 +3362,14 @@ func (w *KMSClientWrapper) RestoreSecret(ctx context.Context, request *kms.Resto
 	var response *kms.RestoreSecretResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.RestoreSecret", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.RestoreSecret", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.RestoreSecret(request)
 		return err
 	})
@@ -2992,6 +3424,14 @@ func (w *KMSClientWrapper) ScheduleKeyDeletion(ctx context.Context, request *kms
 	var response *kms.ScheduleKeyDeletionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.ScheduleKeyDeletion", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ScheduleKeyDeletion", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.ScheduleKeyDeletion(request)
 		return err
 	})
@@ -3046,6 +3486,14 @@ func (w *KMSClientWrapper) TagResource(ctx context.Context, request *kms.TagReso
 	var response *kms.TagResourceResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.TagResource", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.TagResource", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.TagResource(request)
 		return err
 	})
@@ -3100,6 +3548,14 @@ func (w *KMSClientWrapper) UntagResource(ctx context.Context, request *kms.Untag
 	var response *kms.UntagResourceResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.UntagResource", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UntagResource", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.UntagResource(request)
 		return err
 	})
@@ -3154,6 +3610,14 @@ func (w *KMSClientWrapper) UpdateAlias(ctx context.Context, request *kms.UpdateA
 	var response *kms.UpdateAliasResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.UpdateAlias", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UpdateAlias", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.UpdateAlias(request)
 		return err
 	})
@@ -3208,6 +3672,14 @@ func (w *KMSClientWrapper) UpdateCertificateStatus(ctx context.Context, request 
 	var response *kms.UpdateCertificateStatusResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.UpdateCertificateStatus", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UpdateCertificateStatus", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.UpdateCertificateStatus(request)
 		return err
 	})
@@ -3262,6 +3734,14 @@ func (w *KMSClientWrapper) UpdateKeyDescription(ctx context.Context, request *km
 	var response *kms.UpdateKeyDescriptionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.UpdateKeyDescription", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UpdateKeyDescription", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.UpdateKeyDescription(request)
 		return err
 	})
@@ -3316,6 +3796,14 @@ func (w *KMSClientWrapper) UpdateRotationPolicy(ctx context.Context, request *km
 	var response *kms.UpdateRotationPolicyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.UpdateRotationPolicy", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UpdateRotationPolicy", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.UpdateRotationPolicy(request)
 		return err
 	})
@@ -3370,6 +3858,14 @@ func (w *KMSClientWrapper) UpdateSecret(ctx context.Context, request *kms.Update
 	var response *kms.UpdateSecretResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.UpdateSecret", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UpdateSecret", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.UpdateSecret(request)
 		return err
 	})
@@ -3385,6 +3881,14 @@ func (w *KMSClientWrapper) UpdateSecretVersionStage(ctx context.Context, request
 	var response *kms.UpdateSecretVersionStageResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.UpdateSecretVersionStage", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UpdateSecretVersionStage", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.UpdateSecretVersionStage(request)
 		return err
 	})
@@ -3478,6 +3982,14 @@ func (w *KMSClientWrapper) UploadCertificate(ctx context.Context, request *kms.U
 	var response *kms.UploadCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.UploadCertificate", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UploadCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		response, err = w.obj.UploadCertificate(request)
 		return err
 	})

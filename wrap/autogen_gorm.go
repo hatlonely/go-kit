@@ -295,6 +295,14 @@ func (w GORMDBWrapper) Close(ctx context.Context) error {
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("gorm.DB.Close", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("gorm.DB.Close", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.Close()
 		return err
 	})
@@ -1223,6 +1231,14 @@ func (w GORMDBWrapper) Rows(ctx context.Context) (*sql.Rows, error) {
 	var res0 *sql.Rows
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("gorm.DB.Rows", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("gorm.DB.Rows", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Rows()
 		return err
 	})
@@ -1273,6 +1289,14 @@ func (w GORMDBWrapper) ScanRows(ctx context.Context, rows *sql.Rows, result inte
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("gorm.DB.ScanRows", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("gorm.DB.ScanRows", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.ScanRows(rows, result)
 		return err
 	})
@@ -1432,6 +1456,14 @@ func (w GORMDBWrapper) Transaction(ctx context.Context, fc func(tx *gorm.DB) err
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("gorm.DB.Transaction", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("gorm.DB.Transaction", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.Transaction(fc)
 		return err
 	})

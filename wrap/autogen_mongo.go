@@ -103,6 +103,14 @@ func (w *MongoClientWrapper) Connect(ctx context.Context) error {
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Client.Connect", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Client.Connect", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.Connect(ctx)
 		return err
 	})
@@ -123,6 +131,14 @@ func (w *MongoClientWrapper) Disconnect(ctx context.Context) error {
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Client.Disconnect", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Client.Disconnect", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.Disconnect(ctx)
 		return err
 	})
@@ -138,6 +154,14 @@ func (w *MongoClientWrapper) ListDatabaseNames(ctx context.Context, filter inter
 	var res0 []string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Client.ListDatabaseNames", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Client.ListDatabaseNames", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListDatabaseNames(ctx, filter, opts...)
 		return err
 	})
@@ -153,6 +177,14 @@ func (w *MongoClientWrapper) ListDatabases(ctx context.Context, filter interface
 	var res0 mongo.ListDatabasesResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Client.ListDatabases", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Client.ListDatabases", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListDatabases(ctx, filter, opts...)
 		return err
 	})
@@ -186,6 +218,14 @@ func (w *MongoClientWrapper) Ping(ctx context.Context, rp *readpref.ReadPref) er
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Client.Ping", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Client.Ping", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.Ping(ctx, rp)
 		return err
 	})
@@ -201,6 +241,14 @@ func (w *MongoClientWrapper) StartSession(ctx context.Context, opts ...*options.
 	var res0 mongo.Session
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Client.StartSession", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Client.StartSession", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.StartSession(opts...)
 		return err
 	})
@@ -215,6 +263,14 @@ func (w *MongoClientWrapper) UseSession(ctx context.Context, fn func(mongo.Sessi
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Client.UseSession", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Client.UseSession", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.UseSession(ctx, fn)
 		return err
 	})
@@ -229,6 +285,14 @@ func (w *MongoClientWrapper) UseSessionWithOptions(ctx context.Context, opts *op
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Client.UseSessionWithOptions", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Client.UseSessionWithOptions", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.UseSessionWithOptions(ctx, opts, fn)
 		return err
 	})
@@ -244,6 +308,14 @@ func (w *MongoClientWrapper) Watch(ctx context.Context, pipeline interface{}, op
 	var res0 *mongo.ChangeStream
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Client.Watch", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Client.Watch", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Watch(ctx, pipeline, opts...)
 		return err
 	})
@@ -259,6 +331,14 @@ func (w *MongoCollectionWrapper) Aggregate(ctx context.Context, pipeline interfa
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.Aggregate", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.Aggregate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Aggregate(ctx, pipeline, opts...)
 		return err
 	})
@@ -274,6 +354,14 @@ func (w *MongoCollectionWrapper) BulkWrite(ctx context.Context, models []mongo.W
 	var res0 *mongo.BulkWriteResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.BulkWrite", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.BulkWrite", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.BulkWrite(ctx, models, opts...)
 		return err
 	})
@@ -289,6 +377,14 @@ func (w *MongoCollectionWrapper) Clone(ctx context.Context, opts ...*options.Col
 	var res0 *mongo.Collection
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.Clone", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.Clone", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Clone(opts...)
 		return err
 	})
@@ -304,6 +400,14 @@ func (w *MongoCollectionWrapper) CountDocuments(ctx context.Context, filter inte
 	var res0 int64
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.CountDocuments", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.CountDocuments", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.CountDocuments(ctx, filter, opts...)
 		return err
 	})
@@ -338,6 +442,14 @@ func (w *MongoCollectionWrapper) DeleteMany(ctx context.Context, filter interfac
 	var res0 *mongo.DeleteResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.DeleteMany", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.DeleteMany", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DeleteMany(ctx, filter, opts...)
 		return err
 	})
@@ -353,6 +465,14 @@ func (w *MongoCollectionWrapper) DeleteOne(ctx context.Context, filter interface
 	var res0 *mongo.DeleteResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.DeleteOne", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.DeleteOne", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DeleteOne(ctx, filter, opts...)
 		return err
 	})
@@ -368,6 +488,14 @@ func (w *MongoCollectionWrapper) Distinct(ctx context.Context, fieldName string,
 	var res0 []interface{}
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.Distinct", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.Distinct", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Distinct(ctx, fieldName, filter, opts...)
 		return err
 	})
@@ -382,6 +510,14 @@ func (w *MongoCollectionWrapper) Drop(ctx context.Context) error {
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.Drop", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.Drop", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.Drop(ctx)
 		return err
 	})
@@ -397,6 +533,14 @@ func (w *MongoCollectionWrapper) EstimatedDocumentCount(ctx context.Context, opt
 	var res0 int64
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.EstimatedDocumentCount", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.EstimatedDocumentCount", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.EstimatedDocumentCount(ctx, opts...)
 		return err
 	})
@@ -412,6 +556,14 @@ func (w *MongoCollectionWrapper) Find(ctx context.Context, filter interface{}, o
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.Find", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.Find", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Find(ctx, filter, opts...)
 		return err
 	})
@@ -522,6 +674,14 @@ func (w *MongoCollectionWrapper) InsertMany(ctx context.Context, documents []int
 	var res0 *mongo.InsertManyResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.InsertMany", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.InsertMany", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.InsertMany(ctx, documents, opts...)
 		return err
 	})
@@ -537,6 +697,14 @@ func (w *MongoCollectionWrapper) InsertOne(ctx context.Context, document interfa
 	var res0 *mongo.InsertOneResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.InsertOne", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.InsertOne", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.InsertOne(ctx, document, opts...)
 		return err
 	})
@@ -571,6 +739,14 @@ func (w *MongoCollectionWrapper) ReplaceOne(ctx context.Context, filter interfac
 	var res0 *mongo.UpdateResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.ReplaceOne", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.ReplaceOne", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ReplaceOne(ctx, filter, replacement, opts...)
 		return err
 	})
@@ -586,6 +762,14 @@ func (w *MongoCollectionWrapper) UpdateMany(ctx context.Context, filter interfac
 	var res0 *mongo.UpdateResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.UpdateMany", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.UpdateMany", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.UpdateMany(ctx, filter, update, opts...)
 		return err
 	})
@@ -601,6 +785,14 @@ func (w *MongoCollectionWrapper) UpdateOne(ctx context.Context, filter interface
 	var res0 *mongo.UpdateResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.UpdateOne", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.UpdateOne", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.UpdateOne(ctx, filter, update, opts...)
 		return err
 	})
@@ -616,6 +808,14 @@ func (w *MongoCollectionWrapper) Watch(ctx context.Context, pipeline interface{}
 	var res0 *mongo.ChangeStream
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Collection.Watch", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Collection.Watch", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Watch(ctx, pipeline, opts...)
 		return err
 	})
@@ -631,6 +831,14 @@ func (w *MongoDatabaseWrapper) Aggregate(ctx context.Context, pipeline interface
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Database.Aggregate", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Database.Aggregate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Aggregate(ctx, pipeline, opts...)
 		return err
 	})
@@ -670,6 +878,14 @@ func (w *MongoDatabaseWrapper) CreateCollection(ctx context.Context, name string
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Database.CreateCollection", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Database.CreateCollection", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.CreateCollection(ctx, name, opts...)
 		return err
 	})
@@ -684,6 +900,14 @@ func (w *MongoDatabaseWrapper) CreateView(ctx context.Context, viewName string, 
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Database.CreateView", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Database.CreateView", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.CreateView(ctx, viewName, viewOn, pipeline, opts...)
 		return err
 	})
@@ -698,6 +922,14 @@ func (w *MongoDatabaseWrapper) Drop(ctx context.Context) error {
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Database.Drop", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Database.Drop", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.Drop(ctx)
 		return err
 	})
@@ -713,6 +945,14 @@ func (w *MongoDatabaseWrapper) ListCollectionNames(ctx context.Context, filter i
 	var res0 []string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Database.ListCollectionNames", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Database.ListCollectionNames", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListCollectionNames(ctx, filter, opts...)
 		return err
 	})
@@ -728,6 +968,14 @@ func (w *MongoDatabaseWrapper) ListCollections(ctx context.Context, filter inter
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Database.ListCollections", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Database.ListCollections", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListCollections(ctx, filter, opts...)
 		return err
 	})
@@ -819,6 +1067,14 @@ func (w *MongoDatabaseWrapper) RunCommandCursor(ctx context.Context, runCommand 
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Database.RunCommandCursor", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Database.RunCommandCursor", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.RunCommandCursor(ctx, runCommand, opts...)
 		return err
 	})
@@ -834,6 +1090,14 @@ func (w *MongoDatabaseWrapper) Watch(ctx context.Context, pipeline interface{}, 
 	var res0 *mongo.ChangeStream
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("mongo.Database.Watch", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("mongo.Database.Watch", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Watch(ctx, pipeline, opts...)
 		return err
 	})

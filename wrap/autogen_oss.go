@@ -90,6 +90,14 @@ func (w *OSSBucketWrapper) AbortMultipartUpload(ctx context.Context, imur oss.In
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.AbortMultipartUpload", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.AbortMultipartUpload", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.AbortMultipartUpload(imur, options...)
 		return err
 	})
@@ -105,6 +113,14 @@ func (w *OSSBucketWrapper) AppendObject(ctx context.Context, objectKey string, r
 	var res0 int64
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.AppendObject", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.AppendObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.AppendObject(objectKey, reader, appendPosition, options...)
 		return err
 	})
@@ -120,6 +136,14 @@ func (w *OSSBucketWrapper) CompleteMultipartUpload(ctx context.Context, imur oss
 	var res0 oss.CompleteMultipartUploadResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.CompleteMultipartUpload", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CompleteMultipartUpload", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.CompleteMultipartUpload(imur, parts, options...)
 		return err
 	})
@@ -134,6 +158,14 @@ func (w *OSSBucketWrapper) CopyFile(ctx context.Context, srcBucketName string, s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.CopyFile", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CopyFile", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.CopyFile(srcBucketName, srcObjectKey, destObjectKey, partSize, options...)
 		return err
 	})
@@ -149,6 +181,14 @@ func (w *OSSBucketWrapper) CopyObject(ctx context.Context, srcObjectKey string, 
 	var res0 oss.CopyObjectResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.CopyObject", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CopyObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.CopyObject(srcObjectKey, destObjectKey, options...)
 		return err
 	})
@@ -164,6 +204,14 @@ func (w *OSSBucketWrapper) CopyObjectFrom(ctx context.Context, srcBucketName str
 	var res0 oss.CopyObjectResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.CopyObjectFrom", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CopyObjectFrom", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.CopyObjectFrom(srcBucketName, srcObjectKey, destObjectKey, options...)
 		return err
 	})
@@ -179,6 +227,14 @@ func (w *OSSBucketWrapper) CopyObjectTo(ctx context.Context, destBucketName stri
 	var res0 oss.CopyObjectResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.CopyObjectTo", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CopyObjectTo", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.CopyObjectTo(destBucketName, destObjectKey, srcObjectKey, options...)
 		return err
 	})
@@ -194,6 +250,14 @@ func (w *OSSBucketWrapper) CreateLiveChannel(ctx context.Context, channelName st
 	var res0 oss.CreateLiveChannelResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.CreateLiveChannel", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CreateLiveChannel", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.CreateLiveChannel(channelName, config)
 		return err
 	})
@@ -209,6 +273,14 @@ func (w *OSSBucketWrapper) CreateSelectCsvObjectMeta(ctx context.Context, key st
 	var res0 oss.MetaEndFrameCSV
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.CreateSelectCsvObjectMeta", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CreateSelectCsvObjectMeta", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.CreateSelectCsvObjectMeta(key, csvMeta, options...)
 		return err
 	})
@@ -224,6 +296,14 @@ func (w *OSSBucketWrapper) CreateSelectJsonObjectMeta(ctx context.Context, key s
 	var res0 oss.MetaEndFrameJSON
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.CreateSelectJsonObjectMeta", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CreateSelectJsonObjectMeta", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.CreateSelectJsonObjectMeta(key, jsonMeta, options...)
 		return err
 	})
@@ -238,6 +318,14 @@ func (w *OSSBucketWrapper) DeleteLiveChannel(ctx context.Context, channelName st
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.DeleteLiveChannel", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DeleteLiveChannel", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.DeleteLiveChannel(channelName)
 		return err
 	})
@@ -252,6 +340,14 @@ func (w *OSSBucketWrapper) DeleteObject(ctx context.Context, objectKey string, o
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObject", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.DeleteObject(objectKey, options...)
 		return err
 	})
@@ -266,6 +362,14 @@ func (w *OSSBucketWrapper) DeleteObjectTagging(ctx context.Context, objectKey st
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObjectTagging", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObjectTagging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.DeleteObjectTagging(objectKey, options...)
 		return err
 	})
@@ -281,6 +385,14 @@ func (w *OSSBucketWrapper) DeleteObjectVersions(ctx context.Context, objectVersi
 	var res0 oss.DeleteObjectVersionsResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObjectVersions", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObjectVersions", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DeleteObjectVersions(objectVersions, options...)
 		return err
 	})
@@ -296,6 +408,14 @@ func (w *OSSBucketWrapper) DeleteObjects(ctx context.Context, objectKeys []strin
 	var res0 oss.DeleteObjectsResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObjects", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObjects", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DeleteObjects(objectKeys, options...)
 		return err
 	})
@@ -311,6 +431,14 @@ func (w *OSSBucketWrapper) Do(ctx context.Context, method string, objectName str
 	var res0 *oss.Response
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.Do", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.Do(method, objectName, params, options, data, listener)
 		return err
 	})
@@ -326,6 +454,14 @@ func (w *OSSBucketWrapper) DoAppendObject(ctx context.Context, request *oss.Appe
 	var res0 *oss.AppendObjectResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.DoAppendObject", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DoAppendObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DoAppendObject(request, options)
 		return err
 	})
@@ -341,6 +477,14 @@ func (w *OSSBucketWrapper) DoGetObject(ctx context.Context, request *oss.GetObje
 	var res0 *oss.GetObjectResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.DoGetObject", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DoGetObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DoGetObject(request, options)
 		return err
 	})
@@ -356,6 +500,14 @@ func (w *OSSBucketWrapper) DoGetObjectWithURL(ctx context.Context, signedURL str
 	var res0 *oss.GetObjectResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.DoGetObjectWithURL", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DoGetObjectWithURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DoGetObjectWithURL(signedURL, options)
 		return err
 	})
@@ -371,6 +523,14 @@ func (w *OSSBucketWrapper) DoPostSelectObject(ctx context.Context, key string, p
 	var res0 *oss.SelectObjectResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.DoPostSelectObject", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DoPostSelectObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DoPostSelectObject(key, params, buf, options...)
 		return err
 	})
@@ -386,6 +546,14 @@ func (w *OSSBucketWrapper) DoPutObject(ctx context.Context, request *oss.PutObje
 	var res0 *oss.Response
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.DoPutObject", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DoPutObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DoPutObject(request, options)
 		return err
 	})
@@ -401,6 +569,14 @@ func (w *OSSBucketWrapper) DoPutObjectWithURL(ctx context.Context, signedURL str
 	var res0 *oss.Response
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.DoPutObjectWithURL", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DoPutObjectWithURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DoPutObjectWithURL(signedURL, reader, options)
 		return err
 	})
@@ -416,6 +592,14 @@ func (w *OSSBucketWrapper) DoUploadPart(ctx context.Context, request *oss.Upload
 	var res0 *oss.UploadPartResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.DoUploadPart", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DoUploadPart", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.DoUploadPart(request, options)
 		return err
 	})
@@ -430,6 +614,14 @@ func (w *OSSBucketWrapper) DownloadFile(ctx context.Context, objectKey string, f
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.DownloadFile", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DownloadFile", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.DownloadFile(objectKey, filePath, partSize, options...)
 		return err
 	})
@@ -464,6 +656,14 @@ func (w *OSSBucketWrapper) GetLiveChannelHistory(ctx context.Context, channelNam
 	var res0 oss.LiveChannelHistory
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.GetLiveChannelHistory", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetLiveChannelHistory", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetLiveChannelHistory(channelName)
 		return err
 	})
@@ -479,6 +679,14 @@ func (w *OSSBucketWrapper) GetLiveChannelInfo(ctx context.Context, channelName s
 	var res0 oss.LiveChannelConfiguration
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.GetLiveChannelInfo", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetLiveChannelInfo", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetLiveChannelInfo(channelName)
 		return err
 	})
@@ -494,6 +702,14 @@ func (w *OSSBucketWrapper) GetLiveChannelStat(ctx context.Context, channelName s
 	var res0 oss.LiveChannelStat
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.GetLiveChannelStat", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetLiveChannelStat", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetLiveChannelStat(channelName)
 		return err
 	})
@@ -509,6 +725,14 @@ func (w *OSSBucketWrapper) GetObject(ctx context.Context, objectKey string, opti
 	var res0 io.ReadCloser
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObject", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetObject(objectKey, options...)
 		return err
 	})
@@ -524,6 +748,14 @@ func (w *OSSBucketWrapper) GetObjectACL(ctx context.Context, objectKey string, o
 	var res0 oss.GetObjectACLResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectACL", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectACL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetObjectACL(objectKey, options...)
 		return err
 	})
@@ -539,6 +771,14 @@ func (w *OSSBucketWrapper) GetObjectDetailedMeta(ctx context.Context, objectKey 
 	var res0 http.Header
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectDetailedMeta", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectDetailedMeta", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetObjectDetailedMeta(objectKey, options...)
 		return err
 	})
@@ -554,6 +794,14 @@ func (w *OSSBucketWrapper) GetObjectMeta(ctx context.Context, objectKey string, 
 	var res0 http.Header
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectMeta", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectMeta", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetObjectMeta(objectKey, options...)
 		return err
 	})
@@ -569,6 +817,14 @@ func (w *OSSBucketWrapper) GetObjectTagging(ctx context.Context, objectKey strin
 	var res0 oss.GetObjectTaggingResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectTagging", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectTagging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetObjectTagging(objectKey, options...)
 		return err
 	})
@@ -583,6 +839,14 @@ func (w *OSSBucketWrapper) GetObjectToFile(ctx context.Context, objectKey string
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectToFile", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectToFile", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.GetObjectToFile(objectKey, filePath, options...)
 		return err
 	})
@@ -597,6 +861,14 @@ func (w *OSSBucketWrapper) GetObjectToFileWithURL(ctx context.Context, signedURL
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectToFileWithURL", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectToFileWithURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.GetObjectToFileWithURL(signedURL, filePath, options...)
 		return err
 	})
@@ -612,6 +884,14 @@ func (w *OSSBucketWrapper) GetObjectWithURL(ctx context.Context, signedURL strin
 	var res0 io.ReadCloser
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectWithURL", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectWithURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetObjectWithURL(signedURL, options...)
 		return err
 	})
@@ -627,6 +907,14 @@ func (w *OSSBucketWrapper) GetSymlink(ctx context.Context, objectKey string, opt
 	var res0 http.Header
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.GetSymlink", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetSymlink", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetSymlink(objectKey, options...)
 		return err
 	})
@@ -642,6 +930,14 @@ func (w *OSSBucketWrapper) GetVodPlaylist(ctx context.Context, channelName strin
 	var res0 io.ReadCloser
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.GetVodPlaylist", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetVodPlaylist", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetVodPlaylist(channelName, startTime, endTime)
 		return err
 	})
@@ -657,6 +953,14 @@ func (w *OSSBucketWrapper) InitiateMultipartUpload(ctx context.Context, objectKe
 	var res0 oss.InitiateMultipartUploadResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.InitiateMultipartUpload", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.InitiateMultipartUpload", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.InitiateMultipartUpload(objectKey, options...)
 		return err
 	})
@@ -672,6 +976,14 @@ func (w *OSSBucketWrapper) IsObjectExist(ctx context.Context, objectKey string, 
 	var res0 bool
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.IsObjectExist", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.IsObjectExist", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.IsObjectExist(objectKey, options...)
 		return err
 	})
@@ -687,6 +999,14 @@ func (w *OSSBucketWrapper) ListLiveChannel(ctx context.Context, options ...oss.O
 	var res0 oss.ListLiveChannelResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.ListLiveChannel", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.ListLiveChannel", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListLiveChannel(options...)
 		return err
 	})
@@ -702,6 +1022,14 @@ func (w *OSSBucketWrapper) ListMultipartUploads(ctx context.Context, options ...
 	var res0 oss.ListMultipartUploadResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.ListMultipartUploads", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.ListMultipartUploads", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListMultipartUploads(options...)
 		return err
 	})
@@ -717,6 +1045,14 @@ func (w *OSSBucketWrapper) ListObjectVersions(ctx context.Context, options ...os
 	var res0 oss.ListObjectVersionsResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.ListObjectVersions", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.ListObjectVersions", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListObjectVersions(options...)
 		return err
 	})
@@ -732,6 +1068,14 @@ func (w *OSSBucketWrapper) ListObjects(ctx context.Context, options ...oss.Optio
 	var res0 oss.ListObjectsResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.ListObjects", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.ListObjects", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListObjects(options...)
 		return err
 	})
@@ -747,6 +1091,14 @@ func (w *OSSBucketWrapper) ListObjectsV2(ctx context.Context, options ...oss.Opt
 	var res0 oss.ListObjectsResultV2
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.ListObjectsV2", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.ListObjectsV2", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListObjectsV2(options...)
 		return err
 	})
@@ -762,6 +1114,14 @@ func (w *OSSBucketWrapper) ListUploadedParts(ctx context.Context, imur oss.Initi
 	var res0 oss.ListUploadedPartsResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.ListUploadedParts", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.ListUploadedParts", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListUploadedParts(imur, options...)
 		return err
 	})
@@ -777,6 +1137,14 @@ func (w *OSSBucketWrapper) OptionsMethod(ctx context.Context, objectKey string, 
 	var res0 http.Header
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.OptionsMethod", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.OptionsMethod", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.OptionsMethod(objectKey, options...)
 		return err
 	})
@@ -791,6 +1159,14 @@ func (w *OSSBucketWrapper) PostVodPlaylist(ctx context.Context, channelName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.PostVodPlaylist", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PostVodPlaylist", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.PostVodPlaylist(channelName, playlistName, startTime, endTime)
 		return err
 	})
@@ -806,6 +1182,14 @@ func (w *OSSBucketWrapper) ProcessObject(ctx context.Context, objectKey string, 
 	var res0 oss.ProcessObjectResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.ProcessObject", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.ProcessObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ProcessObject(objectKey, process, options...)
 		return err
 	})
@@ -820,6 +1204,14 @@ func (w *OSSBucketWrapper) PutLiveChannelStatus(ctx context.Context, channelName
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.PutLiveChannelStatus", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PutLiveChannelStatus", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.PutLiveChannelStatus(channelName, status)
 		return err
 	})
@@ -834,6 +1226,14 @@ func (w *OSSBucketWrapper) PutObject(ctx context.Context, objectKey string, read
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.PutObject", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PutObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.PutObject(objectKey, reader, options...)
 		return err
 	})
@@ -848,6 +1248,14 @@ func (w *OSSBucketWrapper) PutObjectFromFile(ctx context.Context, objectKey stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectFromFile", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectFromFile", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.PutObjectFromFile(objectKey, filePath, options...)
 		return err
 	})
@@ -862,6 +1270,14 @@ func (w *OSSBucketWrapper) PutObjectFromFileWithURL(ctx context.Context, signedU
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectFromFileWithURL", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectFromFileWithURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.PutObjectFromFileWithURL(signedURL, filePath, options...)
 		return err
 	})
@@ -876,6 +1292,14 @@ func (w *OSSBucketWrapper) PutObjectTagging(ctx context.Context, objectKey strin
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectTagging", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectTagging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.PutObjectTagging(objectKey, tagging, options...)
 		return err
 	})
@@ -890,6 +1314,14 @@ func (w *OSSBucketWrapper) PutObjectWithURL(ctx context.Context, signedURL strin
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectWithURL", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectWithURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.PutObjectWithURL(signedURL, reader, options...)
 		return err
 	})
@@ -904,6 +1336,14 @@ func (w *OSSBucketWrapper) PutSymlink(ctx context.Context, symObjectKey string, 
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.PutSymlink", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PutSymlink", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.PutSymlink(symObjectKey, targetObjectKey, options...)
 		return err
 	})
@@ -918,6 +1358,14 @@ func (w *OSSBucketWrapper) RestoreObject(ctx context.Context, objectKey string, 
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.RestoreObject", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.RestoreObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.RestoreObject(objectKey, options...)
 		return err
 	})
@@ -932,6 +1380,14 @@ func (w *OSSBucketWrapper) RestoreObjectDetail(ctx context.Context, objectKey st
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.RestoreObjectDetail", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.RestoreObjectDetail", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.RestoreObjectDetail(objectKey, restoreConfig, options...)
 		return err
 	})
@@ -946,6 +1402,14 @@ func (w *OSSBucketWrapper) RestoreObjectXML(ctx context.Context, objectKey strin
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.RestoreObjectXML", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.RestoreObjectXML", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.RestoreObjectXML(objectKey, configXML, options...)
 		return err
 	})
@@ -961,6 +1425,14 @@ func (w *OSSBucketWrapper) SelectObject(ctx context.Context, key string, selectR
 	var res0 io.ReadCloser
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.SelectObject", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.SelectObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.SelectObject(key, selectReq, options...)
 		return err
 	})
@@ -975,6 +1447,14 @@ func (w *OSSBucketWrapper) SelectObjectIntoFile(ctx context.Context, key string,
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.SelectObjectIntoFile", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.SelectObjectIntoFile", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SelectObjectIntoFile(key, fileName, selectReq, options...)
 		return err
 	})
@@ -989,6 +1469,14 @@ func (w *OSSBucketWrapper) SetObjectACL(ctx context.Context, objectKey string, o
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.SetObjectACL", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.SetObjectACL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetObjectACL(objectKey, objectACL, options...)
 		return err
 	})
@@ -1003,6 +1491,14 @@ func (w *OSSBucketWrapper) SetObjectMeta(ctx context.Context, objectKey string, 
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.SetObjectMeta", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.SetObjectMeta", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetObjectMeta(objectKey, options...)
 		return err
 	})
@@ -1018,6 +1514,14 @@ func (w *OSSBucketWrapper) SignRtmpURL(ctx context.Context, channelName string, 
 	var res0 string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.SignRtmpURL", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.SignRtmpURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.SignRtmpURL(channelName, playlistName, expires)
 		return err
 	})
@@ -1033,6 +1537,14 @@ func (w *OSSBucketWrapper) SignURL(ctx context.Context, objectKey string, method
 	var res0 string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.SignURL", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.SignURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.SignURL(objectKey, method, expiredInSec, options...)
 		return err
 	})
@@ -1047,6 +1559,14 @@ func (w *OSSBucketWrapper) UploadFile(ctx context.Context, objectKey string, fil
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.UploadFile", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.UploadFile", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.UploadFile(objectKey, filePath, partSize, options...)
 		return err
 	})
@@ -1062,6 +1582,14 @@ func (w *OSSBucketWrapper) UploadPart(ctx context.Context, imur oss.InitiateMult
 	var res0 oss.UploadPart
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.UploadPart", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.UploadPart", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.UploadPart(imur, reader, partSize, partNumber, options...)
 		return err
 	})
@@ -1077,6 +1605,14 @@ func (w *OSSBucketWrapper) UploadPartCopy(ctx context.Context, imur oss.Initiate
 	var res0 oss.UploadPart
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.UploadPartCopy", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.UploadPartCopy", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.UploadPartCopy(imur, srcBucketName, srcObjectKey, startPosition, partSize, partNumber, options...)
 		return err
 	})
@@ -1092,6 +1628,14 @@ func (w *OSSBucketWrapper) UploadPartFromFile(ctx context.Context, imur oss.Init
 	var res0 oss.UploadPart
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Bucket.UploadPartFromFile", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.UploadPartFromFile", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.UploadPartFromFile(imur, filePath, startPosition, partSize, partNumber, options...)
 		return err
 	})
@@ -1106,6 +1650,14 @@ func (w *OSSClientWrapper) AbortBucketWorm(ctx context.Context, bucketName strin
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.AbortBucketWorm", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.AbortBucketWorm", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.AbortBucketWorm(bucketName, options...)
 		return err
 	})
@@ -1127,6 +1679,14 @@ func (w *OSSClientWrapper) CompleteBucketWorm(ctx context.Context, bucketName st
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.CompleteBucketWorm", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.CompleteBucketWorm", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.CompleteBucketWorm(bucketName, wormID, options...)
 		return err
 	})
@@ -1141,6 +1701,14 @@ func (w *OSSClientWrapper) CreateBucket(ctx context.Context, bucketName string, 
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.CreateBucket", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.CreateBucket", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.CreateBucket(bucketName, options...)
 		return err
 	})
@@ -1155,6 +1723,14 @@ func (w *OSSClientWrapper) DeleteBucket(ctx context.Context, bucketName string, 
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucket", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucket", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.DeleteBucket(bucketName, options...)
 		return err
 	})
@@ -1169,6 +1745,14 @@ func (w *OSSClientWrapper) DeleteBucketCORS(ctx context.Context, bucketName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketCORS", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketCORS", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.DeleteBucketCORS(bucketName)
 		return err
 	})
@@ -1183,6 +1767,14 @@ func (w *OSSClientWrapper) DeleteBucketEncryption(ctx context.Context, bucketNam
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketEncryption", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketEncryption", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.DeleteBucketEncryption(bucketName, options...)
 		return err
 	})
@@ -1197,6 +1789,14 @@ func (w *OSSClientWrapper) DeleteBucketInventory(ctx context.Context, bucketName
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketInventory", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketInventory", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.DeleteBucketInventory(bucketName, strInventoryId, options...)
 		return err
 	})
@@ -1211,6 +1811,14 @@ func (w *OSSClientWrapper) DeleteBucketLifecycle(ctx context.Context, bucketName
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketLifecycle", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketLifecycle", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.DeleteBucketLifecycle(bucketName)
 		return err
 	})
@@ -1225,6 +1833,14 @@ func (w *OSSClientWrapper) DeleteBucketLogging(ctx context.Context, bucketName s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketLogging", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketLogging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.DeleteBucketLogging(bucketName)
 		return err
 	})
@@ -1239,6 +1855,14 @@ func (w *OSSClientWrapper) DeleteBucketPolicy(ctx context.Context, bucketName st
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketPolicy", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketPolicy", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.DeleteBucketPolicy(bucketName, options...)
 		return err
 	})
@@ -1253,6 +1877,14 @@ func (w *OSSClientWrapper) DeleteBucketQosInfo(ctx context.Context, bucketName s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketQosInfo", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketQosInfo", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.DeleteBucketQosInfo(bucketName, options...)
 		return err
 	})
@@ -1267,6 +1899,14 @@ func (w *OSSClientWrapper) DeleteBucketTagging(ctx context.Context, bucketName s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketTagging", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketTagging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.DeleteBucketTagging(bucketName, options...)
 		return err
 	})
@@ -1281,6 +1921,14 @@ func (w *OSSClientWrapper) DeleteBucketWebsite(ctx context.Context, bucketName s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketWebsite", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketWebsite", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.DeleteBucketWebsite(bucketName)
 		return err
 	})
@@ -1295,6 +1943,14 @@ func (w *OSSClientWrapper) ExtendBucketWorm(ctx context.Context, bucketName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.ExtendBucketWorm", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.ExtendBucketWorm", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.ExtendBucketWorm(bucketName, retentionDays, wormID, options...)
 		return err
 	})
@@ -1310,6 +1966,14 @@ func (w *OSSClientWrapper) GetBucketACL(ctx context.Context, bucketName string) 
 	var res0 oss.GetBucketACLResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketACL", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketACL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketACL(bucketName)
 		return err
 	})
@@ -1325,6 +1989,14 @@ func (w *OSSClientWrapper) GetBucketAsyncTask(ctx context.Context, bucketName st
 	var res0 oss.AsynFetchTaskInfo
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketAsyncTask", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketAsyncTask", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketAsyncTask(bucketName, taskID, options...)
 		return err
 	})
@@ -1340,6 +2012,14 @@ func (w *OSSClientWrapper) GetBucketCORS(ctx context.Context, bucketName string)
 	var res0 oss.GetBucketCORSResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketCORS", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketCORS", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketCORS(bucketName)
 		return err
 	})
@@ -1355,6 +2035,14 @@ func (w *OSSClientWrapper) GetBucketEncryption(ctx context.Context, bucketName s
 	var res0 oss.GetBucketEncryptionResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketEncryption", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketEncryption", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketEncryption(bucketName, options...)
 		return err
 	})
@@ -1370,6 +2058,14 @@ func (w *OSSClientWrapper) GetBucketInfo(ctx context.Context, bucketName string,
 	var res0 oss.GetBucketInfoResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketInfo", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketInfo", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketInfo(bucketName, options...)
 		return err
 	})
@@ -1385,6 +2081,14 @@ func (w *OSSClientWrapper) GetBucketInventory(ctx context.Context, bucketName st
 	var res0 oss.InventoryConfiguration
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketInventory", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketInventory", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketInventory(bucketName, strInventoryId, options...)
 		return err
 	})
@@ -1400,6 +2104,14 @@ func (w *OSSClientWrapper) GetBucketLifecycle(ctx context.Context, bucketName st
 	var res0 oss.GetBucketLifecycleResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketLifecycle", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketLifecycle", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketLifecycle(bucketName)
 		return err
 	})
@@ -1415,6 +2127,14 @@ func (w *OSSClientWrapper) GetBucketLocation(ctx context.Context, bucketName str
 	var res0 string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketLocation", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketLocation", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketLocation(bucketName)
 		return err
 	})
@@ -1430,6 +2150,14 @@ func (w *OSSClientWrapper) GetBucketLogging(ctx context.Context, bucketName stri
 	var res0 oss.GetBucketLoggingResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketLogging", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketLogging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketLogging(bucketName)
 		return err
 	})
@@ -1445,6 +2173,14 @@ func (w *OSSClientWrapper) GetBucketPolicy(ctx context.Context, bucketName strin
 	var res0 string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketPolicy", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketPolicy", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketPolicy(bucketName, options...)
 		return err
 	})
@@ -1460,6 +2196,14 @@ func (w *OSSClientWrapper) GetBucketQosInfo(ctx context.Context, bucketName stri
 	var res0 oss.BucketQoSConfiguration
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketQosInfo", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketQosInfo", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketQosInfo(bucketName, options...)
 		return err
 	})
@@ -1475,6 +2219,14 @@ func (w *OSSClientWrapper) GetBucketReferer(ctx context.Context, bucketName stri
 	var res0 oss.GetBucketRefererResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketReferer", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketReferer", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketReferer(bucketName)
 		return err
 	})
@@ -1490,6 +2242,14 @@ func (w *OSSClientWrapper) GetBucketRequestPayment(ctx context.Context, bucketNa
 	var res0 oss.RequestPaymentConfiguration
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketRequestPayment", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketRequestPayment", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketRequestPayment(bucketName, options...)
 		return err
 	})
@@ -1505,6 +2265,14 @@ func (w *OSSClientWrapper) GetBucketStat(ctx context.Context, bucketName string)
 	var res0 oss.GetBucketStatResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketStat", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketStat", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketStat(bucketName)
 		return err
 	})
@@ -1520,6 +2288,14 @@ func (w *OSSClientWrapper) GetBucketTagging(ctx context.Context, bucketName stri
 	var res0 oss.GetBucketTaggingResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketTagging", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketTagging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketTagging(bucketName, options...)
 		return err
 	})
@@ -1535,6 +2311,14 @@ func (w *OSSClientWrapper) GetBucketVersioning(ctx context.Context, bucketName s
 	var res0 oss.GetBucketVersioningResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketVersioning", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketVersioning", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketVersioning(bucketName, options...)
 		return err
 	})
@@ -1550,6 +2334,14 @@ func (w *OSSClientWrapper) GetBucketWebsite(ctx context.Context, bucketName stri
 	var res0 oss.GetBucketWebsiteResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketWebsite", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketWebsite", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketWebsite(bucketName)
 		return err
 	})
@@ -1565,6 +2357,14 @@ func (w *OSSClientWrapper) GetBucketWorm(ctx context.Context, bucketName string,
 	var res0 oss.WormConfiguration
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketWorm", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketWorm", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetBucketWorm(bucketName, options...)
 		return err
 	})
@@ -1580,6 +2380,14 @@ func (w *OSSClientWrapper) GetUserQoSInfo(ctx context.Context, options ...oss.Op
 	var res0 oss.UserQoSConfiguration
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.GetUserQoSInfo", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetUserQoSInfo", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.GetUserQoSInfo(options...)
 		return err
 	})
@@ -1595,6 +2403,14 @@ func (w *OSSClientWrapper) InitiateBucketWorm(ctx context.Context, bucketName st
 	var res0 string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.InitiateBucketWorm", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.InitiateBucketWorm", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.InitiateBucketWorm(bucketName, retentionDays, options...)
 		return err
 	})
@@ -1610,6 +2426,14 @@ func (w *OSSClientWrapper) IsBucketExist(ctx context.Context, bucketName string)
 	var res0 bool
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.IsBucketExist", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.IsBucketExist", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.IsBucketExist(bucketName)
 		return err
 	})
@@ -1624,6 +2448,14 @@ func (w *OSSClientWrapper) LimitUploadSpeed(ctx context.Context, upSpeed int) er
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.LimitUploadSpeed", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.LimitUploadSpeed", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.LimitUploadSpeed(upSpeed)
 		return err
 	})
@@ -1639,6 +2471,14 @@ func (w *OSSClientWrapper) ListBucketInventory(ctx context.Context, bucketName s
 	var res0 oss.ListInventoryConfigurationsResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.ListBucketInventory", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.ListBucketInventory", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListBucketInventory(bucketName, continuationToken, options...)
 		return err
 	})
@@ -1654,6 +2494,14 @@ func (w *OSSClientWrapper) ListBuckets(ctx context.Context, options ...oss.Optio
 	var res0 oss.ListBucketsResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.ListBuckets", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.ListBuckets", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.ListBuckets(options...)
 		return err
 	})
@@ -1668,6 +2516,14 @@ func (w *OSSClientWrapper) SetBucketACL(ctx context.Context, bucketName string, 
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketACL", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketACL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketACL(bucketName, bucketACL)
 		return err
 	})
@@ -1683,6 +2539,14 @@ func (w *OSSClientWrapper) SetBucketAsyncTask(ctx context.Context, bucketName st
 	var res0 oss.AsyncFetchTaskResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketAsyncTask", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketAsyncTask", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		res0, err = w.obj.SetBucketAsyncTask(bucketName, asynConf, options...)
 		return err
 	})
@@ -1697,6 +2561,14 @@ func (w *OSSClientWrapper) SetBucketCORS(ctx context.Context, bucketName string,
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketCORS", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketCORS", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketCORS(bucketName, corsRules)
 		return err
 	})
@@ -1711,6 +2583,14 @@ func (w *OSSClientWrapper) SetBucketEncryption(ctx context.Context, bucketName s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketEncryption", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketEncryption", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketEncryption(bucketName, encryptionRule, options...)
 		return err
 	})
@@ -1725,6 +2605,14 @@ func (w *OSSClientWrapper) SetBucketInventory(ctx context.Context, bucketName st
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketInventory", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketInventory", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketInventory(bucketName, inventoryConfig, options...)
 		return err
 	})
@@ -1739,6 +2627,14 @@ func (w *OSSClientWrapper) SetBucketLifecycle(ctx context.Context, bucketName st
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketLifecycle", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketLifecycle", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketLifecycle(bucketName, rules)
 		return err
 	})
@@ -1753,6 +2649,14 @@ func (w *OSSClientWrapper) SetBucketLogging(ctx context.Context, bucketName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketLogging", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketLogging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketLogging(bucketName, targetBucket, targetPrefix, isEnable)
 		return err
 	})
@@ -1767,6 +2671,14 @@ func (w *OSSClientWrapper) SetBucketPolicy(ctx context.Context, bucketName strin
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketPolicy", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketPolicy", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketPolicy(bucketName, policy, options...)
 		return err
 	})
@@ -1781,6 +2693,14 @@ func (w *OSSClientWrapper) SetBucketQoSInfo(ctx context.Context, bucketName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketQoSInfo", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketQoSInfo", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketQoSInfo(bucketName, qosConf, options...)
 		return err
 	})
@@ -1795,6 +2715,14 @@ func (w *OSSClientWrapper) SetBucketReferer(ctx context.Context, bucketName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketReferer", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketReferer", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketReferer(bucketName, referers, allowEmptyReferer)
 		return err
 	})
@@ -1809,6 +2737,14 @@ func (w *OSSClientWrapper) SetBucketRequestPayment(ctx context.Context, bucketNa
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketRequestPayment", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketRequestPayment", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketRequestPayment(bucketName, paymentConfig, options...)
 		return err
 	})
@@ -1823,6 +2759,14 @@ func (w *OSSClientWrapper) SetBucketTagging(ctx context.Context, bucketName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketTagging", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketTagging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketTagging(bucketName, tagging, options...)
 		return err
 	})
@@ -1837,6 +2781,14 @@ func (w *OSSClientWrapper) SetBucketVersioning(ctx context.Context, bucketName s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketVersioning", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketVersioning", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketVersioning(bucketName, versioningConfig, options...)
 		return err
 	})
@@ -1851,6 +2803,14 @@ func (w *OSSClientWrapper) SetBucketWebsite(ctx context.Context, bucketName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketWebsite", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketWebsite", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketWebsite(bucketName, indexDocument, errorDocument)
 		return err
 	})
@@ -1865,6 +2825,14 @@ func (w *OSSClientWrapper) SetBucketWebsiteDetail(ctx context.Context, bucketNam
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketWebsiteDetail", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketWebsiteDetail", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketWebsiteDetail(bucketName, wxml, options...)
 		return err
 	})
@@ -1879,6 +2847,14 @@ func (w *OSSClientWrapper) SetBucketWebsiteXml(ctx context.Context, bucketName s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketWebsiteXml", ErrCode(err)).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketWebsiteXml", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		err = w.obj.SetBucketWebsiteXml(bucketName, webXml, options...)
 		return err
 	})
