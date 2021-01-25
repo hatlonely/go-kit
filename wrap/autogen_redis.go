@@ -3,6 +3,7 @@ package wrap
 
 import (
 	"context"
+	"time"
 
 	"github.com/go-redis/redis"
 	"github.com/opentracing/opentracing-go"
@@ -124,7 +125,16 @@ func (w *RedisClientWrapper) Context(ctx context.Context) context.Context {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Context()
+	var res0 context.Context
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.Client.Context", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.Client.Context", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Context()
 	return res0
 }
 
@@ -134,7 +144,16 @@ func (w *RedisClientWrapper) Options(ctx context.Context) *redis.Options {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Options()
+	var res0 *redis.Options
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.Client.Options", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.Client.Options", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Options()
 	return res0
 }
 
@@ -144,7 +163,16 @@ func (w *RedisClientWrapper) PSubscribe(ctx context.Context, channels ...string)
 		defer span.Finish()
 	}
 
-	res0 := w.obj.PSubscribe(channels...)
+	var res0 *redis.PubSub
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.Client.PSubscribe", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.Client.PSubscribe", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.PSubscribe(channels...)
 	return res0
 }
 
@@ -154,7 +182,16 @@ func (w *RedisClientWrapper) Pipeline(ctx context.Context) redis.Pipeliner {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Pipeline()
+	var res0 redis.Pipeliner
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.Client.Pipeline", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.Client.Pipeline", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Pipeline()
 	return res0
 }
 
@@ -179,7 +216,16 @@ func (w *RedisClientWrapper) PoolStats(ctx context.Context) *redis.PoolStats {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.PoolStats()
+	var res0 *redis.PoolStats
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.Client.PoolStats", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.Client.PoolStats", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.PoolStats()
 	return res0
 }
 
@@ -194,7 +240,16 @@ func (w *RedisClientWrapper) Subscribe(ctx context.Context, channels ...string) 
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Subscribe(channels...)
+	var res0 *redis.PubSub
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.Client.Subscribe", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.Client.Subscribe", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Subscribe(channels...)
 	return res0
 }
 
@@ -204,7 +259,16 @@ func (w *RedisClientWrapper) TxPipeline(ctx context.Context) redis.Pipeliner {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.TxPipeline()
+	var res0 redis.Pipeliner
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.Client.TxPipeline", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.Client.TxPipeline", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.TxPipeline()
 	return res0
 }
 
@@ -262,7 +326,16 @@ func (w *RedisClusterClientWrapper) Context(ctx context.Context) context.Context
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Context()
+	var res0 context.Context
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.ClusterClient.Context", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.ClusterClient.Context", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Context()
 	return res0
 }
 
@@ -272,7 +345,16 @@ func (w *RedisClusterClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DBSize()
+	var res0 *redis.IntCmd
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.ClusterClient.DBSize", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.ClusterClient.DBSize", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DBSize()
 	return res0
 }
 
@@ -282,7 +364,16 @@ func (w *RedisClusterClientWrapper) Do(ctx context.Context, args ...interface{})
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Do(args...)
+	var res0 *redis.Cmd
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.ClusterClient.Do", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.ClusterClient.Do", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Do(args...)
 	return res0
 }
 
@@ -334,7 +425,16 @@ func (w *RedisClusterClientWrapper) Options(ctx context.Context) *redis.ClusterO
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Options()
+	var res0 *redis.ClusterOptions
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.ClusterClient.Options", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.ClusterClient.Options", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Options()
 	return res0
 }
 
@@ -344,7 +444,16 @@ func (w *RedisClusterClientWrapper) PSubscribe(ctx context.Context, channels ...
 		defer span.Finish()
 	}
 
-	res0 := w.obj.PSubscribe(channels...)
+	var res0 *redis.PubSub
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.ClusterClient.PSubscribe", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.ClusterClient.PSubscribe", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.PSubscribe(channels...)
 	return res0
 }
 
@@ -354,7 +463,16 @@ func (w *RedisClusterClientWrapper) Pipeline(ctx context.Context) redis.Pipeline
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Pipeline()
+	var res0 redis.Pipeliner
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.ClusterClient.Pipeline", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.ClusterClient.Pipeline", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Pipeline()
 	return res0
 }
 
@@ -379,7 +497,16 @@ func (w *RedisClusterClientWrapper) PoolStats(ctx context.Context) *redis.PoolSt
 		defer span.Finish()
 	}
 
-	res0 := w.obj.PoolStats()
+	var res0 *redis.PoolStats
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.ClusterClient.PoolStats", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.ClusterClient.PoolStats", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.PoolStats()
 	return res0
 }
 
@@ -417,7 +544,16 @@ func (w *RedisClusterClientWrapper) Subscribe(ctx context.Context, channels ...s
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Subscribe(channels...)
+	var res0 *redis.PubSub
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.ClusterClient.Subscribe", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.ClusterClient.Subscribe", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Subscribe(channels...)
 	return res0
 }
 
@@ -427,7 +563,16 @@ func (w *RedisClusterClientWrapper) TxPipeline(ctx context.Context) redis.Pipeli
 		defer span.Finish()
 	}
 
-	res0 := w.obj.TxPipeline()
+	var res0 redis.Pipeliner
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("redis.ClusterClient.TxPipeline", "OK").Inc()
+			w.durationMetric.WithLabelValues("redis.ClusterClient.TxPipeline", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.TxPipeline()
 	return res0
 }
 

@@ -3,6 +3,7 @@ package wrap
 
 import (
 	"context"
+	"time"
 
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
@@ -109,7 +110,8 @@ func (w *MongoClientWrapper) Connect(ctx context.Context) error {
 }
 
 func (w *MongoClientWrapper) Database(ctx context.Context, name string, opts ...*options.DatabaseOptions) *MongoDatabaseWrapper {
-	res0 := w.obj.Database(name, opts...)
+	var res0 *mongo.Database
+	res0 = w.obj.Database(name, opts...)
 	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
@@ -163,7 +165,16 @@ func (w *MongoClientWrapper) NumberSessionsInProgress(ctx context.Context) int {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.NumberSessionsInProgress()
+	var res0 int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("mongo.Client.NumberSessionsInProgress", "OK").Inc()
+			w.durationMetric.WithLabelValues("mongo.Client.NumberSessionsInProgress", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.NumberSessionsInProgress()
 	return res0
 }
 
@@ -305,7 +316,16 @@ func (w *MongoCollectionWrapper) Database(ctx context.Context) *MongoDatabaseWra
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Database()
+	var res0 *mongo.Database
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("mongo.Collection.Database", "OK").Inc()
+			w.durationMetric.WithLabelValues("mongo.Collection.Database", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Database()
 	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
@@ -404,7 +424,16 @@ func (w *MongoCollectionWrapper) FindOne(ctx context.Context, filter interface{}
 		defer span.Finish()
 	}
 
-	res0 := w.obj.FindOne(ctx, filter, opts...)
+	var res0 *mongo.SingleResult
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("mongo.Collection.FindOne", "OK").Inc()
+			w.durationMetric.WithLabelValues("mongo.Collection.FindOne", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.FindOne(ctx, filter, opts...)
 	return res0
 }
 
@@ -414,7 +443,16 @@ func (w *MongoCollectionWrapper) FindOneAndDelete(ctx context.Context, filter in
 		defer span.Finish()
 	}
 
-	res0 := w.obj.FindOneAndDelete(ctx, filter, opts...)
+	var res0 *mongo.SingleResult
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("mongo.Collection.FindOneAndDelete", "OK").Inc()
+			w.durationMetric.WithLabelValues("mongo.Collection.FindOneAndDelete", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.FindOneAndDelete(ctx, filter, opts...)
 	return res0
 }
 
@@ -424,7 +462,16 @@ func (w *MongoCollectionWrapper) FindOneAndReplace(ctx context.Context, filter i
 		defer span.Finish()
 	}
 
-	res0 := w.obj.FindOneAndReplace(ctx, filter, replacement, opts...)
+	var res0 *mongo.SingleResult
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("mongo.Collection.FindOneAndReplace", "OK").Inc()
+			w.durationMetric.WithLabelValues("mongo.Collection.FindOneAndReplace", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.FindOneAndReplace(ctx, filter, replacement, opts...)
 	return res0
 }
 
@@ -434,7 +481,16 @@ func (w *MongoCollectionWrapper) FindOneAndUpdate(ctx context.Context, filter in
 		defer span.Finish()
 	}
 
-	res0 := w.obj.FindOneAndUpdate(ctx, filter, update, opts...)
+	var res0 *mongo.SingleResult
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("mongo.Collection.FindOneAndUpdate", "OK").Inc()
+			w.durationMetric.WithLabelValues("mongo.Collection.FindOneAndUpdate", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.FindOneAndUpdate(ctx, filter, update, opts...)
 	return res0
 }
 
@@ -444,7 +500,16 @@ func (w *MongoCollectionWrapper) Indexes(ctx context.Context) mongo.IndexView {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Indexes()
+	var res0 mongo.IndexView
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("mongo.Collection.Indexes", "OK").Inc()
+			w.durationMetric.WithLabelValues("mongo.Collection.Indexes", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Indexes()
 	return res0
 }
 
@@ -484,7 +549,16 @@ func (w *MongoCollectionWrapper) Name(ctx context.Context) string {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Name()
+	var res0 string
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("mongo.Collection.Name", "OK").Inc()
+			w.durationMetric.WithLabelValues("mongo.Collection.Name", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Name()
 	return res0
 }
 
@@ -569,12 +643,22 @@ func (w *MongoDatabaseWrapper) Client(ctx context.Context) *MongoClientWrapper {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Client()
+	var res0 *mongo.Client
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("mongo.Database.Client", "OK").Inc()
+			w.durationMetric.WithLabelValues("mongo.Database.Client", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Client()
 	return &MongoClientWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *MongoDatabaseWrapper) Collection(ctx context.Context, name string, opts ...*options.CollectionOptions) *MongoCollectionWrapper {
-	res0 := w.obj.Collection(name, opts...)
+	var res0 *mongo.Collection
+	res0 = w.obj.Collection(name, opts...)
 	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
@@ -656,7 +740,16 @@ func (w *MongoDatabaseWrapper) Name(ctx context.Context) string {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Name()
+	var res0 string
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("mongo.Database.Name", "OK").Inc()
+			w.durationMetric.WithLabelValues("mongo.Database.Name", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Name()
 	return res0
 }
 
@@ -666,7 +759,16 @@ func (w *MongoDatabaseWrapper) ReadConcern(ctx context.Context) *readconcern.Rea
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ReadConcern()
+	var res0 *readconcern.ReadConcern
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("mongo.Database.ReadConcern", "OK").Inc()
+			w.durationMetric.WithLabelValues("mongo.Database.ReadConcern", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ReadConcern()
 	return res0
 }
 
@@ -676,7 +778,16 @@ func (w *MongoDatabaseWrapper) ReadPreference(ctx context.Context) *readpref.Rea
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ReadPreference()
+	var res0 *readpref.ReadPref
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("mongo.Database.ReadPreference", "OK").Inc()
+			w.durationMetric.WithLabelValues("mongo.Database.ReadPreference", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ReadPreference()
 	return res0
 }
 
@@ -686,7 +797,16 @@ func (w *MongoDatabaseWrapper) RunCommand(ctx context.Context, runCommand interf
 		defer span.Finish()
 	}
 
-	res0 := w.obj.RunCommand(ctx, runCommand, opts...)
+	var res0 *mongo.SingleResult
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("mongo.Database.RunCommand", "OK").Inc()
+			w.durationMetric.WithLabelValues("mongo.Database.RunCommand", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.RunCommand(ctx, runCommand, opts...)
 	return res0
 }
 
@@ -726,6 +846,15 @@ func (w *MongoDatabaseWrapper) WriteConcern(ctx context.Context) *writeconcern.W
 		defer span.Finish()
 	}
 
-	res0 := w.obj.WriteConcern()
+	var res0 *writeconcern.WriteConcern
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("mongo.Database.WriteConcern", "OK").Inc()
+			w.durationMetric.WithLabelValues("mongo.Database.WriteConcern", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.WriteConcern()
 	return res0
 }

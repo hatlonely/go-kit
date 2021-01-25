@@ -397,7 +397,7 @@ const WrapperFunctionBodyRetryTpl = `
 	})
 `
 const WrapperFunctionBodyCallTpl = `
-	{{.function.resultList}} := w.obj.{{.function.name}}({{.function.paramList}})
+	{{.function.resultList}} = w.obj.{{.function.name}}({{.function.paramList}})
 `
 
 func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) string {
@@ -461,13 +461,17 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface
 		return buf.String()
 	}
 
+	buf.WriteString(g.generateWrapperDeclareReturnVariables(function))
+
 	if function.IsReturnError && g.MatchFunctionRule(function, g.options.Rule.Retry) {
-		buf.WriteString(g.generateWrapperDeclareReturnVariables(function))
 		buf.WriteString(renderTemplate(WrapperFunctionBodyRetryTpl, vals))
 		buf.WriteString(g.generateWrapperReturnVariables(function))
 		return buf.String()
 	}
 
+	if g.MatchFunctionRule(function, g.options.Rule.Metric) {
+		buf.WriteString(renderTemplate(WrapperFunctionBodyMetricTpl, vals))
+	}
 	buf.WriteString(renderTemplate(WrapperFunctionBodyCallTpl, vals))
 	buf.WriteString(g.generateWrapperReturnVariables(function))
 

@@ -442,7 +442,16 @@ func (w *OSSBucketWrapper) GetConfig(ctx context.Context) *oss.Config {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.GetConfig()
+	var res0 *oss.Config
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("oss.Bucket.GetConfig", "OK").Inc()
+			w.durationMetric.WithLabelValues("oss.Bucket.GetConfig", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.GetConfig()
 	return res0
 }
 
@@ -1104,7 +1113,9 @@ func (w *OSSClientWrapper) AbortBucketWorm(ctx context.Context, bucketName strin
 }
 
 func (w *OSSClientWrapper) Bucket(bucketName string) (*OSSBucketWrapper, error) {
-	res0, err := w.obj.Bucket(bucketName)
+	var res0 *oss.Bucket
+	var err error
+	res0, err = w.obj.Bucket(bucketName)
 	return &OSSBucketWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}, err
 }
 

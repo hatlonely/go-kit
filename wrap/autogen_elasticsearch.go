@@ -1623,7 +1623,8 @@ func (w *ESBulkServiceWrapper) ErrorTrace(errorTrace bool) *ESBulkServiceWrapper
 }
 
 func (w *ESBulkServiceWrapper) EstimatedSizeInBytes() int64 {
-	res0 := w.obj.EstimatedSizeInBytes()
+	var res0 int64
+	res0 = w.obj.EstimatedSizeInBytes()
 	return res0
 }
 
@@ -1653,7 +1654,8 @@ func (w *ESBulkServiceWrapper) Index(index string) *ESBulkServiceWrapper {
 }
 
 func (w *ESBulkServiceWrapper) NumberOfActions() int {
-	res0 := w.obj.NumberOfActions()
+	var res0 int
+	res0 = w.obj.NumberOfActions()
 	return res0
 }
 
@@ -2202,427 +2204,517 @@ func (w *ESClearScrollServiceWrapper) ScrollId(scrollIds ...string) *ESClearScro
 }
 
 func (w *ESClearScrollServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
 func (w *ESClientWrapper) Alias() *ESAliasServiceWrapper {
-	res0 := w.obj.Alias()
+	var res0 *elastic.AliasService
+	res0 = w.obj.Alias()
 	return &ESAliasServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Aliases() *ESAliasesServiceWrapper {
-	res0 := w.obj.Aliases()
+	var res0 *elastic.AliasesService
+	res0 = w.obj.Aliases()
 	return &ESAliasesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Bulk() *ESBulkServiceWrapper {
-	res0 := w.obj.Bulk()
+	var res0 *elastic.BulkService
+	res0 = w.obj.Bulk()
 	return &ESBulkServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) BulkProcessor() *ESBulkProcessorServiceWrapper {
-	res0 := w.obj.BulkProcessor()
+	var res0 *elastic.BulkProcessorService
+	res0 = w.obj.BulkProcessor()
 	return &ESBulkProcessorServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) CatAliases() *ESCatAliasesServiceWrapper {
-	res0 := w.obj.CatAliases()
+	var res0 *elastic.CatAliasesService
+	res0 = w.obj.CatAliases()
 	return &ESCatAliasesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) CatAllocation() *ESCatAllocationServiceWrapper {
-	res0 := w.obj.CatAllocation()
+	var res0 *elastic.CatAllocationService
+	res0 = w.obj.CatAllocation()
 	return &ESCatAllocationServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) CatCount() *ESCatCountServiceWrapper {
-	res0 := w.obj.CatCount()
+	var res0 *elastic.CatCountService
+	res0 = w.obj.CatCount()
 	return &ESCatCountServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) CatHealth() *ESCatHealthServiceWrapper {
-	res0 := w.obj.CatHealth()
+	var res0 *elastic.CatHealthService
+	res0 = w.obj.CatHealth()
 	return &ESCatHealthServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) CatIndices() *ESCatIndicesServiceWrapper {
-	res0 := w.obj.CatIndices()
+	var res0 *elastic.CatIndicesService
+	res0 = w.obj.CatIndices()
 	return &ESCatIndicesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) CatShards() *ESCatShardsServiceWrapper {
-	res0 := w.obj.CatShards()
+	var res0 *elastic.CatShardsService
+	res0 = w.obj.CatShards()
 	return &ESCatShardsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) ClearCache(indices ...string) *ESIndicesClearCacheServiceWrapper {
-	res0 := w.obj.ClearCache(indices...)
+	var res0 *elastic.IndicesClearCacheService
+	res0 = w.obj.ClearCache(indices...)
 	return &ESIndicesClearCacheServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) ClearScroll(scrollIds ...string) *ESClearScrollServiceWrapper {
-	res0 := w.obj.ClearScroll(scrollIds...)
+	var res0 *elastic.ClearScrollService
+	res0 = w.obj.ClearScroll(scrollIds...)
 	return &ESClearScrollServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) CloseIndex(name string) *ESIndicesCloseServiceWrapper {
-	res0 := w.obj.CloseIndex(name)
+	var res0 *elastic.IndicesCloseService
+	res0 = w.obj.CloseIndex(name)
 	return &ESIndicesCloseServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) ClusterHealth() *ESClusterHealthServiceWrapper {
-	res0 := w.obj.ClusterHealth()
+	var res0 *elastic.ClusterHealthService
+	res0 = w.obj.ClusterHealth()
 	return &ESClusterHealthServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) ClusterReroute() *ESClusterRerouteServiceWrapper {
-	res0 := w.obj.ClusterReroute()
+	var res0 *elastic.ClusterRerouteService
+	res0 = w.obj.ClusterReroute()
 	return &ESClusterRerouteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) ClusterState() *ESClusterStateServiceWrapper {
-	res0 := w.obj.ClusterState()
+	var res0 *elastic.ClusterStateService
+	res0 = w.obj.ClusterState()
 	return &ESClusterStateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) ClusterStats() *ESClusterStatsServiceWrapper {
-	res0 := w.obj.ClusterStats()
+	var res0 *elastic.ClusterStatsService
+	res0 = w.obj.ClusterStats()
 	return &ESClusterStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Count(indices ...string) *ESCountServiceWrapper {
-	res0 := w.obj.Count(indices...)
+	var res0 *elastic.CountService
+	res0 = w.obj.Count(indices...)
 	return &ESCountServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) CreateIndex(name string) *ESIndicesCreateServiceWrapper {
-	res0 := w.obj.CreateIndex(name)
+	var res0 *elastic.IndicesCreateService
+	res0 = w.obj.CreateIndex(name)
 	return &ESIndicesCreateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Delete() *ESDeleteServiceWrapper {
-	res0 := w.obj.Delete()
+	var res0 *elastic.DeleteService
+	res0 = w.obj.Delete()
 	return &ESDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) DeleteByQuery(indices ...string) *ESDeleteByQueryServiceWrapper {
-	res0 := w.obj.DeleteByQuery(indices...)
+	var res0 *elastic.DeleteByQueryService
+	res0 = w.obj.DeleteByQuery(indices...)
 	return &ESDeleteByQueryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) DeleteIndex(indices ...string) *ESIndicesDeleteServiceWrapper {
-	res0 := w.obj.DeleteIndex(indices...)
+	var res0 *elastic.IndicesDeleteService
+	res0 = w.obj.DeleteIndex(indices...)
 	return &ESIndicesDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) DeleteScript() *ESDeleteScriptServiceWrapper {
-	res0 := w.obj.DeleteScript()
+	var res0 *elastic.DeleteScriptService
+	res0 = w.obj.DeleteScript()
 	return &ESDeleteScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) ElasticsearchVersion(url string) (string, error) {
-	res0, err := w.obj.ElasticsearchVersion(url)
+	var res0 string
+	var err error
+	res0, err = w.obj.ElasticsearchVersion(url)
 	return res0, err
 }
 
 func (w *ESClientWrapper) Exists() *ESExistsServiceWrapper {
-	res0 := w.obj.Exists()
+	var res0 *elastic.ExistsService
+	res0 = w.obj.Exists()
 	return &ESExistsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Explain(index string, typ string, id string) *ESExplainServiceWrapper {
-	res0 := w.obj.Explain(index, typ, id)
+	var res0 *elastic.ExplainService
+	res0 = w.obj.Explain(index, typ, id)
 	return &ESExplainServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) FieldCaps(indices ...string) *ESFieldCapsServiceWrapper {
-	res0 := w.obj.FieldCaps(indices...)
+	var res0 *elastic.FieldCapsService
+	res0 = w.obj.FieldCaps(indices...)
 	return &ESFieldCapsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Flush(indices ...string) *ESIndicesFlushServiceWrapper {
-	res0 := w.obj.Flush(indices...)
+	var res0 *elastic.IndicesFlushService
+	res0 = w.obj.Flush(indices...)
 	return &ESIndicesFlushServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Forcemerge(indices ...string) *ESIndicesForcemergeServiceWrapper {
-	res0 := w.obj.Forcemerge(indices...)
+	var res0 *elastic.IndicesForcemergeService
+	res0 = w.obj.Forcemerge(indices...)
 	return &ESIndicesForcemergeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) FreezeIndex(name string) *ESIndicesFreezeServiceWrapper {
-	res0 := w.obj.FreezeIndex(name)
+	var res0 *elastic.IndicesFreezeService
+	res0 = w.obj.FreezeIndex(name)
 	return &ESIndicesFreezeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Get() *ESGetServiceWrapper {
-	res0 := w.obj.Get()
+	var res0 *elastic.GetService
+	res0 = w.obj.Get()
 	return &ESGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) GetFieldMapping() *ESIndicesGetFieldMappingServiceWrapper {
-	res0 := w.obj.GetFieldMapping()
+	var res0 *elastic.IndicesGetFieldMappingService
+	res0 = w.obj.GetFieldMapping()
 	return &ESIndicesGetFieldMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) GetMapping() *ESIndicesGetMappingServiceWrapper {
-	res0 := w.obj.GetMapping()
+	var res0 *elastic.IndicesGetMappingService
+	res0 = w.obj.GetMapping()
 	return &ESIndicesGetMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) GetScript() *ESGetScriptServiceWrapper {
-	res0 := w.obj.GetScript()
+	var res0 *elastic.GetScriptService
+	res0 = w.obj.GetScript()
 	return &ESGetScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) HasPlugin(name string) (bool, error) {
-	res0, err := w.obj.HasPlugin(name)
+	var res0 bool
+	var err error
+	res0, err = w.obj.HasPlugin(name)
 	return res0, err
 }
 
 func (w *ESClientWrapper) Index() *ESIndexServiceWrapper {
-	res0 := w.obj.Index()
+	var res0 *elastic.IndexService
+	res0 = w.obj.Index()
 	return &ESIndexServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IndexAnalyze() *ESIndicesAnalyzeServiceWrapper {
-	res0 := w.obj.IndexAnalyze()
+	var res0 *elastic.IndicesAnalyzeService
+	res0 = w.obj.IndexAnalyze()
 	return &ESIndicesAnalyzeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IndexDeleteIndexTemplate(name string) *ESIndicesDeleteIndexTemplateServiceWrapper {
-	res0 := w.obj.IndexDeleteIndexTemplate(name)
+	var res0 *elastic.IndicesDeleteIndexTemplateService
+	res0 = w.obj.IndexDeleteIndexTemplate(name)
 	return &ESIndicesDeleteIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IndexDeleteTemplate(name string) *ESIndicesDeleteTemplateServiceWrapper {
-	res0 := w.obj.IndexDeleteTemplate(name)
+	var res0 *elastic.IndicesDeleteTemplateService
+	res0 = w.obj.IndexDeleteTemplate(name)
 	return &ESIndicesDeleteTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IndexExists(indices ...string) *ESIndicesExistsServiceWrapper {
-	res0 := w.obj.IndexExists(indices...)
+	var res0 *elastic.IndicesExistsService
+	res0 = w.obj.IndexExists(indices...)
 	return &ESIndicesExistsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IndexGet(indices ...string) *ESIndicesGetServiceWrapper {
-	res0 := w.obj.IndexGet(indices...)
+	var res0 *elastic.IndicesGetService
+	res0 = w.obj.IndexGet(indices...)
 	return &ESIndicesGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IndexGetIndexTemplate(name string) *ESIndicesGetIndexTemplateServiceWrapper {
-	res0 := w.obj.IndexGetIndexTemplate(name)
+	var res0 *elastic.IndicesGetIndexTemplateService
+	res0 = w.obj.IndexGetIndexTemplate(name)
 	return &ESIndicesGetIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IndexGetSettings(indices ...string) *ESIndicesGetSettingsServiceWrapper {
-	res0 := w.obj.IndexGetSettings(indices...)
+	var res0 *elastic.IndicesGetSettingsService
+	res0 = w.obj.IndexGetSettings(indices...)
 	return &ESIndicesGetSettingsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IndexGetTemplate(names ...string) *ESIndicesGetTemplateServiceWrapper {
-	res0 := w.obj.IndexGetTemplate(names...)
+	var res0 *elastic.IndicesGetTemplateService
+	res0 = w.obj.IndexGetTemplate(names...)
 	return &ESIndicesGetTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IndexNames() ([]string, error) {
-	res0, err := w.obj.IndexNames()
+	var res0 []string
+	var err error
+	res0, err = w.obj.IndexNames()
 	return res0, err
 }
 
 func (w *ESClientWrapper) IndexPutIndexTemplate(name string) *ESIndicesPutIndexTemplateServiceWrapper {
-	res0 := w.obj.IndexPutIndexTemplate(name)
+	var res0 *elastic.IndicesPutIndexTemplateService
+	res0 = w.obj.IndexPutIndexTemplate(name)
 	return &ESIndicesPutIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IndexPutSettings(indices ...string) *ESIndicesPutSettingsServiceWrapper {
-	res0 := w.obj.IndexPutSettings(indices...)
+	var res0 *elastic.IndicesPutSettingsService
+	res0 = w.obj.IndexPutSettings(indices...)
 	return &ESIndicesPutSettingsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IndexPutTemplate(name string) *ESIndicesPutTemplateServiceWrapper {
-	res0 := w.obj.IndexPutTemplate(name)
+	var res0 *elastic.IndicesPutTemplateService
+	res0 = w.obj.IndexPutTemplate(name)
 	return &ESIndicesPutTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IndexSegments(indices ...string) *ESIndicesSegmentsServiceWrapper {
-	res0 := w.obj.IndexSegments(indices...)
+	var res0 *elastic.IndicesSegmentsService
+	res0 = w.obj.IndexSegments(indices...)
 	return &ESIndicesSegmentsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IndexStats(indices ...string) *ESIndicesStatsServiceWrapper {
-	res0 := w.obj.IndexStats(indices...)
+	var res0 *elastic.IndicesStatsService
+	res0 = w.obj.IndexStats(indices...)
 	return &ESIndicesStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IndexTemplateExists(name string) *ESIndicesExistsTemplateServiceWrapper {
-	res0 := w.obj.IndexTemplateExists(name)
+	var res0 *elastic.IndicesExistsTemplateService
+	res0 = w.obj.IndexTemplateExists(name)
 	return &ESIndicesExistsTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IngestDeletePipeline(id string) *ESIngestDeletePipelineServiceWrapper {
-	res0 := w.obj.IngestDeletePipeline(id)
+	var res0 *elastic.IngestDeletePipelineService
+	res0 = w.obj.IngestDeletePipeline(id)
 	return &ESIngestDeletePipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IngestGetPipeline(ids ...string) *ESIngestGetPipelineServiceWrapper {
-	res0 := w.obj.IngestGetPipeline(ids...)
+	var res0 *elastic.IngestGetPipelineService
+	res0 = w.obj.IngestGetPipeline(ids...)
 	return &ESIngestGetPipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IngestPutPipeline(id string) *ESIngestPutPipelineServiceWrapper {
-	res0 := w.obj.IngestPutPipeline(id)
+	var res0 *elastic.IngestPutPipelineService
+	res0 = w.obj.IngestPutPipeline(id)
 	return &ESIngestPutPipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IngestSimulatePipeline() *ESIngestSimulatePipelineServiceWrapper {
-	res0 := w.obj.IngestSimulatePipeline()
+	var res0 *elastic.IngestSimulatePipelineService
+	res0 = w.obj.IngestSimulatePipeline()
 	return &ESIngestSimulatePipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) IsRunning() bool {
-	res0 := w.obj.IsRunning()
+	var res0 bool
+	res0 = w.obj.IsRunning()
 	return res0
 }
 
 func (w *ESClientWrapper) Mget() *ESMgetServiceWrapper {
-	res0 := w.obj.Mget()
+	var res0 *elastic.MgetService
+	res0 = w.obj.Mget()
 	return &ESMgetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) MultiGet() *ESMgetServiceWrapper {
-	res0 := w.obj.MultiGet()
+	var res0 *elastic.MgetService
+	res0 = w.obj.MultiGet()
 	return &ESMgetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) MultiSearch() *ESMultiSearchServiceWrapper {
-	res0 := w.obj.MultiSearch()
+	var res0 *elastic.MultiSearchService
+	res0 = w.obj.MultiSearch()
 	return &ESMultiSearchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) MultiTermVectors() *ESMultiTermvectorServiceWrapper {
-	res0 := w.obj.MultiTermVectors()
+	var res0 *elastic.MultiTermvectorService
+	res0 = w.obj.MultiTermVectors()
 	return &ESMultiTermvectorServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) NodesInfo() *ESNodesInfoServiceWrapper {
-	res0 := w.obj.NodesInfo()
+	var res0 *elastic.NodesInfoService
+	res0 = w.obj.NodesInfo()
 	return &ESNodesInfoServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) NodesStats() *ESNodesStatsServiceWrapper {
-	res0 := w.obj.NodesStats()
+	var res0 *elastic.NodesStatsService
+	res0 = w.obj.NodesStats()
 	return &ESNodesStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) OpenIndex(name string) *ESIndicesOpenServiceWrapper {
-	res0 := w.obj.OpenIndex(name)
+	var res0 *elastic.IndicesOpenService
+	res0 = w.obj.OpenIndex(name)
 	return &ESIndicesOpenServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) PerformRequest(ctx context.Context, opt elastic.PerformRequestOptions) (*elastic.Response, error) {
-	res0, err := w.obj.PerformRequest(ctx, opt)
+	var res0 *elastic.Response
+	var err error
+	res0, err = w.obj.PerformRequest(ctx, opt)
 	return res0, err
 }
 
 func (w *ESClientWrapper) Ping(url string) *ESPingServiceWrapper {
-	res0 := w.obj.Ping(url)
+	var res0 *elastic.PingService
+	res0 = w.obj.Ping(url)
 	return &ESPingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Plugins() ([]string, error) {
-	res0, err := w.obj.Plugins()
+	var res0 []string
+	var err error
+	res0, err = w.obj.Plugins()
 	return res0, err
 }
 
 func (w *ESClientWrapper) PutMapping() *ESIndicesPutMappingServiceWrapper {
-	res0 := w.obj.PutMapping()
+	var res0 *elastic.IndicesPutMappingService
+	res0 = w.obj.PutMapping()
 	return &ESIndicesPutMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) PutScript() *ESPutScriptServiceWrapper {
-	res0 := w.obj.PutScript()
+	var res0 *elastic.PutScriptService
+	res0 = w.obj.PutScript()
 	return &ESPutScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Refresh(indices ...string) *ESRefreshServiceWrapper {
-	res0 := w.obj.Refresh(indices...)
+	var res0 *elastic.RefreshService
+	res0 = w.obj.Refresh(indices...)
 	return &ESRefreshServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Reindex() *ESReindexServiceWrapper {
-	res0 := w.obj.Reindex()
+	var res0 *elastic.ReindexService
+	res0 = w.obj.Reindex()
 	return &ESReindexServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) RolloverIndex(alias string) *ESIndicesRolloverServiceWrapper {
-	res0 := w.obj.RolloverIndex(alias)
+	var res0 *elastic.IndicesRolloverService
+	res0 = w.obj.RolloverIndex(alias)
 	return &ESIndicesRolloverServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Scroll(indices ...string) *ESScrollServiceWrapper {
-	res0 := w.obj.Scroll(indices...)
+	var res0 *elastic.ScrollService
+	res0 = w.obj.Scroll(indices...)
 	return &ESScrollServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Search(indices ...string) *ESSearchServiceWrapper {
-	res0 := w.obj.Search(indices...)
+	var res0 *elastic.SearchService
+	res0 = w.obj.Search(indices...)
 	return &ESSearchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) SearchShards(indices ...string) *ESSearchShardsServiceWrapper {
-	res0 := w.obj.SearchShards(indices...)
+	var res0 *elastic.SearchShardsService
+	res0 = w.obj.SearchShards(indices...)
 	return &ESSearchShardsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) ShrinkIndex(source string, target string) *ESIndicesShrinkServiceWrapper {
-	res0 := w.obj.ShrinkIndex(source, target)
+	var res0 *elastic.IndicesShrinkService
+	res0 = w.obj.ShrinkIndex(source, target)
 	return &ESIndicesShrinkServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) SnapshotCreate(repository string, snapshot string) *ESSnapshotCreateServiceWrapper {
-	res0 := w.obj.SnapshotCreate(repository, snapshot)
+	var res0 *elastic.SnapshotCreateService
+	res0 = w.obj.SnapshotCreate(repository, snapshot)
 	return &ESSnapshotCreateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) SnapshotCreateRepository(repository string) *ESSnapshotCreateRepositoryServiceWrapper {
-	res0 := w.obj.SnapshotCreateRepository(repository)
+	var res0 *elastic.SnapshotCreateRepositoryService
+	res0 = w.obj.SnapshotCreateRepository(repository)
 	return &ESSnapshotCreateRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) SnapshotDelete(repository string, snapshot string) *ESSnapshotDeleteServiceWrapper {
-	res0 := w.obj.SnapshotDelete(repository, snapshot)
+	var res0 *elastic.SnapshotDeleteService
+	res0 = w.obj.SnapshotDelete(repository, snapshot)
 	return &ESSnapshotDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) SnapshotDeleteRepository(repositories ...string) *ESSnapshotDeleteRepositoryServiceWrapper {
-	res0 := w.obj.SnapshotDeleteRepository(repositories...)
+	var res0 *elastic.SnapshotDeleteRepositoryService
+	res0 = w.obj.SnapshotDeleteRepository(repositories...)
 	return &ESSnapshotDeleteRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) SnapshotGet(repository string) *ESSnapshotGetServiceWrapper {
-	res0 := w.obj.SnapshotGet(repository)
+	var res0 *elastic.SnapshotGetService
+	res0 = w.obj.SnapshotGet(repository)
 	return &ESSnapshotGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) SnapshotGetRepository(repositories ...string) *ESSnapshotGetRepositoryServiceWrapper {
-	res0 := w.obj.SnapshotGetRepository(repositories...)
+	var res0 *elastic.SnapshotGetRepositoryService
+	res0 = w.obj.SnapshotGetRepository(repositories...)
 	return &ESSnapshotGetRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) SnapshotRestore(repository string, snapshot string) *ESSnapshotRestoreServiceWrapper {
-	res0 := w.obj.SnapshotRestore(repository, snapshot)
+	var res0 *elastic.SnapshotRestoreService
+	res0 = w.obj.SnapshotRestore(repository, snapshot)
 	return &ESSnapshotRestoreServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) SnapshotStatus() *ESSnapshotStatusServiceWrapper {
-	res0 := w.obj.SnapshotStatus()
+	var res0 *elastic.SnapshotStatusService
+	res0 = w.obj.SnapshotStatus()
 	return &ESSnapshotStatusServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) SnapshotVerifyRepository(repository string) *ESSnapshotVerifyRepositoryServiceWrapper {
-	res0 := w.obj.SnapshotVerifyRepository(repository)
+	var res0 *elastic.SnapshotVerifyRepositoryService
+	res0 = w.obj.SnapshotVerifyRepository(repository)
 	return &ESSnapshotVerifyRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
@@ -2635,212 +2727,254 @@ func (w *ESClientWrapper) Stop() {
 }
 
 func (w *ESClientWrapper) String() string {
-	res0 := w.obj.String()
+	var res0 string
+	res0 = w.obj.String()
 	return res0
 }
 
 func (w *ESClientWrapper) SyncedFlush(indices ...string) *ESIndicesSyncedFlushServiceWrapper {
-	res0 := w.obj.SyncedFlush(indices...)
+	var res0 *elastic.IndicesSyncedFlushService
+	res0 = w.obj.SyncedFlush(indices...)
 	return &ESIndicesSyncedFlushServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) TasksCancel() *ESTasksCancelServiceWrapper {
-	res0 := w.obj.TasksCancel()
+	var res0 *elastic.TasksCancelService
+	res0 = w.obj.TasksCancel()
 	return &ESTasksCancelServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) TasksGetTask() *ESTasksGetTaskServiceWrapper {
-	res0 := w.obj.TasksGetTask()
+	var res0 *elastic.TasksGetTaskService
+	res0 = w.obj.TasksGetTask()
 	return &ESTasksGetTaskServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) TasksList() *ESTasksListServiceWrapper {
-	res0 := w.obj.TasksList()
+	var res0 *elastic.TasksListService
+	res0 = w.obj.TasksList()
 	return &ESTasksListServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) TermVectors(index string) *ESTermvectorsServiceWrapper {
-	res0 := w.obj.TermVectors(index)
+	var res0 *elastic.TermvectorsService
+	res0 = w.obj.TermVectors(index)
 	return &ESTermvectorsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) UnfreezeIndex(name string) *ESIndicesUnfreezeServiceWrapper {
-	res0 := w.obj.UnfreezeIndex(name)
+	var res0 *elastic.IndicesUnfreezeService
+	res0 = w.obj.UnfreezeIndex(name)
 	return &ESIndicesUnfreezeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Update() *ESUpdateServiceWrapper {
-	res0 := w.obj.Update()
+	var res0 *elastic.UpdateService
+	res0 = w.obj.Update()
 	return &ESUpdateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) UpdateByQuery(indices ...string) *ESUpdateByQueryServiceWrapper {
-	res0 := w.obj.UpdateByQuery(indices...)
+	var res0 *elastic.UpdateByQueryService
+	res0 = w.obj.UpdateByQuery(indices...)
 	return &ESUpdateByQueryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) Validate(indices ...string) *ESValidateServiceWrapper {
-	res0 := w.obj.Validate(indices...)
+	var res0 *elastic.ValidateService
+	res0 = w.obj.Validate(indices...)
 	return &ESValidateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) WaitForGreenStatus(timeout string) error {
-	err := w.obj.WaitForGreenStatus(timeout)
+	var err error
+	err = w.obj.WaitForGreenStatus(timeout)
 	return err
 }
 
 func (w *ESClientWrapper) WaitForStatus(status string, timeout string) error {
-	err := w.obj.WaitForStatus(status, timeout)
+	var err error
+	err = w.obj.WaitForStatus(status, timeout)
 	return err
 }
 
 func (w *ESClientWrapper) WaitForYellowStatus(timeout string) error {
-	err := w.obj.WaitForYellowStatus(timeout)
+	var err error
+	err = w.obj.WaitForYellowStatus(timeout)
 	return err
 }
 
 func (w *ESClientWrapper) XPackAsyncSearchDelete() *elastic.XPackAsyncSearchDelete {
-	res0 := w.obj.XPackAsyncSearchDelete()
+	var res0 *elastic.XPackAsyncSearchDelete
+	res0 = w.obj.XPackAsyncSearchDelete()
 	return res0
 }
 
 func (w *ESClientWrapper) XPackAsyncSearchGet() *elastic.XPackAsyncSearchGet {
-	res0 := w.obj.XPackAsyncSearchGet()
+	var res0 *elastic.XPackAsyncSearchGet
+	res0 = w.obj.XPackAsyncSearchGet()
 	return res0
 }
 
 func (w *ESClientWrapper) XPackAsyncSearchSubmit() *elastic.XPackAsyncSearchSubmit {
-	res0 := w.obj.XPackAsyncSearchSubmit()
+	var res0 *elastic.XPackAsyncSearchSubmit
+	res0 = w.obj.XPackAsyncSearchSubmit()
 	return res0
 }
 
 func (w *ESClientWrapper) XPackIlmDeleteLifecycle() *ESXPackIlmDeleteLifecycleServiceWrapper {
-	res0 := w.obj.XPackIlmDeleteLifecycle()
+	var res0 *elastic.XPackIlmDeleteLifecycleService
+	res0 = w.obj.XPackIlmDeleteLifecycle()
 	return &ESXPackIlmDeleteLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackIlmGetLifecycle() *ESXPackIlmGetLifecycleServiceWrapper {
-	res0 := w.obj.XPackIlmGetLifecycle()
+	var res0 *elastic.XPackIlmGetLifecycleService
+	res0 = w.obj.XPackIlmGetLifecycle()
 	return &ESXPackIlmGetLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackIlmPutLifecycle() *ESXPackIlmPutLifecycleServiceWrapper {
-	res0 := w.obj.XPackIlmPutLifecycle()
+	var res0 *elastic.XPackIlmPutLifecycleService
+	res0 = w.obj.XPackIlmPutLifecycle()
 	return &ESXPackIlmPutLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackInfo() *ESXPackInfoServiceWrapper {
-	res0 := w.obj.XPackInfo()
+	var res0 *elastic.XPackInfoService
+	res0 = w.obj.XPackInfo()
 	return &ESXPackInfoServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackSecurityChangePassword(username string) *ESXPackSecurityChangePasswordServiceWrapper {
-	res0 := w.obj.XPackSecurityChangePassword(username)
+	var res0 *elastic.XPackSecurityChangePasswordService
+	res0 = w.obj.XPackSecurityChangePassword(username)
 	return &ESXPackSecurityChangePasswordServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackSecurityDeleteRole(roleName string) *ESXPackSecurityDeleteRoleServiceWrapper {
-	res0 := w.obj.XPackSecurityDeleteRole(roleName)
+	var res0 *elastic.XPackSecurityDeleteRoleService
+	res0 = w.obj.XPackSecurityDeleteRole(roleName)
 	return &ESXPackSecurityDeleteRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackSecurityDeleteRoleMapping(roleMappingName string) *ESXPackSecurityDeleteRoleMappingServiceWrapper {
-	res0 := w.obj.XPackSecurityDeleteRoleMapping(roleMappingName)
+	var res0 *elastic.XPackSecurityDeleteRoleMappingService
+	res0 = w.obj.XPackSecurityDeleteRoleMapping(roleMappingName)
 	return &ESXPackSecurityDeleteRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackSecurityDeleteUser(username string) *ESXPackSecurityDeleteUserServiceWrapper {
-	res0 := w.obj.XPackSecurityDeleteUser(username)
+	var res0 *elastic.XPackSecurityDeleteUserService
+	res0 = w.obj.XPackSecurityDeleteUser(username)
 	return &ESXPackSecurityDeleteUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackSecurityDisableUser(username string) *ESXPackSecurityDisableUserServiceWrapper {
-	res0 := w.obj.XPackSecurityDisableUser(username)
+	var res0 *elastic.XPackSecurityDisableUserService
+	res0 = w.obj.XPackSecurityDisableUser(username)
 	return &ESXPackSecurityDisableUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackSecurityEnableUser(username string) *ESXPackSecurityEnableUserServiceWrapper {
-	res0 := w.obj.XPackSecurityEnableUser(username)
+	var res0 *elastic.XPackSecurityEnableUserService
+	res0 = w.obj.XPackSecurityEnableUser(username)
 	return &ESXPackSecurityEnableUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackSecurityGetRole(roleName string) *ESXPackSecurityGetRoleServiceWrapper {
-	res0 := w.obj.XPackSecurityGetRole(roleName)
+	var res0 *elastic.XPackSecurityGetRoleService
+	res0 = w.obj.XPackSecurityGetRole(roleName)
 	return &ESXPackSecurityGetRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackSecurityGetRoleMapping(roleMappingName string) *ESXPackSecurityGetRoleMappingServiceWrapper {
-	res0 := w.obj.XPackSecurityGetRoleMapping(roleMappingName)
+	var res0 *elastic.XPackSecurityGetRoleMappingService
+	res0 = w.obj.XPackSecurityGetRoleMapping(roleMappingName)
 	return &ESXPackSecurityGetRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackSecurityGetUser(usernames ...string) *ESXPackSecurityGetUserServiceWrapper {
-	res0 := w.obj.XPackSecurityGetUser(usernames...)
+	var res0 *elastic.XPackSecurityGetUserService
+	res0 = w.obj.XPackSecurityGetUser(usernames...)
 	return &ESXPackSecurityGetUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackSecurityPutRole(roleName string) *ESXPackSecurityPutRoleServiceWrapper {
-	res0 := w.obj.XPackSecurityPutRole(roleName)
+	var res0 *elastic.XPackSecurityPutRoleService
+	res0 = w.obj.XPackSecurityPutRole(roleName)
 	return &ESXPackSecurityPutRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackSecurityPutRoleMapping(roleMappingName string) *ESXPackSecurityPutRoleMappingServiceWrapper {
-	res0 := w.obj.XPackSecurityPutRoleMapping(roleMappingName)
+	var res0 *elastic.XPackSecurityPutRoleMappingService
+	res0 = w.obj.XPackSecurityPutRoleMapping(roleMappingName)
 	return &ESXPackSecurityPutRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackSecurityPutUser(username string) *ESXPackSecurityPutUserServiceWrapper {
-	res0 := w.obj.XPackSecurityPutUser(username)
+	var res0 *elastic.XPackSecurityPutUserService
+	res0 = w.obj.XPackSecurityPutUser(username)
 	return &ESXPackSecurityPutUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackWatchAck(watchId string) *ESXPackWatcherAckWatchServiceWrapper {
-	res0 := w.obj.XPackWatchAck(watchId)
+	var res0 *elastic.XPackWatcherAckWatchService
+	res0 = w.obj.XPackWatchAck(watchId)
 	return &ESXPackWatcherAckWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackWatchActivate(watchId string) *ESXPackWatcherActivateWatchServiceWrapper {
-	res0 := w.obj.XPackWatchActivate(watchId)
+	var res0 *elastic.XPackWatcherActivateWatchService
+	res0 = w.obj.XPackWatchActivate(watchId)
 	return &ESXPackWatcherActivateWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackWatchDeactivate(watchId string) *ESXPackWatcherDeactivateWatchServiceWrapper {
-	res0 := w.obj.XPackWatchDeactivate(watchId)
+	var res0 *elastic.XPackWatcherDeactivateWatchService
+	res0 = w.obj.XPackWatchDeactivate(watchId)
 	return &ESXPackWatcherDeactivateWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackWatchDelete(watchId string) *ESXPackWatcherDeleteWatchServiceWrapper {
-	res0 := w.obj.XPackWatchDelete(watchId)
+	var res0 *elastic.XPackWatcherDeleteWatchService
+	res0 = w.obj.XPackWatchDelete(watchId)
 	return &ESXPackWatcherDeleteWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackWatchExecute() *ESXPackWatcherExecuteWatchServiceWrapper {
-	res0 := w.obj.XPackWatchExecute()
+	var res0 *elastic.XPackWatcherExecuteWatchService
+	res0 = w.obj.XPackWatchExecute()
 	return &ESXPackWatcherExecuteWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackWatchGet(watchId string) *ESXPackWatcherGetWatchServiceWrapper {
-	res0 := w.obj.XPackWatchGet(watchId)
+	var res0 *elastic.XPackWatcherGetWatchService
+	res0 = w.obj.XPackWatchGet(watchId)
 	return &ESXPackWatcherGetWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackWatchPut(watchId string) *ESXPackWatcherPutWatchServiceWrapper {
-	res0 := w.obj.XPackWatchPut(watchId)
+	var res0 *elastic.XPackWatcherPutWatchService
+	res0 = w.obj.XPackWatchPut(watchId)
 	return &ESXPackWatcherPutWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackWatchStart() *ESXPackWatcherStartServiceWrapper {
-	res0 := w.obj.XPackWatchStart()
+	var res0 *elastic.XPackWatcherStartService
+	res0 = w.obj.XPackWatchStart()
 	return &ESXPackWatcherStartServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackWatchStats() *ESXPackWatcherStatsServiceWrapper {
-	res0 := w.obj.XPackWatchStats()
+	var res0 *elastic.XPackWatcherStatsService
+	res0 = w.obj.XPackWatchStats()
 	return &ESXPackWatcherStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *ESClientWrapper) XPackWatchStop() *ESXPackWatcherStopServiceWrapper {
-	res0 := w.obj.XPackWatchStop()
+	var res0 *elastic.XPackWatcherStopService
+	res0 = w.obj.XPackWatchStop()
 	return &ESXPackWatcherStopServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
@@ -2915,7 +3049,8 @@ func (w *ESClusterHealthServiceWrapper) Timeout(timeout string) *ESClusterHealth
 }
 
 func (w *ESClusterHealthServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -3035,7 +3170,8 @@ func (w *ESClusterRerouteServiceWrapper) Timeout(timeout string) *ESClusterRerou
 }
 
 func (w *ESClusterRerouteServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -3125,7 +3261,8 @@ func (w *ESClusterStateServiceWrapper) Pretty(pretty bool) *ESClusterStateServic
 }
 
 func (w *ESClusterStateServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -3185,7 +3322,8 @@ func (w *ESClusterStatsServiceWrapper) Pretty(pretty bool) *ESClusterStatsServic
 }
 
 func (w *ESClusterStatsServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -3335,7 +3473,8 @@ func (w *ESCountServiceWrapper) Type(typ ...string) *ESCountServiceWrapper {
 }
 
 func (w *ESCountServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -3625,7 +3764,8 @@ func (w *ESDeleteByQueryServiceWrapper) Type(typ ...string) *ESDeleteByQueryServ
 }
 
 func (w *ESDeleteByQueryServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -3720,7 +3860,8 @@ func (w *ESDeleteScriptServiceWrapper) Timeout(timeout string) *ESDeleteScriptSe
 }
 
 func (w *ESDeleteScriptServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -3815,7 +3956,8 @@ func (w *ESDeleteServiceWrapper) Type(typ string) *ESDeleteServiceWrapper {
 }
 
 func (w *ESDeleteServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -3920,7 +4062,8 @@ func (w *ESExistsServiceWrapper) Type(typ string) *ESExistsServiceWrapper {
 }
 
 func (w *ESExistsServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -4060,7 +4203,8 @@ func (w *ESExplainServiceWrapper) Type(typ string) *ESExplainServiceWrapper {
 }
 
 func (w *ESExplainServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -4160,7 +4304,8 @@ func (w *ESFieldCapsServiceWrapper) Pretty(pretty bool) *ESFieldCapsServiceWrapp
 }
 
 func (w *ESFieldCapsServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -4215,7 +4360,8 @@ func (w *ESGetScriptServiceWrapper) Pretty(pretty bool) *ESGetScriptServiceWrapp
 }
 
 func (w *ESGetScriptServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -4325,7 +4471,8 @@ func (w *ESGetServiceWrapper) Type(typ string) *ESGetServiceWrapper {
 }
 
 func (w *ESGetServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -4465,7 +4612,8 @@ func (w *ESIndexServiceWrapper) Type(typ string) *ESIndexServiceWrapper {
 }
 
 func (w *ESIndexServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -4600,7 +4748,8 @@ func (w *ESIndicesAnalyzeServiceWrapper) Tokenizer(tokenizer string) *ESIndicesA
 }
 
 func (w *ESIndicesAnalyzeServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -4690,7 +4839,8 @@ func (w *ESIndicesClearCacheServiceWrapper) Request(requestCache bool) *ESIndice
 }
 
 func (w *ESIndicesClearCacheServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -4770,7 +4920,8 @@ func (w *ESIndicesCloseServiceWrapper) Timeout(timeout string) *ESIndicesCloseSe
 }
 
 func (w *ESIndicesCloseServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -4910,7 +5061,8 @@ func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Timeout(timeout string) *ES
 }
 
 func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -4975,7 +5127,8 @@ func (w *ESIndicesDeleteServiceWrapper) Timeout(timeout string) *ESIndicesDelete
 }
 
 func (w *ESIndicesDeleteServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -5040,7 +5193,8 @@ func (w *ESIndicesDeleteTemplateServiceWrapper) Timeout(timeout string) *ESIndic
 }
 
 func (w *ESIndicesDeleteTemplateServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -5115,7 +5269,8 @@ func (w *ESIndicesExistsServiceWrapper) Pretty(pretty bool) *ESIndicesExistsServ
 }
 
 func (w *ESIndicesExistsServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -5180,7 +5335,8 @@ func (w *ESIndicesExistsTemplateServiceWrapper) Pretty(pretty bool) *ESIndicesEx
 }
 
 func (w *ESIndicesExistsTemplateServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -5255,7 +5411,8 @@ func (w *ESIndicesFlushServiceWrapper) Pretty(pretty bool) *ESIndicesFlushServic
 }
 
 func (w *ESIndicesFlushServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -5345,7 +5502,8 @@ func (w *ESIndicesForcemergeServiceWrapper) Pretty(pretty bool) *ESIndicesForcem
 }
 
 func (w *ESIndicesForcemergeServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -5425,7 +5583,8 @@ func (w *ESIndicesFreezeServiceWrapper) Timeout(timeout string) *ESIndicesFreeze
 }
 
 func (w *ESIndicesFreezeServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -5515,7 +5674,8 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Type(types ...string) *ESIndice
 }
 
 func (w *ESIndicesGetFieldMappingServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -5585,7 +5745,8 @@ func (w *ESIndicesGetIndexTemplateServiceWrapper) Pretty(pretty bool) *ESIndices
 }
 
 func (w *ESIndicesGetIndexTemplateServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -5665,7 +5826,8 @@ func (w *ESIndicesGetMappingServiceWrapper) Type(types ...string) *ESIndicesGetM
 }
 
 func (w *ESIndicesGetMappingServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -5745,7 +5907,8 @@ func (w *ESIndicesGetServiceWrapper) Pretty(pretty bool) *ESIndicesGetServiceWra
 }
 
 func (w *ESIndicesGetServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -5830,7 +5993,8 @@ func (w *ESIndicesGetSettingsServiceWrapper) Pretty(pretty bool) *ESIndicesGetSe
 }
 
 func (w *ESIndicesGetSettingsServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -5895,7 +6059,8 @@ func (w *ESIndicesGetTemplateServiceWrapper) Pretty(pretty bool) *ESIndicesGetTe
 }
 
 func (w *ESIndicesGetTemplateServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -5975,7 +6140,8 @@ func (w *ESIndicesOpenServiceWrapper) Timeout(timeout string) *ESIndicesOpenServ
 }
 
 func (w *ESIndicesOpenServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -6060,7 +6226,8 @@ func (w *ESIndicesPutIndexTemplateServiceWrapper) Pretty(pretty bool) *ESIndices
 }
 
 func (w *ESIndicesPutIndexTemplateServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -6155,7 +6322,8 @@ func (w *ESIndicesPutMappingServiceWrapper) UpdateAllTypes(updateAllTypes bool) 
 }
 
 func (w *ESIndicesPutMappingServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -6245,7 +6413,8 @@ func (w *ESIndicesPutSettingsServiceWrapper) Pretty(pretty bool) *ESIndicesPutSe
 }
 
 func (w *ESIndicesPutSettingsServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -6340,7 +6509,8 @@ func (w *ESIndicesPutTemplateServiceWrapper) Timeout(timeout string) *ESIndicesP
 }
 
 func (w *ESIndicesPutTemplateServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -6470,7 +6640,8 @@ func (w *ESIndicesRolloverServiceWrapper) Timeout(timeout string) *ESIndicesRoll
 }
 
 func (w *ESIndicesRolloverServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -6550,7 +6721,8 @@ func (w *ESIndicesSegmentsServiceWrapper) Pretty(pretty bool) *ESIndicesSegments
 }
 
 func (w *ESIndicesSegmentsServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -6635,7 +6807,8 @@ func (w *ESIndicesShrinkServiceWrapper) Timeout(timeout string) *ESIndicesShrink
 }
 
 func (w *ESIndicesShrinkServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -6730,7 +6903,8 @@ func (w *ESIndicesStatsServiceWrapper) Type(types ...string) *ESIndicesStatsServ
 }
 
 func (w *ESIndicesStatsServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -6800,7 +6974,8 @@ func (w *ESIndicesSyncedFlushServiceWrapper) Pretty(pretty bool) *ESIndicesSynce
 }
 
 func (w *ESIndicesSyncedFlushServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -6880,7 +7055,8 @@ func (w *ESIndicesUnfreezeServiceWrapper) Timeout(timeout string) *ESIndicesUnfr
 }
 
 func (w *ESIndicesUnfreezeServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -6950,7 +7126,8 @@ func (w *ESIngestDeletePipelineServiceWrapper) Timeout(timeout string) *ESIngest
 }
 
 func (w *ESIngestDeletePipelineServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -7010,7 +7187,8 @@ func (w *ESIngestGetPipelineServiceWrapper) Pretty(pretty bool) *ESIngestGetPipe
 }
 
 func (w *ESIngestGetPipelineServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -7085,7 +7263,8 @@ func (w *ESIngestPutPipelineServiceWrapper) Timeout(timeout string) *ESIngestPut
 }
 
 func (w *ESIngestPutPipelineServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -7150,7 +7329,8 @@ func (w *ESIngestSimulatePipelineServiceWrapper) Pretty(pretty bool) *ESIngestSi
 }
 
 func (w *ESIngestSimulatePipelineServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -7230,7 +7410,9 @@ func (w *ESMgetServiceWrapper) Routing(routing string) *ESMgetServiceWrapper {
 }
 
 func (w *ESMgetServiceWrapper) Source() (interface{}, error) {
-	res0, err := w.obj.Source()
+	var res0 interface{}
+	var err error
+	res0, err = w.obj.Source()
 	return res0, err
 }
 
@@ -7420,7 +7602,8 @@ func (w *ESMultiTermvectorServiceWrapper) Routing(routing string) *ESMultiTermve
 }
 
 func (w *ESMultiTermvectorServiceWrapper) Source() interface{} {
-	res0 := w.obj.Source()
+	var res0 interface{}
+	res0 = w.obj.Source()
 	return res0
 }
 
@@ -7435,7 +7618,8 @@ func (w *ESMultiTermvectorServiceWrapper) Type(typ string) *ESMultiTermvectorSer
 }
 
 func (w *ESMultiTermvectorServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -7510,7 +7694,8 @@ func (w *ESNodesInfoServiceWrapper) Pretty(pretty bool) *ESNodesInfoServiceWrapp
 }
 
 func (w *ESNodesInfoServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -7610,7 +7795,8 @@ func (w *ESNodesStatsServiceWrapper) Types(types ...string) *ESNodesStatsService
 }
 
 func (w *ESNodesStatsServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -7751,7 +7937,8 @@ func (w *ESPutScriptServiceWrapper) Timeout(timeout string) *ESPutScriptServiceW
 }
 
 func (w *ESPutScriptServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -7941,7 +8128,8 @@ func (w *ESReindexServiceWrapper) Timeout(timeout string) *ESReindexServiceWrapp
 }
 
 func (w *ESReindexServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -7966,7 +8154,8 @@ func (w *ESScrollServiceWrapper) Body(body interface{}) *ESScrollServiceWrapper 
 }
 
 func (w *ESScrollServiceWrapper) Clear(ctx context.Context) error {
-	err := w.obj.Clear(ctx)
+	var err error
+	err = w.obj.Clear(ctx)
 	return err
 }
 
@@ -8496,7 +8685,8 @@ func (w *ESSearchServiceWrapper) TypedKeys(enabled bool) *ESSearchServiceWrapper
 }
 
 func (w *ESSearchServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -8586,7 +8776,8 @@ func (w *ESSearchShardsServiceWrapper) Routing(routing string) *ESSearchShardsSe
 }
 
 func (w *ESSearchShardsServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -8676,7 +8867,8 @@ func (w *ESSnapshotCreateRepositoryServiceWrapper) Type(typ string) *ESSnapshotC
 }
 
 func (w *ESSnapshotCreateRepositoryServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -8756,7 +8948,8 @@ func (w *ESSnapshotCreateServiceWrapper) Snapshot(snapshot string) *ESSnapshotCr
 }
 
 func (w *ESSnapshotCreateServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -8826,7 +9019,8 @@ func (w *ESSnapshotDeleteRepositoryServiceWrapper) Timeout(timeout string) *ESSn
 }
 
 func (w *ESSnapshotDeleteRepositoryServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -8886,7 +9080,8 @@ func (w *ESSnapshotDeleteServiceWrapper) Snapshot(snapshot string) *ESSnapshotDe
 }
 
 func (w *ESSnapshotDeleteServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -8951,7 +9146,8 @@ func (w *ESSnapshotGetRepositoryServiceWrapper) Repository(repositories ...strin
 }
 
 func (w *ESSnapshotGetRepositoryServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -9021,7 +9217,8 @@ func (w *ESSnapshotGetServiceWrapper) Snapshot(snapshots ...string) *ESSnapshotG
 }
 
 func (w *ESSnapshotGetServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -9136,7 +9333,8 @@ func (w *ESSnapshotRestoreServiceWrapper) Snapshot(snapshot string) *ESSnapshotR
 }
 
 func (w *ESSnapshotRestoreServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -9206,7 +9404,8 @@ func (w *ESSnapshotStatusServiceWrapper) Snapshot(snapshots ...string) *ESSnapsh
 }
 
 func (w *ESSnapshotStatusServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -9271,7 +9470,8 @@ func (w *ESSnapshotVerifyRepositoryServiceWrapper) Timeout(timeout string) *ESSn
 }
 
 func (w *ESSnapshotVerifyRepositoryServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -9351,7 +9551,8 @@ func (w *ESTasksCancelServiceWrapper) TaskIdFromNodeAndId(nodeId string, id int6
 }
 
 func (w *ESTasksCancelServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -9411,7 +9612,8 @@ func (w *ESTasksGetTaskServiceWrapper) TaskIdFromNodeAndId(nodeId string, id int
 }
 
 func (w *ESTasksGetTaskServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -9496,7 +9698,8 @@ func (w *ESTasksListServiceWrapper) TaskId(taskId ...string) *ESTasksListService
 }
 
 func (w *ESTasksListServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -9646,7 +9849,8 @@ func (w *ESTermvectorsServiceWrapper) Type(typ string) *ESTermvectorsServiceWrap
 }
 
 func (w *ESTermvectorsServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -9951,7 +10155,8 @@ func (w *ESUpdateByQueryServiceWrapper) Type(typ ...string) *ESUpdateByQueryServ
 }
 
 func (w *ESUpdateByQueryServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -10276,7 +10481,8 @@ func (w *ESValidateServiceWrapper) Type(typ ...string) *ESValidateServiceWrapper
 }
 
 func (w *ESValidateServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -10346,7 +10552,8 @@ func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Timeout(timeout string) *ESXPa
 }
 
 func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -10416,7 +10623,8 @@ func (w *ESXPackIlmGetLifecycleServiceWrapper) Timeout(timeout string) *ESXPackI
 }
 
 func (w *ESXPackIlmGetLifecycleServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -10496,7 +10704,8 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) Timeout(timeout string) *ESXPackI
 }
 
 func (w *ESXPackIlmPutLifecycleServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -10546,7 +10755,8 @@ func (w *ESXPackInfoServiceWrapper) Pretty(pretty bool) *ESXPackInfoServiceWrapp
 }
 
 func (w *ESXPackInfoServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -10616,7 +10826,8 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Username(username string) 
 }
 
 func (w *ESXPackSecurityChangePasswordServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -10671,7 +10882,8 @@ func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Pretty(pretty bool) *ES
 }
 
 func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -10726,7 +10938,8 @@ func (w *ESXPackSecurityDeleteRoleServiceWrapper) Pretty(pretty bool) *ESXPackSe
 }
 
 func (w *ESXPackSecurityDeleteRoleServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -10786,7 +10999,8 @@ func (w *ESXPackSecurityDeleteUserServiceWrapper) Username(username string) *ESX
 }
 
 func (w *ESXPackSecurityDeleteUserServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -10846,7 +11060,8 @@ func (w *ESXPackSecurityDisableUserServiceWrapper) Username(username string) *ES
 }
 
 func (w *ESXPackSecurityDisableUserServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -10906,7 +11121,8 @@ func (w *ESXPackSecurityEnableUserServiceWrapper) Username(username string) *ESX
 }
 
 func (w *ESXPackSecurityEnableUserServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -10961,7 +11177,8 @@ func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Pretty(pretty bool) *ESXPa
 }
 
 func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11016,7 +11233,8 @@ func (w *ESXPackSecurityGetRoleServiceWrapper) Pretty(pretty bool) *ESXPackSecur
 }
 
 func (w *ESXPackSecurityGetRoleServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11071,7 +11289,8 @@ func (w *ESXPackSecurityGetUserServiceWrapper) Usernames(usernames ...string) *E
 }
 
 func (w *ESXPackSecurityGetUserServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11131,7 +11350,8 @@ func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Pretty(pretty bool) *ESXPa
 }
 
 func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11191,7 +11411,8 @@ func (w *ESXPackSecurityPutRoleServiceWrapper) Pretty(pretty bool) *ESXPackSecur
 }
 
 func (w *ESXPackSecurityPutRoleServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11261,7 +11482,8 @@ func (w *ESXPackSecurityPutUserServiceWrapper) Username(username string) *ESXPac
 }
 
 func (w *ESXPackSecurityPutUserServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11321,7 +11543,8 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) Pretty(pretty bool) *ESXPackWatch
 }
 
 func (w *ESXPackWatcherAckWatchServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11381,7 +11604,8 @@ func (w *ESXPackWatcherActivateWatchServiceWrapper) Pretty(pretty bool) *ESXPack
 }
 
 func (w *ESXPackWatcherActivateWatchServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11441,7 +11665,8 @@ func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Pretty(pretty bool) *ESXPa
 }
 
 func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11506,7 +11731,8 @@ func (w *ESXPackWatcherDeleteWatchServiceWrapper) Pretty(pretty bool) *ESXPackWa
 }
 
 func (w *ESXPackWatcherDeleteWatchServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11576,7 +11802,8 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Pretty(pretty bool) *ESXPackW
 }
 
 func (w *ESXPackWatcherExecuteWatchServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11631,7 +11858,8 @@ func (w *ESXPackWatcherGetWatchServiceWrapper) Pretty(pretty bool) *ESXPackWatch
 }
 
 func (w *ESXPackWatcherGetWatchServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11711,7 +11939,8 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Pretty(pretty bool) *ESXPackWatch
 }
 
 func (w *ESXPackWatcherPutWatchServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11761,7 +11990,8 @@ func (w *ESXPackWatcherStartServiceWrapper) Pretty(pretty bool) *ESXPackWatcherS
 }
 
 func (w *ESXPackWatcherStartServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11821,7 +12051,8 @@ func (w *ESXPackWatcherStatsServiceWrapper) Pretty(pretty bool) *ESXPackWatcherS
 }
 
 func (w *ESXPackWatcherStatsServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }
 
@@ -11871,6 +12102,7 @@ func (w *ESXPackWatcherStopServiceWrapper) Pretty(pretty bool) *ESXPackWatcherSt
 }
 
 func (w *ESXPackWatcherStopServiceWrapper) Validate() error {
-	err := w.obj.Validate()
+	var err error
+	err = w.obj.Validate()
 	return err
 }

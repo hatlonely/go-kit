@@ -3,6 +3,7 @@ package wrap
 
 import (
 	"context"
+	"time"
 
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/kms"
 	"github.com/opentracing/opentracing-go"
@@ -87,7 +88,16 @@ func (w *KMSClientWrapper) AsymmetricDecryptWithCallback(ctx context.Context, re
 		defer span.Finish()
 	}
 
-	res0 := w.obj.AsymmetricDecryptWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricDecryptWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricDecryptWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.AsymmetricDecryptWithCallback(request, callback)
 	return res0
 }
 
@@ -97,7 +107,17 @@ func (w *KMSClientWrapper) AsymmetricDecryptWithChan(ctx context.Context, reques
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.AsymmetricDecryptWithChan(request)
+	var res0 <-chan *kms.AsymmetricDecryptResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricDecryptWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricDecryptWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.AsymmetricDecryptWithChan(request)
 	return res0, res1
 }
 
@@ -122,7 +142,16 @@ func (w *KMSClientWrapper) AsymmetricEncryptWithCallback(ctx context.Context, re
 		defer span.Finish()
 	}
 
-	res0 := w.obj.AsymmetricEncryptWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricEncryptWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricEncryptWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.AsymmetricEncryptWithCallback(request, callback)
 	return res0
 }
 
@@ -132,7 +161,17 @@ func (w *KMSClientWrapper) AsymmetricEncryptWithChan(ctx context.Context, reques
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.AsymmetricEncryptWithChan(request)
+	var res0 <-chan *kms.AsymmetricEncryptResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricEncryptWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricEncryptWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.AsymmetricEncryptWithChan(request)
 	return res0, res1
 }
 
@@ -157,7 +196,16 @@ func (w *KMSClientWrapper) AsymmetricSignWithCallback(ctx context.Context, reque
 		defer span.Finish()
 	}
 
-	res0 := w.obj.AsymmetricSignWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricSignWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricSignWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.AsymmetricSignWithCallback(request, callback)
 	return res0
 }
 
@@ -167,7 +215,17 @@ func (w *KMSClientWrapper) AsymmetricSignWithChan(ctx context.Context, request *
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.AsymmetricSignWithChan(request)
+	var res0 <-chan *kms.AsymmetricSignResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricSignWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricSignWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.AsymmetricSignWithChan(request)
 	return res0, res1
 }
 
@@ -192,7 +250,16 @@ func (w *KMSClientWrapper) AsymmetricVerifyWithCallback(ctx context.Context, req
 		defer span.Finish()
 	}
 
-	res0 := w.obj.AsymmetricVerifyWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricVerifyWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricVerifyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.AsymmetricVerifyWithCallback(request, callback)
 	return res0
 }
 
@@ -202,7 +269,17 @@ func (w *KMSClientWrapper) AsymmetricVerifyWithChan(ctx context.Context, request
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.AsymmetricVerifyWithChan(request)
+	var res0 <-chan *kms.AsymmetricVerifyResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricVerifyWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricVerifyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.AsymmetricVerifyWithChan(request)
 	return res0, res1
 }
 
@@ -227,7 +304,16 @@ func (w *KMSClientWrapper) CancelKeyDeletionWithCallback(ctx context.Context, re
 		defer span.Finish()
 	}
 
-	res0 := w.obj.CancelKeyDeletionWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CancelKeyDeletionWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CancelKeyDeletionWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.CancelKeyDeletionWithCallback(request, callback)
 	return res0
 }
 
@@ -237,7 +323,17 @@ func (w *KMSClientWrapper) CancelKeyDeletionWithChan(ctx context.Context, reques
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.CancelKeyDeletionWithChan(request)
+	var res0 <-chan *kms.CancelKeyDeletionResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CancelKeyDeletionWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CancelKeyDeletionWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.CancelKeyDeletionWithChan(request)
 	return res0, res1
 }
 
@@ -262,7 +358,16 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecryptWithCallback(ctx context.
 		defer span.Finish()
 	}
 
-	res0 := w.obj.CertificatePrivateKeyDecryptWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecryptWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecryptWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.CertificatePrivateKeyDecryptWithCallback(request, callback)
 	return res0
 }
 
@@ -272,7 +377,17 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecryptWithChan(ctx context.Cont
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.CertificatePrivateKeyDecryptWithChan(request)
+	var res0 <-chan *kms.CertificatePrivateKeyDecryptResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecryptWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecryptWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.CertificatePrivateKeyDecryptWithChan(request)
 	return res0, res1
 }
 
@@ -297,7 +412,16 @@ func (w *KMSClientWrapper) CertificatePrivateKeySignWithCallback(ctx context.Con
 		defer span.Finish()
 	}
 
-	res0 := w.obj.CertificatePrivateKeySignWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeySignWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeySignWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.CertificatePrivateKeySignWithCallback(request, callback)
 	return res0
 }
 
@@ -307,7 +431,17 @@ func (w *KMSClientWrapper) CertificatePrivateKeySignWithChan(ctx context.Context
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.CertificatePrivateKeySignWithChan(request)
+	var res0 <-chan *kms.CertificatePrivateKeySignResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeySignWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeySignWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.CertificatePrivateKeySignWithChan(request)
 	return res0, res1
 }
 
@@ -332,7 +466,16 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncryptWithCallback(ctx context.C
 		defer span.Finish()
 	}
 
-	res0 := w.obj.CertificatePublicKeyEncryptWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncryptWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncryptWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.CertificatePublicKeyEncryptWithCallback(request, callback)
 	return res0
 }
 
@@ -342,7 +485,17 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncryptWithChan(ctx context.Conte
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.CertificatePublicKeyEncryptWithChan(request)
+	var res0 <-chan *kms.CertificatePublicKeyEncryptResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncryptWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncryptWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.CertificatePublicKeyEncryptWithChan(request)
 	return res0, res1
 }
 
@@ -367,7 +520,16 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerifyWithCallback(ctx context.Co
 		defer span.Finish()
 	}
 
-	res0 := w.obj.CertificatePublicKeyVerifyWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerifyWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerifyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.CertificatePublicKeyVerifyWithCallback(request, callback)
 	return res0
 }
 
@@ -377,7 +539,17 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerifyWithChan(ctx context.Contex
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.CertificatePublicKeyVerifyWithChan(request)
+	var res0 <-chan *kms.CertificatePublicKeyVerifyResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerifyWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerifyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.CertificatePublicKeyVerifyWithChan(request)
 	return res0, res1
 }
 
@@ -402,7 +574,16 @@ func (w *KMSClientWrapper) CreateAliasWithCallback(ctx context.Context, request 
 		defer span.Finish()
 	}
 
-	res0 := w.obj.CreateAliasWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CreateAliasWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateAliasWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.CreateAliasWithCallback(request, callback)
 	return res0
 }
 
@@ -412,7 +593,17 @@ func (w *KMSClientWrapper) CreateAliasWithChan(ctx context.Context, request *kms
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.CreateAliasWithChan(request)
+	var res0 <-chan *kms.CreateAliasResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CreateAliasWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateAliasWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.CreateAliasWithChan(request)
 	return res0, res1
 }
 
@@ -437,7 +628,16 @@ func (w *KMSClientWrapper) CreateCertificateWithCallback(ctx context.Context, re
 		defer span.Finish()
 	}
 
-	res0 := w.obj.CreateCertificateWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CreateCertificateWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.CreateCertificateWithCallback(request, callback)
 	return res0
 }
 
@@ -447,7 +647,17 @@ func (w *KMSClientWrapper) CreateCertificateWithChan(ctx context.Context, reques
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.CreateCertificateWithChan(request)
+	var res0 <-chan *kms.CreateCertificateResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CreateCertificateWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.CreateCertificateWithChan(request)
 	return res0, res1
 }
 
@@ -487,7 +697,16 @@ func (w *KMSClientWrapper) CreateKeyVersionWithCallback(ctx context.Context, req
 		defer span.Finish()
 	}
 
-	res0 := w.obj.CreateKeyVersionWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CreateKeyVersionWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateKeyVersionWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.CreateKeyVersionWithCallback(request, callback)
 	return res0
 }
 
@@ -497,7 +716,17 @@ func (w *KMSClientWrapper) CreateKeyVersionWithChan(ctx context.Context, request
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.CreateKeyVersionWithChan(request)
+	var res0 <-chan *kms.CreateKeyVersionResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CreateKeyVersionWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateKeyVersionWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.CreateKeyVersionWithChan(request)
 	return res0, res1
 }
 
@@ -507,7 +736,16 @@ func (w *KMSClientWrapper) CreateKeyWithCallback(ctx context.Context, request *k
 		defer span.Finish()
 	}
 
-	res0 := w.obj.CreateKeyWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CreateKeyWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.CreateKeyWithCallback(request, callback)
 	return res0
 }
 
@@ -517,7 +755,17 @@ func (w *KMSClientWrapper) CreateKeyWithChan(ctx context.Context, request *kms.C
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.CreateKeyWithChan(request)
+	var res0 <-chan *kms.CreateKeyResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CreateKeyWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.CreateKeyWithChan(request)
 	return res0, res1
 }
 
@@ -542,7 +790,16 @@ func (w *KMSClientWrapper) CreateSecretWithCallback(ctx context.Context, request
 		defer span.Finish()
 	}
 
-	res0 := w.obj.CreateSecretWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CreateSecretWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateSecretWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.CreateSecretWithCallback(request, callback)
 	return res0
 }
 
@@ -552,7 +809,17 @@ func (w *KMSClientWrapper) CreateSecretWithChan(ctx context.Context, request *km
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.CreateSecretWithChan(request)
+	var res0 <-chan *kms.CreateSecretResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.CreateSecretWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateSecretWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.CreateSecretWithChan(request)
 	return res0, res1
 }
 
@@ -577,7 +844,16 @@ func (w *KMSClientWrapper) DecryptWithCallback(ctx context.Context, request *kms
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DecryptWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DecryptWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DecryptWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DecryptWithCallback(request, callback)
 	return res0
 }
 
@@ -587,7 +863,17 @@ func (w *KMSClientWrapper) DecryptWithChan(ctx context.Context, request *kms.Dec
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.DecryptWithChan(request)
+	var res0 <-chan *kms.DecryptResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DecryptWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DecryptWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.DecryptWithChan(request)
 	return res0, res1
 }
 
@@ -612,7 +898,16 @@ func (w *KMSClientWrapper) DeleteAliasWithCallback(ctx context.Context, request 
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DeleteAliasWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DeleteAliasWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteAliasWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DeleteAliasWithCallback(request, callback)
 	return res0
 }
 
@@ -622,7 +917,17 @@ func (w *KMSClientWrapper) DeleteAliasWithChan(ctx context.Context, request *kms
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.DeleteAliasWithChan(request)
+	var res0 <-chan *kms.DeleteAliasResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DeleteAliasWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteAliasWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.DeleteAliasWithChan(request)
 	return res0, res1
 }
 
@@ -647,7 +952,16 @@ func (w *KMSClientWrapper) DeleteCertificateWithCallback(ctx context.Context, re
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DeleteCertificateWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DeleteCertificateWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DeleteCertificateWithCallback(request, callback)
 	return res0
 }
 
@@ -657,7 +971,17 @@ func (w *KMSClientWrapper) DeleteCertificateWithChan(ctx context.Context, reques
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.DeleteCertificateWithChan(request)
+	var res0 <-chan *kms.DeleteCertificateResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DeleteCertificateWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.DeleteCertificateWithChan(request)
 	return res0, res1
 }
 
@@ -682,7 +1006,16 @@ func (w *KMSClientWrapper) DeleteKeyMaterialWithCallback(ctx context.Context, re
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DeleteKeyMaterialWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DeleteKeyMaterialWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteKeyMaterialWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DeleteKeyMaterialWithCallback(request, callback)
 	return res0
 }
 
@@ -692,7 +1025,17 @@ func (w *KMSClientWrapper) DeleteKeyMaterialWithChan(ctx context.Context, reques
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.DeleteKeyMaterialWithChan(request)
+	var res0 <-chan *kms.DeleteKeyMaterialResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DeleteKeyMaterialWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteKeyMaterialWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.DeleteKeyMaterialWithChan(request)
 	return res0, res1
 }
 
@@ -717,7 +1060,16 @@ func (w *KMSClientWrapper) DeleteSecretWithCallback(ctx context.Context, request
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DeleteSecretWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DeleteSecretWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteSecretWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DeleteSecretWithCallback(request, callback)
 	return res0
 }
 
@@ -727,7 +1079,17 @@ func (w *KMSClientWrapper) DeleteSecretWithChan(ctx context.Context, request *km
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.DeleteSecretWithChan(request)
+	var res0 <-chan *kms.DeleteSecretResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DeleteSecretWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteSecretWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.DeleteSecretWithChan(request)
 	return res0, res1
 }
 
@@ -752,7 +1114,16 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatusWithCallback(ctx context.Cont
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DescribeAccountKmsStatusWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatusWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatusWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DescribeAccountKmsStatusWithCallback(request, callback)
 	return res0
 }
 
@@ -762,7 +1133,17 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatusWithChan(ctx context.Context,
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.DescribeAccountKmsStatusWithChan(request)
+	var res0 <-chan *kms.DescribeAccountKmsStatusResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatusWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatusWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.DescribeAccountKmsStatusWithChan(request)
 	return res0, res1
 }
 
@@ -787,7 +1168,16 @@ func (w *KMSClientWrapper) DescribeCertificateWithCallback(ctx context.Context, 
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DescribeCertificateWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DescribeCertificateWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DescribeCertificateWithCallback(request, callback)
 	return res0
 }
 
@@ -797,7 +1187,17 @@ func (w *KMSClientWrapper) DescribeCertificateWithChan(ctx context.Context, requ
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.DescribeCertificateWithChan(request)
+	var res0 <-chan *kms.DescribeCertificateResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DescribeCertificateWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.DescribeCertificateWithChan(request)
 	return res0, res1
 }
 
@@ -837,7 +1237,16 @@ func (w *KMSClientWrapper) DescribeKeyVersionWithCallback(ctx context.Context, r
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DescribeKeyVersionWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DescribeKeyVersionWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeKeyVersionWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DescribeKeyVersionWithCallback(request, callback)
 	return res0
 }
 
@@ -847,7 +1256,17 @@ func (w *KMSClientWrapper) DescribeKeyVersionWithChan(ctx context.Context, reque
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.DescribeKeyVersionWithChan(request)
+	var res0 <-chan *kms.DescribeKeyVersionResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DescribeKeyVersionWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeKeyVersionWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.DescribeKeyVersionWithChan(request)
 	return res0, res1
 }
 
@@ -857,7 +1276,16 @@ func (w *KMSClientWrapper) DescribeKeyWithCallback(ctx context.Context, request 
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DescribeKeyWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DescribeKeyWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DescribeKeyWithCallback(request, callback)
 	return res0
 }
 
@@ -867,7 +1295,17 @@ func (w *KMSClientWrapper) DescribeKeyWithChan(ctx context.Context, request *kms
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.DescribeKeyWithChan(request)
+	var res0 <-chan *kms.DescribeKeyResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DescribeKeyWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.DescribeKeyWithChan(request)
 	return res0, res1
 }
 
@@ -892,7 +1330,16 @@ func (w *KMSClientWrapper) DescribeRegionsWithCallback(ctx context.Context, requ
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DescribeRegionsWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DescribeRegionsWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeRegionsWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DescribeRegionsWithCallback(request, callback)
 	return res0
 }
 
@@ -902,7 +1349,17 @@ func (w *KMSClientWrapper) DescribeRegionsWithChan(ctx context.Context, request 
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.DescribeRegionsWithChan(request)
+	var res0 <-chan *kms.DescribeRegionsResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DescribeRegionsWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeRegionsWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.DescribeRegionsWithChan(request)
 	return res0, res1
 }
 
@@ -927,7 +1384,16 @@ func (w *KMSClientWrapper) DescribeSecretWithCallback(ctx context.Context, reque
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DescribeSecretWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DescribeSecretWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeSecretWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DescribeSecretWithCallback(request, callback)
 	return res0
 }
 
@@ -937,7 +1403,17 @@ func (w *KMSClientWrapper) DescribeSecretWithChan(ctx context.Context, request *
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.DescribeSecretWithChan(request)
+	var res0 <-chan *kms.DescribeSecretResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DescribeSecretWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeSecretWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.DescribeSecretWithChan(request)
 	return res0, res1
 }
 
@@ -962,7 +1438,16 @@ func (w *KMSClientWrapper) DescribeServiceWithCallback(ctx context.Context, requ
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DescribeServiceWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DescribeServiceWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeServiceWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DescribeServiceWithCallback(request, callback)
 	return res0
 }
 
@@ -972,7 +1457,17 @@ func (w *KMSClientWrapper) DescribeServiceWithChan(ctx context.Context, request 
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.DescribeServiceWithChan(request)
+	var res0 <-chan *kms.DescribeServiceResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DescribeServiceWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeServiceWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.DescribeServiceWithChan(request)
 	return res0, res1
 }
 
@@ -997,7 +1492,16 @@ func (w *KMSClientWrapper) DisableKeyWithCallback(ctx context.Context, request *
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DisableKeyWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DisableKeyWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DisableKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DisableKeyWithCallback(request, callback)
 	return res0
 }
 
@@ -1007,7 +1511,17 @@ func (w *KMSClientWrapper) DisableKeyWithChan(ctx context.Context, request *kms.
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.DisableKeyWithChan(request)
+	var res0 <-chan *kms.DisableKeyResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.DisableKeyWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DisableKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.DisableKeyWithChan(request)
 	return res0, res1
 }
 
@@ -1032,7 +1546,16 @@ func (w *KMSClientWrapper) EnableKeyWithCallback(ctx context.Context, request *k
 		defer span.Finish()
 	}
 
-	res0 := w.obj.EnableKeyWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.EnableKeyWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.EnableKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.EnableKeyWithCallback(request, callback)
 	return res0
 }
 
@@ -1042,7 +1565,17 @@ func (w *KMSClientWrapper) EnableKeyWithChan(ctx context.Context, request *kms.E
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.EnableKeyWithChan(request)
+	var res0 <-chan *kms.EnableKeyResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.EnableKeyWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.EnableKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.EnableKeyWithChan(request)
 	return res0, res1
 }
 
@@ -1067,7 +1600,16 @@ func (w *KMSClientWrapper) EncryptWithCallback(ctx context.Context, request *kms
 		defer span.Finish()
 	}
 
-	res0 := w.obj.EncryptWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.EncryptWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.EncryptWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.EncryptWithCallback(request, callback)
 	return res0
 }
 
@@ -1077,7 +1619,17 @@ func (w *KMSClientWrapper) EncryptWithChan(ctx context.Context, request *kms.Enc
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.EncryptWithChan(request)
+	var res0 <-chan *kms.EncryptResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.EncryptWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.EncryptWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.EncryptWithChan(request)
 	return res0, res1
 }
 
@@ -1102,7 +1654,16 @@ func (w *KMSClientWrapper) ExportCertificateWithCallback(ctx context.Context, re
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ExportCertificateWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ExportCertificateWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ExportCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ExportCertificateWithCallback(request, callback)
 	return res0
 }
 
@@ -1112,7 +1673,17 @@ func (w *KMSClientWrapper) ExportCertificateWithChan(ctx context.Context, reques
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ExportCertificateWithChan(request)
+	var res0 <-chan *kms.ExportCertificateResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ExportCertificateWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ExportCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ExportCertificateWithChan(request)
 	return res0, res1
 }
 
@@ -1137,7 +1708,16 @@ func (w *KMSClientWrapper) ExportDataKeyWithCallback(ctx context.Context, reques
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ExportDataKeyWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ExportDataKeyWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ExportDataKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ExportDataKeyWithCallback(request, callback)
 	return res0
 }
 
@@ -1147,7 +1727,17 @@ func (w *KMSClientWrapper) ExportDataKeyWithChan(ctx context.Context, request *k
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ExportDataKeyWithChan(request)
+	var res0 <-chan *kms.ExportDataKeyResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ExportDataKeyWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ExportDataKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ExportDataKeyWithChan(request)
 	return res0, res1
 }
 
@@ -1172,7 +1762,16 @@ func (w *KMSClientWrapper) GenerateAndExportDataKeyWithCallback(ctx context.Cont
 		defer span.Finish()
 	}
 
-	res0 := w.obj.GenerateAndExportDataKeyWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GenerateAndExportDataKeyWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GenerateAndExportDataKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.GenerateAndExportDataKeyWithCallback(request, callback)
 	return res0
 }
 
@@ -1182,7 +1781,17 @@ func (w *KMSClientWrapper) GenerateAndExportDataKeyWithChan(ctx context.Context,
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.GenerateAndExportDataKeyWithChan(request)
+	var res0 <-chan *kms.GenerateAndExportDataKeyResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GenerateAndExportDataKeyWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GenerateAndExportDataKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.GenerateAndExportDataKeyWithChan(request)
 	return res0, res1
 }
 
@@ -1207,7 +1816,16 @@ func (w *KMSClientWrapper) GenerateDataKeyWithCallback(ctx context.Context, requ
 		defer span.Finish()
 	}
 
-	res0 := w.obj.GenerateDataKeyWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.GenerateDataKeyWithCallback(request, callback)
 	return res0
 }
 
@@ -1217,7 +1835,17 @@ func (w *KMSClientWrapper) GenerateDataKeyWithChan(ctx context.Context, request 
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.GenerateDataKeyWithChan(request)
+	var res0 <-chan *kms.GenerateDataKeyResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.GenerateDataKeyWithChan(request)
 	return res0, res1
 }
 
@@ -1242,7 +1870,16 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintextWithCallback(ctx conte
 		defer span.Finish()
 	}
 
-	res0 := w.obj.GenerateDataKeyWithoutPlaintextWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintextWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintextWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.GenerateDataKeyWithoutPlaintextWithCallback(request, callback)
 	return res0
 }
 
@@ -1252,7 +1889,17 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintextWithChan(ctx context.C
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.GenerateDataKeyWithoutPlaintextWithChan(request)
+	var res0 <-chan *kms.GenerateDataKeyWithoutPlaintextResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintextWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintextWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.GenerateDataKeyWithoutPlaintextWithChan(request)
 	return res0, res1
 }
 
@@ -1277,7 +1924,16 @@ func (w *KMSClientWrapper) GetCertificateWithCallback(ctx context.Context, reque
 		defer span.Finish()
 	}
 
-	res0 := w.obj.GetCertificateWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GetCertificateWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.GetCertificateWithCallback(request, callback)
 	return res0
 }
 
@@ -1287,7 +1943,17 @@ func (w *KMSClientWrapper) GetCertificateWithChan(ctx context.Context, request *
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.GetCertificateWithChan(request)
+	var res0 <-chan *kms.GetCertificateResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GetCertificateWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.GetCertificateWithChan(request)
 	return res0, res1
 }
 
@@ -1312,7 +1978,16 @@ func (w *KMSClientWrapper) GetParametersForImportWithCallback(ctx context.Contex
 		defer span.Finish()
 	}
 
-	res0 := w.obj.GetParametersForImportWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GetParametersForImportWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetParametersForImportWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.GetParametersForImportWithCallback(request, callback)
 	return res0
 }
 
@@ -1322,7 +1997,17 @@ func (w *KMSClientWrapper) GetParametersForImportWithChan(ctx context.Context, r
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.GetParametersForImportWithChan(request)
+	var res0 <-chan *kms.GetParametersForImportResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GetParametersForImportWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetParametersForImportWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.GetParametersForImportWithChan(request)
 	return res0, res1
 }
 
@@ -1347,7 +2032,16 @@ func (w *KMSClientWrapper) GetPublicKeyWithCallback(ctx context.Context, request
 		defer span.Finish()
 	}
 
-	res0 := w.obj.GetPublicKeyWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GetPublicKeyWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetPublicKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.GetPublicKeyWithCallback(request, callback)
 	return res0
 }
 
@@ -1357,7 +2051,17 @@ func (w *KMSClientWrapper) GetPublicKeyWithChan(ctx context.Context, request *km
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.GetPublicKeyWithChan(request)
+	var res0 <-chan *kms.GetPublicKeyResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GetPublicKeyWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetPublicKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.GetPublicKeyWithChan(request)
 	return res0, res1
 }
 
@@ -1382,7 +2086,16 @@ func (w *KMSClientWrapper) GetRandomPasswordWithCallback(ctx context.Context, re
 		defer span.Finish()
 	}
 
-	res0 := w.obj.GetRandomPasswordWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GetRandomPasswordWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetRandomPasswordWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.GetRandomPasswordWithCallback(request, callback)
 	return res0
 }
 
@@ -1392,7 +2105,17 @@ func (w *KMSClientWrapper) GetRandomPasswordWithChan(ctx context.Context, reques
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.GetRandomPasswordWithChan(request)
+	var res0 <-chan *kms.GetRandomPasswordResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GetRandomPasswordWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetRandomPasswordWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.GetRandomPasswordWithChan(request)
 	return res0, res1
 }
 
@@ -1417,7 +2140,16 @@ func (w *KMSClientWrapper) GetSecretValueWithCallback(ctx context.Context, reque
 		defer span.Finish()
 	}
 
-	res0 := w.obj.GetSecretValueWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GetSecretValueWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetSecretValueWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.GetSecretValueWithCallback(request, callback)
 	return res0
 }
 
@@ -1427,7 +2159,17 @@ func (w *KMSClientWrapper) GetSecretValueWithChan(ctx context.Context, request *
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.GetSecretValueWithChan(request)
+	var res0 <-chan *kms.GetSecretValueResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.GetSecretValueWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetSecretValueWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.GetSecretValueWithChan(request)
 	return res0, res1
 }
 
@@ -1452,7 +2194,16 @@ func (w *KMSClientWrapper) ImportCertificateWithCallback(ctx context.Context, re
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ImportCertificateWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ImportCertificateWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ImportCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ImportCertificateWithCallback(request, callback)
 	return res0
 }
 
@@ -1462,7 +2213,17 @@ func (w *KMSClientWrapper) ImportCertificateWithChan(ctx context.Context, reques
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ImportCertificateWithChan(request)
+	var res0 <-chan *kms.ImportCertificateResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ImportCertificateWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ImportCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ImportCertificateWithChan(request)
 	return res0, res1
 }
 
@@ -1487,7 +2248,16 @@ func (w *KMSClientWrapper) ImportEncryptionCertificateWithCallback(ctx context.C
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ImportEncryptionCertificateWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ImportEncryptionCertificateWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ImportEncryptionCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ImportEncryptionCertificateWithCallback(request, callback)
 	return res0
 }
 
@@ -1497,7 +2267,17 @@ func (w *KMSClientWrapper) ImportEncryptionCertificateWithChan(ctx context.Conte
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ImportEncryptionCertificateWithChan(request)
+	var res0 <-chan *kms.ImportEncryptionCertificateResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ImportEncryptionCertificateWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ImportEncryptionCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ImportEncryptionCertificateWithChan(request)
 	return res0, res1
 }
 
@@ -1522,7 +2302,16 @@ func (w *KMSClientWrapper) ImportKeyMaterialWithCallback(ctx context.Context, re
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ImportKeyMaterialWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ImportKeyMaterialWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ImportKeyMaterialWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ImportKeyMaterialWithCallback(request, callback)
 	return res0
 }
 
@@ -1532,7 +2321,17 @@ func (w *KMSClientWrapper) ImportKeyMaterialWithChan(ctx context.Context, reques
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ImportKeyMaterialWithChan(request)
+	var res0 <-chan *kms.ImportKeyMaterialResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ImportKeyMaterialWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ImportKeyMaterialWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ImportKeyMaterialWithChan(request)
 	return res0, res1
 }
 
@@ -1572,7 +2371,16 @@ func (w *KMSClientWrapper) ListAliasesByKeyIdWithCallback(ctx context.Context, r
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ListAliasesByKeyIdWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListAliasesByKeyIdWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListAliasesByKeyIdWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ListAliasesByKeyIdWithCallback(request, callback)
 	return res0
 }
 
@@ -1582,7 +2390,17 @@ func (w *KMSClientWrapper) ListAliasesByKeyIdWithChan(ctx context.Context, reque
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ListAliasesByKeyIdWithChan(request)
+	var res0 <-chan *kms.ListAliasesByKeyIdResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListAliasesByKeyIdWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListAliasesByKeyIdWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ListAliasesByKeyIdWithChan(request)
 	return res0, res1
 }
 
@@ -1592,7 +2410,16 @@ func (w *KMSClientWrapper) ListAliasesWithCallback(ctx context.Context, request 
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ListAliasesWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListAliasesWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListAliasesWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ListAliasesWithCallback(request, callback)
 	return res0
 }
 
@@ -1602,7 +2429,17 @@ func (w *KMSClientWrapper) ListAliasesWithChan(ctx context.Context, request *kms
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ListAliasesWithChan(request)
+	var res0 <-chan *kms.ListAliasesResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListAliasesWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListAliasesWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ListAliasesWithChan(request)
 	return res0, res1
 }
 
@@ -1627,7 +2464,16 @@ func (w *KMSClientWrapper) ListCertificatesWithCallback(ctx context.Context, req
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ListCertificatesWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListCertificatesWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListCertificatesWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ListCertificatesWithCallback(request, callback)
 	return res0
 }
 
@@ -1637,7 +2483,17 @@ func (w *KMSClientWrapper) ListCertificatesWithChan(ctx context.Context, request
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ListCertificatesWithChan(request)
+	var res0 <-chan *kms.ListCertificatesResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListCertificatesWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListCertificatesWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ListCertificatesWithChan(request)
 	return res0, res1
 }
 
@@ -1662,7 +2518,16 @@ func (w *KMSClientWrapper) ListKeyVersionsWithCallback(ctx context.Context, requ
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ListKeyVersionsWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListKeyVersionsWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListKeyVersionsWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ListKeyVersionsWithCallback(request, callback)
 	return res0
 }
 
@@ -1672,7 +2537,17 @@ func (w *KMSClientWrapper) ListKeyVersionsWithChan(ctx context.Context, request 
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ListKeyVersionsWithChan(request)
+	var res0 <-chan *kms.ListKeyVersionsResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListKeyVersionsWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListKeyVersionsWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ListKeyVersionsWithChan(request)
 	return res0, res1
 }
 
@@ -1697,7 +2572,16 @@ func (w *KMSClientWrapper) ListKeysWithCallback(ctx context.Context, request *km
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ListKeysWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListKeysWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListKeysWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ListKeysWithCallback(request, callback)
 	return res0
 }
 
@@ -1707,7 +2591,17 @@ func (w *KMSClientWrapper) ListKeysWithChan(ctx context.Context, request *kms.Li
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ListKeysWithChan(request)
+	var res0 <-chan *kms.ListKeysResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListKeysWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListKeysWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ListKeysWithChan(request)
 	return res0, res1
 }
 
@@ -1732,7 +2626,16 @@ func (w *KMSClientWrapper) ListResourceTagsWithCallback(ctx context.Context, req
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ListResourceTagsWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListResourceTagsWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListResourceTagsWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ListResourceTagsWithCallback(request, callback)
 	return res0
 }
 
@@ -1742,7 +2645,17 @@ func (w *KMSClientWrapper) ListResourceTagsWithChan(ctx context.Context, request
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ListResourceTagsWithChan(request)
+	var res0 <-chan *kms.ListResourceTagsResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListResourceTagsWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListResourceTagsWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ListResourceTagsWithChan(request)
 	return res0, res1
 }
 
@@ -1767,7 +2680,16 @@ func (w *KMSClientWrapper) ListSecretVersionIdsWithCallback(ctx context.Context,
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ListSecretVersionIdsWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListSecretVersionIdsWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListSecretVersionIdsWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ListSecretVersionIdsWithCallback(request, callback)
 	return res0
 }
 
@@ -1777,7 +2699,17 @@ func (w *KMSClientWrapper) ListSecretVersionIdsWithChan(ctx context.Context, req
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ListSecretVersionIdsWithChan(request)
+	var res0 <-chan *kms.ListSecretVersionIdsResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListSecretVersionIdsWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListSecretVersionIdsWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ListSecretVersionIdsWithChan(request)
 	return res0, res1
 }
 
@@ -1802,7 +2734,16 @@ func (w *KMSClientWrapper) ListSecretsWithCallback(ctx context.Context, request 
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ListSecretsWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListSecretsWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListSecretsWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ListSecretsWithCallback(request, callback)
 	return res0
 }
 
@@ -1812,7 +2753,17 @@ func (w *KMSClientWrapper) ListSecretsWithChan(ctx context.Context, request *kms
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ListSecretsWithChan(request)
+	var res0 <-chan *kms.ListSecretsResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ListSecretsWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListSecretsWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ListSecretsWithChan(request)
 	return res0, res1
 }
 
@@ -1837,7 +2788,16 @@ func (w *KMSClientWrapper) OpenKmsServiceWithCallback(ctx context.Context, reque
 		defer span.Finish()
 	}
 
-	res0 := w.obj.OpenKmsServiceWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.OpenKmsServiceWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.OpenKmsServiceWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.OpenKmsServiceWithCallback(request, callback)
 	return res0
 }
 
@@ -1847,7 +2807,17 @@ func (w *KMSClientWrapper) OpenKmsServiceWithChan(ctx context.Context, request *
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.OpenKmsServiceWithChan(request)
+	var res0 <-chan *kms.OpenKmsServiceResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.OpenKmsServiceWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.OpenKmsServiceWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.OpenKmsServiceWithChan(request)
 	return res0, res1
 }
 
@@ -1872,7 +2842,16 @@ func (w *KMSClientWrapper) PutSecretValueWithCallback(ctx context.Context, reque
 		defer span.Finish()
 	}
 
-	res0 := w.obj.PutSecretValueWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.PutSecretValueWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.PutSecretValueWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.PutSecretValueWithCallback(request, callback)
 	return res0
 }
 
@@ -1882,7 +2861,17 @@ func (w *KMSClientWrapper) PutSecretValueWithChan(ctx context.Context, request *
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.PutSecretValueWithChan(request)
+	var res0 <-chan *kms.PutSecretValueResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.PutSecretValueWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.PutSecretValueWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.PutSecretValueWithChan(request)
 	return res0, res1
 }
 
@@ -1907,7 +2896,16 @@ func (w *KMSClientWrapper) ReEncryptWithCallback(ctx context.Context, request *k
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ReEncryptWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ReEncryptWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ReEncryptWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ReEncryptWithCallback(request, callback)
 	return res0
 }
 
@@ -1917,7 +2915,17 @@ func (w *KMSClientWrapper) ReEncryptWithChan(ctx context.Context, request *kms.R
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ReEncryptWithChan(request)
+	var res0 <-chan *kms.ReEncryptResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ReEncryptWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ReEncryptWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ReEncryptWithChan(request)
 	return res0, res1
 }
 
@@ -1942,7 +2950,16 @@ func (w *KMSClientWrapper) RestoreSecretWithCallback(ctx context.Context, reques
 		defer span.Finish()
 	}
 
-	res0 := w.obj.RestoreSecretWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.RestoreSecretWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.RestoreSecretWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.RestoreSecretWithCallback(request, callback)
 	return res0
 }
 
@@ -1952,7 +2969,17 @@ func (w *KMSClientWrapper) RestoreSecretWithChan(ctx context.Context, request *k
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.RestoreSecretWithChan(request)
+	var res0 <-chan *kms.RestoreSecretResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.RestoreSecretWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.RestoreSecretWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.RestoreSecretWithChan(request)
 	return res0, res1
 }
 
@@ -1977,7 +3004,16 @@ func (w *KMSClientWrapper) ScheduleKeyDeletionWithCallback(ctx context.Context, 
 		defer span.Finish()
 	}
 
-	res0 := w.obj.ScheduleKeyDeletionWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ScheduleKeyDeletionWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ScheduleKeyDeletionWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.ScheduleKeyDeletionWithCallback(request, callback)
 	return res0
 }
 
@@ -1987,7 +3023,17 @@ func (w *KMSClientWrapper) ScheduleKeyDeletionWithChan(ctx context.Context, requ
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.ScheduleKeyDeletionWithChan(request)
+	var res0 <-chan *kms.ScheduleKeyDeletionResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.ScheduleKeyDeletionWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ScheduleKeyDeletionWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.ScheduleKeyDeletionWithChan(request)
 	return res0, res1
 }
 
@@ -2012,7 +3058,16 @@ func (w *KMSClientWrapper) TagResourceWithCallback(ctx context.Context, request 
 		defer span.Finish()
 	}
 
-	res0 := w.obj.TagResourceWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.TagResourceWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.TagResourceWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.TagResourceWithCallback(request, callback)
 	return res0
 }
 
@@ -2022,7 +3077,17 @@ func (w *KMSClientWrapper) TagResourceWithChan(ctx context.Context, request *kms
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.TagResourceWithChan(request)
+	var res0 <-chan *kms.TagResourceResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.TagResourceWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.TagResourceWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.TagResourceWithChan(request)
 	return res0, res1
 }
 
@@ -2047,7 +3112,16 @@ func (w *KMSClientWrapper) UntagResourceWithCallback(ctx context.Context, reques
 		defer span.Finish()
 	}
 
-	res0 := w.obj.UntagResourceWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UntagResourceWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UntagResourceWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.UntagResourceWithCallback(request, callback)
 	return res0
 }
 
@@ -2057,7 +3131,17 @@ func (w *KMSClientWrapper) UntagResourceWithChan(ctx context.Context, request *k
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.UntagResourceWithChan(request)
+	var res0 <-chan *kms.UntagResourceResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UntagResourceWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UntagResourceWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.UntagResourceWithChan(request)
 	return res0, res1
 }
 
@@ -2082,7 +3166,16 @@ func (w *KMSClientWrapper) UpdateAliasWithCallback(ctx context.Context, request 
 		defer span.Finish()
 	}
 
-	res0 := w.obj.UpdateAliasWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UpdateAliasWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateAliasWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.UpdateAliasWithCallback(request, callback)
 	return res0
 }
 
@@ -2092,7 +3185,17 @@ func (w *KMSClientWrapper) UpdateAliasWithChan(ctx context.Context, request *kms
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.UpdateAliasWithChan(request)
+	var res0 <-chan *kms.UpdateAliasResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UpdateAliasWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateAliasWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.UpdateAliasWithChan(request)
 	return res0, res1
 }
 
@@ -2117,7 +3220,16 @@ func (w *KMSClientWrapper) UpdateCertificateStatusWithCallback(ctx context.Conte
 		defer span.Finish()
 	}
 
-	res0 := w.obj.UpdateCertificateStatusWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UpdateCertificateStatusWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateCertificateStatusWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.UpdateCertificateStatusWithCallback(request, callback)
 	return res0
 }
 
@@ -2127,7 +3239,17 @@ func (w *KMSClientWrapper) UpdateCertificateStatusWithChan(ctx context.Context, 
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.UpdateCertificateStatusWithChan(request)
+	var res0 <-chan *kms.UpdateCertificateStatusResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UpdateCertificateStatusWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateCertificateStatusWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.UpdateCertificateStatusWithChan(request)
 	return res0, res1
 }
 
@@ -2152,7 +3274,16 @@ func (w *KMSClientWrapper) UpdateKeyDescriptionWithCallback(ctx context.Context,
 		defer span.Finish()
 	}
 
-	res0 := w.obj.UpdateKeyDescriptionWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UpdateKeyDescriptionWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateKeyDescriptionWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.UpdateKeyDescriptionWithCallback(request, callback)
 	return res0
 }
 
@@ -2162,7 +3293,17 @@ func (w *KMSClientWrapper) UpdateKeyDescriptionWithChan(ctx context.Context, req
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.UpdateKeyDescriptionWithChan(request)
+	var res0 <-chan *kms.UpdateKeyDescriptionResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UpdateKeyDescriptionWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateKeyDescriptionWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.UpdateKeyDescriptionWithChan(request)
 	return res0, res1
 }
 
@@ -2187,7 +3328,16 @@ func (w *KMSClientWrapper) UpdateRotationPolicyWithCallback(ctx context.Context,
 		defer span.Finish()
 	}
 
-	res0 := w.obj.UpdateRotationPolicyWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UpdateRotationPolicyWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateRotationPolicyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.UpdateRotationPolicyWithCallback(request, callback)
 	return res0
 }
 
@@ -2197,7 +3347,17 @@ func (w *KMSClientWrapper) UpdateRotationPolicyWithChan(ctx context.Context, req
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.UpdateRotationPolicyWithChan(request)
+	var res0 <-chan *kms.UpdateRotationPolicyResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UpdateRotationPolicyWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateRotationPolicyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.UpdateRotationPolicyWithChan(request)
 	return res0, res1
 }
 
@@ -2237,7 +3397,16 @@ func (w *KMSClientWrapper) UpdateSecretVersionStageWithCallback(ctx context.Cont
 		defer span.Finish()
 	}
 
-	res0 := w.obj.UpdateSecretVersionStageWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UpdateSecretVersionStageWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateSecretVersionStageWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.UpdateSecretVersionStageWithCallback(request, callback)
 	return res0
 }
 
@@ -2247,7 +3416,17 @@ func (w *KMSClientWrapper) UpdateSecretVersionStageWithChan(ctx context.Context,
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.UpdateSecretVersionStageWithChan(request)
+	var res0 <-chan *kms.UpdateSecretVersionStageResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UpdateSecretVersionStageWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateSecretVersionStageWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.UpdateSecretVersionStageWithChan(request)
 	return res0, res1
 }
 
@@ -2257,7 +3436,16 @@ func (w *KMSClientWrapper) UpdateSecretWithCallback(ctx context.Context, request
 		defer span.Finish()
 	}
 
-	res0 := w.obj.UpdateSecretWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UpdateSecretWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateSecretWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.UpdateSecretWithCallback(request, callback)
 	return res0
 }
 
@@ -2267,7 +3455,17 @@ func (w *KMSClientWrapper) UpdateSecretWithChan(ctx context.Context, request *km
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.UpdateSecretWithChan(request)
+	var res0 <-chan *kms.UpdateSecretResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UpdateSecretWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateSecretWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.UpdateSecretWithChan(request)
 	return res0, res1
 }
 
@@ -2292,7 +3490,16 @@ func (w *KMSClientWrapper) UploadCertificateWithCallback(ctx context.Context, re
 		defer span.Finish()
 	}
 
-	res0 := w.obj.UploadCertificateWithCallback(request, callback)
+	var res0 <-chan int
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UploadCertificateWithCallback", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UploadCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.UploadCertificateWithCallback(request, callback)
 	return res0
 }
 
@@ -2302,6 +3509,16 @@ func (w *KMSClientWrapper) UploadCertificateWithChan(ctx context.Context, reques
 		defer span.Finish()
 	}
 
-	res0, res1 := w.obj.UploadCertificateWithChan(request)
+	var res0 <-chan *kms.UploadCertificateResponse
+	var res1 <-chan error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("kms.Client.UploadCertificateWithChan", "OK").Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UploadCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0, res1 = w.obj.UploadCertificateWithChan(request)
 	return res0, res1
 }

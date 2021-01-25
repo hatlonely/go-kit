@@ -74,7 +74,16 @@ func (w GORMDBWrapper) AddError(ctx context.Context, err error) error {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.AddError(err)
+	var res0 error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.AddError", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.AddError", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.AddError(err)
 	return res0
 }
 
@@ -156,7 +165,16 @@ func (w GORMDBWrapper) Association(ctx context.Context, column string) *gorm.Ass
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Association(column)
+	var res0 *gorm.Association
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.Association", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Association", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Association(column)
 	return res0
 }
 
@@ -256,7 +274,16 @@ func (w GORMDBWrapper) Callback(ctx context.Context) *gorm.Callback {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Callback()
+	var res0 *gorm.Callback
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.Callback", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Callback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Callback()
 	return res0
 }
 
@@ -298,7 +325,16 @@ func (w GORMDBWrapper) CommonDB(ctx context.Context) gorm.SQLCommon {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.CommonDB()
+	var res0 gorm.SQLCommon
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.CommonDB", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.CommonDB", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.CommonDB()
 	return res0
 }
 
@@ -362,7 +398,16 @@ func (w GORMDBWrapper) DB(ctx context.Context) *sql.DB {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.DB()
+	var res0 *sql.DB
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.DB", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.DB", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.DB()
 	return res0
 }
 
@@ -408,7 +453,16 @@ func (w GORMDBWrapper) Dialect(ctx context.Context) gorm.Dialect {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Dialect()
+	var res0 gorm.Dialect
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.Dialect", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Dialect", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Dialect()
 	return res0
 }
 
@@ -562,7 +616,17 @@ func (w GORMDBWrapper) Get(ctx context.Context, name string) (interface{}, bool)
 		defer span.Finish()
 	}
 
-	value, ok := w.obj.Get(name)
+	var value interface{}
+	var ok bool
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.Get", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Get", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	value, ok = w.obj.Get(name)
 	return value, ok
 }
 
@@ -572,7 +636,16 @@ func (w GORMDBWrapper) GetErrors(ctx context.Context) []error {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.GetErrors()
+	var res0 []error
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.GetErrors", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.GetErrors", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.GetErrors()
 	return res0
 }
 
@@ -600,7 +673,16 @@ func (w GORMDBWrapper) HasBlockGlobalUpdate(ctx context.Context) bool {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.HasBlockGlobalUpdate()
+	var res0 bool
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.HasBlockGlobalUpdate", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.HasBlockGlobalUpdate", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.HasBlockGlobalUpdate()
 	return res0
 }
 
@@ -610,7 +692,16 @@ func (w GORMDBWrapper) HasTable(ctx context.Context, value interface{}) bool {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.HasTable(value)
+	var res0 bool
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.HasTable", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.HasTable", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.HasTable(value)
 	return res0
 }
 
@@ -782,7 +873,16 @@ func (w GORMDBWrapper) NewRecord(ctx context.Context, value interface{}) bool {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.NewRecord(value)
+	var res0 bool
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.NewRecord", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.NewRecord", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.NewRecord(value)
 	return res0
 }
 
@@ -792,7 +892,16 @@ func (w GORMDBWrapper) NewScope(ctx context.Context, value interface{}) *gorm.Sc
 		defer span.Finish()
 	}
 
-	res0 := w.obj.NewScope(value)
+	var res0 *gorm.Scope
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.NewScope", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.NewScope", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.NewScope(value)
 	return res0
 }
 
@@ -946,7 +1055,16 @@ func (w GORMDBWrapper) QueryExpr(ctx context.Context) *gorm.SqlExpr {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.QueryExpr()
+	var res0 *gorm.SqlExpr
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.QueryExpr", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.QueryExpr", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.QueryExpr()
 	return res0
 }
 
@@ -974,7 +1092,16 @@ func (w GORMDBWrapper) RecordNotFound(ctx context.Context) bool {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.RecordNotFound()
+	var res0 bool
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.RecordNotFound", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.RecordNotFound", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.RecordNotFound()
 	return res0
 }
 
@@ -1074,7 +1201,16 @@ func (w GORMDBWrapper) Row(ctx context.Context) *sql.Row {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.Row()
+	var res0 *sql.Row
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.Row", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Row", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.Row()
 	return res0
 }
 
@@ -1239,7 +1375,16 @@ func (w GORMDBWrapper) SubQuery(ctx context.Context) *gorm.SqlExpr {
 		defer span.Finish()
 	}
 
-	res0 := w.obj.SubQuery()
+	var res0 *gorm.SqlExpr
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("gorm.DB.SubQuery", "OK").Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.SubQuery", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+
+	res0 = w.obj.SubQuery()
 	return res0
 }
 
