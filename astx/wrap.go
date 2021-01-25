@@ -3,11 +3,11 @@ package astx
 import (
 	"bytes"
 	"fmt"
-	"html/template"
 	"path"
 	"regexp"
 	"sort"
 	"strings"
+	"text/template"
 
 	"github.com/pkg/errors"
 )
@@ -443,6 +443,9 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface
 		if g.options.EnableRuleForChainFunc {
 			if g.MatchFunctionRule(function, g.options.Rule.Trace) {
 				buf.WriteString(renderTemplate(WrapperFunctionBodyOpentracingTpl, vals))
+			}
+			if g.MatchFunctionRule(function, g.options.Rule.Metric) {
+				buf.WriteString(renderTemplate(WrapperFunctionBodyMetricTpl, vals))
 			}
 		}
 		buf.WriteString(renderTemplate(WrapperFunctionBodyReturnChainTpl, vals))
