@@ -67,6 +67,7 @@ func NewACMConfigClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option
 			return errors.Wrap(err, "clients.CreateConfigClient failed")
 		}
 		w.obj = client.(*config_client.ConfigClient)
+		return nil
 	})
 
 	return w, err
