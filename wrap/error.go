@@ -7,6 +7,7 @@ import (
 	alierr "github.com/aliyun/alibaba-cloud-sdk-go/sdk/errors"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func RegisterErrCode(v interface{}, fun func(err error) string) {
@@ -25,6 +26,10 @@ var errCodeMap = map[reflect.Type]func(err error) string{
 	reflect.TypeOf(&alierr.ServerError{}): func(err error) string {
 		e := err.(*alierr.ServerError)
 		return fmt.Sprintf("pop_%v_%v", e.HttpStatus(), e.ErrorCode())
+	},
+	reflect.TypeOf(mongo.MongocryptError{}): func(err error) string {
+		e := err.(mongo.MongocryptError)
+		return fmt.Sprintf("mongo_%v", e.Code)
 	},
 }
 
