@@ -161,10 +161,16 @@ func (g *WrapperGenerator) Generate() (string, error) {
 			continue
 		}
 
+		vals["class"] = function.Class
+		vals["wrapClass"] = g.wrapClassMap[function.Class]
+		vals["function"] = map[string]string{
+			"name": function.Name,
+		}
+
 		buf.WriteString("\n")
 		buf.WriteString(g.generateWrapperFunctionDeclare(function))
 		buf.WriteString(" {")
-		buf.WriteString(g.generateWrapperFunctionBody(function))
+		buf.WriteString(g.generateWrapperFunctionBody(vals, function))
 		buf.WriteString("}\n")
 	}
 
@@ -364,13 +370,17 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 	return buf.String()
 }
 
-func (g *WrapperGenerator) generateWrapperOpentracing(function *Function) string {
-	return fmt.Sprintf(`
+func (g *WrapperGenerator) generateWrapperOpentracing(vals map[string]interface{}) string {
+	const tplStr = `
 	if w.options.EnableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "%s.%s.%s")
+		span, _ := opentracing.StartSpanFromContext(ctx, "{{.package}}.{{.class}}.{{.function.name}}")
 		defer span.Finish()
 	}
-`, g.options.PackageName, function.Class, function.Name)
+`
+	tpl, _ := template.New("").Parse(tplStr)
+	var buf bytes.Buffer
+	_ = tpl.Execute(&buf, vals)
+	return buf.String()
 }
 
 func (g *WrapperGenerator) generateWrapperMetric(function *Function) string {
@@ -525,12 +535,12 @@ func (g *WrapperGenerator) generateWrapperReturnChain(function *Function) string
 	return fmt.Sprintf("\tw.obj = w.obj.%s(%s)\n", function.Name, strings.Join(params, ", "))
 }
 
-func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) string {
+func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface{}, function *Function) string {
 	var buf bytes.Buffer
 	if function.IsChain {
 		if g.options.EnableRuleForChainFunc {
 			if g.MatchFunctionRule(function, g.options.Rule.Trace) {
-				buf.WriteString(g.generateWrapperOpentracing(function))
+				buf.WriteString(g.generateWrapperOpentracing(vals))
 				buf.WriteString("\n")
 			}
 		}
@@ -540,7 +550,7 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(function *Function) strin
 	}
 
 	if g.MatchFunctionRule(function, g.options.Rule.Trace) {
-		buf.WriteString(g.generateWrapperOpentracing(function))
+		buf.WriteString(g.generateWrapperOpentracing(vals))
 	}
 
 	if function.IsReturnVoid {
