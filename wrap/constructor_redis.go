@@ -46,11 +46,18 @@ func NewRedisClientWrapperWithOptions(options *RedisClientWrapperOptions) (*Redi
 	if err := client.Ping().Err(); err != nil {
 		return nil, errors.Wrap(err, "redis.Client.Ping failed")
 	}
-	return &RedisClientWrapper{
+
+	w := &RedisClientWrapper{
 		obj:     client,
 		retry:   retry,
 		options: &options.Wrapper,
-	}, nil
+	}
+
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
+	}
+
+	return w, nil
 }
 
 func NewRedisClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*RedisClientWrapper, error) {

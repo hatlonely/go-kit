@@ -53,11 +53,17 @@ func NewESClientWrapperWithOptions(options *ESClientWrapperOptions) (*ESClientWr
 		return nil, errors.Wrap(err, "elastic.Client.Ping failed")
 	}
 
-	return &ESClientWrapper{
+	w := &ESClientWrapper{
 		obj:     client,
 		retry:   retry,
 		options: &options.Wrapper,
-	}, nil
+	}
+
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
+	}
+
+	return w, nil
 }
 
 func NewESClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*ESClientWrapper, error) {

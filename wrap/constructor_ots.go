@@ -56,6 +56,11 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 		retry:   retry,
 		options: &options.Wrapper,
 	}
+
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
+	}
+
 	go w.UpdateCredentialByECSRole(res, &options.OTS)
 
 	return w, nil

@@ -48,11 +48,17 @@ func NewMongoClientWrapperWithOptions(options *MongoClientWrapperOptions) (*Mong
 		return nil, errors.Wrap(err, "mongo.Client.Ping failed")
 	}
 
-	return &MongoClientWrapper{
+	w := &MongoClientWrapper{
 		obj:     client,
 		retry:   retry,
 		options: &options.Wrapper,
-	}, nil
+	}
+
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
+	}
+
+	return w, nil
 }
 
 func NewMongoClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*MongoClientWrapper, error) {

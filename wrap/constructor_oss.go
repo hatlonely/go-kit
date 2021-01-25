@@ -61,6 +61,10 @@ func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClien
 		options: &options.Wrapper,
 	}
 
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
+	}
+
 	go w.UpdateCredentialByECSRole(res, &options.OSS)
 
 	return w, nil

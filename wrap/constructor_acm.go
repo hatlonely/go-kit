@@ -29,11 +29,17 @@ func NewACMConfigClientWrapperWithOptions(options *ACMConfigClientWrapperOptions
 		return nil, errors.Wrap(err, "clients.CreateConfigClient failed")
 	}
 
-	return &ACMConfigClientWrapper{
+	w := &ACMConfigClientWrapper{
 		obj:     client.(*config_client.ConfigClient),
 		retry:   retry,
 		options: &options.Wrapper,
-	}, nil
+	}
+
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
+	}
+
+	return w, nil
 }
 
 func NewACMConfigClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*ACMConfigClientWrapper, error) {

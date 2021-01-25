@@ -55,11 +55,17 @@ func NewKMSClientWrapperWithOptions(options *KMSClientWrapperOptions) (*KMSClien
 		return nil, errors.Wrap(err, "kms.Client.ListKeys failed")
 	}
 
-	return &KMSClientWrapper{
+	w := &KMSClientWrapper{
 		obj:     client,
 		retry:   retry,
 		options: &options.Wrapper,
-	}, nil
+	}
+
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
+	}
+
+	return w, nil
 }
 
 func NewKMSClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*KMSClientWrapper, error) {
