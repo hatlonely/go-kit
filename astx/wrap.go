@@ -42,9 +42,11 @@ type WrapperGeneratorOptions struct {
 		StarClass       Rule
 		OnWrapperChange Rule
 		OnRetryChange   Rule
+		NewMetric       Rule
 		Function        map[string]Rule
 		Trace           map[string]Rule
 		Retry           map[string]Rule
+		Metric          map[string]Rule
 	}
 }
 
@@ -71,6 +73,9 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 	}
 	if options.Rule.Class.Exclude == nil {
 		options.Rule.Class.Exclude = excludeAllRegex
+	}
+	if options.Rule.NewMetric.Exclude == nil {
+		options.Rule.NewMetric.Exclude = excludeAllRegex
 	}
 
 	var wrapPackagePrefix string
@@ -134,6 +139,9 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		if g.MatchRule(cls, g.options.Rule.OnRetryChange) {
 			buf.WriteString(g.generateWrapperOnRetryChange(cls))
 		}
+		if g.MatchRule(cls, g.options.Rule.NewMetric) {
+			buf.WriteString(g.generateWrapperNewMetric(cls))
+		}
 	}
 
 	for _, function := range functions {
@@ -184,9 +192,11 @@ func (g *WrapperGenerator) generateWrapperHeader() string {
 func (g *WrapperGenerator) generateWrapperStruct(cls string) string {
 	const tplStr = `
 type {{.wrapClass}} struct {
-	obj     *{{.package}}.{{.class}}
-	retry   *{{.wrapPackagePrefix}}Retry
-	options *{{.wrapPackagePrefix}}WrapperOptions
+	obj            *{{.package}}.{{.class}}
+	retry          *{{.wrapPackagePrefix}}Retry
+	options        *{{.wrapPackagePrefix}}WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
 }
 `
 
@@ -282,6 +292,36 @@ func (w *{{.wrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandl
 	return buf.String()
 }
 
+func (g *WrapperGenerator) generateWrapperNewMetric(cls string) string {
+	const tplStr = `
+func (w *{{.wrapClass}}) NewMetric(options *{{.wrapPackagePrefix}}WrapperOptions) {
+	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:        "{{.package}}_{{.class}}_durationMs",
+		Help:        "{{.package}} {{.class}} response time milliseconds",
+		Buckets:     options.Metric.Buckets,
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
+	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name:        "{{.package}}_{{.class}}_total",
+		Help:        "{{.package}} {{.class}} request total",
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
+}
+`
+
+	tpl, _ := template.New("").Parse(tplStr)
+
+	var buf bytes.Buffer
+	_ = tpl.Execute(&buf, map[string]string{
+		"package":           g.options.PackageName,
+		"class":             cls,
+		"wrapClass":         g.wrapClassMap[cls],
+		"wrapPackagePrefix": g.wrapPackagePrefix,
+	})
+
+	return buf.String()
+}
+
 func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) string {
 	var buf bytes.Buffer
 
@@ -350,6 +390,33 @@ func (g *WrapperGenerator) generateWrapperOpentracing(function *Function) string
 		defer span.Finish()
 	}
 `, g.options.PackageName, function.Class, function.Name)
+}
+
+func (g *WrapperGenerator) generateWrapperMetric(function *Function) string {
+	const tplStr = `
+	if w.options.EnableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", ErrCode(err)).Inc()
+			w.durationMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+`
+
+	tpl, _ := template.New("").Parse(tplStr)
+
+	var buf bytes.Buffer
+	_ = tpl.Execute(&buf, map[string]interface{}{
+		"package":           g.options.PackageName,
+		"class":             function.Class,
+		"wrapPackagePrefix": g.wrapPackagePrefix,
+		"function": map[string]string{
+			"class": function.Class,
+			"name":  function.Name,
+		},
+	})
+
+	return buf.String()
 }
 
 func (g *WrapperGenerator) generateWrapperDeclareReturnVariables(function *Function) string {
@@ -421,9 +488,9 @@ func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) st
 		cls = strings.TrimPrefix(cls, g.options.PackageName+".")
 		if wrapCls, ok := g.wrapClassMap[cls]; ok {
 			if g.starClassSet[cls] {
-				results = append(results, fmt.Sprintf(`&%s{obj: %s, retry: w.retry, options: w.options}`, wrapCls, i.Name))
+				results = append(results, fmt.Sprintf(`&%s{obj: %s, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}`, wrapCls, i.Name))
 			} else {
-				results = append(results, fmt.Sprintf(`%s{obj: %s, retry: w.retry, options: w.options}`, wrapCls, i.Name))
+				results = append(results, fmt.Sprintf(`%s{obj: %s, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}`, wrapCls, i.Name))
 			}
 			continue
 		}

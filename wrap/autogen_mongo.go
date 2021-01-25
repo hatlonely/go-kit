@@ -6,6 +6,8 @@ import (
 
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readconcern"
@@ -17,21 +19,27 @@ import (
 )
 
 type MongoClientWrapper struct {
-	obj     *mongo.Client
-	retry   *Retry
-	options *WrapperOptions
+	obj            *mongo.Client
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
 }
 
 type MongoCollectionWrapper struct {
-	obj     *mongo.Collection
-	retry   *Retry
-	options *WrapperOptions
+	obj            *mongo.Collection
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
 }
 
 type MongoDatabaseWrapper struct {
-	obj     *mongo.Database
-	retry   *Retry
-	options *WrapperOptions
+	obj            *mongo.Database
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
 }
 
 func (w *MongoClientWrapper) Unwrap() *mongo.Client {
@@ -72,6 +80,20 @@ func (w *MongoClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeH
 	}
 }
 
+func (w *MongoClientWrapper) NewMetric(options *WrapperOptions) {
+	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:        "mongo_Client_durationMs",
+		Help:        "mongo Client response time milliseconds",
+		Buckets:     options.Metric.Buckets,
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
+	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name:        "mongo_Client_total",
+		Help:        "mongo Client request total",
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
+}
+
 func (w *MongoClientWrapper) Connect(ctx context.Context) error {
 	if w.options.EnableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Client.Connect")
@@ -88,7 +110,7 @@ func (w *MongoClientWrapper) Connect(ctx context.Context) error {
 
 func (w *MongoClientWrapper) Database(ctx context.Context, name string, opts ...*options.DatabaseOptions) *MongoDatabaseWrapper {
 	res0 := w.obj.Database(name, opts...)
-	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options}
+	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *MongoClientWrapper) Disconnect(ctx context.Context) error {
@@ -259,7 +281,7 @@ func (w *MongoCollectionWrapper) Clone(ctx context.Context, opts ...*options.Col
 		res0, err = w.obj.Clone(opts...)
 		return err
 	})
-	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options}, err
+	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}, err
 }
 
 func (w *MongoCollectionWrapper) CountDocuments(ctx context.Context, filter interface{}, opts ...*options.CountOptions) (int64, error) {
@@ -284,7 +306,7 @@ func (w *MongoCollectionWrapper) Database(ctx context.Context) *MongoDatabaseWra
 	}
 
 	res0 := w.obj.Database()
-	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options}
+	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *MongoCollectionWrapper) DeleteMany(ctx context.Context, filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
@@ -548,12 +570,12 @@ func (w *MongoDatabaseWrapper) Client(ctx context.Context) *MongoClientWrapper {
 	}
 
 	res0 := w.obj.Client()
-	return &MongoClientWrapper{obj: res0, retry: w.retry, options: w.options}
+	return &MongoClientWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *MongoDatabaseWrapper) Collection(ctx context.Context, name string, opts ...*options.CollectionOptions) *MongoCollectionWrapper {
 	res0 := w.obj.Collection(name, opts...)
-	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options}
+	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
 }
 
 func (w *MongoDatabaseWrapper) CreateCollection(ctx context.Context, name string, opts ...*options.CreateCollectionOptions) error {

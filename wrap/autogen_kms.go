@@ -7,15 +7,19 @@ import (
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/kms"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/refx"
 )
 
 type KMSClientWrapper struct {
-	obj     *kms.Client
-	retry   *Retry
-	options *WrapperOptions
+	obj            *kms.Client
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
 }
 
 func (w *KMSClientWrapper) Unwrap() *kms.Client {
@@ -46,6 +50,20 @@ func (w *KMSClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHan
 		w.retry = retry
 		return nil
 	}
+}
+
+func (w *KMSClientWrapper) NewMetric(options *WrapperOptions) {
+	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:        "kms_Client_durationMs",
+		Help:        "kms Client response time milliseconds",
+		Buckets:     options.Metric.Buckets,
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
+	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name:        "kms_Client_total",
+		Help:        "kms Client request total",
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
 }
 
 func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.AsymmetricDecryptRequest) (*kms.AsymmetricDecryptResponse, error) {

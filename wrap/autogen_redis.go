@@ -7,21 +7,27 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/refx"
 )
 
 type RedisClientWrapper struct {
-	obj     *redis.Client
-	retry   *Retry
-	options *WrapperOptions
+	obj            *redis.Client
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
 }
 
 type RedisClusterClientWrapper struct {
-	obj     *redis.ClusterClient
-	retry   *Retry
-	options *WrapperOptions
+	obj            *redis.ClusterClient
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
 }
 
 func (w *RedisClientWrapper) Unwrap() *redis.Client {
@@ -58,6 +64,20 @@ func (w *RedisClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeH
 	}
 }
 
+func (w *RedisClientWrapper) NewMetric(options *WrapperOptions) {
+	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:        "redis_Client_durationMs",
+		Help:        "redis Client response time milliseconds",
+		Buckets:     options.Metric.Buckets,
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
+	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name:        "redis_Client_total",
+		Help:        "redis Client request total",
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
+}
+
 func (w *RedisClusterClientWrapper) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
 		var options WrapperOptions
@@ -82,6 +102,20 @@ func (w *RedisClusterClientWrapper) OnRetryChange(opts ...refx.Option) config.On
 		w.retry = retry
 		return nil
 	}
+}
+
+func (w *RedisClusterClientWrapper) NewMetric(options *WrapperOptions) {
+	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:        "redis_ClusterClient_durationMs",
+		Help:        "redis ClusterClient response time milliseconds",
+		Buckets:     options.Metric.Buckets,
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
+	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name:        "redis_ClusterClient_total",
+		Help:        "redis ClusterClient request total",
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
 }
 
 func (w *RedisClientWrapper) Context(ctx context.Context) context.Context {

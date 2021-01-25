@@ -7,15 +7,19 @@ import (
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/refx"
 )
 
 type OTSTableStoreClientWrapper struct {
-	obj     *tablestore.TableStoreClient
-	retry   *Retry
-	options *WrapperOptions
+	obj            *tablestore.TableStoreClient
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
 }
 
 func (w *OTSTableStoreClientWrapper) Unwrap() *tablestore.TableStoreClient {
@@ -46,6 +50,20 @@ func (w *OTSTableStoreClientWrapper) OnRetryChange(opts ...refx.Option) config.O
 		w.retry = retry
 		return nil
 	}
+}
+
+func (w *OTSTableStoreClientWrapper) NewMetric(options *WrapperOptions) {
+	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:        "tablestore_TableStoreClient_durationMs",
+		Help:        "tablestore TableStoreClient response time milliseconds",
+		Buckets:     options.Metric.Buckets,
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
+	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name:        "tablestore_TableStoreClient_total",
+		Help:        "tablestore TableStoreClient request total",
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
 }
 
 func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, request *tablestore.AbortTransactionRequest) (*tablestore.AbortTransactionResponse, error) {

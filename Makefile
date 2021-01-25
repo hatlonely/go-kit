@@ -57,8 +57,9 @@ wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName tablestore \
 		--classPrefix OTS \
 		--starClasses TableStoreClient \
-		--rule.onWrapperChange '{"include": "TableStoreClient"}' \
-		--rule.onRetryChange '{"include": "TableStoreClient"}' \
+		--rule.newMetric.include "^TableStoreClient$$" \
+		--rule.onWrapperChange.include "^TableStoreClient$$" \
+		--rule.onRetryChange.include "^TableStoreClient$$" \
 		--output $@
 
 wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
@@ -67,8 +68,9 @@ wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName kms \
 		--classPrefix KMS \
 		--starClasses Client \
-		--rule.onWrapperChange '{"include": "^Client$$"}' \
-		--rule.onRetryChange '{"include": "^Client$$"}' \
+		--rule.newMetric.include "^Client$$" \
+		--rule.onWrapperChange.include "^Client$$" \
+		--rule.onRetryChange.include "^Client$$" \
 		--output $@
 
 wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
@@ -77,8 +79,9 @@ wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName config_client \
 		--classPrefix ACM \
 		--starClasses ConfigClient \
-		--rule.onWrapperChange '{"include": "^ConfigClient$$"}' \
-		--rule.onRetryChange '{"include": "^ConfigClient$$"}' \
+		--rule.newMetric.include "^ConfigClient$$" \
+		--rule.onWrapperChange.include "^ConfigClient$$" \
+		--rule.onRetryChange.include "^ConfigClient$$" \
 		--output $@
 
 wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
@@ -87,6 +90,7 @@ wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName oss \
 		--classPrefix OSS \
 		--starClasses Client,Bucket \
+		--rule.newMetric.include "^Client$$" \
 		--rule.onWrapperChange.include "^Client$$" \
 		--rule.onRetryChange.include "^Client$$" \
 		--rule.trace '{"Client": {"exclude": "^Bucket$$"}}' \
@@ -100,8 +104,9 @@ wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--classPrefix GORM \
 		--enableRuleForChainFunc \
 		--classes DB \
-		--rule.onWrapperChange '{"include": "^DB$$"}' \
-		--rule.onRetryChange '{"include": "^DB$$"}' \
+		--rule.newMetric.include "^DB$$" \
+		--rule.onWrapperChange.include "^DB$$" \
+		--rule.onRetryChange.include "^DB$$" \
 		--rule.function '{"DB": {"exclude": "^SetLogger$$"}}' \
 		--output $@
 
@@ -111,8 +116,9 @@ wrap/autogen_elasticsearch.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName elastic \
 		--classPrefix ES \
 		--rule.starClass '{"include": "^(?i:(Client)|(.*Service))$$", "exclude": ".*"}' \
-		--rule.onWrapperChange '{"include": "^Client$$"}' \
-		--rule.onRetryChange '{"include": "^Client$$"}' \
+		--rule.newMetric.include "^Client$$" \
+		--rule.onWrapperChange.include "^Client$$" \
+		--rule.onRetryChange.include "^Client$$" \
 		--rule.trace '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
 		--rule.retry '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
 		--output $@
@@ -123,8 +129,9 @@ wrap/autogen_mongo.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName mongo \
 		--classPrefix Mongo \
 		--rule.starClass '{"include": "^(?i:(Client)|(Database)|(Collection))$$", "exclude": ".*"}' \
-		--rule.onWrapperChange '{"include": "^Client$$"}' \
-		--rule.onRetryChange '{"include": "^Client$$"}' \
+		--rule.newMetric.include "^Client$$" \
+		--rule.onWrapperChange.include "^Client$$" \
+		--rule.onRetryChange.include "^Client$$" \
 		--rule.trace '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
 		--output $@
 
@@ -134,6 +141,7 @@ wrap/autogen_redis.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName redis \
 		--classPrefix Redis \
 		--starClasses Client,ClusterClient \
-		--rule.onWrapperChange '{"include": "^(?i:(Client)|(ClusterClient))$$"}' \
-		--rule.onRetryChange '{"include": "^(?i:(Client)|(ClusterClient))$$"}' \
+		--rule.newMetric.include "^(?i:(Client)|(ClusterClient))$$" \
+		--rule.onWrapperChange.include "^(?i:(Client)|(ClusterClient))$$" \
+		--rule.onRetryChange.include "^(?i:(Client)|(ClusterClient))$$" \
 		--output $@

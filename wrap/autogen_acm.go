@@ -9,15 +9,19 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/vo"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/refx"
 )
 
 type ACMConfigClientWrapper struct {
-	obj     *config_client.ConfigClient
-	retry   *Retry
-	options *WrapperOptions
+	obj            *config_client.ConfigClient
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
 }
 
 func (w *ACMConfigClientWrapper) Unwrap() *config_client.ConfigClient {
@@ -48,6 +52,20 @@ func (w *ACMConfigClientWrapper) OnRetryChange(opts ...refx.Option) config.OnCha
 		w.retry = retry
 		return nil
 	}
+}
+
+func (w *ACMConfigClientWrapper) NewMetric(options *WrapperOptions) {
+	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:        "config_client_ConfigClient_durationMs",
+		Help:        "config_client ConfigClient response time milliseconds",
+		Buckets:     options.Metric.Buckets,
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
+	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name:        "config_client_ConfigClient_total",
+		Help:        "config_client ConfigClient request total",
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
 }
 
 func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param vo.ConfigParam) error {

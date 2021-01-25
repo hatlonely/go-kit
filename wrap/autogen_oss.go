@@ -11,21 +11,27 @@ import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/refx"
 )
 
 type OSSBucketWrapper struct {
-	obj     *oss.Bucket
-	retry   *Retry
-	options *WrapperOptions
+	obj            *oss.Bucket
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
 }
 
 type OSSClientWrapper struct {
-	obj     *oss.Client
-	retry   *Retry
-	options *WrapperOptions
+	obj            *oss.Client
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
 }
 
 func (w *OSSBucketWrapper) Unwrap() *oss.Bucket {
@@ -60,6 +66,20 @@ func (w *OSSClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHan
 		w.retry = retry
 		return nil
 	}
+}
+
+func (w *OSSClientWrapper) NewMetric(options *WrapperOptions) {
+	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:        "oss_Client_durationMs",
+		Help:        "oss Client response time milliseconds",
+		Buckets:     options.Metric.Buckets,
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
+	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name:        "oss_Client_total",
+		Help:        "oss Client request total",
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
 }
 
 func (w *OSSBucketWrapper) AbortMultipartUpload(ctx context.Context, imur oss.InitiateMultipartUploadResult, options ...oss.Option) error {
@@ -1085,7 +1105,7 @@ func (w *OSSClientWrapper) AbortBucketWorm(ctx context.Context, bucketName strin
 
 func (w *OSSClientWrapper) Bucket(bucketName string) (*OSSBucketWrapper, error) {
 	res0, err := w.obj.Bucket(bucketName)
-	return &OSSBucketWrapper{obj: res0, retry: w.retry, options: w.options}, err
+	return &OSSBucketWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}, err
 }
 
 func (w *OSSClientWrapper) CompleteBucketWorm(ctx context.Context, bucketName string, wormID string, options ...oss.Option) error {

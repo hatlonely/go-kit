@@ -9,15 +9,19 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/refx"
 )
 
 type GORMDBWrapper struct {
-	obj     *gorm.DB
-	retry   *Retry
-	options *WrapperOptions
+	obj            *gorm.DB
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
 }
 
 func (w GORMDBWrapper) Unwrap() *gorm.DB {
@@ -48,6 +52,20 @@ func (w *GORMDBWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHandle
 		w.retry = retry
 		return nil
 	}
+}
+
+func (w *GORMDBWrapper) NewMetric(options *WrapperOptions) {
+	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:        "gorm_DB_durationMs",
+		Help:        "gorm DB response time milliseconds",
+		Buckets:     options.Metric.Buckets,
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
+	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name:        "gorm_DB_total",
+		Help:        "gorm DB request total",
+		ConstLabels: options.Metric.ConstLabels,
+	}, []string{"method", "errCode"})
 }
 
 func (w GORMDBWrapper) AddError(ctx context.Context, err error) error {
