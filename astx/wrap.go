@@ -168,7 +168,12 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		vals["class"] = function.Class
 		vals["wrapClass"] = g.wrapClassMap[function.Class]
 		fmap := map[string]string{
-			"name": function.Name,
+			"name":    function.Name,
+			"errCode": "ErrCode(err)",
+		}
+
+		if !function.IsReturnError {
+			fmap["errCode"] = `"OK"`
 		}
 
 		var params []string
@@ -371,8 +376,8 @@ const WrapperFunctionBodyMetricTpl = `
 	if w.options.EnableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", ErrCode(err)).Inc()
-			w.durationMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}).Inc()
+			w.durationMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 `
