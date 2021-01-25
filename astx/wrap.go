@@ -140,13 +140,13 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		buf.WriteString(g.generateWrapperGet(vals))
 
 		if g.MatchRule(cls, g.options.Rule.OnWrapperChange) {
-			buf.WriteString(g.generateWrapperOnWrapperChange(cls))
+			buf.WriteString(g.generateWrapperOnWrapperChange(vals))
 		}
 		if g.MatchRule(cls, g.options.Rule.OnRetryChange) {
-			buf.WriteString(g.generateWrapperOnRetryChange(cls))
+			buf.WriteString(g.generateWrapperOnRetryChange(vals))
 		}
 		if g.MatchRule(cls, g.options.Rule.CreateMetric) {
-			buf.WriteString(g.generateWrapperCreateMetric(cls))
+			buf.WriteString(g.generateWrapperCreateMetric(vals))
 		}
 	}
 
@@ -236,7 +236,7 @@ func (w {{.wrapClass}}) {{.unwrapFunc}}() *{{.package}}.{{.class}} {
 	return buf.String()
 }
 
-func (g *WrapperGenerator) generateWrapperOnWrapperChange(cls string) string {
+func (g *WrapperGenerator) generateWrapperOnWrapperChange(vals map[string]interface{}) string {
 	const tplStr = `
 func (w *{{.wrapClass}}) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
@@ -251,17 +251,12 @@ func (w *{{.wrapClass}}) OnWrapperChange(opts ...refx.Option) config.OnChangeHan
 `
 
 	tpl, _ := template.New("").Parse(tplStr)
-
 	var buf bytes.Buffer
-	_ = tpl.Execute(&buf, map[string]string{
-		"wrapClass":         g.wrapClassMap[cls],
-		"wrapPackagePrefix": g.wrapPackagePrefix,
-	})
-
+	_ = tpl.Execute(&buf, vals)
 	return buf.String()
 }
 
-func (g *WrapperGenerator) generateWrapperOnRetryChange(cls string) string {
+func (g *WrapperGenerator) generateWrapperOnRetryChange(vals map[string]interface{}) string {
 	const tplStr = `
 func (w *{{.wrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
@@ -280,17 +275,12 @@ func (w *{{.wrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandl
 `
 
 	tpl, _ := template.New("").Parse(tplStr)
-
 	var buf bytes.Buffer
-	_ = tpl.Execute(&buf, map[string]string{
-		"wrapClass":         g.wrapClassMap[cls],
-		"wrapPackagePrefix": g.wrapPackagePrefix,
-	})
-
+	_ = tpl.Execute(&buf, vals)
 	return buf.String()
 }
 
-func (g *WrapperGenerator) generateWrapperCreateMetric(cls string) string {
+func (g *WrapperGenerator) generateWrapperCreateMetric(vals map[string]interface{}) string {
 	const tplStr = `
 func (w *{{.wrapClass}}) CreateMetric(options *{{.wrapPackagePrefix}}WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
@@ -308,15 +298,8 @@ func (w *{{.wrapClass}}) CreateMetric(options *{{.wrapPackagePrefix}}WrapperOpti
 `
 
 	tpl, _ := template.New("").Parse(tplStr)
-
 	var buf bytes.Buffer
-	_ = tpl.Execute(&buf, map[string]string{
-		"package":           g.options.PackageName,
-		"class":             cls,
-		"wrapClass":         g.wrapClassMap[cls],
-		"wrapPackagePrefix": g.wrapPackagePrefix,
-	})
-
+	_ = tpl.Execute(&buf, vals)
 	return buf.String()
 }
 
