@@ -8,11 +8,9 @@ import (
 
 	"github.com/avast/retry-go"
 	"github.com/olivere/elastic/v7"
-	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 
 	"github.com/hatlonely/go-kit/cast"
-	"github.com/hatlonely/go-kit/cli"
 )
 
 type ElasticSearchWriter struct {
@@ -23,6 +21,17 @@ type ElasticSearchWriter struct {
 	options *ElasticSearchWriterOptions
 }
 
+type ElasticSearchOptions struct {
+	URI                       string `dft:"http://elasticsearch:9200"`
+	EnableSniff               bool
+	Username                  string
+	Password                  string
+	EnableHealthCheck         bool          `dft:"true"`
+	HealthCheckInterval       time.Duration `dft:"60s"`
+	HealthCheckTimeout        time.Duration `dft:"5s"`
+	HealthCheckTimeoutStartUp time.Duration `dft:"5s"`
+}
+
 type ElasticSearchWriterOptions struct {
 	Index      string
 	IDField    string
@@ -30,17 +39,32 @@ type ElasticSearchWriterOptions struct {
 	MsgChanLen int           `dft:"200"`
 	WorkerNum  int           `dft:"1"`
 
-	ElasticSearch cli.ElasticSearchOptions
+	ES ElasticSearchOptions
 }
 
 func NewElasticSearchWriterWithOptions(options *ElasticSearchWriterOptions) (*ElasticSearchWriter, error) {
-	esCli, err := cli.NewElasticSearchWithOptions(&options.ElasticSearch)
+	client, err := elastic.NewClient(
+		elastic.SetURL(options.ES.URI),
+		elastic.SetSniff(options.ES.EnableSniff),
+		elastic.SetBasicAuth(options.ES.Username, options.ES.Password),
+		elastic.SetHealthcheck(options.ES.EnableHealthCheck),
+		elastic.SetHealthcheckInterval(options.ES.HealthCheckInterval),
+		elastic.SetHealthcheckTimeout(options.ES.HealthCheckTimeout),
+		elastic.SetHealthcheckTimeoutStartup(options.ES.HealthCheckTimeoutStartUp),
+	)
+
 	if err != nil {
-		return nil, errors.Wrap(err, "cli.NewElasticSearchWithOptions failed")
+		return nil, err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	defer cancel()
+	if _, _, err := client.Ping(options.ES.URI).Do(ctx); err != nil {
+		return nil, err
 	}
 
 	w := &ElasticSearchWriter{
-		esCli:    esCli,
+		esCli:    client,
 		messages: make(chan map[string]interface{}, options.MsgChanLen),
 		options:  options,
 	}

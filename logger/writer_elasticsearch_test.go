@@ -9,16 +9,17 @@ import (
 	. "github.com/agiledragon/gomonkey"
 	"github.com/olivere/elastic/v7"
 	. "github.com/smartystreets/goconvey/convey"
-
-	"github.com/hatlonely/go-kit/cli"
 )
 
 func TestElasticSearchWriter_Write(t *testing.T) {
-	patches := ApplyFunc(cli.NewElasticSearchWithOptions, func(options *cli.ElasticSearchOptions) (*elastic.Client, error) {
+	patches := ApplyFunc(elastic.NewClient, func(options ...elastic.ClientOptionFunc) (*elastic.Client, error) {
 		return &elastic.Client{}, nil
 	}).ApplyMethod(reflect.TypeOf(&elastic.IndexService{}), "Do", func(
 		s *elastic.IndexService, ctx context.Context) (*elastic.IndexResponse, error) {
 		return nil, nil
+	}).ApplyMethod(reflect.TypeOf(&elastic.PingService{}), "Do", func(
+		s *elastic.PingService, ctx context.Context) (*elastic.PingResult, int, error) {
+		return nil, 0, nil
 	})
 
 	defer patches.Reset()
@@ -32,7 +33,7 @@ func TestElasticSearchWriter_Write(t *testing.T) {
 				Timeout:    200 * time.Millisecond,
 				MsgChanLen: 200,
 				WorkerNum:  2,
-				ElasticSearch: cli.ElasticSearchOptions{
+				ES: ElasticSearchOptions{
 					URI: "http://127.0.0.1:9200",
 				},
 			},
