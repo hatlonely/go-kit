@@ -26,31 +26,7 @@ type MongoClientWrapper struct {
 	totalMetric    *prometheus.CounterVec
 }
 
-type MongoCollectionWrapper struct {
-	obj            *mongo.Collection
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type MongoDatabaseWrapper struct {
-	obj            *mongo.Database
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
 func (w *MongoClientWrapper) Unwrap() *mongo.Client {
-	return w.obj
-}
-
-func (w *MongoCollectionWrapper) Unwrap() *mongo.Collection {
-	return w.obj
-}
-
-func (w *MongoDatabaseWrapper) Unwrap() *mongo.Database {
 	return w.obj
 }
 
@@ -92,6 +68,30 @@ func (w *MongoClientWrapper) CreateMetric(options *WrapperOptions) {
 		Help:        "mongo Client request total",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode"})
+}
+
+type MongoCollectionWrapper struct {
+	obj            *mongo.Collection
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *MongoCollectionWrapper) Unwrap() *mongo.Collection {
+	return w.obj
+}
+
+type MongoDatabaseWrapper struct {
+	obj            *mongo.Database
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *MongoDatabaseWrapper) Unwrap() *mongo.Database {
+	return w.obj
 }
 
 func (w *MongoClientWrapper) Connect(ctx context.Context) error {

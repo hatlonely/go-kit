@@ -22,19 +22,7 @@ type RedisClientWrapper struct {
 	totalMetric    *prometheus.CounterVec
 }
 
-type RedisClusterClientWrapper struct {
-	obj            *redis.ClusterClient
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
 func (w *RedisClientWrapper) Unwrap() *redis.Client {
-	return w.obj
-}
-
-func (w *RedisClusterClientWrapper) Unwrap() *redis.ClusterClient {
 	return w.obj
 }
 
@@ -76,6 +64,18 @@ func (w *RedisClientWrapper) CreateMetric(options *WrapperOptions) {
 		Help:        "redis Client request total",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode"})
+}
+
+type RedisClusterClientWrapper struct {
+	obj            *redis.ClusterClient
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *RedisClusterClientWrapper) Unwrap() *redis.ClusterClient {
+	return w.obj
 }
 
 func (w *RedisClusterClientWrapper) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {

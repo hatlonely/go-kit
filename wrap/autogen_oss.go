@@ -26,16 +26,16 @@ type OSSBucketWrapper struct {
 	totalMetric    *prometheus.CounterVec
 }
 
+func (w *OSSBucketWrapper) Unwrap() *oss.Bucket {
+	return w.obj
+}
+
 type OSSClientWrapper struct {
 	obj            *oss.Client
 	retry          *Retry
 	options        *WrapperOptions
 	durationMetric *prometheus.HistogramVec
 	totalMetric    *prometheus.CounterVec
-}
-
-func (w *OSSBucketWrapper) Unwrap() *oss.Bucket {
-	return w.obj
 }
 
 func (w *OSSClientWrapper) Unwrap() *oss.Client {

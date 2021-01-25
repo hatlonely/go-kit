@@ -125,14 +125,19 @@ func (g *WrapperGenerator) Generate() (string, error) {
 	}
 
 	sort.Strings(classes)
-	for _, cls := range classes {
-		buf.WriteString(g.generateWrapperStruct(cls))
-	}
-	for _, cls := range classes {
-		buf.WriteString(g.generateWrapperGet(cls))
+
+	vals := map[string]interface{}{
+		"package":           g.options.PackageName,
+		"wrapPackagePrefix": g.wrapPackagePrefix,
 	}
 
 	for _, cls := range classes {
+		vals["class"] = cls
+		vals["wrapClass"] = g.wrapClassMap[cls]
+
+		buf.WriteString(g.generateWrapperStruct(cls))
+		buf.WriteString(g.generateWrapperGet(cls))
+
 		if g.MatchRule(cls, g.options.Rule.OnWrapperChange) {
 			buf.WriteString(g.generateWrapperOnWrapperChange(cls))
 		}

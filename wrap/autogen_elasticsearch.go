@@ -24,12 +24,20 @@ type ESAliasServiceWrapper struct {
 	totalMetric    *prometheus.CounterVec
 }
 
+func (w *ESAliasServiceWrapper) Unwrap() *elastic.AliasService {
+	return w.obj
+}
+
 type ESAliasesServiceWrapper struct {
 	obj            *elastic.AliasesService
 	retry          *Retry
 	options        *WrapperOptions
 	durationMetric *prometheus.HistogramVec
 	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESAliasesServiceWrapper) Unwrap() *elastic.AliasesService {
+	return w.obj
 }
 
 type ESBulkProcessorServiceWrapper struct {
@@ -40,12 +48,20 @@ type ESBulkProcessorServiceWrapper struct {
 	totalMetric    *prometheus.CounterVec
 }
 
+func (w *ESBulkProcessorServiceWrapper) Unwrap() *elastic.BulkProcessorService {
+	return w.obj
+}
+
 type ESBulkServiceWrapper struct {
 	obj            *elastic.BulkService
 	retry          *Retry
 	options        *WrapperOptions
 	durationMetric *prometheus.HistogramVec
 	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESBulkServiceWrapper) Unwrap() *elastic.BulkService {
+	return w.obj
 }
 
 type ESCatAliasesServiceWrapper struct {
@@ -56,12 +72,20 @@ type ESCatAliasesServiceWrapper struct {
 	totalMetric    *prometheus.CounterVec
 }
 
+func (w *ESCatAliasesServiceWrapper) Unwrap() *elastic.CatAliasesService {
+	return w.obj
+}
+
 type ESCatAllocationServiceWrapper struct {
 	obj            *elastic.CatAllocationService
 	retry          *Retry
 	options        *WrapperOptions
 	durationMetric *prometheus.HistogramVec
 	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESCatAllocationServiceWrapper) Unwrap() *elastic.CatAllocationService {
+	return w.obj
 }
 
 type ESCatCountServiceWrapper struct {
@@ -72,12 +96,20 @@ type ESCatCountServiceWrapper struct {
 	totalMetric    *prometheus.CounterVec
 }
 
+func (w *ESCatCountServiceWrapper) Unwrap() *elastic.CatCountService {
+	return w.obj
+}
+
 type ESCatHealthServiceWrapper struct {
 	obj            *elastic.CatHealthService
 	retry          *Retry
 	options        *WrapperOptions
 	durationMetric *prometheus.HistogramVec
 	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESCatHealthServiceWrapper) Unwrap() *elastic.CatHealthService {
+	return w.obj
 }
 
 type ESCatIndicesServiceWrapper struct {
@@ -88,12 +120,20 @@ type ESCatIndicesServiceWrapper struct {
 	totalMetric    *prometheus.CounterVec
 }
 
+func (w *ESCatIndicesServiceWrapper) Unwrap() *elastic.CatIndicesService {
+	return w.obj
+}
+
 type ESCatShardsServiceWrapper struct {
 	obj            *elastic.CatShardsService
 	retry          *Retry
 	options        *WrapperOptions
 	durationMetric *prometheus.HistogramVec
 	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESCatShardsServiceWrapper) Unwrap() *elastic.CatShardsService {
+	return w.obj
 }
 
 type ESClearScrollServiceWrapper struct {
@@ -104,6 +144,10 @@ type ESClearScrollServiceWrapper struct {
 	totalMetric    *prometheus.CounterVec
 }
 
+func (w *ESClearScrollServiceWrapper) Unwrap() *elastic.ClearScrollService {
+	return w.obj
+}
+
 type ESClientWrapper struct {
 	obj            *elastic.Client
 	retry          *Retry
@@ -112,1263 +156,7 @@ type ESClientWrapper struct {
 	totalMetric    *prometheus.CounterVec
 }
 
-type ESClusterHealthServiceWrapper struct {
-	obj            *elastic.ClusterHealthService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESClusterRerouteServiceWrapper struct {
-	obj            *elastic.ClusterRerouteService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESClusterStateServiceWrapper struct {
-	obj            *elastic.ClusterStateService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESClusterStatsServiceWrapper struct {
-	obj            *elastic.ClusterStatsService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESCountServiceWrapper struct {
-	obj            *elastic.CountService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESDeleteByQueryServiceWrapper struct {
-	obj            *elastic.DeleteByQueryService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESDeleteScriptServiceWrapper struct {
-	obj            *elastic.DeleteScriptService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESDeleteServiceWrapper struct {
-	obj            *elastic.DeleteService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESExistsServiceWrapper struct {
-	obj            *elastic.ExistsService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESExplainServiceWrapper struct {
-	obj            *elastic.ExplainService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESFieldCapsServiceWrapper struct {
-	obj            *elastic.FieldCapsService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESGetScriptServiceWrapper struct {
-	obj            *elastic.GetScriptService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESGetServiceWrapper struct {
-	obj            *elastic.GetService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndexServiceWrapper struct {
-	obj            *elastic.IndexService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesAnalyzeServiceWrapper struct {
-	obj            *elastic.IndicesAnalyzeService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesClearCacheServiceWrapper struct {
-	obj            *elastic.IndicesClearCacheService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesCloseServiceWrapper struct {
-	obj            *elastic.IndicesCloseService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesCreateServiceWrapper struct {
-	obj            *elastic.IndicesCreateService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesDeleteIndexTemplateServiceWrapper struct {
-	obj            *elastic.IndicesDeleteIndexTemplateService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesDeleteServiceWrapper struct {
-	obj            *elastic.IndicesDeleteService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesDeleteTemplateServiceWrapper struct {
-	obj            *elastic.IndicesDeleteTemplateService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesExistsServiceWrapper struct {
-	obj            *elastic.IndicesExistsService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesExistsTemplateServiceWrapper struct {
-	obj            *elastic.IndicesExistsTemplateService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesFlushServiceWrapper struct {
-	obj            *elastic.IndicesFlushService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesForcemergeServiceWrapper struct {
-	obj            *elastic.IndicesForcemergeService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesFreezeServiceWrapper struct {
-	obj            *elastic.IndicesFreezeService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesGetFieldMappingServiceWrapper struct {
-	obj            *elastic.IndicesGetFieldMappingService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesGetIndexTemplateServiceWrapper struct {
-	obj            *elastic.IndicesGetIndexTemplateService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesGetMappingServiceWrapper struct {
-	obj            *elastic.IndicesGetMappingService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesGetServiceWrapper struct {
-	obj            *elastic.IndicesGetService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesGetSettingsServiceWrapper struct {
-	obj            *elastic.IndicesGetSettingsService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesGetTemplateServiceWrapper struct {
-	obj            *elastic.IndicesGetTemplateService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesOpenServiceWrapper struct {
-	obj            *elastic.IndicesOpenService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesPutIndexTemplateServiceWrapper struct {
-	obj            *elastic.IndicesPutIndexTemplateService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesPutMappingServiceWrapper struct {
-	obj            *elastic.IndicesPutMappingService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesPutSettingsServiceWrapper struct {
-	obj            *elastic.IndicesPutSettingsService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesPutTemplateServiceWrapper struct {
-	obj            *elastic.IndicesPutTemplateService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesRolloverServiceWrapper struct {
-	obj            *elastic.IndicesRolloverService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesSegmentsServiceWrapper struct {
-	obj            *elastic.IndicesSegmentsService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesShrinkServiceWrapper struct {
-	obj            *elastic.IndicesShrinkService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesStatsServiceWrapper struct {
-	obj            *elastic.IndicesStatsService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesSyncedFlushServiceWrapper struct {
-	obj            *elastic.IndicesSyncedFlushService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIndicesUnfreezeServiceWrapper struct {
-	obj            *elastic.IndicesUnfreezeService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIngestDeletePipelineServiceWrapper struct {
-	obj            *elastic.IngestDeletePipelineService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIngestGetPipelineServiceWrapper struct {
-	obj            *elastic.IngestGetPipelineService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIngestPutPipelineServiceWrapper struct {
-	obj            *elastic.IngestPutPipelineService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESIngestSimulatePipelineServiceWrapper struct {
-	obj            *elastic.IngestSimulatePipelineService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESMgetServiceWrapper struct {
-	obj            *elastic.MgetService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESMultiSearchServiceWrapper struct {
-	obj            *elastic.MultiSearchService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESMultiTermvectorServiceWrapper struct {
-	obj            *elastic.MultiTermvectorService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESNodesInfoServiceWrapper struct {
-	obj            *elastic.NodesInfoService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESNodesStatsServiceWrapper struct {
-	obj            *elastic.NodesStatsService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESPingServiceWrapper struct {
-	obj            *elastic.PingService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESPutScriptServiceWrapper struct {
-	obj            *elastic.PutScriptService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESRefreshServiceWrapper struct {
-	obj            *elastic.RefreshService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESReindexServiceWrapper struct {
-	obj            *elastic.ReindexService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESScrollServiceWrapper struct {
-	obj            *elastic.ScrollService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESSearchServiceWrapper struct {
-	obj            *elastic.SearchService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESSearchShardsServiceWrapper struct {
-	obj            *elastic.SearchShardsService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESSnapshotCreateRepositoryServiceWrapper struct {
-	obj            *elastic.SnapshotCreateRepositoryService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESSnapshotCreateServiceWrapper struct {
-	obj            *elastic.SnapshotCreateService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESSnapshotDeleteRepositoryServiceWrapper struct {
-	obj            *elastic.SnapshotDeleteRepositoryService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESSnapshotDeleteServiceWrapper struct {
-	obj            *elastic.SnapshotDeleteService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESSnapshotGetRepositoryServiceWrapper struct {
-	obj            *elastic.SnapshotGetRepositoryService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESSnapshotGetServiceWrapper struct {
-	obj            *elastic.SnapshotGetService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESSnapshotRestoreServiceWrapper struct {
-	obj            *elastic.SnapshotRestoreService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESSnapshotStatusServiceWrapper struct {
-	obj            *elastic.SnapshotStatusService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESSnapshotVerifyRepositoryServiceWrapper struct {
-	obj            *elastic.SnapshotVerifyRepositoryService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESTasksCancelServiceWrapper struct {
-	obj            *elastic.TasksCancelService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESTasksGetTaskServiceWrapper struct {
-	obj            *elastic.TasksGetTaskService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESTasksListServiceWrapper struct {
-	obj            *elastic.TasksListService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESTermvectorsServiceWrapper struct {
-	obj            *elastic.TermvectorsService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESUpdateByQueryServiceWrapper struct {
-	obj            *elastic.UpdateByQueryService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESUpdateServiceWrapper struct {
-	obj            *elastic.UpdateService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESValidateServiceWrapper struct {
-	obj            *elastic.ValidateService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackIlmDeleteLifecycleServiceWrapper struct {
-	obj            *elastic.XPackIlmDeleteLifecycleService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackIlmGetLifecycleServiceWrapper struct {
-	obj            *elastic.XPackIlmGetLifecycleService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackIlmPutLifecycleServiceWrapper struct {
-	obj            *elastic.XPackIlmPutLifecycleService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackInfoServiceWrapper struct {
-	obj            *elastic.XPackInfoService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackSecurityChangePasswordServiceWrapper struct {
-	obj            *elastic.XPackSecurityChangePasswordService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackSecurityDeleteRoleMappingServiceWrapper struct {
-	obj            *elastic.XPackSecurityDeleteRoleMappingService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackSecurityDeleteRoleServiceWrapper struct {
-	obj            *elastic.XPackSecurityDeleteRoleService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackSecurityDeleteUserServiceWrapper struct {
-	obj            *elastic.XPackSecurityDeleteUserService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackSecurityDisableUserServiceWrapper struct {
-	obj            *elastic.XPackSecurityDisableUserService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackSecurityEnableUserServiceWrapper struct {
-	obj            *elastic.XPackSecurityEnableUserService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackSecurityGetRoleMappingServiceWrapper struct {
-	obj            *elastic.XPackSecurityGetRoleMappingService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackSecurityGetRoleServiceWrapper struct {
-	obj            *elastic.XPackSecurityGetRoleService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackSecurityGetUserServiceWrapper struct {
-	obj            *elastic.XPackSecurityGetUserService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackSecurityPutRoleMappingServiceWrapper struct {
-	obj            *elastic.XPackSecurityPutRoleMappingService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackSecurityPutRoleServiceWrapper struct {
-	obj            *elastic.XPackSecurityPutRoleService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackSecurityPutUserServiceWrapper struct {
-	obj            *elastic.XPackSecurityPutUserService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackWatcherAckWatchServiceWrapper struct {
-	obj            *elastic.XPackWatcherAckWatchService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackWatcherActivateWatchServiceWrapper struct {
-	obj            *elastic.XPackWatcherActivateWatchService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackWatcherDeactivateWatchServiceWrapper struct {
-	obj            *elastic.XPackWatcherDeactivateWatchService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackWatcherDeleteWatchServiceWrapper struct {
-	obj            *elastic.XPackWatcherDeleteWatchService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackWatcherExecuteWatchServiceWrapper struct {
-	obj            *elastic.XPackWatcherExecuteWatchService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackWatcherGetWatchServiceWrapper struct {
-	obj            *elastic.XPackWatcherGetWatchService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackWatcherPutWatchServiceWrapper struct {
-	obj            *elastic.XPackWatcherPutWatchService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackWatcherStartServiceWrapper struct {
-	obj            *elastic.XPackWatcherStartService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackWatcherStatsServiceWrapper struct {
-	obj            *elastic.XPackWatcherStatsService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-type ESXPackWatcherStopServiceWrapper struct {
-	obj            *elastic.XPackWatcherStopService
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
-}
-
-func (w *ESAliasServiceWrapper) Unwrap() *elastic.AliasService {
-	return w.obj
-}
-
-func (w *ESAliasesServiceWrapper) Unwrap() *elastic.AliasesService {
-	return w.obj
-}
-
-func (w *ESBulkProcessorServiceWrapper) Unwrap() *elastic.BulkProcessorService {
-	return w.obj
-}
-
-func (w *ESBulkServiceWrapper) Unwrap() *elastic.BulkService {
-	return w.obj
-}
-
-func (w *ESCatAliasesServiceWrapper) Unwrap() *elastic.CatAliasesService {
-	return w.obj
-}
-
-func (w *ESCatAllocationServiceWrapper) Unwrap() *elastic.CatAllocationService {
-	return w.obj
-}
-
-func (w *ESCatCountServiceWrapper) Unwrap() *elastic.CatCountService {
-	return w.obj
-}
-
-func (w *ESCatHealthServiceWrapper) Unwrap() *elastic.CatHealthService {
-	return w.obj
-}
-
-func (w *ESCatIndicesServiceWrapper) Unwrap() *elastic.CatIndicesService {
-	return w.obj
-}
-
-func (w *ESCatShardsServiceWrapper) Unwrap() *elastic.CatShardsService {
-	return w.obj
-}
-
-func (w *ESClearScrollServiceWrapper) Unwrap() *elastic.ClearScrollService {
-	return w.obj
-}
-
 func (w *ESClientWrapper) Unwrap() *elastic.Client {
-	return w.obj
-}
-
-func (w *ESClusterHealthServiceWrapper) Unwrap() *elastic.ClusterHealthService {
-	return w.obj
-}
-
-func (w *ESClusterRerouteServiceWrapper) Unwrap() *elastic.ClusterRerouteService {
-	return w.obj
-}
-
-func (w *ESClusterStateServiceWrapper) Unwrap() *elastic.ClusterStateService {
-	return w.obj
-}
-
-func (w *ESClusterStatsServiceWrapper) Unwrap() *elastic.ClusterStatsService {
-	return w.obj
-}
-
-func (w *ESCountServiceWrapper) Unwrap() *elastic.CountService {
-	return w.obj
-}
-
-func (w *ESDeleteByQueryServiceWrapper) Unwrap() *elastic.DeleteByQueryService {
-	return w.obj
-}
-
-func (w *ESDeleteScriptServiceWrapper) Unwrap() *elastic.DeleteScriptService {
-	return w.obj
-}
-
-func (w *ESDeleteServiceWrapper) Unwrap() *elastic.DeleteService {
-	return w.obj
-}
-
-func (w *ESExistsServiceWrapper) Unwrap() *elastic.ExistsService {
-	return w.obj
-}
-
-func (w *ESExplainServiceWrapper) Unwrap() *elastic.ExplainService {
-	return w.obj
-}
-
-func (w *ESFieldCapsServiceWrapper) Unwrap() *elastic.FieldCapsService {
-	return w.obj
-}
-
-func (w *ESGetScriptServiceWrapper) Unwrap() *elastic.GetScriptService {
-	return w.obj
-}
-
-func (w *ESGetServiceWrapper) Unwrap() *elastic.GetService {
-	return w.obj
-}
-
-func (w *ESIndexServiceWrapper) Unwrap() *elastic.IndexService {
-	return w.obj
-}
-
-func (w *ESIndicesAnalyzeServiceWrapper) Unwrap() *elastic.IndicesAnalyzeService {
-	return w.obj
-}
-
-func (w *ESIndicesClearCacheServiceWrapper) Unwrap() *elastic.IndicesClearCacheService {
-	return w.obj
-}
-
-func (w *ESIndicesCloseServiceWrapper) Unwrap() *elastic.IndicesCloseService {
-	return w.obj
-}
-
-func (w *ESIndicesCreateServiceWrapper) Unwrap() *elastic.IndicesCreateService {
-	return w.obj
-}
-
-func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesDeleteIndexTemplateService {
-	return w.obj
-}
-
-func (w *ESIndicesDeleteServiceWrapper) Unwrap() *elastic.IndicesDeleteService {
-	return w.obj
-}
-
-func (w *ESIndicesDeleteTemplateServiceWrapper) Unwrap() *elastic.IndicesDeleteTemplateService {
-	return w.obj
-}
-
-func (w *ESIndicesExistsServiceWrapper) Unwrap() *elastic.IndicesExistsService {
-	return w.obj
-}
-
-func (w *ESIndicesExistsTemplateServiceWrapper) Unwrap() *elastic.IndicesExistsTemplateService {
-	return w.obj
-}
-
-func (w *ESIndicesFlushServiceWrapper) Unwrap() *elastic.IndicesFlushService {
-	return w.obj
-}
-
-func (w *ESIndicesForcemergeServiceWrapper) Unwrap() *elastic.IndicesForcemergeService {
-	return w.obj
-}
-
-func (w *ESIndicesFreezeServiceWrapper) Unwrap() *elastic.IndicesFreezeService {
-	return w.obj
-}
-
-func (w *ESIndicesGetFieldMappingServiceWrapper) Unwrap() *elastic.IndicesGetFieldMappingService {
-	return w.obj
-}
-
-func (w *ESIndicesGetIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesGetIndexTemplateService {
-	return w.obj
-}
-
-func (w *ESIndicesGetMappingServiceWrapper) Unwrap() *elastic.IndicesGetMappingService {
-	return w.obj
-}
-
-func (w *ESIndicesGetServiceWrapper) Unwrap() *elastic.IndicesGetService {
-	return w.obj
-}
-
-func (w *ESIndicesGetSettingsServiceWrapper) Unwrap() *elastic.IndicesGetSettingsService {
-	return w.obj
-}
-
-func (w *ESIndicesGetTemplateServiceWrapper) Unwrap() *elastic.IndicesGetTemplateService {
-	return w.obj
-}
-
-func (w *ESIndicesOpenServiceWrapper) Unwrap() *elastic.IndicesOpenService {
-	return w.obj
-}
-
-func (w *ESIndicesPutIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesPutIndexTemplateService {
-	return w.obj
-}
-
-func (w *ESIndicesPutMappingServiceWrapper) Unwrap() *elastic.IndicesPutMappingService {
-	return w.obj
-}
-
-func (w *ESIndicesPutSettingsServiceWrapper) Unwrap() *elastic.IndicesPutSettingsService {
-	return w.obj
-}
-
-func (w *ESIndicesPutTemplateServiceWrapper) Unwrap() *elastic.IndicesPutTemplateService {
-	return w.obj
-}
-
-func (w *ESIndicesRolloverServiceWrapper) Unwrap() *elastic.IndicesRolloverService {
-	return w.obj
-}
-
-func (w *ESIndicesSegmentsServiceWrapper) Unwrap() *elastic.IndicesSegmentsService {
-	return w.obj
-}
-
-func (w *ESIndicesShrinkServiceWrapper) Unwrap() *elastic.IndicesShrinkService {
-	return w.obj
-}
-
-func (w *ESIndicesStatsServiceWrapper) Unwrap() *elastic.IndicesStatsService {
-	return w.obj
-}
-
-func (w *ESIndicesSyncedFlushServiceWrapper) Unwrap() *elastic.IndicesSyncedFlushService {
-	return w.obj
-}
-
-func (w *ESIndicesUnfreezeServiceWrapper) Unwrap() *elastic.IndicesUnfreezeService {
-	return w.obj
-}
-
-func (w *ESIngestDeletePipelineServiceWrapper) Unwrap() *elastic.IngestDeletePipelineService {
-	return w.obj
-}
-
-func (w *ESIngestGetPipelineServiceWrapper) Unwrap() *elastic.IngestGetPipelineService {
-	return w.obj
-}
-
-func (w *ESIngestPutPipelineServiceWrapper) Unwrap() *elastic.IngestPutPipelineService {
-	return w.obj
-}
-
-func (w *ESIngestSimulatePipelineServiceWrapper) Unwrap() *elastic.IngestSimulatePipelineService {
-	return w.obj
-}
-
-func (w *ESMgetServiceWrapper) Unwrap() *elastic.MgetService {
-	return w.obj
-}
-
-func (w *ESMultiSearchServiceWrapper) Unwrap() *elastic.MultiSearchService {
-	return w.obj
-}
-
-func (w *ESMultiTermvectorServiceWrapper) Unwrap() *elastic.MultiTermvectorService {
-	return w.obj
-}
-
-func (w *ESNodesInfoServiceWrapper) Unwrap() *elastic.NodesInfoService {
-	return w.obj
-}
-
-func (w *ESNodesStatsServiceWrapper) Unwrap() *elastic.NodesStatsService {
-	return w.obj
-}
-
-func (w *ESPingServiceWrapper) Unwrap() *elastic.PingService {
-	return w.obj
-}
-
-func (w *ESPutScriptServiceWrapper) Unwrap() *elastic.PutScriptService {
-	return w.obj
-}
-
-func (w *ESRefreshServiceWrapper) Unwrap() *elastic.RefreshService {
-	return w.obj
-}
-
-func (w *ESReindexServiceWrapper) Unwrap() *elastic.ReindexService {
-	return w.obj
-}
-
-func (w *ESScrollServiceWrapper) Unwrap() *elastic.ScrollService {
-	return w.obj
-}
-
-func (w *ESSearchServiceWrapper) Unwrap() *elastic.SearchService {
-	return w.obj
-}
-
-func (w *ESSearchShardsServiceWrapper) Unwrap() *elastic.SearchShardsService {
-	return w.obj
-}
-
-func (w *ESSnapshotCreateRepositoryServiceWrapper) Unwrap() *elastic.SnapshotCreateRepositoryService {
-	return w.obj
-}
-
-func (w *ESSnapshotCreateServiceWrapper) Unwrap() *elastic.SnapshotCreateService {
-	return w.obj
-}
-
-func (w *ESSnapshotDeleteRepositoryServiceWrapper) Unwrap() *elastic.SnapshotDeleteRepositoryService {
-	return w.obj
-}
-
-func (w *ESSnapshotDeleteServiceWrapper) Unwrap() *elastic.SnapshotDeleteService {
-	return w.obj
-}
-
-func (w *ESSnapshotGetRepositoryServiceWrapper) Unwrap() *elastic.SnapshotGetRepositoryService {
-	return w.obj
-}
-
-func (w *ESSnapshotGetServiceWrapper) Unwrap() *elastic.SnapshotGetService {
-	return w.obj
-}
-
-func (w *ESSnapshotRestoreServiceWrapper) Unwrap() *elastic.SnapshotRestoreService {
-	return w.obj
-}
-
-func (w *ESSnapshotStatusServiceWrapper) Unwrap() *elastic.SnapshotStatusService {
-	return w.obj
-}
-
-func (w *ESSnapshotVerifyRepositoryServiceWrapper) Unwrap() *elastic.SnapshotVerifyRepositoryService {
-	return w.obj
-}
-
-func (w *ESTasksCancelServiceWrapper) Unwrap() *elastic.TasksCancelService {
-	return w.obj
-}
-
-func (w *ESTasksGetTaskServiceWrapper) Unwrap() *elastic.TasksGetTaskService {
-	return w.obj
-}
-
-func (w *ESTasksListServiceWrapper) Unwrap() *elastic.TasksListService {
-	return w.obj
-}
-
-func (w *ESTermvectorsServiceWrapper) Unwrap() *elastic.TermvectorsService {
-	return w.obj
-}
-
-func (w *ESUpdateByQueryServiceWrapper) Unwrap() *elastic.UpdateByQueryService {
-	return w.obj
-}
-
-func (w *ESUpdateServiceWrapper) Unwrap() *elastic.UpdateService {
-	return w.obj
-}
-
-func (w *ESValidateServiceWrapper) Unwrap() *elastic.ValidateService {
-	return w.obj
-}
-
-func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmDeleteLifecycleService {
-	return w.obj
-}
-
-func (w *ESXPackIlmGetLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmGetLifecycleService {
-	return w.obj
-}
-
-func (w *ESXPackIlmPutLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmPutLifecycleService {
-	return w.obj
-}
-
-func (w *ESXPackInfoServiceWrapper) Unwrap() *elastic.XPackInfoService {
-	return w.obj
-}
-
-func (w *ESXPackSecurityChangePasswordServiceWrapper) Unwrap() *elastic.XPackSecurityChangePasswordService {
-	return w.obj
-}
-
-func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteRoleMappingService {
-	return w.obj
-}
-
-func (w *ESXPackSecurityDeleteRoleServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteRoleService {
-	return w.obj
-}
-
-func (w *ESXPackSecurityDeleteUserServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteUserService {
-	return w.obj
-}
-
-func (w *ESXPackSecurityDisableUserServiceWrapper) Unwrap() *elastic.XPackSecurityDisableUserService {
-	return w.obj
-}
-
-func (w *ESXPackSecurityEnableUserServiceWrapper) Unwrap() *elastic.XPackSecurityEnableUserService {
-	return w.obj
-}
-
-func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityGetRoleMappingService {
-	return w.obj
-}
-
-func (w *ESXPackSecurityGetRoleServiceWrapper) Unwrap() *elastic.XPackSecurityGetRoleService {
-	return w.obj
-}
-
-func (w *ESXPackSecurityGetUserServiceWrapper) Unwrap() *elastic.XPackSecurityGetUserService {
-	return w.obj
-}
-
-func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityPutRoleMappingService {
-	return w.obj
-}
-
-func (w *ESXPackSecurityPutRoleServiceWrapper) Unwrap() *elastic.XPackSecurityPutRoleService {
-	return w.obj
-}
-
-func (w *ESXPackSecurityPutUserServiceWrapper) Unwrap() *elastic.XPackSecurityPutUserService {
-	return w.obj
-}
-
-func (w *ESXPackWatcherAckWatchServiceWrapper) Unwrap() *elastic.XPackWatcherAckWatchService {
-	return w.obj
-}
-
-func (w *ESXPackWatcherActivateWatchServiceWrapper) Unwrap() *elastic.XPackWatcherActivateWatchService {
-	return w.obj
-}
-
-func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Unwrap() *elastic.XPackWatcherDeactivateWatchService {
-	return w.obj
-}
-
-func (w *ESXPackWatcherDeleteWatchServiceWrapper) Unwrap() *elastic.XPackWatcherDeleteWatchService {
-	return w.obj
-}
-
-func (w *ESXPackWatcherExecuteWatchServiceWrapper) Unwrap() *elastic.XPackWatcherExecuteWatchService {
-	return w.obj
-}
-
-func (w *ESXPackWatcherGetWatchServiceWrapper) Unwrap() *elastic.XPackWatcherGetWatchService {
-	return w.obj
-}
-
-func (w *ESXPackWatcherPutWatchServiceWrapper) Unwrap() *elastic.XPackWatcherPutWatchService {
-	return w.obj
-}
-
-func (w *ESXPackWatcherStartServiceWrapper) Unwrap() *elastic.XPackWatcherStartService {
-	return w.obj
-}
-
-func (w *ESXPackWatcherStatsServiceWrapper) Unwrap() *elastic.XPackWatcherStatsService {
-	return w.obj
-}
-
-func (w *ESXPackWatcherStopServiceWrapper) Unwrap() *elastic.XPackWatcherStopService {
 	return w.obj
 }
 
@@ -1410,6 +198,1218 @@ func (w *ESClientWrapper) CreateMetric(options *WrapperOptions) {
 		Help:        "elastic Client request total",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode"})
+}
+
+type ESClusterHealthServiceWrapper struct {
+	obj            *elastic.ClusterHealthService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESClusterHealthServiceWrapper) Unwrap() *elastic.ClusterHealthService {
+	return w.obj
+}
+
+type ESClusterRerouteServiceWrapper struct {
+	obj            *elastic.ClusterRerouteService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESClusterRerouteServiceWrapper) Unwrap() *elastic.ClusterRerouteService {
+	return w.obj
+}
+
+type ESClusterStateServiceWrapper struct {
+	obj            *elastic.ClusterStateService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESClusterStateServiceWrapper) Unwrap() *elastic.ClusterStateService {
+	return w.obj
+}
+
+type ESClusterStatsServiceWrapper struct {
+	obj            *elastic.ClusterStatsService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESClusterStatsServiceWrapper) Unwrap() *elastic.ClusterStatsService {
+	return w.obj
+}
+
+type ESCountServiceWrapper struct {
+	obj            *elastic.CountService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESCountServiceWrapper) Unwrap() *elastic.CountService {
+	return w.obj
+}
+
+type ESDeleteByQueryServiceWrapper struct {
+	obj            *elastic.DeleteByQueryService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESDeleteByQueryServiceWrapper) Unwrap() *elastic.DeleteByQueryService {
+	return w.obj
+}
+
+type ESDeleteScriptServiceWrapper struct {
+	obj            *elastic.DeleteScriptService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESDeleteScriptServiceWrapper) Unwrap() *elastic.DeleteScriptService {
+	return w.obj
+}
+
+type ESDeleteServiceWrapper struct {
+	obj            *elastic.DeleteService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESDeleteServiceWrapper) Unwrap() *elastic.DeleteService {
+	return w.obj
+}
+
+type ESExistsServiceWrapper struct {
+	obj            *elastic.ExistsService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESExistsServiceWrapper) Unwrap() *elastic.ExistsService {
+	return w.obj
+}
+
+type ESExplainServiceWrapper struct {
+	obj            *elastic.ExplainService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESExplainServiceWrapper) Unwrap() *elastic.ExplainService {
+	return w.obj
+}
+
+type ESFieldCapsServiceWrapper struct {
+	obj            *elastic.FieldCapsService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESFieldCapsServiceWrapper) Unwrap() *elastic.FieldCapsService {
+	return w.obj
+}
+
+type ESGetScriptServiceWrapper struct {
+	obj            *elastic.GetScriptService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESGetScriptServiceWrapper) Unwrap() *elastic.GetScriptService {
+	return w.obj
+}
+
+type ESGetServiceWrapper struct {
+	obj            *elastic.GetService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESGetServiceWrapper) Unwrap() *elastic.GetService {
+	return w.obj
+}
+
+type ESIndexServiceWrapper struct {
+	obj            *elastic.IndexService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndexServiceWrapper) Unwrap() *elastic.IndexService {
+	return w.obj
+}
+
+type ESIndicesAnalyzeServiceWrapper struct {
+	obj            *elastic.IndicesAnalyzeService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesAnalyzeServiceWrapper) Unwrap() *elastic.IndicesAnalyzeService {
+	return w.obj
+}
+
+type ESIndicesClearCacheServiceWrapper struct {
+	obj            *elastic.IndicesClearCacheService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesClearCacheServiceWrapper) Unwrap() *elastic.IndicesClearCacheService {
+	return w.obj
+}
+
+type ESIndicesCloseServiceWrapper struct {
+	obj            *elastic.IndicesCloseService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesCloseServiceWrapper) Unwrap() *elastic.IndicesCloseService {
+	return w.obj
+}
+
+type ESIndicesCreateServiceWrapper struct {
+	obj            *elastic.IndicesCreateService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesCreateServiceWrapper) Unwrap() *elastic.IndicesCreateService {
+	return w.obj
+}
+
+type ESIndicesDeleteIndexTemplateServiceWrapper struct {
+	obj            *elastic.IndicesDeleteIndexTemplateService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesDeleteIndexTemplateService {
+	return w.obj
+}
+
+type ESIndicesDeleteServiceWrapper struct {
+	obj            *elastic.IndicesDeleteService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesDeleteServiceWrapper) Unwrap() *elastic.IndicesDeleteService {
+	return w.obj
+}
+
+type ESIndicesDeleteTemplateServiceWrapper struct {
+	obj            *elastic.IndicesDeleteTemplateService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesDeleteTemplateServiceWrapper) Unwrap() *elastic.IndicesDeleteTemplateService {
+	return w.obj
+}
+
+type ESIndicesExistsServiceWrapper struct {
+	obj            *elastic.IndicesExistsService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesExistsServiceWrapper) Unwrap() *elastic.IndicesExistsService {
+	return w.obj
+}
+
+type ESIndicesExistsTemplateServiceWrapper struct {
+	obj            *elastic.IndicesExistsTemplateService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesExistsTemplateServiceWrapper) Unwrap() *elastic.IndicesExistsTemplateService {
+	return w.obj
+}
+
+type ESIndicesFlushServiceWrapper struct {
+	obj            *elastic.IndicesFlushService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesFlushServiceWrapper) Unwrap() *elastic.IndicesFlushService {
+	return w.obj
+}
+
+type ESIndicesForcemergeServiceWrapper struct {
+	obj            *elastic.IndicesForcemergeService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesForcemergeServiceWrapper) Unwrap() *elastic.IndicesForcemergeService {
+	return w.obj
+}
+
+type ESIndicesFreezeServiceWrapper struct {
+	obj            *elastic.IndicesFreezeService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesFreezeServiceWrapper) Unwrap() *elastic.IndicesFreezeService {
+	return w.obj
+}
+
+type ESIndicesGetFieldMappingServiceWrapper struct {
+	obj            *elastic.IndicesGetFieldMappingService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesGetFieldMappingServiceWrapper) Unwrap() *elastic.IndicesGetFieldMappingService {
+	return w.obj
+}
+
+type ESIndicesGetIndexTemplateServiceWrapper struct {
+	obj            *elastic.IndicesGetIndexTemplateService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesGetIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesGetIndexTemplateService {
+	return w.obj
+}
+
+type ESIndicesGetMappingServiceWrapper struct {
+	obj            *elastic.IndicesGetMappingService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesGetMappingServiceWrapper) Unwrap() *elastic.IndicesGetMappingService {
+	return w.obj
+}
+
+type ESIndicesGetServiceWrapper struct {
+	obj            *elastic.IndicesGetService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesGetServiceWrapper) Unwrap() *elastic.IndicesGetService {
+	return w.obj
+}
+
+type ESIndicesGetSettingsServiceWrapper struct {
+	obj            *elastic.IndicesGetSettingsService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesGetSettingsServiceWrapper) Unwrap() *elastic.IndicesGetSettingsService {
+	return w.obj
+}
+
+type ESIndicesGetTemplateServiceWrapper struct {
+	obj            *elastic.IndicesGetTemplateService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesGetTemplateServiceWrapper) Unwrap() *elastic.IndicesGetTemplateService {
+	return w.obj
+}
+
+type ESIndicesOpenServiceWrapper struct {
+	obj            *elastic.IndicesOpenService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesOpenServiceWrapper) Unwrap() *elastic.IndicesOpenService {
+	return w.obj
+}
+
+type ESIndicesPutIndexTemplateServiceWrapper struct {
+	obj            *elastic.IndicesPutIndexTemplateService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesPutIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesPutIndexTemplateService {
+	return w.obj
+}
+
+type ESIndicesPutMappingServiceWrapper struct {
+	obj            *elastic.IndicesPutMappingService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesPutMappingServiceWrapper) Unwrap() *elastic.IndicesPutMappingService {
+	return w.obj
+}
+
+type ESIndicesPutSettingsServiceWrapper struct {
+	obj            *elastic.IndicesPutSettingsService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesPutSettingsServiceWrapper) Unwrap() *elastic.IndicesPutSettingsService {
+	return w.obj
+}
+
+type ESIndicesPutTemplateServiceWrapper struct {
+	obj            *elastic.IndicesPutTemplateService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesPutTemplateServiceWrapper) Unwrap() *elastic.IndicesPutTemplateService {
+	return w.obj
+}
+
+type ESIndicesRolloverServiceWrapper struct {
+	obj            *elastic.IndicesRolloverService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesRolloverServiceWrapper) Unwrap() *elastic.IndicesRolloverService {
+	return w.obj
+}
+
+type ESIndicesSegmentsServiceWrapper struct {
+	obj            *elastic.IndicesSegmentsService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesSegmentsServiceWrapper) Unwrap() *elastic.IndicesSegmentsService {
+	return w.obj
+}
+
+type ESIndicesShrinkServiceWrapper struct {
+	obj            *elastic.IndicesShrinkService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesShrinkServiceWrapper) Unwrap() *elastic.IndicesShrinkService {
+	return w.obj
+}
+
+type ESIndicesStatsServiceWrapper struct {
+	obj            *elastic.IndicesStatsService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesStatsServiceWrapper) Unwrap() *elastic.IndicesStatsService {
+	return w.obj
+}
+
+type ESIndicesSyncedFlushServiceWrapper struct {
+	obj            *elastic.IndicesSyncedFlushService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesSyncedFlushServiceWrapper) Unwrap() *elastic.IndicesSyncedFlushService {
+	return w.obj
+}
+
+type ESIndicesUnfreezeServiceWrapper struct {
+	obj            *elastic.IndicesUnfreezeService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIndicesUnfreezeServiceWrapper) Unwrap() *elastic.IndicesUnfreezeService {
+	return w.obj
+}
+
+type ESIngestDeletePipelineServiceWrapper struct {
+	obj            *elastic.IngestDeletePipelineService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIngestDeletePipelineServiceWrapper) Unwrap() *elastic.IngestDeletePipelineService {
+	return w.obj
+}
+
+type ESIngestGetPipelineServiceWrapper struct {
+	obj            *elastic.IngestGetPipelineService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIngestGetPipelineServiceWrapper) Unwrap() *elastic.IngestGetPipelineService {
+	return w.obj
+}
+
+type ESIngestPutPipelineServiceWrapper struct {
+	obj            *elastic.IngestPutPipelineService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIngestPutPipelineServiceWrapper) Unwrap() *elastic.IngestPutPipelineService {
+	return w.obj
+}
+
+type ESIngestSimulatePipelineServiceWrapper struct {
+	obj            *elastic.IngestSimulatePipelineService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESIngestSimulatePipelineServiceWrapper) Unwrap() *elastic.IngestSimulatePipelineService {
+	return w.obj
+}
+
+type ESMgetServiceWrapper struct {
+	obj            *elastic.MgetService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESMgetServiceWrapper) Unwrap() *elastic.MgetService {
+	return w.obj
+}
+
+type ESMultiSearchServiceWrapper struct {
+	obj            *elastic.MultiSearchService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESMultiSearchServiceWrapper) Unwrap() *elastic.MultiSearchService {
+	return w.obj
+}
+
+type ESMultiTermvectorServiceWrapper struct {
+	obj            *elastic.MultiTermvectorService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESMultiTermvectorServiceWrapper) Unwrap() *elastic.MultiTermvectorService {
+	return w.obj
+}
+
+type ESNodesInfoServiceWrapper struct {
+	obj            *elastic.NodesInfoService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESNodesInfoServiceWrapper) Unwrap() *elastic.NodesInfoService {
+	return w.obj
+}
+
+type ESNodesStatsServiceWrapper struct {
+	obj            *elastic.NodesStatsService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESNodesStatsServiceWrapper) Unwrap() *elastic.NodesStatsService {
+	return w.obj
+}
+
+type ESPingServiceWrapper struct {
+	obj            *elastic.PingService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESPingServiceWrapper) Unwrap() *elastic.PingService {
+	return w.obj
+}
+
+type ESPutScriptServiceWrapper struct {
+	obj            *elastic.PutScriptService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESPutScriptServiceWrapper) Unwrap() *elastic.PutScriptService {
+	return w.obj
+}
+
+type ESRefreshServiceWrapper struct {
+	obj            *elastic.RefreshService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESRefreshServiceWrapper) Unwrap() *elastic.RefreshService {
+	return w.obj
+}
+
+type ESReindexServiceWrapper struct {
+	obj            *elastic.ReindexService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESReindexServiceWrapper) Unwrap() *elastic.ReindexService {
+	return w.obj
+}
+
+type ESScrollServiceWrapper struct {
+	obj            *elastic.ScrollService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESScrollServiceWrapper) Unwrap() *elastic.ScrollService {
+	return w.obj
+}
+
+type ESSearchServiceWrapper struct {
+	obj            *elastic.SearchService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESSearchServiceWrapper) Unwrap() *elastic.SearchService {
+	return w.obj
+}
+
+type ESSearchShardsServiceWrapper struct {
+	obj            *elastic.SearchShardsService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESSearchShardsServiceWrapper) Unwrap() *elastic.SearchShardsService {
+	return w.obj
+}
+
+type ESSnapshotCreateRepositoryServiceWrapper struct {
+	obj            *elastic.SnapshotCreateRepositoryService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESSnapshotCreateRepositoryServiceWrapper) Unwrap() *elastic.SnapshotCreateRepositoryService {
+	return w.obj
+}
+
+type ESSnapshotCreateServiceWrapper struct {
+	obj            *elastic.SnapshotCreateService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESSnapshotCreateServiceWrapper) Unwrap() *elastic.SnapshotCreateService {
+	return w.obj
+}
+
+type ESSnapshotDeleteRepositoryServiceWrapper struct {
+	obj            *elastic.SnapshotDeleteRepositoryService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESSnapshotDeleteRepositoryServiceWrapper) Unwrap() *elastic.SnapshotDeleteRepositoryService {
+	return w.obj
+}
+
+type ESSnapshotDeleteServiceWrapper struct {
+	obj            *elastic.SnapshotDeleteService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESSnapshotDeleteServiceWrapper) Unwrap() *elastic.SnapshotDeleteService {
+	return w.obj
+}
+
+type ESSnapshotGetRepositoryServiceWrapper struct {
+	obj            *elastic.SnapshotGetRepositoryService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESSnapshotGetRepositoryServiceWrapper) Unwrap() *elastic.SnapshotGetRepositoryService {
+	return w.obj
+}
+
+type ESSnapshotGetServiceWrapper struct {
+	obj            *elastic.SnapshotGetService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESSnapshotGetServiceWrapper) Unwrap() *elastic.SnapshotGetService {
+	return w.obj
+}
+
+type ESSnapshotRestoreServiceWrapper struct {
+	obj            *elastic.SnapshotRestoreService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESSnapshotRestoreServiceWrapper) Unwrap() *elastic.SnapshotRestoreService {
+	return w.obj
+}
+
+type ESSnapshotStatusServiceWrapper struct {
+	obj            *elastic.SnapshotStatusService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESSnapshotStatusServiceWrapper) Unwrap() *elastic.SnapshotStatusService {
+	return w.obj
+}
+
+type ESSnapshotVerifyRepositoryServiceWrapper struct {
+	obj            *elastic.SnapshotVerifyRepositoryService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESSnapshotVerifyRepositoryServiceWrapper) Unwrap() *elastic.SnapshotVerifyRepositoryService {
+	return w.obj
+}
+
+type ESTasksCancelServiceWrapper struct {
+	obj            *elastic.TasksCancelService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESTasksCancelServiceWrapper) Unwrap() *elastic.TasksCancelService {
+	return w.obj
+}
+
+type ESTasksGetTaskServiceWrapper struct {
+	obj            *elastic.TasksGetTaskService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESTasksGetTaskServiceWrapper) Unwrap() *elastic.TasksGetTaskService {
+	return w.obj
+}
+
+type ESTasksListServiceWrapper struct {
+	obj            *elastic.TasksListService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESTasksListServiceWrapper) Unwrap() *elastic.TasksListService {
+	return w.obj
+}
+
+type ESTermvectorsServiceWrapper struct {
+	obj            *elastic.TermvectorsService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESTermvectorsServiceWrapper) Unwrap() *elastic.TermvectorsService {
+	return w.obj
+}
+
+type ESUpdateByQueryServiceWrapper struct {
+	obj            *elastic.UpdateByQueryService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESUpdateByQueryServiceWrapper) Unwrap() *elastic.UpdateByQueryService {
+	return w.obj
+}
+
+type ESUpdateServiceWrapper struct {
+	obj            *elastic.UpdateService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESUpdateServiceWrapper) Unwrap() *elastic.UpdateService {
+	return w.obj
+}
+
+type ESValidateServiceWrapper struct {
+	obj            *elastic.ValidateService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESValidateServiceWrapper) Unwrap() *elastic.ValidateService {
+	return w.obj
+}
+
+type ESXPackIlmDeleteLifecycleServiceWrapper struct {
+	obj            *elastic.XPackIlmDeleteLifecycleService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmDeleteLifecycleService {
+	return w.obj
+}
+
+type ESXPackIlmGetLifecycleServiceWrapper struct {
+	obj            *elastic.XPackIlmGetLifecycleService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackIlmGetLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmGetLifecycleService {
+	return w.obj
+}
+
+type ESXPackIlmPutLifecycleServiceWrapper struct {
+	obj            *elastic.XPackIlmPutLifecycleService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackIlmPutLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmPutLifecycleService {
+	return w.obj
+}
+
+type ESXPackInfoServiceWrapper struct {
+	obj            *elastic.XPackInfoService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackInfoServiceWrapper) Unwrap() *elastic.XPackInfoService {
+	return w.obj
+}
+
+type ESXPackSecurityChangePasswordServiceWrapper struct {
+	obj            *elastic.XPackSecurityChangePasswordService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackSecurityChangePasswordServiceWrapper) Unwrap() *elastic.XPackSecurityChangePasswordService {
+	return w.obj
+}
+
+type ESXPackSecurityDeleteRoleMappingServiceWrapper struct {
+	obj            *elastic.XPackSecurityDeleteRoleMappingService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteRoleMappingService {
+	return w.obj
+}
+
+type ESXPackSecurityDeleteRoleServiceWrapper struct {
+	obj            *elastic.XPackSecurityDeleteRoleService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackSecurityDeleteRoleServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteRoleService {
+	return w.obj
+}
+
+type ESXPackSecurityDeleteUserServiceWrapper struct {
+	obj            *elastic.XPackSecurityDeleteUserService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackSecurityDeleteUserServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteUserService {
+	return w.obj
+}
+
+type ESXPackSecurityDisableUserServiceWrapper struct {
+	obj            *elastic.XPackSecurityDisableUserService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackSecurityDisableUserServiceWrapper) Unwrap() *elastic.XPackSecurityDisableUserService {
+	return w.obj
+}
+
+type ESXPackSecurityEnableUserServiceWrapper struct {
+	obj            *elastic.XPackSecurityEnableUserService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackSecurityEnableUserServiceWrapper) Unwrap() *elastic.XPackSecurityEnableUserService {
+	return w.obj
+}
+
+type ESXPackSecurityGetRoleMappingServiceWrapper struct {
+	obj            *elastic.XPackSecurityGetRoleMappingService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityGetRoleMappingService {
+	return w.obj
+}
+
+type ESXPackSecurityGetRoleServiceWrapper struct {
+	obj            *elastic.XPackSecurityGetRoleService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackSecurityGetRoleServiceWrapper) Unwrap() *elastic.XPackSecurityGetRoleService {
+	return w.obj
+}
+
+type ESXPackSecurityGetUserServiceWrapper struct {
+	obj            *elastic.XPackSecurityGetUserService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackSecurityGetUserServiceWrapper) Unwrap() *elastic.XPackSecurityGetUserService {
+	return w.obj
+}
+
+type ESXPackSecurityPutRoleMappingServiceWrapper struct {
+	obj            *elastic.XPackSecurityPutRoleMappingService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityPutRoleMappingService {
+	return w.obj
+}
+
+type ESXPackSecurityPutRoleServiceWrapper struct {
+	obj            *elastic.XPackSecurityPutRoleService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackSecurityPutRoleServiceWrapper) Unwrap() *elastic.XPackSecurityPutRoleService {
+	return w.obj
+}
+
+type ESXPackSecurityPutUserServiceWrapper struct {
+	obj            *elastic.XPackSecurityPutUserService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackSecurityPutUserServiceWrapper) Unwrap() *elastic.XPackSecurityPutUserService {
+	return w.obj
+}
+
+type ESXPackWatcherAckWatchServiceWrapper struct {
+	obj            *elastic.XPackWatcherAckWatchService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackWatcherAckWatchServiceWrapper) Unwrap() *elastic.XPackWatcherAckWatchService {
+	return w.obj
+}
+
+type ESXPackWatcherActivateWatchServiceWrapper struct {
+	obj            *elastic.XPackWatcherActivateWatchService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackWatcherActivateWatchServiceWrapper) Unwrap() *elastic.XPackWatcherActivateWatchService {
+	return w.obj
+}
+
+type ESXPackWatcherDeactivateWatchServiceWrapper struct {
+	obj            *elastic.XPackWatcherDeactivateWatchService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Unwrap() *elastic.XPackWatcherDeactivateWatchService {
+	return w.obj
+}
+
+type ESXPackWatcherDeleteWatchServiceWrapper struct {
+	obj            *elastic.XPackWatcherDeleteWatchService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackWatcherDeleteWatchServiceWrapper) Unwrap() *elastic.XPackWatcherDeleteWatchService {
+	return w.obj
+}
+
+type ESXPackWatcherExecuteWatchServiceWrapper struct {
+	obj            *elastic.XPackWatcherExecuteWatchService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackWatcherExecuteWatchServiceWrapper) Unwrap() *elastic.XPackWatcherExecuteWatchService {
+	return w.obj
+}
+
+type ESXPackWatcherGetWatchServiceWrapper struct {
+	obj            *elastic.XPackWatcherGetWatchService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackWatcherGetWatchServiceWrapper) Unwrap() *elastic.XPackWatcherGetWatchService {
+	return w.obj
+}
+
+type ESXPackWatcherPutWatchServiceWrapper struct {
+	obj            *elastic.XPackWatcherPutWatchService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackWatcherPutWatchServiceWrapper) Unwrap() *elastic.XPackWatcherPutWatchService {
+	return w.obj
+}
+
+type ESXPackWatcherStartServiceWrapper struct {
+	obj            *elastic.XPackWatcherStartService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackWatcherStartServiceWrapper) Unwrap() *elastic.XPackWatcherStartService {
+	return w.obj
+}
+
+type ESXPackWatcherStatsServiceWrapper struct {
+	obj            *elastic.XPackWatcherStatsService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackWatcherStatsServiceWrapper) Unwrap() *elastic.XPackWatcherStatsService {
+	return w.obj
+}
+
+type ESXPackWatcherStopServiceWrapper struct {
+	obj            *elastic.XPackWatcherStopService
+	retry          *Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	totalMetric    *prometheus.CounterVec
+}
+
+func (w *ESXPackWatcherStopServiceWrapper) Unwrap() *elastic.XPackWatcherStopService {
+	return w.obj
 }
 
 func (w *ESAliasServiceWrapper) Action(action ...elastic.AliasAction) *ESAliasServiceWrapper {
