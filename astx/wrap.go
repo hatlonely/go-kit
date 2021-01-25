@@ -427,19 +427,10 @@ func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) st
 const WrapperFunctionBodyReturnVoidTpl = `
 	w.obj.{{.function.name}}({{.function.paramList}})
 `
-
-func (g *WrapperGenerator) generateWrapperReturnChain(function *Function) string {
-	var params []string
-	for _, i := range function.Params {
-		if strings.HasPrefix(i.Type, "...") {
-			params = append(params, fmt.Sprintf("%s...", i.Name))
-		} else {
-			params = append(params, i.Name)
-		}
-	}
-
-	return fmt.Sprintf("\tw.obj = w.obj.%s(%s)\n", function.Name, strings.Join(params, ", "))
-}
+const WrapperFunctionBodyReturnChainTpl = `
+	w.obj = w.obj.{{.function.name}}({{.function.paramList}})
+	return w
+`
 
 func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface{}, function *Function) string {
 	var buf bytes.Buffer
@@ -447,11 +438,9 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface
 		if g.options.EnableRuleForChainFunc {
 			if g.MatchFunctionRule(function, g.options.Rule.Trace) {
 				buf.WriteString(renderTemplate(WrapperFunctionBodyOpentracingTpl, vals))
-				buf.WriteString("\n")
 			}
 		}
-		buf.WriteString(g.generateWrapperReturnChain(function))
-		buf.WriteString("\treturn w")
+		buf.WriteString(renderTemplate(WrapperFunctionBodyReturnChainTpl, vals))
 		return buf.String()
 	}
 
