@@ -46,18 +46,18 @@ func main() {
 			var options astx.WrapperGeneratorOptions
 			Must(f.Struct(&options, refx.WithCamelName()))
 			strx.Trac(f.Usage())
-			strx.Trac(`
-    gen wrap --sourcePath vendor \
-        --packagePath "go.mongodb.org/mongo-driver/mongo" \
-        --packageName mongo \
-        --classPrefix Mongo \
-        --rule.starClass '{"include": "^(?i:(Client)|(Database)|(Collection))$$", "exclude": ".*"}' \
-        --rule.createMetric.include "^Client$$" \
-        --rule.onWrapperChange.include "^Client$$" \
-        --rule.onRetryChange.include "^Client$$" \
-        --rule.trace '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
-        --rule.metric '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
-        --output wrap/autogen_mongo.go
+			strx.Trac(`Example:
+  gen wrap --sourcePath vendor \
+      --packagePath "go.mongodb.org/mongo-driver/mongo" \
+      --packageName mongo \
+      --classPrefix Mongo \
+      --rule.starClass '{"include": "^(?i:(Client)|(Database)|(Collection))$$", "exclude": ".*"}' \
+      --rule.createMetric.include "^Client$$" \
+      --rule.onWrapperChange.include "^Client$$" \
+      --rule.onRetryChange.include "^Client$$" \
+      --rule.trace '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
+      --rule.metric '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
+      --output wrap/autogen_mongo.go
 `)
 		default:
 			strx.Trac(flag.Usage())

@@ -51,8 +51,8 @@ func (r Rule) MarshalJSON() ([]byte, error) {
 }
 
 type WrapperGeneratorOptions struct {
-	Debug                  bool     `flag:"usage: debug mode. more log will trace"`
-	SourcePath             string   `flag:"usage: gopath; default: vendor"`
+	Debug                  bool     `flag:"usage: debug mode"`
+	SourcePath             string   `flag:"usage: source path; default: vendor"`
 	PackagePath            string   `flag:"usage: package path"`
 	PackageName            string   `flag:"usage: package name"`
 	OutputPackage          string   `flag:"usage: output package name; default: wrap" dft:"wrap"`
