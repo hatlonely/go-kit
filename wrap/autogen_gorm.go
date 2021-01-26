@@ -17,11 +17,12 @@ import (
 )
 
 type GORMDBWrapper struct {
-	obj            *gorm.DB
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
+	obj              *gorm.DB
+	retry            *Retry
+	options          *WrapperOptions
+	durationMetric   *prometheus.HistogramVec
+	totalMetric      *prometheus.CounterVec
+	rateLimiterGroup RateLimiterGroup
 }
 
 func (w GORMDBWrapper) Unwrap() *gorm.DB {
@@ -399,6 +400,12 @@ func (w GORMDBWrapper) Close(ctx context.Context) error {
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "DB.Close"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1743,6 +1750,12 @@ func (w GORMDBWrapper) Rows(ctx context.Context) (*sql.Rows, error) {
 	var res0 *sql.Rows
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "DB.Rows"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1825,6 +1838,12 @@ func (w GORMDBWrapper) ScanRows(ctx context.Context, rows *sql.Rows, result inte
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "DB.ScanRows"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2072,6 +2091,12 @@ func (w GORMDBWrapper) Transaction(ctx context.Context, fc func(tx *gorm.DB) err
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "DB.Transaction"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {

@@ -16,11 +16,12 @@ import (
 )
 
 type OTSTableStoreClientWrapper struct {
-	obj            *tablestore.TableStoreClient
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
+	obj              *tablestore.TableStoreClient
+	retry            *Retry
+	options          *WrapperOptions
+	durationMetric   *prometheus.HistogramVec
+	totalMetric      *prometheus.CounterVec
+	rateLimiterGroup RateLimiterGroup
 }
 
 func (w *OTSTableStoreClientWrapper) Unwrap() *tablestore.TableStoreClient {
@@ -84,6 +85,12 @@ func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, reque
 	var res0 *tablestore.AbortTransactionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.AbortTransaction"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -115,6 +122,12 @@ func (w *OTSTableStoreClientWrapper) BatchGetRow(ctx context.Context, request *t
 	var res0 *tablestore.BatchGetRowResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.BatchGetRow"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -146,6 +159,12 @@ func (w *OTSTableStoreClientWrapper) BatchWriteRow(ctx context.Context, request 
 	var res0 *tablestore.BatchWriteRowResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.BatchWriteRow"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -177,6 +196,12 @@ func (w *OTSTableStoreClientWrapper) CommitTransaction(ctx context.Context, requ
 	var res0 *tablestore.CommitTransactionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.CommitTransaction"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -208,6 +233,12 @@ func (w *OTSTableStoreClientWrapper) ComputeSplitPointsBySize(ctx context.Contex
 	var res0 *tablestore.ComputeSplitPointsBySizeResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.ComputeSplitPointsBySize"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -239,6 +270,12 @@ func (w *OTSTableStoreClientWrapper) CreateIndex(ctx context.Context, request *t
 	var res0 *tablestore.CreateIndexResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.CreateIndex"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -270,6 +307,12 @@ func (w *OTSTableStoreClientWrapper) CreateSearchIndex(ctx context.Context, requ
 	var res0 *tablestore.CreateSearchIndexResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.CreateSearchIndex"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -301,6 +344,12 @@ func (w *OTSTableStoreClientWrapper) CreateTable(ctx context.Context, request *t
 	var res0 *tablestore.CreateTableResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.CreateTable"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -332,6 +381,12 @@ func (w *OTSTableStoreClientWrapper) DeleteIndex(ctx context.Context, request *t
 	var res0 *tablestore.DeleteIndexResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.DeleteIndex"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -363,6 +418,12 @@ func (w *OTSTableStoreClientWrapper) DeleteRow(ctx context.Context, request *tab
 	var res0 *tablestore.DeleteRowResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.DeleteRow"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -394,6 +455,12 @@ func (w *OTSTableStoreClientWrapper) DeleteSearchIndex(ctx context.Context, requ
 	var res0 *tablestore.DeleteSearchIndexResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.DeleteSearchIndex"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -425,6 +492,12 @@ func (w *OTSTableStoreClientWrapper) DeleteTable(ctx context.Context, request *t
 	var res0 *tablestore.DeleteTableResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.DeleteTable"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -456,6 +529,12 @@ func (w *OTSTableStoreClientWrapper) DescribeSearchIndex(ctx context.Context, re
 	var res0 *tablestore.DescribeSearchIndexResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.DescribeSearchIndex"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -487,6 +566,12 @@ func (w *OTSTableStoreClientWrapper) DescribeStream(ctx context.Context, req *ta
 	var res0 *tablestore.DescribeStreamResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.DescribeStream"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -518,6 +603,12 @@ func (w *OTSTableStoreClientWrapper) DescribeTable(ctx context.Context, request 
 	var res0 *tablestore.DescribeTableResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.DescribeTable"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -549,6 +640,12 @@ func (w *OTSTableStoreClientWrapper) GetRange(ctx context.Context, request *tabl
 	var res0 *tablestore.GetRangeResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.GetRange"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -580,6 +677,12 @@ func (w *OTSTableStoreClientWrapper) GetRow(ctx context.Context, request *tables
 	var res0 *tablestore.GetRowResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.GetRow"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -611,6 +714,12 @@ func (w *OTSTableStoreClientWrapper) GetShardIterator(ctx context.Context, req *
 	var res0 *tablestore.GetShardIteratorResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.GetShardIterator"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -642,6 +751,12 @@ func (w *OTSTableStoreClientWrapper) GetStreamRecord(ctx context.Context, req *t
 	var res0 *tablestore.GetStreamRecordResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.GetStreamRecord"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -673,6 +788,12 @@ func (w *OTSTableStoreClientWrapper) ListSearchIndex(ctx context.Context, reques
 	var res0 *tablestore.ListSearchIndexResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.ListSearchIndex"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -704,6 +825,12 @@ func (w *OTSTableStoreClientWrapper) ListStream(ctx context.Context, req *tables
 	var res0 *tablestore.ListStreamResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.ListStream"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -735,6 +862,12 @@ func (w *OTSTableStoreClientWrapper) ListTable(ctx context.Context) (*tablestore
 	var res0 *tablestore.ListTableResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.ListTable"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -766,6 +899,12 @@ func (w *OTSTableStoreClientWrapper) PutRow(ctx context.Context, request *tables
 	var res0 *tablestore.PutRowResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.PutRow"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -797,6 +936,12 @@ func (w *OTSTableStoreClientWrapper) Search(ctx context.Context, request *tables
 	var res0 *tablestore.SearchResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.Search"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -828,6 +973,12 @@ func (w *OTSTableStoreClientWrapper) StartLocalTransaction(ctx context.Context, 
 	var res0 *tablestore.StartLocalTransactionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.StartLocalTransaction"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -859,6 +1010,12 @@ func (w *OTSTableStoreClientWrapper) UpdateRow(ctx context.Context, request *tab
 	var res0 *tablestore.UpdateRowResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.UpdateRow"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -890,6 +1047,12 @@ func (w *OTSTableStoreClientWrapper) UpdateTable(ctx context.Context, request *t
 	var res0 *tablestore.UpdateTableResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "TableStoreClient.UpdateTable"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {

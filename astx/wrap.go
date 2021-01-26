@@ -290,11 +290,12 @@ func renderTemplate(tplStr string, vals map[string]interface{}, tplName string) 
 
 const WrapperStructTpl = `
 type {{.wrapClass}} struct {
-	obj            *{{.package}}.{{.class}}
-	retry          *{{.wrapPackagePrefix}}Retry
-	options        *{{.wrapPackagePrefix}}WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
+	obj              *{{.package}}.{{.class}}
+	retry            *{{.wrapPackagePrefix}}Retry
+	options          *{{.wrapPackagePrefix}}WrapperOptions
+	durationMetric   *prometheus.HistogramVec
+	totalMetric      *prometheus.CounterVec
+	rateLimiterGroup RateLimiterGroup
 }
 `
 const WrapperFunctionGetWithStarTpl = `
@@ -472,12 +473,24 @@ const WrapperFunctionBodyMetricTpl = `
 `
 const WrapperFunctionBodyRetryTpl = `
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "{{.class}}.{{.function.name}}"); err != nil {
+				return err
+			}
+		}
+
 		{{.function.resultList}} = w.obj.{{.function.name}}({{.function.paramList}})
 		return {{.function.lastResult}}
 	})
 `
 const WrapperFunctionBodyRetryWithMetricTpl = `
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "{{.class}}.{{.function.name}}"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {

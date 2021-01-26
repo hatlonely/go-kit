@@ -18,11 +18,12 @@ import (
 )
 
 type ACMConfigClientWrapper struct {
-	obj            *config_client.ConfigClient
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
+	obj              *config_client.ConfigClient
+	retry            *Retry
+	options          *WrapperOptions
+	durationMetric   *prometheus.HistogramVec
+	totalMetric      *prometheus.CounterVec
+	rateLimiterGroup RateLimiterGroup
 }
 
 func (w *ACMConfigClientWrapper) Unwrap() *config_client.ConfigClient {
@@ -85,6 +86,12 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ConfigClient.CancelListenConfig"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -116,6 +123,12 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 	var deleted bool
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ConfigClient.DeleteConfig"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -147,6 +160,12 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 	var content string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ConfigClient.GetConfig"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -177,6 +196,12 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ConfigClient.ListenConfig"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -208,6 +233,12 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 	var published bool
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ConfigClient.PublishConfig"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -239,6 +270,12 @@ func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.Sear
 	var res0 *model.ConfigPage
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ConfigClient.SearchConfig"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {

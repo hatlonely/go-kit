@@ -19,11 +19,12 @@ import (
 )
 
 type OSSBucketWrapper struct {
-	obj            *oss.Bucket
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
+	obj              *oss.Bucket
+	retry            *Retry
+	options          *WrapperOptions
+	durationMetric   *prometheus.HistogramVec
+	totalMetric      *prometheus.CounterVec
+	rateLimiterGroup RateLimiterGroup
 }
 
 func (w *OSSBucketWrapper) Unwrap() *oss.Bucket {
@@ -31,11 +32,12 @@ func (w *OSSBucketWrapper) Unwrap() *oss.Bucket {
 }
 
 type OSSClientWrapper struct {
-	obj            *oss.Client
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
+	obj              *oss.Client
+	retry            *Retry
+	options          *WrapperOptions
+	durationMetric   *prometheus.HistogramVec
+	totalMetric      *prometheus.CounterVec
+	rateLimiterGroup RateLimiterGroup
 }
 
 func (w *OSSClientWrapper) Unwrap() *oss.Client {
@@ -98,6 +100,12 @@ func (w *OSSBucketWrapper) AbortMultipartUpload(ctx context.Context, imur oss.In
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.AbortMultipartUpload"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -129,6 +137,12 @@ func (w *OSSBucketWrapper) AppendObject(ctx context.Context, objectKey string, r
 	var res0 int64
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.AppendObject"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -160,6 +174,12 @@ func (w *OSSBucketWrapper) CompleteMultipartUpload(ctx context.Context, imur oss
 	var res0 oss.CompleteMultipartUploadResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.CompleteMultipartUpload"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -190,6 +210,12 @@ func (w *OSSBucketWrapper) CopyFile(ctx context.Context, srcBucketName string, s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.CopyFile"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -221,6 +247,12 @@ func (w *OSSBucketWrapper) CopyObject(ctx context.Context, srcObjectKey string, 
 	var res0 oss.CopyObjectResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.CopyObject"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -252,6 +284,12 @@ func (w *OSSBucketWrapper) CopyObjectFrom(ctx context.Context, srcBucketName str
 	var res0 oss.CopyObjectResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.CopyObjectFrom"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -283,6 +321,12 @@ func (w *OSSBucketWrapper) CopyObjectTo(ctx context.Context, destBucketName stri
 	var res0 oss.CopyObjectResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.CopyObjectTo"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -314,6 +358,12 @@ func (w *OSSBucketWrapper) CreateLiveChannel(ctx context.Context, channelName st
 	var res0 oss.CreateLiveChannelResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.CreateLiveChannel"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -345,6 +395,12 @@ func (w *OSSBucketWrapper) CreateSelectCsvObjectMeta(ctx context.Context, key st
 	var res0 oss.MetaEndFrameCSV
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.CreateSelectCsvObjectMeta"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -376,6 +432,12 @@ func (w *OSSBucketWrapper) CreateSelectJsonObjectMeta(ctx context.Context, key s
 	var res0 oss.MetaEndFrameJSON
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.CreateSelectJsonObjectMeta"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -406,6 +468,12 @@ func (w *OSSBucketWrapper) DeleteLiveChannel(ctx context.Context, channelName st
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.DeleteLiveChannel"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -436,6 +504,12 @@ func (w *OSSBucketWrapper) DeleteObject(ctx context.Context, objectKey string, o
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.DeleteObject"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -466,6 +540,12 @@ func (w *OSSBucketWrapper) DeleteObjectTagging(ctx context.Context, objectKey st
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.DeleteObjectTagging"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -497,6 +577,12 @@ func (w *OSSBucketWrapper) DeleteObjectVersions(ctx context.Context, objectVersi
 	var res0 oss.DeleteObjectVersionsResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.DeleteObjectVersions"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -528,6 +614,12 @@ func (w *OSSBucketWrapper) DeleteObjects(ctx context.Context, objectKeys []strin
 	var res0 oss.DeleteObjectsResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.DeleteObjects"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -559,6 +651,12 @@ func (w *OSSBucketWrapper) Do(ctx context.Context, method string, objectName str
 	var res0 *oss.Response
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.Do"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -590,6 +688,12 @@ func (w *OSSBucketWrapper) DoAppendObject(ctx context.Context, request *oss.Appe
 	var res0 *oss.AppendObjectResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.DoAppendObject"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -621,6 +725,12 @@ func (w *OSSBucketWrapper) DoGetObject(ctx context.Context, request *oss.GetObje
 	var res0 *oss.GetObjectResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.DoGetObject"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -652,6 +762,12 @@ func (w *OSSBucketWrapper) DoGetObjectWithURL(ctx context.Context, signedURL str
 	var res0 *oss.GetObjectResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.DoGetObjectWithURL"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -683,6 +799,12 @@ func (w *OSSBucketWrapper) DoPostSelectObject(ctx context.Context, key string, p
 	var res0 *oss.SelectObjectResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.DoPostSelectObject"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -714,6 +836,12 @@ func (w *OSSBucketWrapper) DoPutObject(ctx context.Context, request *oss.PutObje
 	var res0 *oss.Response
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.DoPutObject"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -745,6 +873,12 @@ func (w *OSSBucketWrapper) DoPutObjectWithURL(ctx context.Context, signedURL str
 	var res0 *oss.Response
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.DoPutObjectWithURL"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -776,6 +910,12 @@ func (w *OSSBucketWrapper) DoUploadPart(ctx context.Context, request *oss.Upload
 	var res0 *oss.UploadPartResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.DoUploadPart"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -806,6 +946,12 @@ func (w *OSSBucketWrapper) DownloadFile(ctx context.Context, objectKey string, f
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.DownloadFile"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -864,6 +1010,12 @@ func (w *OSSBucketWrapper) GetLiveChannelHistory(ctx context.Context, channelNam
 	var res0 oss.LiveChannelHistory
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.GetLiveChannelHistory"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -895,6 +1047,12 @@ func (w *OSSBucketWrapper) GetLiveChannelInfo(ctx context.Context, channelName s
 	var res0 oss.LiveChannelConfiguration
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.GetLiveChannelInfo"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -926,6 +1084,12 @@ func (w *OSSBucketWrapper) GetLiveChannelStat(ctx context.Context, channelName s
 	var res0 oss.LiveChannelStat
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.GetLiveChannelStat"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -957,6 +1121,12 @@ func (w *OSSBucketWrapper) GetObject(ctx context.Context, objectKey string, opti
 	var res0 io.ReadCloser
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.GetObject"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -988,6 +1158,12 @@ func (w *OSSBucketWrapper) GetObjectACL(ctx context.Context, objectKey string, o
 	var res0 oss.GetObjectACLResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.GetObjectACL"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1019,6 +1195,12 @@ func (w *OSSBucketWrapper) GetObjectDetailedMeta(ctx context.Context, objectKey 
 	var res0 http.Header
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.GetObjectDetailedMeta"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1050,6 +1232,12 @@ func (w *OSSBucketWrapper) GetObjectMeta(ctx context.Context, objectKey string, 
 	var res0 http.Header
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.GetObjectMeta"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1081,6 +1269,12 @@ func (w *OSSBucketWrapper) GetObjectTagging(ctx context.Context, objectKey strin
 	var res0 oss.GetObjectTaggingResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.GetObjectTagging"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1111,6 +1305,12 @@ func (w *OSSBucketWrapper) GetObjectToFile(ctx context.Context, objectKey string
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.GetObjectToFile"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1141,6 +1341,12 @@ func (w *OSSBucketWrapper) GetObjectToFileWithURL(ctx context.Context, signedURL
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.GetObjectToFileWithURL"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1172,6 +1378,12 @@ func (w *OSSBucketWrapper) GetObjectWithURL(ctx context.Context, signedURL strin
 	var res0 io.ReadCloser
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.GetObjectWithURL"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1203,6 +1415,12 @@ func (w *OSSBucketWrapper) GetSymlink(ctx context.Context, objectKey string, opt
 	var res0 http.Header
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.GetSymlink"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1234,6 +1452,12 @@ func (w *OSSBucketWrapper) GetVodPlaylist(ctx context.Context, channelName strin
 	var res0 io.ReadCloser
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.GetVodPlaylist"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1265,6 +1489,12 @@ func (w *OSSBucketWrapper) InitiateMultipartUpload(ctx context.Context, objectKe
 	var res0 oss.InitiateMultipartUploadResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.InitiateMultipartUpload"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1296,6 +1526,12 @@ func (w *OSSBucketWrapper) IsObjectExist(ctx context.Context, objectKey string, 
 	var res0 bool
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.IsObjectExist"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1327,6 +1563,12 @@ func (w *OSSBucketWrapper) ListLiveChannel(ctx context.Context, options ...oss.O
 	var res0 oss.ListLiveChannelResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.ListLiveChannel"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1358,6 +1600,12 @@ func (w *OSSBucketWrapper) ListMultipartUploads(ctx context.Context, options ...
 	var res0 oss.ListMultipartUploadResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.ListMultipartUploads"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1389,6 +1637,12 @@ func (w *OSSBucketWrapper) ListObjectVersions(ctx context.Context, options ...os
 	var res0 oss.ListObjectVersionsResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.ListObjectVersions"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1420,6 +1674,12 @@ func (w *OSSBucketWrapper) ListObjects(ctx context.Context, options ...oss.Optio
 	var res0 oss.ListObjectsResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.ListObjects"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1451,6 +1711,12 @@ func (w *OSSBucketWrapper) ListObjectsV2(ctx context.Context, options ...oss.Opt
 	var res0 oss.ListObjectsResultV2
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.ListObjectsV2"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1482,6 +1748,12 @@ func (w *OSSBucketWrapper) ListUploadedParts(ctx context.Context, imur oss.Initi
 	var res0 oss.ListUploadedPartsResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.ListUploadedParts"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1513,6 +1785,12 @@ func (w *OSSBucketWrapper) OptionsMethod(ctx context.Context, objectKey string, 
 	var res0 http.Header
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.OptionsMethod"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1543,6 +1821,12 @@ func (w *OSSBucketWrapper) PostVodPlaylist(ctx context.Context, channelName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.PostVodPlaylist"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1574,6 +1858,12 @@ func (w *OSSBucketWrapper) ProcessObject(ctx context.Context, objectKey string, 
 	var res0 oss.ProcessObjectResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.ProcessObject"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1604,6 +1894,12 @@ func (w *OSSBucketWrapper) PutLiveChannelStatus(ctx context.Context, channelName
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.PutLiveChannelStatus"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1634,6 +1930,12 @@ func (w *OSSBucketWrapper) PutObject(ctx context.Context, objectKey string, read
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.PutObject"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1664,6 +1966,12 @@ func (w *OSSBucketWrapper) PutObjectFromFile(ctx context.Context, objectKey stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.PutObjectFromFile"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1694,6 +2002,12 @@ func (w *OSSBucketWrapper) PutObjectFromFileWithURL(ctx context.Context, signedU
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.PutObjectFromFileWithURL"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1724,6 +2038,12 @@ func (w *OSSBucketWrapper) PutObjectTagging(ctx context.Context, objectKey strin
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.PutObjectTagging"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1754,6 +2074,12 @@ func (w *OSSBucketWrapper) PutObjectWithURL(ctx context.Context, signedURL strin
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.PutObjectWithURL"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1784,6 +2110,12 @@ func (w *OSSBucketWrapper) PutSymlink(ctx context.Context, symObjectKey string, 
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.PutSymlink"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1814,6 +2146,12 @@ func (w *OSSBucketWrapper) RestoreObject(ctx context.Context, objectKey string, 
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.RestoreObject"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1844,6 +2182,12 @@ func (w *OSSBucketWrapper) RestoreObjectDetail(ctx context.Context, objectKey st
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.RestoreObjectDetail"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1874,6 +2218,12 @@ func (w *OSSBucketWrapper) RestoreObjectXML(ctx context.Context, objectKey strin
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.RestoreObjectXML"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1905,6 +2255,12 @@ func (w *OSSBucketWrapper) SelectObject(ctx context.Context, key string, selectR
 	var res0 io.ReadCloser
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.SelectObject"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1935,6 +2291,12 @@ func (w *OSSBucketWrapper) SelectObjectIntoFile(ctx context.Context, key string,
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.SelectObjectIntoFile"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1965,6 +2327,12 @@ func (w *OSSBucketWrapper) SetObjectACL(ctx context.Context, objectKey string, o
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.SetObjectACL"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1995,6 +2363,12 @@ func (w *OSSBucketWrapper) SetObjectMeta(ctx context.Context, objectKey string, 
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.SetObjectMeta"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2026,6 +2400,12 @@ func (w *OSSBucketWrapper) SignRtmpURL(ctx context.Context, channelName string, 
 	var res0 string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.SignRtmpURL"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2057,6 +2437,12 @@ func (w *OSSBucketWrapper) SignURL(ctx context.Context, objectKey string, method
 	var res0 string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.SignURL"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2087,6 +2473,12 @@ func (w *OSSBucketWrapper) UploadFile(ctx context.Context, objectKey string, fil
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.UploadFile"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2118,6 +2510,12 @@ func (w *OSSBucketWrapper) UploadPart(ctx context.Context, imur oss.InitiateMult
 	var res0 oss.UploadPart
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.UploadPart"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2149,6 +2547,12 @@ func (w *OSSBucketWrapper) UploadPartCopy(ctx context.Context, imur oss.Initiate
 	var res0 oss.UploadPart
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.UploadPartCopy"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2180,6 +2584,12 @@ func (w *OSSBucketWrapper) UploadPartFromFile(ctx context.Context, imur oss.Init
 	var res0 oss.UploadPart
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Bucket.UploadPartFromFile"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2210,6 +2620,12 @@ func (w *OSSClientWrapper) AbortBucketWorm(ctx context.Context, bucketName strin
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.AbortBucketWorm"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2247,6 +2663,12 @@ func (w *OSSClientWrapper) CompleteBucketWorm(ctx context.Context, bucketName st
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.CompleteBucketWorm"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2277,6 +2699,12 @@ func (w *OSSClientWrapper) CreateBucket(ctx context.Context, bucketName string, 
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.CreateBucket"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2307,6 +2735,12 @@ func (w *OSSClientWrapper) DeleteBucket(ctx context.Context, bucketName string, 
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DeleteBucket"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2337,6 +2771,12 @@ func (w *OSSClientWrapper) DeleteBucketCORS(ctx context.Context, bucketName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DeleteBucketCORS"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2367,6 +2807,12 @@ func (w *OSSClientWrapper) DeleteBucketEncryption(ctx context.Context, bucketNam
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DeleteBucketEncryption"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2397,6 +2843,12 @@ func (w *OSSClientWrapper) DeleteBucketInventory(ctx context.Context, bucketName
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DeleteBucketInventory"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2427,6 +2879,12 @@ func (w *OSSClientWrapper) DeleteBucketLifecycle(ctx context.Context, bucketName
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DeleteBucketLifecycle"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2457,6 +2915,12 @@ func (w *OSSClientWrapper) DeleteBucketLogging(ctx context.Context, bucketName s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DeleteBucketLogging"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2487,6 +2951,12 @@ func (w *OSSClientWrapper) DeleteBucketPolicy(ctx context.Context, bucketName st
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DeleteBucketPolicy"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2517,6 +2987,12 @@ func (w *OSSClientWrapper) DeleteBucketQosInfo(ctx context.Context, bucketName s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DeleteBucketQosInfo"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2547,6 +3023,12 @@ func (w *OSSClientWrapper) DeleteBucketTagging(ctx context.Context, bucketName s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DeleteBucketTagging"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2577,6 +3059,12 @@ func (w *OSSClientWrapper) DeleteBucketWebsite(ctx context.Context, bucketName s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DeleteBucketWebsite"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2607,6 +3095,12 @@ func (w *OSSClientWrapper) ExtendBucketWorm(ctx context.Context, bucketName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ExtendBucketWorm"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2638,6 +3132,12 @@ func (w *OSSClientWrapper) GetBucketACL(ctx context.Context, bucketName string) 
 	var res0 oss.GetBucketACLResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketACL"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2669,6 +3169,12 @@ func (w *OSSClientWrapper) GetBucketAsyncTask(ctx context.Context, bucketName st
 	var res0 oss.AsynFetchTaskInfo
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketAsyncTask"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2700,6 +3206,12 @@ func (w *OSSClientWrapper) GetBucketCORS(ctx context.Context, bucketName string)
 	var res0 oss.GetBucketCORSResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketCORS"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2731,6 +3243,12 @@ func (w *OSSClientWrapper) GetBucketEncryption(ctx context.Context, bucketName s
 	var res0 oss.GetBucketEncryptionResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketEncryption"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2762,6 +3280,12 @@ func (w *OSSClientWrapper) GetBucketInfo(ctx context.Context, bucketName string,
 	var res0 oss.GetBucketInfoResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketInfo"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2793,6 +3317,12 @@ func (w *OSSClientWrapper) GetBucketInventory(ctx context.Context, bucketName st
 	var res0 oss.InventoryConfiguration
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketInventory"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2824,6 +3354,12 @@ func (w *OSSClientWrapper) GetBucketLifecycle(ctx context.Context, bucketName st
 	var res0 oss.GetBucketLifecycleResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketLifecycle"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2855,6 +3391,12 @@ func (w *OSSClientWrapper) GetBucketLocation(ctx context.Context, bucketName str
 	var res0 string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketLocation"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2886,6 +3428,12 @@ func (w *OSSClientWrapper) GetBucketLogging(ctx context.Context, bucketName stri
 	var res0 oss.GetBucketLoggingResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketLogging"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2917,6 +3465,12 @@ func (w *OSSClientWrapper) GetBucketPolicy(ctx context.Context, bucketName strin
 	var res0 string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketPolicy"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2948,6 +3502,12 @@ func (w *OSSClientWrapper) GetBucketQosInfo(ctx context.Context, bucketName stri
 	var res0 oss.BucketQoSConfiguration
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketQosInfo"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2979,6 +3539,12 @@ func (w *OSSClientWrapper) GetBucketReferer(ctx context.Context, bucketName stri
 	var res0 oss.GetBucketRefererResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketReferer"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3010,6 +3576,12 @@ func (w *OSSClientWrapper) GetBucketRequestPayment(ctx context.Context, bucketNa
 	var res0 oss.RequestPaymentConfiguration
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketRequestPayment"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3041,6 +3613,12 @@ func (w *OSSClientWrapper) GetBucketStat(ctx context.Context, bucketName string)
 	var res0 oss.GetBucketStatResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketStat"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3072,6 +3650,12 @@ func (w *OSSClientWrapper) GetBucketTagging(ctx context.Context, bucketName stri
 	var res0 oss.GetBucketTaggingResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketTagging"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3103,6 +3687,12 @@ func (w *OSSClientWrapper) GetBucketVersioning(ctx context.Context, bucketName s
 	var res0 oss.GetBucketVersioningResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketVersioning"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3134,6 +3724,12 @@ func (w *OSSClientWrapper) GetBucketWebsite(ctx context.Context, bucketName stri
 	var res0 oss.GetBucketWebsiteResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketWebsite"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3165,6 +3761,12 @@ func (w *OSSClientWrapper) GetBucketWorm(ctx context.Context, bucketName string,
 	var res0 oss.WormConfiguration
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBucketWorm"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3196,6 +3798,12 @@ func (w *OSSClientWrapper) GetUserQoSInfo(ctx context.Context, options ...oss.Op
 	var res0 oss.UserQoSConfiguration
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetUserQoSInfo"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3227,6 +3835,12 @@ func (w *OSSClientWrapper) InitiateBucketWorm(ctx context.Context, bucketName st
 	var res0 string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.InitiateBucketWorm"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3258,6 +3872,12 @@ func (w *OSSClientWrapper) IsBucketExist(ctx context.Context, bucketName string)
 	var res0 bool
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.IsBucketExist"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3288,6 +3908,12 @@ func (w *OSSClientWrapper) LimitUploadSpeed(ctx context.Context, upSpeed int) er
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.LimitUploadSpeed"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3319,6 +3945,12 @@ func (w *OSSClientWrapper) ListBucketInventory(ctx context.Context, bucketName s
 	var res0 oss.ListInventoryConfigurationsResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ListBucketInventory"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3350,6 +3982,12 @@ func (w *OSSClientWrapper) ListBuckets(ctx context.Context, options ...oss.Optio
 	var res0 oss.ListBucketsResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ListBuckets"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3380,6 +4018,12 @@ func (w *OSSClientWrapper) SetBucketACL(ctx context.Context, bucketName string, 
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketACL"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3411,6 +4055,12 @@ func (w *OSSClientWrapper) SetBucketAsyncTask(ctx context.Context, bucketName st
 	var res0 oss.AsyncFetchTaskResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketAsyncTask"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3441,6 +4091,12 @@ func (w *OSSClientWrapper) SetBucketCORS(ctx context.Context, bucketName string,
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketCORS"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3471,6 +4127,12 @@ func (w *OSSClientWrapper) SetBucketEncryption(ctx context.Context, bucketName s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketEncryption"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3501,6 +4163,12 @@ func (w *OSSClientWrapper) SetBucketInventory(ctx context.Context, bucketName st
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketInventory"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3531,6 +4199,12 @@ func (w *OSSClientWrapper) SetBucketLifecycle(ctx context.Context, bucketName st
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketLifecycle"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3561,6 +4235,12 @@ func (w *OSSClientWrapper) SetBucketLogging(ctx context.Context, bucketName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketLogging"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3591,6 +4271,12 @@ func (w *OSSClientWrapper) SetBucketPolicy(ctx context.Context, bucketName strin
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketPolicy"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3621,6 +4307,12 @@ func (w *OSSClientWrapper) SetBucketQoSInfo(ctx context.Context, bucketName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketQoSInfo"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3651,6 +4343,12 @@ func (w *OSSClientWrapper) SetBucketReferer(ctx context.Context, bucketName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketReferer"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3681,6 +4379,12 @@ func (w *OSSClientWrapper) SetBucketRequestPayment(ctx context.Context, bucketNa
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketRequestPayment"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3711,6 +4415,12 @@ func (w *OSSClientWrapper) SetBucketTagging(ctx context.Context, bucketName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketTagging"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3741,6 +4451,12 @@ func (w *OSSClientWrapper) SetBucketVersioning(ctx context.Context, bucketName s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketVersioning"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3771,6 +4487,12 @@ func (w *OSSClientWrapper) SetBucketWebsite(ctx context.Context, bucketName stri
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketWebsite"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3801,6 +4523,12 @@ func (w *OSSClientWrapper) SetBucketWebsiteDetail(ctx context.Context, bucketNam
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketWebsiteDetail"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3831,6 +4559,12 @@ func (w *OSSClientWrapper) SetBucketWebsiteXml(ctx context.Context, bucketName s
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBucketWebsiteXml"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {

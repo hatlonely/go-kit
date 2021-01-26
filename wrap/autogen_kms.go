@@ -16,11 +16,12 @@ import (
 )
 
 type KMSClientWrapper struct {
-	obj            *kms.Client
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
+	obj              *kms.Client
+	retry            *Retry
+	options          *WrapperOptions
+	durationMetric   *prometheus.HistogramVec
+	totalMetric      *prometheus.CounterVec
+	rateLimiterGroup RateLimiterGroup
 }
 
 func (w *KMSClientWrapper) Unwrap() *kms.Client {
@@ -84,6 +85,12 @@ func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.A
 	var response *kms.AsymmetricDecryptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.AsymmetricDecrypt"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -170,6 +177,12 @@ func (w *KMSClientWrapper) AsymmetricEncrypt(ctx context.Context, request *kms.A
 	var response *kms.AsymmetricEncryptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.AsymmetricEncrypt"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -256,6 +269,12 @@ func (w *KMSClientWrapper) AsymmetricSign(ctx context.Context, request *kms.Asym
 	var response *kms.AsymmetricSignResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.AsymmetricSign"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -342,6 +361,12 @@ func (w *KMSClientWrapper) AsymmetricVerify(ctx context.Context, request *kms.As
 	var response *kms.AsymmetricVerifyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.AsymmetricVerify"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -428,6 +453,12 @@ func (w *KMSClientWrapper) CancelKeyDeletion(ctx context.Context, request *kms.C
 	var response *kms.CancelKeyDeletionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.CancelKeyDeletion"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -514,6 +545,12 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecrypt(ctx context.Context, req
 	var response *kms.CertificatePrivateKeyDecryptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.CertificatePrivateKeyDecrypt"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -600,6 +637,12 @@ func (w *KMSClientWrapper) CertificatePrivateKeySign(ctx context.Context, reques
 	var response *kms.CertificatePrivateKeySignResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.CertificatePrivateKeySign"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -686,6 +729,12 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncrypt(ctx context.Context, requ
 	var response *kms.CertificatePublicKeyEncryptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.CertificatePublicKeyEncrypt"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -772,6 +821,12 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerify(ctx context.Context, reque
 	var response *kms.CertificatePublicKeyVerifyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.CertificatePublicKeyVerify"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -858,6 +913,12 @@ func (w *KMSClientWrapper) CreateAlias(ctx context.Context, request *kms.CreateA
 	var response *kms.CreateAliasResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.CreateAlias"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -944,6 +1005,12 @@ func (w *KMSClientWrapper) CreateCertificate(ctx context.Context, request *kms.C
 	var response *kms.CreateCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.CreateCertificate"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1030,6 +1097,12 @@ func (w *KMSClientWrapper) CreateKey(ctx context.Context, request *kms.CreateKey
 	var response *kms.CreateKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.CreateKey"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1061,6 +1134,12 @@ func (w *KMSClientWrapper) CreateKeyVersion(ctx context.Context, request *kms.Cr
 	var response *kms.CreateKeyVersionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.CreateKeyVersion"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1202,6 +1281,12 @@ func (w *KMSClientWrapper) CreateSecret(ctx context.Context, request *kms.Create
 	var response *kms.CreateSecretResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.CreateSecret"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1288,6 +1373,12 @@ func (w *KMSClientWrapper) Decrypt(ctx context.Context, request *kms.DecryptRequ
 	var response *kms.DecryptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.Decrypt"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1374,6 +1465,12 @@ func (w *KMSClientWrapper) DeleteAlias(ctx context.Context, request *kms.DeleteA
 	var response *kms.DeleteAliasResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DeleteAlias"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1460,6 +1557,12 @@ func (w *KMSClientWrapper) DeleteCertificate(ctx context.Context, request *kms.D
 	var response *kms.DeleteCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DeleteCertificate"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1546,6 +1649,12 @@ func (w *KMSClientWrapper) DeleteKeyMaterial(ctx context.Context, request *kms.D
 	var response *kms.DeleteKeyMaterialResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DeleteKeyMaterial"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1632,6 +1741,12 @@ func (w *KMSClientWrapper) DeleteSecret(ctx context.Context, request *kms.Delete
 	var response *kms.DeleteSecretResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DeleteSecret"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1718,6 +1833,12 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatus(ctx context.Context, request
 	var response *kms.DescribeAccountKmsStatusResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DescribeAccountKmsStatus"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1804,6 +1925,12 @@ func (w *KMSClientWrapper) DescribeCertificate(ctx context.Context, request *kms
 	var response *kms.DescribeCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DescribeCertificate"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1890,6 +2017,12 @@ func (w *KMSClientWrapper) DescribeKey(ctx context.Context, request *kms.Describ
 	var response *kms.DescribeKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DescribeKey"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1921,6 +2054,12 @@ func (w *KMSClientWrapper) DescribeKeyVersion(ctx context.Context, request *kms.
 	var response *kms.DescribeKeyVersionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DescribeKeyVersion"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2062,6 +2201,12 @@ func (w *KMSClientWrapper) DescribeRegions(ctx context.Context, request *kms.Des
 	var response *kms.DescribeRegionsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DescribeRegions"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2148,6 +2293,12 @@ func (w *KMSClientWrapper) DescribeSecret(ctx context.Context, request *kms.Desc
 	var response *kms.DescribeSecretResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DescribeSecret"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2234,6 +2385,12 @@ func (w *KMSClientWrapper) DescribeService(ctx context.Context, request *kms.Des
 	var response *kms.DescribeServiceResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DescribeService"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2320,6 +2477,12 @@ func (w *KMSClientWrapper) DisableKey(ctx context.Context, request *kms.DisableK
 	var response *kms.DisableKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.DisableKey"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2406,6 +2569,12 @@ func (w *KMSClientWrapper) EnableKey(ctx context.Context, request *kms.EnableKey
 	var response *kms.EnableKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.EnableKey"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2492,6 +2661,12 @@ func (w *KMSClientWrapper) Encrypt(ctx context.Context, request *kms.EncryptRequ
 	var response *kms.EncryptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.Encrypt"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2578,6 +2753,12 @@ func (w *KMSClientWrapper) ExportCertificate(ctx context.Context, request *kms.E
 	var response *kms.ExportCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ExportCertificate"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2664,6 +2845,12 @@ func (w *KMSClientWrapper) ExportDataKey(ctx context.Context, request *kms.Expor
 	var response *kms.ExportDataKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ExportDataKey"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2750,6 +2937,12 @@ func (w *KMSClientWrapper) GenerateAndExportDataKey(ctx context.Context, request
 	var response *kms.GenerateAndExportDataKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GenerateAndExportDataKey"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2836,6 +3029,12 @@ func (w *KMSClientWrapper) GenerateDataKey(ctx context.Context, request *kms.Gen
 	var response *kms.GenerateDataKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GenerateDataKey"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -2922,6 +3121,12 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintext(ctx context.Context, 
 	var response *kms.GenerateDataKeyWithoutPlaintextResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GenerateDataKeyWithoutPlaintext"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3008,6 +3213,12 @@ func (w *KMSClientWrapper) GetCertificate(ctx context.Context, request *kms.GetC
 	var response *kms.GetCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetCertificate"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3094,6 +3305,12 @@ func (w *KMSClientWrapper) GetParametersForImport(ctx context.Context, request *
 	var response *kms.GetParametersForImportResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetParametersForImport"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3180,6 +3397,12 @@ func (w *KMSClientWrapper) GetPublicKey(ctx context.Context, request *kms.GetPub
 	var response *kms.GetPublicKeyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetPublicKey"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3266,6 +3489,12 @@ func (w *KMSClientWrapper) GetRandomPassword(ctx context.Context, request *kms.G
 	var response *kms.GetRandomPasswordResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetRandomPassword"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3352,6 +3581,12 @@ func (w *KMSClientWrapper) GetSecretValue(ctx context.Context, request *kms.GetS
 	var response *kms.GetSecretValueResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetSecretValue"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3438,6 +3673,12 @@ func (w *KMSClientWrapper) ImportCertificate(ctx context.Context, request *kms.I
 	var response *kms.ImportCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ImportCertificate"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3524,6 +3765,12 @@ func (w *KMSClientWrapper) ImportEncryptionCertificate(ctx context.Context, requ
 	var response *kms.ImportEncryptionCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ImportEncryptionCertificate"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3610,6 +3857,12 @@ func (w *KMSClientWrapper) ImportKeyMaterial(ctx context.Context, request *kms.I
 	var response *kms.ImportKeyMaterialResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ImportKeyMaterial"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3696,6 +3949,12 @@ func (w *KMSClientWrapper) ListAliases(ctx context.Context, request *kms.ListAli
 	var response *kms.ListAliasesResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ListAliases"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3727,6 +3986,12 @@ func (w *KMSClientWrapper) ListAliasesByKeyId(ctx context.Context, request *kms.
 	var response *kms.ListAliasesByKeyIdResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ListAliasesByKeyId"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3868,6 +4133,12 @@ func (w *KMSClientWrapper) ListCertificates(ctx context.Context, request *kms.Li
 	var response *kms.ListCertificatesResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ListCertificates"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -3954,6 +4225,12 @@ func (w *KMSClientWrapper) ListKeyVersions(ctx context.Context, request *kms.Lis
 	var response *kms.ListKeyVersionsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ListKeyVersions"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -4040,6 +4317,12 @@ func (w *KMSClientWrapper) ListKeys(ctx context.Context, request *kms.ListKeysRe
 	var response *kms.ListKeysResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ListKeys"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -4126,6 +4409,12 @@ func (w *KMSClientWrapper) ListResourceTags(ctx context.Context, request *kms.Li
 	var response *kms.ListResourceTagsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ListResourceTags"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -4212,6 +4501,12 @@ func (w *KMSClientWrapper) ListSecretVersionIds(ctx context.Context, request *km
 	var response *kms.ListSecretVersionIdsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ListSecretVersionIds"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -4298,6 +4593,12 @@ func (w *KMSClientWrapper) ListSecrets(ctx context.Context, request *kms.ListSec
 	var response *kms.ListSecretsResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ListSecrets"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -4384,6 +4685,12 @@ func (w *KMSClientWrapper) OpenKmsService(ctx context.Context, request *kms.Open
 	var response *kms.OpenKmsServiceResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.OpenKmsService"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -4470,6 +4777,12 @@ func (w *KMSClientWrapper) PutSecretValue(ctx context.Context, request *kms.PutS
 	var response *kms.PutSecretValueResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.PutSecretValue"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -4556,6 +4869,12 @@ func (w *KMSClientWrapper) ReEncrypt(ctx context.Context, request *kms.ReEncrypt
 	var response *kms.ReEncryptResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ReEncrypt"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -4642,6 +4961,12 @@ func (w *KMSClientWrapper) RestoreSecret(ctx context.Context, request *kms.Resto
 	var response *kms.RestoreSecretResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.RestoreSecret"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -4728,6 +5053,12 @@ func (w *KMSClientWrapper) ScheduleKeyDeletion(ctx context.Context, request *kms
 	var response *kms.ScheduleKeyDeletionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ScheduleKeyDeletion"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -4814,6 +5145,12 @@ func (w *KMSClientWrapper) TagResource(ctx context.Context, request *kms.TagReso
 	var response *kms.TagResourceResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.TagResource"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -4900,6 +5237,12 @@ func (w *KMSClientWrapper) UntagResource(ctx context.Context, request *kms.Untag
 	var response *kms.UntagResourceResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.UntagResource"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -4986,6 +5329,12 @@ func (w *KMSClientWrapper) UpdateAlias(ctx context.Context, request *kms.UpdateA
 	var response *kms.UpdateAliasResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.UpdateAlias"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -5072,6 +5421,12 @@ func (w *KMSClientWrapper) UpdateCertificateStatus(ctx context.Context, request 
 	var response *kms.UpdateCertificateStatusResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.UpdateCertificateStatus"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -5158,6 +5513,12 @@ func (w *KMSClientWrapper) UpdateKeyDescription(ctx context.Context, request *km
 	var response *kms.UpdateKeyDescriptionResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.UpdateKeyDescription"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -5244,6 +5605,12 @@ func (w *KMSClientWrapper) UpdateRotationPolicy(ctx context.Context, request *km
 	var response *kms.UpdateRotationPolicyResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.UpdateRotationPolicy"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -5330,6 +5697,12 @@ func (w *KMSClientWrapper) UpdateSecret(ctx context.Context, request *kms.Update
 	var response *kms.UpdateSecretResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.UpdateSecret"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -5361,6 +5734,12 @@ func (w *KMSClientWrapper) UpdateSecretVersionStage(ctx context.Context, request
 	var response *kms.UpdateSecretVersionStageResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.UpdateSecretVersionStage"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -5502,6 +5881,12 @@ func (w *KMSClientWrapper) UploadCertificate(ctx context.Context, request *kms.U
 	var response *kms.UploadCertificateResponse
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.UploadCertificate"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {

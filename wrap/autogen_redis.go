@@ -16,11 +16,12 @@ import (
 )
 
 type RedisClientWrapper struct {
-	obj            *redis.Client
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
+	obj              *redis.Client
+	retry            *Retry
+	options          *WrapperOptions
+	durationMetric   *prometheus.HistogramVec
+	totalMetric      *prometheus.CounterVec
+	rateLimiterGroup RateLimiterGroup
 }
 
 func (w *RedisClientWrapper) Unwrap() *redis.Client {
@@ -68,11 +69,12 @@ func (w *RedisClientWrapper) CreateMetric(options *WrapperOptions) {
 }
 
 type RedisClusterClientWrapper struct {
-	obj            *redis.ClusterClient
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
+	obj              *redis.ClusterClient
+	retry            *Retry
+	options          *WrapperOptions
+	durationMetric   *prometheus.HistogramVec
+	totalMetric      *prometheus.CounterVec
+	rateLimiterGroup RateLimiterGroup
 }
 
 func (w *RedisClusterClientWrapper) Unwrap() *redis.ClusterClient {
@@ -244,6 +246,12 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.Pipelined"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -361,6 +369,12 @@ func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipe
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.TxPipelined"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -391,6 +405,12 @@ func (w *RedisClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.Watch"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -426,6 +446,12 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Close"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -537,6 +563,12 @@ func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(c
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ForEachMaster"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -567,6 +599,12 @@ func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(cli
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ForEachNode"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -597,6 +635,12 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ForEachSlave"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -709,6 +753,12 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Pipelined"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -766,6 +816,12 @@ func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Process"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -796,6 +852,12 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ReloadState"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -881,6 +943,12 @@ func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(red
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.TxPipelined"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -911,6 +979,12 @@ func (w *RedisClusterClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Watch"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {

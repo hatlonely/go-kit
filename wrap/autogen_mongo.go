@@ -20,11 +20,12 @@ import (
 )
 
 type MongoClientWrapper struct {
-	obj            *mongo.Client
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
+	obj              *mongo.Client
+	retry            *Retry
+	options          *WrapperOptions
+	durationMetric   *prometheus.HistogramVec
+	totalMetric      *prometheus.CounterVec
+	rateLimiterGroup RateLimiterGroup
 }
 
 func (w *MongoClientWrapper) Unwrap() *mongo.Client {
@@ -72,11 +73,12 @@ func (w *MongoClientWrapper) CreateMetric(options *WrapperOptions) {
 }
 
 type MongoCollectionWrapper struct {
-	obj            *mongo.Collection
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
+	obj              *mongo.Collection
+	retry            *Retry
+	options          *WrapperOptions
+	durationMetric   *prometheus.HistogramVec
+	totalMetric      *prometheus.CounterVec
+	rateLimiterGroup RateLimiterGroup
 }
 
 func (w *MongoCollectionWrapper) Unwrap() *mongo.Collection {
@@ -84,11 +86,12 @@ func (w *MongoCollectionWrapper) Unwrap() *mongo.Collection {
 }
 
 type MongoDatabaseWrapper struct {
-	obj            *mongo.Database
-	retry          *Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	totalMetric    *prometheus.CounterVec
+	obj              *mongo.Database
+	retry            *Retry
+	options          *WrapperOptions
+	durationMetric   *prometheus.HistogramVec
+	totalMetric      *prometheus.CounterVec
+	rateLimiterGroup RateLimiterGroup
 }
 
 func (w *MongoDatabaseWrapper) Unwrap() *mongo.Database {
@@ -111,6 +114,12 @@ func (w *MongoClientWrapper) Connect(ctx context.Context) error {
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.Connect"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -147,6 +156,12 @@ func (w *MongoClientWrapper) Disconnect(ctx context.Context) error {
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.Disconnect"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -178,6 +193,12 @@ func (w *MongoClientWrapper) ListDatabaseNames(ctx context.Context, filter inter
 	var res0 []string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ListDatabaseNames"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -209,6 +230,12 @@ func (w *MongoClientWrapper) ListDatabases(ctx context.Context, filter interface
 	var res0 mongo.ListDatabasesResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.ListDatabases"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -266,6 +293,12 @@ func (w *MongoClientWrapper) Ping(ctx context.Context, rp *readpref.ReadPref) er
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.Ping"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -297,6 +330,12 @@ func (w *MongoClientWrapper) StartSession(ctx context.Context, opts ...*options.
 	var res0 mongo.Session
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.StartSession"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -327,6 +366,12 @@ func (w *MongoClientWrapper) UseSession(ctx context.Context, fn func(mongo.Sessi
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.UseSession"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -357,6 +402,12 @@ func (w *MongoClientWrapper) UseSessionWithOptions(ctx context.Context, opts *op
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.UseSessionWithOptions"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -388,6 +439,12 @@ func (w *MongoClientWrapper) Watch(ctx context.Context, pipeline interface{}, op
 	var res0 *mongo.ChangeStream
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.Watch"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -419,6 +476,12 @@ func (w *MongoCollectionWrapper) Aggregate(ctx context.Context, pipeline interfa
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.Aggregate"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -450,6 +513,12 @@ func (w *MongoCollectionWrapper) BulkWrite(ctx context.Context, models []mongo.W
 	var res0 *mongo.BulkWriteResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.BulkWrite"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -481,6 +550,12 @@ func (w *MongoCollectionWrapper) Clone(ctx context.Context, opts ...*options.Col
 	var res0 *mongo.Collection
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.Clone"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -512,6 +587,12 @@ func (w *MongoCollectionWrapper) CountDocuments(ctx context.Context, filter inte
 	var res0 int64
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.CountDocuments"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -570,6 +651,12 @@ func (w *MongoCollectionWrapper) DeleteMany(ctx context.Context, filter interfac
 	var res0 *mongo.DeleteResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.DeleteMany"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -601,6 +688,12 @@ func (w *MongoCollectionWrapper) DeleteOne(ctx context.Context, filter interface
 	var res0 *mongo.DeleteResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.DeleteOne"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -632,6 +725,12 @@ func (w *MongoCollectionWrapper) Distinct(ctx context.Context, fieldName string,
 	var res0 []interface{}
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.Distinct"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -662,6 +761,12 @@ func (w *MongoCollectionWrapper) Drop(ctx context.Context) error {
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.Drop"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -693,6 +798,12 @@ func (w *MongoCollectionWrapper) EstimatedDocumentCount(ctx context.Context, opt
 	var res0 int64
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.EstimatedDocumentCount"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -724,6 +835,12 @@ func (w *MongoCollectionWrapper) Find(ctx context.Context, filter interface{}, o
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.Find"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -890,6 +1007,12 @@ func (w *MongoCollectionWrapper) InsertMany(ctx context.Context, documents []int
 	var res0 *mongo.InsertManyResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.InsertMany"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -921,6 +1044,12 @@ func (w *MongoCollectionWrapper) InsertOne(ctx context.Context, document interfa
 	var res0 *mongo.InsertOneResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.InsertOne"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -979,6 +1108,12 @@ func (w *MongoCollectionWrapper) ReplaceOne(ctx context.Context, filter interfac
 	var res0 *mongo.UpdateResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.ReplaceOne"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1010,6 +1145,12 @@ func (w *MongoCollectionWrapper) UpdateMany(ctx context.Context, filter interfac
 	var res0 *mongo.UpdateResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.UpdateMany"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1041,6 +1182,12 @@ func (w *MongoCollectionWrapper) UpdateOne(ctx context.Context, filter interface
 	var res0 *mongo.UpdateResult
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.UpdateOne"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1072,6 +1219,12 @@ func (w *MongoCollectionWrapper) Watch(ctx context.Context, pipeline interface{}
 	var res0 *mongo.ChangeStream
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Collection.Watch"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1103,6 +1256,12 @@ func (w *MongoDatabaseWrapper) Aggregate(ctx context.Context, pipeline interface
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Database.Aggregate"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1166,6 +1325,12 @@ func (w *MongoDatabaseWrapper) CreateCollection(ctx context.Context, name string
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Database.CreateCollection"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1196,6 +1361,12 @@ func (w *MongoDatabaseWrapper) CreateView(ctx context.Context, viewName string, 
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Database.CreateView"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1226,6 +1397,12 @@ func (w *MongoDatabaseWrapper) Drop(ctx context.Context) error {
 
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Database.Drop"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1257,6 +1434,12 @@ func (w *MongoDatabaseWrapper) ListCollectionNames(ctx context.Context, filter i
 	var res0 []string
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Database.ListCollectionNames"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1288,6 +1471,12 @@ func (w *MongoDatabaseWrapper) ListCollections(ctx context.Context, filter inter
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Database.ListCollections"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1427,6 +1616,12 @@ func (w *MongoDatabaseWrapper) RunCommandCursor(ctx context.Context, runCommand 
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Database.RunCommandCursor"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -1458,6 +1653,12 @@ func (w *MongoDatabaseWrapper) Watch(ctx context.Context, pipeline interface{}, 
 	var res0 *mongo.ChangeStream
 	var err error
 	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Database.Watch"); err != nil {
+				return err
+			}
+		}
+
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
