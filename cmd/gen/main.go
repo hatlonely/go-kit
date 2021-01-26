@@ -14,9 +14,9 @@ import (
 )
 
 type Options struct {
-	Help    bool   `flag:"show help info"`
-	Version string `flag:"show version"`
-	Output  string `flag:"output path"`
+	Help    bool   `flag:"-h; usage: show help info"`
+	Version string `flag:"-v; usage: show version"`
+	Output  string `flag:"usage: output path"`
 
 	astx.WrapperGeneratorOptions
 }
@@ -38,9 +38,17 @@ func main() {
 	if options.Help {
 		strx.Trac(flag.Usage())
 		strx.Trac(`
-  gen --goPath vendor --pkgPath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" --package tablestore --classPrefix OTS --classes TableStoreClient
-  gen --goPath vendor --pkgPath "github.com/olivere/elastic/v7" --package elastic --classPrefix ES --classes Client
-  gen --goPath vendor --pkgPath "github.com/aliyun/aliyun-oss-go-sdk/oss" --package oss --classPrefix OSS --classes Client
+    gen --sourcePath vendor \
+		--packagePath "go.mongodb.org/mongo-driver/mongo" \
+		--packageName mongo \
+		--classPrefix Mongo \
+		--rule.starClass '{"include": "^(?i:(Client)|(Database)|(Collection))$$", "exclude": ".*"}' \
+		--rule.createMetric.include "^Client$$" \
+		--rule.onWrapperChange.include "^Client$$" \
+		--rule.onRetryChange.include "^Client$$" \
+		--rule.trace '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
+		--rule.metric '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
+		--output $@
 `)
 		return
 	}
