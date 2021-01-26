@@ -14,6 +14,8 @@ type RateLimiterGroup interface {
 
 func NewRateLimiterGroup(options *RateLimiterGroupOptions) (RateLimiterGroup, error) {
 	switch options.Type {
+	case "":
+		return nil, nil
 	case "LocalGroup":
 		return NewLocalGroupRateLimiter(&options.LocalGroupRateLimiter)
 	case "LocalShare":

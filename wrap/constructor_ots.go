@@ -19,15 +19,21 @@ type OTSOptions struct {
 }
 
 type OTSTableStoreClientWrapperOptions struct {
-	Retry   RetryOptions
-	Wrapper WrapperOptions
-	OTS     OTSOptions
+	Retry            RetryOptions
+	Wrapper          WrapperOptions
+	OTS              OTSOptions
+	RateLimiterGroup RateLimiterGroupOptions
 }
 
 func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrapperOptions) (*OTSTableStoreClientWrapper, error) {
 	retry, err := NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
+	}
+
+	rateLimiter, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
 	}
 
 	if options.OTS.AccessKeyID != "" {
@@ -52,9 +58,10 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 	}
 
 	w := &OTSTableStoreClientWrapper{
-		obj:     client,
-		retry:   retry,
-		options: &options.Wrapper,
+		obj:              client,
+		retry:            retry,
+		options:          &options.Wrapper,
+		rateLimiterGroup: rateLimiter,
 	}
 
 	if w.options.EnableMetric {
