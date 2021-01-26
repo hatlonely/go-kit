@@ -181,6 +181,13 @@ func (w *{{.wrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandl
 }
 ```
 
+## Unwrap
+
+有几种场景下，Wrap 无法完全覆盖原生类的所有功能，提供 Unwrap 方法来获取原生类对象
+
+1. 原生类方法使用了私有的类作为参数或者返回，比如 `gorm.SetLogger(log logger)`，这里的 logger 为一个私有的接口，无法 wrap
+2. 原生类成员无法 wrap，但是又需要直接访问，比如 `gorm.DB.Error`
+
 ## ECS RAM Role 支持
 
 对于阿里云相关的客户端，如果配置中没有提供 ak/sk 信息，wrap 模块会自动尝试从 esc 中获取 ram role 并创建 client，并启动一个后台协程，
