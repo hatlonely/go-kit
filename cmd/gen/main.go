@@ -39,16 +39,16 @@ func main() {
 		strx.Trac(flag.Usage())
 		strx.Trac(`
     gen --sourcePath vendor \
-		--packagePath "go.mongodb.org/mongo-driver/mongo" \
-		--packageName mongo \
-		--classPrefix Mongo \
-		--rule.starClass '{"include": "^(?i:(Client)|(Database)|(Collection))$$", "exclude": ".*"}' \
-		--rule.createMetric.include "^Client$$" \
-		--rule.onWrapperChange.include "^Client$$" \
-		--rule.onRetryChange.include "^Client$$" \
-		--rule.trace '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
-		--rule.metric '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
-		--output $@
+        --packagePath "go.mongodb.org/mongo-driver/mongo" \
+        --packageName mongo \
+        --classPrefix Mongo \
+        --rule.starClass '{"include": "^(?i:(Client)|(Database)|(Collection))$$", "exclude": ".*"}' \
+        --rule.createMetric.include "^Client$$" \
+        --rule.onWrapperChange.include "^Client$$" \
+        --rule.onRetryChange.include "^Client$$" \
+        --rule.trace '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
+        --rule.metric '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
+        --output $@
 `)
 		return
 	}
