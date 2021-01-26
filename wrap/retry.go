@@ -20,9 +20,6 @@ var retryDelayTypeMap = map[string]retry.DelayTypeFunc{
 
 var retryRetryIfMap = map[string]retry.RetryIfFunc{
 	"OSS": func(err error) bool {
-		if !retry.IsRecoverable(err) {
-			return false
-		}
 		switch e := err.(type) {
 		case oss.ServiceError:
 			if e.StatusCode >= http.StatusInternalServerError {
@@ -35,9 +32,6 @@ var retryRetryIfMap = map[string]retry.RetryIfFunc{
 		return false
 	},
 	"OTS": func(err error) bool {
-		if !retry.IsRecoverable(err) {
-			return false
-		}
 		switch e := err.(type) {
 		case *tablestore.OtsError:
 			if e.HttpStatusCode >= http.StatusInternalServerError {
@@ -50,9 +44,6 @@ var retryRetryIfMap = map[string]retry.RetryIfFunc{
 		return false
 	},
 	"POP": func(err error) bool {
-		if !retry.IsRecoverable(err) {
-			return false
-		}
 		switch e := err.(type) {
 		case *alierr.ServerError:
 			if e.HttpStatus() >= http.StatusInternalServerError {
@@ -105,7 +96,12 @@ func NewRetryWithOptions(options *RetryOptions) (*Retry, error) {
 
 	if options.RetryIf != "" {
 		if retryIf, ok := retryRetryIfMap[options.RetryIf]; ok {
-			r.RetryIf = retryIf
+			r.RetryIf = func(err error) bool {
+				if !retry.IsRecoverable(err) {
+					return false
+				}
+				return retryIf(err)
+			}
 		} else {
 			return nil, errors.Errorf("unsupported retryIf [%v] func", options.RetryIf)
 		}
