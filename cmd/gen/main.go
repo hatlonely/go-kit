@@ -58,6 +58,27 @@ func main() {
       --rule.trace '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
       --rule.metric '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
       --output wrap/autogen_mongo.go
+  gen wrap --sourcePath vendor \
+      --packagePath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" \
+      --packageName tablestore \
+      --classPrefix OTS \
+      --starClasses TableStoreClient \
+      --rule.createMetric.include "^TableStoreClient$$" \
+      --rule.onWrapperChange.include "^TableStoreClient$$" \
+      --rule.onRetryChange.include "^TableStoreClient$$" \
+      --output wrap/autogen_ots.go
+  gen wrap --sourcePath vendor \
+      --packagePath "github.com/olivere/elastic/v7" \
+      --packageName elastic \
+      --classPrefix ES \
+      --rule.starClass '{"include": "^(?i:(Client)|(.*Service))$$", "exclude": ".*"}' \
+      --rule.createMetric.include "^Client$$" \
+      --rule.onWrapperChange.include "^Client$$" \
+      --rule.onRetryChange.include "^Client$$" \
+      --rule.trace '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
+      --rule.retry '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
+      --rule.metric '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
+      --output wrap/autogen_elasticsearch.go
 `)
 		default:
 			strx.Trac(flag.Usage())
