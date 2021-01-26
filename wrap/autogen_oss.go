@@ -87,6 +87,12 @@ func (w *OSSBucketWrapper) AbortMultipartUpload(ctx context.Context, imur oss.In
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.AbortMultipartUpload")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -111,6 +117,12 @@ func (w *OSSBucketWrapper) AppendObject(ctx context.Context, objectKey string, r
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.AppendObject")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -136,6 +148,12 @@ func (w *OSSBucketWrapper) CompleteMultipartUpload(ctx context.Context, imur oss
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CompleteMultipartUpload")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -161,6 +179,12 @@ func (w *OSSBucketWrapper) CopyFile(ctx context.Context, srcBucketName string, s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CopyFile")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -185,6 +209,12 @@ func (w *OSSBucketWrapper) CopyObject(ctx context.Context, srcObjectKey string, 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CopyObject")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -210,6 +240,12 @@ func (w *OSSBucketWrapper) CopyObjectFrom(ctx context.Context, srcBucketName str
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CopyObjectFrom")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -235,6 +271,12 @@ func (w *OSSBucketWrapper) CopyObjectTo(ctx context.Context, destBucketName stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CopyObjectTo")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -260,6 +302,12 @@ func (w *OSSBucketWrapper) CreateLiveChannel(ctx context.Context, channelName st
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CreateLiveChannel")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -285,6 +333,12 @@ func (w *OSSBucketWrapper) CreateSelectCsvObjectMeta(ctx context.Context, key st
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CreateSelectCsvObjectMeta")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -310,6 +364,12 @@ func (w *OSSBucketWrapper) CreateSelectJsonObjectMeta(ctx context.Context, key s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CreateSelectJsonObjectMeta")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -335,6 +395,12 @@ func (w *OSSBucketWrapper) DeleteLiveChannel(ctx context.Context, channelName st
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DeleteLiveChannel")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -359,6 +425,12 @@ func (w *OSSBucketWrapper) DeleteObject(ctx context.Context, objectKey string, o
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DeleteObject")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -383,6 +455,12 @@ func (w *OSSBucketWrapper) DeleteObjectTagging(ctx context.Context, objectKey st
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DeleteObjectTagging")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -407,6 +485,12 @@ func (w *OSSBucketWrapper) DeleteObjectVersions(ctx context.Context, objectVersi
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DeleteObjectVersions")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -432,6 +516,12 @@ func (w *OSSBucketWrapper) DeleteObjects(ctx context.Context, objectKeys []strin
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DeleteObjects")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -457,6 +547,12 @@ func (w *OSSBucketWrapper) Do(ctx context.Context, method string, objectName str
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.Do")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -482,6 +578,12 @@ func (w *OSSBucketWrapper) DoAppendObject(ctx context.Context, request *oss.Appe
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoAppendObject")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -507,6 +609,12 @@ func (w *OSSBucketWrapper) DoGetObject(ctx context.Context, request *oss.GetObje
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoGetObject")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -532,6 +640,12 @@ func (w *OSSBucketWrapper) DoGetObjectWithURL(ctx context.Context, signedURL str
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoGetObjectWithURL")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -557,6 +671,12 @@ func (w *OSSBucketWrapper) DoPostSelectObject(ctx context.Context, key string, p
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoPostSelectObject")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -582,6 +702,12 @@ func (w *OSSBucketWrapper) DoPutObject(ctx context.Context, request *oss.PutObje
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoPutObject")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -607,6 +733,12 @@ func (w *OSSBucketWrapper) DoPutObjectWithURL(ctx context.Context, signedURL str
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoPutObjectWithURL")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -632,6 +764,12 @@ func (w *OSSBucketWrapper) DoUploadPart(ctx context.Context, request *oss.Upload
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoUploadPart")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -657,6 +795,12 @@ func (w *OSSBucketWrapper) DownloadFile(ctx context.Context, objectKey string, f
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DownloadFile")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -681,6 +825,12 @@ func (w *OSSBucketWrapper) GetConfig(ctx context.Context) *oss.Config {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetConfig")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -702,6 +852,12 @@ func (w *OSSBucketWrapper) GetLiveChannelHistory(ctx context.Context, channelNam
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetLiveChannelHistory")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -727,6 +883,12 @@ func (w *OSSBucketWrapper) GetLiveChannelInfo(ctx context.Context, channelName s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetLiveChannelInfo")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -752,6 +914,12 @@ func (w *OSSBucketWrapper) GetLiveChannelStat(ctx context.Context, channelName s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetLiveChannelStat")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -777,6 +945,12 @@ func (w *OSSBucketWrapper) GetObject(ctx context.Context, objectKey string, opti
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObject")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -802,6 +976,12 @@ func (w *OSSBucketWrapper) GetObjectACL(ctx context.Context, objectKey string, o
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectACL")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -827,6 +1007,12 @@ func (w *OSSBucketWrapper) GetObjectDetailedMeta(ctx context.Context, objectKey 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectDetailedMeta")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -852,6 +1038,12 @@ func (w *OSSBucketWrapper) GetObjectMeta(ctx context.Context, objectKey string, 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectMeta")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -877,6 +1069,12 @@ func (w *OSSBucketWrapper) GetObjectTagging(ctx context.Context, objectKey strin
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectTagging")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -902,6 +1100,12 @@ func (w *OSSBucketWrapper) GetObjectToFile(ctx context.Context, objectKey string
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectToFile")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -926,6 +1130,12 @@ func (w *OSSBucketWrapper) GetObjectToFileWithURL(ctx context.Context, signedURL
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectToFileWithURL")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -950,6 +1160,12 @@ func (w *OSSBucketWrapper) GetObjectWithURL(ctx context.Context, signedURL strin
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectWithURL")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -975,6 +1191,12 @@ func (w *OSSBucketWrapper) GetSymlink(ctx context.Context, objectKey string, opt
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetSymlink")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1000,6 +1222,12 @@ func (w *OSSBucketWrapper) GetVodPlaylist(ctx context.Context, channelName strin
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetVodPlaylist")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1025,6 +1253,12 @@ func (w *OSSBucketWrapper) InitiateMultipartUpload(ctx context.Context, objectKe
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.InitiateMultipartUpload")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1050,6 +1284,12 @@ func (w *OSSBucketWrapper) IsObjectExist(ctx context.Context, objectKey string, 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.IsObjectExist")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1075,6 +1315,12 @@ func (w *OSSBucketWrapper) ListLiveChannel(ctx context.Context, options ...oss.O
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListLiveChannel")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1100,6 +1346,12 @@ func (w *OSSBucketWrapper) ListMultipartUploads(ctx context.Context, options ...
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListMultipartUploads")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1125,6 +1377,12 @@ func (w *OSSBucketWrapper) ListObjectVersions(ctx context.Context, options ...os
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListObjectVersions")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1150,6 +1408,12 @@ func (w *OSSBucketWrapper) ListObjects(ctx context.Context, options ...oss.Optio
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListObjects")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1175,6 +1439,12 @@ func (w *OSSBucketWrapper) ListObjectsV2(ctx context.Context, options ...oss.Opt
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListObjectsV2")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1200,6 +1470,12 @@ func (w *OSSBucketWrapper) ListUploadedParts(ctx context.Context, imur oss.Initi
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListUploadedParts")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1225,6 +1501,12 @@ func (w *OSSBucketWrapper) OptionsMethod(ctx context.Context, objectKey string, 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.OptionsMethod")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1250,6 +1532,12 @@ func (w *OSSBucketWrapper) PostVodPlaylist(ctx context.Context, channelName stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PostVodPlaylist")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1274,6 +1562,12 @@ func (w *OSSBucketWrapper) ProcessObject(ctx context.Context, objectKey string, 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ProcessObject")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1299,6 +1593,12 @@ func (w *OSSBucketWrapper) PutLiveChannelStatus(ctx context.Context, channelName
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutLiveChannelStatus")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1323,6 +1623,12 @@ func (w *OSSBucketWrapper) PutObject(ctx context.Context, objectKey string, read
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutObject")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1347,6 +1653,12 @@ func (w *OSSBucketWrapper) PutObjectFromFile(ctx context.Context, objectKey stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutObjectFromFile")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1371,6 +1683,12 @@ func (w *OSSBucketWrapper) PutObjectFromFileWithURL(ctx context.Context, signedU
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutObjectFromFileWithURL")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1395,6 +1713,12 @@ func (w *OSSBucketWrapper) PutObjectTagging(ctx context.Context, objectKey strin
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutObjectTagging")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1419,6 +1743,12 @@ func (w *OSSBucketWrapper) PutObjectWithURL(ctx context.Context, signedURL strin
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutObjectWithURL")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1443,6 +1773,12 @@ func (w *OSSBucketWrapper) PutSymlink(ctx context.Context, symObjectKey string, 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutSymlink")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1467,6 +1803,12 @@ func (w *OSSBucketWrapper) RestoreObject(ctx context.Context, objectKey string, 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.RestoreObject")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1491,6 +1833,12 @@ func (w *OSSBucketWrapper) RestoreObjectDetail(ctx context.Context, objectKey st
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.RestoreObjectDetail")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1515,6 +1863,12 @@ func (w *OSSBucketWrapper) RestoreObjectXML(ctx context.Context, objectKey strin
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.RestoreObjectXML")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1539,6 +1893,12 @@ func (w *OSSBucketWrapper) SelectObject(ctx context.Context, key string, selectR
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.SelectObject")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1564,6 +1924,12 @@ func (w *OSSBucketWrapper) SelectObjectIntoFile(ctx context.Context, key string,
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.SelectObjectIntoFile")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1588,6 +1954,12 @@ func (w *OSSBucketWrapper) SetObjectACL(ctx context.Context, objectKey string, o
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.SetObjectACL")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1612,6 +1984,12 @@ func (w *OSSBucketWrapper) SetObjectMeta(ctx context.Context, objectKey string, 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.SetObjectMeta")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1636,6 +2014,12 @@ func (w *OSSBucketWrapper) SignRtmpURL(ctx context.Context, channelName string, 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.SignRtmpURL")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1661,6 +2045,12 @@ func (w *OSSBucketWrapper) SignURL(ctx context.Context, objectKey string, method
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.SignURL")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1686,6 +2076,12 @@ func (w *OSSBucketWrapper) UploadFile(ctx context.Context, objectKey string, fil
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.UploadFile")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1710,6 +2106,12 @@ func (w *OSSBucketWrapper) UploadPart(ctx context.Context, imur oss.InitiateMult
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.UploadPart")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1735,6 +2137,12 @@ func (w *OSSBucketWrapper) UploadPartCopy(ctx context.Context, imur oss.Initiate
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.UploadPartCopy")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1760,6 +2168,12 @@ func (w *OSSBucketWrapper) UploadPartFromFile(ctx context.Context, imur oss.Init
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.UploadPartFromFile")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1785,6 +2199,12 @@ func (w *OSSClientWrapper) AbortBucketWorm(ctx context.Context, bucketName strin
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.AbortBucketWorm")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1816,6 +2236,12 @@ func (w *OSSClientWrapper) CompleteBucketWorm(ctx context.Context, bucketName st
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.CompleteBucketWorm")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1840,6 +2266,12 @@ func (w *OSSClientWrapper) CreateBucket(ctx context.Context, bucketName string, 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.CreateBucket")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1864,6 +2296,12 @@ func (w *OSSClientWrapper) DeleteBucket(ctx context.Context, bucketName string, 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucket")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1888,6 +2326,12 @@ func (w *OSSClientWrapper) DeleteBucketCORS(ctx context.Context, bucketName stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketCORS")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1912,6 +2356,12 @@ func (w *OSSClientWrapper) DeleteBucketEncryption(ctx context.Context, bucketNam
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketEncryption")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1936,6 +2386,12 @@ func (w *OSSClientWrapper) DeleteBucketInventory(ctx context.Context, bucketName
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketInventory")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1960,6 +2416,12 @@ func (w *OSSClientWrapper) DeleteBucketLifecycle(ctx context.Context, bucketName
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketLifecycle")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1984,6 +2446,12 @@ func (w *OSSClientWrapper) DeleteBucketLogging(ctx context.Context, bucketName s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketLogging")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2008,6 +2476,12 @@ func (w *OSSClientWrapper) DeleteBucketPolicy(ctx context.Context, bucketName st
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketPolicy")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2032,6 +2506,12 @@ func (w *OSSClientWrapper) DeleteBucketQosInfo(ctx context.Context, bucketName s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketQosInfo")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2056,6 +2536,12 @@ func (w *OSSClientWrapper) DeleteBucketTagging(ctx context.Context, bucketName s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketTagging")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2080,6 +2566,12 @@ func (w *OSSClientWrapper) DeleteBucketWebsite(ctx context.Context, bucketName s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketWebsite")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2104,6 +2596,12 @@ func (w *OSSClientWrapper) ExtendBucketWorm(ctx context.Context, bucketName stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.ExtendBucketWorm")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2128,6 +2626,12 @@ func (w *OSSClientWrapper) GetBucketACL(ctx context.Context, bucketName string) 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketACL")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2153,6 +2657,12 @@ func (w *OSSClientWrapper) GetBucketAsyncTask(ctx context.Context, bucketName st
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketAsyncTask")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2178,6 +2688,12 @@ func (w *OSSClientWrapper) GetBucketCORS(ctx context.Context, bucketName string)
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketCORS")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2203,6 +2719,12 @@ func (w *OSSClientWrapper) GetBucketEncryption(ctx context.Context, bucketName s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketEncryption")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2228,6 +2750,12 @@ func (w *OSSClientWrapper) GetBucketInfo(ctx context.Context, bucketName string,
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketInfo")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2253,6 +2781,12 @@ func (w *OSSClientWrapper) GetBucketInventory(ctx context.Context, bucketName st
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketInventory")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2278,6 +2812,12 @@ func (w *OSSClientWrapper) GetBucketLifecycle(ctx context.Context, bucketName st
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketLifecycle")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2303,6 +2843,12 @@ func (w *OSSClientWrapper) GetBucketLocation(ctx context.Context, bucketName str
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketLocation")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2328,6 +2874,12 @@ func (w *OSSClientWrapper) GetBucketLogging(ctx context.Context, bucketName stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketLogging")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2353,6 +2905,12 @@ func (w *OSSClientWrapper) GetBucketPolicy(ctx context.Context, bucketName strin
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketPolicy")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2378,6 +2936,12 @@ func (w *OSSClientWrapper) GetBucketQosInfo(ctx context.Context, bucketName stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketQosInfo")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2403,6 +2967,12 @@ func (w *OSSClientWrapper) GetBucketReferer(ctx context.Context, bucketName stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketReferer")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2428,6 +2998,12 @@ func (w *OSSClientWrapper) GetBucketRequestPayment(ctx context.Context, bucketNa
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketRequestPayment")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2453,6 +3029,12 @@ func (w *OSSClientWrapper) GetBucketStat(ctx context.Context, bucketName string)
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketStat")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2478,6 +3060,12 @@ func (w *OSSClientWrapper) GetBucketTagging(ctx context.Context, bucketName stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketTagging")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2503,6 +3091,12 @@ func (w *OSSClientWrapper) GetBucketVersioning(ctx context.Context, bucketName s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketVersioning")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2528,6 +3122,12 @@ func (w *OSSClientWrapper) GetBucketWebsite(ctx context.Context, bucketName stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketWebsite")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2553,6 +3153,12 @@ func (w *OSSClientWrapper) GetBucketWorm(ctx context.Context, bucketName string,
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketWorm")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2578,6 +3184,12 @@ func (w *OSSClientWrapper) GetUserQoSInfo(ctx context.Context, options ...oss.Op
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetUserQoSInfo")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2603,6 +3215,12 @@ func (w *OSSClientWrapper) InitiateBucketWorm(ctx context.Context, bucketName st
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.InitiateBucketWorm")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2628,6 +3246,12 @@ func (w *OSSClientWrapper) IsBucketExist(ctx context.Context, bucketName string)
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.IsBucketExist")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2653,6 +3277,12 @@ func (w *OSSClientWrapper) LimitUploadSpeed(ctx context.Context, upSpeed int) er
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.LimitUploadSpeed")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2677,6 +3307,12 @@ func (w *OSSClientWrapper) ListBucketInventory(ctx context.Context, bucketName s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.ListBucketInventory")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2702,6 +3338,12 @@ func (w *OSSClientWrapper) ListBuckets(ctx context.Context, options ...oss.Optio
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.ListBuckets")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2727,6 +3369,12 @@ func (w *OSSClientWrapper) SetBucketACL(ctx context.Context, bucketName string, 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketACL")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2751,6 +3399,12 @@ func (w *OSSClientWrapper) SetBucketAsyncTask(ctx context.Context, bucketName st
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketAsyncTask")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2776,6 +3430,12 @@ func (w *OSSClientWrapper) SetBucketCORS(ctx context.Context, bucketName string,
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketCORS")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2800,6 +3460,12 @@ func (w *OSSClientWrapper) SetBucketEncryption(ctx context.Context, bucketName s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketEncryption")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2824,6 +3490,12 @@ func (w *OSSClientWrapper) SetBucketInventory(ctx context.Context, bucketName st
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketInventory")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2848,6 +3520,12 @@ func (w *OSSClientWrapper) SetBucketLifecycle(ctx context.Context, bucketName st
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketLifecycle")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2872,6 +3550,12 @@ func (w *OSSClientWrapper) SetBucketLogging(ctx context.Context, bucketName stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketLogging")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2896,6 +3580,12 @@ func (w *OSSClientWrapper) SetBucketPolicy(ctx context.Context, bucketName strin
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketPolicy")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2920,6 +3610,12 @@ func (w *OSSClientWrapper) SetBucketQoSInfo(ctx context.Context, bucketName stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketQoSInfo")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2944,6 +3640,12 @@ func (w *OSSClientWrapper) SetBucketReferer(ctx context.Context, bucketName stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketReferer")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2968,6 +3670,12 @@ func (w *OSSClientWrapper) SetBucketRequestPayment(ctx context.Context, bucketNa
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketRequestPayment")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -2992,6 +3700,12 @@ func (w *OSSClientWrapper) SetBucketTagging(ctx context.Context, bucketName stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketTagging")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -3016,6 +3730,12 @@ func (w *OSSClientWrapper) SetBucketVersioning(ctx context.Context, bucketName s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketVersioning")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -3040,6 +3760,12 @@ func (w *OSSClientWrapper) SetBucketWebsite(ctx context.Context, bucketName stri
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketWebsite")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -3064,6 +3790,12 @@ func (w *OSSClientWrapper) SetBucketWebsiteDetail(ctx context.Context, bucketNam
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketWebsiteDetail")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -3088,6 +3820,12 @@ func (w *OSSClientWrapper) SetBucketWebsiteXml(ctx context.Context, bucketName s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketWebsiteXml")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 

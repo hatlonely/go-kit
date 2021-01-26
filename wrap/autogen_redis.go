@@ -124,6 +124,12 @@ func (w *RedisClientWrapper) Context(ctx context.Context) context.Context {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Context")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -145,6 +151,12 @@ func (w *RedisClientWrapper) Options(ctx context.Context) *redis.Options {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Options")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -166,6 +178,12 @@ func (w *RedisClientWrapper) PSubscribe(ctx context.Context, channels ...string)
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.PSubscribe")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -187,6 +205,12 @@ func (w *RedisClientWrapper) Pipeline(ctx context.Context) redis.Pipeliner {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Pipeline")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -208,6 +232,12 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Pipelined")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -233,6 +263,12 @@ func (w *RedisClientWrapper) PoolStats(ctx context.Context) *redis.PoolStats {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.PoolStats")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -259,6 +295,12 @@ func (w *RedisClientWrapper) Subscribe(ctx context.Context, channels ...string) 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Subscribe")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -280,6 +322,12 @@ func (w *RedisClientWrapper) TxPipeline(ctx context.Context) redis.Pipeliner {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.TxPipeline")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -301,6 +349,12 @@ func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipe
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.TxPipelined")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -326,6 +380,12 @@ func (w *RedisClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Watch")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -355,6 +415,12 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Close")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -379,6 +445,12 @@ func (w *RedisClusterClientWrapper) Context(ctx context.Context) context.Context
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Context")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -400,6 +472,12 @@ func (w *RedisClusterClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.DBSize")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -421,6 +499,12 @@ func (w *RedisClusterClientWrapper) Do(ctx context.Context, args ...interface{})
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Do")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -442,6 +526,12 @@ func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(c
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ForEachMaster")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -466,6 +556,12 @@ func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(cli
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ForEachNode")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -490,6 +586,12 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ForEachSlave")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -514,6 +616,12 @@ func (w *RedisClusterClientWrapper) Options(ctx context.Context) *redis.ClusterO
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Options")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -535,6 +643,12 @@ func (w *RedisClusterClientWrapper) PSubscribe(ctx context.Context, channels ...
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PSubscribe")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -556,6 +670,12 @@ func (w *RedisClusterClientWrapper) Pipeline(ctx context.Context) redis.Pipeline
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Pipeline")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -577,6 +697,12 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Pipelined")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -602,6 +728,12 @@ func (w *RedisClusterClientWrapper) PoolStats(ctx context.Context) *redis.PoolSt
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PoolStats")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -623,6 +755,12 @@ func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Process")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -647,6 +785,12 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ReloadState")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -671,6 +815,12 @@ func (w *RedisClusterClientWrapper) Subscribe(ctx context.Context, channels ...s
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Subscribe")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -692,6 +842,12 @@ func (w *RedisClusterClientWrapper) TxPipeline(ctx context.Context) redis.Pipeli
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.TxPipeline")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -713,6 +869,12 @@ func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(red
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.TxPipelined")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -738,6 +900,12 @@ func (w *RedisClusterClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Watch")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -767,6 +935,12 @@ func (w *RedisClusterClientWrapper) WrapProcess(ctx context.Context, fn func(old
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.WrapProcess")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -778,6 +952,12 @@ func (w *RedisClusterClientWrapper) WrapProcessPipeline(ctx context.Context, fn 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.WrapProcessPipeline")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 

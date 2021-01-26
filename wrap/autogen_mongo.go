@@ -100,6 +100,12 @@ func (w *MongoClientWrapper) Connect(ctx context.Context) error {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Client.Connect")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -130,6 +136,12 @@ func (w *MongoClientWrapper) Disconnect(ctx context.Context) error {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Client.Disconnect")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -154,6 +166,12 @@ func (w *MongoClientWrapper) ListDatabaseNames(ctx context.Context, filter inter
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Client.ListDatabaseNames")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -179,6 +197,12 @@ func (w *MongoClientWrapper) ListDatabases(ctx context.Context, filter interface
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Client.ListDatabases")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -204,6 +228,12 @@ func (w *MongoClientWrapper) NumberSessionsInProgress(ctx context.Context) int {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Client.NumberSessionsInProgress")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -225,6 +255,12 @@ func (w *MongoClientWrapper) Ping(ctx context.Context, rp *readpref.ReadPref) er
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Client.Ping")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -249,6 +285,12 @@ func (w *MongoClientWrapper) StartSession(ctx context.Context, opts ...*options.
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Client.StartSession")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -274,6 +316,12 @@ func (w *MongoClientWrapper) UseSession(ctx context.Context, fn func(mongo.Sessi
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Client.UseSession")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -298,6 +346,12 @@ func (w *MongoClientWrapper) UseSessionWithOptions(ctx context.Context, opts *op
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Client.UseSessionWithOptions")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -322,6 +376,12 @@ func (w *MongoClientWrapper) Watch(ctx context.Context, pipeline interface{}, op
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Client.Watch")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -347,6 +407,12 @@ func (w *MongoCollectionWrapper) Aggregate(ctx context.Context, pipeline interfa
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.Aggregate")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -372,6 +438,12 @@ func (w *MongoCollectionWrapper) BulkWrite(ctx context.Context, models []mongo.W
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.BulkWrite")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -397,6 +469,12 @@ func (w *MongoCollectionWrapper) Clone(ctx context.Context, opts ...*options.Col
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.Clone")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -422,6 +500,12 @@ func (w *MongoCollectionWrapper) CountDocuments(ctx context.Context, filter inte
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.CountDocuments")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -447,6 +531,12 @@ func (w *MongoCollectionWrapper) Database(ctx context.Context) *MongoDatabaseWra
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.Database")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -468,6 +558,12 @@ func (w *MongoCollectionWrapper) DeleteMany(ctx context.Context, filter interfac
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.DeleteMany")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -493,6 +589,12 @@ func (w *MongoCollectionWrapper) DeleteOne(ctx context.Context, filter interface
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.DeleteOne")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -518,6 +620,12 @@ func (w *MongoCollectionWrapper) Distinct(ctx context.Context, fieldName string,
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.Distinct")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -543,6 +651,12 @@ func (w *MongoCollectionWrapper) Drop(ctx context.Context) error {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.Drop")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -567,6 +681,12 @@ func (w *MongoCollectionWrapper) EstimatedDocumentCount(ctx context.Context, opt
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.EstimatedDocumentCount")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -592,6 +712,12 @@ func (w *MongoCollectionWrapper) Find(ctx context.Context, filter interface{}, o
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.Find")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -617,6 +743,12 @@ func (w *MongoCollectionWrapper) FindOne(ctx context.Context, filter interface{}
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.FindOne")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -638,6 +770,12 @@ func (w *MongoCollectionWrapper) FindOneAndDelete(ctx context.Context, filter in
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.FindOneAndDelete")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -659,6 +797,12 @@ func (w *MongoCollectionWrapper) FindOneAndReplace(ctx context.Context, filter i
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.FindOneAndReplace")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -680,6 +824,12 @@ func (w *MongoCollectionWrapper) FindOneAndUpdate(ctx context.Context, filter in
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.FindOneAndUpdate")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -701,6 +851,12 @@ func (w *MongoCollectionWrapper) Indexes(ctx context.Context) mongo.IndexView {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.Indexes")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -722,6 +878,12 @@ func (w *MongoCollectionWrapper) InsertMany(ctx context.Context, documents []int
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.InsertMany")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -747,6 +909,12 @@ func (w *MongoCollectionWrapper) InsertOne(ctx context.Context, document interfa
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.InsertOne")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -772,6 +940,12 @@ func (w *MongoCollectionWrapper) Name(ctx context.Context) string {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.Name")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -793,6 +967,12 @@ func (w *MongoCollectionWrapper) ReplaceOne(ctx context.Context, filter interfac
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.ReplaceOne")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -818,6 +998,12 @@ func (w *MongoCollectionWrapper) UpdateMany(ctx context.Context, filter interfac
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.UpdateMany")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -843,6 +1029,12 @@ func (w *MongoCollectionWrapper) UpdateOne(ctx context.Context, filter interface
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.UpdateOne")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -868,6 +1060,12 @@ func (w *MongoCollectionWrapper) Watch(ctx context.Context, pipeline interface{}
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Collection.Watch")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -893,6 +1091,12 @@ func (w *MongoDatabaseWrapper) Aggregate(ctx context.Context, pipeline interface
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Database.Aggregate")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -918,6 +1122,12 @@ func (w *MongoDatabaseWrapper) Client(ctx context.Context) *MongoClientWrapper {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Database.Client")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -945,6 +1155,12 @@ func (w *MongoDatabaseWrapper) CreateCollection(ctx context.Context, name string
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Database.CreateCollection")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -969,6 +1185,12 @@ func (w *MongoDatabaseWrapper) CreateView(ctx context.Context, viewName string, 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Database.CreateView")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -993,6 +1215,12 @@ func (w *MongoDatabaseWrapper) Drop(ctx context.Context) error {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Database.Drop")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1017,6 +1245,12 @@ func (w *MongoDatabaseWrapper) ListCollectionNames(ctx context.Context, filter i
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Database.ListCollectionNames")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1042,6 +1276,12 @@ func (w *MongoDatabaseWrapper) ListCollections(ctx context.Context, filter inter
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Database.ListCollections")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1067,6 +1307,12 @@ func (w *MongoDatabaseWrapper) Name(ctx context.Context) string {
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Database.Name")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1088,6 +1334,12 @@ func (w *MongoDatabaseWrapper) ReadConcern(ctx context.Context) *readconcern.Rea
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Database.ReadConcern")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1109,6 +1361,12 @@ func (w *MongoDatabaseWrapper) ReadPreference(ctx context.Context) *readpref.Rea
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Database.ReadPreference")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1130,6 +1388,12 @@ func (w *MongoDatabaseWrapper) RunCommand(ctx context.Context, runCommand interf
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Database.RunCommand")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1151,6 +1415,12 @@ func (w *MongoDatabaseWrapper) RunCommandCursor(ctx context.Context, runCommand 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Database.RunCommandCursor")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1176,6 +1446,12 @@ func (w *MongoDatabaseWrapper) Watch(ctx context.Context, pipeline interface{}, 
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Database.Watch")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 
@@ -1201,6 +1477,12 @@ func (w *MongoDatabaseWrapper) WriteConcern(ctx context.Context) *writeconcern.W
 
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "mongo.Database.WriteConcern")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
 		defer span.Finish()
 	}
 

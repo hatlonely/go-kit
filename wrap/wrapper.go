@@ -7,7 +7,10 @@ import (
 type WrapperOptions struct {
 	EnableTrace  bool
 	EnableMetric bool
-	Metric       struct {
+	Trace        struct {
+		ConstTags map[string]string
+	}
+	Metric struct {
 		Buckets     []float64
 		ConstLabels map[string]string
 	}
@@ -17,6 +20,7 @@ type CtxOptions struct {
 	DisableTrace           bool
 	DisableMetric          bool
 	MetricCustomLabelValue string
+	TraceTags              map[string]string
 }
 
 type CtxOption func(options *CtxOptions)
@@ -33,9 +37,18 @@ func WithCtxDisableMetric() CtxOption {
 	}
 }
 
-func WithMetricCustomLabelValue(val string) CtxOption {
+func WithCtxMetricCustomLabelValue(val string) CtxOption {
 	return func(options *CtxOptions) {
 		options.MetricCustomLabelValue = val
+	}
+}
+
+func WithCtxTraceTag(key string, val string) CtxOption {
+	return func(options *CtxOptions) {
+		if options.TraceTags == nil {
+			options.TraceTags = map[string]string{}
+		}
+		options.TraceTags[key] = val
 	}
 }
 
