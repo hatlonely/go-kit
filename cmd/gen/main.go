@@ -14,11 +14,11 @@ import (
 )
 
 type Options struct {
-	flag.Options
+	Help    bool   `flag:"show help info"`
+	Version string `flag:"show version"`
+	Output  string `flag:"output path"`
 
 	astx.WrapperGeneratorOptions
-
-	Output string `flag:"output path"`
 }
 
 var Version string
