@@ -1,5 +1,9 @@
 package wrap
 
+import (
+	"context"
+)
+
 type WrapperOptions struct {
 	EnableTrace  bool
 	EnableMetric bool
@@ -7,4 +11,49 @@ type WrapperOptions struct {
 		Buckets     []float64
 		ConstLabels map[string]string
 	}
+}
+
+type CtxOptions struct {
+	DisableTrace           bool
+	DisableMetric          bool
+	MetricCustomLabelValue string
+}
+
+type CtxOption func(options *CtxOptions)
+
+func WithCtxDisableTrace() CtxOption {
+	return func(options *CtxOptions) {
+		options.DisableTrace = true
+	}
+}
+
+func WithCtxDisableMetric() CtxOption {
+	return func(options *CtxOptions) {
+		options.DisableMetric = true
+	}
+}
+
+func WithMetricCustomLabelValue(val string) CtxOption {
+	return func(options *CtxOptions) {
+		options.MetricCustomLabelValue = val
+	}
+}
+
+type ctxKey struct{}
+
+func NewContext(ctx context.Context, opts ...CtxOption) context.Context {
+	var options CtxOptions
+	for _, opt := range opts {
+		opt(&options)
+	}
+
+	return context.WithValue(ctx, &ctxKey{}, &options)
+}
+
+func FromContext(ctx context.Context) (*CtxOptions, bool) {
+	val := ctx.Value(&ctxKey{})
+	if val == nil {
+		return nil, false
+	}
+	return val.(*CtxOptions), true
 }
