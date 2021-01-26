@@ -114,9 +114,9 @@ func (w *OTSTableStoreClientWrapper) UpdateCredentialByECSRole(res *alics.ECSMet
 	for {
 		oldClient := w.obj
 
-		d := res.ExpirationTime.Sub(time.Now()) - 5*time.Minute
+		d := res.ExpirationTime.Sub(time.Now()) - 25*time.Minute
 		if d < 0 {
-			d = 5 * time.Second
+			d = 30 * time.Second
 		}
 		<-time.After(d)
 		// 检查 client 是否被其他协程更新
