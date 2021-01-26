@@ -15,8 +15,8 @@ import (
 
 type Options struct {
 	Help       bool   `flag:"-h; usage: show help info"`
-	Version    string `flag:"-v; usage: show version"`
-	SubCommand string `flag:"sub; usage: sub command" rule:"x in ['wrap']"`
+	Version    bool   `flag:"-v; usage: show version"`
+	SubCommand string `flag:"sub; usage: sub command" rule:"x in ['', 'wrap']"`
 	Output     string `flag:"usage: output path"`
 }
 
