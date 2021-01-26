@@ -175,21 +175,21 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		if g.options.Debug {
 			fmt.Printf("process class: %v, vals: %v\n", cls, strx.JsonMarshalIndent(vals))
 		}
-		buf.WriteString(renderTemplate(WrapperStructTpl, vals))
+		buf.WriteString(renderTemplate(WrapperStructTpl, vals, "WrapperStructTpl"))
 		if g.starClassSet[cls] {
-			buf.WriteString(renderTemplate(WrapperFunctionGetWithStarTpl, vals))
+			buf.WriteString(renderTemplate(WrapperFunctionGetWithStarTpl, vals, "WrapperFunctionGetWithStarTpl"))
 		} else {
-			buf.WriteString(renderTemplate(WrapperFunctionGetTpl, vals))
+			buf.WriteString(renderTemplate(WrapperFunctionGetTpl, vals, "WrapperFunctionGetTpl"))
 		}
 
 		if g.MatchRule(cls, g.options.Rule.OnWrapperChange) {
-			buf.WriteString(renderTemplate(WrapperFunctionOnWrapperChangeTpl, vals))
+			buf.WriteString(renderTemplate(WrapperFunctionOnWrapperChangeTpl, vals, "WrapperFunctionOnWrapperChangeTpl"))
 		}
 		if g.MatchRule(cls, g.options.Rule.OnRetryChange) {
-			buf.WriteString(renderTemplate(WrapperFunctionOnRetryChangeTpl, vals))
+			buf.WriteString(renderTemplate(WrapperFunctionOnRetryChangeTpl, vals, "WrapperFunctionOnRetryChangeTpl"))
 		}
 		if g.MatchRule(cls, g.options.Rule.CreateMetric) {
-			buf.WriteString(renderTemplate(WrapperFunctionCreateMetricTpl, vals))
+			buf.WriteString(renderTemplate(WrapperFunctionCreateMetricTpl, vals, "WrapperFunctionCreateMetricTpl"))
 		}
 	}
 
@@ -268,12 +268,12 @@ func (g *WrapperGenerator) generateWrapperImport() string {
 	return buf.String()
 }
 
-func renderTemplate(tplStr string, vals map[string]interface{}) string {
+func renderTemplate(tplStr string, vals map[string]interface{}, tplName string) string {
 	if vals["debug"].(bool) {
 		if fun, ok := vals["function"]; ok {
-			fmt.Printf("render template function. class: [%v], function: [%v]\n", vals["class"], fun.(map[string]string)["name"])
+			fmt.Printf("render template function. class: [%v], function: [%v], tpl[%v]\n", vals["class"], fun.(map[string]string)["name"], tplName)
 		} else {
-			fmt.Printf("render template class. class: [%v]\n", vals["class"])
+			fmt.Printf("render template class. class: [%v], tpl: [%v]\n", vals["class"], tplName)
 		}
 	}
 	tpl, err := template.New("").Parse(tplStr)
@@ -504,13 +504,13 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface
 				buf.WriteString("\tctxOptions := FromContext(ctx)\n")
 			}
 			if g.MatchFunctionRule(function, g.options.Rule.Trace) {
-				buf.WriteString(renderTemplate(WrapperFunctionBodyOpentracingTpl, vals))
+				buf.WriteString(renderTemplate(WrapperFunctionBodyOpentracingTpl, vals, "WrapperFunctionBodyOpentracingTpl"))
 			}
 			if g.MatchFunctionRule(function, g.options.Rule.Metric) {
-				buf.WriteString(renderTemplate(WrapperFunctionBodyMetricTpl, vals))
+				buf.WriteString(renderTemplate(WrapperFunctionBodyMetricTpl, vals, "WrapperFunctionBodyMetricTpl"))
 			}
 		}
-		buf.WriteString(renderTemplate(WrapperFunctionBodyReturnChainTpl, vals))
+		buf.WriteString(renderTemplate(WrapperFunctionBodyReturnChainTpl, vals, "WrapperFunctionBodyReturnChainTpl"))
 		return buf.String()
 	}
 
@@ -519,11 +519,11 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface
 	}
 
 	if g.MatchFunctionRule(function, g.options.Rule.Trace) {
-		buf.WriteString(renderTemplate(WrapperFunctionBodyOpentracingTpl, vals))
+		buf.WriteString(renderTemplate(WrapperFunctionBodyOpentracingTpl, vals, "WrapperFunctionBodyOpentracingTpl"))
 	}
 
 	if function.IsReturnVoid {
-		buf.WriteString(renderTemplate(WrapperFunctionBodyReturnVoidTpl, vals))
+		buf.WriteString(renderTemplate(WrapperFunctionBodyReturnVoidTpl, vals, "WrapperFunctionBodyReturnVoidTpl"))
 		return buf.String()
 	}
 
@@ -531,18 +531,18 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface
 
 	if function.IsReturnError && g.MatchFunctionRule(function, g.options.Rule.Retry) {
 		if g.MatchFunctionRule(function, g.options.Rule.Metric) {
-			buf.WriteString(renderTemplate(WrapperFunctionBodyRetryWithMetricTpl, vals))
+			buf.WriteString(renderTemplate(WrapperFunctionBodyRetryWithMetricTpl, vals, "WrapperFunctionBodyRetryWithMetricTpl"))
 		} else {
-			buf.WriteString(renderTemplate(WrapperFunctionBodyRetryTpl, vals))
+			buf.WriteString(renderTemplate(WrapperFunctionBodyRetryTpl, vals, "WrapperFunctionBodyRetryTpl"))
 		}
 		buf.WriteString(g.generateWrapperReturnVariables(function))
 		return buf.String()
 	}
 
 	if g.MatchFunctionRule(function, g.options.Rule.Metric) {
-		buf.WriteString(renderTemplate(WrapperFunctionBodyMetricTpl, vals))
+		buf.WriteString(renderTemplate(WrapperFunctionBodyMetricTpl, vals, "WrapperFunctionBodyMetricTpl"))
 	}
-	buf.WriteString(renderTemplate(WrapperFunctionBodyCallTpl, vals))
+	buf.WriteString(renderTemplate(WrapperFunctionBodyCallTpl, vals, "WrapperFunctionBodyCallTpl"))
 	buf.WriteString(g.generateWrapperReturnVariables(function))
 
 	return buf.String()
