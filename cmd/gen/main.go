@@ -34,6 +34,11 @@ func main() {
 	Must(flag.Parse(flag.WithJsonVal()))
 	Must(bind.Bind(&options, []bind.Getter{flag.Instance()}, refx.WithCamelName(), refx.WithDefaultValidator()))
 
+	if options.Version {
+		strx.Trac(Version)
+		return
+	}
+
 	if options.Help {
 		switch options.SubCommand {
 		case "wrap":
