@@ -14,11 +14,10 @@ import (
 )
 
 type Options struct {
-	Help    bool   `flag:"-h; usage: show help info"`
-	Version string `flag:"-v; usage: show version"`
-	Output  string `flag:"usage: output path"`
-
-	astx.WrapperGeneratorOptions
+	Help       bool   `flag:"-h; usage: show help info"`
+	Version    string `flag:"-v; usage: show version"`
+	SubCommand string `flag:"sub; usage: sub command" rule:"x in ['wrap']"`
+	Output     string `flag:"usage: output path"`
 }
 
 var Version string
@@ -33,12 +32,17 @@ func main() {
 	var options Options
 	Must(flag.Struct(&options, refx.WithCamelName()))
 	Must(flag.Parse(flag.WithJsonVal()))
-	Must(bind.Bind(&options, []bind.Getter{flag.Instance()}, refx.WithCamelName()))
+	Must(bind.Bind(&options, []bind.Getter{flag.Instance()}, refx.WithCamelName(), refx.WithDefaultValidator()))
 
 	if options.Help {
-		strx.Trac(flag.Usage())
-		strx.Trac(`
-    gen --sourcePath vendor \
+		switch options.SubCommand {
+		case "wrap":
+			f := flag.NewFlag("gen wrap")
+			var options astx.WrapperGeneratorOptions
+			Must(f.Struct(&options, refx.WithCamelName()))
+			strx.Trac(f.Usage())
+			strx.Trac(`
+    gen wrap --sourcePath vendor \
         --packagePath "go.mongodb.org/mongo-driver/mongo" \
         --packageName mongo \
         --classPrefix Mongo \
@@ -48,31 +52,43 @@ func main() {
         --rule.onRetryChange.include "^Client$$" \
         --rule.trace '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
         --rule.metric '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
-        --output $@
+        --output wrap/autogen_mongo.go
 `)
+		default:
+			strx.Trac(flag.Usage())
+		}
 		return
 	}
 
-	generator := astx.NewWrapperGeneratorWithOptions(&options.WrapperGeneratorOptions)
-	str, err := generator.Generate()
-	if err != nil {
-		strx.Warn(err.Error())
-		os.Exit(1)
-	}
+	if options.SubCommand == "wrap" {
+		f := flag.NewFlag("gen wrap")
+		var subOptions astx.WrapperGeneratorOptions
+		Must(f.Struct(&subOptions, refx.WithCamelName()))
+		Must(f.ParseArgs(os.Args[2:], flag.WithJsonVal()))
+		Must(bind.Bind(&subOptions, []bind.Getter{f}, refx.WithCamelName(), refx.WithDefaultValidator()))
 
-	if options.Output == "" {
-		options.Output = fmt.Sprintf("%s.go", options.PackageName)
-	}
-	if options.Output != "stdout" {
-		_ = ioutil.WriteFile(options.Output, []byte(str), 0644)
-		code, err := ops.ExecCommandWithOutput(fmt.Sprintf("goimports -w %v", options.Output), nil, ".", os.Stdout, os.Stderr)
-		if code != 0 {
-			strx.Warn(fmt.Sprintf("exit [%v]", code))
-		}
+		generator := astx.NewWrapperGeneratorWithOptions(&subOptions)
+		str, err := generator.Generate()
 		if err != nil {
 			strx.Warn(err.Error())
+			os.Exit(1)
 		}
-	} else {
-		fmt.Println(str)
+
+		if options.Output == "" {
+			options.Output = fmt.Sprintf("autogen_%s.go", subOptions.PackageName)
+		}
+		if options.Output != "stdout" {
+			_ = ioutil.WriteFile(options.Output, []byte(str), 0644)
+			code, err := ops.ExecCommandWithOutput(fmt.Sprintf("goimports -w %v", options.Output), nil, ".", os.Stdout, os.Stderr)
+			if code != 0 {
+				strx.Warn(fmt.Sprintf("exit [%v]", code))
+			}
+			if err != nil {
+				strx.Warn(err.Error())
+			}
+		} else {
+			fmt.Println(str)
+		}
 	}
+
 }
