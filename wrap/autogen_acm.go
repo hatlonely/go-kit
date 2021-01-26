@@ -72,7 +72,6 @@ func (w *ACMConfigClientWrapper) CreateMetric(options *WrapperOptions) {
 
 func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param vo.ConfigParam) error {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.CancelListenConfig")
 		for key, val := range w.options.Trace.ConstTags {
@@ -83,7 +82,6 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 		}
 		defer span.Finish()
 	}
-
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiterGroup != nil {
@@ -91,7 +89,6 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -99,7 +96,6 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 				w.durationMetric.WithLabelValues("config_client.ConfigClient.CancelListenConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		err = w.obj.CancelListenConfig(param)
 		return err
 	})
@@ -108,7 +104,6 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 
 func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.ConfigParam) (bool, error) {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.DeleteConfig")
 		for key, val := range w.options.Trace.ConstTags {
@@ -119,7 +114,6 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 		}
 		defer span.Finish()
 	}
-
 	var deleted bool
 	var err error
 	err = w.retry.Do(func() error {
@@ -128,7 +122,6 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -136,7 +129,6 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 				w.durationMetric.WithLabelValues("config_client.ConfigClient.DeleteConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		deleted, err = w.obj.DeleteConfig(param)
 		return err
 	})
@@ -145,7 +137,6 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 
 func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigParam) (string, error) {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.GetConfig")
 		for key, val := range w.options.Trace.ConstTags {
@@ -156,7 +147,6 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 		}
 		defer span.Finish()
 	}
-
 	var content string
 	var err error
 	err = w.retry.Do(func() error {
@@ -165,7 +155,6 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -173,7 +162,6 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 				w.durationMetric.WithLabelValues("config_client.ConfigClient.GetConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		content, err = w.obj.GetConfig(param)
 		return err
 	})
@@ -182,7 +170,6 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 
 func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.ConfigParam) error {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.ListenConfig")
 		for key, val := range w.options.Trace.ConstTags {
@@ -193,7 +180,6 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 		}
 		defer span.Finish()
 	}
-
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiterGroup != nil {
@@ -201,7 +187,6 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -209,7 +194,6 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 				w.durationMetric.WithLabelValues("config_client.ConfigClient.ListenConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		err = w.obj.ListenConfig(param)
 		return err
 	})
@@ -218,7 +202,6 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 
 func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.ConfigParam) (bool, error) {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.PublishConfig")
 		for key, val := range w.options.Trace.ConstTags {
@@ -229,7 +212,6 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 		}
 		defer span.Finish()
 	}
-
 	var published bool
 	var err error
 	err = w.retry.Do(func() error {
@@ -238,7 +220,6 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -246,7 +227,6 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 				w.durationMetric.WithLabelValues("config_client.ConfigClient.PublishConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		published, err = w.obj.PublishConfig(param)
 		return err
 	})
@@ -255,7 +235,6 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 
 func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.SearchConfigParm) (*model.ConfigPage, error) {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.SearchConfig")
 		for key, val := range w.options.Trace.ConstTags {
@@ -266,7 +245,6 @@ func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.Sear
 		}
 		defer span.Finish()
 	}
-
 	var res0 *model.ConfigPage
 	var err error
 	err = w.retry.Do(func() error {
@@ -275,7 +253,6 @@ func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.Sear
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -283,7 +260,6 @@ func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.Sear
 				w.durationMetric.WithLabelValues("config_client.ConfigClient.SearchConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		res0, err = w.obj.SearchConfig(param)
 		return err
 	})

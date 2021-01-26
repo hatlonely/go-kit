@@ -122,116 +122,27 @@ func (w *RedisClusterClientWrapper) CreateMetric(options *WrapperOptions) {
 }
 
 func (w *RedisClientWrapper) Context(ctx context.Context) context.Context {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Context")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 context.Context
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.Client.Context", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.Client.Context", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.Context()
+	res0 := w.obj.Context()
 	return res0
 }
 
 func (w *RedisClientWrapper) Options(ctx context.Context) *redis.Options {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Options")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 *redis.Options
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.Client.Options", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.Client.Options", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.Options()
+	res0 := w.obj.Options()
 	return res0
 }
 
 func (w *RedisClientWrapper) PSubscribe(ctx context.Context, channels ...string) *redis.PubSub {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.PSubscribe")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 *redis.PubSub
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.Client.PSubscribe", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.Client.PSubscribe", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.PSubscribe(channels...)
+	res0 := w.obj.PSubscribe(channels...)
 	return res0
 }
 
 func (w *RedisClientWrapper) Pipeline(ctx context.Context) redis.Pipeliner {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Pipeline")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 redis.Pipeliner
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.Client.Pipeline", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.Client.Pipeline", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.Pipeline()
+	res0 := w.obj.Pipeline()
 	return res0
 }
 
 func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeliner) error) ([]redis.Cmder, error) {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Pipelined")
 		for key, val := range w.options.Trace.ConstTags {
@@ -242,7 +153,6 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 		}
 		defer span.Finish()
 	}
-
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
@@ -251,7 +161,6 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -259,7 +168,6 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 				w.durationMetric.WithLabelValues("redis.Client.Pipelined", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		res0, err = w.obj.Pipelined(fn)
 		return err
 	})
@@ -267,29 +175,7 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 }
 
 func (w *RedisClientWrapper) PoolStats(ctx context.Context) *redis.PoolStats {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.PoolStats")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 *redis.PoolStats
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.Client.PoolStats", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.Client.PoolStats", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.PoolStats()
+	res0 := w.obj.PoolStats()
 	return res0
 }
 
@@ -299,62 +185,17 @@ func (w *RedisClientWrapper) SetLimiter(ctx context.Context, l redis.Limiter) *R
 }
 
 func (w *RedisClientWrapper) Subscribe(ctx context.Context, channels ...string) *redis.PubSub {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Subscribe")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 *redis.PubSub
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.Client.Subscribe", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.Client.Subscribe", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.Subscribe(channels...)
+	res0 := w.obj.Subscribe(channels...)
 	return res0
 }
 
 func (w *RedisClientWrapper) TxPipeline(ctx context.Context) redis.Pipeliner {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.TxPipeline")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 redis.Pipeliner
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.Client.TxPipeline", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.Client.TxPipeline", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.TxPipeline()
+	res0 := w.obj.TxPipeline()
 	return res0
 }
 
 func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipeliner) error) ([]redis.Cmder, error) {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.TxPipelined")
 		for key, val := range w.options.Trace.ConstTags {
@@ -365,7 +206,6 @@ func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipe
 		}
 		defer span.Finish()
 	}
-
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
@@ -374,7 +214,6 @@ func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipe
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -382,7 +221,6 @@ func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipe
 				w.durationMetric.WithLabelValues("redis.Client.TxPipelined", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		res0, err = w.obj.TxPipelined(fn)
 		return err
 	})
@@ -391,7 +229,6 @@ func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipe
 
 func (w *RedisClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error, keys ...string) error {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Watch")
 		for key, val := range w.options.Trace.ConstTags {
@@ -402,7 +239,6 @@ func (w *RedisClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error
 		}
 		defer span.Finish()
 	}
-
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiterGroup != nil {
@@ -410,7 +246,6 @@ func (w *RedisClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -418,7 +253,6 @@ func (w *RedisClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error
 				w.durationMetric.WithLabelValues("redis.Client.Watch", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		err = w.obj.Watch(fn, keys...)
 		return err
 	})
@@ -432,7 +266,6 @@ func (w *RedisClientWrapper) WithContext(ctx context.Context) *RedisClientWrappe
 
 func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Close")
 		for key, val := range w.options.Trace.ConstTags {
@@ -443,7 +276,6 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 		}
 		defer span.Finish()
 	}
-
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiterGroup != nil {
@@ -451,7 +283,6 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -459,7 +290,6 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 				w.durationMetric.WithLabelValues("redis.ClusterClient.Close", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		err = w.obj.Close()
 		return err
 	})
@@ -467,89 +297,22 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 }
 
 func (w *RedisClusterClientWrapper) Context(ctx context.Context) context.Context {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Context")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 context.Context
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.ClusterClient.Context", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.ClusterClient.Context", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.Context()
+	res0 := w.obj.Context()
 	return res0
 }
 
 func (w *RedisClusterClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.DBSize")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 *redis.IntCmd
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.ClusterClient.DBSize", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.ClusterClient.DBSize", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.DBSize()
+	res0 := w.obj.DBSize()
 	return res0
 }
 
 func (w *RedisClusterClientWrapper) Do(ctx context.Context, args ...interface{}) *redis.Cmd {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Do")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 *redis.Cmd
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.ClusterClient.Do", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.ClusterClient.Do", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.Do(args...)
+	res0 := w.obj.Do(args...)
 	return res0
 }
 
 func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(client *redis.Client) error) error {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ForEachMaster")
 		for key, val := range w.options.Trace.ConstTags {
@@ -560,7 +323,6 @@ func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(c
 		}
 		defer span.Finish()
 	}
-
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiterGroup != nil {
@@ -568,7 +330,6 @@ func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(c
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -576,7 +337,6 @@ func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(c
 				w.durationMetric.WithLabelValues("redis.ClusterClient.ForEachMaster", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		err = w.obj.ForEachMaster(fn)
 		return err
 	})
@@ -585,7 +345,6 @@ func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(c
 
 func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(client *redis.Client) error) error {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ForEachNode")
 		for key, val := range w.options.Trace.ConstTags {
@@ -596,7 +355,6 @@ func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(cli
 		}
 		defer span.Finish()
 	}
-
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiterGroup != nil {
@@ -604,7 +362,6 @@ func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(cli
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -612,7 +369,6 @@ func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(cli
 				w.durationMetric.WithLabelValues("redis.ClusterClient.ForEachNode", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		err = w.obj.ForEachNode(fn)
 		return err
 	})
@@ -621,7 +377,6 @@ func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(cli
 
 func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(client *redis.Client) error) error {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ForEachSlave")
 		for key, val := range w.options.Trace.ConstTags {
@@ -632,7 +387,6 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 		}
 		defer span.Finish()
 	}
-
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiterGroup != nil {
@@ -640,7 +394,6 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -648,7 +401,6 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 				w.durationMetric.WithLabelValues("redis.ClusterClient.ForEachSlave", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		err = w.obj.ForEachSlave(fn)
 		return err
 	})
@@ -656,89 +408,22 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 }
 
 func (w *RedisClusterClientWrapper) Options(ctx context.Context) *redis.ClusterOptions {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Options")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 *redis.ClusterOptions
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.ClusterClient.Options", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.ClusterClient.Options", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.Options()
+	res0 := w.obj.Options()
 	return res0
 }
 
 func (w *RedisClusterClientWrapper) PSubscribe(ctx context.Context, channels ...string) *redis.PubSub {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PSubscribe")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 *redis.PubSub
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.ClusterClient.PSubscribe", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.ClusterClient.PSubscribe", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.PSubscribe(channels...)
+	res0 := w.obj.PSubscribe(channels...)
 	return res0
 }
 
 func (w *RedisClusterClientWrapper) Pipeline(ctx context.Context) redis.Pipeliner {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Pipeline")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 redis.Pipeliner
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.ClusterClient.Pipeline", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.ClusterClient.Pipeline", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.Pipeline()
+	res0 := w.obj.Pipeline()
 	return res0
 }
 
 func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeliner) error) ([]redis.Cmder, error) {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Pipelined")
 		for key, val := range w.options.Trace.ConstTags {
@@ -749,7 +434,6 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 		}
 		defer span.Finish()
 	}
-
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
@@ -758,7 +442,6 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -766,7 +449,6 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 				w.durationMetric.WithLabelValues("redis.ClusterClient.Pipelined", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		res0, err = w.obj.Pipelined(fn)
 		return err
 	})
@@ -774,35 +456,12 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 }
 
 func (w *RedisClusterClientWrapper) PoolStats(ctx context.Context) *redis.PoolStats {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PoolStats")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 *redis.PoolStats
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.ClusterClient.PoolStats", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.ClusterClient.PoolStats", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.PoolStats()
+	res0 := w.obj.PoolStats()
 	return res0
 }
 
 func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder) error {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Process")
 		for key, val := range w.options.Trace.ConstTags {
@@ -813,7 +472,6 @@ func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder
 		}
 		defer span.Finish()
 	}
-
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiterGroup != nil {
@@ -821,7 +479,6 @@ func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -829,7 +486,6 @@ func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder
 				w.durationMetric.WithLabelValues("redis.ClusterClient.Process", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		err = w.obj.Process(cmd)
 		return err
 	})
@@ -838,7 +494,6 @@ func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder
 
 func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ReloadState")
 		for key, val := range w.options.Trace.ConstTags {
@@ -849,7 +504,6 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 		}
 		defer span.Finish()
 	}
-
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiterGroup != nil {
@@ -857,7 +511,6 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -865,7 +518,6 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 				w.durationMetric.WithLabelValues("redis.ClusterClient.ReloadState", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		err = w.obj.ReloadState()
 		return err
 	})
@@ -873,62 +525,17 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 }
 
 func (w *RedisClusterClientWrapper) Subscribe(ctx context.Context, channels ...string) *redis.PubSub {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Subscribe")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 *redis.PubSub
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.ClusterClient.Subscribe", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.ClusterClient.Subscribe", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.Subscribe(channels...)
+	res0 := w.obj.Subscribe(channels...)
 	return res0
 }
 
 func (w *RedisClusterClientWrapper) TxPipeline(ctx context.Context) redis.Pipeliner {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.TxPipeline")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
-	var res0 redis.Pipeliner
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		defer func() {
-			w.totalMetric.WithLabelValues("redis.ClusterClient.TxPipeline", "OK", ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("redis.ClusterClient.TxPipeline", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-
-	res0 = w.obj.TxPipeline()
+	res0 := w.obj.TxPipeline()
 	return res0
 }
 
 func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipeliner) error) ([]redis.Cmder, error) {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.TxPipelined")
 		for key, val := range w.options.Trace.ConstTags {
@@ -939,7 +546,6 @@ func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(red
 		}
 		defer span.Finish()
 	}
-
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
@@ -948,7 +554,6 @@ func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(red
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -956,7 +561,6 @@ func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(red
 				w.durationMetric.WithLabelValues("redis.ClusterClient.TxPipelined", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		res0, err = w.obj.TxPipelined(fn)
 		return err
 	})
@@ -965,7 +569,6 @@ func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(red
 
 func (w *RedisClusterClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error, keys ...string) error {
 	ctxOptions := FromContext(ctx)
-
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Watch")
 		for key, val := range w.options.Trace.ConstTags {
@@ -976,7 +579,6 @@ func (w *RedisClusterClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx
 		}
 		defer span.Finish()
 	}
-
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiterGroup != nil {
@@ -984,7 +586,6 @@ func (w *RedisClusterClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx
 				return err
 			}
 		}
-
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
@@ -992,7 +593,6 @@ func (w *RedisClusterClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx
 				w.durationMetric.WithLabelValues("redis.ClusterClient.Watch", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
 		err = w.obj.Watch(fn, keys...)
 		return err
 	})
@@ -1005,35 +605,9 @@ func (w *RedisClusterClientWrapper) WithContext(ctx context.Context) *RedisClust
 }
 
 func (w *RedisClusterClientWrapper) WrapProcess(ctx context.Context, fn func(oldProcess func(redis.Cmder) error) func(redis.Cmder) error) {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.WrapProcess")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
 	w.obj.WrapProcess(fn)
 }
 
 func (w *RedisClusterClientWrapper) WrapProcessPipeline(ctx context.Context, fn func(oldProcess func([]redis.Cmder) error) func([]redis.Cmder) error) {
-	ctxOptions := FromContext(ctx)
-
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.WrapProcessPipeline")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-
 	w.obj.WrapProcessPipeline(fn)
 }

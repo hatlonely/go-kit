@@ -72,6 +72,7 @@ type WrapperGeneratorOptions struct {
 		Trace           map[string]Rule
 		Retry           map[string]Rule
 		Metric          map[string]Rule
+		RateLimiter     map[string]Rule
 	}
 }
 
@@ -120,6 +121,35 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 	}
 }
 
+type RenderInfo struct {
+	Debug             bool
+	Package           string
+	WrapPackagePrefix string
+	UnwrapFunc        string
+	Class             string
+	WrapClass         string
+	Function          struct {
+		Name             string
+		ErrCode          string
+		ParamList        string
+		ResultList       string
+		LastResult       string
+		DeclareVariables string
+		ReturnVariables  string
+		IsChain          bool
+		IsReturnVoid     bool
+		IsReturnError    bool
+	}
+
+	EnableRuleForChainFunc bool
+	Rule                   struct {
+		Trace       bool
+		Retry       bool
+		Metric      bool
+		RateLimiter bool
+	}
+}
+
 func (g *WrapperGenerator) Generate() (string, error) {
 	functions, err := ParseFunction(path.Join(g.options.SourcePath, g.options.PackagePath), g.options.PackageName)
 	if err != nil {
@@ -161,35 +191,36 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		fmt.Printf("wrap class map: %v\n", strx.JsonMarshalIndent(g.wrapClassMap))
 	}
 
-	vals := map[string]interface{}{
-		"package":           g.options.PackageName,
-		"wrapPackagePrefix": g.wrapPackagePrefix,
-		"unwrapFunc":        g.options.UnwrapFunc,
-		"debug":             g.options.Debug,
+	info := &RenderInfo{
+		Package:                g.options.PackageName,
+		WrapPackagePrefix:      g.wrapPackagePrefix,
+		UnwrapFunc:             g.options.UnwrapFunc,
+		Debug:                  g.options.Debug,
+		EnableRuleForChainFunc: g.options.EnableRuleForChainFunc,
 	}
 
 	for _, cls := range classes {
-		vals["class"] = cls
-		vals["wrapClass"] = g.wrapClassMap[cls]
+		info.Class = cls
+		info.WrapClass = g.wrapClassMap[cls]
 
 		if g.options.Debug {
-			fmt.Printf("process class: %v, vals: %v\n", cls, strx.JsonMarshalIndent(vals))
+			fmt.Printf("process class: %v, info: %v\n", cls, strx.JsonMarshalIndent(info))
 		}
-		buf.WriteString(renderTemplate(WrapperStructTpl, vals, "WrapperStructTpl"))
+		buf.WriteString(renderTemplate(WrapperStructTpl, info, "WrapperStructTpl"))
 		if g.starClassSet[cls] {
-			buf.WriteString(renderTemplate(WrapperFunctionGetWithStarTpl, vals, "WrapperFunctionGetWithStarTpl"))
+			buf.WriteString(renderTemplate(WrapperFunctionGetWithStarTpl, info, "WrapperFunctionGetWithStarTpl"))
 		} else {
-			buf.WriteString(renderTemplate(WrapperFunctionGetTpl, vals, "WrapperFunctionGetTpl"))
+			buf.WriteString(renderTemplate(WrapperFunctionGetTpl, info, "WrapperFunctionGetTpl"))
 		}
 
 		if g.MatchRule(cls, g.options.Rule.OnWrapperChange) {
-			buf.WriteString(renderTemplate(WrapperFunctionOnWrapperChangeTpl, vals, "WrapperFunctionOnWrapperChangeTpl"))
+			buf.WriteString(renderTemplate(WrapperFunctionOnWrapperChangeTpl, info, "WrapperFunctionOnWrapperChangeTpl"))
 		}
 		if g.MatchRule(cls, g.options.Rule.OnRetryChange) {
-			buf.WriteString(renderTemplate(WrapperFunctionOnRetryChangeTpl, vals, "WrapperFunctionOnRetryChangeTpl"))
+			buf.WriteString(renderTemplate(WrapperFunctionOnRetryChangeTpl, info, "WrapperFunctionOnRetryChangeTpl"))
 		}
 		if g.MatchRule(cls, g.options.Rule.CreateMetric) {
-			buf.WriteString(renderTemplate(WrapperFunctionCreateMetricTpl, vals, "WrapperFunctionCreateMetricTpl"))
+			buf.WriteString(renderTemplate(WrapperFunctionCreateMetricTpl, info, "WrapperFunctionCreateMetricTpl"))
 		}
 	}
 
@@ -204,17 +235,16 @@ func (g *WrapperGenerator) Generate() (string, error) {
 			continue
 		}
 
-		vals["class"] = function.Class
-		vals["wrapClass"] = g.wrapClassMap[function.Class]
-		fmap := map[string]string{
-			"name":    function.Name,
-			"errCode": "ErrCode(err)",
-		}
-
+		info.Class = function.Class
+		info.WrapClass = g.wrapClassMap[function.Class]
+		info.Function.Name = function.Name
+		info.Function.IsChain = function.IsChain
+		info.Function.IsReturnVoid = function.IsReturnVoid
+		info.Function.IsReturnError = function.IsReturnError
+		info.Function.ErrCode = "ErrCode(err)"
 		if !function.IsReturnError {
-			fmap["errCode"] = `"OK"`
+			info.Function.ErrCode = `"OK"`
 		}
-
 		var params []string
 		for _, i := range function.Params {
 			if strings.HasPrefix(i.Type, "...") {
@@ -223,21 +253,26 @@ func (g *WrapperGenerator) Generate() (string, error) {
 				params = append(params, i.Name)
 			}
 		}
-		fmap["paramList"] = strings.Join(params, ", ")
+		info.Function.ParamList = strings.Join(params, ", ")
 		var results []string
 		for _, i := range function.Results {
 			results = append(results, fmt.Sprintf("%s", i.Name))
 		}
-		fmap["resultList"] = strings.Join(results, ", ")
+		info.Function.ResultList = strings.Join(results, ", ")
 		if len(results) != 0 {
-			fmap["lastResult"] = results[len(results)-1]
+			info.Function.LastResult = results[len(results)-1]
 		}
+		info.Function.ReturnVariables = g.generateWrapperReturnVariables(function)
+		info.Function.DeclareVariables = g.generateWrapperDeclareReturnVariables(function)
+		info.Rule.Trace = g.MatchFunctionRule(function, g.options.Rule.Trace)
+		info.Rule.Metric = g.MatchFunctionRule(function, g.options.Rule.Metric)
+		info.Rule.Retry = g.MatchFunctionRule(function, g.options.Rule.Retry)
+		info.Rule.RateLimiter = g.MatchFunctionRule(function, g.options.Rule.RateLimiter)
 
-		vals["function"] = fmap
 		buf.WriteString("\n")
 		buf.WriteString(g.generateWrapperFunctionDeclare(function))
 		buf.WriteString(" {")
-		buf.WriteString(g.generateWrapperFunctionBody(vals, function))
+		buf.WriteString(g.generateWrapperFunctionBody(info, function))
 		buf.WriteString("}\n")
 	}
 
@@ -268,12 +303,13 @@ func (g *WrapperGenerator) generateWrapperImport() string {
 	return buf.String()
 }
 
-func renderTemplate(tplStr string, vals map[string]interface{}, tplName string) string {
-	if vals["debug"].(bool) {
-		if fun, ok := vals["function"]; ok {
-			fmt.Printf("render template function. class: [%v], function: [%v], tpl[%v]\n", vals["class"], fun.(map[string]string)["name"], tplName)
+func renderTemplate(tplStr string, vals interface{}, tplName string) string {
+	v := vals.(*RenderInfo)
+	if v.Debug {
+		if v.Function.Name != "" {
+			fmt.Printf("render template function. class: [%v], function: [%v], tpl[%v]\n", v.Class, v.Function.Name, tplName)
 		} else {
-			fmt.Printf("render template class. class: [%v], tpl: [%v]\n", vals["class"], tplName)
+			fmt.Printf("render template class. class: [%v], tpl: [%v]\n", v.Class, tplName)
 		}
 	}
 	tpl, err := template.New("").Parse(tplStr)
@@ -289,29 +325,29 @@ func renderTemplate(tplStr string, vals map[string]interface{}, tplName string) 
 }
 
 const WrapperStructTpl = `
-type {{.wrapClass}} struct {
-	obj              *{{.package}}.{{.class}}
-	retry            *{{.wrapPackagePrefix}}Retry
-	options          *{{.wrapPackagePrefix}}WrapperOptions
+type {{.WrapClass}} struct {
+	obj              *{{.Package}}.{{.Class}}
+	retry            *{{.WrapPackagePrefix}}Retry
+	options          *{{.WrapPackagePrefix}}WrapperOptions
 	durationMetric   *prometheus.HistogramVec
 	totalMetric      *prometheus.CounterVec
 	rateLimiterGroup RateLimiterGroup
 }
 `
 const WrapperFunctionGetWithStarTpl = `
-func (w *{{.wrapClass}}) {{.unwrapFunc}}() *{{.package}}.{{.class}} {
+func (w *{{.WrapClass}}) {{.UnwrapFunc}}() *{{.Package}}.{{.Class}} {
 	return w.obj
 }
 `
 const WrapperFunctionGetTpl = `
-func (w {{.wrapClass}}) {{.unwrapFunc}}() *{{.package}}.{{.class}} {
+func (w {{.WrapClass}}) {{.UnwrapFunc}}() *{{.Package}}.{{.Class}} {
 	return w.obj
 }
 `
 const WrapperFunctionOnWrapperChangeTpl = `
-func (w *{{.wrapClass}}) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {
+func (w *{{.WrapClass}}) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options {{.wrapPackagePrefix}}WrapperOptions
+		var options {{.WrapPackagePrefix}}WrapperOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
@@ -321,13 +357,13 @@ func (w *{{.wrapClass}}) OnWrapperChange(opts ...refx.Option) config.OnChangeHan
 }
 `
 const WrapperFunctionOnRetryChangeTpl = `
-func (w *{{.wrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
+func (w *{{.WrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options {{.wrapPackagePrefix}}RetryOptions
+		var options {{.WrapPackagePrefix}}RetryOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		retry, err := {{.wrapPackagePrefix}}NewRetryWithOptions(&options)
+		retry, err := {{.WrapPackagePrefix}}NewRetryWithOptions(&options)
 		if err != nil {
 			return errors.Wrap(err, "NewRetryWithOptions failed")
 		}
@@ -337,16 +373,16 @@ func (w *{{.wrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandl
 }
 `
 const WrapperFunctionCreateMetricTpl = `
-func (w *{{.wrapClass}}) CreateMetric(options *{{.wrapPackagePrefix}}WrapperOptions) {
+func (w *{{.WrapClass}}) CreateMetric(options *{{.WrapPackagePrefix}}WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:        "{{.package}}_{{.class}}_durationMs",
-		Help:        "{{.package}} {{.class}} response time milliseconds",
+		Name:        "{{.Package}}_{{.Class}}_durationMs",
+		Help:        "{{.Package}} {{.Class}} response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
 	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name:        "{{.package}}_{{.class}}_total",
-		Help:        "{{.package}} {{.class}} request total",
+		Name:        "{{.Package}}_{{.Class}}_total",
+		Help:        "{{.Package}} {{.Class}} request total",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
 }
@@ -414,18 +450,14 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 }
 
 func (g *WrapperGenerator) generateWrapperDeclareReturnVariables(function *Function) string {
-	var buf bytes.Buffer
+	var vars []string
 	for _, field := range function.Results {
-		buf.WriteString(fmt.Sprintf("\n	var %s %s", field.Name, field.Type))
+		vars = append(vars, fmt.Sprintf("var %s %s", field.Name, field.Type))
 	}
-	return buf.String()
+	return strings.Join(vars, "\n")
 }
 
 func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) string {
-	if function.IsReturnVoid {
-		panic(fmt.Sprintf("generateWrapperReturnVariables with void function. function [%v]", function.Name))
-	}
-
 	var results []string
 	for _, i := range function.Results {
 		cls := strings.TrimLeft(i.Type, "*")
@@ -447,12 +479,17 @@ func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) st
 		results = append(results, fmt.Sprintf("%s", i.Name))
 	}
 
-	return fmt.Sprintf("\treturn %s\n", strings.Join(results, ", "))
+	return fmt.Sprintf("return %s", strings.Join(results, ", "))
 }
 
-const WrapperFunctionBodyOpentracingTpl = `
+const WrapperFunctionBodyWithoutErrorTpl = `
+{{- if .EnableRuleForChainFunc}}
+{{- if or .Rule.Trace .Rule.Metric}}
+	ctxOptions := FromContext(ctx)
+{{- end}}
+{{- if .Rule.Trace}}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "{{.package}}.{{.class}}.{{.function.name}}")
+		span, _ := opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}")
 		for key, val := range w.options.Trace.ConstTags {
 			span.SetTag(key, val)
 		}
@@ -461,109 +498,121 @@ const WrapperFunctionBodyOpentracingTpl = `
 		}
 		defer span.Finish()
 	}
-`
-const WrapperFunctionBodyMetricTpl = `
+{{- end}}
+{{- if .Rule.RateLimiter}}
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "{{.Class}}.{{.Function.Name}}")
+	}
+{{- end}}
+{{- if .Rule.Metric}}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}, ctxOptions.MetricCustomLabelValue).Inc()
-			w.durationMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}, ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", {{.Function.ErrCode}}, ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", {{.Function.ErrCode}}, ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
+{{- end}}
+{{- end}}
+{{- if .Function.IsChain}}
+	w.obj = w.obj.{{.Function.Name}}({{.Function.ParamList}})
+	return w
+{{- else if .Function.IsReturnVoid}}
+	w.obj.{{.Function.Name}}({{.Function.ParamList}})
+{{- else if not .Function.IsReturnError}}
+	{{.Function.ResultList}} := w.obj.{{.Function.Name}}({{.Function.ParamList}})
+	{{.Function.ReturnVariables}}
+{{- end}}
 `
-const WrapperFunctionBodyRetryTpl = `
+
+const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
+{{- if or .Rule.Trace .Rule.Metric}}
+	ctxOptions := FromContext(ctx)
+{{- end}}
+{{- if .Rule.Trace}}
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
+		defer span.Finish()
+	}
+{{- end}}
+{{.Function.DeclareVariables}}
+{{- if .Rule.RateLimiter}}
+	if w.rateLimiterGroup != nil {
+		if err := w.rateLimiterGroup.Wait(ctx, "{{.Class}}.{{.Function.Name}}"); err != nil {
+			{{.Function.ReturnVariables}}
+		}
+	}
+{{- end}}
+{{- if .Rule.Metric}}
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
+		ts := time.Now()
+		defer func() {
+			w.totalMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", {{.Function.ErrCode}}, ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", {{.Function.ErrCode}}, ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+		}()
+	}
+{{- end}}
+	{{.Function.ResultList}} = w.obj.{{.Function.Name}}({{.Function.ParamList}})
+	{{.Function.ReturnVariables}}
+`
+
+const WrapperFunctionBodyWithErrorWithRetryTpl = `
+{{- if or .Rule.Trace .Rule.Metric}}
+	ctxOptions := FromContext(ctx)
+{{- end}}
+{{- if .Rule.Trace}}
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
+		defer span.Finish()
+	}
+{{- end}}
+{{.Function.DeclareVariables}}
 	err = w.retry.Do(func() error {
+{{- if .Rule.RateLimiter}}
 		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "{{.class}}.{{.function.name}}"); err != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "{{.Class}}.{{.Function.Name}}"); err != nil {
 				return err
 			}
 		}
-
-		{{.function.resultList}} = w.obj.{{.function.name}}({{.function.paramList}})
-		return {{.function.lastResult}}
-	})
-`
-const WrapperFunctionBodyRetryWithMetricTpl = `
-	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "{{.class}}.{{.function.name}}"); err != nil {
-				return err
-			}
-		}
-
+{{- end}}
+{{- if .Rule.Metric}}
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}, ctxOptions.MetricCustomLabelValue).Inc()
-				w.durationMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}, ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", {{.Function.ErrCode}}, ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", {{.Function.ErrCode}}, ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
-
-		{{.function.resultList}} = w.obj.{{.function.name}}({{.function.paramList}})
-		return {{.function.lastResult}}
+{{- end}}
+		{{.Function.ResultList}} = w.obj.{{.Function.Name}}({{.Function.ParamList}})
+		return {{.Function.LastResult}}
 	})
-`
-const WrapperFunctionBodyCallTpl = `
-	{{.function.resultList}} = w.obj.{{.function.name}}({{.function.paramList}})
+{{.Function.ReturnVariables}}
 `
 
-const WrapperFunctionBodyReturnVoidTpl = `
-	w.obj.{{.function.name}}({{.function.paramList}})
-`
-const WrapperFunctionBodyReturnChainTpl = `
-	w.obj = w.obj.{{.function.name}}({{.function.paramList}})
-	return w
-`
-
-func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface{}, function *Function) string {
+func (g *WrapperGenerator) generateWrapperFunctionBody(info *RenderInfo, function *Function) string {
 	var buf bytes.Buffer
-	if function.IsChain {
-		if g.options.EnableRuleForChainFunc {
-			if g.MatchFunctionRule(function, g.options.Rule.Trace) || g.MatchFunctionRule(function, g.options.Rule.Metric) {
-				buf.WriteString("\tctxOptions := FromContext(ctx)\n")
-			}
-			if g.MatchFunctionRule(function, g.options.Rule.Trace) {
-				buf.WriteString(renderTemplate(WrapperFunctionBodyOpentracingTpl, vals, "WrapperFunctionBodyOpentracingTpl"))
-			}
-			if g.MatchFunctionRule(function, g.options.Rule.Metric) {
-				buf.WriteString(renderTemplate(WrapperFunctionBodyMetricTpl, vals, "WrapperFunctionBodyMetricTpl"))
-			}
-		}
-		buf.WriteString(renderTemplate(WrapperFunctionBodyReturnChainTpl, vals, "WrapperFunctionBodyReturnChainTpl"))
+	if !function.IsReturnError {
+		buf.WriteString(renderTemplate(WrapperFunctionBodyWithoutErrorTpl, info, "WrapperFunctionBodyWithoutErrorTpl"))
 		return buf.String()
 	}
-
-	if g.MatchFunctionRule(function, g.options.Rule.Trace) || g.MatchFunctionRule(function, g.options.Rule.Metric) {
-		buf.WriteString("\tctxOptions := FromContext(ctx)\n")
-	}
-
-	if g.MatchFunctionRule(function, g.options.Rule.Trace) {
-		buf.WriteString(renderTemplate(WrapperFunctionBodyOpentracingTpl, vals, "WrapperFunctionBodyOpentracingTpl"))
-	}
-
-	if function.IsReturnVoid {
-		buf.WriteString(renderTemplate(WrapperFunctionBodyReturnVoidTpl, vals, "WrapperFunctionBodyReturnVoidTpl"))
+	if !info.Rule.Retry {
+		buf.WriteString(renderTemplate(WrapperFunctionBodyWithErrorWithoutRetryTpl, info, "WrapperFunctionBodyWithoutErrorTpl"))
 		return buf.String()
 	}
-
-	buf.WriteString(g.generateWrapperDeclareReturnVariables(function))
-
-	if function.IsReturnError && g.MatchFunctionRule(function, g.options.Rule.Retry) {
-		if g.MatchFunctionRule(function, g.options.Rule.Metric) {
-			buf.WriteString(renderTemplate(WrapperFunctionBodyRetryWithMetricTpl, vals, "WrapperFunctionBodyRetryWithMetricTpl"))
-		} else {
-			buf.WriteString(renderTemplate(WrapperFunctionBodyRetryTpl, vals, "WrapperFunctionBodyRetryTpl"))
-		}
-		buf.WriteString(g.generateWrapperReturnVariables(function))
-		return buf.String()
-	}
-
-	if g.MatchFunctionRule(function, g.options.Rule.Metric) {
-		buf.WriteString(renderTemplate(WrapperFunctionBodyMetricTpl, vals, "WrapperFunctionBodyMetricTpl"))
-	}
-	buf.WriteString(renderTemplate(WrapperFunctionBodyCallTpl, vals, "WrapperFunctionBodyCallTpl"))
-	buf.WriteString(g.generateWrapperReturnVariables(function))
-
+	buf.WriteString(renderTemplate(WrapperFunctionBodyWithErrorWithRetryTpl, info, "WrapperFunctionBodyWithErrorWithRetryTpl"))
 	return buf.String()
 }
 
