@@ -66,13 +66,22 @@ func RegisterRetryRetryIf(key string, retryIfFunc retry.RetryIfFunc) {
 }
 
 type RetryOptions struct {
-	Attempts      uint
-	Delay         time.Duration
-	MaxDelay      time.Duration
-	MaxJitter     time.Duration
+	Attempts uint `dft:"3"`
+	// 重试间隔，当 DelayType == Fixed || DelayType == BackOff 时有效
+	Delay time.Duration `dft:"1s"`
+	// 最大重试间隔时间
+	MaxDelay time.Duration `dft:"3m"`
+	// 随机重试间隔，当 DelayType == Random 时有效
+	MaxJitter     time.Duration `dft:"1s"`
 	LastErrorOnly bool
-	DelayType     string `dft:"BackOff"`
-	RetryIf       string
+	// Fixed: 固定重试间隔为 Delay
+	// BackOff: 以 Delay 为基础，重试间隔指数增长，Delay, Delay >> 1, Delay >> 2
+	// Random: 重试间隔为 (0, MaxJitter) 中的一个随机值
+	// Fixed,Random: 重试间隔 (Delay, Delay + MaxJitter) 中的一个随机值
+	DelayType string `dft:"BackOff"`
+	// 使用定义在 retryRetryIfMap 中的 retryIf 方法
+	// 默认重试非 retry.Unrecoverable 的所有错误
+	RetryIf string
 }
 
 type Retry struct {
