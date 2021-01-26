@@ -2,6 +2,7 @@ package astx
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"path"
 	"regexp"
@@ -10,6 +11,8 @@ import (
 	"text/template"
 
 	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/strx"
 )
 
 type WrapperGenerator struct {
@@ -26,14 +29,36 @@ type Rule struct {
 	Exclude *regexp.Regexp
 }
 
+func (r Rule) MarshalJSON() ([]byte, error) {
+	var include *string
+	var exclude *string
+	if r.Include != nil {
+		s := r.Include.String()
+		include = &s
+	}
+	if r.Exclude != nil {
+		s := r.Exclude.String()
+		exclude = &s
+	}
+
+	return json.Marshal(struct {
+		Include *string
+		Exclude *string
+	}{
+		Include: include,
+		Exclude: exclude,
+	})
+}
+
 type WrapperGeneratorOptions struct {
+	Debug                  bool     `flag:"usage: debug mode. more log will trace"`
 	SourcePath             string   `flag:"usage: gopath; default: vendor"`
 	PackagePath            string   `flag:"usage: package path"`
 	PackageName            string   `flag:"usage: package name"`
 	OutputPackage          string   `flag:"usage: output package name; default: wrap" dft:"wrap"`
 	Classes                []string `flag:"usage: classes to wrap"`
 	StarClasses            []string `flag:"usage: star classes to wrap"`
-	ClassPrefix            string   `flag:"usage: wrap class name"`
+	ClassPrefix            string   `flag:"usage: wrap class name prefix"`
 	UnwrapFunc             string   `flag:"usage: unwrap function name; default: Unwrap" dft:"Unwrap"`
 	EnableRuleForChainFunc bool     `flag:"usage: enable trace on chain function"`
 
@@ -83,6 +108,10 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 		wrapPackagePrefix = "wrap."
 	}
 
+	if options.Debug {
+		fmt.Println(strx.JsonMarshalIndentSortKeys(options))
+	}
+
 	return &WrapperGenerator{
 		options:           options,
 		wrapClassMap:      wrapClassMap,
@@ -126,16 +155,26 @@ func (g *WrapperGenerator) Generate() (string, error) {
 
 	sort.Strings(classes)
 
+	if g.options.Debug {
+		fmt.Printf("classes to wrap: %v\n", strx.JsonMarshal(classes))
+		fmt.Printf("star class set: %v\n", strx.JsonMarshal(g.starClassSet))
+		fmt.Printf("wrap class map: %v\n", strx.JsonMarshalIndent(g.wrapClassMap))
+	}
+
 	vals := map[string]interface{}{
 		"package":           g.options.PackageName,
 		"wrapPackagePrefix": g.wrapPackagePrefix,
 		"unwrapFunc":        g.options.UnwrapFunc,
+		"debug":             g.options.Debug,
 	}
 
 	for _, cls := range classes {
 		vals["class"] = cls
 		vals["wrapClass"] = g.wrapClassMap[cls]
 
+		if g.options.Debug {
+			fmt.Printf("process class: %v, vals: %v\n", cls, strx.JsonMarshalIndent(vals))
+		}
 		buf.WriteString(renderTemplate(WrapperStructTpl, vals))
 		if g.starClassSet[cls] {
 			buf.WriteString(renderTemplate(WrapperFunctionGetWithStarTpl, vals))
@@ -229,7 +268,14 @@ func (g *WrapperGenerator) generateWrapperImport() string {
 	return buf.String()
 }
 
-func renderTemplate(tplStr string, vals interface{}) string {
+func renderTemplate(tplStr string, vals map[string]interface{}) string {
+	if vals["debug"].(bool) {
+		if fun, ok := vals["function"]; ok {
+			fmt.Printf("render template function. class: [%v], function: [%v]\n", vals["class"], fun.(map[string]string)["name"])
+		} else {
+			fmt.Printf("render template class. class: [%v]\n", vals["class"])
+		}
+	}
 	tpl, err := template.New("").Parse(tplStr)
 	if err != nil {
 		panic(err)
