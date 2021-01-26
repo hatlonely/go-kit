@@ -2644,7 +2644,7 @@ func (w *OSSClientWrapper) Bucket(bucketName string) (*OSSBucketWrapper, error) 
 	var res0 *oss.Bucket
 	var err error
 	res0, err = w.obj.Bucket(bucketName)
-	return &OSSBucketWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}, err
+	return &OSSBucketWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}, err
 }
 
 func (w *OSSClientWrapper) CompleteBucketWorm(ctx context.Context, bucketName string, wormID string, options ...oss.Option) error {

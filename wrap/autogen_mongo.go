@@ -137,7 +137,7 @@ func (w *MongoClientWrapper) Connect(ctx context.Context) error {
 func (w *MongoClientWrapper) Database(ctx context.Context, name string, opts ...*options.DatabaseOptions) *MongoDatabaseWrapper {
 	var res0 *mongo.Database
 	res0 = w.obj.Database(name, opts...)
-	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
+	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *MongoClientWrapper) Disconnect(ctx context.Context) error {
@@ -567,7 +567,7 @@ func (w *MongoCollectionWrapper) Clone(ctx context.Context, opts ...*options.Col
 		res0, err = w.obj.Clone(opts...)
 		return err
 	})
-	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}, err
+	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}, err
 }
 
 func (w *MongoCollectionWrapper) CountDocuments(ctx context.Context, filter interface{}, opts ...*options.CountOptions) (int64, error) {
@@ -631,7 +631,7 @@ func (w *MongoCollectionWrapper) Database(ctx context.Context) *MongoDatabaseWra
 	}
 
 	res0 = w.obj.Database()
-	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
+	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *MongoCollectionWrapper) DeleteMany(ctx context.Context, filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
@@ -1300,13 +1300,13 @@ func (w *MongoDatabaseWrapper) Client(ctx context.Context) *MongoClientWrapper {
 	}
 
 	res0 = w.obj.Client()
-	return &MongoClientWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
+	return &MongoClientWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *MongoDatabaseWrapper) Collection(ctx context.Context, name string, opts ...*options.CollectionOptions) *MongoCollectionWrapper {
 	var res0 *mongo.Collection
 	res0 = w.obj.Collection(name, opts...)
-	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric}
+	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *MongoDatabaseWrapper) CreateCollection(ctx context.Context, name string, opts ...*options.CreateCollectionOptions) error {
