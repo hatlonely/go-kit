@@ -128,6 +128,8 @@ type RenderInfo struct {
 	UnwrapFunc        string
 	Class             string
 	WrapClass         string
+	OutputPackage     string
+	PackagePath       string
 	Function          struct {
 		Name             string
 		ErrCode          string
@@ -143,10 +145,13 @@ type RenderInfo struct {
 
 	EnableRuleForChainFunc bool
 	Rule                   struct {
-		Trace       bool
-		Retry       bool
-		Metric      bool
-		RateLimiter bool
+		OnWrapperChange bool
+		OnRetryChange   bool
+		CreateMetric    bool
+		Trace           bool
+		Retry           bool
+		Metric          bool
+		RateLimiter     bool
 	}
 }
 
@@ -157,8 +162,6 @@ func (g *WrapperGenerator) Generate() (string, error) {
 	}
 
 	var buf bytes.Buffer
-
-	buf.WriteString(g.generateWrapperImport())
 
 	classes := append(g.options.Classes, g.options.StarClasses...)
 	if len(classes) == 0 {
@@ -197,11 +200,18 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		UnwrapFunc:             g.options.UnwrapFunc,
 		Debug:                  g.options.Debug,
 		EnableRuleForChainFunc: g.options.EnableRuleForChainFunc,
+		OutputPackage:          g.options.OutputPackage,
+		PackagePath:            g.options.PackagePath,
 	}
+
+	buf.WriteString(renderTemplate(WrapperImportTpl, info, "WrapperImportTpl"))
 
 	for _, cls := range classes {
 		info.Class = cls
 		info.WrapClass = g.wrapClassMap[cls]
+		info.Rule.OnWrapperChange = g.MatchRule(cls, g.options.Rule.OnWrapperChange)
+		info.Rule.OnRetryChange = g.MatchRule(cls, g.options.Rule.OnRetryChange)
+		info.Rule.CreateMetric = g.MatchRule(cls, g.options.Rule.CreateMetric)
 
 		if g.options.Debug {
 			fmt.Printf("process class: %v, info: %v\n", cls, strx.JsonMarshalIndent(info))
@@ -264,6 +274,9 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		}
 		info.Function.ReturnVariables = g.generateWrapperReturnVariables(function)
 		info.Function.DeclareVariables = g.generateWrapperDeclareReturnVariables(function)
+		info.Rule.OnWrapperChange = g.MatchRule(function.Class, g.options.Rule.OnWrapperChange)
+		info.Rule.OnRetryChange = g.MatchRule(function.Class, g.options.Rule.OnRetryChange)
+		info.Rule.CreateMetric = g.MatchRule(function.Class, g.options.Rule.CreateMetric)
 		info.Rule.Trace = g.MatchFunctionRule(function, g.options.Rule.Trace)
 		info.Rule.Metric = g.MatchFunctionRule(function, g.options.Rule.Metric)
 		info.Rule.Retry = g.MatchFunctionRule(function, g.options.Rule.Retry)
@@ -278,6 +291,28 @@ func (g *WrapperGenerator) Generate() (string, error) {
 
 	return buf.String(), nil
 }
+
+const WrapperImportTpl = `
+// autogen by github.com/hatlonely/go-kit/astx/wrap.go. do not edit!
+package {{.OutputPackage}}
+
+import (
+	"context"
+	"time"
+
+	"{{.PackagePath}}"
+	"github.com/opentracing/opentracing-go"
+	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+
+	"github.com/hatlonely/go-kit/config"
+{{- if not (eq .OutputPackage "wrap")}}
+	"github.com/hatlonely/go-kit/wrap"
+{{- end}}
+	"github.com/hatlonely/go-kit/refx"
+)
+`
 
 func (g *WrapperGenerator) generateWrapperImport() string {
 	var buf bytes.Buffer
