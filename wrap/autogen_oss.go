@@ -74,16 +74,18 @@ func (w *OSSClientWrapper) CreateMetric(options *WrapperOptions) {
 		Help:        "oss Client response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode"})
+	}, []string{"method", "errCode", "custom"})
 	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name:        "oss_Client_total",
 		Help:        "oss Client request total",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode"})
+	}, []string{"method", "errCode", "custom"})
 }
 
 func (w *OSSBucketWrapper) AbortMultipartUpload(ctx context.Context, imur oss.InitiateMultipartUploadResult, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.AbortMultipartUpload")
 		defer span.Finish()
 	}
@@ -93,8 +95,8 @@ func (w *OSSBucketWrapper) AbortMultipartUpload(ctx context.Context, imur oss.In
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.AbortMultipartUpload", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.AbortMultipartUpload", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.AbortMultipartUpload", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.AbortMultipartUpload", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -105,7 +107,9 @@ func (w *OSSBucketWrapper) AbortMultipartUpload(ctx context.Context, imur oss.In
 }
 
 func (w *OSSBucketWrapper) AppendObject(ctx context.Context, objectKey string, reader io.Reader, appendPosition int64, options ...oss.Option) (int64, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.AppendObject")
 		defer span.Finish()
 	}
@@ -116,8 +120,8 @@ func (w *OSSBucketWrapper) AppendObject(ctx context.Context, objectKey string, r
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.AppendObject", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.AppendObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.AppendObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.AppendObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -128,7 +132,9 @@ func (w *OSSBucketWrapper) AppendObject(ctx context.Context, objectKey string, r
 }
 
 func (w *OSSBucketWrapper) CompleteMultipartUpload(ctx context.Context, imur oss.InitiateMultipartUploadResult, parts []oss.UploadPart, options ...oss.Option) (oss.CompleteMultipartUploadResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CompleteMultipartUpload")
 		defer span.Finish()
 	}
@@ -139,8 +145,8 @@ func (w *OSSBucketWrapper) CompleteMultipartUpload(ctx context.Context, imur oss
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CompleteMultipartUpload", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.CompleteMultipartUpload", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.CompleteMultipartUpload", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CompleteMultipartUpload", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -151,7 +157,9 @@ func (w *OSSBucketWrapper) CompleteMultipartUpload(ctx context.Context, imur oss
 }
 
 func (w *OSSBucketWrapper) CopyFile(ctx context.Context, srcBucketName string, srcObjectKey string, destObjectKey string, partSize int64, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CopyFile")
 		defer span.Finish()
 	}
@@ -161,8 +169,8 @@ func (w *OSSBucketWrapper) CopyFile(ctx context.Context, srcBucketName string, s
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CopyFile", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.CopyFile", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.CopyFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CopyFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -173,7 +181,9 @@ func (w *OSSBucketWrapper) CopyFile(ctx context.Context, srcBucketName string, s
 }
 
 func (w *OSSBucketWrapper) CopyObject(ctx context.Context, srcObjectKey string, destObjectKey string, options ...oss.Option) (oss.CopyObjectResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CopyObject")
 		defer span.Finish()
 	}
@@ -184,8 +194,8 @@ func (w *OSSBucketWrapper) CopyObject(ctx context.Context, srcObjectKey string, 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CopyObject", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.CopyObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.CopyObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CopyObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -196,7 +206,9 @@ func (w *OSSBucketWrapper) CopyObject(ctx context.Context, srcObjectKey string, 
 }
 
 func (w *OSSBucketWrapper) CopyObjectFrom(ctx context.Context, srcBucketName string, srcObjectKey string, destObjectKey string, options ...oss.Option) (oss.CopyObjectResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CopyObjectFrom")
 		defer span.Finish()
 	}
@@ -207,8 +219,8 @@ func (w *OSSBucketWrapper) CopyObjectFrom(ctx context.Context, srcBucketName str
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CopyObjectFrom", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.CopyObjectFrom", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.CopyObjectFrom", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CopyObjectFrom", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -219,7 +231,9 @@ func (w *OSSBucketWrapper) CopyObjectFrom(ctx context.Context, srcBucketName str
 }
 
 func (w *OSSBucketWrapper) CopyObjectTo(ctx context.Context, destBucketName string, destObjectKey string, srcObjectKey string, options ...oss.Option) (oss.CopyObjectResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CopyObjectTo")
 		defer span.Finish()
 	}
@@ -230,8 +244,8 @@ func (w *OSSBucketWrapper) CopyObjectTo(ctx context.Context, destBucketName stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CopyObjectTo", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.CopyObjectTo", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.CopyObjectTo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CopyObjectTo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -242,7 +256,9 @@ func (w *OSSBucketWrapper) CopyObjectTo(ctx context.Context, destBucketName stri
 }
 
 func (w *OSSBucketWrapper) CreateLiveChannel(ctx context.Context, channelName string, config oss.LiveChannelConfiguration) (oss.CreateLiveChannelResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CreateLiveChannel")
 		defer span.Finish()
 	}
@@ -253,8 +269,8 @@ func (w *OSSBucketWrapper) CreateLiveChannel(ctx context.Context, channelName st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CreateLiveChannel", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.CreateLiveChannel", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.CreateLiveChannel", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CreateLiveChannel", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -265,7 +281,9 @@ func (w *OSSBucketWrapper) CreateLiveChannel(ctx context.Context, channelName st
 }
 
 func (w *OSSBucketWrapper) CreateSelectCsvObjectMeta(ctx context.Context, key string, csvMeta oss.CsvMetaRequest, options ...oss.Option) (oss.MetaEndFrameCSV, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CreateSelectCsvObjectMeta")
 		defer span.Finish()
 	}
@@ -276,8 +294,8 @@ func (w *OSSBucketWrapper) CreateSelectCsvObjectMeta(ctx context.Context, key st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CreateSelectCsvObjectMeta", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.CreateSelectCsvObjectMeta", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.CreateSelectCsvObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CreateSelectCsvObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -288,7 +306,9 @@ func (w *OSSBucketWrapper) CreateSelectCsvObjectMeta(ctx context.Context, key st
 }
 
 func (w *OSSBucketWrapper) CreateSelectJsonObjectMeta(ctx context.Context, key string, jsonMeta oss.JsonMetaRequest, options ...oss.Option) (oss.MetaEndFrameJSON, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.CreateSelectJsonObjectMeta")
 		defer span.Finish()
 	}
@@ -299,8 +319,8 @@ func (w *OSSBucketWrapper) CreateSelectJsonObjectMeta(ctx context.Context, key s
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CreateSelectJsonObjectMeta", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.CreateSelectJsonObjectMeta", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.CreateSelectJsonObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.CreateSelectJsonObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -311,7 +331,9 @@ func (w *OSSBucketWrapper) CreateSelectJsonObjectMeta(ctx context.Context, key s
 }
 
 func (w *OSSBucketWrapper) DeleteLiveChannel(ctx context.Context, channelName string) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DeleteLiveChannel")
 		defer span.Finish()
 	}
@@ -321,8 +343,8 @@ func (w *OSSBucketWrapper) DeleteLiveChannel(ctx context.Context, channelName st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DeleteLiveChannel", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.DeleteLiveChannel", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.DeleteLiveChannel", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DeleteLiveChannel", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -333,7 +355,9 @@ func (w *OSSBucketWrapper) DeleteLiveChannel(ctx context.Context, channelName st
 }
 
 func (w *OSSBucketWrapper) DeleteObject(ctx context.Context, objectKey string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DeleteObject")
 		defer span.Finish()
 	}
@@ -343,8 +367,8 @@ func (w *OSSBucketWrapper) DeleteObject(ctx context.Context, objectKey string, o
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObject", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -355,7 +379,9 @@ func (w *OSSBucketWrapper) DeleteObject(ctx context.Context, objectKey string, o
 }
 
 func (w *OSSBucketWrapper) DeleteObjectTagging(ctx context.Context, objectKey string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DeleteObjectTagging")
 		defer span.Finish()
 	}
@@ -365,8 +391,8 @@ func (w *OSSBucketWrapper) DeleteObjectTagging(ctx context.Context, objectKey st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObjectTagging", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObjectTagging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObjectTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObjectTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -377,7 +403,9 @@ func (w *OSSBucketWrapper) DeleteObjectTagging(ctx context.Context, objectKey st
 }
 
 func (w *OSSBucketWrapper) DeleteObjectVersions(ctx context.Context, objectVersions []oss.DeleteObject, options ...oss.Option) (oss.DeleteObjectVersionsResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DeleteObjectVersions")
 		defer span.Finish()
 	}
@@ -388,8 +416,8 @@ func (w *OSSBucketWrapper) DeleteObjectVersions(ctx context.Context, objectVersi
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObjectVersions", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObjectVersions", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObjectVersions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObjectVersions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -400,7 +428,9 @@ func (w *OSSBucketWrapper) DeleteObjectVersions(ctx context.Context, objectVersi
 }
 
 func (w *OSSBucketWrapper) DeleteObjects(ctx context.Context, objectKeys []string, options ...oss.Option) (oss.DeleteObjectsResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DeleteObjects")
 		defer span.Finish()
 	}
@@ -411,8 +441,8 @@ func (w *OSSBucketWrapper) DeleteObjects(ctx context.Context, objectKeys []strin
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObjects", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObjects", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObjects", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObjects", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -423,7 +453,9 @@ func (w *OSSBucketWrapper) DeleteObjects(ctx context.Context, objectKeys []strin
 }
 
 func (w *OSSBucketWrapper) Do(ctx context.Context, method string, objectName string, params map[string]interface{}, options []oss.Option, data io.Reader, listener oss.ProgressListener) (*oss.Response, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.Do")
 		defer span.Finish()
 	}
@@ -434,8 +466,8 @@ func (w *OSSBucketWrapper) Do(ctx context.Context, method string, objectName str
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -446,7 +478,9 @@ func (w *OSSBucketWrapper) Do(ctx context.Context, method string, objectName str
 }
 
 func (w *OSSBucketWrapper) DoAppendObject(ctx context.Context, request *oss.AppendObjectRequest, options []oss.Option) (*oss.AppendObjectResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoAppendObject")
 		defer span.Finish()
 	}
@@ -457,8 +491,8 @@ func (w *OSSBucketWrapper) DoAppendObject(ctx context.Context, request *oss.Appe
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DoAppendObject", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.DoAppendObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.DoAppendObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DoAppendObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -469,7 +503,9 @@ func (w *OSSBucketWrapper) DoAppendObject(ctx context.Context, request *oss.Appe
 }
 
 func (w *OSSBucketWrapper) DoGetObject(ctx context.Context, request *oss.GetObjectRequest, options []oss.Option) (*oss.GetObjectResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoGetObject")
 		defer span.Finish()
 	}
@@ -480,8 +516,8 @@ func (w *OSSBucketWrapper) DoGetObject(ctx context.Context, request *oss.GetObje
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DoGetObject", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.DoGetObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.DoGetObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DoGetObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -492,7 +528,9 @@ func (w *OSSBucketWrapper) DoGetObject(ctx context.Context, request *oss.GetObje
 }
 
 func (w *OSSBucketWrapper) DoGetObjectWithURL(ctx context.Context, signedURL string, options []oss.Option) (*oss.GetObjectResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoGetObjectWithURL")
 		defer span.Finish()
 	}
@@ -503,8 +541,8 @@ func (w *OSSBucketWrapper) DoGetObjectWithURL(ctx context.Context, signedURL str
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DoGetObjectWithURL", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.DoGetObjectWithURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.DoGetObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DoGetObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -515,7 +553,9 @@ func (w *OSSBucketWrapper) DoGetObjectWithURL(ctx context.Context, signedURL str
 }
 
 func (w *OSSBucketWrapper) DoPostSelectObject(ctx context.Context, key string, params map[string]interface{}, buf *bytes.Buffer, options ...oss.Option) (*oss.SelectObjectResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoPostSelectObject")
 		defer span.Finish()
 	}
@@ -526,8 +566,8 @@ func (w *OSSBucketWrapper) DoPostSelectObject(ctx context.Context, key string, p
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DoPostSelectObject", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.DoPostSelectObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.DoPostSelectObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DoPostSelectObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -538,7 +578,9 @@ func (w *OSSBucketWrapper) DoPostSelectObject(ctx context.Context, key string, p
 }
 
 func (w *OSSBucketWrapper) DoPutObject(ctx context.Context, request *oss.PutObjectRequest, options []oss.Option) (*oss.Response, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoPutObject")
 		defer span.Finish()
 	}
@@ -549,8 +591,8 @@ func (w *OSSBucketWrapper) DoPutObject(ctx context.Context, request *oss.PutObje
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DoPutObject", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.DoPutObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.DoPutObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DoPutObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -561,7 +603,9 @@ func (w *OSSBucketWrapper) DoPutObject(ctx context.Context, request *oss.PutObje
 }
 
 func (w *OSSBucketWrapper) DoPutObjectWithURL(ctx context.Context, signedURL string, reader io.Reader, options []oss.Option) (*oss.Response, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoPutObjectWithURL")
 		defer span.Finish()
 	}
@@ -572,8 +616,8 @@ func (w *OSSBucketWrapper) DoPutObjectWithURL(ctx context.Context, signedURL str
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DoPutObjectWithURL", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.DoPutObjectWithURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.DoPutObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DoPutObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -584,7 +628,9 @@ func (w *OSSBucketWrapper) DoPutObjectWithURL(ctx context.Context, signedURL str
 }
 
 func (w *OSSBucketWrapper) DoUploadPart(ctx context.Context, request *oss.UploadPartRequest, options []oss.Option) (*oss.UploadPartResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoUploadPart")
 		defer span.Finish()
 	}
@@ -595,8 +641,8 @@ func (w *OSSBucketWrapper) DoUploadPart(ctx context.Context, request *oss.Upload
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DoUploadPart", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.DoUploadPart", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.DoUploadPart", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DoUploadPart", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -607,7 +653,9 @@ func (w *OSSBucketWrapper) DoUploadPart(ctx context.Context, request *oss.Upload
 }
 
 func (w *OSSBucketWrapper) DownloadFile(ctx context.Context, objectKey string, filePath string, partSize int64, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.DownloadFile")
 		defer span.Finish()
 	}
@@ -617,8 +665,8 @@ func (w *OSSBucketWrapper) DownloadFile(ctx context.Context, objectKey string, f
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DownloadFile", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.DownloadFile", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.DownloadFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.DownloadFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -629,17 +677,19 @@ func (w *OSSBucketWrapper) DownloadFile(ctx context.Context, objectKey string, f
 }
 
 func (w *OSSBucketWrapper) GetConfig(ctx context.Context) *oss.Config {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetConfig")
 		defer span.Finish()
 	}
 
 	var res0 *oss.Config
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("oss.Bucket.GetConfig", "OK").Inc()
-			w.durationMetric.WithLabelValues("oss.Bucket.GetConfig", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("oss.Bucket.GetConfig", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("oss.Bucket.GetConfig", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -648,7 +698,9 @@ func (w *OSSBucketWrapper) GetConfig(ctx context.Context) *oss.Config {
 }
 
 func (w *OSSBucketWrapper) GetLiveChannelHistory(ctx context.Context, channelName string) (oss.LiveChannelHistory, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetLiveChannelHistory")
 		defer span.Finish()
 	}
@@ -659,8 +711,8 @@ func (w *OSSBucketWrapper) GetLiveChannelHistory(ctx context.Context, channelNam
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetLiveChannelHistory", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.GetLiveChannelHistory", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.GetLiveChannelHistory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetLiveChannelHistory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -671,7 +723,9 @@ func (w *OSSBucketWrapper) GetLiveChannelHistory(ctx context.Context, channelNam
 }
 
 func (w *OSSBucketWrapper) GetLiveChannelInfo(ctx context.Context, channelName string) (oss.LiveChannelConfiguration, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetLiveChannelInfo")
 		defer span.Finish()
 	}
@@ -682,8 +736,8 @@ func (w *OSSBucketWrapper) GetLiveChannelInfo(ctx context.Context, channelName s
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetLiveChannelInfo", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.GetLiveChannelInfo", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.GetLiveChannelInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetLiveChannelInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -694,7 +748,9 @@ func (w *OSSBucketWrapper) GetLiveChannelInfo(ctx context.Context, channelName s
 }
 
 func (w *OSSBucketWrapper) GetLiveChannelStat(ctx context.Context, channelName string) (oss.LiveChannelStat, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetLiveChannelStat")
 		defer span.Finish()
 	}
@@ -705,8 +761,8 @@ func (w *OSSBucketWrapper) GetLiveChannelStat(ctx context.Context, channelName s
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetLiveChannelStat", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.GetLiveChannelStat", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.GetLiveChannelStat", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetLiveChannelStat", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -717,7 +773,9 @@ func (w *OSSBucketWrapper) GetLiveChannelStat(ctx context.Context, channelName s
 }
 
 func (w *OSSBucketWrapper) GetObject(ctx context.Context, objectKey string, options ...oss.Option) (io.ReadCloser, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObject")
 		defer span.Finish()
 	}
@@ -728,8 +786,8 @@ func (w *OSSBucketWrapper) GetObject(ctx context.Context, objectKey string, opti
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObject", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.GetObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -740,7 +798,9 @@ func (w *OSSBucketWrapper) GetObject(ctx context.Context, objectKey string, opti
 }
 
 func (w *OSSBucketWrapper) GetObjectACL(ctx context.Context, objectKey string, options ...oss.Option) (oss.GetObjectACLResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectACL")
 		defer span.Finish()
 	}
@@ -751,8 +811,8 @@ func (w *OSSBucketWrapper) GetObjectACL(ctx context.Context, objectKey string, o
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectACL", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectACL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -763,7 +823,9 @@ func (w *OSSBucketWrapper) GetObjectACL(ctx context.Context, objectKey string, o
 }
 
 func (w *OSSBucketWrapper) GetObjectDetailedMeta(ctx context.Context, objectKey string, options ...oss.Option) (http.Header, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectDetailedMeta")
 		defer span.Finish()
 	}
@@ -774,8 +836,8 @@ func (w *OSSBucketWrapper) GetObjectDetailedMeta(ctx context.Context, objectKey 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectDetailedMeta", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectDetailedMeta", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectDetailedMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectDetailedMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -786,7 +848,9 @@ func (w *OSSBucketWrapper) GetObjectDetailedMeta(ctx context.Context, objectKey 
 }
 
 func (w *OSSBucketWrapper) GetObjectMeta(ctx context.Context, objectKey string, options ...oss.Option) (http.Header, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectMeta")
 		defer span.Finish()
 	}
@@ -797,8 +861,8 @@ func (w *OSSBucketWrapper) GetObjectMeta(ctx context.Context, objectKey string, 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectMeta", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectMeta", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -809,7 +873,9 @@ func (w *OSSBucketWrapper) GetObjectMeta(ctx context.Context, objectKey string, 
 }
 
 func (w *OSSBucketWrapper) GetObjectTagging(ctx context.Context, objectKey string, options ...oss.Option) (oss.GetObjectTaggingResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectTagging")
 		defer span.Finish()
 	}
@@ -820,8 +886,8 @@ func (w *OSSBucketWrapper) GetObjectTagging(ctx context.Context, objectKey strin
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectTagging", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectTagging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -832,7 +898,9 @@ func (w *OSSBucketWrapper) GetObjectTagging(ctx context.Context, objectKey strin
 }
 
 func (w *OSSBucketWrapper) GetObjectToFile(ctx context.Context, objectKey string, filePath string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectToFile")
 		defer span.Finish()
 	}
@@ -842,8 +910,8 @@ func (w *OSSBucketWrapper) GetObjectToFile(ctx context.Context, objectKey string
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectToFile", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectToFile", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectToFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectToFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -854,7 +922,9 @@ func (w *OSSBucketWrapper) GetObjectToFile(ctx context.Context, objectKey string
 }
 
 func (w *OSSBucketWrapper) GetObjectToFileWithURL(ctx context.Context, signedURL string, filePath string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectToFileWithURL")
 		defer span.Finish()
 	}
@@ -864,8 +934,8 @@ func (w *OSSBucketWrapper) GetObjectToFileWithURL(ctx context.Context, signedURL
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectToFileWithURL", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectToFileWithURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectToFileWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectToFileWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -876,7 +946,9 @@ func (w *OSSBucketWrapper) GetObjectToFileWithURL(ctx context.Context, signedURL
 }
 
 func (w *OSSBucketWrapper) GetObjectWithURL(ctx context.Context, signedURL string, options ...oss.Option) (io.ReadCloser, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectWithURL")
 		defer span.Finish()
 	}
@@ -887,8 +959,8 @@ func (w *OSSBucketWrapper) GetObjectWithURL(ctx context.Context, signedURL strin
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectWithURL", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectWithURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -899,7 +971,9 @@ func (w *OSSBucketWrapper) GetObjectWithURL(ctx context.Context, signedURL strin
 }
 
 func (w *OSSBucketWrapper) GetSymlink(ctx context.Context, objectKey string, options ...oss.Option) (http.Header, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetSymlink")
 		defer span.Finish()
 	}
@@ -910,8 +984,8 @@ func (w *OSSBucketWrapper) GetSymlink(ctx context.Context, objectKey string, opt
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetSymlink", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.GetSymlink", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.GetSymlink", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetSymlink", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -922,7 +996,9 @@ func (w *OSSBucketWrapper) GetSymlink(ctx context.Context, objectKey string, opt
 }
 
 func (w *OSSBucketWrapper) GetVodPlaylist(ctx context.Context, channelName string, startTime time.Time, endTime time.Time) (io.ReadCloser, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetVodPlaylist")
 		defer span.Finish()
 	}
@@ -933,8 +1009,8 @@ func (w *OSSBucketWrapper) GetVodPlaylist(ctx context.Context, channelName strin
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetVodPlaylist", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.GetVodPlaylist", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.GetVodPlaylist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.GetVodPlaylist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -945,7 +1021,9 @@ func (w *OSSBucketWrapper) GetVodPlaylist(ctx context.Context, channelName strin
 }
 
 func (w *OSSBucketWrapper) InitiateMultipartUpload(ctx context.Context, objectKey string, options ...oss.Option) (oss.InitiateMultipartUploadResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.InitiateMultipartUpload")
 		defer span.Finish()
 	}
@@ -956,8 +1034,8 @@ func (w *OSSBucketWrapper) InitiateMultipartUpload(ctx context.Context, objectKe
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.InitiateMultipartUpload", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.InitiateMultipartUpload", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.InitiateMultipartUpload", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.InitiateMultipartUpload", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -968,7 +1046,9 @@ func (w *OSSBucketWrapper) InitiateMultipartUpload(ctx context.Context, objectKe
 }
 
 func (w *OSSBucketWrapper) IsObjectExist(ctx context.Context, objectKey string, options ...oss.Option) (bool, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.IsObjectExist")
 		defer span.Finish()
 	}
@@ -979,8 +1059,8 @@ func (w *OSSBucketWrapper) IsObjectExist(ctx context.Context, objectKey string, 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.IsObjectExist", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.IsObjectExist", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.IsObjectExist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.IsObjectExist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -991,7 +1071,9 @@ func (w *OSSBucketWrapper) IsObjectExist(ctx context.Context, objectKey string, 
 }
 
 func (w *OSSBucketWrapper) ListLiveChannel(ctx context.Context, options ...oss.Option) (oss.ListLiveChannelResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListLiveChannel")
 		defer span.Finish()
 	}
@@ -1002,8 +1084,8 @@ func (w *OSSBucketWrapper) ListLiveChannel(ctx context.Context, options ...oss.O
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.ListLiveChannel", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.ListLiveChannel", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.ListLiveChannel", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.ListLiveChannel", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1014,7 +1096,9 @@ func (w *OSSBucketWrapper) ListLiveChannel(ctx context.Context, options ...oss.O
 }
 
 func (w *OSSBucketWrapper) ListMultipartUploads(ctx context.Context, options ...oss.Option) (oss.ListMultipartUploadResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListMultipartUploads")
 		defer span.Finish()
 	}
@@ -1025,8 +1109,8 @@ func (w *OSSBucketWrapper) ListMultipartUploads(ctx context.Context, options ...
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.ListMultipartUploads", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.ListMultipartUploads", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.ListMultipartUploads", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.ListMultipartUploads", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1037,7 +1121,9 @@ func (w *OSSBucketWrapper) ListMultipartUploads(ctx context.Context, options ...
 }
 
 func (w *OSSBucketWrapper) ListObjectVersions(ctx context.Context, options ...oss.Option) (oss.ListObjectVersionsResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListObjectVersions")
 		defer span.Finish()
 	}
@@ -1048,8 +1134,8 @@ func (w *OSSBucketWrapper) ListObjectVersions(ctx context.Context, options ...os
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.ListObjectVersions", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.ListObjectVersions", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.ListObjectVersions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.ListObjectVersions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1060,7 +1146,9 @@ func (w *OSSBucketWrapper) ListObjectVersions(ctx context.Context, options ...os
 }
 
 func (w *OSSBucketWrapper) ListObjects(ctx context.Context, options ...oss.Option) (oss.ListObjectsResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListObjects")
 		defer span.Finish()
 	}
@@ -1071,8 +1159,8 @@ func (w *OSSBucketWrapper) ListObjects(ctx context.Context, options ...oss.Optio
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.ListObjects", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.ListObjects", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.ListObjects", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.ListObjects", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1083,7 +1171,9 @@ func (w *OSSBucketWrapper) ListObjects(ctx context.Context, options ...oss.Optio
 }
 
 func (w *OSSBucketWrapper) ListObjectsV2(ctx context.Context, options ...oss.Option) (oss.ListObjectsResultV2, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListObjectsV2")
 		defer span.Finish()
 	}
@@ -1094,8 +1184,8 @@ func (w *OSSBucketWrapper) ListObjectsV2(ctx context.Context, options ...oss.Opt
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.ListObjectsV2", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.ListObjectsV2", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.ListObjectsV2", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.ListObjectsV2", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1106,7 +1196,9 @@ func (w *OSSBucketWrapper) ListObjectsV2(ctx context.Context, options ...oss.Opt
 }
 
 func (w *OSSBucketWrapper) ListUploadedParts(ctx context.Context, imur oss.InitiateMultipartUploadResult, options ...oss.Option) (oss.ListUploadedPartsResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListUploadedParts")
 		defer span.Finish()
 	}
@@ -1117,8 +1209,8 @@ func (w *OSSBucketWrapper) ListUploadedParts(ctx context.Context, imur oss.Initi
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.ListUploadedParts", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.ListUploadedParts", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.ListUploadedParts", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.ListUploadedParts", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1129,7 +1221,9 @@ func (w *OSSBucketWrapper) ListUploadedParts(ctx context.Context, imur oss.Initi
 }
 
 func (w *OSSBucketWrapper) OptionsMethod(ctx context.Context, objectKey string, options ...oss.Option) (http.Header, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.OptionsMethod")
 		defer span.Finish()
 	}
@@ -1140,8 +1234,8 @@ func (w *OSSBucketWrapper) OptionsMethod(ctx context.Context, objectKey string, 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.OptionsMethod", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.OptionsMethod", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.OptionsMethod", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.OptionsMethod", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1152,7 +1246,9 @@ func (w *OSSBucketWrapper) OptionsMethod(ctx context.Context, objectKey string, 
 }
 
 func (w *OSSBucketWrapper) PostVodPlaylist(ctx context.Context, channelName string, playlistName string, startTime time.Time, endTime time.Time) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PostVodPlaylist")
 		defer span.Finish()
 	}
@@ -1162,8 +1258,8 @@ func (w *OSSBucketWrapper) PostVodPlaylist(ctx context.Context, channelName stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PostVodPlaylist", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.PostVodPlaylist", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.PostVodPlaylist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PostVodPlaylist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1174,7 +1270,9 @@ func (w *OSSBucketWrapper) PostVodPlaylist(ctx context.Context, channelName stri
 }
 
 func (w *OSSBucketWrapper) ProcessObject(ctx context.Context, objectKey string, process string, options ...oss.Option) (oss.ProcessObjectResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.ProcessObject")
 		defer span.Finish()
 	}
@@ -1185,8 +1283,8 @@ func (w *OSSBucketWrapper) ProcessObject(ctx context.Context, objectKey string, 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.ProcessObject", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.ProcessObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.ProcessObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.ProcessObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1197,7 +1295,9 @@ func (w *OSSBucketWrapper) ProcessObject(ctx context.Context, objectKey string, 
 }
 
 func (w *OSSBucketWrapper) PutLiveChannelStatus(ctx context.Context, channelName string, status string) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutLiveChannelStatus")
 		defer span.Finish()
 	}
@@ -1207,8 +1307,8 @@ func (w *OSSBucketWrapper) PutLiveChannelStatus(ctx context.Context, channelName
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PutLiveChannelStatus", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.PutLiveChannelStatus", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.PutLiveChannelStatus", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PutLiveChannelStatus", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1219,7 +1319,9 @@ func (w *OSSBucketWrapper) PutLiveChannelStatus(ctx context.Context, channelName
 }
 
 func (w *OSSBucketWrapper) PutObject(ctx context.Context, objectKey string, reader io.Reader, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutObject")
 		defer span.Finish()
 	}
@@ -1229,8 +1331,8 @@ func (w *OSSBucketWrapper) PutObject(ctx context.Context, objectKey string, read
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PutObject", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.PutObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.PutObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PutObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1241,7 +1343,9 @@ func (w *OSSBucketWrapper) PutObject(ctx context.Context, objectKey string, read
 }
 
 func (w *OSSBucketWrapper) PutObjectFromFile(ctx context.Context, objectKey string, filePath string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutObjectFromFile")
 		defer span.Finish()
 	}
@@ -1251,8 +1355,8 @@ func (w *OSSBucketWrapper) PutObjectFromFile(ctx context.Context, objectKey stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectFromFile", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectFromFile", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectFromFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectFromFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1263,7 +1367,9 @@ func (w *OSSBucketWrapper) PutObjectFromFile(ctx context.Context, objectKey stri
 }
 
 func (w *OSSBucketWrapper) PutObjectFromFileWithURL(ctx context.Context, signedURL string, filePath string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutObjectFromFileWithURL")
 		defer span.Finish()
 	}
@@ -1273,8 +1379,8 @@ func (w *OSSBucketWrapper) PutObjectFromFileWithURL(ctx context.Context, signedU
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectFromFileWithURL", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectFromFileWithURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectFromFileWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectFromFileWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1285,7 +1391,9 @@ func (w *OSSBucketWrapper) PutObjectFromFileWithURL(ctx context.Context, signedU
 }
 
 func (w *OSSBucketWrapper) PutObjectTagging(ctx context.Context, objectKey string, tagging oss.Tagging, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutObjectTagging")
 		defer span.Finish()
 	}
@@ -1295,8 +1403,8 @@ func (w *OSSBucketWrapper) PutObjectTagging(ctx context.Context, objectKey strin
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectTagging", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectTagging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1307,7 +1415,9 @@ func (w *OSSBucketWrapper) PutObjectTagging(ctx context.Context, objectKey strin
 }
 
 func (w *OSSBucketWrapper) PutObjectWithURL(ctx context.Context, signedURL string, reader io.Reader, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutObjectWithURL")
 		defer span.Finish()
 	}
@@ -1317,8 +1427,8 @@ func (w *OSSBucketWrapper) PutObjectWithURL(ctx context.Context, signedURL strin
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectWithURL", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectWithURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1329,7 +1439,9 @@ func (w *OSSBucketWrapper) PutObjectWithURL(ctx context.Context, signedURL strin
 }
 
 func (w *OSSBucketWrapper) PutSymlink(ctx context.Context, symObjectKey string, targetObjectKey string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutSymlink")
 		defer span.Finish()
 	}
@@ -1339,8 +1451,8 @@ func (w *OSSBucketWrapper) PutSymlink(ctx context.Context, symObjectKey string, 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PutSymlink", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.PutSymlink", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.PutSymlink", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.PutSymlink", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1351,7 +1463,9 @@ func (w *OSSBucketWrapper) PutSymlink(ctx context.Context, symObjectKey string, 
 }
 
 func (w *OSSBucketWrapper) RestoreObject(ctx context.Context, objectKey string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.RestoreObject")
 		defer span.Finish()
 	}
@@ -1361,8 +1475,8 @@ func (w *OSSBucketWrapper) RestoreObject(ctx context.Context, objectKey string, 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.RestoreObject", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.RestoreObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.RestoreObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.RestoreObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1373,7 +1487,9 @@ func (w *OSSBucketWrapper) RestoreObject(ctx context.Context, objectKey string, 
 }
 
 func (w *OSSBucketWrapper) RestoreObjectDetail(ctx context.Context, objectKey string, restoreConfig oss.RestoreConfiguration, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.RestoreObjectDetail")
 		defer span.Finish()
 	}
@@ -1383,8 +1499,8 @@ func (w *OSSBucketWrapper) RestoreObjectDetail(ctx context.Context, objectKey st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.RestoreObjectDetail", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.RestoreObjectDetail", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.RestoreObjectDetail", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.RestoreObjectDetail", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1395,7 +1511,9 @@ func (w *OSSBucketWrapper) RestoreObjectDetail(ctx context.Context, objectKey st
 }
 
 func (w *OSSBucketWrapper) RestoreObjectXML(ctx context.Context, objectKey string, configXML string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.RestoreObjectXML")
 		defer span.Finish()
 	}
@@ -1405,8 +1523,8 @@ func (w *OSSBucketWrapper) RestoreObjectXML(ctx context.Context, objectKey strin
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.RestoreObjectXML", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.RestoreObjectXML", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.RestoreObjectXML", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.RestoreObjectXML", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1417,7 +1535,9 @@ func (w *OSSBucketWrapper) RestoreObjectXML(ctx context.Context, objectKey strin
 }
 
 func (w *OSSBucketWrapper) SelectObject(ctx context.Context, key string, selectReq oss.SelectRequest, options ...oss.Option) (io.ReadCloser, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.SelectObject")
 		defer span.Finish()
 	}
@@ -1428,8 +1548,8 @@ func (w *OSSBucketWrapper) SelectObject(ctx context.Context, key string, selectR
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.SelectObject", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.SelectObject", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.SelectObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.SelectObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1440,7 +1560,9 @@ func (w *OSSBucketWrapper) SelectObject(ctx context.Context, key string, selectR
 }
 
 func (w *OSSBucketWrapper) SelectObjectIntoFile(ctx context.Context, key string, fileName string, selectReq oss.SelectRequest, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.SelectObjectIntoFile")
 		defer span.Finish()
 	}
@@ -1450,8 +1572,8 @@ func (w *OSSBucketWrapper) SelectObjectIntoFile(ctx context.Context, key string,
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.SelectObjectIntoFile", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.SelectObjectIntoFile", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.SelectObjectIntoFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.SelectObjectIntoFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1462,7 +1584,9 @@ func (w *OSSBucketWrapper) SelectObjectIntoFile(ctx context.Context, key string,
 }
 
 func (w *OSSBucketWrapper) SetObjectACL(ctx context.Context, objectKey string, objectACL oss.ACLType, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.SetObjectACL")
 		defer span.Finish()
 	}
@@ -1472,8 +1596,8 @@ func (w *OSSBucketWrapper) SetObjectACL(ctx context.Context, objectKey string, o
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.SetObjectACL", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.SetObjectACL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.SetObjectACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.SetObjectACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1484,7 +1608,9 @@ func (w *OSSBucketWrapper) SetObjectACL(ctx context.Context, objectKey string, o
 }
 
 func (w *OSSBucketWrapper) SetObjectMeta(ctx context.Context, objectKey string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.SetObjectMeta")
 		defer span.Finish()
 	}
@@ -1494,8 +1620,8 @@ func (w *OSSBucketWrapper) SetObjectMeta(ctx context.Context, objectKey string, 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.SetObjectMeta", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.SetObjectMeta", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.SetObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.SetObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1506,7 +1632,9 @@ func (w *OSSBucketWrapper) SetObjectMeta(ctx context.Context, objectKey string, 
 }
 
 func (w *OSSBucketWrapper) SignRtmpURL(ctx context.Context, channelName string, playlistName string, expires int64) (string, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.SignRtmpURL")
 		defer span.Finish()
 	}
@@ -1517,8 +1645,8 @@ func (w *OSSBucketWrapper) SignRtmpURL(ctx context.Context, channelName string, 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.SignRtmpURL", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.SignRtmpURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.SignRtmpURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.SignRtmpURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1529,7 +1657,9 @@ func (w *OSSBucketWrapper) SignRtmpURL(ctx context.Context, channelName string, 
 }
 
 func (w *OSSBucketWrapper) SignURL(ctx context.Context, objectKey string, method oss.HTTPMethod, expiredInSec int64, options ...oss.Option) (string, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.SignURL")
 		defer span.Finish()
 	}
@@ -1540,8 +1670,8 @@ func (w *OSSBucketWrapper) SignURL(ctx context.Context, objectKey string, method
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.SignURL", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.SignURL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.SignURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.SignURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1552,7 +1682,9 @@ func (w *OSSBucketWrapper) SignURL(ctx context.Context, objectKey string, method
 }
 
 func (w *OSSBucketWrapper) UploadFile(ctx context.Context, objectKey string, filePath string, partSize int64, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.UploadFile")
 		defer span.Finish()
 	}
@@ -1562,8 +1694,8 @@ func (w *OSSBucketWrapper) UploadFile(ctx context.Context, objectKey string, fil
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.UploadFile", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.UploadFile", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.UploadFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.UploadFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1574,7 +1706,9 @@ func (w *OSSBucketWrapper) UploadFile(ctx context.Context, objectKey string, fil
 }
 
 func (w *OSSBucketWrapper) UploadPart(ctx context.Context, imur oss.InitiateMultipartUploadResult, reader io.Reader, partSize int64, partNumber int, options ...oss.Option) (oss.UploadPart, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.UploadPart")
 		defer span.Finish()
 	}
@@ -1585,8 +1719,8 @@ func (w *OSSBucketWrapper) UploadPart(ctx context.Context, imur oss.InitiateMult
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.UploadPart", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.UploadPart", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.UploadPart", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.UploadPart", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1597,7 +1731,9 @@ func (w *OSSBucketWrapper) UploadPart(ctx context.Context, imur oss.InitiateMult
 }
 
 func (w *OSSBucketWrapper) UploadPartCopy(ctx context.Context, imur oss.InitiateMultipartUploadResult, srcBucketName string, srcObjectKey string, startPosition int64, partSize int64, partNumber int, options ...oss.Option) (oss.UploadPart, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.UploadPartCopy")
 		defer span.Finish()
 	}
@@ -1608,8 +1744,8 @@ func (w *OSSBucketWrapper) UploadPartCopy(ctx context.Context, imur oss.Initiate
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.UploadPartCopy", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.UploadPartCopy", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.UploadPartCopy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.UploadPartCopy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1620,7 +1756,9 @@ func (w *OSSBucketWrapper) UploadPartCopy(ctx context.Context, imur oss.Initiate
 }
 
 func (w *OSSBucketWrapper) UploadPartFromFile(ctx context.Context, imur oss.InitiateMultipartUploadResult, filePath string, startPosition int64, partSize int64, partNumber int, options ...oss.Option) (oss.UploadPart, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Bucket.UploadPartFromFile")
 		defer span.Finish()
 	}
@@ -1631,8 +1769,8 @@ func (w *OSSBucketWrapper) UploadPartFromFile(ctx context.Context, imur oss.Init
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.UploadPartFromFile", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Bucket.UploadPartFromFile", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Bucket.UploadPartFromFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Bucket.UploadPartFromFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1643,7 +1781,9 @@ func (w *OSSBucketWrapper) UploadPartFromFile(ctx context.Context, imur oss.Init
 }
 
 func (w *OSSClientWrapper) AbortBucketWorm(ctx context.Context, bucketName string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.AbortBucketWorm")
 		defer span.Finish()
 	}
@@ -1653,8 +1793,8 @@ func (w *OSSClientWrapper) AbortBucketWorm(ctx context.Context, bucketName strin
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.AbortBucketWorm", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.AbortBucketWorm", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.AbortBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.AbortBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1672,7 +1812,9 @@ func (w *OSSClientWrapper) Bucket(bucketName string) (*OSSBucketWrapper, error) 
 }
 
 func (w *OSSClientWrapper) CompleteBucketWorm(ctx context.Context, bucketName string, wormID string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.CompleteBucketWorm")
 		defer span.Finish()
 	}
@@ -1682,8 +1824,8 @@ func (w *OSSClientWrapper) CompleteBucketWorm(ctx context.Context, bucketName st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.CompleteBucketWorm", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.CompleteBucketWorm", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.CompleteBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.CompleteBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1694,7 +1836,9 @@ func (w *OSSClientWrapper) CompleteBucketWorm(ctx context.Context, bucketName st
 }
 
 func (w *OSSClientWrapper) CreateBucket(ctx context.Context, bucketName string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.CreateBucket")
 		defer span.Finish()
 	}
@@ -1704,8 +1848,8 @@ func (w *OSSClientWrapper) CreateBucket(ctx context.Context, bucketName string, 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.CreateBucket", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.CreateBucket", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.CreateBucket", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.CreateBucket", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1716,7 +1860,9 @@ func (w *OSSClientWrapper) CreateBucket(ctx context.Context, bucketName string, 
 }
 
 func (w *OSSClientWrapper) DeleteBucket(ctx context.Context, bucketName string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucket")
 		defer span.Finish()
 	}
@@ -1726,8 +1872,8 @@ func (w *OSSClientWrapper) DeleteBucket(ctx context.Context, bucketName string, 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucket", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.DeleteBucket", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucket", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucket", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1738,7 +1884,9 @@ func (w *OSSClientWrapper) DeleteBucket(ctx context.Context, bucketName string, 
 }
 
 func (w *OSSClientWrapper) DeleteBucketCORS(ctx context.Context, bucketName string) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketCORS")
 		defer span.Finish()
 	}
@@ -1748,8 +1896,8 @@ func (w *OSSClientWrapper) DeleteBucketCORS(ctx context.Context, bucketName stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketCORS", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketCORS", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketCORS", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketCORS", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1760,7 +1908,9 @@ func (w *OSSClientWrapper) DeleteBucketCORS(ctx context.Context, bucketName stri
 }
 
 func (w *OSSClientWrapper) DeleteBucketEncryption(ctx context.Context, bucketName string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketEncryption")
 		defer span.Finish()
 	}
@@ -1770,8 +1920,8 @@ func (w *OSSClientWrapper) DeleteBucketEncryption(ctx context.Context, bucketNam
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketEncryption", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketEncryption", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketEncryption", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketEncryption", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1782,7 +1932,9 @@ func (w *OSSClientWrapper) DeleteBucketEncryption(ctx context.Context, bucketNam
 }
 
 func (w *OSSClientWrapper) DeleteBucketInventory(ctx context.Context, bucketName string, strInventoryId string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketInventory")
 		defer span.Finish()
 	}
@@ -1792,8 +1944,8 @@ func (w *OSSClientWrapper) DeleteBucketInventory(ctx context.Context, bucketName
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketInventory", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketInventory", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1804,7 +1956,9 @@ func (w *OSSClientWrapper) DeleteBucketInventory(ctx context.Context, bucketName
 }
 
 func (w *OSSClientWrapper) DeleteBucketLifecycle(ctx context.Context, bucketName string) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketLifecycle")
 		defer span.Finish()
 	}
@@ -1814,8 +1968,8 @@ func (w *OSSClientWrapper) DeleteBucketLifecycle(ctx context.Context, bucketName
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketLifecycle", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketLifecycle", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketLifecycle", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketLifecycle", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1826,7 +1980,9 @@ func (w *OSSClientWrapper) DeleteBucketLifecycle(ctx context.Context, bucketName
 }
 
 func (w *OSSClientWrapper) DeleteBucketLogging(ctx context.Context, bucketName string) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketLogging")
 		defer span.Finish()
 	}
@@ -1836,8 +1992,8 @@ func (w *OSSClientWrapper) DeleteBucketLogging(ctx context.Context, bucketName s
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketLogging", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketLogging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketLogging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketLogging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1848,7 +2004,9 @@ func (w *OSSClientWrapper) DeleteBucketLogging(ctx context.Context, bucketName s
 }
 
 func (w *OSSClientWrapper) DeleteBucketPolicy(ctx context.Context, bucketName string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketPolicy")
 		defer span.Finish()
 	}
@@ -1858,8 +2016,8 @@ func (w *OSSClientWrapper) DeleteBucketPolicy(ctx context.Context, bucketName st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketPolicy", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketPolicy", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1870,7 +2028,9 @@ func (w *OSSClientWrapper) DeleteBucketPolicy(ctx context.Context, bucketName st
 }
 
 func (w *OSSClientWrapper) DeleteBucketQosInfo(ctx context.Context, bucketName string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketQosInfo")
 		defer span.Finish()
 	}
@@ -1880,8 +2040,8 @@ func (w *OSSClientWrapper) DeleteBucketQosInfo(ctx context.Context, bucketName s
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketQosInfo", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketQosInfo", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketQosInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketQosInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1892,7 +2052,9 @@ func (w *OSSClientWrapper) DeleteBucketQosInfo(ctx context.Context, bucketName s
 }
 
 func (w *OSSClientWrapper) DeleteBucketTagging(ctx context.Context, bucketName string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketTagging")
 		defer span.Finish()
 	}
@@ -1902,8 +2064,8 @@ func (w *OSSClientWrapper) DeleteBucketTagging(ctx context.Context, bucketName s
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketTagging", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketTagging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1914,7 +2076,9 @@ func (w *OSSClientWrapper) DeleteBucketTagging(ctx context.Context, bucketName s
 }
 
 func (w *OSSClientWrapper) DeleteBucketWebsite(ctx context.Context, bucketName string) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketWebsite")
 		defer span.Finish()
 	}
@@ -1924,8 +2088,8 @@ func (w *OSSClientWrapper) DeleteBucketWebsite(ctx context.Context, bucketName s
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketWebsite", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketWebsite", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketWebsite", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketWebsite", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1936,7 +2100,9 @@ func (w *OSSClientWrapper) DeleteBucketWebsite(ctx context.Context, bucketName s
 }
 
 func (w *OSSClientWrapper) ExtendBucketWorm(ctx context.Context, bucketName string, retentionDays int, wormID string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.ExtendBucketWorm")
 		defer span.Finish()
 	}
@@ -1946,8 +2112,8 @@ func (w *OSSClientWrapper) ExtendBucketWorm(ctx context.Context, bucketName stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.ExtendBucketWorm", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.ExtendBucketWorm", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.ExtendBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.ExtendBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1958,7 +2124,9 @@ func (w *OSSClientWrapper) ExtendBucketWorm(ctx context.Context, bucketName stri
 }
 
 func (w *OSSClientWrapper) GetBucketACL(ctx context.Context, bucketName string) (oss.GetBucketACLResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketACL")
 		defer span.Finish()
 	}
@@ -1969,8 +2137,8 @@ func (w *OSSClientWrapper) GetBucketACL(ctx context.Context, bucketName string) 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketACL", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketACL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1981,7 +2149,9 @@ func (w *OSSClientWrapper) GetBucketACL(ctx context.Context, bucketName string) 
 }
 
 func (w *OSSClientWrapper) GetBucketAsyncTask(ctx context.Context, bucketName string, taskID string, options ...oss.Option) (oss.AsynFetchTaskInfo, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketAsyncTask")
 		defer span.Finish()
 	}
@@ -1992,8 +2162,8 @@ func (w *OSSClientWrapper) GetBucketAsyncTask(ctx context.Context, bucketName st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketAsyncTask", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketAsyncTask", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketAsyncTask", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketAsyncTask", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2004,7 +2174,9 @@ func (w *OSSClientWrapper) GetBucketAsyncTask(ctx context.Context, bucketName st
 }
 
 func (w *OSSClientWrapper) GetBucketCORS(ctx context.Context, bucketName string) (oss.GetBucketCORSResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketCORS")
 		defer span.Finish()
 	}
@@ -2015,8 +2187,8 @@ func (w *OSSClientWrapper) GetBucketCORS(ctx context.Context, bucketName string)
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketCORS", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketCORS", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketCORS", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketCORS", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2027,7 +2199,9 @@ func (w *OSSClientWrapper) GetBucketCORS(ctx context.Context, bucketName string)
 }
 
 func (w *OSSClientWrapper) GetBucketEncryption(ctx context.Context, bucketName string, options ...oss.Option) (oss.GetBucketEncryptionResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketEncryption")
 		defer span.Finish()
 	}
@@ -2038,8 +2212,8 @@ func (w *OSSClientWrapper) GetBucketEncryption(ctx context.Context, bucketName s
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketEncryption", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketEncryption", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketEncryption", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketEncryption", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2050,7 +2224,9 @@ func (w *OSSClientWrapper) GetBucketEncryption(ctx context.Context, bucketName s
 }
 
 func (w *OSSClientWrapper) GetBucketInfo(ctx context.Context, bucketName string, options ...oss.Option) (oss.GetBucketInfoResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketInfo")
 		defer span.Finish()
 	}
@@ -2061,8 +2237,8 @@ func (w *OSSClientWrapper) GetBucketInfo(ctx context.Context, bucketName string,
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketInfo", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketInfo", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2073,7 +2249,9 @@ func (w *OSSClientWrapper) GetBucketInfo(ctx context.Context, bucketName string,
 }
 
 func (w *OSSClientWrapper) GetBucketInventory(ctx context.Context, bucketName string, strInventoryId string, options ...oss.Option) (oss.InventoryConfiguration, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketInventory")
 		defer span.Finish()
 	}
@@ -2084,8 +2262,8 @@ func (w *OSSClientWrapper) GetBucketInventory(ctx context.Context, bucketName st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketInventory", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketInventory", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2096,7 +2274,9 @@ func (w *OSSClientWrapper) GetBucketInventory(ctx context.Context, bucketName st
 }
 
 func (w *OSSClientWrapper) GetBucketLifecycle(ctx context.Context, bucketName string) (oss.GetBucketLifecycleResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketLifecycle")
 		defer span.Finish()
 	}
@@ -2107,8 +2287,8 @@ func (w *OSSClientWrapper) GetBucketLifecycle(ctx context.Context, bucketName st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketLifecycle", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketLifecycle", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketLifecycle", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketLifecycle", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2119,7 +2299,9 @@ func (w *OSSClientWrapper) GetBucketLifecycle(ctx context.Context, bucketName st
 }
 
 func (w *OSSClientWrapper) GetBucketLocation(ctx context.Context, bucketName string) (string, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketLocation")
 		defer span.Finish()
 	}
@@ -2130,8 +2312,8 @@ func (w *OSSClientWrapper) GetBucketLocation(ctx context.Context, bucketName str
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketLocation", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketLocation", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketLocation", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketLocation", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2142,7 +2324,9 @@ func (w *OSSClientWrapper) GetBucketLocation(ctx context.Context, bucketName str
 }
 
 func (w *OSSClientWrapper) GetBucketLogging(ctx context.Context, bucketName string) (oss.GetBucketLoggingResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketLogging")
 		defer span.Finish()
 	}
@@ -2153,8 +2337,8 @@ func (w *OSSClientWrapper) GetBucketLogging(ctx context.Context, bucketName stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketLogging", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketLogging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketLogging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketLogging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2165,7 +2349,9 @@ func (w *OSSClientWrapper) GetBucketLogging(ctx context.Context, bucketName stri
 }
 
 func (w *OSSClientWrapper) GetBucketPolicy(ctx context.Context, bucketName string, options ...oss.Option) (string, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketPolicy")
 		defer span.Finish()
 	}
@@ -2176,8 +2362,8 @@ func (w *OSSClientWrapper) GetBucketPolicy(ctx context.Context, bucketName strin
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketPolicy", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketPolicy", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2188,7 +2374,9 @@ func (w *OSSClientWrapper) GetBucketPolicy(ctx context.Context, bucketName strin
 }
 
 func (w *OSSClientWrapper) GetBucketQosInfo(ctx context.Context, bucketName string, options ...oss.Option) (oss.BucketQoSConfiguration, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketQosInfo")
 		defer span.Finish()
 	}
@@ -2199,8 +2387,8 @@ func (w *OSSClientWrapper) GetBucketQosInfo(ctx context.Context, bucketName stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketQosInfo", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketQosInfo", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketQosInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketQosInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2211,7 +2399,9 @@ func (w *OSSClientWrapper) GetBucketQosInfo(ctx context.Context, bucketName stri
 }
 
 func (w *OSSClientWrapper) GetBucketReferer(ctx context.Context, bucketName string) (oss.GetBucketRefererResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketReferer")
 		defer span.Finish()
 	}
@@ -2222,8 +2412,8 @@ func (w *OSSClientWrapper) GetBucketReferer(ctx context.Context, bucketName stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketReferer", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketReferer", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketReferer", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketReferer", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2234,7 +2424,9 @@ func (w *OSSClientWrapper) GetBucketReferer(ctx context.Context, bucketName stri
 }
 
 func (w *OSSClientWrapper) GetBucketRequestPayment(ctx context.Context, bucketName string, options ...oss.Option) (oss.RequestPaymentConfiguration, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketRequestPayment")
 		defer span.Finish()
 	}
@@ -2245,8 +2437,8 @@ func (w *OSSClientWrapper) GetBucketRequestPayment(ctx context.Context, bucketNa
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketRequestPayment", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketRequestPayment", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketRequestPayment", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketRequestPayment", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2257,7 +2449,9 @@ func (w *OSSClientWrapper) GetBucketRequestPayment(ctx context.Context, bucketNa
 }
 
 func (w *OSSClientWrapper) GetBucketStat(ctx context.Context, bucketName string) (oss.GetBucketStatResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketStat")
 		defer span.Finish()
 	}
@@ -2268,8 +2462,8 @@ func (w *OSSClientWrapper) GetBucketStat(ctx context.Context, bucketName string)
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketStat", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketStat", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketStat", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketStat", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2280,7 +2474,9 @@ func (w *OSSClientWrapper) GetBucketStat(ctx context.Context, bucketName string)
 }
 
 func (w *OSSClientWrapper) GetBucketTagging(ctx context.Context, bucketName string, options ...oss.Option) (oss.GetBucketTaggingResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketTagging")
 		defer span.Finish()
 	}
@@ -2291,8 +2487,8 @@ func (w *OSSClientWrapper) GetBucketTagging(ctx context.Context, bucketName stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketTagging", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketTagging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2303,7 +2499,9 @@ func (w *OSSClientWrapper) GetBucketTagging(ctx context.Context, bucketName stri
 }
 
 func (w *OSSClientWrapper) GetBucketVersioning(ctx context.Context, bucketName string, options ...oss.Option) (oss.GetBucketVersioningResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketVersioning")
 		defer span.Finish()
 	}
@@ -2314,8 +2512,8 @@ func (w *OSSClientWrapper) GetBucketVersioning(ctx context.Context, bucketName s
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketVersioning", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketVersioning", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketVersioning", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketVersioning", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2326,7 +2524,9 @@ func (w *OSSClientWrapper) GetBucketVersioning(ctx context.Context, bucketName s
 }
 
 func (w *OSSClientWrapper) GetBucketWebsite(ctx context.Context, bucketName string) (oss.GetBucketWebsiteResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketWebsite")
 		defer span.Finish()
 	}
@@ -2337,8 +2537,8 @@ func (w *OSSClientWrapper) GetBucketWebsite(ctx context.Context, bucketName stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketWebsite", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketWebsite", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketWebsite", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketWebsite", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2349,7 +2549,9 @@ func (w *OSSClientWrapper) GetBucketWebsite(ctx context.Context, bucketName stri
 }
 
 func (w *OSSClientWrapper) GetBucketWorm(ctx context.Context, bucketName string, options ...oss.Option) (oss.WormConfiguration, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketWorm")
 		defer span.Finish()
 	}
@@ -2360,8 +2562,8 @@ func (w *OSSClientWrapper) GetBucketWorm(ctx context.Context, bucketName string,
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketWorm", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetBucketWorm", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2372,7 +2574,9 @@ func (w *OSSClientWrapper) GetBucketWorm(ctx context.Context, bucketName string,
 }
 
 func (w *OSSClientWrapper) GetUserQoSInfo(ctx context.Context, options ...oss.Option) (oss.UserQoSConfiguration, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.GetUserQoSInfo")
 		defer span.Finish()
 	}
@@ -2383,8 +2587,8 @@ func (w *OSSClientWrapper) GetUserQoSInfo(ctx context.Context, options ...oss.Op
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetUserQoSInfo", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.GetUserQoSInfo", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.GetUserQoSInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.GetUserQoSInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2395,7 +2599,9 @@ func (w *OSSClientWrapper) GetUserQoSInfo(ctx context.Context, options ...oss.Op
 }
 
 func (w *OSSClientWrapper) InitiateBucketWorm(ctx context.Context, bucketName string, retentionDays int, options ...oss.Option) (string, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.InitiateBucketWorm")
 		defer span.Finish()
 	}
@@ -2406,8 +2612,8 @@ func (w *OSSClientWrapper) InitiateBucketWorm(ctx context.Context, bucketName st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.InitiateBucketWorm", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.InitiateBucketWorm", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.InitiateBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.InitiateBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2418,7 +2624,9 @@ func (w *OSSClientWrapper) InitiateBucketWorm(ctx context.Context, bucketName st
 }
 
 func (w *OSSClientWrapper) IsBucketExist(ctx context.Context, bucketName string) (bool, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.IsBucketExist")
 		defer span.Finish()
 	}
@@ -2429,8 +2637,8 @@ func (w *OSSClientWrapper) IsBucketExist(ctx context.Context, bucketName string)
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.IsBucketExist", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.IsBucketExist", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.IsBucketExist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.IsBucketExist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2441,7 +2649,9 @@ func (w *OSSClientWrapper) IsBucketExist(ctx context.Context, bucketName string)
 }
 
 func (w *OSSClientWrapper) LimitUploadSpeed(ctx context.Context, upSpeed int) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.LimitUploadSpeed")
 		defer span.Finish()
 	}
@@ -2451,8 +2661,8 @@ func (w *OSSClientWrapper) LimitUploadSpeed(ctx context.Context, upSpeed int) er
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.LimitUploadSpeed", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.LimitUploadSpeed", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.LimitUploadSpeed", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.LimitUploadSpeed", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2463,7 +2673,9 @@ func (w *OSSClientWrapper) LimitUploadSpeed(ctx context.Context, upSpeed int) er
 }
 
 func (w *OSSClientWrapper) ListBucketInventory(ctx context.Context, bucketName string, continuationToken string, options ...oss.Option) (oss.ListInventoryConfigurationsResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.ListBucketInventory")
 		defer span.Finish()
 	}
@@ -2474,8 +2686,8 @@ func (w *OSSClientWrapper) ListBucketInventory(ctx context.Context, bucketName s
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.ListBucketInventory", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.ListBucketInventory", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.ListBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.ListBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2486,7 +2698,9 @@ func (w *OSSClientWrapper) ListBucketInventory(ctx context.Context, bucketName s
 }
 
 func (w *OSSClientWrapper) ListBuckets(ctx context.Context, options ...oss.Option) (oss.ListBucketsResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.ListBuckets")
 		defer span.Finish()
 	}
@@ -2497,8 +2711,8 @@ func (w *OSSClientWrapper) ListBuckets(ctx context.Context, options ...oss.Optio
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.ListBuckets", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.ListBuckets", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.ListBuckets", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.ListBuckets", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2509,7 +2723,9 @@ func (w *OSSClientWrapper) ListBuckets(ctx context.Context, options ...oss.Optio
 }
 
 func (w *OSSClientWrapper) SetBucketACL(ctx context.Context, bucketName string, bucketACL oss.ACLType) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketACL")
 		defer span.Finish()
 	}
@@ -2519,8 +2735,8 @@ func (w *OSSClientWrapper) SetBucketACL(ctx context.Context, bucketName string, 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketACL", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketACL", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2531,7 +2747,9 @@ func (w *OSSClientWrapper) SetBucketACL(ctx context.Context, bucketName string, 
 }
 
 func (w *OSSClientWrapper) SetBucketAsyncTask(ctx context.Context, bucketName string, asynConf oss.AsyncFetchTaskConfiguration, options ...oss.Option) (oss.AsyncFetchTaskResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketAsyncTask")
 		defer span.Finish()
 	}
@@ -2542,8 +2760,8 @@ func (w *OSSClientWrapper) SetBucketAsyncTask(ctx context.Context, bucketName st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketAsyncTask", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketAsyncTask", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketAsyncTask", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketAsyncTask", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2554,7 +2772,9 @@ func (w *OSSClientWrapper) SetBucketAsyncTask(ctx context.Context, bucketName st
 }
 
 func (w *OSSClientWrapper) SetBucketCORS(ctx context.Context, bucketName string, corsRules []oss.CORSRule) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketCORS")
 		defer span.Finish()
 	}
@@ -2564,8 +2784,8 @@ func (w *OSSClientWrapper) SetBucketCORS(ctx context.Context, bucketName string,
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketCORS", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketCORS", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketCORS", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketCORS", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2576,7 +2796,9 @@ func (w *OSSClientWrapper) SetBucketCORS(ctx context.Context, bucketName string,
 }
 
 func (w *OSSClientWrapper) SetBucketEncryption(ctx context.Context, bucketName string, encryptionRule oss.ServerEncryptionRule, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketEncryption")
 		defer span.Finish()
 	}
@@ -2586,8 +2808,8 @@ func (w *OSSClientWrapper) SetBucketEncryption(ctx context.Context, bucketName s
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketEncryption", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketEncryption", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketEncryption", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketEncryption", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2598,7 +2820,9 @@ func (w *OSSClientWrapper) SetBucketEncryption(ctx context.Context, bucketName s
 }
 
 func (w *OSSClientWrapper) SetBucketInventory(ctx context.Context, bucketName string, inventoryConfig oss.InventoryConfiguration, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketInventory")
 		defer span.Finish()
 	}
@@ -2608,8 +2832,8 @@ func (w *OSSClientWrapper) SetBucketInventory(ctx context.Context, bucketName st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketInventory", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketInventory", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2620,7 +2844,9 @@ func (w *OSSClientWrapper) SetBucketInventory(ctx context.Context, bucketName st
 }
 
 func (w *OSSClientWrapper) SetBucketLifecycle(ctx context.Context, bucketName string, rules []oss.LifecycleRule) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketLifecycle")
 		defer span.Finish()
 	}
@@ -2630,8 +2856,8 @@ func (w *OSSClientWrapper) SetBucketLifecycle(ctx context.Context, bucketName st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketLifecycle", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketLifecycle", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketLifecycle", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketLifecycle", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2642,7 +2868,9 @@ func (w *OSSClientWrapper) SetBucketLifecycle(ctx context.Context, bucketName st
 }
 
 func (w *OSSClientWrapper) SetBucketLogging(ctx context.Context, bucketName string, targetBucket string, targetPrefix string, isEnable bool) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketLogging")
 		defer span.Finish()
 	}
@@ -2652,8 +2880,8 @@ func (w *OSSClientWrapper) SetBucketLogging(ctx context.Context, bucketName stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketLogging", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketLogging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketLogging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketLogging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2664,7 +2892,9 @@ func (w *OSSClientWrapper) SetBucketLogging(ctx context.Context, bucketName stri
 }
 
 func (w *OSSClientWrapper) SetBucketPolicy(ctx context.Context, bucketName string, policy string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketPolicy")
 		defer span.Finish()
 	}
@@ -2674,8 +2904,8 @@ func (w *OSSClientWrapper) SetBucketPolicy(ctx context.Context, bucketName strin
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketPolicy", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketPolicy", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2686,7 +2916,9 @@ func (w *OSSClientWrapper) SetBucketPolicy(ctx context.Context, bucketName strin
 }
 
 func (w *OSSClientWrapper) SetBucketQoSInfo(ctx context.Context, bucketName string, qosConf oss.BucketQoSConfiguration, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketQoSInfo")
 		defer span.Finish()
 	}
@@ -2696,8 +2928,8 @@ func (w *OSSClientWrapper) SetBucketQoSInfo(ctx context.Context, bucketName stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketQoSInfo", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketQoSInfo", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketQoSInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketQoSInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2708,7 +2940,9 @@ func (w *OSSClientWrapper) SetBucketQoSInfo(ctx context.Context, bucketName stri
 }
 
 func (w *OSSClientWrapper) SetBucketReferer(ctx context.Context, bucketName string, referers []string, allowEmptyReferer bool) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketReferer")
 		defer span.Finish()
 	}
@@ -2718,8 +2952,8 @@ func (w *OSSClientWrapper) SetBucketReferer(ctx context.Context, bucketName stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketReferer", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketReferer", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketReferer", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketReferer", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2730,7 +2964,9 @@ func (w *OSSClientWrapper) SetBucketReferer(ctx context.Context, bucketName stri
 }
 
 func (w *OSSClientWrapper) SetBucketRequestPayment(ctx context.Context, bucketName string, paymentConfig oss.RequestPaymentConfiguration, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketRequestPayment")
 		defer span.Finish()
 	}
@@ -2740,8 +2976,8 @@ func (w *OSSClientWrapper) SetBucketRequestPayment(ctx context.Context, bucketNa
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketRequestPayment", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketRequestPayment", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketRequestPayment", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketRequestPayment", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2752,7 +2988,9 @@ func (w *OSSClientWrapper) SetBucketRequestPayment(ctx context.Context, bucketNa
 }
 
 func (w *OSSClientWrapper) SetBucketTagging(ctx context.Context, bucketName string, tagging oss.Tagging, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketTagging")
 		defer span.Finish()
 	}
@@ -2762,8 +3000,8 @@ func (w *OSSClientWrapper) SetBucketTagging(ctx context.Context, bucketName stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketTagging", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketTagging", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2774,7 +3012,9 @@ func (w *OSSClientWrapper) SetBucketTagging(ctx context.Context, bucketName stri
 }
 
 func (w *OSSClientWrapper) SetBucketVersioning(ctx context.Context, bucketName string, versioningConfig oss.VersioningConfig, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketVersioning")
 		defer span.Finish()
 	}
@@ -2784,8 +3024,8 @@ func (w *OSSClientWrapper) SetBucketVersioning(ctx context.Context, bucketName s
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketVersioning", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketVersioning", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketVersioning", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketVersioning", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2796,7 +3036,9 @@ func (w *OSSClientWrapper) SetBucketVersioning(ctx context.Context, bucketName s
 }
 
 func (w *OSSClientWrapper) SetBucketWebsite(ctx context.Context, bucketName string, indexDocument string, errorDocument string) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketWebsite")
 		defer span.Finish()
 	}
@@ -2806,8 +3048,8 @@ func (w *OSSClientWrapper) SetBucketWebsite(ctx context.Context, bucketName stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketWebsite", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketWebsite", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketWebsite", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketWebsite", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2818,7 +3060,9 @@ func (w *OSSClientWrapper) SetBucketWebsite(ctx context.Context, bucketName stri
 }
 
 func (w *OSSClientWrapper) SetBucketWebsiteDetail(ctx context.Context, bucketName string, wxml oss.WebsiteXML, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketWebsiteDetail")
 		defer span.Finish()
 	}
@@ -2828,8 +3072,8 @@ func (w *OSSClientWrapper) SetBucketWebsiteDetail(ctx context.Context, bucketNam
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketWebsiteDetail", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketWebsiteDetail", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketWebsiteDetail", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketWebsiteDetail", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2840,7 +3084,9 @@ func (w *OSSClientWrapper) SetBucketWebsiteDetail(ctx context.Context, bucketNam
 }
 
 func (w *OSSClientWrapper) SetBucketWebsiteXml(ctx context.Context, bucketName string, webXml string, options ...oss.Option) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketWebsiteXml")
 		defer span.Finish()
 	}
@@ -2850,8 +3096,8 @@ func (w *OSSClientWrapper) SetBucketWebsiteXml(ctx context.Context, bucketName s
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketWebsiteXml", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("oss.Client.SetBucketWebsiteXml", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("oss.Client.SetBucketWebsiteXml", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("oss.Client.SetBucketWebsiteXml", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 

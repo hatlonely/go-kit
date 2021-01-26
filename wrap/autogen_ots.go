@@ -59,16 +59,18 @@ func (w *OTSTableStoreClientWrapper) CreateMetric(options *WrapperOptions) {
 		Help:        "tablestore TableStoreClient response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode"})
+	}, []string{"method", "errCode", "custom"})
 	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name:        "tablestore_TableStoreClient_total",
 		Help:        "tablestore TableStoreClient request total",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode"})
+	}, []string{"method", "errCode", "custom"})
 }
 
 func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, request *tablestore.AbortTransactionRequest) (*tablestore.AbortTransactionResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.AbortTransaction")
 		defer span.Finish()
 	}
@@ -79,8 +81,8 @@ func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, reque
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.AbortTransaction", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.AbortTransaction", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.AbortTransaction", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.AbortTransaction", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -91,7 +93,9 @@ func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, reque
 }
 
 func (w *OTSTableStoreClientWrapper) BatchGetRow(ctx context.Context, request *tablestore.BatchGetRowRequest) (*tablestore.BatchGetRowResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.BatchGetRow")
 		defer span.Finish()
 	}
@@ -102,8 +106,8 @@ func (w *OTSTableStoreClientWrapper) BatchGetRow(ctx context.Context, request *t
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.BatchGetRow", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.BatchGetRow", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.BatchGetRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.BatchGetRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -114,7 +118,9 @@ func (w *OTSTableStoreClientWrapper) BatchGetRow(ctx context.Context, request *t
 }
 
 func (w *OTSTableStoreClientWrapper) BatchWriteRow(ctx context.Context, request *tablestore.BatchWriteRowRequest) (*tablestore.BatchWriteRowResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.BatchWriteRow")
 		defer span.Finish()
 	}
@@ -125,8 +131,8 @@ func (w *OTSTableStoreClientWrapper) BatchWriteRow(ctx context.Context, request 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.BatchWriteRow", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.BatchWriteRow", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.BatchWriteRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.BatchWriteRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -137,7 +143,9 @@ func (w *OTSTableStoreClientWrapper) BatchWriteRow(ctx context.Context, request 
 }
 
 func (w *OTSTableStoreClientWrapper) CommitTransaction(ctx context.Context, request *tablestore.CommitTransactionRequest) (*tablestore.CommitTransactionResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CommitTransaction")
 		defer span.Finish()
 	}
@@ -148,8 +156,8 @@ func (w *OTSTableStoreClientWrapper) CommitTransaction(ctx context.Context, requ
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CommitTransaction", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CommitTransaction", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CommitTransaction", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CommitTransaction", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -160,7 +168,9 @@ func (w *OTSTableStoreClientWrapper) CommitTransaction(ctx context.Context, requ
 }
 
 func (w *OTSTableStoreClientWrapper) ComputeSplitPointsBySize(ctx context.Context, req *tablestore.ComputeSplitPointsBySizeRequest) (*tablestore.ComputeSplitPointsBySizeResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ComputeSplitPointsBySize")
 		defer span.Finish()
 	}
@@ -171,8 +181,8 @@ func (w *OTSTableStoreClientWrapper) ComputeSplitPointsBySize(ctx context.Contex
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ComputeSplitPointsBySize", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ComputeSplitPointsBySize", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ComputeSplitPointsBySize", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ComputeSplitPointsBySize", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -183,7 +193,9 @@ func (w *OTSTableStoreClientWrapper) ComputeSplitPointsBySize(ctx context.Contex
 }
 
 func (w *OTSTableStoreClientWrapper) CreateIndex(ctx context.Context, request *tablestore.CreateIndexRequest) (*tablestore.CreateIndexResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateIndex")
 		defer span.Finish()
 	}
@@ -194,8 +206,8 @@ func (w *OTSTableStoreClientWrapper) CreateIndex(ctx context.Context, request *t
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CreateIndex", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CreateIndex", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CreateIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CreateIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -206,7 +218,9 @@ func (w *OTSTableStoreClientWrapper) CreateIndex(ctx context.Context, request *t
 }
 
 func (w *OTSTableStoreClientWrapper) CreateSearchIndex(ctx context.Context, request *tablestore.CreateSearchIndexRequest) (*tablestore.CreateSearchIndexResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateSearchIndex")
 		defer span.Finish()
 	}
@@ -217,8 +231,8 @@ func (w *OTSTableStoreClientWrapper) CreateSearchIndex(ctx context.Context, requ
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CreateSearchIndex", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CreateSearchIndex", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CreateSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CreateSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -229,7 +243,9 @@ func (w *OTSTableStoreClientWrapper) CreateSearchIndex(ctx context.Context, requ
 }
 
 func (w *OTSTableStoreClientWrapper) CreateTable(ctx context.Context, request *tablestore.CreateTableRequest) (*tablestore.CreateTableResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateTable")
 		defer span.Finish()
 	}
@@ -240,8 +256,8 @@ func (w *OTSTableStoreClientWrapper) CreateTable(ctx context.Context, request *t
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CreateTable", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CreateTable", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CreateTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CreateTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -252,7 +268,9 @@ func (w *OTSTableStoreClientWrapper) CreateTable(ctx context.Context, request *t
 }
 
 func (w *OTSTableStoreClientWrapper) DeleteIndex(ctx context.Context, request *tablestore.DeleteIndexRequest) (*tablestore.DeleteIndexResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteIndex")
 		defer span.Finish()
 	}
@@ -263,8 +281,8 @@ func (w *OTSTableStoreClientWrapper) DeleteIndex(ctx context.Context, request *t
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteIndex", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteIndex", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -275,7 +293,9 @@ func (w *OTSTableStoreClientWrapper) DeleteIndex(ctx context.Context, request *t
 }
 
 func (w *OTSTableStoreClientWrapper) DeleteRow(ctx context.Context, request *tablestore.DeleteRowRequest) (*tablestore.DeleteRowResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteRow")
 		defer span.Finish()
 	}
@@ -286,8 +306,8 @@ func (w *OTSTableStoreClientWrapper) DeleteRow(ctx context.Context, request *tab
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteRow", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteRow", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -298,7 +318,9 @@ func (w *OTSTableStoreClientWrapper) DeleteRow(ctx context.Context, request *tab
 }
 
 func (w *OTSTableStoreClientWrapper) DeleteSearchIndex(ctx context.Context, request *tablestore.DeleteSearchIndexRequest) (*tablestore.DeleteSearchIndexResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteSearchIndex")
 		defer span.Finish()
 	}
@@ -309,8 +331,8 @@ func (w *OTSTableStoreClientWrapper) DeleteSearchIndex(ctx context.Context, requ
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteSearchIndex", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteSearchIndex", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -321,7 +343,9 @@ func (w *OTSTableStoreClientWrapper) DeleteSearchIndex(ctx context.Context, requ
 }
 
 func (w *OTSTableStoreClientWrapper) DeleteTable(ctx context.Context, request *tablestore.DeleteTableRequest) (*tablestore.DeleteTableResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteTable")
 		defer span.Finish()
 	}
@@ -332,8 +356,8 @@ func (w *OTSTableStoreClientWrapper) DeleteTable(ctx context.Context, request *t
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteTable", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteTable", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -344,7 +368,9 @@ func (w *OTSTableStoreClientWrapper) DeleteTable(ctx context.Context, request *t
 }
 
 func (w *OTSTableStoreClientWrapper) DescribeSearchIndex(ctx context.Context, request *tablestore.DescribeSearchIndexRequest) (*tablestore.DescribeSearchIndexResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeSearchIndex")
 		defer span.Finish()
 	}
@@ -355,8 +381,8 @@ func (w *OTSTableStoreClientWrapper) DescribeSearchIndex(ctx context.Context, re
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DescribeSearchIndex", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DescribeSearchIndex", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DescribeSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DescribeSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -367,7 +393,9 @@ func (w *OTSTableStoreClientWrapper) DescribeSearchIndex(ctx context.Context, re
 }
 
 func (w *OTSTableStoreClientWrapper) DescribeStream(ctx context.Context, req *tablestore.DescribeStreamRequest) (*tablestore.DescribeStreamResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeStream")
 		defer span.Finish()
 	}
@@ -378,8 +406,8 @@ func (w *OTSTableStoreClientWrapper) DescribeStream(ctx context.Context, req *ta
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DescribeStream", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DescribeStream", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DescribeStream", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DescribeStream", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -390,7 +418,9 @@ func (w *OTSTableStoreClientWrapper) DescribeStream(ctx context.Context, req *ta
 }
 
 func (w *OTSTableStoreClientWrapper) DescribeTable(ctx context.Context, request *tablestore.DescribeTableRequest) (*tablestore.DescribeTableResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeTable")
 		defer span.Finish()
 	}
@@ -401,8 +431,8 @@ func (w *OTSTableStoreClientWrapper) DescribeTable(ctx context.Context, request 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DescribeTable", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DescribeTable", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DescribeTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DescribeTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -413,7 +443,9 @@ func (w *OTSTableStoreClientWrapper) DescribeTable(ctx context.Context, request 
 }
 
 func (w *OTSTableStoreClientWrapper) GetRange(ctx context.Context, request *tablestore.GetRangeRequest) (*tablestore.GetRangeResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetRange")
 		defer span.Finish()
 	}
@@ -424,8 +456,8 @@ func (w *OTSTableStoreClientWrapper) GetRange(ctx context.Context, request *tabl
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetRange", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetRange", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetRange", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetRange", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -436,7 +468,9 @@ func (w *OTSTableStoreClientWrapper) GetRange(ctx context.Context, request *tabl
 }
 
 func (w *OTSTableStoreClientWrapper) GetRow(ctx context.Context, request *tablestore.GetRowRequest) (*tablestore.GetRowResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetRow")
 		defer span.Finish()
 	}
@@ -447,8 +481,8 @@ func (w *OTSTableStoreClientWrapper) GetRow(ctx context.Context, request *tables
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetRow", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetRow", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -459,7 +493,9 @@ func (w *OTSTableStoreClientWrapper) GetRow(ctx context.Context, request *tables
 }
 
 func (w *OTSTableStoreClientWrapper) GetShardIterator(ctx context.Context, req *tablestore.GetShardIteratorRequest) (*tablestore.GetShardIteratorResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetShardIterator")
 		defer span.Finish()
 	}
@@ -470,8 +506,8 @@ func (w *OTSTableStoreClientWrapper) GetShardIterator(ctx context.Context, req *
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetShardIterator", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetShardIterator", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetShardIterator", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetShardIterator", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -482,7 +518,9 @@ func (w *OTSTableStoreClientWrapper) GetShardIterator(ctx context.Context, req *
 }
 
 func (w *OTSTableStoreClientWrapper) GetStreamRecord(ctx context.Context, req *tablestore.GetStreamRecordRequest) (*tablestore.GetStreamRecordResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetStreamRecord")
 		defer span.Finish()
 	}
@@ -493,8 +531,8 @@ func (w *OTSTableStoreClientWrapper) GetStreamRecord(ctx context.Context, req *t
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetStreamRecord", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetStreamRecord", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetStreamRecord", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetStreamRecord", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -505,7 +543,9 @@ func (w *OTSTableStoreClientWrapper) GetStreamRecord(ctx context.Context, req *t
 }
 
 func (w *OTSTableStoreClientWrapper) ListSearchIndex(ctx context.Context, request *tablestore.ListSearchIndexRequest) (*tablestore.ListSearchIndexResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListSearchIndex")
 		defer span.Finish()
 	}
@@ -516,8 +556,8 @@ func (w *OTSTableStoreClientWrapper) ListSearchIndex(ctx context.Context, reques
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ListSearchIndex", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ListSearchIndex", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ListSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ListSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -528,7 +568,9 @@ func (w *OTSTableStoreClientWrapper) ListSearchIndex(ctx context.Context, reques
 }
 
 func (w *OTSTableStoreClientWrapper) ListStream(ctx context.Context, req *tablestore.ListStreamRequest) (*tablestore.ListStreamResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListStream")
 		defer span.Finish()
 	}
@@ -539,8 +581,8 @@ func (w *OTSTableStoreClientWrapper) ListStream(ctx context.Context, req *tables
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ListStream", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ListStream", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ListStream", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ListStream", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -551,7 +593,9 @@ func (w *OTSTableStoreClientWrapper) ListStream(ctx context.Context, req *tables
 }
 
 func (w *OTSTableStoreClientWrapper) ListTable(ctx context.Context) (*tablestore.ListTableResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListTable")
 		defer span.Finish()
 	}
@@ -562,8 +606,8 @@ func (w *OTSTableStoreClientWrapper) ListTable(ctx context.Context) (*tablestore
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ListTable", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ListTable", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ListTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ListTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -574,7 +618,9 @@ func (w *OTSTableStoreClientWrapper) ListTable(ctx context.Context) (*tablestore
 }
 
 func (w *OTSTableStoreClientWrapper) PutRow(ctx context.Context, request *tablestore.PutRowRequest) (*tablestore.PutRowResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.PutRow")
 		defer span.Finish()
 	}
@@ -585,8 +631,8 @@ func (w *OTSTableStoreClientWrapper) PutRow(ctx context.Context, request *tables
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.PutRow", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.PutRow", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.PutRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.PutRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -597,7 +643,9 @@ func (w *OTSTableStoreClientWrapper) PutRow(ctx context.Context, request *tables
 }
 
 func (w *OTSTableStoreClientWrapper) Search(ctx context.Context, request *tablestore.SearchRequest) (*tablestore.SearchResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.Search")
 		defer span.Finish()
 	}
@@ -608,8 +656,8 @@ func (w *OTSTableStoreClientWrapper) Search(ctx context.Context, request *tables
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.Search", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.Search", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.Search", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.Search", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -620,7 +668,9 @@ func (w *OTSTableStoreClientWrapper) Search(ctx context.Context, request *tables
 }
 
 func (w *OTSTableStoreClientWrapper) StartLocalTransaction(ctx context.Context, request *tablestore.StartLocalTransactionRequest) (*tablestore.StartLocalTransactionResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.StartLocalTransaction")
 		defer span.Finish()
 	}
@@ -631,8 +681,8 @@ func (w *OTSTableStoreClientWrapper) StartLocalTransaction(ctx context.Context, 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.StartLocalTransaction", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.StartLocalTransaction", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.StartLocalTransaction", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.StartLocalTransaction", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -643,7 +693,9 @@ func (w *OTSTableStoreClientWrapper) StartLocalTransaction(ctx context.Context, 
 }
 
 func (w *OTSTableStoreClientWrapper) UpdateRow(ctx context.Context, request *tablestore.UpdateRowRequest) (*tablestore.UpdateRowResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.UpdateRow")
 		defer span.Finish()
 	}
@@ -654,8 +706,8 @@ func (w *OTSTableStoreClientWrapper) UpdateRow(ctx context.Context, request *tab
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.UpdateRow", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.UpdateRow", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.UpdateRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.UpdateRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -666,7 +718,9 @@ func (w *OTSTableStoreClientWrapper) UpdateRow(ctx context.Context, request *tab
 }
 
 func (w *OTSTableStoreClientWrapper) UpdateTable(ctx context.Context, request *tablestore.UpdateTableRequest) (*tablestore.UpdateTableResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.UpdateTable")
 		defer span.Finish()
 	}
@@ -677,8 +731,8 @@ func (w *OTSTableStoreClientWrapper) UpdateTable(ctx context.Context, request *t
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.UpdateTable", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.UpdateTable", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.UpdateTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.UpdateTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 

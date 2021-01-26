@@ -192,12 +192,12 @@ func (w *ESClientWrapper) CreateMetric(options *WrapperOptions) {
 		Help:        "elastic Client response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode"})
+	}, []string{"method", "errCode", "custom"})
 	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name:        "elastic_Client_total",
 		Help:        "elastic Client request total",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode"})
+	}, []string{"method", "errCode", "custom"})
 }
 
 type ESClusterHealthServiceWrapper struct {
@@ -1428,7 +1428,9 @@ func (w *ESAliasServiceWrapper) AddWithFilter(indexName string, aliasName string
 }
 
 func (w *ESAliasServiceWrapper) Do(ctx context.Context) (*elastic.AliasResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.AliasService.Do")
 		defer span.Finish()
 	}
@@ -1439,8 +1441,8 @@ func (w *ESAliasServiceWrapper) Do(ctx context.Context) (*elastic.AliasResult, e
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.AliasService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.AliasService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.AliasService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.AliasService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1491,7 +1493,9 @@ func (w *ESAliasesServiceWrapper) Alias(alias ...string) *ESAliasesServiceWrappe
 }
 
 func (w *ESAliasesServiceWrapper) Do(ctx context.Context) (*elastic.AliasesResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.AliasesService.Do")
 		defer span.Finish()
 	}
@@ -1502,8 +1506,8 @@ func (w *ESAliasesServiceWrapper) Do(ctx context.Context) (*elastic.AliasesResul
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.AliasesService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.AliasesService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.AliasesService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.AliasesService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1574,7 +1578,9 @@ func (w *ESBulkProcessorServiceWrapper) BulkSize(bulkSize int) *ESBulkProcessorS
 }
 
 func (w *ESBulkProcessorServiceWrapper) Do(ctx context.Context) (*elastic.BulkProcessor, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.BulkProcessorService.Do")
 		defer span.Finish()
 	}
@@ -1585,8 +1591,8 @@ func (w *ESBulkProcessorServiceWrapper) Do(ctx context.Context) (*elastic.BulkPr
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.BulkProcessorService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.BulkProcessorService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.BulkProcessorService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.BulkProcessorService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1627,7 +1633,9 @@ func (w *ESBulkServiceWrapper) Add(requests ...elastic.BulkableRequest) *ESBulkS
 }
 
 func (w *ESBulkServiceWrapper) Do(ctx context.Context) (*elastic.BulkResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.BulkService.Do")
 		defer span.Finish()
 	}
@@ -1638,8 +1646,8 @@ func (w *ESBulkServiceWrapper) Do(ctx context.Context) (*elastic.BulkResponse, e
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.BulkService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.BulkService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.BulkService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.BulkService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1746,7 +1754,9 @@ func (w *ESCatAliasesServiceWrapper) Columns(columns ...string) *ESCatAliasesSer
 }
 
 func (w *ESCatAliasesServiceWrapper) Do(ctx context.Context) (elastic.CatAliasesResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.CatAliasesService.Do")
 		defer span.Finish()
 	}
@@ -1757,8 +1767,8 @@ func (w *ESCatAliasesServiceWrapper) Do(ctx context.Context) (elastic.CatAliases
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.CatAliasesService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.CatAliasesService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.CatAliasesService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.CatAliasesService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1824,7 +1834,9 @@ func (w *ESCatAllocationServiceWrapper) Columns(columns ...string) *ESCatAllocat
 }
 
 func (w *ESCatAllocationServiceWrapper) Do(ctx context.Context) (elastic.CatAllocationResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.CatAllocationService.Do")
 		defer span.Finish()
 	}
@@ -1835,8 +1847,8 @@ func (w *ESCatAllocationServiceWrapper) Do(ctx context.Context) (elastic.CatAllo
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.CatAllocationService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.CatAllocationService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.CatAllocationService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.CatAllocationService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1902,7 +1914,9 @@ func (w *ESCatCountServiceWrapper) Columns(columns ...string) *ESCatCountService
 }
 
 func (w *ESCatCountServiceWrapper) Do(ctx context.Context) (elastic.CatCountResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.CatCountService.Do")
 		defer span.Finish()
 	}
@@ -1913,8 +1927,8 @@ func (w *ESCatCountServiceWrapper) Do(ctx context.Context) (elastic.CatCountResp
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.CatCountService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.CatCountService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.CatCountService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.CatCountService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1985,7 +1999,9 @@ func (w *ESCatHealthServiceWrapper) DisableTimestamping(disable bool) *ESCatHeal
 }
 
 func (w *ESCatHealthServiceWrapper) Do(ctx context.Context) (elastic.CatHealthResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.CatHealthService.Do")
 		defer span.Finish()
 	}
@@ -1996,8 +2012,8 @@ func (w *ESCatHealthServiceWrapper) Do(ctx context.Context) (elastic.CatHealthRe
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.CatHealthService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.CatHealthService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.CatHealthService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.CatHealthService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2063,7 +2079,9 @@ func (w *ESCatIndicesServiceWrapper) Columns(columns ...string) *ESCatIndicesSer
 }
 
 func (w *ESCatIndicesServiceWrapper) Do(ctx context.Context) (elastic.CatIndicesResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.CatIndicesService.Do")
 		defer span.Finish()
 	}
@@ -2074,8 +2092,8 @@ func (w *ESCatIndicesServiceWrapper) Do(ctx context.Context) (elastic.CatIndices
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.CatIndicesService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.CatIndicesService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.CatIndicesService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.CatIndicesService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2156,7 +2174,9 @@ func (w *ESCatShardsServiceWrapper) Columns(columns ...string) *ESCatShardsServi
 }
 
 func (w *ESCatShardsServiceWrapper) Do(ctx context.Context) (elastic.CatShardsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.CatShardsService.Do")
 		defer span.Finish()
 	}
@@ -2167,8 +2187,8 @@ func (w *ESCatShardsServiceWrapper) Do(ctx context.Context) (elastic.CatShardsRe
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.CatShardsService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.CatShardsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.CatShardsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.CatShardsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2234,7 +2254,9 @@ func (w *ESCatShardsServiceWrapper) Time(time string) *ESCatShardsServiceWrapper
 }
 
 func (w *ESClearScrollServiceWrapper) Do(ctx context.Context) (*elastic.ClearScrollResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ClearScrollService.Do")
 		defer span.Finish()
 	}
@@ -2245,8 +2267,8 @@ func (w *ESClearScrollServiceWrapper) Do(ctx context.Context) (*elastic.ClearScr
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ClearScrollService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.ClearScrollService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.ClearScrollService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.ClearScrollService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3067,7 +3089,9 @@ func (w *ESClientWrapper) XPackWatchStop() *ESXPackWatcherStopServiceWrapper {
 }
 
 func (w *ESClusterHealthServiceWrapper) Do(ctx context.Context) (*elastic.ClusterHealthResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ClusterHealthService.Do")
 		defer span.Finish()
 	}
@@ -3078,8 +3102,8 @@ func (w *ESClusterHealthServiceWrapper) Do(ctx context.Context) (*elastic.Cluste
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ClusterHealthService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.ClusterHealthService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.ClusterHealthService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.ClusterHealthService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3191,7 +3215,9 @@ func (w *ESClusterRerouteServiceWrapper) Body(body interface{}) *ESClusterRerout
 }
 
 func (w *ESClusterRerouteServiceWrapper) Do(ctx context.Context) (*elastic.ClusterRerouteResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ClusterRerouteService.Do")
 		defer span.Finish()
 	}
@@ -3202,8 +3228,8 @@ func (w *ESClusterRerouteServiceWrapper) Do(ctx context.Context) (*elastic.Clust
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ClusterRerouteService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.ClusterRerouteService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.ClusterRerouteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.ClusterRerouteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3285,7 +3311,9 @@ func (w *ESClusterStateServiceWrapper) AllowNoIndices(allowNoIndices bool) *ESCl
 }
 
 func (w *ESClusterStateServiceWrapper) Do(ctx context.Context) (*elastic.ClusterStateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ClusterStateService.Do")
 		defer span.Finish()
 	}
@@ -3296,8 +3324,8 @@ func (w *ESClusterStateServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ClusterStateService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.ClusterStateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.ClusterStateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.ClusterStateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3379,7 +3407,9 @@ func (w *ESClusterStateServiceWrapper) Validate() error {
 }
 
 func (w *ESClusterStatsServiceWrapper) Do(ctx context.Context) (*elastic.ClusterStatsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ClusterStatsService.Do")
 		defer span.Finish()
 	}
@@ -3390,8 +3420,8 @@ func (w *ESClusterStatsServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ClusterStatsService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.ClusterStatsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.ClusterStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.ClusterStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3483,7 +3513,9 @@ func (w *ESCountServiceWrapper) Df(df string) *ESCountServiceWrapper {
 }
 
 func (w *ESCountServiceWrapper) Do(ctx context.Context) (int64, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.CountService.Do")
 		defer span.Finish()
 	}
@@ -3494,8 +3526,8 @@ func (w *ESCountServiceWrapper) Do(ctx context.Context) (int64, error) {
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.CountService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.CountService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.CountService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.CountService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3652,7 +3684,9 @@ func (w *ESDeleteByQueryServiceWrapper) DefaultOperator(defaultOperator string) 
 }
 
 func (w *ESDeleteByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIndexByScrollResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.DeleteByQueryService.Do")
 		defer span.Finish()
 	}
@@ -3663,8 +3697,8 @@ func (w *ESDeleteByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.DeleteByQueryService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.DeleteByQueryService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.DeleteByQueryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.DeleteByQueryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3675,7 +3709,9 @@ func (w *ESDeleteByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 }
 
 func (w *ESDeleteByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.StartTaskResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.DeleteByQueryService.DoAsync")
 		defer span.Finish()
 	}
@@ -3686,8 +3722,8 @@ func (w *ESDeleteByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.DeleteByQueryService.DoAsync", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.DeleteByQueryService.DoAsync", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.DeleteByQueryService.DoAsync", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.DeleteByQueryService.DoAsync", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3944,7 +3980,9 @@ func (w *ESDeleteByQueryServiceWrapper) XSourceInclude(xSourceInclude ...string)
 }
 
 func (w *ESDeleteScriptServiceWrapper) Do(ctx context.Context) (*elastic.DeleteScriptResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.DeleteScriptService.Do")
 		defer span.Finish()
 	}
@@ -3955,8 +3993,8 @@ func (w *ESDeleteScriptServiceWrapper) Do(ctx context.Context) (*elastic.DeleteS
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.DeleteScriptService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.DeleteScriptService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.DeleteScriptService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.DeleteScriptService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -4018,7 +4056,9 @@ func (w *ESDeleteScriptServiceWrapper) Validate() error {
 }
 
 func (w *ESDeleteServiceWrapper) Do(ctx context.Context) (*elastic.DeleteResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.DeleteService.Do")
 		defer span.Finish()
 	}
@@ -4029,8 +4069,8 @@ func (w *ESDeleteServiceWrapper) Do(ctx context.Context) (*elastic.DeleteRespons
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.DeleteService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.DeleteService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.DeleteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.DeleteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -4137,7 +4177,9 @@ func (w *ESDeleteServiceWrapper) WaitForActiveShards(waitForActiveShards string)
 }
 
 func (w *ESExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ExistsService.Do")
 		defer span.Finish()
 	}
@@ -4148,8 +4190,8 @@ func (w *ESExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ExistsService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.ExistsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.ExistsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.ExistsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -4266,7 +4308,9 @@ func (w *ESExplainServiceWrapper) Df(df string) *ESExplainServiceWrapper {
 }
 
 func (w *ESExplainServiceWrapper) Do(ctx context.Context) (*elastic.ExplainResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ExplainService.Do")
 		defer span.Finish()
 	}
@@ -4277,8 +4321,8 @@ func (w *ESExplainServiceWrapper) Do(ctx context.Context) (*elastic.ExplainRespo
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ExplainService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.ExplainService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.ExplainService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.ExplainService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -4415,7 +4459,9 @@ func (w *ESFieldCapsServiceWrapper) BodyString(body string) *ESFieldCapsServiceW
 }
 
 func (w *ESFieldCapsServiceWrapper) Do(ctx context.Context) (*elastic.FieldCapsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.FieldCapsService.Do")
 		defer span.Finish()
 	}
@@ -4426,8 +4472,8 @@ func (w *ESFieldCapsServiceWrapper) Do(ctx context.Context) (*elastic.FieldCapsR
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.FieldCapsService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.FieldCapsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.FieldCapsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.FieldCapsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -4494,7 +4540,9 @@ func (w *ESFieldCapsServiceWrapper) Validate() error {
 }
 
 func (w *ESGetScriptServiceWrapper) Do(ctx context.Context) (*elastic.GetScriptResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.GetScriptService.Do")
 		defer span.Finish()
 	}
@@ -4505,8 +4553,8 @@ func (w *ESGetScriptServiceWrapper) Do(ctx context.Context) (*elastic.GetScriptR
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.GetScriptService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.GetScriptService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.GetScriptService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.GetScriptService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -4558,7 +4606,9 @@ func (w *ESGetScriptServiceWrapper) Validate() error {
 }
 
 func (w *ESGetServiceWrapper) Do(ctx context.Context) (*elastic.GetResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.GetService.Do")
 		defer span.Finish()
 	}
@@ -4569,8 +4619,8 @@ func (w *ESGetServiceWrapper) Do(ctx context.Context) (*elastic.GetResult, error
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.GetService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.GetService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.GetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.GetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -4697,7 +4747,9 @@ func (w *ESIndexServiceWrapper) BodyString(body string) *ESIndexServiceWrapper {
 }
 
 func (w *ESIndexServiceWrapper) Do(ctx context.Context) (*elastic.IndexResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndexService.Do")
 		defer span.Finish()
 	}
@@ -4708,8 +4760,8 @@ func (w *ESIndexServiceWrapper) Do(ctx context.Context) (*elastic.IndexResponse,
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndexService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndexService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndexService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndexService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -4866,7 +4918,9 @@ func (w *ESIndicesAnalyzeServiceWrapper) CharFilter(charFilter ...string) *ESInd
 }
 
 func (w *ESIndicesAnalyzeServiceWrapper) Do(ctx context.Context) (*elastic.IndicesAnalyzeResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesAnalyzeService.Do")
 		defer span.Finish()
 	}
@@ -4877,8 +4931,8 @@ func (w *ESIndicesAnalyzeServiceWrapper) Do(ctx context.Context) (*elastic.Indic
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesAnalyzeService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesAnalyzeService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesAnalyzeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesAnalyzeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -4975,7 +5029,9 @@ func (w *ESIndicesClearCacheServiceWrapper) AllowNoIndices(allowNoIndices bool) 
 }
 
 func (w *ESIndicesClearCacheServiceWrapper) Do(ctx context.Context) (*elastic.IndicesClearCacheResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesClearCacheService.Do")
 		defer span.Finish()
 	}
@@ -4986,8 +5042,8 @@ func (w *ESIndicesClearCacheServiceWrapper) Do(ctx context.Context) (*elastic.In
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesClearCacheService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesClearCacheService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesClearCacheService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesClearCacheService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -5074,7 +5130,9 @@ func (w *ESIndicesCloseServiceWrapper) AllowNoIndices(allowNoIndices bool) *ESIn
 }
 
 func (w *ESIndicesCloseServiceWrapper) Do(ctx context.Context) (*elastic.IndicesCloseResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesCloseService.Do")
 		defer span.Finish()
 	}
@@ -5085,8 +5143,8 @@ func (w *ESIndicesCloseServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesCloseService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesCloseService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesCloseService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesCloseService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -5173,7 +5231,9 @@ func (w *ESIndicesCreateServiceWrapper) BodyString(body string) *ESIndicesCreate
 }
 
 func (w *ESIndicesCreateServiceWrapper) Do(ctx context.Context) (*elastic.IndicesCreateResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesCreateService.Do")
 		defer span.Finish()
 	}
@@ -5184,8 +5244,8 @@ func (w *ESIndicesCreateServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesCreateService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesCreateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesCreateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesCreateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -5241,7 +5301,9 @@ func (w *ESIndicesCreateServiceWrapper) Timeout(timeout string) *ESIndicesCreate
 }
 
 func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Do(ctx context.Context) (*elastic.IndicesDeleteIndexTemplateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesDeleteIndexTemplateService.Do")
 		defer span.Finish()
 	}
@@ -5252,8 +5314,8 @@ func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Do(ctx context.Context) (*e
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesDeleteIndexTemplateService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesDeleteIndexTemplateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesDeleteIndexTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesDeleteIndexTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -5315,7 +5377,9 @@ func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Validate() error {
 }
 
 func (w *ESIndicesDeleteServiceWrapper) Do(ctx context.Context) (*elastic.IndicesDeleteResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesDeleteService.Do")
 		defer span.Finish()
 	}
@@ -5326,8 +5390,8 @@ func (w *ESIndicesDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesDeleteService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesDeleteService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesDeleteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesDeleteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -5389,7 +5453,9 @@ func (w *ESIndicesDeleteServiceWrapper) Validate() error {
 }
 
 func (w *ESIndicesDeleteTemplateServiceWrapper) Do(ctx context.Context) (*elastic.IndicesDeleteTemplateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesDeleteTemplateService.Do")
 		defer span.Finish()
 	}
@@ -5400,8 +5466,8 @@ func (w *ESIndicesDeleteTemplateServiceWrapper) Do(ctx context.Context) (*elasti
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesDeleteTemplateService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesDeleteTemplateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesDeleteTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesDeleteTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -5468,7 +5534,9 @@ func (w *ESIndicesExistsServiceWrapper) AllowNoIndices(allowNoIndices bool) *ESI
 }
 
 func (w *ESIndicesExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesExistsService.Do")
 		defer span.Finish()
 	}
@@ -5479,8 +5547,8 @@ func (w *ESIndicesExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesExistsService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesExistsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesExistsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesExistsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -5547,7 +5615,9 @@ func (w *ESIndicesExistsServiceWrapper) Validate() error {
 }
 
 func (w *ESIndicesExistsTemplateServiceWrapper) Do(ctx context.Context) (bool, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesExistsTemplateService.Do")
 		defer span.Finish()
 	}
@@ -5558,8 +5628,8 @@ func (w *ESIndicesExistsTemplateServiceWrapper) Do(ctx context.Context) (bool, e
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesExistsTemplateService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesExistsTemplateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesExistsTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesExistsTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -5626,7 +5696,9 @@ func (w *ESIndicesFlushServiceWrapper) AllowNoIndices(allowNoIndices bool) *ESIn
 }
 
 func (w *ESIndicesFlushServiceWrapper) Do(ctx context.Context) (*elastic.IndicesFlushResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesFlushService.Do")
 		defer span.Finish()
 	}
@@ -5637,8 +5709,8 @@ func (w *ESIndicesFlushServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesFlushService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesFlushService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesFlushService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesFlushService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -5715,7 +5787,9 @@ func (w *ESIndicesForcemergeServiceWrapper) AllowNoIndices(allowNoIndices bool) 
 }
 
 func (w *ESIndicesForcemergeServiceWrapper) Do(ctx context.Context) (*elastic.IndicesForcemergeResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesForcemergeService.Do")
 		defer span.Finish()
 	}
@@ -5726,8 +5800,8 @@ func (w *ESIndicesForcemergeServiceWrapper) Do(ctx context.Context) (*elastic.In
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesForcemergeService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesForcemergeService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesForcemergeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesForcemergeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -5809,7 +5883,9 @@ func (w *ESIndicesFreezeServiceWrapper) AllowNoIndices(allowNoIndices bool) *ESI
 }
 
 func (w *ESIndicesFreezeServiceWrapper) Do(ctx context.Context) (*elastic.IndicesFreezeResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesFreezeService.Do")
 		defer span.Finish()
 	}
@@ -5820,8 +5896,8 @@ func (w *ESIndicesFreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesFreezeService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesFreezeService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesFreezeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesFreezeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -5903,7 +5979,9 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) AllowNoIndices(allowNoIndices b
 }
 
 func (w *ESIndicesGetFieldMappingServiceWrapper) Do(ctx context.Context) (map[string]interface{}, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetFieldMappingService.Do")
 		defer span.Finish()
 	}
@@ -5914,8 +5992,8 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Do(ctx context.Context) (map[st
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesGetFieldMappingService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesGetFieldMappingService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesGetFieldMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesGetFieldMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -5992,7 +6070,9 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Validate() error {
 }
 
 func (w *ESIndicesGetIndexTemplateServiceWrapper) Do(ctx context.Context) (*elastic.IndicesGetIndexTemplateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetIndexTemplateService.Do")
 		defer span.Finish()
 	}
@@ -6003,8 +6083,8 @@ func (w *ESIndicesGetIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesGetIndexTemplateService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesGetIndexTemplateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesGetIndexTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesGetIndexTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -6076,7 +6156,9 @@ func (w *ESIndicesGetMappingServiceWrapper) AllowNoIndices(allowNoIndices bool) 
 }
 
 func (w *ESIndicesGetMappingServiceWrapper) Do(ctx context.Context) (map[string]interface{}, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetMappingService.Do")
 		defer span.Finish()
 	}
@@ -6087,8 +6169,8 @@ func (w *ESIndicesGetMappingServiceWrapper) Do(ctx context.Context) (map[string]
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesGetMappingService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesGetMappingService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesGetMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesGetMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -6165,7 +6247,9 @@ func (w *ESIndicesGetServiceWrapper) AllowNoIndices(allowNoIndices bool) *ESIndi
 }
 
 func (w *ESIndicesGetServiceWrapper) Do(ctx context.Context) (map[string]*elastic.IndicesGetResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetService.Do")
 		defer span.Finish()
 	}
@@ -6176,8 +6260,8 @@ func (w *ESIndicesGetServiceWrapper) Do(ctx context.Context) (map[string]*elasti
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesGetService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesGetService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesGetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesGetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -6254,7 +6338,9 @@ func (w *ESIndicesGetSettingsServiceWrapper) AllowNoIndices(allowNoIndices bool)
 }
 
 func (w *ESIndicesGetSettingsServiceWrapper) Do(ctx context.Context) (map[string]*elastic.IndicesGetSettingsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetSettingsService.Do")
 		defer span.Finish()
 	}
@@ -6265,8 +6351,8 @@ func (w *ESIndicesGetSettingsServiceWrapper) Do(ctx context.Context) (map[string
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesGetSettingsService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesGetSettingsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesGetSettingsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesGetSettingsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -6343,7 +6429,9 @@ func (w *ESIndicesGetSettingsServiceWrapper) Validate() error {
 }
 
 func (w *ESIndicesGetTemplateServiceWrapper) Do(ctx context.Context) (map[string]*elastic.IndicesGetTemplateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetTemplateService.Do")
 		defer span.Finish()
 	}
@@ -6354,8 +6442,8 @@ func (w *ESIndicesGetTemplateServiceWrapper) Do(ctx context.Context) (map[string
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesGetTemplateService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesGetTemplateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesGetTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesGetTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -6422,7 +6510,9 @@ func (w *ESIndicesOpenServiceWrapper) AllowNoIndices(allowNoIndices bool) *ESInd
 }
 
 func (w *ESIndicesOpenServiceWrapper) Do(ctx context.Context) (*elastic.IndicesOpenResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesOpenService.Do")
 		defer span.Finish()
 	}
@@ -6433,8 +6523,8 @@ func (w *ESIndicesOpenServiceWrapper) Do(ctx context.Context) (*elastic.IndicesO
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesOpenService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesOpenService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesOpenService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesOpenService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -6531,7 +6621,9 @@ func (w *ESIndicesPutIndexTemplateServiceWrapper) Create(create bool) *ESIndices
 }
 
 func (w *ESIndicesPutIndexTemplateServiceWrapper) Do(ctx context.Context) (*elastic.IndicesPutIndexTemplateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutIndexTemplateService.Do")
 		defer span.Finish()
 	}
@@ -6542,8 +6634,8 @@ func (w *ESIndicesPutIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesPutIndexTemplateService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesPutIndexTemplateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesPutIndexTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesPutIndexTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -6615,7 +6707,9 @@ func (w *ESIndicesPutMappingServiceWrapper) BodyString(mapping string) *ESIndice
 }
 
 func (w *ESIndicesPutMappingServiceWrapper) Do(ctx context.Context) (*elastic.PutMappingResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutMappingService.Do")
 		defer span.Finish()
 	}
@@ -6626,8 +6720,8 @@ func (w *ESIndicesPutMappingServiceWrapper) Do(ctx context.Context) (*elastic.Pu
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesPutMappingService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesPutMappingService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesPutMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesPutMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -6719,7 +6813,9 @@ func (w *ESIndicesPutSettingsServiceWrapper) BodyString(body string) *ESIndicesP
 }
 
 func (w *ESIndicesPutSettingsServiceWrapper) Do(ctx context.Context) (*elastic.IndicesPutSettingsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutSettingsService.Do")
 		defer span.Finish()
 	}
@@ -6730,8 +6826,8 @@ func (w *ESIndicesPutSettingsServiceWrapper) Do(ctx context.Context) (*elastic.I
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesPutSettingsService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesPutSettingsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesPutSettingsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesPutSettingsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -6823,7 +6919,9 @@ func (w *ESIndicesPutTemplateServiceWrapper) Create(create bool) *ESIndicesPutTe
 }
 
 func (w *ESIndicesPutTemplateServiceWrapper) Do(ctx context.Context) (*elastic.IndicesPutTemplateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutTemplateService.Do")
 		defer span.Finish()
 	}
@@ -6834,8 +6932,8 @@ func (w *ESIndicesPutTemplateServiceWrapper) Do(ctx context.Context) (*elastic.I
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesPutTemplateService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesPutTemplateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesPutTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesPutTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -6957,7 +7055,9 @@ func (w *ESIndicesRolloverServiceWrapper) Conditions(conditions map[string]inter
 }
 
 func (w *ESIndicesRolloverServiceWrapper) Do(ctx context.Context) (*elastic.IndicesRolloverResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesRolloverService.Do")
 		defer span.Finish()
 	}
@@ -6968,8 +7068,8 @@ func (w *ESIndicesRolloverServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesRolloverService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesRolloverService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesRolloverService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesRolloverService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -7056,7 +7156,9 @@ func (w *ESIndicesSegmentsServiceWrapper) AllowNoIndices(allowNoIndices bool) *E
 }
 
 func (w *ESIndicesSegmentsServiceWrapper) Do(ctx context.Context) (*elastic.IndicesSegmentsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesSegmentsService.Do")
 		defer span.Finish()
 	}
@@ -7067,8 +7169,8 @@ func (w *ESIndicesSegmentsServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesSegmentsService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesSegmentsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesSegmentsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesSegmentsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -7150,7 +7252,9 @@ func (w *ESIndicesShrinkServiceWrapper) BodyString(body string) *ESIndicesShrink
 }
 
 func (w *ESIndicesShrinkServiceWrapper) Do(ctx context.Context) (*elastic.IndicesShrinkResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesShrinkService.Do")
 		defer span.Finish()
 	}
@@ -7161,8 +7265,8 @@ func (w *ESIndicesShrinkServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesShrinkService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesShrinkService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesShrinkService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesShrinkService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -7239,7 +7343,9 @@ func (w *ESIndicesStatsServiceWrapper) CompletionFields(completionFields ...stri
 }
 
 func (w *ESIndicesStatsServiceWrapper) Do(ctx context.Context) (*elastic.IndicesStatsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesStatsService.Do")
 		defer span.Finish()
 	}
@@ -7250,8 +7356,8 @@ func (w *ESIndicesStatsServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesStatsService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesStatsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -7338,7 +7444,9 @@ func (w *ESIndicesSyncedFlushServiceWrapper) AllowNoIndices(allowNoIndices bool)
 }
 
 func (w *ESIndicesSyncedFlushServiceWrapper) Do(ctx context.Context) (*elastic.IndicesSyncedFlushResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesSyncedFlushService.Do")
 		defer span.Finish()
 	}
@@ -7349,8 +7457,8 @@ func (w *ESIndicesSyncedFlushServiceWrapper) Do(ctx context.Context) (*elastic.I
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesSyncedFlushService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesSyncedFlushService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesSyncedFlushService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesSyncedFlushService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -7417,7 +7525,9 @@ func (w *ESIndicesUnfreezeServiceWrapper) AllowNoIndices(allowNoIndices bool) *E
 }
 
 func (w *ESIndicesUnfreezeServiceWrapper) Do(ctx context.Context) (*elastic.IndicesUnfreezeResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesUnfreezeService.Do")
 		defer span.Finish()
 	}
@@ -7428,8 +7538,8 @@ func (w *ESIndicesUnfreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesUnfreezeService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IndicesUnfreezeService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IndicesUnfreezeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IndicesUnfreezeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -7506,7 +7616,9 @@ func (w *ESIndicesUnfreezeServiceWrapper) WaitForActiveShards(numShards string) 
 }
 
 func (w *ESIngestDeletePipelineServiceWrapper) Do(ctx context.Context) (*elastic.IngestDeletePipelineResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IngestDeletePipelineService.Do")
 		defer span.Finish()
 	}
@@ -7517,8 +7629,8 @@ func (w *ESIngestDeletePipelineServiceWrapper) Do(ctx context.Context) (*elastic
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IngestDeletePipelineService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IngestDeletePipelineService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IngestDeletePipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IngestDeletePipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -7580,7 +7692,9 @@ func (w *ESIngestDeletePipelineServiceWrapper) Validate() error {
 }
 
 func (w *ESIngestGetPipelineServiceWrapper) Do(ctx context.Context) (elastic.IngestGetPipelineResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IngestGetPipelineService.Do")
 		defer span.Finish()
 	}
@@ -7591,8 +7705,8 @@ func (w *ESIngestGetPipelineServiceWrapper) Do(ctx context.Context) (elastic.Ing
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IngestGetPipelineService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IngestGetPipelineService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IngestGetPipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IngestGetPipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -7659,7 +7773,9 @@ func (w *ESIngestPutPipelineServiceWrapper) BodyString(body string) *ESIngestPut
 }
 
 func (w *ESIngestPutPipelineServiceWrapper) Do(ctx context.Context) (*elastic.IngestPutPipelineResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IngestPutPipelineService.Do")
 		defer span.Finish()
 	}
@@ -7670,8 +7786,8 @@ func (w *ESIngestPutPipelineServiceWrapper) Do(ctx context.Context) (*elastic.In
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IngestPutPipelineService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IngestPutPipelineService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IngestPutPipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IngestPutPipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -7743,7 +7859,9 @@ func (w *ESIngestSimulatePipelineServiceWrapper) BodyString(body string) *ESInge
 }
 
 func (w *ESIngestSimulatePipelineServiceWrapper) Do(ctx context.Context) (*elastic.IngestSimulatePipelineResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IngestSimulatePipelineService.Do")
 		defer span.Finish()
 	}
@@ -7754,8 +7872,8 @@ func (w *ESIngestSimulatePipelineServiceWrapper) Do(ctx context.Context) (*elast
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IngestSimulatePipelineService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.IngestSimulatePipelineService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.IngestSimulatePipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.IngestSimulatePipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -7817,7 +7935,9 @@ func (w *ESMgetServiceWrapper) Add(items ...*elastic.MultiGetItem) *ESMgetServic
 }
 
 func (w *ESMgetServiceWrapper) Do(ctx context.Context) (*elastic.MgetResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.MgetService.Do")
 		defer span.Finish()
 	}
@@ -7828,8 +7948,8 @@ func (w *ESMgetServiceWrapper) Do(ctx context.Context) (*elastic.MgetResponse, e
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.MgetService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.MgetService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.MgetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.MgetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -7907,7 +8027,9 @@ func (w *ESMultiSearchServiceWrapper) Add(requests ...*elastic.SearchRequest) *E
 }
 
 func (w *ESMultiSearchServiceWrapper) Do(ctx context.Context) (*elastic.MultiSearchResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.MultiSearchService.Do")
 		defer span.Finish()
 	}
@@ -7918,8 +8040,8 @@ func (w *ESMultiSearchServiceWrapper) Do(ctx context.Context) (*elastic.MultiSea
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.MultiSearchService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.MultiSearchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.MultiSearchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.MultiSearchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -7990,7 +8112,9 @@ func (w *ESMultiTermvectorServiceWrapper) BodyString(body string) *ESMultiTermve
 }
 
 func (w *ESMultiTermvectorServiceWrapper) Do(ctx context.Context) (*elastic.MultiTermvectorResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.MultiTermvectorService.Do")
 		defer span.Finish()
 	}
@@ -8001,8 +8125,8 @@ func (w *ESMultiTermvectorServiceWrapper) Do(ctx context.Context) (*elastic.Mult
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.MultiTermvectorService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.MultiTermvectorService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.MultiTermvectorService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.MultiTermvectorService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -8130,7 +8254,9 @@ func (w *ESMultiTermvectorServiceWrapper) VersionType(versionType string) *ESMul
 }
 
 func (w *ESNodesInfoServiceWrapper) Do(ctx context.Context) (*elastic.NodesInfoResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.NodesInfoService.Do")
 		defer span.Finish()
 	}
@@ -8141,8 +8267,8 @@ func (w *ESNodesInfoServiceWrapper) Do(ctx context.Context) (*elastic.NodesInfoR
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.NodesInfoService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.NodesInfoService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.NodesInfoService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.NodesInfoService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -8209,7 +8335,9 @@ func (w *ESNodesStatsServiceWrapper) CompletionFields(completionFields ...string
 }
 
 func (w *ESNodesStatsServiceWrapper) Do(ctx context.Context) (*elastic.NodesStatsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.NodesStatsService.Do")
 		defer span.Finish()
 	}
@@ -8220,8 +8348,8 @@ func (w *ESNodesStatsServiceWrapper) Do(ctx context.Context) (*elastic.NodesStat
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.NodesStatsService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.NodesStatsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.NodesStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.NodesStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -8313,7 +8441,9 @@ func (w *ESNodesStatsServiceWrapper) Validate() error {
 }
 
 func (w *ESPingServiceWrapper) Do(ctx context.Context) (*elastic.PingResult, int, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.PingService.Do")
 		defer span.Finish()
 	}
@@ -8325,8 +8455,8 @@ func (w *ESPingServiceWrapper) Do(ctx context.Context) (*elastic.PingResult, int
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.PingService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.PingService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.PingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.PingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -8397,7 +8527,9 @@ func (w *ESPutScriptServiceWrapper) Context(context string) *ESPutScriptServiceW
 }
 
 func (w *ESPutScriptServiceWrapper) Do(ctx context.Context) (*elastic.PutScriptResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.PutScriptService.Do")
 		defer span.Finish()
 	}
@@ -8408,8 +8540,8 @@ func (w *ESPutScriptServiceWrapper) Do(ctx context.Context) (*elastic.PutScriptR
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.PutScriptService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.PutScriptService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.PutScriptService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.PutScriptService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -8471,7 +8603,9 @@ func (w *ESPutScriptServiceWrapper) Validate() error {
 }
 
 func (w *ESRefreshServiceWrapper) Do(ctx context.Context) (*elastic.RefreshResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.RefreshService.Do")
 		defer span.Finish()
 	}
@@ -8482,8 +8616,8 @@ func (w *ESRefreshServiceWrapper) Do(ctx context.Context) (*elastic.RefreshResul
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.RefreshService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.RefreshService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.RefreshService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.RefreshService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -8559,7 +8693,9 @@ func (w *ESReindexServiceWrapper) DestinationIndexAndType(index string, typ stri
 }
 
 func (w *ESReindexServiceWrapper) Do(ctx context.Context) (*elastic.BulkIndexByScrollResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ReindexService.Do")
 		defer span.Finish()
 	}
@@ -8570,8 +8706,8 @@ func (w *ESReindexServiceWrapper) Do(ctx context.Context) (*elastic.BulkIndexByS
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ReindexService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.ReindexService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.ReindexService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.ReindexService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -8582,7 +8718,9 @@ func (w *ESReindexServiceWrapper) Do(ctx context.Context) (*elastic.BulkIndexByS
 }
 
 func (w *ESReindexServiceWrapper) DoAsync(ctx context.Context) (*elastic.StartTaskResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ReindexService.DoAsync")
 		defer span.Finish()
 	}
@@ -8593,8 +8731,8 @@ func (w *ESReindexServiceWrapper) DoAsync(ctx context.Context) (*elastic.StartTa
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ReindexService.DoAsync", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.ReindexService.DoAsync", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.ReindexService.DoAsync", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.ReindexService.DoAsync", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -8712,7 +8850,9 @@ func (w *ESScrollServiceWrapper) Clear(ctx context.Context) error {
 }
 
 func (w *ESScrollServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ScrollService.Do")
 		defer span.Finish()
 	}
@@ -8723,8 +8863,8 @@ func (w *ESScrollServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ScrollService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.ScrollService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.ScrollService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.ScrollService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -8965,7 +9105,9 @@ func (w *ESSearchServiceWrapper) DefaultRescoreWindowSize(defaultRescoreWindowSi
 }
 
 func (w *ESSearchServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SearchService.Do")
 		defer span.Finish()
 	}
@@ -8976,8 +9118,8 @@ func (w *ESSearchServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SearchService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.SearchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.SearchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.SearchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -9269,7 +9411,9 @@ func (w *ESSearchShardsServiceWrapper) AllowNoIndices(allowNoIndices bool) *ESSe
 }
 
 func (w *ESSearchShardsServiceWrapper) Do(ctx context.Context) (*elastic.SearchShardsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SearchShardsService.Do")
 		defer span.Finish()
 	}
@@ -9280,8 +9424,8 @@ func (w *ESSearchShardsServiceWrapper) Do(ctx context.Context) (*elastic.SearchS
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SearchShardsService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.SearchShardsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.SearchShardsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.SearchShardsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -9368,7 +9512,9 @@ func (w *ESSnapshotCreateRepositoryServiceWrapper) BodyString(body string) *ESSn
 }
 
 func (w *ESSnapshotCreateRepositoryServiceWrapper) Do(ctx context.Context) (*elastic.SnapshotCreateRepositoryResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotCreateRepositoryService.Do")
 		defer span.Finish()
 	}
@@ -9379,8 +9525,8 @@ func (w *ESSnapshotCreateRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotCreateRepositoryService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.SnapshotCreateRepositoryService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.SnapshotCreateRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotCreateRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -9472,7 +9618,9 @@ func (w *ESSnapshotCreateServiceWrapper) BodyString(body string) *ESSnapshotCrea
 }
 
 func (w *ESSnapshotCreateServiceWrapper) Do(ctx context.Context) (*elastic.SnapshotCreateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotCreateService.Do")
 		defer span.Finish()
 	}
@@ -9483,8 +9631,8 @@ func (w *ESSnapshotCreateServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotCreateService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.SnapshotCreateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.SnapshotCreateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotCreateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -9551,7 +9699,9 @@ func (w *ESSnapshotCreateServiceWrapper) WaitForCompletion(waitForCompletion boo
 }
 
 func (w *ESSnapshotDeleteRepositoryServiceWrapper) Do(ctx context.Context) (*elastic.SnapshotDeleteRepositoryResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotDeleteRepositoryService.Do")
 		defer span.Finish()
 	}
@@ -9562,8 +9712,8 @@ func (w *ESSnapshotDeleteRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotDeleteRepositoryService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.SnapshotDeleteRepositoryService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.SnapshotDeleteRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotDeleteRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -9625,7 +9775,9 @@ func (w *ESSnapshotDeleteRepositoryServiceWrapper) Validate() error {
 }
 
 func (w *ESSnapshotDeleteServiceWrapper) Do(ctx context.Context) (*elastic.SnapshotDeleteResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotDeleteService.Do")
 		defer span.Finish()
 	}
@@ -9636,8 +9788,8 @@ func (w *ESSnapshotDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotDeleteService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.SnapshotDeleteService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.SnapshotDeleteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotDeleteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -9694,7 +9846,9 @@ func (w *ESSnapshotDeleteServiceWrapper) Validate() error {
 }
 
 func (w *ESSnapshotGetRepositoryServiceWrapper) Do(ctx context.Context) (elastic.SnapshotGetRepositoryResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotGetRepositoryService.Do")
 		defer span.Finish()
 	}
@@ -9705,8 +9859,8 @@ func (w *ESSnapshotGetRepositoryServiceWrapper) Do(ctx context.Context) (elastic
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotGetRepositoryService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.SnapshotGetRepositoryService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.SnapshotGetRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotGetRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -9768,7 +9922,9 @@ func (w *ESSnapshotGetRepositoryServiceWrapper) Validate() error {
 }
 
 func (w *ESSnapshotGetServiceWrapper) Do(ctx context.Context) (*elastic.SnapshotGetResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotGetService.Do")
 		defer span.Finish()
 	}
@@ -9779,8 +9935,8 @@ func (w *ESSnapshotGetServiceWrapper) Do(ctx context.Context) (*elastic.Snapshot
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotGetService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.SnapshotGetService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.SnapshotGetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotGetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -9857,7 +10013,9 @@ func (w *ESSnapshotRestoreServiceWrapper) BodyString(body string) *ESSnapshotRes
 }
 
 func (w *ESSnapshotRestoreServiceWrapper) Do(ctx context.Context) (*elastic.SnapshotRestoreResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotRestoreService.Do")
 		defer span.Finish()
 	}
@@ -9868,8 +10026,8 @@ func (w *ESSnapshotRestoreServiceWrapper) Do(ctx context.Context) (*elastic.Snap
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotRestoreService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.SnapshotRestoreService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.SnapshotRestoreService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotRestoreService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -9976,7 +10134,9 @@ func (w *ESSnapshotRestoreServiceWrapper) WaitForCompletion(waitForCompletion bo
 }
 
 func (w *ESSnapshotStatusServiceWrapper) Do(ctx context.Context) (*elastic.SnapshotStatusResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotStatusService.Do")
 		defer span.Finish()
 	}
@@ -9987,8 +10147,8 @@ func (w *ESSnapshotStatusServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotStatusService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.SnapshotStatusService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.SnapshotStatusService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotStatusService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -10050,7 +10210,9 @@ func (w *ESSnapshotStatusServiceWrapper) Validate() error {
 }
 
 func (w *ESSnapshotVerifyRepositoryServiceWrapper) Do(ctx context.Context) (*elastic.SnapshotVerifyRepositoryResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotVerifyRepositoryService.Do")
 		defer span.Finish()
 	}
@@ -10061,8 +10223,8 @@ func (w *ESSnapshotVerifyRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotVerifyRepositoryService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.SnapshotVerifyRepositoryService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.SnapshotVerifyRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.SnapshotVerifyRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -10129,7 +10291,9 @@ func (w *ESTasksCancelServiceWrapper) Actions(actions ...string) *ESTasksCancelS
 }
 
 func (w *ESTasksCancelServiceWrapper) Do(ctx context.Context) (*elastic.TasksListResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.TasksCancelService.Do")
 		defer span.Finish()
 	}
@@ -10140,8 +10304,8 @@ func (w *ESTasksCancelServiceWrapper) Do(ctx context.Context) (*elastic.TasksLis
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.TasksCancelService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.TasksCancelService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.TasksCancelService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.TasksCancelService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -10213,7 +10377,9 @@ func (w *ESTasksCancelServiceWrapper) Validate() error {
 }
 
 func (w *ESTasksGetTaskServiceWrapper) Do(ctx context.Context) (*elastic.TasksGetTaskResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.TasksGetTaskService.Do")
 		defer span.Finish()
 	}
@@ -10224,8 +10390,8 @@ func (w *ESTasksGetTaskServiceWrapper) Do(ctx context.Context) (*elastic.TasksGe
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.TasksGetTaskService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.TasksGetTaskService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.TasksGetTaskService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.TasksGetTaskService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -10297,7 +10463,9 @@ func (w *ESTasksListServiceWrapper) Detailed(detailed bool) *ESTasksListServiceW
 }
 
 func (w *ESTasksListServiceWrapper) Do(ctx context.Context) (*elastic.TasksListResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.TasksListService.Do")
 		defer span.Finish()
 	}
@@ -10308,8 +10476,8 @@ func (w *ESTasksListServiceWrapper) Do(ctx context.Context) (*elastic.TasksListR
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.TasksListService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.TasksListService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.TasksListService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.TasksListService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -10396,7 +10564,9 @@ func (w *ESTermvectorsServiceWrapper) Dfs(dfs bool) *ESTermvectorsServiceWrapper
 }
 
 func (w *ESTermvectorsServiceWrapper) Do(ctx context.Context) (*elastic.TermvectorsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.TermvectorsService.Do")
 		defer span.Finish()
 	}
@@ -10407,8 +10577,8 @@ func (w *ESTermvectorsServiceWrapper) Do(ctx context.Context) (*elastic.Termvect
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.TermvectorsService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.TermvectorsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.TermvectorsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.TermvectorsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -10585,7 +10755,9 @@ func (w *ESUpdateByQueryServiceWrapper) DefaultOperator(defaultOperator string) 
 }
 
 func (w *ESUpdateByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIndexByScrollResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.UpdateByQueryService.Do")
 		defer span.Finish()
 	}
@@ -10596,8 +10768,8 @@ func (w *ESUpdateByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.UpdateByQueryService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.UpdateByQueryService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.UpdateByQueryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.UpdateByQueryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -10608,7 +10780,9 @@ func (w *ESUpdateByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 }
 
 func (w *ESUpdateByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.StartTaskResult, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.UpdateByQueryService.DoAsync")
 		defer span.Finish()
 	}
@@ -10619,8 +10793,8 @@ func (w *ESUpdateByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.UpdateByQueryService.DoAsync", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.UpdateByQueryService.DoAsync", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.UpdateByQueryService.DoAsync", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.UpdateByQueryService.DoAsync", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -10897,7 +11071,9 @@ func (w *ESUpdateServiceWrapper) DetectNoop(detectNoop bool) *ESUpdateServiceWra
 }
 
 func (w *ESUpdateServiceWrapper) Do(ctx context.Context) (*elastic.UpdateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.UpdateService.Do")
 		defer span.Finish()
 	}
@@ -10908,8 +11084,8 @@ func (w *ESUpdateServiceWrapper) Do(ctx context.Context) (*elastic.UpdateRespons
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.UpdateService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.UpdateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.UpdateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.UpdateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -11095,7 +11271,9 @@ func (w *ESValidateServiceWrapper) Df(df string) *ESValidateServiceWrapper {
 }
 
 func (w *ESValidateServiceWrapper) Do(ctx context.Context) (*elastic.ValidateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ValidateService.Do")
 		defer span.Finish()
 	}
@@ -11106,8 +11284,8 @@ func (w *ESValidateServiceWrapper) Do(ctx context.Context) (*elastic.ValidateRes
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ValidateService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.ValidateService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.ValidateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.ValidateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -11199,7 +11377,9 @@ func (w *ESValidateServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Do(ctx context.Context) (*elastic.XPackIlmDeleteLifecycleResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackIlmDeleteLifecycleService.Do")
 		defer span.Finish()
 	}
@@ -11210,8 +11390,8 @@ func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Do(ctx context.Context) (*elas
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackIlmDeleteLifecycleService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackIlmDeleteLifecycleService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackIlmDeleteLifecycleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackIlmDeleteLifecycleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -11278,7 +11458,9 @@ func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackIlmGetLifecycleServiceWrapper) Do(ctx context.Context) (map[string]*elastic.XPackIlmGetLifecycleResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackIlmGetLifecycleService.Do")
 		defer span.Finish()
 	}
@@ -11289,8 +11471,8 @@ func (w *ESXPackIlmGetLifecycleServiceWrapper) Do(ctx context.Context) (map[stri
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackIlmGetLifecycleService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackIlmGetLifecycleService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackIlmGetLifecycleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackIlmGetLifecycleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -11367,7 +11549,9 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) BodyString(body string) *ESXPackI
 }
 
 func (w *ESXPackIlmPutLifecycleServiceWrapper) Do(ctx context.Context) (*elastic.XPackIlmPutLifecycleResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackIlmPutLifecycleService.Do")
 		defer span.Finish()
 	}
@@ -11378,8 +11562,8 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) Do(ctx context.Context) (*elastic
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackIlmPutLifecycleService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackIlmPutLifecycleService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackIlmPutLifecycleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackIlmPutLifecycleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -11446,7 +11630,9 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackInfoServiceWrapper) Do(ctx context.Context) (*elastic.XPackInfoServiceResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackInfoService.Do")
 		defer span.Finish()
 	}
@@ -11457,8 +11643,8 @@ func (w *ESXPackInfoServiceWrapper) Do(ctx context.Context) (*elastic.XPackInfoS
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackInfoService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackInfoService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackInfoService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackInfoService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -11510,7 +11696,9 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Body(body interface{}) *ES
 }
 
 func (w *ESXPackSecurityChangePasswordServiceWrapper) Do(ctx context.Context) (*elastic.XPackSecurityChangeUserPasswordResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityChangePasswordService.Do")
 		defer span.Finish()
 	}
@@ -11521,8 +11709,8 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Do(ctx context.Context) (*
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityChangePasswordService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackSecurityChangePasswordService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityChangePasswordService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityChangePasswordService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -11584,7 +11772,9 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Do(ctx context.Context) (*elastic.XPackSecurityDeleteRoleMappingResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDeleteRoleMappingService.Do")
 		defer span.Finish()
 	}
@@ -11595,8 +11785,8 @@ func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Do(ctx context.Context)
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleMappingService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleMappingService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -11648,7 +11838,9 @@ func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackSecurityDeleteRoleServiceWrapper) Do(ctx context.Context) (*elastic.XPackSecurityDeleteRoleResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDeleteRoleService.Do")
 		defer span.Finish()
 	}
@@ -11659,8 +11851,8 @@ func (w *ESXPackSecurityDeleteRoleServiceWrapper) Do(ctx context.Context) (*elas
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -11712,7 +11904,9 @@ func (w *ESXPackSecurityDeleteRoleServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackSecurityDeleteUserServiceWrapper) Do(ctx context.Context) (*elastic.XPackSecurityDeleteUserResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDeleteUserService.Do")
 		defer span.Finish()
 	}
@@ -11723,8 +11917,8 @@ func (w *ESXPackSecurityDeleteUserServiceWrapper) Do(ctx context.Context) (*elas
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityDeleteUserService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackSecurityDeleteUserService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityDeleteUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityDeleteUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -11781,7 +11975,9 @@ func (w *ESXPackSecurityDeleteUserServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackSecurityDisableUserServiceWrapper) Do(ctx context.Context) (*elastic.XPackSecurityDisableUserResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDisableUserService.Do")
 		defer span.Finish()
 	}
@@ -11792,8 +11988,8 @@ func (w *ESXPackSecurityDisableUserServiceWrapper) Do(ctx context.Context) (*ela
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityDisableUserService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackSecurityDisableUserService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityDisableUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityDisableUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -11850,7 +12046,9 @@ func (w *ESXPackSecurityDisableUserServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackSecurityEnableUserServiceWrapper) Do(ctx context.Context) (*elastic.XPackSecurityEnableUserResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityEnableUserService.Do")
 		defer span.Finish()
 	}
@@ -11861,8 +12059,8 @@ func (w *ESXPackSecurityEnableUserServiceWrapper) Do(ctx context.Context) (*elas
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityEnableUserService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackSecurityEnableUserService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityEnableUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityEnableUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -11919,7 +12117,9 @@ func (w *ESXPackSecurityEnableUserServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Do(ctx context.Context) (*elastic.XPackSecurityGetRoleMappingResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityGetRoleMappingService.Do")
 		defer span.Finish()
 	}
@@ -11930,8 +12130,8 @@ func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Do(ctx context.Context) (*
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityGetRoleMappingService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackSecurityGetRoleMappingService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityGetRoleMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityGetRoleMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -11983,7 +12183,9 @@ func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackSecurityGetRoleServiceWrapper) Do(ctx context.Context) (*elastic.XPackSecurityGetRoleResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityGetRoleService.Do")
 		defer span.Finish()
 	}
@@ -11994,8 +12196,8 @@ func (w *ESXPackSecurityGetRoleServiceWrapper) Do(ctx context.Context) (*elastic
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityGetRoleService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackSecurityGetRoleService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityGetRoleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityGetRoleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -12047,7 +12249,9 @@ func (w *ESXPackSecurityGetRoleServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackSecurityGetUserServiceWrapper) Do(ctx context.Context) (*elastic.XPackSecurityGetUserResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityGetUserService.Do")
 		defer span.Finish()
 	}
@@ -12058,8 +12262,8 @@ func (w *ESXPackSecurityGetUserServiceWrapper) Do(ctx context.Context) (*elastic
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityGetUserService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackSecurityGetUserService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityGetUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityGetUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -12116,7 +12320,9 @@ func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Body(body interface{}) *ES
 }
 
 func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Do(ctx context.Context) (*elastic.XPackSecurityPutRoleMappingResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityPutRoleMappingService.Do")
 		defer span.Finish()
 	}
@@ -12127,8 +12333,8 @@ func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Do(ctx context.Context) (*
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityPutRoleMappingService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackSecurityPutRoleMappingService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityPutRoleMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityPutRoleMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -12185,7 +12391,9 @@ func (w *ESXPackSecurityPutRoleServiceWrapper) Body(body interface{}) *ESXPackSe
 }
 
 func (w *ESXPackSecurityPutRoleServiceWrapper) Do(ctx context.Context) (*elastic.XPackSecurityPutRoleResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityPutRoleService.Do")
 		defer span.Finish()
 	}
@@ -12196,8 +12404,8 @@ func (w *ESXPackSecurityPutRoleServiceWrapper) Do(ctx context.Context) (*elastic
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityPutRoleService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackSecurityPutRoleService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityPutRoleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityPutRoleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -12254,7 +12462,9 @@ func (w *ESXPackSecurityPutUserServiceWrapper) Body(body interface{}) *ESXPackSe
 }
 
 func (w *ESXPackSecurityPutUserServiceWrapper) Do(ctx context.Context) (*elastic.XPackSecurityPutUserResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityPutUserService.Do")
 		defer span.Finish()
 	}
@@ -12265,8 +12475,8 @@ func (w *ESXPackSecurityPutUserServiceWrapper) Do(ctx context.Context) (*elastic
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityPutUserService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackSecurityPutUserService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackSecurityPutUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackSecurityPutUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -12333,7 +12543,9 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) ActionId(actionId ...string) *ESX
 }
 
 func (w *ESXPackWatcherAckWatchServiceWrapper) Do(ctx context.Context) (*elastic.XPackWatcherAckWatchResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherAckWatchService.Do")
 		defer span.Finish()
 	}
@@ -12344,8 +12556,8 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) Do(ctx context.Context) (*elastic
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherAckWatchService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackWatcherAckWatchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherAckWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherAckWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -12402,7 +12614,9 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) WatchId(watchId string) *ESXPackW
 }
 
 func (w *ESXPackWatcherActivateWatchServiceWrapper) Do(ctx context.Context) (*elastic.XPackWatcherActivateWatchResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherActivateWatchService.Do")
 		defer span.Finish()
 	}
@@ -12413,8 +12627,8 @@ func (w *ESXPackWatcherActivateWatchServiceWrapper) Do(ctx context.Context) (*el
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherActivateWatchService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackWatcherActivateWatchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherActivateWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherActivateWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -12471,7 +12685,9 @@ func (w *ESXPackWatcherActivateWatchServiceWrapper) WatchId(watchId string) *ESX
 }
 
 func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Do(ctx context.Context) (*elastic.XPackWatcherDeactivateWatchResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherDeactivateWatchService.Do")
 		defer span.Finish()
 	}
@@ -12482,8 +12698,8 @@ func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Do(ctx context.Context) (*
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherDeactivateWatchService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackWatcherDeactivateWatchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherDeactivateWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherDeactivateWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -12540,7 +12756,9 @@ func (w *ESXPackWatcherDeactivateWatchServiceWrapper) WatchId(watchId string) *E
 }
 
 func (w *ESXPackWatcherDeleteWatchServiceWrapper) Do(ctx context.Context) (*elastic.XPackWatcherDeleteWatchResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherDeleteWatchService.Do")
 		defer span.Finish()
 	}
@@ -12551,8 +12769,8 @@ func (w *ESXPackWatcherDeleteWatchServiceWrapper) Do(ctx context.Context) (*elas
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherDeleteWatchService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackWatcherDeleteWatchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherDeleteWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherDeleteWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -12624,7 +12842,9 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Debug(debug bool) *ESXPackWat
 }
 
 func (w *ESXPackWatcherExecuteWatchServiceWrapper) Do(ctx context.Context) (*elastic.XPackWatcherExecuteWatchResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherExecuteWatchService.Do")
 		defer span.Finish()
 	}
@@ -12635,8 +12855,8 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Do(ctx context.Context) (*ela
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherExecuteWatchService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackWatcherExecuteWatchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherExecuteWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherExecuteWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -12688,7 +12908,9 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackWatcherGetWatchServiceWrapper) Do(ctx context.Context) (*elastic.XPackWatcherGetWatchResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherGetWatchService.Do")
 		defer span.Finish()
 	}
@@ -12699,8 +12921,8 @@ func (w *ESXPackWatcherGetWatchServiceWrapper) Do(ctx context.Context) (*elastic
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherGetWatchService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackWatcherGetWatchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherGetWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherGetWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -12762,7 +12984,9 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Body(body interface{}) *ESXPackWa
 }
 
 func (w *ESXPackWatcherPutWatchServiceWrapper) Do(ctx context.Context) (*elastic.XPackWatcherPutWatchResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherPutWatchService.Do")
 		defer span.Finish()
 	}
@@ -12773,8 +12997,8 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Do(ctx context.Context) (*elastic
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherPutWatchService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackWatcherPutWatchService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherPutWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherPutWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -12841,7 +13065,9 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackWatcherStartServiceWrapper) Do(ctx context.Context) (*elastic.XPackWatcherStartResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherStartService.Do")
 		defer span.Finish()
 	}
@@ -12852,8 +13078,8 @@ func (w *ESXPackWatcherStartServiceWrapper) Do(ctx context.Context) (*elastic.XP
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherStartService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackWatcherStartService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherStartService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherStartService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -12900,7 +13126,9 @@ func (w *ESXPackWatcherStartServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackWatcherStatsServiceWrapper) Do(ctx context.Context) (*elastic.XPackWatcherStatsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherStatsService.Do")
 		defer span.Finish()
 	}
@@ -12911,8 +13139,8 @@ func (w *ESXPackWatcherStatsServiceWrapper) Do(ctx context.Context) (*elastic.XP
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherStatsService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackWatcherStatsService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -12969,7 +13197,9 @@ func (w *ESXPackWatcherStatsServiceWrapper) Validate() error {
 }
 
 func (w *ESXPackWatcherStopServiceWrapper) Do(ctx context.Context) (*elastic.XPackWatcherStopResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherStopService.Do")
 		defer span.Finish()
 	}
@@ -12980,8 +13210,8 @@ func (w *ESXPackWatcherStopServiceWrapper) Do(ctx context.Context) (*elastic.XPa
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherStopService.Do", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("elastic.XPackWatcherStopService.Do", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("elastic.XPackWatcherStopService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("elastic.XPackWatcherStopService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 

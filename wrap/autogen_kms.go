@@ -59,16 +59,18 @@ func (w *KMSClientWrapper) CreateMetric(options *WrapperOptions) {
 		Help:        "kms Client response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode"})
+	}, []string{"method", "errCode", "custom"})
 	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name:        "kms_Client_total",
 		Help:        "kms Client request total",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode"})
+	}, []string{"method", "errCode", "custom"})
 }
 
 func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.AsymmetricDecryptRequest) (*kms.AsymmetricDecryptResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricDecrypt")
 		defer span.Finish()
 	}
@@ -79,8 +81,8 @@ func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.A
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.AsymmetricDecrypt", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.AsymmetricDecrypt", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.AsymmetricDecrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.AsymmetricDecrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -91,17 +93,19 @@ func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.A
 }
 
 func (w *KMSClientWrapper) AsymmetricDecryptWithCallback(ctx context.Context, request *kms.AsymmetricDecryptRequest, callback func(response *kms.AsymmetricDecryptResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricDecryptWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.AsymmetricDecryptWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.AsymmetricDecryptWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricDecryptWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricDecryptWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -110,18 +114,20 @@ func (w *KMSClientWrapper) AsymmetricDecryptWithCallback(ctx context.Context, re
 }
 
 func (w *KMSClientWrapper) AsymmetricDecryptWithChan(ctx context.Context, request *kms.AsymmetricDecryptRequest) (<-chan *kms.AsymmetricDecryptResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricDecryptWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.AsymmetricDecryptResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.AsymmetricDecryptWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.AsymmetricDecryptWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricDecryptWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricDecryptWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -130,7 +136,9 @@ func (w *KMSClientWrapper) AsymmetricDecryptWithChan(ctx context.Context, reques
 }
 
 func (w *KMSClientWrapper) AsymmetricEncrypt(ctx context.Context, request *kms.AsymmetricEncryptRequest) (*kms.AsymmetricEncryptResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricEncrypt")
 		defer span.Finish()
 	}
@@ -141,8 +149,8 @@ func (w *KMSClientWrapper) AsymmetricEncrypt(ctx context.Context, request *kms.A
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.AsymmetricEncrypt", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.AsymmetricEncrypt", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.AsymmetricEncrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.AsymmetricEncrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -153,17 +161,19 @@ func (w *KMSClientWrapper) AsymmetricEncrypt(ctx context.Context, request *kms.A
 }
 
 func (w *KMSClientWrapper) AsymmetricEncryptWithCallback(ctx context.Context, request *kms.AsymmetricEncryptRequest, callback func(response *kms.AsymmetricEncryptResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricEncryptWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.AsymmetricEncryptWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.AsymmetricEncryptWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricEncryptWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricEncryptWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -172,18 +182,20 @@ func (w *KMSClientWrapper) AsymmetricEncryptWithCallback(ctx context.Context, re
 }
 
 func (w *KMSClientWrapper) AsymmetricEncryptWithChan(ctx context.Context, request *kms.AsymmetricEncryptRequest) (<-chan *kms.AsymmetricEncryptResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricEncryptWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.AsymmetricEncryptResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.AsymmetricEncryptWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.AsymmetricEncryptWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricEncryptWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricEncryptWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -192,7 +204,9 @@ func (w *KMSClientWrapper) AsymmetricEncryptWithChan(ctx context.Context, reques
 }
 
 func (w *KMSClientWrapper) AsymmetricSign(ctx context.Context, request *kms.AsymmetricSignRequest) (*kms.AsymmetricSignResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricSign")
 		defer span.Finish()
 	}
@@ -203,8 +217,8 @@ func (w *KMSClientWrapper) AsymmetricSign(ctx context.Context, request *kms.Asym
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.AsymmetricSign", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.AsymmetricSign", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.AsymmetricSign", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.AsymmetricSign", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -215,17 +229,19 @@ func (w *KMSClientWrapper) AsymmetricSign(ctx context.Context, request *kms.Asym
 }
 
 func (w *KMSClientWrapper) AsymmetricSignWithCallback(ctx context.Context, request *kms.AsymmetricSignRequest, callback func(response *kms.AsymmetricSignResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricSignWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.AsymmetricSignWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.AsymmetricSignWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricSignWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricSignWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -234,18 +250,20 @@ func (w *KMSClientWrapper) AsymmetricSignWithCallback(ctx context.Context, reque
 }
 
 func (w *KMSClientWrapper) AsymmetricSignWithChan(ctx context.Context, request *kms.AsymmetricSignRequest) (<-chan *kms.AsymmetricSignResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricSignWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.AsymmetricSignResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.AsymmetricSignWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.AsymmetricSignWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricSignWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricSignWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -254,7 +272,9 @@ func (w *KMSClientWrapper) AsymmetricSignWithChan(ctx context.Context, request *
 }
 
 func (w *KMSClientWrapper) AsymmetricVerify(ctx context.Context, request *kms.AsymmetricVerifyRequest) (*kms.AsymmetricVerifyResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricVerify")
 		defer span.Finish()
 	}
@@ -265,8 +285,8 @@ func (w *KMSClientWrapper) AsymmetricVerify(ctx context.Context, request *kms.As
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.AsymmetricVerify", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.AsymmetricVerify", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.AsymmetricVerify", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.AsymmetricVerify", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -277,17 +297,19 @@ func (w *KMSClientWrapper) AsymmetricVerify(ctx context.Context, request *kms.As
 }
 
 func (w *KMSClientWrapper) AsymmetricVerifyWithCallback(ctx context.Context, request *kms.AsymmetricVerifyRequest, callback func(response *kms.AsymmetricVerifyResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricVerifyWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.AsymmetricVerifyWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.AsymmetricVerifyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricVerifyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricVerifyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -296,18 +318,20 @@ func (w *KMSClientWrapper) AsymmetricVerifyWithCallback(ctx context.Context, req
 }
 
 func (w *KMSClientWrapper) AsymmetricVerifyWithChan(ctx context.Context, request *kms.AsymmetricVerifyRequest) (<-chan *kms.AsymmetricVerifyResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricVerifyWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.AsymmetricVerifyResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.AsymmetricVerifyWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.AsymmetricVerifyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.AsymmetricVerifyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.AsymmetricVerifyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -316,7 +340,9 @@ func (w *KMSClientWrapper) AsymmetricVerifyWithChan(ctx context.Context, request
 }
 
 func (w *KMSClientWrapper) CancelKeyDeletion(ctx context.Context, request *kms.CancelKeyDeletionRequest) (*kms.CancelKeyDeletionResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CancelKeyDeletion")
 		defer span.Finish()
 	}
@@ -327,8 +353,8 @@ func (w *KMSClientWrapper) CancelKeyDeletion(ctx context.Context, request *kms.C
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CancelKeyDeletion", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.CancelKeyDeletion", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.CancelKeyDeletion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CancelKeyDeletion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -339,17 +365,19 @@ func (w *KMSClientWrapper) CancelKeyDeletion(ctx context.Context, request *kms.C
 }
 
 func (w *KMSClientWrapper) CancelKeyDeletionWithCallback(ctx context.Context, request *kms.CancelKeyDeletionRequest, callback func(response *kms.CancelKeyDeletionResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CancelKeyDeletionWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CancelKeyDeletionWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CancelKeyDeletionWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CancelKeyDeletionWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CancelKeyDeletionWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -358,18 +386,20 @@ func (w *KMSClientWrapper) CancelKeyDeletionWithCallback(ctx context.Context, re
 }
 
 func (w *KMSClientWrapper) CancelKeyDeletionWithChan(ctx context.Context, request *kms.CancelKeyDeletionRequest) (<-chan *kms.CancelKeyDeletionResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CancelKeyDeletionWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.CancelKeyDeletionResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CancelKeyDeletionWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CancelKeyDeletionWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CancelKeyDeletionWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CancelKeyDeletionWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -378,7 +408,9 @@ func (w *KMSClientWrapper) CancelKeyDeletionWithChan(ctx context.Context, reques
 }
 
 func (w *KMSClientWrapper) CertificatePrivateKeyDecrypt(ctx context.Context, request *kms.CertificatePrivateKeyDecryptRequest) (*kms.CertificatePrivateKeyDecryptResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePrivateKeyDecrypt")
 		defer span.Finish()
 	}
@@ -389,8 +421,8 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecrypt(ctx context.Context, req
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecrypt", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecrypt", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -401,17 +433,19 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecrypt(ctx context.Context, req
 }
 
 func (w *KMSClientWrapper) CertificatePrivateKeyDecryptWithCallback(ctx context.Context, request *kms.CertificatePrivateKeyDecryptRequest, callback func(response *kms.CertificatePrivateKeyDecryptResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePrivateKeyDecryptWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecryptWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecryptWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecryptWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecryptWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -420,18 +454,20 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecryptWithCallback(ctx context.
 }
 
 func (w *KMSClientWrapper) CertificatePrivateKeyDecryptWithChan(ctx context.Context, request *kms.CertificatePrivateKeyDecryptRequest) (<-chan *kms.CertificatePrivateKeyDecryptResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePrivateKeyDecryptWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.CertificatePrivateKeyDecryptResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecryptWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecryptWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecryptWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecryptWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -440,7 +476,9 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecryptWithChan(ctx context.Cont
 }
 
 func (w *KMSClientWrapper) CertificatePrivateKeySign(ctx context.Context, request *kms.CertificatePrivateKeySignRequest) (*kms.CertificatePrivateKeySignResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePrivateKeySign")
 		defer span.Finish()
 	}
@@ -451,8 +489,8 @@ func (w *KMSClientWrapper) CertificatePrivateKeySign(ctx context.Context, reques
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeySign", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeySign", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeySign", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeySign", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -463,17 +501,19 @@ func (w *KMSClientWrapper) CertificatePrivateKeySign(ctx context.Context, reques
 }
 
 func (w *KMSClientWrapper) CertificatePrivateKeySignWithCallback(ctx context.Context, request *kms.CertificatePrivateKeySignRequest, callback func(response *kms.CertificatePrivateKeySignResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePrivateKeySignWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeySignWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeySignWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeySignWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeySignWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -482,18 +522,20 @@ func (w *KMSClientWrapper) CertificatePrivateKeySignWithCallback(ctx context.Con
 }
 
 func (w *KMSClientWrapper) CertificatePrivateKeySignWithChan(ctx context.Context, request *kms.CertificatePrivateKeySignRequest) (<-chan *kms.CertificatePrivateKeySignResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePrivateKeySignWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.CertificatePrivateKeySignResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeySignWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeySignWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeySignWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeySignWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -502,7 +544,9 @@ func (w *KMSClientWrapper) CertificatePrivateKeySignWithChan(ctx context.Context
 }
 
 func (w *KMSClientWrapper) CertificatePublicKeyEncrypt(ctx context.Context, request *kms.CertificatePublicKeyEncryptRequest) (*kms.CertificatePublicKeyEncryptResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePublicKeyEncrypt")
 		defer span.Finish()
 	}
@@ -513,8 +557,8 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncrypt(ctx context.Context, requ
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncrypt", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncrypt", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -525,17 +569,19 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncrypt(ctx context.Context, requ
 }
 
 func (w *KMSClientWrapper) CertificatePublicKeyEncryptWithCallback(ctx context.Context, request *kms.CertificatePublicKeyEncryptRequest, callback func(response *kms.CertificatePublicKeyEncryptResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePublicKeyEncryptWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncryptWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncryptWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncryptWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncryptWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -544,18 +590,20 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncryptWithCallback(ctx context.C
 }
 
 func (w *KMSClientWrapper) CertificatePublicKeyEncryptWithChan(ctx context.Context, request *kms.CertificatePublicKeyEncryptRequest) (<-chan *kms.CertificatePublicKeyEncryptResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePublicKeyEncryptWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.CertificatePublicKeyEncryptResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncryptWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncryptWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncryptWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncryptWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -564,7 +612,9 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncryptWithChan(ctx context.Conte
 }
 
 func (w *KMSClientWrapper) CertificatePublicKeyVerify(ctx context.Context, request *kms.CertificatePublicKeyVerifyRequest) (*kms.CertificatePublicKeyVerifyResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePublicKeyVerify")
 		defer span.Finish()
 	}
@@ -575,8 +625,8 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerify(ctx context.Context, reque
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerify", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerify", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerify", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerify", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -587,17 +637,19 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerify(ctx context.Context, reque
 }
 
 func (w *KMSClientWrapper) CertificatePublicKeyVerifyWithCallback(ctx context.Context, request *kms.CertificatePublicKeyVerifyRequest, callback func(response *kms.CertificatePublicKeyVerifyResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePublicKeyVerifyWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerifyWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerifyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerifyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerifyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -606,18 +658,20 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerifyWithCallback(ctx context.Co
 }
 
 func (w *KMSClientWrapper) CertificatePublicKeyVerifyWithChan(ctx context.Context, request *kms.CertificatePublicKeyVerifyRequest) (<-chan *kms.CertificatePublicKeyVerifyResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePublicKeyVerifyWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.CertificatePublicKeyVerifyResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerifyWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerifyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerifyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerifyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -626,7 +680,9 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerifyWithChan(ctx context.Contex
 }
 
 func (w *KMSClientWrapper) CreateAlias(ctx context.Context, request *kms.CreateAliasRequest) (*kms.CreateAliasResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateAlias")
 		defer span.Finish()
 	}
@@ -637,8 +693,8 @@ func (w *KMSClientWrapper) CreateAlias(ctx context.Context, request *kms.CreateA
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CreateAlias", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.CreateAlias", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.CreateAlias", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CreateAlias", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -649,17 +705,19 @@ func (w *KMSClientWrapper) CreateAlias(ctx context.Context, request *kms.CreateA
 }
 
 func (w *KMSClientWrapper) CreateAliasWithCallback(ctx context.Context, request *kms.CreateAliasRequest, callback func(response *kms.CreateAliasResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateAliasWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CreateAliasWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CreateAliasWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CreateAliasWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateAliasWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -668,18 +726,20 @@ func (w *KMSClientWrapper) CreateAliasWithCallback(ctx context.Context, request 
 }
 
 func (w *KMSClientWrapper) CreateAliasWithChan(ctx context.Context, request *kms.CreateAliasRequest) (<-chan *kms.CreateAliasResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateAliasWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.CreateAliasResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CreateAliasWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CreateAliasWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CreateAliasWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateAliasWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -688,7 +748,9 @@ func (w *KMSClientWrapper) CreateAliasWithChan(ctx context.Context, request *kms
 }
 
 func (w *KMSClientWrapper) CreateCertificate(ctx context.Context, request *kms.CreateCertificateRequest) (*kms.CreateCertificateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateCertificate")
 		defer span.Finish()
 	}
@@ -699,8 +761,8 @@ func (w *KMSClientWrapper) CreateCertificate(ctx context.Context, request *kms.C
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CreateCertificate", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.CreateCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.CreateCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CreateCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -711,17 +773,19 @@ func (w *KMSClientWrapper) CreateCertificate(ctx context.Context, request *kms.C
 }
 
 func (w *KMSClientWrapper) CreateCertificateWithCallback(ctx context.Context, request *kms.CreateCertificateRequest, callback func(response *kms.CreateCertificateResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateCertificateWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CreateCertificateWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CreateCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CreateCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -730,18 +794,20 @@ func (w *KMSClientWrapper) CreateCertificateWithCallback(ctx context.Context, re
 }
 
 func (w *KMSClientWrapper) CreateCertificateWithChan(ctx context.Context, request *kms.CreateCertificateRequest) (<-chan *kms.CreateCertificateResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateCertificateWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.CreateCertificateResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CreateCertificateWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CreateCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CreateCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -750,7 +816,9 @@ func (w *KMSClientWrapper) CreateCertificateWithChan(ctx context.Context, reques
 }
 
 func (w *KMSClientWrapper) CreateKey(ctx context.Context, request *kms.CreateKeyRequest) (*kms.CreateKeyResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateKey")
 		defer span.Finish()
 	}
@@ -761,8 +829,8 @@ func (w *KMSClientWrapper) CreateKey(ctx context.Context, request *kms.CreateKey
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CreateKey", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.CreateKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.CreateKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CreateKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -773,7 +841,9 @@ func (w *KMSClientWrapper) CreateKey(ctx context.Context, request *kms.CreateKey
 }
 
 func (w *KMSClientWrapper) CreateKeyVersion(ctx context.Context, request *kms.CreateKeyVersionRequest) (*kms.CreateKeyVersionResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateKeyVersion")
 		defer span.Finish()
 	}
@@ -784,8 +854,8 @@ func (w *KMSClientWrapper) CreateKeyVersion(ctx context.Context, request *kms.Cr
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CreateKeyVersion", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.CreateKeyVersion", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.CreateKeyVersion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CreateKeyVersion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -796,17 +866,19 @@ func (w *KMSClientWrapper) CreateKeyVersion(ctx context.Context, request *kms.Cr
 }
 
 func (w *KMSClientWrapper) CreateKeyVersionWithCallback(ctx context.Context, request *kms.CreateKeyVersionRequest, callback func(response *kms.CreateKeyVersionResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateKeyVersionWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CreateKeyVersionWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CreateKeyVersionWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CreateKeyVersionWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateKeyVersionWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -815,18 +887,20 @@ func (w *KMSClientWrapper) CreateKeyVersionWithCallback(ctx context.Context, req
 }
 
 func (w *KMSClientWrapper) CreateKeyVersionWithChan(ctx context.Context, request *kms.CreateKeyVersionRequest) (<-chan *kms.CreateKeyVersionResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateKeyVersionWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.CreateKeyVersionResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CreateKeyVersionWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CreateKeyVersionWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CreateKeyVersionWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateKeyVersionWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -835,17 +909,19 @@ func (w *KMSClientWrapper) CreateKeyVersionWithChan(ctx context.Context, request
 }
 
 func (w *KMSClientWrapper) CreateKeyWithCallback(ctx context.Context, request *kms.CreateKeyRequest, callback func(response *kms.CreateKeyResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateKeyWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CreateKeyWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CreateKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CreateKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -854,18 +930,20 @@ func (w *KMSClientWrapper) CreateKeyWithCallback(ctx context.Context, request *k
 }
 
 func (w *KMSClientWrapper) CreateKeyWithChan(ctx context.Context, request *kms.CreateKeyRequest) (<-chan *kms.CreateKeyResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateKeyWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.CreateKeyResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CreateKeyWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CreateKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CreateKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -874,7 +952,9 @@ func (w *KMSClientWrapper) CreateKeyWithChan(ctx context.Context, request *kms.C
 }
 
 func (w *KMSClientWrapper) CreateSecret(ctx context.Context, request *kms.CreateSecretRequest) (*kms.CreateSecretResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateSecret")
 		defer span.Finish()
 	}
@@ -885,8 +965,8 @@ func (w *KMSClientWrapper) CreateSecret(ctx context.Context, request *kms.Create
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CreateSecret", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.CreateSecret", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.CreateSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.CreateSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -897,17 +977,19 @@ func (w *KMSClientWrapper) CreateSecret(ctx context.Context, request *kms.Create
 }
 
 func (w *KMSClientWrapper) CreateSecretWithCallback(ctx context.Context, request *kms.CreateSecretRequest, callback func(response *kms.CreateSecretResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateSecretWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CreateSecretWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CreateSecretWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CreateSecretWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateSecretWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -916,18 +998,20 @@ func (w *KMSClientWrapper) CreateSecretWithCallback(ctx context.Context, request
 }
 
 func (w *KMSClientWrapper) CreateSecretWithChan(ctx context.Context, request *kms.CreateSecretRequest) (<-chan *kms.CreateSecretResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateSecretWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.CreateSecretResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.CreateSecretWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.CreateSecretWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.CreateSecretWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.CreateSecretWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -936,7 +1020,9 @@ func (w *KMSClientWrapper) CreateSecretWithChan(ctx context.Context, request *km
 }
 
 func (w *KMSClientWrapper) Decrypt(ctx context.Context, request *kms.DecryptRequest) (*kms.DecryptResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.Decrypt")
 		defer span.Finish()
 	}
@@ -947,8 +1033,8 @@ func (w *KMSClientWrapper) Decrypt(ctx context.Context, request *kms.DecryptRequ
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.Decrypt", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.Decrypt", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.Decrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.Decrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -959,17 +1045,19 @@ func (w *KMSClientWrapper) Decrypt(ctx context.Context, request *kms.DecryptRequ
 }
 
 func (w *KMSClientWrapper) DecryptWithCallback(ctx context.Context, request *kms.DecryptRequest, callback func(response *kms.DecryptResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DecryptWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DecryptWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DecryptWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DecryptWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DecryptWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -978,18 +1066,20 @@ func (w *KMSClientWrapper) DecryptWithCallback(ctx context.Context, request *kms
 }
 
 func (w *KMSClientWrapper) DecryptWithChan(ctx context.Context, request *kms.DecryptRequest) (<-chan *kms.DecryptResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DecryptWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.DecryptResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DecryptWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DecryptWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DecryptWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DecryptWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -998,7 +1088,9 @@ func (w *KMSClientWrapper) DecryptWithChan(ctx context.Context, request *kms.Dec
 }
 
 func (w *KMSClientWrapper) DeleteAlias(ctx context.Context, request *kms.DeleteAliasRequest) (*kms.DeleteAliasResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteAlias")
 		defer span.Finish()
 	}
@@ -1009,8 +1101,8 @@ func (w *KMSClientWrapper) DeleteAlias(ctx context.Context, request *kms.DeleteA
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DeleteAlias", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.DeleteAlias", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.DeleteAlias", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DeleteAlias", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1021,17 +1113,19 @@ func (w *KMSClientWrapper) DeleteAlias(ctx context.Context, request *kms.DeleteA
 }
 
 func (w *KMSClientWrapper) DeleteAliasWithCallback(ctx context.Context, request *kms.DeleteAliasRequest, callback func(response *kms.DeleteAliasResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteAliasWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DeleteAliasWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DeleteAliasWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DeleteAliasWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteAliasWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1040,18 +1134,20 @@ func (w *KMSClientWrapper) DeleteAliasWithCallback(ctx context.Context, request 
 }
 
 func (w *KMSClientWrapper) DeleteAliasWithChan(ctx context.Context, request *kms.DeleteAliasRequest) (<-chan *kms.DeleteAliasResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteAliasWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.DeleteAliasResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DeleteAliasWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DeleteAliasWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DeleteAliasWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteAliasWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1060,7 +1156,9 @@ func (w *KMSClientWrapper) DeleteAliasWithChan(ctx context.Context, request *kms
 }
 
 func (w *KMSClientWrapper) DeleteCertificate(ctx context.Context, request *kms.DeleteCertificateRequest) (*kms.DeleteCertificateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteCertificate")
 		defer span.Finish()
 	}
@@ -1071,8 +1169,8 @@ func (w *KMSClientWrapper) DeleteCertificate(ctx context.Context, request *kms.D
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DeleteCertificate", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.DeleteCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.DeleteCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DeleteCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1083,17 +1181,19 @@ func (w *KMSClientWrapper) DeleteCertificate(ctx context.Context, request *kms.D
 }
 
 func (w *KMSClientWrapper) DeleteCertificateWithCallback(ctx context.Context, request *kms.DeleteCertificateRequest, callback func(response *kms.DeleteCertificateResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteCertificateWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DeleteCertificateWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DeleteCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DeleteCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1102,18 +1202,20 @@ func (w *KMSClientWrapper) DeleteCertificateWithCallback(ctx context.Context, re
 }
 
 func (w *KMSClientWrapper) DeleteCertificateWithChan(ctx context.Context, request *kms.DeleteCertificateRequest) (<-chan *kms.DeleteCertificateResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteCertificateWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.DeleteCertificateResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DeleteCertificateWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DeleteCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DeleteCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1122,7 +1224,9 @@ func (w *KMSClientWrapper) DeleteCertificateWithChan(ctx context.Context, reques
 }
 
 func (w *KMSClientWrapper) DeleteKeyMaterial(ctx context.Context, request *kms.DeleteKeyMaterialRequest) (*kms.DeleteKeyMaterialResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteKeyMaterial")
 		defer span.Finish()
 	}
@@ -1133,8 +1237,8 @@ func (w *KMSClientWrapper) DeleteKeyMaterial(ctx context.Context, request *kms.D
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DeleteKeyMaterial", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.DeleteKeyMaterial", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.DeleteKeyMaterial", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DeleteKeyMaterial", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1145,17 +1249,19 @@ func (w *KMSClientWrapper) DeleteKeyMaterial(ctx context.Context, request *kms.D
 }
 
 func (w *KMSClientWrapper) DeleteKeyMaterialWithCallback(ctx context.Context, request *kms.DeleteKeyMaterialRequest, callback func(response *kms.DeleteKeyMaterialResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteKeyMaterialWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DeleteKeyMaterialWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DeleteKeyMaterialWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DeleteKeyMaterialWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteKeyMaterialWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1164,18 +1270,20 @@ func (w *KMSClientWrapper) DeleteKeyMaterialWithCallback(ctx context.Context, re
 }
 
 func (w *KMSClientWrapper) DeleteKeyMaterialWithChan(ctx context.Context, request *kms.DeleteKeyMaterialRequest) (<-chan *kms.DeleteKeyMaterialResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteKeyMaterialWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.DeleteKeyMaterialResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DeleteKeyMaterialWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DeleteKeyMaterialWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DeleteKeyMaterialWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteKeyMaterialWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1184,7 +1292,9 @@ func (w *KMSClientWrapper) DeleteKeyMaterialWithChan(ctx context.Context, reques
 }
 
 func (w *KMSClientWrapper) DeleteSecret(ctx context.Context, request *kms.DeleteSecretRequest) (*kms.DeleteSecretResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteSecret")
 		defer span.Finish()
 	}
@@ -1195,8 +1305,8 @@ func (w *KMSClientWrapper) DeleteSecret(ctx context.Context, request *kms.Delete
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DeleteSecret", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.DeleteSecret", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.DeleteSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DeleteSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1207,17 +1317,19 @@ func (w *KMSClientWrapper) DeleteSecret(ctx context.Context, request *kms.Delete
 }
 
 func (w *KMSClientWrapper) DeleteSecretWithCallback(ctx context.Context, request *kms.DeleteSecretRequest, callback func(response *kms.DeleteSecretResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteSecretWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DeleteSecretWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DeleteSecretWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DeleteSecretWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteSecretWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1226,18 +1338,20 @@ func (w *KMSClientWrapper) DeleteSecretWithCallback(ctx context.Context, request
 }
 
 func (w *KMSClientWrapper) DeleteSecretWithChan(ctx context.Context, request *kms.DeleteSecretRequest) (<-chan *kms.DeleteSecretResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteSecretWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.DeleteSecretResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DeleteSecretWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DeleteSecretWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DeleteSecretWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DeleteSecretWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1246,7 +1360,9 @@ func (w *KMSClientWrapper) DeleteSecretWithChan(ctx context.Context, request *km
 }
 
 func (w *KMSClientWrapper) DescribeAccountKmsStatus(ctx context.Context, request *kms.DescribeAccountKmsStatusRequest) (*kms.DescribeAccountKmsStatusResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeAccountKmsStatus")
 		defer span.Finish()
 	}
@@ -1257,8 +1373,8 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatus(ctx context.Context, request
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatus", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatus", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatus", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatus", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1269,17 +1385,19 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatus(ctx context.Context, request
 }
 
 func (w *KMSClientWrapper) DescribeAccountKmsStatusWithCallback(ctx context.Context, request *kms.DescribeAccountKmsStatusRequest, callback func(response *kms.DescribeAccountKmsStatusResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeAccountKmsStatusWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatusWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatusWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatusWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatusWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1288,18 +1406,20 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatusWithCallback(ctx context.Cont
 }
 
 func (w *KMSClientWrapper) DescribeAccountKmsStatusWithChan(ctx context.Context, request *kms.DescribeAccountKmsStatusRequest) (<-chan *kms.DescribeAccountKmsStatusResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeAccountKmsStatusWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.DescribeAccountKmsStatusResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatusWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatusWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatusWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatusWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1308,7 +1428,9 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatusWithChan(ctx context.Context,
 }
 
 func (w *KMSClientWrapper) DescribeCertificate(ctx context.Context, request *kms.DescribeCertificateRequest) (*kms.DescribeCertificateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeCertificate")
 		defer span.Finish()
 	}
@@ -1319,8 +1441,8 @@ func (w *KMSClientWrapper) DescribeCertificate(ctx context.Context, request *kms
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DescribeCertificate", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.DescribeCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.DescribeCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DescribeCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1331,17 +1453,19 @@ func (w *KMSClientWrapper) DescribeCertificate(ctx context.Context, request *kms
 }
 
 func (w *KMSClientWrapper) DescribeCertificateWithCallback(ctx context.Context, request *kms.DescribeCertificateRequest, callback func(response *kms.DescribeCertificateResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeCertificateWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DescribeCertificateWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DescribeCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DescribeCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1350,18 +1474,20 @@ func (w *KMSClientWrapper) DescribeCertificateWithCallback(ctx context.Context, 
 }
 
 func (w *KMSClientWrapper) DescribeCertificateWithChan(ctx context.Context, request *kms.DescribeCertificateRequest) (<-chan *kms.DescribeCertificateResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeCertificateWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.DescribeCertificateResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DescribeCertificateWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DescribeCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DescribeCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1370,7 +1496,9 @@ func (w *KMSClientWrapper) DescribeCertificateWithChan(ctx context.Context, requ
 }
 
 func (w *KMSClientWrapper) DescribeKey(ctx context.Context, request *kms.DescribeKeyRequest) (*kms.DescribeKeyResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeKey")
 		defer span.Finish()
 	}
@@ -1381,8 +1509,8 @@ func (w *KMSClientWrapper) DescribeKey(ctx context.Context, request *kms.Describ
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DescribeKey", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.DescribeKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.DescribeKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DescribeKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1393,7 +1521,9 @@ func (w *KMSClientWrapper) DescribeKey(ctx context.Context, request *kms.Describ
 }
 
 func (w *KMSClientWrapper) DescribeKeyVersion(ctx context.Context, request *kms.DescribeKeyVersionRequest) (*kms.DescribeKeyVersionResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeKeyVersion")
 		defer span.Finish()
 	}
@@ -1404,8 +1534,8 @@ func (w *KMSClientWrapper) DescribeKeyVersion(ctx context.Context, request *kms.
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DescribeKeyVersion", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.DescribeKeyVersion", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.DescribeKeyVersion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DescribeKeyVersion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1416,17 +1546,19 @@ func (w *KMSClientWrapper) DescribeKeyVersion(ctx context.Context, request *kms.
 }
 
 func (w *KMSClientWrapper) DescribeKeyVersionWithCallback(ctx context.Context, request *kms.DescribeKeyVersionRequest, callback func(response *kms.DescribeKeyVersionResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeKeyVersionWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DescribeKeyVersionWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DescribeKeyVersionWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DescribeKeyVersionWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeKeyVersionWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1435,18 +1567,20 @@ func (w *KMSClientWrapper) DescribeKeyVersionWithCallback(ctx context.Context, r
 }
 
 func (w *KMSClientWrapper) DescribeKeyVersionWithChan(ctx context.Context, request *kms.DescribeKeyVersionRequest) (<-chan *kms.DescribeKeyVersionResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeKeyVersionWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.DescribeKeyVersionResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DescribeKeyVersionWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DescribeKeyVersionWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DescribeKeyVersionWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeKeyVersionWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1455,17 +1589,19 @@ func (w *KMSClientWrapper) DescribeKeyVersionWithChan(ctx context.Context, reque
 }
 
 func (w *KMSClientWrapper) DescribeKeyWithCallback(ctx context.Context, request *kms.DescribeKeyRequest, callback func(response *kms.DescribeKeyResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeKeyWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DescribeKeyWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DescribeKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DescribeKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1474,18 +1610,20 @@ func (w *KMSClientWrapper) DescribeKeyWithCallback(ctx context.Context, request 
 }
 
 func (w *KMSClientWrapper) DescribeKeyWithChan(ctx context.Context, request *kms.DescribeKeyRequest) (<-chan *kms.DescribeKeyResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeKeyWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.DescribeKeyResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DescribeKeyWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DescribeKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DescribeKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1494,7 +1632,9 @@ func (w *KMSClientWrapper) DescribeKeyWithChan(ctx context.Context, request *kms
 }
 
 func (w *KMSClientWrapper) DescribeRegions(ctx context.Context, request *kms.DescribeRegionsRequest) (*kms.DescribeRegionsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeRegions")
 		defer span.Finish()
 	}
@@ -1505,8 +1645,8 @@ func (w *KMSClientWrapper) DescribeRegions(ctx context.Context, request *kms.Des
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DescribeRegions", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.DescribeRegions", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.DescribeRegions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DescribeRegions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1517,17 +1657,19 @@ func (w *KMSClientWrapper) DescribeRegions(ctx context.Context, request *kms.Des
 }
 
 func (w *KMSClientWrapper) DescribeRegionsWithCallback(ctx context.Context, request *kms.DescribeRegionsRequest, callback func(response *kms.DescribeRegionsResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeRegionsWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DescribeRegionsWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DescribeRegionsWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DescribeRegionsWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeRegionsWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1536,18 +1678,20 @@ func (w *KMSClientWrapper) DescribeRegionsWithCallback(ctx context.Context, requ
 }
 
 func (w *KMSClientWrapper) DescribeRegionsWithChan(ctx context.Context, request *kms.DescribeRegionsRequest) (<-chan *kms.DescribeRegionsResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeRegionsWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.DescribeRegionsResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DescribeRegionsWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DescribeRegionsWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DescribeRegionsWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeRegionsWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1556,7 +1700,9 @@ func (w *KMSClientWrapper) DescribeRegionsWithChan(ctx context.Context, request 
 }
 
 func (w *KMSClientWrapper) DescribeSecret(ctx context.Context, request *kms.DescribeSecretRequest) (*kms.DescribeSecretResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeSecret")
 		defer span.Finish()
 	}
@@ -1567,8 +1713,8 @@ func (w *KMSClientWrapper) DescribeSecret(ctx context.Context, request *kms.Desc
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DescribeSecret", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.DescribeSecret", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.DescribeSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DescribeSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1579,17 +1725,19 @@ func (w *KMSClientWrapper) DescribeSecret(ctx context.Context, request *kms.Desc
 }
 
 func (w *KMSClientWrapper) DescribeSecretWithCallback(ctx context.Context, request *kms.DescribeSecretRequest, callback func(response *kms.DescribeSecretResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeSecretWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DescribeSecretWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DescribeSecretWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DescribeSecretWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeSecretWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1598,18 +1746,20 @@ func (w *KMSClientWrapper) DescribeSecretWithCallback(ctx context.Context, reque
 }
 
 func (w *KMSClientWrapper) DescribeSecretWithChan(ctx context.Context, request *kms.DescribeSecretRequest) (<-chan *kms.DescribeSecretResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeSecretWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.DescribeSecretResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DescribeSecretWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DescribeSecretWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DescribeSecretWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeSecretWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1618,7 +1768,9 @@ func (w *KMSClientWrapper) DescribeSecretWithChan(ctx context.Context, request *
 }
 
 func (w *KMSClientWrapper) DescribeService(ctx context.Context, request *kms.DescribeServiceRequest) (*kms.DescribeServiceResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeService")
 		defer span.Finish()
 	}
@@ -1629,8 +1781,8 @@ func (w *KMSClientWrapper) DescribeService(ctx context.Context, request *kms.Des
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DescribeService", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.DescribeService", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.DescribeService", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DescribeService", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1641,17 +1793,19 @@ func (w *KMSClientWrapper) DescribeService(ctx context.Context, request *kms.Des
 }
 
 func (w *KMSClientWrapper) DescribeServiceWithCallback(ctx context.Context, request *kms.DescribeServiceRequest, callback func(response *kms.DescribeServiceResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeServiceWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DescribeServiceWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DescribeServiceWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DescribeServiceWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeServiceWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1660,18 +1814,20 @@ func (w *KMSClientWrapper) DescribeServiceWithCallback(ctx context.Context, requ
 }
 
 func (w *KMSClientWrapper) DescribeServiceWithChan(ctx context.Context, request *kms.DescribeServiceRequest) (<-chan *kms.DescribeServiceResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeServiceWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.DescribeServiceResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DescribeServiceWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DescribeServiceWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DescribeServiceWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DescribeServiceWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1680,7 +1836,9 @@ func (w *KMSClientWrapper) DescribeServiceWithChan(ctx context.Context, request 
 }
 
 func (w *KMSClientWrapper) DisableKey(ctx context.Context, request *kms.DisableKeyRequest) (*kms.DisableKeyResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DisableKey")
 		defer span.Finish()
 	}
@@ -1691,8 +1849,8 @@ func (w *KMSClientWrapper) DisableKey(ctx context.Context, request *kms.DisableK
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DisableKey", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.DisableKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.DisableKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.DisableKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1703,17 +1861,19 @@ func (w *KMSClientWrapper) DisableKey(ctx context.Context, request *kms.DisableK
 }
 
 func (w *KMSClientWrapper) DisableKeyWithCallback(ctx context.Context, request *kms.DisableKeyRequest, callback func(response *kms.DisableKeyResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DisableKeyWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DisableKeyWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DisableKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DisableKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DisableKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1722,18 +1882,20 @@ func (w *KMSClientWrapper) DisableKeyWithCallback(ctx context.Context, request *
 }
 
 func (w *KMSClientWrapper) DisableKeyWithChan(ctx context.Context, request *kms.DisableKeyRequest) (<-chan *kms.DisableKeyResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DisableKeyWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.DisableKeyResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.DisableKeyWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.DisableKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.DisableKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.DisableKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1742,7 +1904,9 @@ func (w *KMSClientWrapper) DisableKeyWithChan(ctx context.Context, request *kms.
 }
 
 func (w *KMSClientWrapper) EnableKey(ctx context.Context, request *kms.EnableKeyRequest) (*kms.EnableKeyResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.EnableKey")
 		defer span.Finish()
 	}
@@ -1753,8 +1917,8 @@ func (w *KMSClientWrapper) EnableKey(ctx context.Context, request *kms.EnableKey
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.EnableKey", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.EnableKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.EnableKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.EnableKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1765,17 +1929,19 @@ func (w *KMSClientWrapper) EnableKey(ctx context.Context, request *kms.EnableKey
 }
 
 func (w *KMSClientWrapper) EnableKeyWithCallback(ctx context.Context, request *kms.EnableKeyRequest, callback func(response *kms.EnableKeyResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.EnableKeyWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.EnableKeyWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.EnableKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.EnableKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.EnableKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1784,18 +1950,20 @@ func (w *KMSClientWrapper) EnableKeyWithCallback(ctx context.Context, request *k
 }
 
 func (w *KMSClientWrapper) EnableKeyWithChan(ctx context.Context, request *kms.EnableKeyRequest) (<-chan *kms.EnableKeyResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.EnableKeyWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.EnableKeyResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.EnableKeyWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.EnableKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.EnableKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.EnableKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1804,7 +1972,9 @@ func (w *KMSClientWrapper) EnableKeyWithChan(ctx context.Context, request *kms.E
 }
 
 func (w *KMSClientWrapper) Encrypt(ctx context.Context, request *kms.EncryptRequest) (*kms.EncryptResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.Encrypt")
 		defer span.Finish()
 	}
@@ -1815,8 +1985,8 @@ func (w *KMSClientWrapper) Encrypt(ctx context.Context, request *kms.EncryptRequ
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.Encrypt", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.Encrypt", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.Encrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.Encrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1827,17 +1997,19 @@ func (w *KMSClientWrapper) Encrypt(ctx context.Context, request *kms.EncryptRequ
 }
 
 func (w *KMSClientWrapper) EncryptWithCallback(ctx context.Context, request *kms.EncryptRequest, callback func(response *kms.EncryptResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.EncryptWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.EncryptWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.EncryptWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.EncryptWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.EncryptWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1846,18 +2018,20 @@ func (w *KMSClientWrapper) EncryptWithCallback(ctx context.Context, request *kms
 }
 
 func (w *KMSClientWrapper) EncryptWithChan(ctx context.Context, request *kms.EncryptRequest) (<-chan *kms.EncryptResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.EncryptWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.EncryptResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.EncryptWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.EncryptWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.EncryptWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.EncryptWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1866,7 +2040,9 @@ func (w *KMSClientWrapper) EncryptWithChan(ctx context.Context, request *kms.Enc
 }
 
 func (w *KMSClientWrapper) ExportCertificate(ctx context.Context, request *kms.ExportCertificateRequest) (*kms.ExportCertificateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ExportCertificate")
 		defer span.Finish()
 	}
@@ -1877,8 +2053,8 @@ func (w *KMSClientWrapper) ExportCertificate(ctx context.Context, request *kms.E
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ExportCertificate", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ExportCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ExportCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ExportCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1889,17 +2065,19 @@ func (w *KMSClientWrapper) ExportCertificate(ctx context.Context, request *kms.E
 }
 
 func (w *KMSClientWrapper) ExportCertificateWithCallback(ctx context.Context, request *kms.ExportCertificateRequest, callback func(response *kms.ExportCertificateResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ExportCertificateWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ExportCertificateWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ExportCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ExportCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ExportCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1908,18 +2086,20 @@ func (w *KMSClientWrapper) ExportCertificateWithCallback(ctx context.Context, re
 }
 
 func (w *KMSClientWrapper) ExportCertificateWithChan(ctx context.Context, request *kms.ExportCertificateRequest) (<-chan *kms.ExportCertificateResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ExportCertificateWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ExportCertificateResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ExportCertificateWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ExportCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ExportCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ExportCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1928,7 +2108,9 @@ func (w *KMSClientWrapper) ExportCertificateWithChan(ctx context.Context, reques
 }
 
 func (w *KMSClientWrapper) ExportDataKey(ctx context.Context, request *kms.ExportDataKeyRequest) (*kms.ExportDataKeyResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ExportDataKey")
 		defer span.Finish()
 	}
@@ -1939,8 +2121,8 @@ func (w *KMSClientWrapper) ExportDataKey(ctx context.Context, request *kms.Expor
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ExportDataKey", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ExportDataKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ExportDataKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ExportDataKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1951,17 +2133,19 @@ func (w *KMSClientWrapper) ExportDataKey(ctx context.Context, request *kms.Expor
 }
 
 func (w *KMSClientWrapper) ExportDataKeyWithCallback(ctx context.Context, request *kms.ExportDataKeyRequest, callback func(response *kms.ExportDataKeyResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ExportDataKeyWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ExportDataKeyWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ExportDataKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ExportDataKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ExportDataKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1970,18 +2154,20 @@ func (w *KMSClientWrapper) ExportDataKeyWithCallback(ctx context.Context, reques
 }
 
 func (w *KMSClientWrapper) ExportDataKeyWithChan(ctx context.Context, request *kms.ExportDataKeyRequest) (<-chan *kms.ExportDataKeyResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ExportDataKeyWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ExportDataKeyResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ExportDataKeyWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ExportDataKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ExportDataKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ExportDataKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1990,7 +2176,9 @@ func (w *KMSClientWrapper) ExportDataKeyWithChan(ctx context.Context, request *k
 }
 
 func (w *KMSClientWrapper) GenerateAndExportDataKey(ctx context.Context, request *kms.GenerateAndExportDataKeyRequest) (*kms.GenerateAndExportDataKeyResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateAndExportDataKey")
 		defer span.Finish()
 	}
@@ -2001,8 +2189,8 @@ func (w *KMSClientWrapper) GenerateAndExportDataKey(ctx context.Context, request
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GenerateAndExportDataKey", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.GenerateAndExportDataKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.GenerateAndExportDataKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GenerateAndExportDataKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2013,17 +2201,19 @@ func (w *KMSClientWrapper) GenerateAndExportDataKey(ctx context.Context, request
 }
 
 func (w *KMSClientWrapper) GenerateAndExportDataKeyWithCallback(ctx context.Context, request *kms.GenerateAndExportDataKeyRequest, callback func(response *kms.GenerateAndExportDataKeyResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateAndExportDataKeyWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GenerateAndExportDataKeyWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GenerateAndExportDataKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GenerateAndExportDataKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GenerateAndExportDataKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2032,18 +2222,20 @@ func (w *KMSClientWrapper) GenerateAndExportDataKeyWithCallback(ctx context.Cont
 }
 
 func (w *KMSClientWrapper) GenerateAndExportDataKeyWithChan(ctx context.Context, request *kms.GenerateAndExportDataKeyRequest) (<-chan *kms.GenerateAndExportDataKeyResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateAndExportDataKeyWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.GenerateAndExportDataKeyResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GenerateAndExportDataKeyWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GenerateAndExportDataKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GenerateAndExportDataKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GenerateAndExportDataKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2052,7 +2244,9 @@ func (w *KMSClientWrapper) GenerateAndExportDataKeyWithChan(ctx context.Context,
 }
 
 func (w *KMSClientWrapper) GenerateDataKey(ctx context.Context, request *kms.GenerateDataKeyRequest) (*kms.GenerateDataKeyResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateDataKey")
 		defer span.Finish()
 	}
@@ -2063,8 +2257,8 @@ func (w *KMSClientWrapper) GenerateDataKey(ctx context.Context, request *kms.Gen
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GenerateDataKey", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.GenerateDataKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.GenerateDataKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GenerateDataKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2075,17 +2269,19 @@ func (w *KMSClientWrapper) GenerateDataKey(ctx context.Context, request *kms.Gen
 }
 
 func (w *KMSClientWrapper) GenerateDataKeyWithCallback(ctx context.Context, request *kms.GenerateDataKeyRequest, callback func(response *kms.GenerateDataKeyResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateDataKeyWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2094,18 +2290,20 @@ func (w *KMSClientWrapper) GenerateDataKeyWithCallback(ctx context.Context, requ
 }
 
 func (w *KMSClientWrapper) GenerateDataKeyWithChan(ctx context.Context, request *kms.GenerateDataKeyRequest) (<-chan *kms.GenerateDataKeyResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateDataKeyWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.GenerateDataKeyResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2114,7 +2312,9 @@ func (w *KMSClientWrapper) GenerateDataKeyWithChan(ctx context.Context, request 
 }
 
 func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintext(ctx context.Context, request *kms.GenerateDataKeyWithoutPlaintextRequest) (*kms.GenerateDataKeyWithoutPlaintextResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateDataKeyWithoutPlaintext")
 		defer span.Finish()
 	}
@@ -2125,8 +2325,8 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintext(ctx context.Context, 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintext", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintext", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintext", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintext", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2137,17 +2337,19 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintext(ctx context.Context, 
 }
 
 func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintextWithCallback(ctx context.Context, request *kms.GenerateDataKeyWithoutPlaintextRequest, callback func(response *kms.GenerateDataKeyWithoutPlaintextResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateDataKeyWithoutPlaintextWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintextWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintextWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintextWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintextWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2156,18 +2358,20 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintextWithCallback(ctx conte
 }
 
 func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintextWithChan(ctx context.Context, request *kms.GenerateDataKeyWithoutPlaintextRequest) (<-chan *kms.GenerateDataKeyWithoutPlaintextResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateDataKeyWithoutPlaintextWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.GenerateDataKeyWithoutPlaintextResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintextWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintextWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintextWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintextWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2176,7 +2380,9 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintextWithChan(ctx context.C
 }
 
 func (w *KMSClientWrapper) GetCertificate(ctx context.Context, request *kms.GetCertificateRequest) (*kms.GetCertificateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetCertificate")
 		defer span.Finish()
 	}
@@ -2187,8 +2393,8 @@ func (w *KMSClientWrapper) GetCertificate(ctx context.Context, request *kms.GetC
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GetCertificate", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.GetCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.GetCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GetCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2199,17 +2405,19 @@ func (w *KMSClientWrapper) GetCertificate(ctx context.Context, request *kms.GetC
 }
 
 func (w *KMSClientWrapper) GetCertificateWithCallback(ctx context.Context, request *kms.GetCertificateRequest, callback func(response *kms.GetCertificateResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetCertificateWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GetCertificateWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GetCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GetCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2218,18 +2426,20 @@ func (w *KMSClientWrapper) GetCertificateWithCallback(ctx context.Context, reque
 }
 
 func (w *KMSClientWrapper) GetCertificateWithChan(ctx context.Context, request *kms.GetCertificateRequest) (<-chan *kms.GetCertificateResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetCertificateWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.GetCertificateResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GetCertificateWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GetCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GetCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2238,7 +2448,9 @@ func (w *KMSClientWrapper) GetCertificateWithChan(ctx context.Context, request *
 }
 
 func (w *KMSClientWrapper) GetParametersForImport(ctx context.Context, request *kms.GetParametersForImportRequest) (*kms.GetParametersForImportResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetParametersForImport")
 		defer span.Finish()
 	}
@@ -2249,8 +2461,8 @@ func (w *KMSClientWrapper) GetParametersForImport(ctx context.Context, request *
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GetParametersForImport", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.GetParametersForImport", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.GetParametersForImport", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GetParametersForImport", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2261,17 +2473,19 @@ func (w *KMSClientWrapper) GetParametersForImport(ctx context.Context, request *
 }
 
 func (w *KMSClientWrapper) GetParametersForImportWithCallback(ctx context.Context, request *kms.GetParametersForImportRequest, callback func(response *kms.GetParametersForImportResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetParametersForImportWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GetParametersForImportWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GetParametersForImportWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GetParametersForImportWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetParametersForImportWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2280,18 +2494,20 @@ func (w *KMSClientWrapper) GetParametersForImportWithCallback(ctx context.Contex
 }
 
 func (w *KMSClientWrapper) GetParametersForImportWithChan(ctx context.Context, request *kms.GetParametersForImportRequest) (<-chan *kms.GetParametersForImportResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetParametersForImportWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.GetParametersForImportResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GetParametersForImportWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GetParametersForImportWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GetParametersForImportWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetParametersForImportWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2300,7 +2516,9 @@ func (w *KMSClientWrapper) GetParametersForImportWithChan(ctx context.Context, r
 }
 
 func (w *KMSClientWrapper) GetPublicKey(ctx context.Context, request *kms.GetPublicKeyRequest) (*kms.GetPublicKeyResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetPublicKey")
 		defer span.Finish()
 	}
@@ -2311,8 +2529,8 @@ func (w *KMSClientWrapper) GetPublicKey(ctx context.Context, request *kms.GetPub
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GetPublicKey", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.GetPublicKey", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.GetPublicKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GetPublicKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2323,17 +2541,19 @@ func (w *KMSClientWrapper) GetPublicKey(ctx context.Context, request *kms.GetPub
 }
 
 func (w *KMSClientWrapper) GetPublicKeyWithCallback(ctx context.Context, request *kms.GetPublicKeyRequest, callback func(response *kms.GetPublicKeyResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetPublicKeyWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GetPublicKeyWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GetPublicKeyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GetPublicKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetPublicKeyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2342,18 +2562,20 @@ func (w *KMSClientWrapper) GetPublicKeyWithCallback(ctx context.Context, request
 }
 
 func (w *KMSClientWrapper) GetPublicKeyWithChan(ctx context.Context, request *kms.GetPublicKeyRequest) (<-chan *kms.GetPublicKeyResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetPublicKeyWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.GetPublicKeyResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GetPublicKeyWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GetPublicKeyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GetPublicKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetPublicKeyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2362,7 +2584,9 @@ func (w *KMSClientWrapper) GetPublicKeyWithChan(ctx context.Context, request *km
 }
 
 func (w *KMSClientWrapper) GetRandomPassword(ctx context.Context, request *kms.GetRandomPasswordRequest) (*kms.GetRandomPasswordResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetRandomPassword")
 		defer span.Finish()
 	}
@@ -2373,8 +2597,8 @@ func (w *KMSClientWrapper) GetRandomPassword(ctx context.Context, request *kms.G
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GetRandomPassword", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.GetRandomPassword", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.GetRandomPassword", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GetRandomPassword", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2385,17 +2609,19 @@ func (w *KMSClientWrapper) GetRandomPassword(ctx context.Context, request *kms.G
 }
 
 func (w *KMSClientWrapper) GetRandomPasswordWithCallback(ctx context.Context, request *kms.GetRandomPasswordRequest, callback func(response *kms.GetRandomPasswordResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetRandomPasswordWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GetRandomPasswordWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GetRandomPasswordWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GetRandomPasswordWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetRandomPasswordWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2404,18 +2630,20 @@ func (w *KMSClientWrapper) GetRandomPasswordWithCallback(ctx context.Context, re
 }
 
 func (w *KMSClientWrapper) GetRandomPasswordWithChan(ctx context.Context, request *kms.GetRandomPasswordRequest) (<-chan *kms.GetRandomPasswordResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetRandomPasswordWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.GetRandomPasswordResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GetRandomPasswordWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GetRandomPasswordWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GetRandomPasswordWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetRandomPasswordWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2424,7 +2652,9 @@ func (w *KMSClientWrapper) GetRandomPasswordWithChan(ctx context.Context, reques
 }
 
 func (w *KMSClientWrapper) GetSecretValue(ctx context.Context, request *kms.GetSecretValueRequest) (*kms.GetSecretValueResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetSecretValue")
 		defer span.Finish()
 	}
@@ -2435,8 +2665,8 @@ func (w *KMSClientWrapper) GetSecretValue(ctx context.Context, request *kms.GetS
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GetSecretValue", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.GetSecretValue", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.GetSecretValue", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.GetSecretValue", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2447,17 +2677,19 @@ func (w *KMSClientWrapper) GetSecretValue(ctx context.Context, request *kms.GetS
 }
 
 func (w *KMSClientWrapper) GetSecretValueWithCallback(ctx context.Context, request *kms.GetSecretValueRequest, callback func(response *kms.GetSecretValueResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetSecretValueWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GetSecretValueWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GetSecretValueWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GetSecretValueWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetSecretValueWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2466,18 +2698,20 @@ func (w *KMSClientWrapper) GetSecretValueWithCallback(ctx context.Context, reque
 }
 
 func (w *KMSClientWrapper) GetSecretValueWithChan(ctx context.Context, request *kms.GetSecretValueRequest) (<-chan *kms.GetSecretValueResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetSecretValueWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.GetSecretValueResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.GetSecretValueWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.GetSecretValueWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.GetSecretValueWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.GetSecretValueWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2486,7 +2720,9 @@ func (w *KMSClientWrapper) GetSecretValueWithChan(ctx context.Context, request *
 }
 
 func (w *KMSClientWrapper) ImportCertificate(ctx context.Context, request *kms.ImportCertificateRequest) (*kms.ImportCertificateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ImportCertificate")
 		defer span.Finish()
 	}
@@ -2497,8 +2733,8 @@ func (w *KMSClientWrapper) ImportCertificate(ctx context.Context, request *kms.I
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ImportCertificate", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ImportCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ImportCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ImportCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2509,17 +2745,19 @@ func (w *KMSClientWrapper) ImportCertificate(ctx context.Context, request *kms.I
 }
 
 func (w *KMSClientWrapper) ImportCertificateWithCallback(ctx context.Context, request *kms.ImportCertificateRequest, callback func(response *kms.ImportCertificateResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ImportCertificateWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ImportCertificateWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ImportCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ImportCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ImportCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2528,18 +2766,20 @@ func (w *KMSClientWrapper) ImportCertificateWithCallback(ctx context.Context, re
 }
 
 func (w *KMSClientWrapper) ImportCertificateWithChan(ctx context.Context, request *kms.ImportCertificateRequest) (<-chan *kms.ImportCertificateResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ImportCertificateWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ImportCertificateResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ImportCertificateWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ImportCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ImportCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ImportCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2548,7 +2788,9 @@ func (w *KMSClientWrapper) ImportCertificateWithChan(ctx context.Context, reques
 }
 
 func (w *KMSClientWrapper) ImportEncryptionCertificate(ctx context.Context, request *kms.ImportEncryptionCertificateRequest) (*kms.ImportEncryptionCertificateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ImportEncryptionCertificate")
 		defer span.Finish()
 	}
@@ -2559,8 +2801,8 @@ func (w *KMSClientWrapper) ImportEncryptionCertificate(ctx context.Context, requ
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ImportEncryptionCertificate", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ImportEncryptionCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ImportEncryptionCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ImportEncryptionCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2571,17 +2813,19 @@ func (w *KMSClientWrapper) ImportEncryptionCertificate(ctx context.Context, requ
 }
 
 func (w *KMSClientWrapper) ImportEncryptionCertificateWithCallback(ctx context.Context, request *kms.ImportEncryptionCertificateRequest, callback func(response *kms.ImportEncryptionCertificateResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ImportEncryptionCertificateWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ImportEncryptionCertificateWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ImportEncryptionCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ImportEncryptionCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ImportEncryptionCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2590,18 +2834,20 @@ func (w *KMSClientWrapper) ImportEncryptionCertificateWithCallback(ctx context.C
 }
 
 func (w *KMSClientWrapper) ImportEncryptionCertificateWithChan(ctx context.Context, request *kms.ImportEncryptionCertificateRequest) (<-chan *kms.ImportEncryptionCertificateResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ImportEncryptionCertificateWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ImportEncryptionCertificateResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ImportEncryptionCertificateWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ImportEncryptionCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ImportEncryptionCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ImportEncryptionCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2610,7 +2856,9 @@ func (w *KMSClientWrapper) ImportEncryptionCertificateWithChan(ctx context.Conte
 }
 
 func (w *KMSClientWrapper) ImportKeyMaterial(ctx context.Context, request *kms.ImportKeyMaterialRequest) (*kms.ImportKeyMaterialResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ImportKeyMaterial")
 		defer span.Finish()
 	}
@@ -2621,8 +2869,8 @@ func (w *KMSClientWrapper) ImportKeyMaterial(ctx context.Context, request *kms.I
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ImportKeyMaterial", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ImportKeyMaterial", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ImportKeyMaterial", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ImportKeyMaterial", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2633,17 +2881,19 @@ func (w *KMSClientWrapper) ImportKeyMaterial(ctx context.Context, request *kms.I
 }
 
 func (w *KMSClientWrapper) ImportKeyMaterialWithCallback(ctx context.Context, request *kms.ImportKeyMaterialRequest, callback func(response *kms.ImportKeyMaterialResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ImportKeyMaterialWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ImportKeyMaterialWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ImportKeyMaterialWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ImportKeyMaterialWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ImportKeyMaterialWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2652,18 +2902,20 @@ func (w *KMSClientWrapper) ImportKeyMaterialWithCallback(ctx context.Context, re
 }
 
 func (w *KMSClientWrapper) ImportKeyMaterialWithChan(ctx context.Context, request *kms.ImportKeyMaterialRequest) (<-chan *kms.ImportKeyMaterialResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ImportKeyMaterialWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ImportKeyMaterialResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ImportKeyMaterialWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ImportKeyMaterialWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ImportKeyMaterialWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ImportKeyMaterialWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2672,7 +2924,9 @@ func (w *KMSClientWrapper) ImportKeyMaterialWithChan(ctx context.Context, reques
 }
 
 func (w *KMSClientWrapper) ListAliases(ctx context.Context, request *kms.ListAliasesRequest) (*kms.ListAliasesResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListAliases")
 		defer span.Finish()
 	}
@@ -2683,8 +2937,8 @@ func (w *KMSClientWrapper) ListAliases(ctx context.Context, request *kms.ListAli
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListAliases", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ListAliases", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ListAliases", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListAliases", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2695,7 +2949,9 @@ func (w *KMSClientWrapper) ListAliases(ctx context.Context, request *kms.ListAli
 }
 
 func (w *KMSClientWrapper) ListAliasesByKeyId(ctx context.Context, request *kms.ListAliasesByKeyIdRequest) (*kms.ListAliasesByKeyIdResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListAliasesByKeyId")
 		defer span.Finish()
 	}
@@ -2706,8 +2962,8 @@ func (w *KMSClientWrapper) ListAliasesByKeyId(ctx context.Context, request *kms.
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListAliasesByKeyId", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ListAliasesByKeyId", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ListAliasesByKeyId", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListAliasesByKeyId", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2718,17 +2974,19 @@ func (w *KMSClientWrapper) ListAliasesByKeyId(ctx context.Context, request *kms.
 }
 
 func (w *KMSClientWrapper) ListAliasesByKeyIdWithCallback(ctx context.Context, request *kms.ListAliasesByKeyIdRequest, callback func(response *kms.ListAliasesByKeyIdResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListAliasesByKeyIdWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListAliasesByKeyIdWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListAliasesByKeyIdWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListAliasesByKeyIdWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListAliasesByKeyIdWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2737,18 +2995,20 @@ func (w *KMSClientWrapper) ListAliasesByKeyIdWithCallback(ctx context.Context, r
 }
 
 func (w *KMSClientWrapper) ListAliasesByKeyIdWithChan(ctx context.Context, request *kms.ListAliasesByKeyIdRequest) (<-chan *kms.ListAliasesByKeyIdResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListAliasesByKeyIdWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ListAliasesByKeyIdResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListAliasesByKeyIdWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListAliasesByKeyIdWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListAliasesByKeyIdWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListAliasesByKeyIdWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2757,17 +3017,19 @@ func (w *KMSClientWrapper) ListAliasesByKeyIdWithChan(ctx context.Context, reque
 }
 
 func (w *KMSClientWrapper) ListAliasesWithCallback(ctx context.Context, request *kms.ListAliasesRequest, callback func(response *kms.ListAliasesResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListAliasesWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListAliasesWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListAliasesWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListAliasesWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListAliasesWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2776,18 +3038,20 @@ func (w *KMSClientWrapper) ListAliasesWithCallback(ctx context.Context, request 
 }
 
 func (w *KMSClientWrapper) ListAliasesWithChan(ctx context.Context, request *kms.ListAliasesRequest) (<-chan *kms.ListAliasesResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListAliasesWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ListAliasesResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListAliasesWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListAliasesWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListAliasesWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListAliasesWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2796,7 +3060,9 @@ func (w *KMSClientWrapper) ListAliasesWithChan(ctx context.Context, request *kms
 }
 
 func (w *KMSClientWrapper) ListCertificates(ctx context.Context, request *kms.ListCertificatesRequest) (*kms.ListCertificatesResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListCertificates")
 		defer span.Finish()
 	}
@@ -2807,8 +3073,8 @@ func (w *KMSClientWrapper) ListCertificates(ctx context.Context, request *kms.Li
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListCertificates", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ListCertificates", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ListCertificates", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListCertificates", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2819,17 +3085,19 @@ func (w *KMSClientWrapper) ListCertificates(ctx context.Context, request *kms.Li
 }
 
 func (w *KMSClientWrapper) ListCertificatesWithCallback(ctx context.Context, request *kms.ListCertificatesRequest, callback func(response *kms.ListCertificatesResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListCertificatesWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListCertificatesWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListCertificatesWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListCertificatesWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListCertificatesWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2838,18 +3106,20 @@ func (w *KMSClientWrapper) ListCertificatesWithCallback(ctx context.Context, req
 }
 
 func (w *KMSClientWrapper) ListCertificatesWithChan(ctx context.Context, request *kms.ListCertificatesRequest) (<-chan *kms.ListCertificatesResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListCertificatesWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ListCertificatesResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListCertificatesWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListCertificatesWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListCertificatesWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListCertificatesWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2858,7 +3128,9 @@ func (w *KMSClientWrapper) ListCertificatesWithChan(ctx context.Context, request
 }
 
 func (w *KMSClientWrapper) ListKeyVersions(ctx context.Context, request *kms.ListKeyVersionsRequest) (*kms.ListKeyVersionsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListKeyVersions")
 		defer span.Finish()
 	}
@@ -2869,8 +3141,8 @@ func (w *KMSClientWrapper) ListKeyVersions(ctx context.Context, request *kms.Lis
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListKeyVersions", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ListKeyVersions", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ListKeyVersions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListKeyVersions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2881,17 +3153,19 @@ func (w *KMSClientWrapper) ListKeyVersions(ctx context.Context, request *kms.Lis
 }
 
 func (w *KMSClientWrapper) ListKeyVersionsWithCallback(ctx context.Context, request *kms.ListKeyVersionsRequest, callback func(response *kms.ListKeyVersionsResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListKeyVersionsWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListKeyVersionsWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListKeyVersionsWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListKeyVersionsWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListKeyVersionsWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2900,18 +3174,20 @@ func (w *KMSClientWrapper) ListKeyVersionsWithCallback(ctx context.Context, requ
 }
 
 func (w *KMSClientWrapper) ListKeyVersionsWithChan(ctx context.Context, request *kms.ListKeyVersionsRequest) (<-chan *kms.ListKeyVersionsResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListKeyVersionsWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ListKeyVersionsResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListKeyVersionsWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListKeyVersionsWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListKeyVersionsWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListKeyVersionsWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2920,7 +3196,9 @@ func (w *KMSClientWrapper) ListKeyVersionsWithChan(ctx context.Context, request 
 }
 
 func (w *KMSClientWrapper) ListKeys(ctx context.Context, request *kms.ListKeysRequest) (*kms.ListKeysResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListKeys")
 		defer span.Finish()
 	}
@@ -2931,8 +3209,8 @@ func (w *KMSClientWrapper) ListKeys(ctx context.Context, request *kms.ListKeysRe
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListKeys", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ListKeys", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ListKeys", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListKeys", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -2943,17 +3221,19 @@ func (w *KMSClientWrapper) ListKeys(ctx context.Context, request *kms.ListKeysRe
 }
 
 func (w *KMSClientWrapper) ListKeysWithCallback(ctx context.Context, request *kms.ListKeysRequest, callback func(response *kms.ListKeysResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListKeysWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListKeysWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListKeysWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListKeysWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListKeysWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2962,18 +3242,20 @@ func (w *KMSClientWrapper) ListKeysWithCallback(ctx context.Context, request *km
 }
 
 func (w *KMSClientWrapper) ListKeysWithChan(ctx context.Context, request *kms.ListKeysRequest) (<-chan *kms.ListKeysResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListKeysWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ListKeysResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListKeysWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListKeysWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListKeysWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListKeysWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -2982,7 +3264,9 @@ func (w *KMSClientWrapper) ListKeysWithChan(ctx context.Context, request *kms.Li
 }
 
 func (w *KMSClientWrapper) ListResourceTags(ctx context.Context, request *kms.ListResourceTagsRequest) (*kms.ListResourceTagsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListResourceTags")
 		defer span.Finish()
 	}
@@ -2993,8 +3277,8 @@ func (w *KMSClientWrapper) ListResourceTags(ctx context.Context, request *kms.Li
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListResourceTags", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ListResourceTags", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ListResourceTags", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListResourceTags", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3005,17 +3289,19 @@ func (w *KMSClientWrapper) ListResourceTags(ctx context.Context, request *kms.Li
 }
 
 func (w *KMSClientWrapper) ListResourceTagsWithCallback(ctx context.Context, request *kms.ListResourceTagsRequest, callback func(response *kms.ListResourceTagsResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListResourceTagsWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListResourceTagsWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListResourceTagsWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListResourceTagsWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListResourceTagsWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3024,18 +3310,20 @@ func (w *KMSClientWrapper) ListResourceTagsWithCallback(ctx context.Context, req
 }
 
 func (w *KMSClientWrapper) ListResourceTagsWithChan(ctx context.Context, request *kms.ListResourceTagsRequest) (<-chan *kms.ListResourceTagsResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListResourceTagsWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ListResourceTagsResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListResourceTagsWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListResourceTagsWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListResourceTagsWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListResourceTagsWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3044,7 +3332,9 @@ func (w *KMSClientWrapper) ListResourceTagsWithChan(ctx context.Context, request
 }
 
 func (w *KMSClientWrapper) ListSecretVersionIds(ctx context.Context, request *kms.ListSecretVersionIdsRequest) (*kms.ListSecretVersionIdsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListSecretVersionIds")
 		defer span.Finish()
 	}
@@ -3055,8 +3345,8 @@ func (w *KMSClientWrapper) ListSecretVersionIds(ctx context.Context, request *km
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListSecretVersionIds", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ListSecretVersionIds", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ListSecretVersionIds", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListSecretVersionIds", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3067,17 +3357,19 @@ func (w *KMSClientWrapper) ListSecretVersionIds(ctx context.Context, request *km
 }
 
 func (w *KMSClientWrapper) ListSecretVersionIdsWithCallback(ctx context.Context, request *kms.ListSecretVersionIdsRequest, callback func(response *kms.ListSecretVersionIdsResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListSecretVersionIdsWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListSecretVersionIdsWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListSecretVersionIdsWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListSecretVersionIdsWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListSecretVersionIdsWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3086,18 +3378,20 @@ func (w *KMSClientWrapper) ListSecretVersionIdsWithCallback(ctx context.Context,
 }
 
 func (w *KMSClientWrapper) ListSecretVersionIdsWithChan(ctx context.Context, request *kms.ListSecretVersionIdsRequest) (<-chan *kms.ListSecretVersionIdsResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListSecretVersionIdsWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ListSecretVersionIdsResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListSecretVersionIdsWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListSecretVersionIdsWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListSecretVersionIdsWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListSecretVersionIdsWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3106,7 +3400,9 @@ func (w *KMSClientWrapper) ListSecretVersionIdsWithChan(ctx context.Context, req
 }
 
 func (w *KMSClientWrapper) ListSecrets(ctx context.Context, request *kms.ListSecretsRequest) (*kms.ListSecretsResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListSecrets")
 		defer span.Finish()
 	}
@@ -3117,8 +3413,8 @@ func (w *KMSClientWrapper) ListSecrets(ctx context.Context, request *kms.ListSec
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListSecrets", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ListSecrets", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ListSecrets", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ListSecrets", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3129,17 +3425,19 @@ func (w *KMSClientWrapper) ListSecrets(ctx context.Context, request *kms.ListSec
 }
 
 func (w *KMSClientWrapper) ListSecretsWithCallback(ctx context.Context, request *kms.ListSecretsRequest, callback func(response *kms.ListSecretsResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListSecretsWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListSecretsWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListSecretsWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListSecretsWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListSecretsWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3148,18 +3446,20 @@ func (w *KMSClientWrapper) ListSecretsWithCallback(ctx context.Context, request 
 }
 
 func (w *KMSClientWrapper) ListSecretsWithChan(ctx context.Context, request *kms.ListSecretsRequest) (<-chan *kms.ListSecretsResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListSecretsWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ListSecretsResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ListSecretsWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ListSecretsWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ListSecretsWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ListSecretsWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3168,7 +3468,9 @@ func (w *KMSClientWrapper) ListSecretsWithChan(ctx context.Context, request *kms
 }
 
 func (w *KMSClientWrapper) OpenKmsService(ctx context.Context, request *kms.OpenKmsServiceRequest) (*kms.OpenKmsServiceResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.OpenKmsService")
 		defer span.Finish()
 	}
@@ -3179,8 +3481,8 @@ func (w *KMSClientWrapper) OpenKmsService(ctx context.Context, request *kms.Open
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.OpenKmsService", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.OpenKmsService", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.OpenKmsService", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.OpenKmsService", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3191,17 +3493,19 @@ func (w *KMSClientWrapper) OpenKmsService(ctx context.Context, request *kms.Open
 }
 
 func (w *KMSClientWrapper) OpenKmsServiceWithCallback(ctx context.Context, request *kms.OpenKmsServiceRequest, callback func(response *kms.OpenKmsServiceResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.OpenKmsServiceWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.OpenKmsServiceWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.OpenKmsServiceWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.OpenKmsServiceWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.OpenKmsServiceWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3210,18 +3514,20 @@ func (w *KMSClientWrapper) OpenKmsServiceWithCallback(ctx context.Context, reque
 }
 
 func (w *KMSClientWrapper) OpenKmsServiceWithChan(ctx context.Context, request *kms.OpenKmsServiceRequest) (<-chan *kms.OpenKmsServiceResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.OpenKmsServiceWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.OpenKmsServiceResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.OpenKmsServiceWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.OpenKmsServiceWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.OpenKmsServiceWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.OpenKmsServiceWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3230,7 +3536,9 @@ func (w *KMSClientWrapper) OpenKmsServiceWithChan(ctx context.Context, request *
 }
 
 func (w *KMSClientWrapper) PutSecretValue(ctx context.Context, request *kms.PutSecretValueRequest) (*kms.PutSecretValueResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.PutSecretValue")
 		defer span.Finish()
 	}
@@ -3241,8 +3549,8 @@ func (w *KMSClientWrapper) PutSecretValue(ctx context.Context, request *kms.PutS
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.PutSecretValue", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.PutSecretValue", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.PutSecretValue", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.PutSecretValue", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3253,17 +3561,19 @@ func (w *KMSClientWrapper) PutSecretValue(ctx context.Context, request *kms.PutS
 }
 
 func (w *KMSClientWrapper) PutSecretValueWithCallback(ctx context.Context, request *kms.PutSecretValueRequest, callback func(response *kms.PutSecretValueResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.PutSecretValueWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.PutSecretValueWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.PutSecretValueWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.PutSecretValueWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.PutSecretValueWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3272,18 +3582,20 @@ func (w *KMSClientWrapper) PutSecretValueWithCallback(ctx context.Context, reque
 }
 
 func (w *KMSClientWrapper) PutSecretValueWithChan(ctx context.Context, request *kms.PutSecretValueRequest) (<-chan *kms.PutSecretValueResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.PutSecretValueWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.PutSecretValueResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.PutSecretValueWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.PutSecretValueWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.PutSecretValueWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.PutSecretValueWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3292,7 +3604,9 @@ func (w *KMSClientWrapper) PutSecretValueWithChan(ctx context.Context, request *
 }
 
 func (w *KMSClientWrapper) ReEncrypt(ctx context.Context, request *kms.ReEncryptRequest) (*kms.ReEncryptResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ReEncrypt")
 		defer span.Finish()
 	}
@@ -3303,8 +3617,8 @@ func (w *KMSClientWrapper) ReEncrypt(ctx context.Context, request *kms.ReEncrypt
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ReEncrypt", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ReEncrypt", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ReEncrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ReEncrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3315,17 +3629,19 @@ func (w *KMSClientWrapper) ReEncrypt(ctx context.Context, request *kms.ReEncrypt
 }
 
 func (w *KMSClientWrapper) ReEncryptWithCallback(ctx context.Context, request *kms.ReEncryptRequest, callback func(response *kms.ReEncryptResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ReEncryptWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ReEncryptWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ReEncryptWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ReEncryptWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ReEncryptWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3334,18 +3650,20 @@ func (w *KMSClientWrapper) ReEncryptWithCallback(ctx context.Context, request *k
 }
 
 func (w *KMSClientWrapper) ReEncryptWithChan(ctx context.Context, request *kms.ReEncryptRequest) (<-chan *kms.ReEncryptResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ReEncryptWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ReEncryptResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ReEncryptWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ReEncryptWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ReEncryptWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ReEncryptWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3354,7 +3672,9 @@ func (w *KMSClientWrapper) ReEncryptWithChan(ctx context.Context, request *kms.R
 }
 
 func (w *KMSClientWrapper) RestoreSecret(ctx context.Context, request *kms.RestoreSecretRequest) (*kms.RestoreSecretResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.RestoreSecret")
 		defer span.Finish()
 	}
@@ -3365,8 +3685,8 @@ func (w *KMSClientWrapper) RestoreSecret(ctx context.Context, request *kms.Resto
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.RestoreSecret", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.RestoreSecret", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.RestoreSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.RestoreSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3377,17 +3697,19 @@ func (w *KMSClientWrapper) RestoreSecret(ctx context.Context, request *kms.Resto
 }
 
 func (w *KMSClientWrapper) RestoreSecretWithCallback(ctx context.Context, request *kms.RestoreSecretRequest, callback func(response *kms.RestoreSecretResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.RestoreSecretWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.RestoreSecretWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.RestoreSecretWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.RestoreSecretWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.RestoreSecretWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3396,18 +3718,20 @@ func (w *KMSClientWrapper) RestoreSecretWithCallback(ctx context.Context, reques
 }
 
 func (w *KMSClientWrapper) RestoreSecretWithChan(ctx context.Context, request *kms.RestoreSecretRequest) (<-chan *kms.RestoreSecretResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.RestoreSecretWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.RestoreSecretResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.RestoreSecretWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.RestoreSecretWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.RestoreSecretWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.RestoreSecretWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3416,7 +3740,9 @@ func (w *KMSClientWrapper) RestoreSecretWithChan(ctx context.Context, request *k
 }
 
 func (w *KMSClientWrapper) ScheduleKeyDeletion(ctx context.Context, request *kms.ScheduleKeyDeletionRequest) (*kms.ScheduleKeyDeletionResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ScheduleKeyDeletion")
 		defer span.Finish()
 	}
@@ -3427,8 +3753,8 @@ func (w *KMSClientWrapper) ScheduleKeyDeletion(ctx context.Context, request *kms
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ScheduleKeyDeletion", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.ScheduleKeyDeletion", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.ScheduleKeyDeletion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.ScheduleKeyDeletion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3439,17 +3765,19 @@ func (w *KMSClientWrapper) ScheduleKeyDeletion(ctx context.Context, request *kms
 }
 
 func (w *KMSClientWrapper) ScheduleKeyDeletionWithCallback(ctx context.Context, request *kms.ScheduleKeyDeletionRequest, callback func(response *kms.ScheduleKeyDeletionResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ScheduleKeyDeletionWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ScheduleKeyDeletionWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ScheduleKeyDeletionWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ScheduleKeyDeletionWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ScheduleKeyDeletionWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3458,18 +3786,20 @@ func (w *KMSClientWrapper) ScheduleKeyDeletionWithCallback(ctx context.Context, 
 }
 
 func (w *KMSClientWrapper) ScheduleKeyDeletionWithChan(ctx context.Context, request *kms.ScheduleKeyDeletionRequest) (<-chan *kms.ScheduleKeyDeletionResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ScheduleKeyDeletionWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.ScheduleKeyDeletionResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.ScheduleKeyDeletionWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.ScheduleKeyDeletionWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.ScheduleKeyDeletionWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.ScheduleKeyDeletionWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3478,7 +3808,9 @@ func (w *KMSClientWrapper) ScheduleKeyDeletionWithChan(ctx context.Context, requ
 }
 
 func (w *KMSClientWrapper) TagResource(ctx context.Context, request *kms.TagResourceRequest) (*kms.TagResourceResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.TagResource")
 		defer span.Finish()
 	}
@@ -3489,8 +3821,8 @@ func (w *KMSClientWrapper) TagResource(ctx context.Context, request *kms.TagReso
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.TagResource", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.TagResource", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.TagResource", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.TagResource", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3501,17 +3833,19 @@ func (w *KMSClientWrapper) TagResource(ctx context.Context, request *kms.TagReso
 }
 
 func (w *KMSClientWrapper) TagResourceWithCallback(ctx context.Context, request *kms.TagResourceRequest, callback func(response *kms.TagResourceResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.TagResourceWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.TagResourceWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.TagResourceWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.TagResourceWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.TagResourceWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3520,18 +3854,20 @@ func (w *KMSClientWrapper) TagResourceWithCallback(ctx context.Context, request 
 }
 
 func (w *KMSClientWrapper) TagResourceWithChan(ctx context.Context, request *kms.TagResourceRequest) (<-chan *kms.TagResourceResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.TagResourceWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.TagResourceResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.TagResourceWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.TagResourceWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.TagResourceWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.TagResourceWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3540,7 +3876,9 @@ func (w *KMSClientWrapper) TagResourceWithChan(ctx context.Context, request *kms
 }
 
 func (w *KMSClientWrapper) UntagResource(ctx context.Context, request *kms.UntagResourceRequest) (*kms.UntagResourceResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UntagResource")
 		defer span.Finish()
 	}
@@ -3551,8 +3889,8 @@ func (w *KMSClientWrapper) UntagResource(ctx context.Context, request *kms.Untag
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UntagResource", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.UntagResource", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.UntagResource", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UntagResource", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3563,17 +3901,19 @@ func (w *KMSClientWrapper) UntagResource(ctx context.Context, request *kms.Untag
 }
 
 func (w *KMSClientWrapper) UntagResourceWithCallback(ctx context.Context, request *kms.UntagResourceRequest, callback func(response *kms.UntagResourceResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UntagResourceWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UntagResourceWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UntagResourceWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UntagResourceWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UntagResourceWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3582,18 +3922,20 @@ func (w *KMSClientWrapper) UntagResourceWithCallback(ctx context.Context, reques
 }
 
 func (w *KMSClientWrapper) UntagResourceWithChan(ctx context.Context, request *kms.UntagResourceRequest) (<-chan *kms.UntagResourceResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UntagResourceWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.UntagResourceResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UntagResourceWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UntagResourceWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UntagResourceWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UntagResourceWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3602,7 +3944,9 @@ func (w *KMSClientWrapper) UntagResourceWithChan(ctx context.Context, request *k
 }
 
 func (w *KMSClientWrapper) UpdateAlias(ctx context.Context, request *kms.UpdateAliasRequest) (*kms.UpdateAliasResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateAlias")
 		defer span.Finish()
 	}
@@ -3613,8 +3957,8 @@ func (w *KMSClientWrapper) UpdateAlias(ctx context.Context, request *kms.UpdateA
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UpdateAlias", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.UpdateAlias", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.UpdateAlias", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UpdateAlias", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3625,17 +3969,19 @@ func (w *KMSClientWrapper) UpdateAlias(ctx context.Context, request *kms.UpdateA
 }
 
 func (w *KMSClientWrapper) UpdateAliasWithCallback(ctx context.Context, request *kms.UpdateAliasRequest, callback func(response *kms.UpdateAliasResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateAliasWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UpdateAliasWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UpdateAliasWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UpdateAliasWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateAliasWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3644,18 +3990,20 @@ func (w *KMSClientWrapper) UpdateAliasWithCallback(ctx context.Context, request 
 }
 
 func (w *KMSClientWrapper) UpdateAliasWithChan(ctx context.Context, request *kms.UpdateAliasRequest) (<-chan *kms.UpdateAliasResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateAliasWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.UpdateAliasResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UpdateAliasWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UpdateAliasWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UpdateAliasWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateAliasWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3664,7 +4012,9 @@ func (w *KMSClientWrapper) UpdateAliasWithChan(ctx context.Context, request *kms
 }
 
 func (w *KMSClientWrapper) UpdateCertificateStatus(ctx context.Context, request *kms.UpdateCertificateStatusRequest) (*kms.UpdateCertificateStatusResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateCertificateStatus")
 		defer span.Finish()
 	}
@@ -3675,8 +4025,8 @@ func (w *KMSClientWrapper) UpdateCertificateStatus(ctx context.Context, request 
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UpdateCertificateStatus", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.UpdateCertificateStatus", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.UpdateCertificateStatus", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UpdateCertificateStatus", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3687,17 +4037,19 @@ func (w *KMSClientWrapper) UpdateCertificateStatus(ctx context.Context, request 
 }
 
 func (w *KMSClientWrapper) UpdateCertificateStatusWithCallback(ctx context.Context, request *kms.UpdateCertificateStatusRequest, callback func(response *kms.UpdateCertificateStatusResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateCertificateStatusWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UpdateCertificateStatusWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UpdateCertificateStatusWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UpdateCertificateStatusWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateCertificateStatusWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3706,18 +4058,20 @@ func (w *KMSClientWrapper) UpdateCertificateStatusWithCallback(ctx context.Conte
 }
 
 func (w *KMSClientWrapper) UpdateCertificateStatusWithChan(ctx context.Context, request *kms.UpdateCertificateStatusRequest) (<-chan *kms.UpdateCertificateStatusResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateCertificateStatusWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.UpdateCertificateStatusResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UpdateCertificateStatusWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UpdateCertificateStatusWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UpdateCertificateStatusWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateCertificateStatusWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3726,7 +4080,9 @@ func (w *KMSClientWrapper) UpdateCertificateStatusWithChan(ctx context.Context, 
 }
 
 func (w *KMSClientWrapper) UpdateKeyDescription(ctx context.Context, request *kms.UpdateKeyDescriptionRequest) (*kms.UpdateKeyDescriptionResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateKeyDescription")
 		defer span.Finish()
 	}
@@ -3737,8 +4093,8 @@ func (w *KMSClientWrapper) UpdateKeyDescription(ctx context.Context, request *km
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UpdateKeyDescription", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.UpdateKeyDescription", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.UpdateKeyDescription", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UpdateKeyDescription", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3749,17 +4105,19 @@ func (w *KMSClientWrapper) UpdateKeyDescription(ctx context.Context, request *km
 }
 
 func (w *KMSClientWrapper) UpdateKeyDescriptionWithCallback(ctx context.Context, request *kms.UpdateKeyDescriptionRequest, callback func(response *kms.UpdateKeyDescriptionResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateKeyDescriptionWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UpdateKeyDescriptionWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UpdateKeyDescriptionWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UpdateKeyDescriptionWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateKeyDescriptionWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3768,18 +4126,20 @@ func (w *KMSClientWrapper) UpdateKeyDescriptionWithCallback(ctx context.Context,
 }
 
 func (w *KMSClientWrapper) UpdateKeyDescriptionWithChan(ctx context.Context, request *kms.UpdateKeyDescriptionRequest) (<-chan *kms.UpdateKeyDescriptionResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateKeyDescriptionWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.UpdateKeyDescriptionResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UpdateKeyDescriptionWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UpdateKeyDescriptionWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UpdateKeyDescriptionWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateKeyDescriptionWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3788,7 +4148,9 @@ func (w *KMSClientWrapper) UpdateKeyDescriptionWithChan(ctx context.Context, req
 }
 
 func (w *KMSClientWrapper) UpdateRotationPolicy(ctx context.Context, request *kms.UpdateRotationPolicyRequest) (*kms.UpdateRotationPolicyResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateRotationPolicy")
 		defer span.Finish()
 	}
@@ -3799,8 +4161,8 @@ func (w *KMSClientWrapper) UpdateRotationPolicy(ctx context.Context, request *km
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UpdateRotationPolicy", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.UpdateRotationPolicy", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.UpdateRotationPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UpdateRotationPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3811,17 +4173,19 @@ func (w *KMSClientWrapper) UpdateRotationPolicy(ctx context.Context, request *km
 }
 
 func (w *KMSClientWrapper) UpdateRotationPolicyWithCallback(ctx context.Context, request *kms.UpdateRotationPolicyRequest, callback func(response *kms.UpdateRotationPolicyResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateRotationPolicyWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UpdateRotationPolicyWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UpdateRotationPolicyWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UpdateRotationPolicyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateRotationPolicyWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3830,18 +4194,20 @@ func (w *KMSClientWrapper) UpdateRotationPolicyWithCallback(ctx context.Context,
 }
 
 func (w *KMSClientWrapper) UpdateRotationPolicyWithChan(ctx context.Context, request *kms.UpdateRotationPolicyRequest) (<-chan *kms.UpdateRotationPolicyResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateRotationPolicyWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.UpdateRotationPolicyResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UpdateRotationPolicyWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UpdateRotationPolicyWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UpdateRotationPolicyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateRotationPolicyWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3850,7 +4216,9 @@ func (w *KMSClientWrapper) UpdateRotationPolicyWithChan(ctx context.Context, req
 }
 
 func (w *KMSClientWrapper) UpdateSecret(ctx context.Context, request *kms.UpdateSecretRequest) (*kms.UpdateSecretResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateSecret")
 		defer span.Finish()
 	}
@@ -3861,8 +4229,8 @@ func (w *KMSClientWrapper) UpdateSecret(ctx context.Context, request *kms.Update
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UpdateSecret", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.UpdateSecret", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.UpdateSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UpdateSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3873,7 +4241,9 @@ func (w *KMSClientWrapper) UpdateSecret(ctx context.Context, request *kms.Update
 }
 
 func (w *KMSClientWrapper) UpdateSecretVersionStage(ctx context.Context, request *kms.UpdateSecretVersionStageRequest) (*kms.UpdateSecretVersionStageResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateSecretVersionStage")
 		defer span.Finish()
 	}
@@ -3884,8 +4254,8 @@ func (w *KMSClientWrapper) UpdateSecretVersionStage(ctx context.Context, request
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UpdateSecretVersionStage", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.UpdateSecretVersionStage", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.UpdateSecretVersionStage", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UpdateSecretVersionStage", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3896,17 +4266,19 @@ func (w *KMSClientWrapper) UpdateSecretVersionStage(ctx context.Context, request
 }
 
 func (w *KMSClientWrapper) UpdateSecretVersionStageWithCallback(ctx context.Context, request *kms.UpdateSecretVersionStageRequest, callback func(response *kms.UpdateSecretVersionStageResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateSecretVersionStageWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UpdateSecretVersionStageWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UpdateSecretVersionStageWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UpdateSecretVersionStageWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateSecretVersionStageWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3915,18 +4287,20 @@ func (w *KMSClientWrapper) UpdateSecretVersionStageWithCallback(ctx context.Cont
 }
 
 func (w *KMSClientWrapper) UpdateSecretVersionStageWithChan(ctx context.Context, request *kms.UpdateSecretVersionStageRequest) (<-chan *kms.UpdateSecretVersionStageResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateSecretVersionStageWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.UpdateSecretVersionStageResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UpdateSecretVersionStageWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UpdateSecretVersionStageWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UpdateSecretVersionStageWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateSecretVersionStageWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3935,17 +4309,19 @@ func (w *KMSClientWrapper) UpdateSecretVersionStageWithChan(ctx context.Context,
 }
 
 func (w *KMSClientWrapper) UpdateSecretWithCallback(ctx context.Context, request *kms.UpdateSecretRequest, callback func(response *kms.UpdateSecretResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateSecretWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UpdateSecretWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UpdateSecretWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UpdateSecretWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateSecretWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3954,18 +4330,20 @@ func (w *KMSClientWrapper) UpdateSecretWithCallback(ctx context.Context, request
 }
 
 func (w *KMSClientWrapper) UpdateSecretWithChan(ctx context.Context, request *kms.UpdateSecretRequest) (<-chan *kms.UpdateSecretResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateSecretWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.UpdateSecretResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UpdateSecretWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UpdateSecretWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UpdateSecretWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UpdateSecretWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -3974,7 +4352,9 @@ func (w *KMSClientWrapper) UpdateSecretWithChan(ctx context.Context, request *km
 }
 
 func (w *KMSClientWrapper) UploadCertificate(ctx context.Context, request *kms.UploadCertificateRequest) (*kms.UploadCertificateResponse, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UploadCertificate")
 		defer span.Finish()
 	}
@@ -3985,8 +4365,8 @@ func (w *KMSClientWrapper) UploadCertificate(ctx context.Context, request *kms.U
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UploadCertificate", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("kms.Client.UploadCertificate", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("kms.Client.UploadCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UploadCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -3997,17 +4377,19 @@ func (w *KMSClientWrapper) UploadCertificate(ctx context.Context, request *kms.U
 }
 
 func (w *KMSClientWrapper) UploadCertificateWithCallback(ctx context.Context, request *kms.UploadCertificateRequest, callback func(response *kms.UploadCertificateResponse, err error)) <-chan int {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UploadCertificateWithCallback")
 		defer span.Finish()
 	}
 
 	var res0 <-chan int
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UploadCertificateWithCallback", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UploadCertificateWithCallback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UploadCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UploadCertificateWithCallback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -4016,18 +4398,20 @@ func (w *KMSClientWrapper) UploadCertificateWithCallback(ctx context.Context, re
 }
 
 func (w *KMSClientWrapper) UploadCertificateWithChan(ctx context.Context, request *kms.UploadCertificateRequest) (<-chan *kms.UploadCertificateResponse, <-chan error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UploadCertificateWithChan")
 		defer span.Finish()
 	}
 
 	var res0 <-chan *kms.UploadCertificateResponse
 	var res1 <-chan error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("kms.Client.UploadCertificateWithChan", "OK").Inc()
-			w.durationMetric.WithLabelValues("kms.Client.UploadCertificateWithChan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("kms.Client.UploadCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("kms.Client.UploadCertificateWithChan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 

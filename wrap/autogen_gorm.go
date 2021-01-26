@@ -60,26 +60,28 @@ func (w *GORMDBWrapper) CreateMetric(options *WrapperOptions) {
 		Help:        "gorm DB response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode"})
+	}, []string{"method", "errCode", "custom"})
 	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name:        "gorm_DB_total",
 		Help:        "gorm DB request total",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode"})
+	}, []string{"method", "errCode", "custom"})
 }
 
 func (w GORMDBWrapper) AddError(ctx context.Context, err error) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AddError")
 		defer span.Finish()
 	}
 
 	var res0 error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.AddError", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.AddError", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.AddError", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.AddError", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -88,16 +90,18 @@ func (w GORMDBWrapper) AddError(ctx context.Context, err error) error {
 }
 
 func (w GORMDBWrapper) AddForeignKey(ctx context.Context, field string, dest string, onDelete string, onUpdate string) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AddForeignKey")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.AddForeignKey", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.AddForeignKey", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.AddForeignKey", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.AddForeignKey", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -106,16 +110,18 @@ func (w GORMDBWrapper) AddForeignKey(ctx context.Context, field string, dest str
 }
 
 func (w GORMDBWrapper) AddIndex(ctx context.Context, indexName string, columns ...string) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AddIndex")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.AddIndex", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.AddIndex", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.AddIndex", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.AddIndex", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -124,16 +130,18 @@ func (w GORMDBWrapper) AddIndex(ctx context.Context, indexName string, columns .
 }
 
 func (w GORMDBWrapper) AddUniqueIndex(ctx context.Context, indexName string, columns ...string) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AddUniqueIndex")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.AddUniqueIndex", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.AddUniqueIndex", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.AddUniqueIndex", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.AddUniqueIndex", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -142,16 +150,18 @@ func (w GORMDBWrapper) AddUniqueIndex(ctx context.Context, indexName string, col
 }
 
 func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Assign")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Assign", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Assign", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Assign", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Assign", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -160,17 +170,19 @@ func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBW
 }
 
 func (w GORMDBWrapper) Association(ctx context.Context, column string) *gorm.Association {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Association")
 		defer span.Finish()
 	}
 
 	var res0 *gorm.Association
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Association", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Association", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Association", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Association", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -179,16 +191,18 @@ func (w GORMDBWrapper) Association(ctx context.Context, column string) *gorm.Ass
 }
 
 func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Attrs")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Attrs", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Attrs", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Attrs", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Attrs", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -197,16 +211,18 @@ func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWr
 }
 
 func (w GORMDBWrapper) AutoMigrate(ctx context.Context, values ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AutoMigrate")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.AutoMigrate", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.AutoMigrate", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.AutoMigrate", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.AutoMigrate", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -215,16 +231,18 @@ func (w GORMDBWrapper) AutoMigrate(ctx context.Context, values ...interface{}) G
 }
 
 func (w GORMDBWrapper) Begin(ctx context.Context) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Begin")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Begin", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Begin", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Begin", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Begin", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -233,16 +251,18 @@ func (w GORMDBWrapper) Begin(ctx context.Context) GORMDBWrapper {
 }
 
 func (w GORMDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.BeginTx")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.BeginTx", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.BeginTx", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.BeginTx", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.BeginTx", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -251,16 +271,18 @@ func (w GORMDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) GORMDBW
 }
 
 func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.BlockGlobalUpdate")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.BlockGlobalUpdate", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.BlockGlobalUpdate", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.BlockGlobalUpdate", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.BlockGlobalUpdate", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -269,17 +291,19 @@ func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMD
 }
 
 func (w GORMDBWrapper) Callback(ctx context.Context) *gorm.Callback {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Callback")
 		defer span.Finish()
 	}
 
 	var res0 *gorm.Callback
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Callback", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Callback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Callback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Callback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -288,7 +312,9 @@ func (w GORMDBWrapper) Callback(ctx context.Context) *gorm.Callback {
 }
 
 func (w GORMDBWrapper) Close(ctx context.Context) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Close")
 		defer span.Finish()
 	}
@@ -298,8 +324,8 @@ func (w GORMDBWrapper) Close(ctx context.Context) error {
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("gorm.DB.Close", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("gorm.DB.Close", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("gorm.DB.Close", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("gorm.DB.Close", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -310,16 +336,18 @@ func (w GORMDBWrapper) Close(ctx context.Context) error {
 }
 
 func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Commit")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Commit", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Commit", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Commit", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Commit", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -328,17 +356,19 @@ func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
 }
 
 func (w GORMDBWrapper) CommonDB(ctx context.Context) gorm.SQLCommon {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.CommonDB")
 		defer span.Finish()
 	}
 
 	var res0 gorm.SQLCommon
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.CommonDB", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.CommonDB", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.CommonDB", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.CommonDB", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -347,16 +377,18 @@ func (w GORMDBWrapper) CommonDB(ctx context.Context) gorm.SQLCommon {
 }
 
 func (w GORMDBWrapper) Count(ctx context.Context, value interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Count")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Count", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Count", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Count", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Count", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -365,16 +397,18 @@ func (w GORMDBWrapper) Count(ctx context.Context, value interface{}) GORMDBWrapp
 }
 
 func (w GORMDBWrapper) Create(ctx context.Context, value interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Create")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Create", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Create", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Create", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Create", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -383,16 +417,18 @@ func (w GORMDBWrapper) Create(ctx context.Context, value interface{}) GORMDBWrap
 }
 
 func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.CreateTable")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.CreateTable", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.CreateTable", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.CreateTable", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.CreateTable", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -401,17 +437,19 @@ func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) G
 }
 
 func (w GORMDBWrapper) DB(ctx context.Context) *sql.DB {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.DB")
 		defer span.Finish()
 	}
 
 	var res0 *sql.DB
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.DB", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.DB", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.DB", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.DB", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -420,16 +458,18 @@ func (w GORMDBWrapper) DB(ctx context.Context) *sql.DB {
 }
 
 func (w GORMDBWrapper) Debug(ctx context.Context) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Debug")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Debug", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Debug", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Debug", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Debug", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -438,16 +478,18 @@ func (w GORMDBWrapper) Debug(ctx context.Context) GORMDBWrapper {
 }
 
 func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Delete")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Delete", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Delete", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Delete", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Delete", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -456,17 +498,19 @@ func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...i
 }
 
 func (w GORMDBWrapper) Dialect(ctx context.Context) gorm.Dialect {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Dialect")
 		defer span.Finish()
 	}
 
 	var res0 gorm.Dialect
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Dialect", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Dialect", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Dialect", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Dialect", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -475,16 +519,18 @@ func (w GORMDBWrapper) Dialect(ctx context.Context) gorm.Dialect {
 }
 
 func (w GORMDBWrapper) DropColumn(ctx context.Context, column string) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.DropColumn")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.DropColumn", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.DropColumn", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.DropColumn", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.DropColumn", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -493,16 +539,18 @@ func (w GORMDBWrapper) DropColumn(ctx context.Context, column string) GORMDBWrap
 }
 
 func (w GORMDBWrapper) DropTable(ctx context.Context, values ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.DropTable")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.DropTable", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.DropTable", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.DropTable", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.DropTable", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -511,16 +559,18 @@ func (w GORMDBWrapper) DropTable(ctx context.Context, values ...interface{}) GOR
 }
 
 func (w GORMDBWrapper) DropTableIfExists(ctx context.Context, values ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.DropTableIfExists")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.DropTableIfExists", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.DropTableIfExists", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.DropTableIfExists", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.DropTableIfExists", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -529,16 +579,18 @@ func (w GORMDBWrapper) DropTableIfExists(ctx context.Context, values ...interfac
 }
 
 func (w GORMDBWrapper) Exec(ctx context.Context, sql string, values ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Exec")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Exec", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Exec", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Exec", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Exec", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -547,16 +599,18 @@ func (w GORMDBWrapper) Exec(ctx context.Context, sql string, values ...interface
 }
 
 func (w GORMDBWrapper) Find(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Find")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Find", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Find", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Find", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Find", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -565,16 +619,18 @@ func (w GORMDBWrapper) Find(ctx context.Context, out interface{}, where ...inter
 }
 
 func (w GORMDBWrapper) First(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.First")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.First", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.First", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.First", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.First", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -583,16 +639,18 @@ func (w GORMDBWrapper) First(ctx context.Context, out interface{}, where ...inte
 }
 
 func (w GORMDBWrapper) FirstOrCreate(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.FirstOrCreate")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.FirstOrCreate", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.FirstOrCreate", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.FirstOrCreate", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.FirstOrCreate", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -601,16 +659,18 @@ func (w GORMDBWrapper) FirstOrCreate(ctx context.Context, out interface{}, where
 }
 
 func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.FirstOrInit")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.FirstOrInit", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.FirstOrInit", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.FirstOrInit", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.FirstOrInit", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -619,18 +679,20 @@ func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where .
 }
 
 func (w GORMDBWrapper) Get(ctx context.Context, name string) (interface{}, bool) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Get")
 		defer span.Finish()
 	}
 
 	var value interface{}
 	var ok bool
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Get", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Get", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Get", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Get", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -639,17 +701,19 @@ func (w GORMDBWrapper) Get(ctx context.Context, name string) (interface{}, bool)
 }
 
 func (w GORMDBWrapper) GetErrors(ctx context.Context) []error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.GetErrors")
 		defer span.Finish()
 	}
 
 	var res0 []error
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.GetErrors", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.GetErrors", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.GetErrors", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.GetErrors", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -658,16 +722,18 @@ func (w GORMDBWrapper) GetErrors(ctx context.Context) []error {
 }
 
 func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Group")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Group", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Group", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Group", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Group", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -676,17 +742,19 @@ func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
 }
 
 func (w GORMDBWrapper) HasBlockGlobalUpdate(ctx context.Context) bool {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.HasBlockGlobalUpdate")
 		defer span.Finish()
 	}
 
 	var res0 bool
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.HasBlockGlobalUpdate", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.HasBlockGlobalUpdate", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.HasBlockGlobalUpdate", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.HasBlockGlobalUpdate", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -695,17 +763,19 @@ func (w GORMDBWrapper) HasBlockGlobalUpdate(ctx context.Context) bool {
 }
 
 func (w GORMDBWrapper) HasTable(ctx context.Context, value interface{}) bool {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.HasTable")
 		defer span.Finish()
 	}
 
 	var res0 bool
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.HasTable", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.HasTable", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.HasTable", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.HasTable", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -714,16 +784,18 @@ func (w GORMDBWrapper) HasTable(ctx context.Context, value interface{}) bool {
 }
 
 func (w GORMDBWrapper) Having(ctx context.Context, query interface{}, values ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Having")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Having", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Having", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Having", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Having", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -732,16 +804,18 @@ func (w GORMDBWrapper) Having(ctx context.Context, query interface{}, values ...
 }
 
 func (w GORMDBWrapper) InstantSet(ctx context.Context, name string, value interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.InstantSet")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.InstantSet", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.InstantSet", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.InstantSet", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.InstantSet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -750,16 +824,18 @@ func (w GORMDBWrapper) InstantSet(ctx context.Context, name string, value interf
 }
 
 func (w GORMDBWrapper) Joins(ctx context.Context, query string, args ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Joins")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Joins", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Joins", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Joins", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Joins", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -768,16 +844,18 @@ func (w GORMDBWrapper) Joins(ctx context.Context, query string, args ...interfac
 }
 
 func (w GORMDBWrapper) Last(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Last")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Last", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Last", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Last", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Last", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -786,16 +864,18 @@ func (w GORMDBWrapper) Last(ctx context.Context, out interface{}, where ...inter
 }
 
 func (w GORMDBWrapper) Limit(ctx context.Context, limit interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Limit")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Limit", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Limit", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Limit", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Limit", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -804,16 +884,18 @@ func (w GORMDBWrapper) Limit(ctx context.Context, limit interface{}) GORMDBWrapp
 }
 
 func (w GORMDBWrapper) LogMode(ctx context.Context, enable bool) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.LogMode")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.LogMode", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.LogMode", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.LogMode", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.LogMode", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -822,16 +904,18 @@ func (w GORMDBWrapper) LogMode(ctx context.Context, enable bool) GORMDBWrapper {
 }
 
 func (w GORMDBWrapper) Model(ctx context.Context, value interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Model")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Model", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Model", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Model", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Model", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -840,16 +924,18 @@ func (w GORMDBWrapper) Model(ctx context.Context, value interface{}) GORMDBWrapp
 }
 
 func (w GORMDBWrapper) ModifyColumn(ctx context.Context, column string, typ string) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.ModifyColumn")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.ModifyColumn", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.ModifyColumn", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.ModifyColumn", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.ModifyColumn", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -858,16 +944,18 @@ func (w GORMDBWrapper) ModifyColumn(ctx context.Context, column string, typ stri
 }
 
 func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.New")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.New", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.New", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.New", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.New", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -876,17 +964,19 @@ func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
 }
 
 func (w GORMDBWrapper) NewRecord(ctx context.Context, value interface{}) bool {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.NewRecord")
 		defer span.Finish()
 	}
 
 	var res0 bool
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.NewRecord", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.NewRecord", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.NewRecord", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.NewRecord", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -895,17 +985,19 @@ func (w GORMDBWrapper) NewRecord(ctx context.Context, value interface{}) bool {
 }
 
 func (w GORMDBWrapper) NewScope(ctx context.Context, value interface{}) *gorm.Scope {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.NewScope")
 		defer span.Finish()
 	}
 
 	var res0 *gorm.Scope
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.NewScope", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.NewScope", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.NewScope", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.NewScope", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -914,16 +1006,18 @@ func (w GORMDBWrapper) NewScope(ctx context.Context, value interface{}) *gorm.Sc
 }
 
 func (w GORMDBWrapper) Not(ctx context.Context, query interface{}, args ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Not")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Not", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Not", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Not", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Not", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -932,16 +1026,18 @@ func (w GORMDBWrapper) Not(ctx context.Context, query interface{}, args ...inter
 }
 
 func (w GORMDBWrapper) Offset(ctx context.Context, offset interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Offset")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Offset", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Offset", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Offset", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Offset", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -950,16 +1046,18 @@ func (w GORMDBWrapper) Offset(ctx context.Context, offset interface{}) GORMDBWra
 }
 
 func (w GORMDBWrapper) Omit(ctx context.Context, columns ...string) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Omit")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Omit", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Omit", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Omit", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Omit", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -968,16 +1066,18 @@ func (w GORMDBWrapper) Omit(ctx context.Context, columns ...string) GORMDBWrappe
 }
 
 func (w GORMDBWrapper) Or(ctx context.Context, query interface{}, args ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Or")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Or", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Or", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Or", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Or", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -986,16 +1086,18 @@ func (w GORMDBWrapper) Or(ctx context.Context, query interface{}, args ...interf
 }
 
 func (w GORMDBWrapper) Order(ctx context.Context, value interface{}, reorder ...bool) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Order")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Order", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Order", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Order", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Order", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1004,16 +1106,18 @@ func (w GORMDBWrapper) Order(ctx context.Context, value interface{}, reorder ...
 }
 
 func (w GORMDBWrapper) Pluck(ctx context.Context, column string, value interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Pluck")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Pluck", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Pluck", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Pluck", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Pluck", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1022,16 +1126,18 @@ func (w GORMDBWrapper) Pluck(ctx context.Context, column string, value interface
 }
 
 func (w GORMDBWrapper) Preload(ctx context.Context, column string, conditions ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Preload")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Preload", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Preload", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Preload", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Preload", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1040,16 +1146,18 @@ func (w GORMDBWrapper) Preload(ctx context.Context, column string, conditions ..
 }
 
 func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Preloads")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Preloads", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Preloads", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Preloads", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Preloads", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1058,17 +1166,19 @@ func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrap
 }
 
 func (w GORMDBWrapper) QueryExpr(ctx context.Context) *gorm.SqlExpr {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.QueryExpr")
 		defer span.Finish()
 	}
 
 	var res0 *gorm.SqlExpr
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.QueryExpr", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.QueryExpr", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.QueryExpr", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.QueryExpr", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1077,16 +1187,18 @@ func (w GORMDBWrapper) QueryExpr(ctx context.Context) *gorm.SqlExpr {
 }
 
 func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Raw")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Raw", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Raw", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Raw", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Raw", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1095,17 +1207,19 @@ func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{
 }
 
 func (w GORMDBWrapper) RecordNotFound(ctx context.Context) bool {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.RecordNotFound")
 		defer span.Finish()
 	}
 
 	var res0 bool
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.RecordNotFound", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.RecordNotFound", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.RecordNotFound", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.RecordNotFound", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1114,16 +1228,18 @@ func (w GORMDBWrapper) RecordNotFound(ctx context.Context) bool {
 }
 
 func (w GORMDBWrapper) Related(ctx context.Context, value interface{}, foreignKeys ...string) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Related")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Related", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Related", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Related", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Related", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1132,16 +1248,18 @@ func (w GORMDBWrapper) Related(ctx context.Context, value interface{}, foreignKe
 }
 
 func (w GORMDBWrapper) RemoveForeignKey(ctx context.Context, field string, dest string) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.RemoveForeignKey")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.RemoveForeignKey", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.RemoveForeignKey", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.RemoveForeignKey", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.RemoveForeignKey", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1150,16 +1268,18 @@ func (w GORMDBWrapper) RemoveForeignKey(ctx context.Context, field string, dest 
 }
 
 func (w GORMDBWrapper) RemoveIndex(ctx context.Context, indexName string) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.RemoveIndex")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.RemoveIndex", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.RemoveIndex", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.RemoveIndex", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.RemoveIndex", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1168,16 +1288,18 @@ func (w GORMDBWrapper) RemoveIndex(ctx context.Context, indexName string) GORMDB
 }
 
 func (w GORMDBWrapper) Rollback(ctx context.Context) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Rollback")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Rollback", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Rollback", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Rollback", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Rollback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1186,16 +1308,18 @@ func (w GORMDBWrapper) Rollback(ctx context.Context) GORMDBWrapper {
 }
 
 func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.RollbackUnlessCommitted")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.RollbackUnlessCommitted", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.RollbackUnlessCommitted", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.RollbackUnlessCommitted", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.RollbackUnlessCommitted", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1204,17 +1328,19 @@ func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrappe
 }
 
 func (w GORMDBWrapper) Row(ctx context.Context) *sql.Row {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Row")
 		defer span.Finish()
 	}
 
 	var res0 *sql.Row
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Row", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Row", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Row", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Row", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1223,7 +1349,9 @@ func (w GORMDBWrapper) Row(ctx context.Context) *sql.Row {
 }
 
 func (w GORMDBWrapper) Rows(ctx context.Context) (*sql.Rows, error) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Rows")
 		defer span.Finish()
 	}
@@ -1234,8 +1362,8 @@ func (w GORMDBWrapper) Rows(ctx context.Context) (*sql.Rows, error) {
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("gorm.DB.Rows", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("gorm.DB.Rows", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("gorm.DB.Rows", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("gorm.DB.Rows", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1246,16 +1374,18 @@ func (w GORMDBWrapper) Rows(ctx context.Context) (*sql.Rows, error) {
 }
 
 func (w GORMDBWrapper) Save(ctx context.Context, value interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Save")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Save", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Save", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Save", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Save", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1264,16 +1394,18 @@ func (w GORMDBWrapper) Save(ctx context.Context, value interface{}) GORMDBWrappe
 }
 
 func (w GORMDBWrapper) Scan(ctx context.Context, dest interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Scan")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Scan", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Scan", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Scan", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Scan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1282,7 +1414,9 @@ func (w GORMDBWrapper) Scan(ctx context.Context, dest interface{}) GORMDBWrapper
 }
 
 func (w GORMDBWrapper) ScanRows(ctx context.Context, rows *sql.Rows, result interface{}) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.ScanRows")
 		defer span.Finish()
 	}
@@ -1292,8 +1426,8 @@ func (w GORMDBWrapper) ScanRows(ctx context.Context, rows *sql.Rows, result inte
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("gorm.DB.ScanRows", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("gorm.DB.ScanRows", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("gorm.DB.ScanRows", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("gorm.DB.ScanRows", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1304,16 +1438,18 @@ func (w GORMDBWrapper) ScanRows(ctx context.Context, rows *sql.Rows, result inte
 }
 
 func (w GORMDBWrapper) Scopes(ctx context.Context, funcs ...func(*gorm.DB) *gorm.DB) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Scopes")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Scopes", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Scopes", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Scopes", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Scopes", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1322,16 +1458,18 @@ func (w GORMDBWrapper) Scopes(ctx context.Context, funcs ...func(*gorm.DB) *gorm
 }
 
 func (w GORMDBWrapper) Select(ctx context.Context, query interface{}, args ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Select")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Select", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Select", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Select", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Select", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1340,16 +1478,18 @@ func (w GORMDBWrapper) Select(ctx context.Context, query interface{}, args ...in
 }
 
 func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Set")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Set", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Set", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Set", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Set", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1358,7 +1498,9 @@ func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) 
 }
 
 func (w GORMDBWrapper) SetJoinTableHandler(ctx context.Context, source interface{}, column string, handler gorm.JoinTableHandlerInterface) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.SetJoinTableHandler")
 		defer span.Finish()
 	}
@@ -1367,16 +1509,18 @@ func (w GORMDBWrapper) SetJoinTableHandler(ctx context.Context, source interface
 }
 
 func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride func() time.Time) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.SetNowFuncOverride")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.SetNowFuncOverride", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.SetNowFuncOverride", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.SetNowFuncOverride", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.SetNowFuncOverride", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1385,7 +1529,9 @@ func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride f
 }
 
 func (w GORMDBWrapper) SingularTable(ctx context.Context, enable bool) {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.SingularTable")
 		defer span.Finish()
 	}
@@ -1394,17 +1540,19 @@ func (w GORMDBWrapper) SingularTable(ctx context.Context, enable bool) {
 }
 
 func (w GORMDBWrapper) SubQuery(ctx context.Context) *gorm.SqlExpr {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.SubQuery")
 		defer span.Finish()
 	}
 
 	var res0 *gorm.SqlExpr
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.SubQuery", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.SubQuery", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.SubQuery", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.SubQuery", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1413,16 +1561,18 @@ func (w GORMDBWrapper) SubQuery(ctx context.Context) *gorm.SqlExpr {
 }
 
 func (w GORMDBWrapper) Table(ctx context.Context, name string) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Table")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Table", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Table", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Table", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Table", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1431,16 +1581,18 @@ func (w GORMDBWrapper) Table(ctx context.Context, name string) GORMDBWrapper {
 }
 
 func (w GORMDBWrapper) Take(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Take")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Take", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Take", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Take", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Take", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1449,7 +1601,9 @@ func (w GORMDBWrapper) Take(ctx context.Context, out interface{}, where ...inter
 }
 
 func (w GORMDBWrapper) Transaction(ctx context.Context, fc func(tx *gorm.DB) error) error {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Transaction")
 		defer span.Finish()
 	}
@@ -1459,8 +1613,8 @@ func (w GORMDBWrapper) Transaction(ctx context.Context, fc func(tx *gorm.DB) err
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("gorm.DB.Transaction", ErrCode(err)).Inc()
-				w.durationMetric.WithLabelValues("gorm.DB.Transaction", ErrCode(err)).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("gorm.DB.Transaction", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("gorm.DB.Transaction", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -1471,16 +1625,18 @@ func (w GORMDBWrapper) Transaction(ctx context.Context, fc func(tx *gorm.DB) err
 }
 
 func (w GORMDBWrapper) Unscoped(ctx context.Context) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Unscoped")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Unscoped", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Unscoped", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Unscoped", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Unscoped", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1489,16 +1645,18 @@ func (w GORMDBWrapper) Unscoped(ctx context.Context) GORMDBWrapper {
 }
 
 func (w GORMDBWrapper) Update(ctx context.Context, attrs ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Update")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Update", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Update", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Update", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Update", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1507,16 +1665,18 @@ func (w GORMDBWrapper) Update(ctx context.Context, attrs ...interface{}) GORMDBW
 }
 
 func (w GORMDBWrapper) UpdateColumn(ctx context.Context, attrs ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.UpdateColumn")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.UpdateColumn", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.UpdateColumn", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.UpdateColumn", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.UpdateColumn", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1525,16 +1685,18 @@ func (w GORMDBWrapper) UpdateColumn(ctx context.Context, attrs ...interface{}) G
 }
 
 func (w GORMDBWrapper) UpdateColumns(ctx context.Context, values interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.UpdateColumns")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.UpdateColumns", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.UpdateColumns", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.UpdateColumns", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.UpdateColumns", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1543,16 +1705,18 @@ func (w GORMDBWrapper) UpdateColumns(ctx context.Context, values interface{}) GO
 }
 
 func (w GORMDBWrapper) Updates(ctx context.Context, values interface{}, ignoreProtectedAttrs ...bool) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Updates")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Updates", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Updates", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Updates", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Updates", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 
@@ -1561,16 +1725,18 @@ func (w GORMDBWrapper) Updates(ctx context.Context, values interface{}, ignorePr
 }
 
 func (w GORMDBWrapper) Where(ctx context.Context, query interface{}, args ...interface{}) GORMDBWrapper {
-	if w.options.EnableTrace {
+	ctxOptions := FromContext(ctx)
+
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Where")
 		defer span.Finish()
 	}
 
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("gorm.DB.Where", "OK").Inc()
-			w.durationMetric.WithLabelValues("gorm.DB.Where", "OK").Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("gorm.DB.Where", "OK", ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("gorm.DB.Where", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 

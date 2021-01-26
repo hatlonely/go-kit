@@ -296,12 +296,12 @@ func (w *{{.wrapClass}}) CreateMetric(options *{{.wrapPackagePrefix}}WrapperOpti
 		Help:        "{{.package}} {{.class}} response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode"})
+	}, []string{"method", "errCode", "custom"})
 	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name:        "{{.package}}_{{.class}}_total",
 		Help:        "{{.package}} {{.class}} request total",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode"})
+	}, []string{"method", "errCode", "custom"})
 }
 `
 
@@ -404,17 +404,17 @@ func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) st
 }
 
 const WrapperFunctionBodyOpentracingTpl = `
-	if w.options.EnableTrace {
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "{{.package}}.{{.class}}.{{.function.name}}")
 		defer span.Finish()
 	}
 `
 const WrapperFunctionBodyMetricTpl = `
-	if w.options.EnableMetric {
+	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
 		defer func() {
-			w.totalMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}).Inc()
-			w.durationMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			w.totalMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}, ctxOptions.MetricCustomLabelValue).Inc()
+			w.durationMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}, ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
 `
@@ -429,8 +429,8 @@ const WrapperFunctionBodyRetryWithMetricTpl = `
 		if w.options.EnableMetric {
 			ts := time.Now()
 			defer func() {
-				w.totalMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}).Inc()
-				w.durationMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.totalMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}, ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}, ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 
@@ -454,6 +454,9 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface
 	var buf bytes.Buffer
 	if function.IsChain {
 		if g.options.EnableRuleForChainFunc {
+			if g.MatchFunctionRule(function, g.options.Rule.Trace) || g.MatchFunctionRule(function, g.options.Rule.Metric) {
+				buf.WriteString("\tctxOptions := FromContext(ctx)\n")
+			}
 			if g.MatchFunctionRule(function, g.options.Rule.Trace) {
 				buf.WriteString(renderTemplate(WrapperFunctionBodyOpentracingTpl, vals))
 			}
@@ -463,6 +466,10 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(vals map[string]interface
 		}
 		buf.WriteString(renderTemplate(WrapperFunctionBodyReturnChainTpl, vals))
 		return buf.String()
+	}
+
+	if g.MatchFunctionRule(function, g.options.Rule.Trace) || g.MatchFunctionRule(function, g.options.Rule.Metric) {
+		buf.WriteString("\tctxOptions := FromContext(ctx)\n")
 	}
 
 	if g.MatchFunctionRule(function, g.options.Rule.Trace) {
