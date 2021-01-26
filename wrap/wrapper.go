@@ -42,7 +42,9 @@ func WithMetricCustomLabelValue(val string) CtxOption {
 type ctxKey struct{}
 
 func NewContext(ctx context.Context, opts ...CtxOption) context.Context {
-	var options CtxOptions
+	options := CtxOptions{
+		MetricCustomLabelValue: "default",
+	}
 	for _, opt := range opts {
 		opt(&options)
 	}
@@ -50,10 +52,12 @@ func NewContext(ctx context.Context, opts ...CtxOption) context.Context {
 	return context.WithValue(ctx, &ctxKey{}, &options)
 }
 
-func FromContext(ctx context.Context) (*CtxOptions, bool) {
+func FromContext(ctx context.Context) *CtxOptions {
 	val := ctx.Value(&ctxKey{})
 	if val == nil {
-		return nil, false
+		return &CtxOptions{
+			MetricCustomLabelValue: "default",
+		}
 	}
-	return val.(*CtxOptions), true
+	return val.(*CtxOptions)
 }
