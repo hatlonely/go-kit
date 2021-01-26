@@ -87,6 +87,11 @@ if w.options.EnableTrace {
 
 ## Metric
 
+有两个 Metric
+
+- durationMetric 使用 HistogramVec 用于统计平均响应时间和分位数
+- totalMetric 使用 CounterVec 用于统计 QPS 和错误分布
+
 ### Metric 初始化模板
 
 ```go
@@ -96,12 +101,12 @@ func (w *{{.wrapClass}}) CreateMetric(options *{{.wrapPackagePrefix}}WrapperOpti
 		Help:        "{{.package}} {{.class}} response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode"})
+	}, []string{"method", "errCode", "custom"})
 	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name:        "{{.package}}_{{.class}}_total",
 		Help:        "{{.package}} {{.class}} request total",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode"})
+	}, []string{"method", "errCode", "custom"})
 }
 ```
 
@@ -122,6 +127,24 @@ if w.options.EnableMetric {
 - `method`: 方法名
 - `errCode`: 错误码
 - `custom`: 用户自定义 Label，常见的使用场景是一个 client 有多种不同业务在使用，业务字段可以设置在这个字段上
+
+## Context
+
+在 Context 中可以传递一些动态的选项，用来改变函数执行的逻辑
+
+```go
+type CtxOptions struct {
+	DisableTrace           bool
+	DisableMetric          bool
+	MetricCustomLabelValue string
+}
+```
+
+用户可以通过 `NewContext` 来创建新的 context，调用方式类似
+
+```go
+res, err := w.GetRow(wrap.NewContext(ctx, wrap.WithCtxDisableTrace(), wrap.WithMetricCustomLabelValue("myCustomVal")), &tablestore.GetRowRequest{...})
+```
 
 ## 热加载
 
