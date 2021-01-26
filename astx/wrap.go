@@ -130,6 +130,7 @@ type RenderInfo struct {
 	WrapClass         string
 	OutputPackage     string
 	PackagePath       string
+	IsStarClass       bool
 	Function          struct {
 		Name             string
 		ErrCode          string
@@ -212,26 +213,13 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		info.Rule.OnWrapperChange = g.MatchRule(cls, g.options.Rule.OnWrapperChange)
 		info.Rule.OnRetryChange = g.MatchRule(cls, g.options.Rule.OnRetryChange)
 		info.Rule.CreateMetric = g.MatchRule(cls, g.options.Rule.CreateMetric)
+		info.IsStarClass = g.starClassSet[cls]
 
 		if g.options.Debug {
 			fmt.Printf("process class: %v, info: %v\n", cls, strx.JsonMarshalIndent(info))
 		}
-		buf.WriteString(renderTemplate(WrapperStructTpl, info, "WrapperStructTpl"))
-		if g.starClassSet[cls] {
-			buf.WriteString(renderTemplate(WrapperFunctionGetWithStarTpl, info, "WrapperFunctionGetWithStarTpl"))
-		} else {
-			buf.WriteString(renderTemplate(WrapperFunctionGetTpl, info, "WrapperFunctionGetTpl"))
-		}
 
-		if g.MatchRule(cls, g.options.Rule.OnWrapperChange) {
-			buf.WriteString(renderTemplate(WrapperFunctionOnWrapperChangeTpl, info, "WrapperFunctionOnWrapperChangeTpl"))
-		}
-		if g.MatchRule(cls, g.options.Rule.OnRetryChange) {
-			buf.WriteString(renderTemplate(WrapperFunctionOnRetryChangeTpl, info, "WrapperFunctionOnRetryChangeTpl"))
-		}
-		if g.MatchRule(cls, g.options.Rule.CreateMetric) {
-			buf.WriteString(renderTemplate(WrapperFunctionCreateMetricTpl, info, "WrapperFunctionCreateMetricTpl"))
-		}
+		buf.WriteString(renderTemplate(WrapperClassTpl, info, "WrapperClassTpl"))
 	}
 
 	for _, function := range functions {
@@ -314,30 +302,6 @@ import (
 )
 `
 
-func (g *WrapperGenerator) generateWrapperImport() string {
-	var buf bytes.Buffer
-
-	buf.WriteString("// autogen by github.com/hatlonely/go-kit/astx/wrap.go. do not edit!\n")
-	buf.WriteString(fmt.Sprintf("package %s\n\n", g.options.OutputPackage))
-	buf.WriteString("import (\n")
-	buf.WriteString("\t\"context\"\n")
-	buf.WriteString("")
-	buf.WriteString(fmt.Sprintf("\t\"%s\"\n", g.options.PackagePath))
-	buf.WriteString(fmt.Sprintf("\t\"github.com/opentracing/opentracing-go\"\n\n"))
-
-	if g.options.OutputPackage != "wrap" {
-		buf.WriteString(fmt.Sprintf("\t\"github.com/hatlonely/go-kit/wrap\"\n"))
-	}
-	if g.options.Rule.OnWrapperChange.Include != nil || g.options.Rule.OnRetryChange.Include != nil {
-		buf.WriteString(fmt.Sprintf("\t\"github.com/hatlonely/go-kit/config\"\n"))
-		buf.WriteString(fmt.Sprintf("\t\"github.com/hatlonely/go-kit/rpcx\"\n"))
-	}
-
-	buf.WriteString(")\n")
-
-	return buf.String()
-}
-
 func renderTemplate(tplStr string, vals interface{}, tplName string) string {
 	v := vals.(*RenderInfo)
 	if v.Debug {
@@ -359,7 +323,7 @@ func renderTemplate(tplStr string, vals interface{}, tplName string) string {
 	return buf.String()
 }
 
-const WrapperStructTpl = `
+const WrapperClassTpl = `
 type {{.WrapClass}} struct {
 	obj              *{{.Package}}.{{.Class}}
 	retry            *{{.WrapPackagePrefix}}Retry
@@ -368,18 +332,20 @@ type {{.WrapClass}} struct {
 	totalMetric      *prometheus.CounterVec
 	rateLimiterGroup RateLimiterGroup
 }
-`
-const WrapperFunctionGetWithStarTpl = `
+
+{{- if .IsStarClass}}
 func (w *{{.WrapClass}}) {{.UnwrapFunc}}() *{{.Package}}.{{.Class}} {
 	return w.obj
 }
-`
-const WrapperFunctionGetTpl = `
+{{- else}}
 func (w {{.WrapClass}}) {{.UnwrapFunc}}() *{{.Package}}.{{.Class}} {
 	return w.obj
 }
-`
-const WrapperFunctionOnWrapperChangeTpl = `
+{{- end}}
+
+
+{{- if .Rule.OnWrapperChange}}
+
 func (w *{{.WrapClass}}) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
 		var options {{.WrapPackagePrefix}}WrapperOptions
@@ -390,8 +356,11 @@ func (w *{{.WrapClass}}) OnWrapperChange(opts ...refx.Option) config.OnChangeHan
 		return nil
 	}
 }
-`
-const WrapperFunctionOnRetryChangeTpl = `
+{{- end}}
+
+
+{{- if .Rule.OnRetryChange}}
+
 func (w *{{.WrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
 		var options {{.WrapPackagePrefix}}RetryOptions
@@ -406,8 +375,11 @@ func (w *{{.WrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandl
 		return nil
 	}
 }
-`
-const WrapperFunctionCreateMetricTpl = `
+{{- end}}
+
+
+{{- if .Rule.CreateMetric}}
+
 func (w *{{.WrapClass}}) CreateMetric(options *{{.WrapPackagePrefix}}WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "{{.Package}}_{{.Class}}_durationMs",
@@ -421,6 +393,7 @@ func (w *{{.WrapClass}}) CreateMetric(options *{{.WrapPackagePrefix}}WrapperOpti
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
 }
+{{- end}}
 `
 
 func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) string {
