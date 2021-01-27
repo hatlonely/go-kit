@@ -3885,7 +3885,7 @@ func (w *ESDeleteByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 	return res0, err
 }
 
-func (w *ESDeleteByQueryServiceWrapper) DocvalueFields(ctx context.Context, docvalueFields ...string) *ESDeleteByQueryServiceWrapper {
+func (w *ESDeleteByQueryServiceWrapper) DocvalueFields(docvalueFields ...string) *ESDeleteByQueryServiceWrapper {
 	w.obj = w.obj.DocvalueFields(docvalueFields...)
 	return w
 }
@@ -9441,22 +9441,22 @@ func (w *ESScrollServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 	return res0, err
 }
 
-func (w *ESScrollServiceWrapper) DocvalueField(ctx context.Context, docvalueField string) *ESScrollServiceWrapper {
+func (w *ESScrollServiceWrapper) DocvalueField(docvalueField string) *ESScrollServiceWrapper {
 	w.obj = w.obj.DocvalueField(docvalueField)
 	return w
 }
 
-func (w *ESScrollServiceWrapper) DocvalueFieldWithFormat(ctx context.Context, docvalueField elastic.DocvalueField) *ESScrollServiceWrapper {
+func (w *ESScrollServiceWrapper) DocvalueFieldWithFormat(docvalueField elastic.DocvalueField) *ESScrollServiceWrapper {
 	w.obj = w.obj.DocvalueFieldWithFormat(docvalueField)
 	return w
 }
 
-func (w *ESScrollServiceWrapper) DocvalueFields(ctx context.Context, docvalueFields ...string) *ESScrollServiceWrapper {
+func (w *ESScrollServiceWrapper) DocvalueFields(docvalueFields ...string) *ESScrollServiceWrapper {
 	w.obj = w.obj.DocvalueFields(docvalueFields...)
 	return w
 }
 
-func (w *ESScrollServiceWrapper) DocvalueFieldsWithFormat(ctx context.Context, docvalueFields ...elastic.DocvalueField) *ESScrollServiceWrapper {
+func (w *ESScrollServiceWrapper) DocvalueFieldsWithFormat(docvalueFields ...elastic.DocvalueField) *ESScrollServiceWrapper {
 	w.obj = w.obj.DocvalueFieldsWithFormat(docvalueFields...)
 	return w
 }
@@ -9704,22 +9704,22 @@ func (w *ESSearchServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 	return res0, err
 }
 
-func (w *ESSearchServiceWrapper) DocvalueField(ctx context.Context, docvalueField string) *ESSearchServiceWrapper {
+func (w *ESSearchServiceWrapper) DocvalueField(docvalueField string) *ESSearchServiceWrapper {
 	w.obj = w.obj.DocvalueField(docvalueField)
 	return w
 }
 
-func (w *ESSearchServiceWrapper) DocvalueFieldWithFormat(ctx context.Context, docvalueField elastic.DocvalueField) *ESSearchServiceWrapper {
+func (w *ESSearchServiceWrapper) DocvalueFieldWithFormat(docvalueField elastic.DocvalueField) *ESSearchServiceWrapper {
 	w.obj = w.obj.DocvalueFieldWithFormat(docvalueField)
 	return w
 }
 
-func (w *ESSearchServiceWrapper) DocvalueFields(ctx context.Context, docvalueFields ...string) *ESSearchServiceWrapper {
+func (w *ESSearchServiceWrapper) DocvalueFields(docvalueFields ...string) *ESSearchServiceWrapper {
 	w.obj = w.obj.DocvalueFields(docvalueFields...)
 	return w
 }
 
-func (w *ESSearchServiceWrapper) DocvalueFieldsWithFormat(ctx context.Context, docvalueFields ...elastic.DocvalueField) *ESSearchServiceWrapper {
+func (w *ESSearchServiceWrapper) DocvalueFieldsWithFormat(docvalueFields ...elastic.DocvalueField) *ESSearchServiceWrapper {
 	w.obj = w.obj.DocvalueFieldsWithFormat(docvalueFields...)
 	return w
 }
@@ -11275,7 +11275,7 @@ func (w *ESTermvectorsServiceWrapper) Do(ctx context.Context) (*elastic.Termvect
 	return res0, err
 }
 
-func (w *ESTermvectorsServiceWrapper) Doc(ctx context.Context, doc interface{}) *ESTermvectorsServiceWrapper {
+func (w *ESTermvectorsServiceWrapper) Doc(doc interface{}) *ESTermvectorsServiceWrapper {
 	w.obj = w.obj.Doc(doc)
 	return w
 }
@@ -11507,7 +11507,7 @@ func (w *ESUpdateByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 	return res0, err
 }
 
-func (w *ESUpdateByQueryServiceWrapper) DocvalueFields(ctx context.Context, docvalueFields ...string) *ESUpdateByQueryServiceWrapper {
+func (w *ESUpdateByQueryServiceWrapper) DocvalueFields(docvalueFields ...string) *ESUpdateByQueryServiceWrapper {
 	w.obj = w.obj.DocvalueFields(docvalueFields...)
 	return w
 }
@@ -11806,12 +11806,12 @@ func (w *ESUpdateServiceWrapper) Do(ctx context.Context) (*elastic.UpdateRespons
 	return res0, err
 }
 
-func (w *ESUpdateServiceWrapper) Doc(ctx context.Context, doc interface{}) *ESUpdateServiceWrapper {
+func (w *ESUpdateServiceWrapper) Doc(doc interface{}) *ESUpdateServiceWrapper {
 	w.obj = w.obj.Doc(doc)
 	return w
 }
 
-func (w *ESUpdateServiceWrapper) DocAsUpsert(ctx context.Context, docAsUpsert bool) *ESUpdateServiceWrapper {
+func (w *ESUpdateServiceWrapper) DocAsUpsert(docAsUpsert bool) *ESUpdateServiceWrapper {
 	w.obj = w.obj.DocAsUpsert(docAsUpsert)
 	return w
 }

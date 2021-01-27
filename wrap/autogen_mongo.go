@@ -145,7 +145,7 @@ func (w *MongoClientWrapper) Connect(ctx context.Context) error {
 	return err
 }
 
-func (w *MongoClientWrapper) Database(ctx context.Context, name string, opts ...*options.DatabaseOptions) *MongoDatabaseWrapper {
+func (w *MongoClientWrapper) Database(name string, opts ...*options.DatabaseOptions) *MongoDatabaseWrapper {
 	res0 := w.obj.Database(name, opts...)
 	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
@@ -248,7 +248,7 @@ func (w *MongoClientWrapper) ListDatabases(ctx context.Context, filter interface
 	return res0, err
 }
 
-func (w *MongoClientWrapper) NumberSessionsInProgress(ctx context.Context) int {
+func (w *MongoClientWrapper) NumberSessionsInProgress() int {
 	res0 := w.obj.NumberSessionsInProgress()
 	return res0
 }
@@ -547,7 +547,7 @@ func (w *MongoCollectionWrapper) CountDocuments(ctx context.Context, filter inte
 	return res0, err
 }
 
-func (w *MongoCollectionWrapper) Database(ctx context.Context) *MongoDatabaseWrapper {
+func (w *MongoCollectionWrapper) Database() *MongoDatabaseWrapper {
 	res0 := w.obj.Database()
 	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
@@ -769,7 +769,7 @@ func (w *MongoCollectionWrapper) FindOneAndUpdate(ctx context.Context, filter in
 	return res0
 }
 
-func (w *MongoCollectionWrapper) Indexes(ctx context.Context) mongo.IndexView {
+func (w *MongoCollectionWrapper) Indexes() mongo.IndexView {
 	res0 := w.obj.Indexes()
 	return res0
 }
@@ -840,7 +840,7 @@ func (w *MongoCollectionWrapper) InsertOne(ctx context.Context, document interfa
 	return res0, err
 }
 
-func (w *MongoCollectionWrapper) Name(ctx context.Context) string {
+func (w *MongoCollectionWrapper) Name() string {
 	res0 := w.obj.Name()
 	return res0
 }
@@ -1010,12 +1010,12 @@ func (w *MongoDatabaseWrapper) Aggregate(ctx context.Context, pipeline interface
 	return res0, err
 }
 
-func (w *MongoDatabaseWrapper) Client(ctx context.Context) *MongoClientWrapper {
+func (w *MongoDatabaseWrapper) Client() *MongoClientWrapper {
 	res0 := w.obj.Client()
 	return &MongoClientWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
-func (w *MongoDatabaseWrapper) Collection(ctx context.Context, name string, opts ...*options.CollectionOptions) *MongoCollectionWrapper {
+func (w *MongoDatabaseWrapper) Collection(name string, opts ...*options.CollectionOptions) *MongoCollectionWrapper {
 	res0 := w.obj.Collection(name, opts...)
 	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
@@ -1182,17 +1182,17 @@ func (w *MongoDatabaseWrapper) ListCollections(ctx context.Context, filter inter
 	return res0, err
 }
 
-func (w *MongoDatabaseWrapper) Name(ctx context.Context) string {
+func (w *MongoDatabaseWrapper) Name() string {
 	res0 := w.obj.Name()
 	return res0
 }
 
-func (w *MongoDatabaseWrapper) ReadConcern(ctx context.Context) *readconcern.ReadConcern {
+func (w *MongoDatabaseWrapper) ReadConcern() *readconcern.ReadConcern {
 	res0 := w.obj.ReadConcern()
 	return res0
 }
 
-func (w *MongoDatabaseWrapper) ReadPreference(ctx context.Context) *readpref.ReadPref {
+func (w *MongoDatabaseWrapper) ReadPreference() *readpref.ReadPref {
 	res0 := w.obj.ReadPreference()
 	return res0
 }
@@ -1268,7 +1268,7 @@ func (w *MongoDatabaseWrapper) Watch(ctx context.Context, pipeline interface{}, 
 	return res0, err
 }
 
-func (w *MongoDatabaseWrapper) WriteConcern(ctx context.Context) *writeconcern.WriteConcern {
+func (w *MongoDatabaseWrapper) WriteConcern() *writeconcern.WriteConcern {
 	res0 := w.obj.WriteConcern()
 	return res0
 }

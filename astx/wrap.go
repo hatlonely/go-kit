@@ -278,7 +278,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		info.Rule.RateLimiter = g.MatchFunctionRule(function, g.options.Rule.RateLimiter)
 
 		buf.WriteString("\n")
-		buf.WriteString(g.generateWrapperFunctionDeclare(function))
+		buf.WriteString(g.generateWrapperFunctionDeclare(info, function))
 		buf.WriteString(" {")
 		buf.WriteString(g.generateWrapperFunctionBody(info, function))
 		buf.WriteString("}\n")
@@ -420,7 +420,7 @@ func (w *{{.WrapClass}}) CreateMetric(options *{{.WrapPackagePrefix}}WrapperOpti
 {{- end}}
 `
 
-func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) string {
+func (g *WrapperGenerator) generateWrapperFunctionDeclare(info *RenderInfo, function *Function) string {
 	var buf bytes.Buffer
 
 	buf.WriteString("func ")
@@ -439,8 +439,14 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(function *Function) st
 
 	var params []string
 	if len(function.Params) == 0 || function.Params[0].Type != "context.Context" {
-		if g.MatchFunctionRule(function, g.options.Rule.Trace) || g.MatchFunctionRule(function, g.options.Rule.Retry) {
-			params = append(params, "ctx context.Context")
+		if !function.IsReturnError {
+			if info.EnableRuleForNoErrorFunc && (info.Rule.Trace || info.Rule.Retry) {
+				params = append(params, "ctx context.Context")
+			}
+		} else {
+			if info.Rule.Trace || info.Rule.Retry {
+				params = append(params, "ctx context.Context")
+			}
 		}
 	}
 

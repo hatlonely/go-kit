@@ -116,12 +116,12 @@ func (w *STSClientWrapper) AssumeRole(ctx context.Context, request *sts.AssumeRo
 	return response, err
 }
 
-func (w *STSClientWrapper) AssumeRoleWithCallback(ctx context.Context, request *sts.AssumeRoleRequest, callback func(response *sts.AssumeRoleResponse, err error)) <-chan int {
+func (w *STSClientWrapper) AssumeRoleWithCallback(request *sts.AssumeRoleRequest, callback func(response *sts.AssumeRoleResponse, err error)) <-chan int {
 	res0 := w.obj.AssumeRoleWithCallback(request, callback)
 	return res0
 }
 
-func (w *STSClientWrapper) AssumeRoleWithChan(ctx context.Context, request *sts.AssumeRoleRequest) (<-chan *sts.AssumeRoleResponse, <-chan error) {
+func (w *STSClientWrapper) AssumeRoleWithChan(request *sts.AssumeRoleRequest) (<-chan *sts.AssumeRoleResponse, <-chan error) {
 	res0, res1 := w.obj.AssumeRoleWithChan(request)
 	return res0, res1
 }
@@ -159,12 +159,12 @@ func (w *STSClientWrapper) AssumeRoleWithSAML(ctx context.Context, request *sts.
 	return response, err
 }
 
-func (w *STSClientWrapper) AssumeRoleWithSAMLWithCallback(ctx context.Context, request *sts.AssumeRoleWithSAMLRequest, callback func(response *sts.AssumeRoleWithSAMLResponse, err error)) <-chan int {
+func (w *STSClientWrapper) AssumeRoleWithSAMLWithCallback(request *sts.AssumeRoleWithSAMLRequest, callback func(response *sts.AssumeRoleWithSAMLResponse, err error)) <-chan int {
 	res0 := w.obj.AssumeRoleWithSAMLWithCallback(request, callback)
 	return res0
 }
 
-func (w *STSClientWrapper) AssumeRoleWithSAMLWithChan(ctx context.Context, request *sts.AssumeRoleWithSAMLRequest) (<-chan *sts.AssumeRoleWithSAMLResponse, <-chan error) {
+func (w *STSClientWrapper) AssumeRoleWithSAMLWithChan(request *sts.AssumeRoleWithSAMLRequest) (<-chan *sts.AssumeRoleWithSAMLResponse, <-chan error) {
 	res0, res1 := w.obj.AssumeRoleWithSAMLWithChan(request)
 	return res0, res1
 }
@@ -202,12 +202,12 @@ func (w *STSClientWrapper) GetCallerIdentity(ctx context.Context, request *sts.G
 	return response, err
 }
 
-func (w *STSClientWrapper) GetCallerIdentityWithCallback(ctx context.Context, request *sts.GetCallerIdentityRequest, callback func(response *sts.GetCallerIdentityResponse, err error)) <-chan int {
+func (w *STSClientWrapper) GetCallerIdentityWithCallback(request *sts.GetCallerIdentityRequest, callback func(response *sts.GetCallerIdentityResponse, err error)) <-chan int {
 	res0 := w.obj.GetCallerIdentityWithCallback(request, callback)
 	return res0
 }
 
-func (w *STSClientWrapper) GetCallerIdentityWithChan(ctx context.Context, request *sts.GetCallerIdentityRequest) (<-chan *sts.GetCallerIdentityResponse, <-chan error) {
+func (w *STSClientWrapper) GetCallerIdentityWithChan(request *sts.GetCallerIdentityRequest) (<-chan *sts.GetCallerIdentityResponse, <-chan error) {
 	res0, res1 := w.obj.GetCallerIdentityWithChan(request)
 	return res0, res1
 }

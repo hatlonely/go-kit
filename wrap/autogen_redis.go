@@ -151,22 +151,22 @@ func (w *RedisClusterClientWrapper) CreateMetric(options *WrapperOptions) {
 	}, []string{"method", "errCode", "custom"})
 }
 
-func (w *RedisClientWrapper) Context(ctx context.Context) context.Context {
+func (w *RedisClientWrapper) Context() context.Context {
 	res0 := w.obj.Context()
 	return res0
 }
 
-func (w *RedisClientWrapper) Options(ctx context.Context) *redis.Options {
+func (w *RedisClientWrapper) Options() *redis.Options {
 	res0 := w.obj.Options()
 	return res0
 }
 
-func (w *RedisClientWrapper) PSubscribe(ctx context.Context, channels ...string) *redis.PubSub {
+func (w *RedisClientWrapper) PSubscribe(channels ...string) *redis.PubSub {
 	res0 := w.obj.PSubscribe(channels...)
 	return res0
 }
 
-func (w *RedisClientWrapper) Pipeline(ctx context.Context) redis.Pipeliner {
+func (w *RedisClientWrapper) Pipeline() redis.Pipeliner {
 	res0 := w.obj.Pipeline()
 	return res0
 }
@@ -204,22 +204,22 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 	return res0, err
 }
 
-func (w *RedisClientWrapper) PoolStats(ctx context.Context) *redis.PoolStats {
+func (w *RedisClientWrapper) PoolStats() *redis.PoolStats {
 	res0 := w.obj.PoolStats()
 	return res0
 }
 
-func (w *RedisClientWrapper) SetLimiter(ctx context.Context, l redis.Limiter) *RedisClientWrapper {
+func (w *RedisClientWrapper) SetLimiter(l redis.Limiter) *RedisClientWrapper {
 	w.obj = w.obj.SetLimiter(l)
 	return w
 }
 
-func (w *RedisClientWrapper) Subscribe(ctx context.Context, channels ...string) *redis.PubSub {
+func (w *RedisClientWrapper) Subscribe(channels ...string) *redis.PubSub {
 	res0 := w.obj.Subscribe(channels...)
 	return res0
 }
 
-func (w *RedisClientWrapper) TxPipeline(ctx context.Context) redis.Pipeliner {
+func (w *RedisClientWrapper) TxPipeline() redis.Pipeliner {
 	res0 := w.obj.TxPipeline()
 	return res0
 }
@@ -326,17 +326,17 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 	return err
 }
 
-func (w *RedisClusterClientWrapper) Context(ctx context.Context) context.Context {
+func (w *RedisClusterClientWrapper) Context() context.Context {
 	res0 := w.obj.Context()
 	return res0
 }
 
-func (w *RedisClusterClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
+func (w *RedisClusterClientWrapper) DBSize() *redis.IntCmd {
 	res0 := w.obj.DBSize()
 	return res0
 }
 
-func (w *RedisClusterClientWrapper) Do(ctx context.Context, args ...interface{}) *redis.Cmd {
+func (w *RedisClusterClientWrapper) Do(args ...interface{}) *redis.Cmd {
 	res0 := w.obj.Do(args...)
 	return res0
 }
@@ -437,17 +437,17 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 	return err
 }
 
-func (w *RedisClusterClientWrapper) Options(ctx context.Context) *redis.ClusterOptions {
+func (w *RedisClusterClientWrapper) Options() *redis.ClusterOptions {
 	res0 := w.obj.Options()
 	return res0
 }
 
-func (w *RedisClusterClientWrapper) PSubscribe(ctx context.Context, channels ...string) *redis.PubSub {
+func (w *RedisClusterClientWrapper) PSubscribe(channels ...string) *redis.PubSub {
 	res0 := w.obj.PSubscribe(channels...)
 	return res0
 }
 
-func (w *RedisClusterClientWrapper) Pipeline(ctx context.Context) redis.Pipeliner {
+func (w *RedisClusterClientWrapper) Pipeline() redis.Pipeliner {
 	res0 := w.obj.Pipeline()
 	return res0
 }
@@ -485,7 +485,7 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 	return res0, err
 }
 
-func (w *RedisClusterClientWrapper) PoolStats(ctx context.Context) *redis.PoolStats {
+func (w *RedisClusterClientWrapper) PoolStats() *redis.PoolStats {
 	res0 := w.obj.PoolStats()
 	return res0
 }
@@ -554,12 +554,12 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 	return err
 }
 
-func (w *RedisClusterClientWrapper) Subscribe(ctx context.Context, channels ...string) *redis.PubSub {
+func (w *RedisClusterClientWrapper) Subscribe(channels ...string) *redis.PubSub {
 	res0 := w.obj.Subscribe(channels...)
 	return res0
 }
 
-func (w *RedisClusterClientWrapper) TxPipeline(ctx context.Context) redis.Pipeliner {
+func (w *RedisClusterClientWrapper) TxPipeline() redis.Pipeliner {
 	res0 := w.obj.TxPipeline()
 	return res0
 }
@@ -634,10 +634,10 @@ func (w *RedisClusterClientWrapper) WithContext(ctx context.Context) *RedisClust
 	return w
 }
 
-func (w *RedisClusterClientWrapper) WrapProcess(ctx context.Context, fn func(oldProcess func(redis.Cmder) error) func(redis.Cmder) error) {
+func (w *RedisClusterClientWrapper) WrapProcess(fn func(oldProcess func(redis.Cmder) error) func(redis.Cmder) error) {
 	w.obj.WrapProcess(fn)
 }
 
-func (w *RedisClusterClientWrapper) WrapProcessPipeline(ctx context.Context, fn func(oldProcess func([]redis.Cmder) error) func([]redis.Cmder) error) {
+func (w *RedisClusterClientWrapper) WrapProcessPipeline(fn func(oldProcess func([]redis.Cmder) error) func([]redis.Cmder) error) {
 	w.obj.WrapProcessPipeline(fn)
 }

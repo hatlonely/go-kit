@@ -24,7 +24,7 @@ func Test1(t *testing.T) {
 			"localGroupRateLimiter": map[string]interface{}{
 				"DB.First": map[string]interface{}{
 					"interval": "2s",
-					"buckets":  1,
+					"burst":    1,
 				},
 			},
 		}

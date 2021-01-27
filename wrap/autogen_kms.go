@@ -116,12 +116,12 @@ func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.A
 	return response, err
 }
 
-func (w *KMSClientWrapper) AsymmetricDecryptWithCallback(ctx context.Context, request *kms.AsymmetricDecryptRequest, callback func(response *kms.AsymmetricDecryptResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) AsymmetricDecryptWithCallback(request *kms.AsymmetricDecryptRequest, callback func(response *kms.AsymmetricDecryptResponse, err error)) <-chan int {
 	res0 := w.obj.AsymmetricDecryptWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) AsymmetricDecryptWithChan(ctx context.Context, request *kms.AsymmetricDecryptRequest) (<-chan *kms.AsymmetricDecryptResponse, <-chan error) {
+func (w *KMSClientWrapper) AsymmetricDecryptWithChan(request *kms.AsymmetricDecryptRequest) (<-chan *kms.AsymmetricDecryptResponse, <-chan error) {
 	res0, res1 := w.obj.AsymmetricDecryptWithChan(request)
 	return res0, res1
 }
@@ -159,12 +159,12 @@ func (w *KMSClientWrapper) AsymmetricEncrypt(ctx context.Context, request *kms.A
 	return response, err
 }
 
-func (w *KMSClientWrapper) AsymmetricEncryptWithCallback(ctx context.Context, request *kms.AsymmetricEncryptRequest, callback func(response *kms.AsymmetricEncryptResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) AsymmetricEncryptWithCallback(request *kms.AsymmetricEncryptRequest, callback func(response *kms.AsymmetricEncryptResponse, err error)) <-chan int {
 	res0 := w.obj.AsymmetricEncryptWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) AsymmetricEncryptWithChan(ctx context.Context, request *kms.AsymmetricEncryptRequest) (<-chan *kms.AsymmetricEncryptResponse, <-chan error) {
+func (w *KMSClientWrapper) AsymmetricEncryptWithChan(request *kms.AsymmetricEncryptRequest) (<-chan *kms.AsymmetricEncryptResponse, <-chan error) {
 	res0, res1 := w.obj.AsymmetricEncryptWithChan(request)
 	return res0, res1
 }
@@ -202,12 +202,12 @@ func (w *KMSClientWrapper) AsymmetricSign(ctx context.Context, request *kms.Asym
 	return response, err
 }
 
-func (w *KMSClientWrapper) AsymmetricSignWithCallback(ctx context.Context, request *kms.AsymmetricSignRequest, callback func(response *kms.AsymmetricSignResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) AsymmetricSignWithCallback(request *kms.AsymmetricSignRequest, callback func(response *kms.AsymmetricSignResponse, err error)) <-chan int {
 	res0 := w.obj.AsymmetricSignWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) AsymmetricSignWithChan(ctx context.Context, request *kms.AsymmetricSignRequest) (<-chan *kms.AsymmetricSignResponse, <-chan error) {
+func (w *KMSClientWrapper) AsymmetricSignWithChan(request *kms.AsymmetricSignRequest) (<-chan *kms.AsymmetricSignResponse, <-chan error) {
 	res0, res1 := w.obj.AsymmetricSignWithChan(request)
 	return res0, res1
 }
@@ -245,12 +245,12 @@ func (w *KMSClientWrapper) AsymmetricVerify(ctx context.Context, request *kms.As
 	return response, err
 }
 
-func (w *KMSClientWrapper) AsymmetricVerifyWithCallback(ctx context.Context, request *kms.AsymmetricVerifyRequest, callback func(response *kms.AsymmetricVerifyResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) AsymmetricVerifyWithCallback(request *kms.AsymmetricVerifyRequest, callback func(response *kms.AsymmetricVerifyResponse, err error)) <-chan int {
 	res0 := w.obj.AsymmetricVerifyWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) AsymmetricVerifyWithChan(ctx context.Context, request *kms.AsymmetricVerifyRequest) (<-chan *kms.AsymmetricVerifyResponse, <-chan error) {
+func (w *KMSClientWrapper) AsymmetricVerifyWithChan(request *kms.AsymmetricVerifyRequest) (<-chan *kms.AsymmetricVerifyResponse, <-chan error) {
 	res0, res1 := w.obj.AsymmetricVerifyWithChan(request)
 	return res0, res1
 }
@@ -288,12 +288,12 @@ func (w *KMSClientWrapper) CancelKeyDeletion(ctx context.Context, request *kms.C
 	return response, err
 }
 
-func (w *KMSClientWrapper) CancelKeyDeletionWithCallback(ctx context.Context, request *kms.CancelKeyDeletionRequest, callback func(response *kms.CancelKeyDeletionResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) CancelKeyDeletionWithCallback(request *kms.CancelKeyDeletionRequest, callback func(response *kms.CancelKeyDeletionResponse, err error)) <-chan int {
 	res0 := w.obj.CancelKeyDeletionWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) CancelKeyDeletionWithChan(ctx context.Context, request *kms.CancelKeyDeletionRequest) (<-chan *kms.CancelKeyDeletionResponse, <-chan error) {
+func (w *KMSClientWrapper) CancelKeyDeletionWithChan(request *kms.CancelKeyDeletionRequest) (<-chan *kms.CancelKeyDeletionResponse, <-chan error) {
 	res0, res1 := w.obj.CancelKeyDeletionWithChan(request)
 	return res0, res1
 }
@@ -331,12 +331,12 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecrypt(ctx context.Context, req
 	return response, err
 }
 
-func (w *KMSClientWrapper) CertificatePrivateKeyDecryptWithCallback(ctx context.Context, request *kms.CertificatePrivateKeyDecryptRequest, callback func(response *kms.CertificatePrivateKeyDecryptResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) CertificatePrivateKeyDecryptWithCallback(request *kms.CertificatePrivateKeyDecryptRequest, callback func(response *kms.CertificatePrivateKeyDecryptResponse, err error)) <-chan int {
 	res0 := w.obj.CertificatePrivateKeyDecryptWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) CertificatePrivateKeyDecryptWithChan(ctx context.Context, request *kms.CertificatePrivateKeyDecryptRequest) (<-chan *kms.CertificatePrivateKeyDecryptResponse, <-chan error) {
+func (w *KMSClientWrapper) CertificatePrivateKeyDecryptWithChan(request *kms.CertificatePrivateKeyDecryptRequest) (<-chan *kms.CertificatePrivateKeyDecryptResponse, <-chan error) {
 	res0, res1 := w.obj.CertificatePrivateKeyDecryptWithChan(request)
 	return res0, res1
 }
@@ -374,12 +374,12 @@ func (w *KMSClientWrapper) CertificatePrivateKeySign(ctx context.Context, reques
 	return response, err
 }
 
-func (w *KMSClientWrapper) CertificatePrivateKeySignWithCallback(ctx context.Context, request *kms.CertificatePrivateKeySignRequest, callback func(response *kms.CertificatePrivateKeySignResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) CertificatePrivateKeySignWithCallback(request *kms.CertificatePrivateKeySignRequest, callback func(response *kms.CertificatePrivateKeySignResponse, err error)) <-chan int {
 	res0 := w.obj.CertificatePrivateKeySignWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) CertificatePrivateKeySignWithChan(ctx context.Context, request *kms.CertificatePrivateKeySignRequest) (<-chan *kms.CertificatePrivateKeySignResponse, <-chan error) {
+func (w *KMSClientWrapper) CertificatePrivateKeySignWithChan(request *kms.CertificatePrivateKeySignRequest) (<-chan *kms.CertificatePrivateKeySignResponse, <-chan error) {
 	res0, res1 := w.obj.CertificatePrivateKeySignWithChan(request)
 	return res0, res1
 }
@@ -417,12 +417,12 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncrypt(ctx context.Context, requ
 	return response, err
 }
 
-func (w *KMSClientWrapper) CertificatePublicKeyEncryptWithCallback(ctx context.Context, request *kms.CertificatePublicKeyEncryptRequest, callback func(response *kms.CertificatePublicKeyEncryptResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) CertificatePublicKeyEncryptWithCallback(request *kms.CertificatePublicKeyEncryptRequest, callback func(response *kms.CertificatePublicKeyEncryptResponse, err error)) <-chan int {
 	res0 := w.obj.CertificatePublicKeyEncryptWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) CertificatePublicKeyEncryptWithChan(ctx context.Context, request *kms.CertificatePublicKeyEncryptRequest) (<-chan *kms.CertificatePublicKeyEncryptResponse, <-chan error) {
+func (w *KMSClientWrapper) CertificatePublicKeyEncryptWithChan(request *kms.CertificatePublicKeyEncryptRequest) (<-chan *kms.CertificatePublicKeyEncryptResponse, <-chan error) {
 	res0, res1 := w.obj.CertificatePublicKeyEncryptWithChan(request)
 	return res0, res1
 }
@@ -460,12 +460,12 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerify(ctx context.Context, reque
 	return response, err
 }
 
-func (w *KMSClientWrapper) CertificatePublicKeyVerifyWithCallback(ctx context.Context, request *kms.CertificatePublicKeyVerifyRequest, callback func(response *kms.CertificatePublicKeyVerifyResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) CertificatePublicKeyVerifyWithCallback(request *kms.CertificatePublicKeyVerifyRequest, callback func(response *kms.CertificatePublicKeyVerifyResponse, err error)) <-chan int {
 	res0 := w.obj.CertificatePublicKeyVerifyWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) CertificatePublicKeyVerifyWithChan(ctx context.Context, request *kms.CertificatePublicKeyVerifyRequest) (<-chan *kms.CertificatePublicKeyVerifyResponse, <-chan error) {
+func (w *KMSClientWrapper) CertificatePublicKeyVerifyWithChan(request *kms.CertificatePublicKeyVerifyRequest) (<-chan *kms.CertificatePublicKeyVerifyResponse, <-chan error) {
 	res0, res1 := w.obj.CertificatePublicKeyVerifyWithChan(request)
 	return res0, res1
 }
@@ -503,12 +503,12 @@ func (w *KMSClientWrapper) CreateAlias(ctx context.Context, request *kms.CreateA
 	return response, err
 }
 
-func (w *KMSClientWrapper) CreateAliasWithCallback(ctx context.Context, request *kms.CreateAliasRequest, callback func(response *kms.CreateAliasResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) CreateAliasWithCallback(request *kms.CreateAliasRequest, callback func(response *kms.CreateAliasResponse, err error)) <-chan int {
 	res0 := w.obj.CreateAliasWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) CreateAliasWithChan(ctx context.Context, request *kms.CreateAliasRequest) (<-chan *kms.CreateAliasResponse, <-chan error) {
+func (w *KMSClientWrapper) CreateAliasWithChan(request *kms.CreateAliasRequest) (<-chan *kms.CreateAliasResponse, <-chan error) {
 	res0, res1 := w.obj.CreateAliasWithChan(request)
 	return res0, res1
 }
@@ -546,12 +546,12 @@ func (w *KMSClientWrapper) CreateCertificate(ctx context.Context, request *kms.C
 	return response, err
 }
 
-func (w *KMSClientWrapper) CreateCertificateWithCallback(ctx context.Context, request *kms.CreateCertificateRequest, callback func(response *kms.CreateCertificateResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) CreateCertificateWithCallback(request *kms.CreateCertificateRequest, callback func(response *kms.CreateCertificateResponse, err error)) <-chan int {
 	res0 := w.obj.CreateCertificateWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) CreateCertificateWithChan(ctx context.Context, request *kms.CreateCertificateRequest) (<-chan *kms.CreateCertificateResponse, <-chan error) {
+func (w *KMSClientWrapper) CreateCertificateWithChan(request *kms.CreateCertificateRequest) (<-chan *kms.CreateCertificateResponse, <-chan error) {
 	res0, res1 := w.obj.CreateCertificateWithChan(request)
 	return res0, res1
 }
@@ -622,22 +622,22 @@ func (w *KMSClientWrapper) CreateKeyVersion(ctx context.Context, request *kms.Cr
 	return response, err
 }
 
-func (w *KMSClientWrapper) CreateKeyVersionWithCallback(ctx context.Context, request *kms.CreateKeyVersionRequest, callback func(response *kms.CreateKeyVersionResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) CreateKeyVersionWithCallback(request *kms.CreateKeyVersionRequest, callback func(response *kms.CreateKeyVersionResponse, err error)) <-chan int {
 	res0 := w.obj.CreateKeyVersionWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) CreateKeyVersionWithChan(ctx context.Context, request *kms.CreateKeyVersionRequest) (<-chan *kms.CreateKeyVersionResponse, <-chan error) {
+func (w *KMSClientWrapper) CreateKeyVersionWithChan(request *kms.CreateKeyVersionRequest) (<-chan *kms.CreateKeyVersionResponse, <-chan error) {
 	res0, res1 := w.obj.CreateKeyVersionWithChan(request)
 	return res0, res1
 }
 
-func (w *KMSClientWrapper) CreateKeyWithCallback(ctx context.Context, request *kms.CreateKeyRequest, callback func(response *kms.CreateKeyResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) CreateKeyWithCallback(request *kms.CreateKeyRequest, callback func(response *kms.CreateKeyResponse, err error)) <-chan int {
 	res0 := w.obj.CreateKeyWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) CreateKeyWithChan(ctx context.Context, request *kms.CreateKeyRequest) (<-chan *kms.CreateKeyResponse, <-chan error) {
+func (w *KMSClientWrapper) CreateKeyWithChan(request *kms.CreateKeyRequest) (<-chan *kms.CreateKeyResponse, <-chan error) {
 	res0, res1 := w.obj.CreateKeyWithChan(request)
 	return res0, res1
 }
@@ -675,12 +675,12 @@ func (w *KMSClientWrapper) CreateSecret(ctx context.Context, request *kms.Create
 	return response, err
 }
 
-func (w *KMSClientWrapper) CreateSecretWithCallback(ctx context.Context, request *kms.CreateSecretRequest, callback func(response *kms.CreateSecretResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) CreateSecretWithCallback(request *kms.CreateSecretRequest, callback func(response *kms.CreateSecretResponse, err error)) <-chan int {
 	res0 := w.obj.CreateSecretWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) CreateSecretWithChan(ctx context.Context, request *kms.CreateSecretRequest) (<-chan *kms.CreateSecretResponse, <-chan error) {
+func (w *KMSClientWrapper) CreateSecretWithChan(request *kms.CreateSecretRequest) (<-chan *kms.CreateSecretResponse, <-chan error) {
 	res0, res1 := w.obj.CreateSecretWithChan(request)
 	return res0, res1
 }
@@ -718,12 +718,12 @@ func (w *KMSClientWrapper) Decrypt(ctx context.Context, request *kms.DecryptRequ
 	return response, err
 }
 
-func (w *KMSClientWrapper) DecryptWithCallback(ctx context.Context, request *kms.DecryptRequest, callback func(response *kms.DecryptResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) DecryptWithCallback(request *kms.DecryptRequest, callback func(response *kms.DecryptResponse, err error)) <-chan int {
 	res0 := w.obj.DecryptWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) DecryptWithChan(ctx context.Context, request *kms.DecryptRequest) (<-chan *kms.DecryptResponse, <-chan error) {
+func (w *KMSClientWrapper) DecryptWithChan(request *kms.DecryptRequest) (<-chan *kms.DecryptResponse, <-chan error) {
 	res0, res1 := w.obj.DecryptWithChan(request)
 	return res0, res1
 }
@@ -761,12 +761,12 @@ func (w *KMSClientWrapper) DeleteAlias(ctx context.Context, request *kms.DeleteA
 	return response, err
 }
 
-func (w *KMSClientWrapper) DeleteAliasWithCallback(ctx context.Context, request *kms.DeleteAliasRequest, callback func(response *kms.DeleteAliasResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) DeleteAliasWithCallback(request *kms.DeleteAliasRequest, callback func(response *kms.DeleteAliasResponse, err error)) <-chan int {
 	res0 := w.obj.DeleteAliasWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) DeleteAliasWithChan(ctx context.Context, request *kms.DeleteAliasRequest) (<-chan *kms.DeleteAliasResponse, <-chan error) {
+func (w *KMSClientWrapper) DeleteAliasWithChan(request *kms.DeleteAliasRequest) (<-chan *kms.DeleteAliasResponse, <-chan error) {
 	res0, res1 := w.obj.DeleteAliasWithChan(request)
 	return res0, res1
 }
@@ -804,12 +804,12 @@ func (w *KMSClientWrapper) DeleteCertificate(ctx context.Context, request *kms.D
 	return response, err
 }
 
-func (w *KMSClientWrapper) DeleteCertificateWithCallback(ctx context.Context, request *kms.DeleteCertificateRequest, callback func(response *kms.DeleteCertificateResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) DeleteCertificateWithCallback(request *kms.DeleteCertificateRequest, callback func(response *kms.DeleteCertificateResponse, err error)) <-chan int {
 	res0 := w.obj.DeleteCertificateWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) DeleteCertificateWithChan(ctx context.Context, request *kms.DeleteCertificateRequest) (<-chan *kms.DeleteCertificateResponse, <-chan error) {
+func (w *KMSClientWrapper) DeleteCertificateWithChan(request *kms.DeleteCertificateRequest) (<-chan *kms.DeleteCertificateResponse, <-chan error) {
 	res0, res1 := w.obj.DeleteCertificateWithChan(request)
 	return res0, res1
 }
@@ -847,12 +847,12 @@ func (w *KMSClientWrapper) DeleteKeyMaterial(ctx context.Context, request *kms.D
 	return response, err
 }
 
-func (w *KMSClientWrapper) DeleteKeyMaterialWithCallback(ctx context.Context, request *kms.DeleteKeyMaterialRequest, callback func(response *kms.DeleteKeyMaterialResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) DeleteKeyMaterialWithCallback(request *kms.DeleteKeyMaterialRequest, callback func(response *kms.DeleteKeyMaterialResponse, err error)) <-chan int {
 	res0 := w.obj.DeleteKeyMaterialWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) DeleteKeyMaterialWithChan(ctx context.Context, request *kms.DeleteKeyMaterialRequest) (<-chan *kms.DeleteKeyMaterialResponse, <-chan error) {
+func (w *KMSClientWrapper) DeleteKeyMaterialWithChan(request *kms.DeleteKeyMaterialRequest) (<-chan *kms.DeleteKeyMaterialResponse, <-chan error) {
 	res0, res1 := w.obj.DeleteKeyMaterialWithChan(request)
 	return res0, res1
 }
@@ -890,12 +890,12 @@ func (w *KMSClientWrapper) DeleteSecret(ctx context.Context, request *kms.Delete
 	return response, err
 }
 
-func (w *KMSClientWrapper) DeleteSecretWithCallback(ctx context.Context, request *kms.DeleteSecretRequest, callback func(response *kms.DeleteSecretResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) DeleteSecretWithCallback(request *kms.DeleteSecretRequest, callback func(response *kms.DeleteSecretResponse, err error)) <-chan int {
 	res0 := w.obj.DeleteSecretWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) DeleteSecretWithChan(ctx context.Context, request *kms.DeleteSecretRequest) (<-chan *kms.DeleteSecretResponse, <-chan error) {
+func (w *KMSClientWrapper) DeleteSecretWithChan(request *kms.DeleteSecretRequest) (<-chan *kms.DeleteSecretResponse, <-chan error) {
 	res0, res1 := w.obj.DeleteSecretWithChan(request)
 	return res0, res1
 }
@@ -933,12 +933,12 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatus(ctx context.Context, request
 	return response, err
 }
 
-func (w *KMSClientWrapper) DescribeAccountKmsStatusWithCallback(ctx context.Context, request *kms.DescribeAccountKmsStatusRequest, callback func(response *kms.DescribeAccountKmsStatusResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) DescribeAccountKmsStatusWithCallback(request *kms.DescribeAccountKmsStatusRequest, callback func(response *kms.DescribeAccountKmsStatusResponse, err error)) <-chan int {
 	res0 := w.obj.DescribeAccountKmsStatusWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) DescribeAccountKmsStatusWithChan(ctx context.Context, request *kms.DescribeAccountKmsStatusRequest) (<-chan *kms.DescribeAccountKmsStatusResponse, <-chan error) {
+func (w *KMSClientWrapper) DescribeAccountKmsStatusWithChan(request *kms.DescribeAccountKmsStatusRequest) (<-chan *kms.DescribeAccountKmsStatusResponse, <-chan error) {
 	res0, res1 := w.obj.DescribeAccountKmsStatusWithChan(request)
 	return res0, res1
 }
@@ -976,12 +976,12 @@ func (w *KMSClientWrapper) DescribeCertificate(ctx context.Context, request *kms
 	return response, err
 }
 
-func (w *KMSClientWrapper) DescribeCertificateWithCallback(ctx context.Context, request *kms.DescribeCertificateRequest, callback func(response *kms.DescribeCertificateResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) DescribeCertificateWithCallback(request *kms.DescribeCertificateRequest, callback func(response *kms.DescribeCertificateResponse, err error)) <-chan int {
 	res0 := w.obj.DescribeCertificateWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) DescribeCertificateWithChan(ctx context.Context, request *kms.DescribeCertificateRequest) (<-chan *kms.DescribeCertificateResponse, <-chan error) {
+func (w *KMSClientWrapper) DescribeCertificateWithChan(request *kms.DescribeCertificateRequest) (<-chan *kms.DescribeCertificateResponse, <-chan error) {
 	res0, res1 := w.obj.DescribeCertificateWithChan(request)
 	return res0, res1
 }
@@ -1052,22 +1052,22 @@ func (w *KMSClientWrapper) DescribeKeyVersion(ctx context.Context, request *kms.
 	return response, err
 }
 
-func (w *KMSClientWrapper) DescribeKeyVersionWithCallback(ctx context.Context, request *kms.DescribeKeyVersionRequest, callback func(response *kms.DescribeKeyVersionResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) DescribeKeyVersionWithCallback(request *kms.DescribeKeyVersionRequest, callback func(response *kms.DescribeKeyVersionResponse, err error)) <-chan int {
 	res0 := w.obj.DescribeKeyVersionWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) DescribeKeyVersionWithChan(ctx context.Context, request *kms.DescribeKeyVersionRequest) (<-chan *kms.DescribeKeyVersionResponse, <-chan error) {
+func (w *KMSClientWrapper) DescribeKeyVersionWithChan(request *kms.DescribeKeyVersionRequest) (<-chan *kms.DescribeKeyVersionResponse, <-chan error) {
 	res0, res1 := w.obj.DescribeKeyVersionWithChan(request)
 	return res0, res1
 }
 
-func (w *KMSClientWrapper) DescribeKeyWithCallback(ctx context.Context, request *kms.DescribeKeyRequest, callback func(response *kms.DescribeKeyResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) DescribeKeyWithCallback(request *kms.DescribeKeyRequest, callback func(response *kms.DescribeKeyResponse, err error)) <-chan int {
 	res0 := w.obj.DescribeKeyWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) DescribeKeyWithChan(ctx context.Context, request *kms.DescribeKeyRequest) (<-chan *kms.DescribeKeyResponse, <-chan error) {
+func (w *KMSClientWrapper) DescribeKeyWithChan(request *kms.DescribeKeyRequest) (<-chan *kms.DescribeKeyResponse, <-chan error) {
 	res0, res1 := w.obj.DescribeKeyWithChan(request)
 	return res0, res1
 }
@@ -1105,12 +1105,12 @@ func (w *KMSClientWrapper) DescribeRegions(ctx context.Context, request *kms.Des
 	return response, err
 }
 
-func (w *KMSClientWrapper) DescribeRegionsWithCallback(ctx context.Context, request *kms.DescribeRegionsRequest, callback func(response *kms.DescribeRegionsResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) DescribeRegionsWithCallback(request *kms.DescribeRegionsRequest, callback func(response *kms.DescribeRegionsResponse, err error)) <-chan int {
 	res0 := w.obj.DescribeRegionsWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) DescribeRegionsWithChan(ctx context.Context, request *kms.DescribeRegionsRequest) (<-chan *kms.DescribeRegionsResponse, <-chan error) {
+func (w *KMSClientWrapper) DescribeRegionsWithChan(request *kms.DescribeRegionsRequest) (<-chan *kms.DescribeRegionsResponse, <-chan error) {
 	res0, res1 := w.obj.DescribeRegionsWithChan(request)
 	return res0, res1
 }
@@ -1148,12 +1148,12 @@ func (w *KMSClientWrapper) DescribeSecret(ctx context.Context, request *kms.Desc
 	return response, err
 }
 
-func (w *KMSClientWrapper) DescribeSecretWithCallback(ctx context.Context, request *kms.DescribeSecretRequest, callback func(response *kms.DescribeSecretResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) DescribeSecretWithCallback(request *kms.DescribeSecretRequest, callback func(response *kms.DescribeSecretResponse, err error)) <-chan int {
 	res0 := w.obj.DescribeSecretWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) DescribeSecretWithChan(ctx context.Context, request *kms.DescribeSecretRequest) (<-chan *kms.DescribeSecretResponse, <-chan error) {
+func (w *KMSClientWrapper) DescribeSecretWithChan(request *kms.DescribeSecretRequest) (<-chan *kms.DescribeSecretResponse, <-chan error) {
 	res0, res1 := w.obj.DescribeSecretWithChan(request)
 	return res0, res1
 }
@@ -1191,12 +1191,12 @@ func (w *KMSClientWrapper) DescribeService(ctx context.Context, request *kms.Des
 	return response, err
 }
 
-func (w *KMSClientWrapper) DescribeServiceWithCallback(ctx context.Context, request *kms.DescribeServiceRequest, callback func(response *kms.DescribeServiceResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) DescribeServiceWithCallback(request *kms.DescribeServiceRequest, callback func(response *kms.DescribeServiceResponse, err error)) <-chan int {
 	res0 := w.obj.DescribeServiceWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) DescribeServiceWithChan(ctx context.Context, request *kms.DescribeServiceRequest) (<-chan *kms.DescribeServiceResponse, <-chan error) {
+func (w *KMSClientWrapper) DescribeServiceWithChan(request *kms.DescribeServiceRequest) (<-chan *kms.DescribeServiceResponse, <-chan error) {
 	res0, res1 := w.obj.DescribeServiceWithChan(request)
 	return res0, res1
 }
@@ -1234,12 +1234,12 @@ func (w *KMSClientWrapper) DisableKey(ctx context.Context, request *kms.DisableK
 	return response, err
 }
 
-func (w *KMSClientWrapper) DisableKeyWithCallback(ctx context.Context, request *kms.DisableKeyRequest, callback func(response *kms.DisableKeyResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) DisableKeyWithCallback(request *kms.DisableKeyRequest, callback func(response *kms.DisableKeyResponse, err error)) <-chan int {
 	res0 := w.obj.DisableKeyWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) DisableKeyWithChan(ctx context.Context, request *kms.DisableKeyRequest) (<-chan *kms.DisableKeyResponse, <-chan error) {
+func (w *KMSClientWrapper) DisableKeyWithChan(request *kms.DisableKeyRequest) (<-chan *kms.DisableKeyResponse, <-chan error) {
 	res0, res1 := w.obj.DisableKeyWithChan(request)
 	return res0, res1
 }
@@ -1277,12 +1277,12 @@ func (w *KMSClientWrapper) EnableKey(ctx context.Context, request *kms.EnableKey
 	return response, err
 }
 
-func (w *KMSClientWrapper) EnableKeyWithCallback(ctx context.Context, request *kms.EnableKeyRequest, callback func(response *kms.EnableKeyResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) EnableKeyWithCallback(request *kms.EnableKeyRequest, callback func(response *kms.EnableKeyResponse, err error)) <-chan int {
 	res0 := w.obj.EnableKeyWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) EnableKeyWithChan(ctx context.Context, request *kms.EnableKeyRequest) (<-chan *kms.EnableKeyResponse, <-chan error) {
+func (w *KMSClientWrapper) EnableKeyWithChan(request *kms.EnableKeyRequest) (<-chan *kms.EnableKeyResponse, <-chan error) {
 	res0, res1 := w.obj.EnableKeyWithChan(request)
 	return res0, res1
 }
@@ -1320,12 +1320,12 @@ func (w *KMSClientWrapper) Encrypt(ctx context.Context, request *kms.EncryptRequ
 	return response, err
 }
 
-func (w *KMSClientWrapper) EncryptWithCallback(ctx context.Context, request *kms.EncryptRequest, callback func(response *kms.EncryptResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) EncryptWithCallback(request *kms.EncryptRequest, callback func(response *kms.EncryptResponse, err error)) <-chan int {
 	res0 := w.obj.EncryptWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) EncryptWithChan(ctx context.Context, request *kms.EncryptRequest) (<-chan *kms.EncryptResponse, <-chan error) {
+func (w *KMSClientWrapper) EncryptWithChan(request *kms.EncryptRequest) (<-chan *kms.EncryptResponse, <-chan error) {
 	res0, res1 := w.obj.EncryptWithChan(request)
 	return res0, res1
 }
@@ -1363,12 +1363,12 @@ func (w *KMSClientWrapper) ExportCertificate(ctx context.Context, request *kms.E
 	return response, err
 }
 
-func (w *KMSClientWrapper) ExportCertificateWithCallback(ctx context.Context, request *kms.ExportCertificateRequest, callback func(response *kms.ExportCertificateResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ExportCertificateWithCallback(request *kms.ExportCertificateRequest, callback func(response *kms.ExportCertificateResponse, err error)) <-chan int {
 	res0 := w.obj.ExportCertificateWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ExportCertificateWithChan(ctx context.Context, request *kms.ExportCertificateRequest) (<-chan *kms.ExportCertificateResponse, <-chan error) {
+func (w *KMSClientWrapper) ExportCertificateWithChan(request *kms.ExportCertificateRequest) (<-chan *kms.ExportCertificateResponse, <-chan error) {
 	res0, res1 := w.obj.ExportCertificateWithChan(request)
 	return res0, res1
 }
@@ -1406,12 +1406,12 @@ func (w *KMSClientWrapper) ExportDataKey(ctx context.Context, request *kms.Expor
 	return response, err
 }
 
-func (w *KMSClientWrapper) ExportDataKeyWithCallback(ctx context.Context, request *kms.ExportDataKeyRequest, callback func(response *kms.ExportDataKeyResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ExportDataKeyWithCallback(request *kms.ExportDataKeyRequest, callback func(response *kms.ExportDataKeyResponse, err error)) <-chan int {
 	res0 := w.obj.ExportDataKeyWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ExportDataKeyWithChan(ctx context.Context, request *kms.ExportDataKeyRequest) (<-chan *kms.ExportDataKeyResponse, <-chan error) {
+func (w *KMSClientWrapper) ExportDataKeyWithChan(request *kms.ExportDataKeyRequest) (<-chan *kms.ExportDataKeyResponse, <-chan error) {
 	res0, res1 := w.obj.ExportDataKeyWithChan(request)
 	return res0, res1
 }
@@ -1449,12 +1449,12 @@ func (w *KMSClientWrapper) GenerateAndExportDataKey(ctx context.Context, request
 	return response, err
 }
 
-func (w *KMSClientWrapper) GenerateAndExportDataKeyWithCallback(ctx context.Context, request *kms.GenerateAndExportDataKeyRequest, callback func(response *kms.GenerateAndExportDataKeyResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) GenerateAndExportDataKeyWithCallback(request *kms.GenerateAndExportDataKeyRequest, callback func(response *kms.GenerateAndExportDataKeyResponse, err error)) <-chan int {
 	res0 := w.obj.GenerateAndExportDataKeyWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) GenerateAndExportDataKeyWithChan(ctx context.Context, request *kms.GenerateAndExportDataKeyRequest) (<-chan *kms.GenerateAndExportDataKeyResponse, <-chan error) {
+func (w *KMSClientWrapper) GenerateAndExportDataKeyWithChan(request *kms.GenerateAndExportDataKeyRequest) (<-chan *kms.GenerateAndExportDataKeyResponse, <-chan error) {
 	res0, res1 := w.obj.GenerateAndExportDataKeyWithChan(request)
 	return res0, res1
 }
@@ -1492,12 +1492,12 @@ func (w *KMSClientWrapper) GenerateDataKey(ctx context.Context, request *kms.Gen
 	return response, err
 }
 
-func (w *KMSClientWrapper) GenerateDataKeyWithCallback(ctx context.Context, request *kms.GenerateDataKeyRequest, callback func(response *kms.GenerateDataKeyResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) GenerateDataKeyWithCallback(request *kms.GenerateDataKeyRequest, callback func(response *kms.GenerateDataKeyResponse, err error)) <-chan int {
 	res0 := w.obj.GenerateDataKeyWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) GenerateDataKeyWithChan(ctx context.Context, request *kms.GenerateDataKeyRequest) (<-chan *kms.GenerateDataKeyResponse, <-chan error) {
+func (w *KMSClientWrapper) GenerateDataKeyWithChan(request *kms.GenerateDataKeyRequest) (<-chan *kms.GenerateDataKeyResponse, <-chan error) {
 	res0, res1 := w.obj.GenerateDataKeyWithChan(request)
 	return res0, res1
 }
@@ -1535,12 +1535,12 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintext(ctx context.Context, 
 	return response, err
 }
 
-func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintextWithCallback(ctx context.Context, request *kms.GenerateDataKeyWithoutPlaintextRequest, callback func(response *kms.GenerateDataKeyWithoutPlaintextResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintextWithCallback(request *kms.GenerateDataKeyWithoutPlaintextRequest, callback func(response *kms.GenerateDataKeyWithoutPlaintextResponse, err error)) <-chan int {
 	res0 := w.obj.GenerateDataKeyWithoutPlaintextWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintextWithChan(ctx context.Context, request *kms.GenerateDataKeyWithoutPlaintextRequest) (<-chan *kms.GenerateDataKeyWithoutPlaintextResponse, <-chan error) {
+func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintextWithChan(request *kms.GenerateDataKeyWithoutPlaintextRequest) (<-chan *kms.GenerateDataKeyWithoutPlaintextResponse, <-chan error) {
 	res0, res1 := w.obj.GenerateDataKeyWithoutPlaintextWithChan(request)
 	return res0, res1
 }
@@ -1578,12 +1578,12 @@ func (w *KMSClientWrapper) GetCertificate(ctx context.Context, request *kms.GetC
 	return response, err
 }
 
-func (w *KMSClientWrapper) GetCertificateWithCallback(ctx context.Context, request *kms.GetCertificateRequest, callback func(response *kms.GetCertificateResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) GetCertificateWithCallback(request *kms.GetCertificateRequest, callback func(response *kms.GetCertificateResponse, err error)) <-chan int {
 	res0 := w.obj.GetCertificateWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) GetCertificateWithChan(ctx context.Context, request *kms.GetCertificateRequest) (<-chan *kms.GetCertificateResponse, <-chan error) {
+func (w *KMSClientWrapper) GetCertificateWithChan(request *kms.GetCertificateRequest) (<-chan *kms.GetCertificateResponse, <-chan error) {
 	res0, res1 := w.obj.GetCertificateWithChan(request)
 	return res0, res1
 }
@@ -1621,12 +1621,12 @@ func (w *KMSClientWrapper) GetParametersForImport(ctx context.Context, request *
 	return response, err
 }
 
-func (w *KMSClientWrapper) GetParametersForImportWithCallback(ctx context.Context, request *kms.GetParametersForImportRequest, callback func(response *kms.GetParametersForImportResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) GetParametersForImportWithCallback(request *kms.GetParametersForImportRequest, callback func(response *kms.GetParametersForImportResponse, err error)) <-chan int {
 	res0 := w.obj.GetParametersForImportWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) GetParametersForImportWithChan(ctx context.Context, request *kms.GetParametersForImportRequest) (<-chan *kms.GetParametersForImportResponse, <-chan error) {
+func (w *KMSClientWrapper) GetParametersForImportWithChan(request *kms.GetParametersForImportRequest) (<-chan *kms.GetParametersForImportResponse, <-chan error) {
 	res0, res1 := w.obj.GetParametersForImportWithChan(request)
 	return res0, res1
 }
@@ -1664,12 +1664,12 @@ func (w *KMSClientWrapper) GetPublicKey(ctx context.Context, request *kms.GetPub
 	return response, err
 }
 
-func (w *KMSClientWrapper) GetPublicKeyWithCallback(ctx context.Context, request *kms.GetPublicKeyRequest, callback func(response *kms.GetPublicKeyResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) GetPublicKeyWithCallback(request *kms.GetPublicKeyRequest, callback func(response *kms.GetPublicKeyResponse, err error)) <-chan int {
 	res0 := w.obj.GetPublicKeyWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) GetPublicKeyWithChan(ctx context.Context, request *kms.GetPublicKeyRequest) (<-chan *kms.GetPublicKeyResponse, <-chan error) {
+func (w *KMSClientWrapper) GetPublicKeyWithChan(request *kms.GetPublicKeyRequest) (<-chan *kms.GetPublicKeyResponse, <-chan error) {
 	res0, res1 := w.obj.GetPublicKeyWithChan(request)
 	return res0, res1
 }
@@ -1707,12 +1707,12 @@ func (w *KMSClientWrapper) GetRandomPassword(ctx context.Context, request *kms.G
 	return response, err
 }
 
-func (w *KMSClientWrapper) GetRandomPasswordWithCallback(ctx context.Context, request *kms.GetRandomPasswordRequest, callback func(response *kms.GetRandomPasswordResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) GetRandomPasswordWithCallback(request *kms.GetRandomPasswordRequest, callback func(response *kms.GetRandomPasswordResponse, err error)) <-chan int {
 	res0 := w.obj.GetRandomPasswordWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) GetRandomPasswordWithChan(ctx context.Context, request *kms.GetRandomPasswordRequest) (<-chan *kms.GetRandomPasswordResponse, <-chan error) {
+func (w *KMSClientWrapper) GetRandomPasswordWithChan(request *kms.GetRandomPasswordRequest) (<-chan *kms.GetRandomPasswordResponse, <-chan error) {
 	res0, res1 := w.obj.GetRandomPasswordWithChan(request)
 	return res0, res1
 }
@@ -1750,12 +1750,12 @@ func (w *KMSClientWrapper) GetSecretValue(ctx context.Context, request *kms.GetS
 	return response, err
 }
 
-func (w *KMSClientWrapper) GetSecretValueWithCallback(ctx context.Context, request *kms.GetSecretValueRequest, callback func(response *kms.GetSecretValueResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) GetSecretValueWithCallback(request *kms.GetSecretValueRequest, callback func(response *kms.GetSecretValueResponse, err error)) <-chan int {
 	res0 := w.obj.GetSecretValueWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) GetSecretValueWithChan(ctx context.Context, request *kms.GetSecretValueRequest) (<-chan *kms.GetSecretValueResponse, <-chan error) {
+func (w *KMSClientWrapper) GetSecretValueWithChan(request *kms.GetSecretValueRequest) (<-chan *kms.GetSecretValueResponse, <-chan error) {
 	res0, res1 := w.obj.GetSecretValueWithChan(request)
 	return res0, res1
 }
@@ -1793,12 +1793,12 @@ func (w *KMSClientWrapper) ImportCertificate(ctx context.Context, request *kms.I
 	return response, err
 }
 
-func (w *KMSClientWrapper) ImportCertificateWithCallback(ctx context.Context, request *kms.ImportCertificateRequest, callback func(response *kms.ImportCertificateResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ImportCertificateWithCallback(request *kms.ImportCertificateRequest, callback func(response *kms.ImportCertificateResponse, err error)) <-chan int {
 	res0 := w.obj.ImportCertificateWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ImportCertificateWithChan(ctx context.Context, request *kms.ImportCertificateRequest) (<-chan *kms.ImportCertificateResponse, <-chan error) {
+func (w *KMSClientWrapper) ImportCertificateWithChan(request *kms.ImportCertificateRequest) (<-chan *kms.ImportCertificateResponse, <-chan error) {
 	res0, res1 := w.obj.ImportCertificateWithChan(request)
 	return res0, res1
 }
@@ -1836,12 +1836,12 @@ func (w *KMSClientWrapper) ImportEncryptionCertificate(ctx context.Context, requ
 	return response, err
 }
 
-func (w *KMSClientWrapper) ImportEncryptionCertificateWithCallback(ctx context.Context, request *kms.ImportEncryptionCertificateRequest, callback func(response *kms.ImportEncryptionCertificateResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ImportEncryptionCertificateWithCallback(request *kms.ImportEncryptionCertificateRequest, callback func(response *kms.ImportEncryptionCertificateResponse, err error)) <-chan int {
 	res0 := w.obj.ImportEncryptionCertificateWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ImportEncryptionCertificateWithChan(ctx context.Context, request *kms.ImportEncryptionCertificateRequest) (<-chan *kms.ImportEncryptionCertificateResponse, <-chan error) {
+func (w *KMSClientWrapper) ImportEncryptionCertificateWithChan(request *kms.ImportEncryptionCertificateRequest) (<-chan *kms.ImportEncryptionCertificateResponse, <-chan error) {
 	res0, res1 := w.obj.ImportEncryptionCertificateWithChan(request)
 	return res0, res1
 }
@@ -1879,12 +1879,12 @@ func (w *KMSClientWrapper) ImportKeyMaterial(ctx context.Context, request *kms.I
 	return response, err
 }
 
-func (w *KMSClientWrapper) ImportKeyMaterialWithCallback(ctx context.Context, request *kms.ImportKeyMaterialRequest, callback func(response *kms.ImportKeyMaterialResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ImportKeyMaterialWithCallback(request *kms.ImportKeyMaterialRequest, callback func(response *kms.ImportKeyMaterialResponse, err error)) <-chan int {
 	res0 := w.obj.ImportKeyMaterialWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ImportKeyMaterialWithChan(ctx context.Context, request *kms.ImportKeyMaterialRequest) (<-chan *kms.ImportKeyMaterialResponse, <-chan error) {
+func (w *KMSClientWrapper) ImportKeyMaterialWithChan(request *kms.ImportKeyMaterialRequest) (<-chan *kms.ImportKeyMaterialResponse, <-chan error) {
 	res0, res1 := w.obj.ImportKeyMaterialWithChan(request)
 	return res0, res1
 }
@@ -1955,22 +1955,22 @@ func (w *KMSClientWrapper) ListAliasesByKeyId(ctx context.Context, request *kms.
 	return response, err
 }
 
-func (w *KMSClientWrapper) ListAliasesByKeyIdWithCallback(ctx context.Context, request *kms.ListAliasesByKeyIdRequest, callback func(response *kms.ListAliasesByKeyIdResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ListAliasesByKeyIdWithCallback(request *kms.ListAliasesByKeyIdRequest, callback func(response *kms.ListAliasesByKeyIdResponse, err error)) <-chan int {
 	res0 := w.obj.ListAliasesByKeyIdWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ListAliasesByKeyIdWithChan(ctx context.Context, request *kms.ListAliasesByKeyIdRequest) (<-chan *kms.ListAliasesByKeyIdResponse, <-chan error) {
+func (w *KMSClientWrapper) ListAliasesByKeyIdWithChan(request *kms.ListAliasesByKeyIdRequest) (<-chan *kms.ListAliasesByKeyIdResponse, <-chan error) {
 	res0, res1 := w.obj.ListAliasesByKeyIdWithChan(request)
 	return res0, res1
 }
 
-func (w *KMSClientWrapper) ListAliasesWithCallback(ctx context.Context, request *kms.ListAliasesRequest, callback func(response *kms.ListAliasesResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ListAliasesWithCallback(request *kms.ListAliasesRequest, callback func(response *kms.ListAliasesResponse, err error)) <-chan int {
 	res0 := w.obj.ListAliasesWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ListAliasesWithChan(ctx context.Context, request *kms.ListAliasesRequest) (<-chan *kms.ListAliasesResponse, <-chan error) {
+func (w *KMSClientWrapper) ListAliasesWithChan(request *kms.ListAliasesRequest) (<-chan *kms.ListAliasesResponse, <-chan error) {
 	res0, res1 := w.obj.ListAliasesWithChan(request)
 	return res0, res1
 }
@@ -2008,12 +2008,12 @@ func (w *KMSClientWrapper) ListCertificates(ctx context.Context, request *kms.Li
 	return response, err
 }
 
-func (w *KMSClientWrapper) ListCertificatesWithCallback(ctx context.Context, request *kms.ListCertificatesRequest, callback func(response *kms.ListCertificatesResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ListCertificatesWithCallback(request *kms.ListCertificatesRequest, callback func(response *kms.ListCertificatesResponse, err error)) <-chan int {
 	res0 := w.obj.ListCertificatesWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ListCertificatesWithChan(ctx context.Context, request *kms.ListCertificatesRequest) (<-chan *kms.ListCertificatesResponse, <-chan error) {
+func (w *KMSClientWrapper) ListCertificatesWithChan(request *kms.ListCertificatesRequest) (<-chan *kms.ListCertificatesResponse, <-chan error) {
 	res0, res1 := w.obj.ListCertificatesWithChan(request)
 	return res0, res1
 }
@@ -2051,12 +2051,12 @@ func (w *KMSClientWrapper) ListKeyVersions(ctx context.Context, request *kms.Lis
 	return response, err
 }
 
-func (w *KMSClientWrapper) ListKeyVersionsWithCallback(ctx context.Context, request *kms.ListKeyVersionsRequest, callback func(response *kms.ListKeyVersionsResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ListKeyVersionsWithCallback(request *kms.ListKeyVersionsRequest, callback func(response *kms.ListKeyVersionsResponse, err error)) <-chan int {
 	res0 := w.obj.ListKeyVersionsWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ListKeyVersionsWithChan(ctx context.Context, request *kms.ListKeyVersionsRequest) (<-chan *kms.ListKeyVersionsResponse, <-chan error) {
+func (w *KMSClientWrapper) ListKeyVersionsWithChan(request *kms.ListKeyVersionsRequest) (<-chan *kms.ListKeyVersionsResponse, <-chan error) {
 	res0, res1 := w.obj.ListKeyVersionsWithChan(request)
 	return res0, res1
 }
@@ -2094,12 +2094,12 @@ func (w *KMSClientWrapper) ListKeys(ctx context.Context, request *kms.ListKeysRe
 	return response, err
 }
 
-func (w *KMSClientWrapper) ListKeysWithCallback(ctx context.Context, request *kms.ListKeysRequest, callback func(response *kms.ListKeysResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ListKeysWithCallback(request *kms.ListKeysRequest, callback func(response *kms.ListKeysResponse, err error)) <-chan int {
 	res0 := w.obj.ListKeysWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ListKeysWithChan(ctx context.Context, request *kms.ListKeysRequest) (<-chan *kms.ListKeysResponse, <-chan error) {
+func (w *KMSClientWrapper) ListKeysWithChan(request *kms.ListKeysRequest) (<-chan *kms.ListKeysResponse, <-chan error) {
 	res0, res1 := w.obj.ListKeysWithChan(request)
 	return res0, res1
 }
@@ -2137,12 +2137,12 @@ func (w *KMSClientWrapper) ListResourceTags(ctx context.Context, request *kms.Li
 	return response, err
 }
 
-func (w *KMSClientWrapper) ListResourceTagsWithCallback(ctx context.Context, request *kms.ListResourceTagsRequest, callback func(response *kms.ListResourceTagsResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ListResourceTagsWithCallback(request *kms.ListResourceTagsRequest, callback func(response *kms.ListResourceTagsResponse, err error)) <-chan int {
 	res0 := w.obj.ListResourceTagsWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ListResourceTagsWithChan(ctx context.Context, request *kms.ListResourceTagsRequest) (<-chan *kms.ListResourceTagsResponse, <-chan error) {
+func (w *KMSClientWrapper) ListResourceTagsWithChan(request *kms.ListResourceTagsRequest) (<-chan *kms.ListResourceTagsResponse, <-chan error) {
 	res0, res1 := w.obj.ListResourceTagsWithChan(request)
 	return res0, res1
 }
@@ -2180,12 +2180,12 @@ func (w *KMSClientWrapper) ListSecretVersionIds(ctx context.Context, request *km
 	return response, err
 }
 
-func (w *KMSClientWrapper) ListSecretVersionIdsWithCallback(ctx context.Context, request *kms.ListSecretVersionIdsRequest, callback func(response *kms.ListSecretVersionIdsResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ListSecretVersionIdsWithCallback(request *kms.ListSecretVersionIdsRequest, callback func(response *kms.ListSecretVersionIdsResponse, err error)) <-chan int {
 	res0 := w.obj.ListSecretVersionIdsWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ListSecretVersionIdsWithChan(ctx context.Context, request *kms.ListSecretVersionIdsRequest) (<-chan *kms.ListSecretVersionIdsResponse, <-chan error) {
+func (w *KMSClientWrapper) ListSecretVersionIdsWithChan(request *kms.ListSecretVersionIdsRequest) (<-chan *kms.ListSecretVersionIdsResponse, <-chan error) {
 	res0, res1 := w.obj.ListSecretVersionIdsWithChan(request)
 	return res0, res1
 }
@@ -2223,12 +2223,12 @@ func (w *KMSClientWrapper) ListSecrets(ctx context.Context, request *kms.ListSec
 	return response, err
 }
 
-func (w *KMSClientWrapper) ListSecretsWithCallback(ctx context.Context, request *kms.ListSecretsRequest, callback func(response *kms.ListSecretsResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ListSecretsWithCallback(request *kms.ListSecretsRequest, callback func(response *kms.ListSecretsResponse, err error)) <-chan int {
 	res0 := w.obj.ListSecretsWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ListSecretsWithChan(ctx context.Context, request *kms.ListSecretsRequest) (<-chan *kms.ListSecretsResponse, <-chan error) {
+func (w *KMSClientWrapper) ListSecretsWithChan(request *kms.ListSecretsRequest) (<-chan *kms.ListSecretsResponse, <-chan error) {
 	res0, res1 := w.obj.ListSecretsWithChan(request)
 	return res0, res1
 }
@@ -2266,12 +2266,12 @@ func (w *KMSClientWrapper) OpenKmsService(ctx context.Context, request *kms.Open
 	return response, err
 }
 
-func (w *KMSClientWrapper) OpenKmsServiceWithCallback(ctx context.Context, request *kms.OpenKmsServiceRequest, callback func(response *kms.OpenKmsServiceResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) OpenKmsServiceWithCallback(request *kms.OpenKmsServiceRequest, callback func(response *kms.OpenKmsServiceResponse, err error)) <-chan int {
 	res0 := w.obj.OpenKmsServiceWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) OpenKmsServiceWithChan(ctx context.Context, request *kms.OpenKmsServiceRequest) (<-chan *kms.OpenKmsServiceResponse, <-chan error) {
+func (w *KMSClientWrapper) OpenKmsServiceWithChan(request *kms.OpenKmsServiceRequest) (<-chan *kms.OpenKmsServiceResponse, <-chan error) {
 	res0, res1 := w.obj.OpenKmsServiceWithChan(request)
 	return res0, res1
 }
@@ -2309,12 +2309,12 @@ func (w *KMSClientWrapper) PutSecretValue(ctx context.Context, request *kms.PutS
 	return response, err
 }
 
-func (w *KMSClientWrapper) PutSecretValueWithCallback(ctx context.Context, request *kms.PutSecretValueRequest, callback func(response *kms.PutSecretValueResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) PutSecretValueWithCallback(request *kms.PutSecretValueRequest, callback func(response *kms.PutSecretValueResponse, err error)) <-chan int {
 	res0 := w.obj.PutSecretValueWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) PutSecretValueWithChan(ctx context.Context, request *kms.PutSecretValueRequest) (<-chan *kms.PutSecretValueResponse, <-chan error) {
+func (w *KMSClientWrapper) PutSecretValueWithChan(request *kms.PutSecretValueRequest) (<-chan *kms.PutSecretValueResponse, <-chan error) {
 	res0, res1 := w.obj.PutSecretValueWithChan(request)
 	return res0, res1
 }
@@ -2352,12 +2352,12 @@ func (w *KMSClientWrapper) ReEncrypt(ctx context.Context, request *kms.ReEncrypt
 	return response, err
 }
 
-func (w *KMSClientWrapper) ReEncryptWithCallback(ctx context.Context, request *kms.ReEncryptRequest, callback func(response *kms.ReEncryptResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ReEncryptWithCallback(request *kms.ReEncryptRequest, callback func(response *kms.ReEncryptResponse, err error)) <-chan int {
 	res0 := w.obj.ReEncryptWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ReEncryptWithChan(ctx context.Context, request *kms.ReEncryptRequest) (<-chan *kms.ReEncryptResponse, <-chan error) {
+func (w *KMSClientWrapper) ReEncryptWithChan(request *kms.ReEncryptRequest) (<-chan *kms.ReEncryptResponse, <-chan error) {
 	res0, res1 := w.obj.ReEncryptWithChan(request)
 	return res0, res1
 }
@@ -2395,12 +2395,12 @@ func (w *KMSClientWrapper) RestoreSecret(ctx context.Context, request *kms.Resto
 	return response, err
 }
 
-func (w *KMSClientWrapper) RestoreSecretWithCallback(ctx context.Context, request *kms.RestoreSecretRequest, callback func(response *kms.RestoreSecretResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) RestoreSecretWithCallback(request *kms.RestoreSecretRequest, callback func(response *kms.RestoreSecretResponse, err error)) <-chan int {
 	res0 := w.obj.RestoreSecretWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) RestoreSecretWithChan(ctx context.Context, request *kms.RestoreSecretRequest) (<-chan *kms.RestoreSecretResponse, <-chan error) {
+func (w *KMSClientWrapper) RestoreSecretWithChan(request *kms.RestoreSecretRequest) (<-chan *kms.RestoreSecretResponse, <-chan error) {
 	res0, res1 := w.obj.RestoreSecretWithChan(request)
 	return res0, res1
 }
@@ -2438,12 +2438,12 @@ func (w *KMSClientWrapper) RotateSecret(ctx context.Context, request *kms.Rotate
 	return response, err
 }
 
-func (w *KMSClientWrapper) RotateSecretWithCallback(ctx context.Context, request *kms.RotateSecretRequest, callback func(response *kms.RotateSecretResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) RotateSecretWithCallback(request *kms.RotateSecretRequest, callback func(response *kms.RotateSecretResponse, err error)) <-chan int {
 	res0 := w.obj.RotateSecretWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) RotateSecretWithChan(ctx context.Context, request *kms.RotateSecretRequest) (<-chan *kms.RotateSecretResponse, <-chan error) {
+func (w *KMSClientWrapper) RotateSecretWithChan(request *kms.RotateSecretRequest) (<-chan *kms.RotateSecretResponse, <-chan error) {
 	res0, res1 := w.obj.RotateSecretWithChan(request)
 	return res0, res1
 }
@@ -2481,12 +2481,12 @@ func (w *KMSClientWrapper) ScheduleKeyDeletion(ctx context.Context, request *kms
 	return response, err
 }
 
-func (w *KMSClientWrapper) ScheduleKeyDeletionWithCallback(ctx context.Context, request *kms.ScheduleKeyDeletionRequest, callback func(response *kms.ScheduleKeyDeletionResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) ScheduleKeyDeletionWithCallback(request *kms.ScheduleKeyDeletionRequest, callback func(response *kms.ScheduleKeyDeletionResponse, err error)) <-chan int {
 	res0 := w.obj.ScheduleKeyDeletionWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) ScheduleKeyDeletionWithChan(ctx context.Context, request *kms.ScheduleKeyDeletionRequest) (<-chan *kms.ScheduleKeyDeletionResponse, <-chan error) {
+func (w *KMSClientWrapper) ScheduleKeyDeletionWithChan(request *kms.ScheduleKeyDeletionRequest) (<-chan *kms.ScheduleKeyDeletionResponse, <-chan error) {
 	res0, res1 := w.obj.ScheduleKeyDeletionWithChan(request)
 	return res0, res1
 }
@@ -2524,12 +2524,12 @@ func (w *KMSClientWrapper) TagResource(ctx context.Context, request *kms.TagReso
 	return response, err
 }
 
-func (w *KMSClientWrapper) TagResourceWithCallback(ctx context.Context, request *kms.TagResourceRequest, callback func(response *kms.TagResourceResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) TagResourceWithCallback(request *kms.TagResourceRequest, callback func(response *kms.TagResourceResponse, err error)) <-chan int {
 	res0 := w.obj.TagResourceWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) TagResourceWithChan(ctx context.Context, request *kms.TagResourceRequest) (<-chan *kms.TagResourceResponse, <-chan error) {
+func (w *KMSClientWrapper) TagResourceWithChan(request *kms.TagResourceRequest) (<-chan *kms.TagResourceResponse, <-chan error) {
 	res0, res1 := w.obj.TagResourceWithChan(request)
 	return res0, res1
 }
@@ -2567,12 +2567,12 @@ func (w *KMSClientWrapper) UntagResource(ctx context.Context, request *kms.Untag
 	return response, err
 }
 
-func (w *KMSClientWrapper) UntagResourceWithCallback(ctx context.Context, request *kms.UntagResourceRequest, callback func(response *kms.UntagResourceResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) UntagResourceWithCallback(request *kms.UntagResourceRequest, callback func(response *kms.UntagResourceResponse, err error)) <-chan int {
 	res0 := w.obj.UntagResourceWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) UntagResourceWithChan(ctx context.Context, request *kms.UntagResourceRequest) (<-chan *kms.UntagResourceResponse, <-chan error) {
+func (w *KMSClientWrapper) UntagResourceWithChan(request *kms.UntagResourceRequest) (<-chan *kms.UntagResourceResponse, <-chan error) {
 	res0, res1 := w.obj.UntagResourceWithChan(request)
 	return res0, res1
 }
@@ -2610,12 +2610,12 @@ func (w *KMSClientWrapper) UpdateAlias(ctx context.Context, request *kms.UpdateA
 	return response, err
 }
 
-func (w *KMSClientWrapper) UpdateAliasWithCallback(ctx context.Context, request *kms.UpdateAliasRequest, callback func(response *kms.UpdateAliasResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) UpdateAliasWithCallback(request *kms.UpdateAliasRequest, callback func(response *kms.UpdateAliasResponse, err error)) <-chan int {
 	res0 := w.obj.UpdateAliasWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) UpdateAliasWithChan(ctx context.Context, request *kms.UpdateAliasRequest) (<-chan *kms.UpdateAliasResponse, <-chan error) {
+func (w *KMSClientWrapper) UpdateAliasWithChan(request *kms.UpdateAliasRequest) (<-chan *kms.UpdateAliasResponse, <-chan error) {
 	res0, res1 := w.obj.UpdateAliasWithChan(request)
 	return res0, res1
 }
@@ -2653,12 +2653,12 @@ func (w *KMSClientWrapper) UpdateCertificateStatus(ctx context.Context, request 
 	return response, err
 }
 
-func (w *KMSClientWrapper) UpdateCertificateStatusWithCallback(ctx context.Context, request *kms.UpdateCertificateStatusRequest, callback func(response *kms.UpdateCertificateStatusResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) UpdateCertificateStatusWithCallback(request *kms.UpdateCertificateStatusRequest, callback func(response *kms.UpdateCertificateStatusResponse, err error)) <-chan int {
 	res0 := w.obj.UpdateCertificateStatusWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) UpdateCertificateStatusWithChan(ctx context.Context, request *kms.UpdateCertificateStatusRequest) (<-chan *kms.UpdateCertificateStatusResponse, <-chan error) {
+func (w *KMSClientWrapper) UpdateCertificateStatusWithChan(request *kms.UpdateCertificateStatusRequest) (<-chan *kms.UpdateCertificateStatusResponse, <-chan error) {
 	res0, res1 := w.obj.UpdateCertificateStatusWithChan(request)
 	return res0, res1
 }
@@ -2696,12 +2696,12 @@ func (w *KMSClientWrapper) UpdateKeyDescription(ctx context.Context, request *km
 	return response, err
 }
 
-func (w *KMSClientWrapper) UpdateKeyDescriptionWithCallback(ctx context.Context, request *kms.UpdateKeyDescriptionRequest, callback func(response *kms.UpdateKeyDescriptionResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) UpdateKeyDescriptionWithCallback(request *kms.UpdateKeyDescriptionRequest, callback func(response *kms.UpdateKeyDescriptionResponse, err error)) <-chan int {
 	res0 := w.obj.UpdateKeyDescriptionWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) UpdateKeyDescriptionWithChan(ctx context.Context, request *kms.UpdateKeyDescriptionRequest) (<-chan *kms.UpdateKeyDescriptionResponse, <-chan error) {
+func (w *KMSClientWrapper) UpdateKeyDescriptionWithChan(request *kms.UpdateKeyDescriptionRequest) (<-chan *kms.UpdateKeyDescriptionResponse, <-chan error) {
 	res0, res1 := w.obj.UpdateKeyDescriptionWithChan(request)
 	return res0, res1
 }
@@ -2739,12 +2739,12 @@ func (w *KMSClientWrapper) UpdateRotationPolicy(ctx context.Context, request *km
 	return response, err
 }
 
-func (w *KMSClientWrapper) UpdateRotationPolicyWithCallback(ctx context.Context, request *kms.UpdateRotationPolicyRequest, callback func(response *kms.UpdateRotationPolicyResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) UpdateRotationPolicyWithCallback(request *kms.UpdateRotationPolicyRequest, callback func(response *kms.UpdateRotationPolicyResponse, err error)) <-chan int {
 	res0 := w.obj.UpdateRotationPolicyWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) UpdateRotationPolicyWithChan(ctx context.Context, request *kms.UpdateRotationPolicyRequest) (<-chan *kms.UpdateRotationPolicyResponse, <-chan error) {
+func (w *KMSClientWrapper) UpdateRotationPolicyWithChan(request *kms.UpdateRotationPolicyRequest) (<-chan *kms.UpdateRotationPolicyResponse, <-chan error) {
 	res0, res1 := w.obj.UpdateRotationPolicyWithChan(request)
 	return res0, res1
 }
@@ -2815,12 +2815,12 @@ func (w *KMSClientWrapper) UpdateSecretRotationPolicy(ctx context.Context, reque
 	return response, err
 }
 
-func (w *KMSClientWrapper) UpdateSecretRotationPolicyWithCallback(ctx context.Context, request *kms.UpdateSecretRotationPolicyRequest, callback func(response *kms.UpdateSecretRotationPolicyResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) UpdateSecretRotationPolicyWithCallback(request *kms.UpdateSecretRotationPolicyRequest, callback func(response *kms.UpdateSecretRotationPolicyResponse, err error)) <-chan int {
 	res0 := w.obj.UpdateSecretRotationPolicyWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) UpdateSecretRotationPolicyWithChan(ctx context.Context, request *kms.UpdateSecretRotationPolicyRequest) (<-chan *kms.UpdateSecretRotationPolicyResponse, <-chan error) {
+func (w *KMSClientWrapper) UpdateSecretRotationPolicyWithChan(request *kms.UpdateSecretRotationPolicyRequest) (<-chan *kms.UpdateSecretRotationPolicyResponse, <-chan error) {
 	res0, res1 := w.obj.UpdateSecretRotationPolicyWithChan(request)
 	return res0, res1
 }
@@ -2858,22 +2858,22 @@ func (w *KMSClientWrapper) UpdateSecretVersionStage(ctx context.Context, request
 	return response, err
 }
 
-func (w *KMSClientWrapper) UpdateSecretVersionStageWithCallback(ctx context.Context, request *kms.UpdateSecretVersionStageRequest, callback func(response *kms.UpdateSecretVersionStageResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) UpdateSecretVersionStageWithCallback(request *kms.UpdateSecretVersionStageRequest, callback func(response *kms.UpdateSecretVersionStageResponse, err error)) <-chan int {
 	res0 := w.obj.UpdateSecretVersionStageWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) UpdateSecretVersionStageWithChan(ctx context.Context, request *kms.UpdateSecretVersionStageRequest) (<-chan *kms.UpdateSecretVersionStageResponse, <-chan error) {
+func (w *KMSClientWrapper) UpdateSecretVersionStageWithChan(request *kms.UpdateSecretVersionStageRequest) (<-chan *kms.UpdateSecretVersionStageResponse, <-chan error) {
 	res0, res1 := w.obj.UpdateSecretVersionStageWithChan(request)
 	return res0, res1
 }
 
-func (w *KMSClientWrapper) UpdateSecretWithCallback(ctx context.Context, request *kms.UpdateSecretRequest, callback func(response *kms.UpdateSecretResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) UpdateSecretWithCallback(request *kms.UpdateSecretRequest, callback func(response *kms.UpdateSecretResponse, err error)) <-chan int {
 	res0 := w.obj.UpdateSecretWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) UpdateSecretWithChan(ctx context.Context, request *kms.UpdateSecretRequest) (<-chan *kms.UpdateSecretResponse, <-chan error) {
+func (w *KMSClientWrapper) UpdateSecretWithChan(request *kms.UpdateSecretRequest) (<-chan *kms.UpdateSecretResponse, <-chan error) {
 	res0, res1 := w.obj.UpdateSecretWithChan(request)
 	return res0, res1
 }
@@ -2911,12 +2911,12 @@ func (w *KMSClientWrapper) UploadCertificate(ctx context.Context, request *kms.U
 	return response, err
 }
 
-func (w *KMSClientWrapper) UploadCertificateWithCallback(ctx context.Context, request *kms.UploadCertificateRequest, callback func(response *kms.UploadCertificateResponse, err error)) <-chan int {
+func (w *KMSClientWrapper) UploadCertificateWithCallback(request *kms.UploadCertificateRequest, callback func(response *kms.UploadCertificateResponse, err error)) <-chan int {
 	res0 := w.obj.UploadCertificateWithCallback(request, callback)
 	return res0
 }
 
-func (w *KMSClientWrapper) UploadCertificateWithChan(ctx context.Context, request *kms.UploadCertificateRequest) (<-chan *kms.UploadCertificateResponse, <-chan error) {
+func (w *KMSClientWrapper) UploadCertificateWithChan(request *kms.UploadCertificateRequest) (<-chan *kms.UploadCertificateResponse, <-chan error) {
 	res0, res1 := w.obj.UploadCertificateWithChan(request)
 	return res0, res1
 }

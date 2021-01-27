@@ -885,7 +885,7 @@ func (w *OSSBucketWrapper) DownloadFile(ctx context.Context, objectKey string, f
 	return err
 }
 
-func (w *OSSBucketWrapper) GetConfig(ctx context.Context) *oss.Config {
+func (w *OSSBucketWrapper) GetConfig() *oss.Config {
 	res0 := w.obj.GetConfig()
 	return res0
 }
