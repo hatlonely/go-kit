@@ -2405,6 +2405,49 @@ func (w *KMSClientWrapper) RestoreSecretWithChan(ctx context.Context, request *k
 	return res0, res1
 }
 
+func (w *KMSClientWrapper) RotateSecret(ctx context.Context, request *kms.RotateSecretRequest) (*kms.RotateSecretResponse, error) {
+	ctxOptions := FromContext(ctx)
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.RotateSecret")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
+		defer span.Finish()
+	}
+	var response *kms.RotateSecretResponse
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.RotateSecret"); err != nil {
+				return err
+			}
+		}
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.RotateSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.RotateSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		response, err = w.obj.RotateSecret(request)
+		return err
+	})
+	return response, err
+}
+
+func (w *KMSClientWrapper) RotateSecretWithCallback(ctx context.Context, request *kms.RotateSecretRequest, callback func(response *kms.RotateSecretResponse, err error)) <-chan int {
+	res0 := w.obj.RotateSecretWithCallback(request, callback)
+	return res0
+}
+
+func (w *KMSClientWrapper) RotateSecretWithChan(ctx context.Context, request *kms.RotateSecretRequest) (<-chan *kms.RotateSecretResponse, <-chan error) {
+	res0, res1 := w.obj.RotateSecretWithChan(request)
+	return res0, res1
+}
+
 func (w *KMSClientWrapper) ScheduleKeyDeletion(ctx context.Context, request *kms.ScheduleKeyDeletionRequest) (*kms.ScheduleKeyDeletionResponse, error) {
 	ctxOptions := FromContext(ctx)
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
@@ -2737,6 +2780,49 @@ func (w *KMSClientWrapper) UpdateSecret(ctx context.Context, request *kms.Update
 		return err
 	})
 	return response, err
+}
+
+func (w *KMSClientWrapper) UpdateSecretRotationPolicy(ctx context.Context, request *kms.UpdateSecretRotationPolicyRequest) (*kms.UpdateSecretRotationPolicyResponse, error) {
+	ctxOptions := FromContext(ctx)
+	if w.options.EnableTrace && !ctxOptions.DisableTrace {
+		span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateSecretRotationPolicy")
+		for key, val := range w.options.Trace.ConstTags {
+			span.SetTag(key, val)
+		}
+		for key, val := range ctxOptions.TraceTags {
+			span.SetTag(key, val)
+		}
+		defer span.Finish()
+	}
+	var response *kms.UpdateSecretRotationPolicyResponse
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Client.UpdateSecretRotationPolicy"); err != nil {
+				return err
+			}
+		}
+		if w.options.EnableMetric {
+			ts := time.Now()
+			defer func() {
+				w.totalMetric.WithLabelValues("kms.Client.UpdateSecretRotationPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.durationMetric.WithLabelValues("kms.Client.UpdateSecretRotationPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		response, err = w.obj.UpdateSecretRotationPolicy(request)
+		return err
+	})
+	return response, err
+}
+
+func (w *KMSClientWrapper) UpdateSecretRotationPolicyWithCallback(ctx context.Context, request *kms.UpdateSecretRotationPolicyRequest, callback func(response *kms.UpdateSecretRotationPolicyResponse, err error)) <-chan int {
+	res0 := w.obj.UpdateSecretRotationPolicyWithCallback(request, callback)
+	return res0
+}
+
+func (w *KMSClientWrapper) UpdateSecretRotationPolicyWithChan(ctx context.Context, request *kms.UpdateSecretRotationPolicyRequest) (<-chan *kms.UpdateSecretRotationPolicyResponse, <-chan error) {
+	res0, res1 := w.obj.UpdateSecretRotationPolicyWithChan(request)
+	return res0, res1
 }
 
 func (w *KMSClientWrapper) UpdateSecretVersionStage(ctx context.Context, request *kms.UpdateSecretVersionStageRequest) (*kms.UpdateSecretVersionStageResponse, error) {

@@ -49,7 +49,8 @@ wrap: wrap/autogen_ots.go \
 	wrap/autogen_gorm.go \
 	wrap/autogen_elasticsearch.go \
 	wrap/autogen_mongo.go \
-	wrap/autogen_redis.go
+	wrap/autogen_redis.go \
+	wrap/autogen_sts.go
 
 wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 	build/bin/gen wrap --sourcePath vendor \
@@ -68,6 +69,18 @@ wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packagePath "github.com/aliyun/alibaba-cloud-sdk-go/services/kms" \
 		--packageName kms \
 		--classPrefix KMS \
+		--starClasses Client \
+		--rule.createMetric.include "^Client$$" \
+		--rule.onWrapperChange.include "^Client$$" \
+		--rule.onRetryChange.include "^Client$$" \
+		--rule.onRateLimiterGroupChange.include "^Client$$" \
+		--output $@
+
+wrap/autogen_sts.go: build/bin/gen vendor $(wildcard astx/*.go)
+	build/bin/gen wrap --sourcePath vendor \
+		--packagePath "github.com/aliyun/alibaba-cloud-sdk-go/services/sts" \
+		--packageName sts \
+		--classPrefix STS \
 		--starClasses Client \
 		--rule.createMetric.include "^Client$$" \
 		--rule.onWrapperChange.include "^Client$$" \
