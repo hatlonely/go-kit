@@ -29,13 +29,20 @@ type RedisClientWrapperOptions struct {
 }
 
 func NewRedisClientWrapperWithOptions(options *RedisClientWrapperOptions) (*RedisClientWrapper, error) {
-	retry, err := NewRetryWithOptions(&options.Retry)
+	var w RedisClientWrapper
+	var err error
+
+	w.options = &options.Wrapper
+	w.retry, err = NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroup(&options.RateLimiterGroup)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
+	}
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
 	}
 
 	client := redis.NewClient(&redis.Options{
@@ -51,19 +58,9 @@ func NewRedisClientWrapperWithOptions(options *RedisClientWrapperOptions) (*Redi
 	if err := client.Ping().Err(); err != nil {
 		return nil, errors.Wrap(err, "redis.Client.Ping failed")
 	}
+	w.obj = client
 
-	w := &RedisClientWrapper{
-		obj:              client,
-		retry:            retry,
-		options:          &options.Wrapper,
-		rateLimiterGroup: rateLimiterGroup,
-	}
-
-	if w.options.EnableMetric {
-		w.CreateMetric(w.options)
-	}
-
-	return w, nil
+	return &w, nil
 }
 
 func NewRedisClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*RedisClientWrapper, error) {
@@ -123,13 +120,20 @@ type RedisClusterClientWrapperOptions struct {
 }
 
 func NewRedisClusterClientWrapperWithOptions(options *RedisClusterClientWrapperOptions) (*RedisClusterClientWrapper, error) {
-	retry, err := NewRetryWithOptions(&options.Retry)
+	var w RedisClusterClientWrapper
+	var err error
+
+	w.options = &options.Wrapper
+	w.retry, err = NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroup(&options.RateLimiterGroup)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
+	}
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
 	}
 
 	client := redis.NewClusterClient(&redis.ClusterOptions{
@@ -144,12 +148,9 @@ func NewRedisClusterClientWrapperWithOptions(options *RedisClusterClientWrapperO
 	if err := client.Ping().Err(); err != nil {
 		return nil, errors.Wrap(err, "redis.ClusterClient.Ping failed")
 	}
-	return &RedisClusterClientWrapper{
-		obj:              client,
-		retry:            retry,
-		options:          &options.Wrapper,
-		rateLimiterGroup: rateLimiterGroup,
-	}, nil
+	w.obj = client
+
+	return &w, nil
 }
 
 func NewRedisClusterClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*RedisClusterClientWrapper, error) {

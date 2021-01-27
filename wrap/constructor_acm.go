@@ -18,13 +18,20 @@ type ACMConfigClientWrapperOptions struct {
 }
 
 func NewACMConfigClientWrapperWithOptions(options *ACMConfigClientWrapperOptions) (*ACMConfigClientWrapper, error) {
-	retry, err := NewRetryWithOptions(&options.Retry)
+	var w ACMConfigClientWrapper
+	var err error
+
+	w.options = &options.Wrapper
+	w.retry, err = NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroup(&options.RateLimiterGroup)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
+	}
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
 	}
 
 	client, err := clients.CreateConfigClient(map[string]interface{}{
@@ -33,19 +40,13 @@ func NewACMConfigClientWrapperWithOptions(options *ACMConfigClientWrapperOptions
 	if err != nil {
 		return nil, errors.Wrap(err, "clients.CreateConfigClient failed")
 	}
-
-	w := &ACMConfigClientWrapper{
-		obj:              client.(*config_client.ConfigClient),
-		retry:            retry,
-		options:          &options.Wrapper,
-		rateLimiterGroup: rateLimiterGroup,
-	}
+	w.obj = client.(*config_client.ConfigClient)
 
 	if w.options.EnableMetric {
 		w.CreateMetric(w.options)
 	}
 
-	return w, nil
+	return &w, nil
 }
 
 func NewACMConfigClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*ACMConfigClientWrapper, error) {

@@ -47,13 +47,20 @@ type KMSClientWrapperOptions struct {
 }
 
 func NewKMSClientWrapperWithOptions(options *KMSClientWrapperOptions) (*KMSClientWrapper, error) {
-	retry, err := NewRetryWithOptions(&options.Retry)
+	var w KMSClientWrapper
+	var err error
+
+	w.options = &options.Wrapper
+	w.retry, err = NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroup(&options.RateLimiterGroup)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
+	}
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
 	}
 
 	if options.KMS.AccessKeyID != "" {
@@ -64,39 +71,24 @@ func NewKMSClientWrapperWithOptions(options *KMSClientWrapperOptions) (*KMSClien
 		if _, err := client.ListKeys(kms.CreateListKeysRequest()); err != nil {
 			return nil, errors.Wrap(err, "kms.Client.ListKeys failed")
 		}
-		return &KMSClientWrapper{
-			obj:              client,
-			retry:            retry,
-			options:          &options.Wrapper,
-			rateLimiterGroup: rateLimiterGroup,
-		}, nil
+		w.obj = client
+	} else {
+		role, err := alics.ECSMetaDataRamSecurityCredentialsRole()
+		if err != nil {
+			return nil, errors.Wrap(err, "alics.ECSMetaDataRamSecurityCredentialsRole failed")
+		}
+
+		client, err := kms.NewClientWithEcsRamRole(options.KMS.RegionID, role)
+		if err != nil {
+			return nil, errors.Wrap(err, "kms.NewClientWithEcsRamRole failed")
+		}
+		if _, err := client.ListKeys(kms.CreateListKeysRequest()); err != nil {
+			return nil, errors.Wrap(err, "kms.Client.ListKeys failed")
+		}
+		w.obj = client
 	}
 
-	role, err := alics.ECSMetaDataRamSecurityCredentialsRole()
-	if err != nil {
-		return nil, errors.Wrap(err, "alics.ECSMetaDataRamSecurityCredentialsRole failed")
-	}
-
-	client, err := kms.NewClientWithEcsRamRole(options.KMS.RegionID, role)
-	if err != nil {
-		return nil, errors.Wrap(err, "kms.NewClientWithEcsRamRole failed")
-	}
-	if _, err := client.ListKeys(kms.CreateListKeysRequest()); err != nil {
-		return nil, errors.Wrap(err, "kms.Client.ListKeys failed")
-	}
-
-	w := &KMSClientWrapper{
-		obj:              client,
-		retry:            retry,
-		options:          &options.Wrapper,
-		rateLimiterGroup: rateLimiterGroup,
-	}
-
-	if w.options.EnableMetric {
-		w.CreateMetric(w.options)
-	}
-
-	return w, nil
+	return &w, nil
 }
 
 func NewKMSClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*KMSClientWrapper, error) {
@@ -143,7 +135,6 @@ func NewKMSClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*KM
 			return errors.Wrap(err, "kms.Client.ListKeys failed")
 		}
 		w.obj = client
-
 		return nil
 	})
 

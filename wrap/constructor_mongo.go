@@ -35,44 +35,40 @@ type MongoClientWrapperOptions struct {
 }
 
 func NewMongoClientWrapperWithOptions(options *MongoClientWrapperOptions) (*MongoClientWrapper, error) {
-	retry, err := NewRetryWithOptions(&options.Retry)
+	var w MongoClientWrapper
+	var err error
+
+	w.options = &options.Wrapper
+	w.retry, err = NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroup(&options.RateLimiterGroup)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
+	}
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
 	}
 
 	client, err := mongo.NewClient(mopt.Client().ApplyURI(options.Mongo.URI))
 	if err != nil {
 		return nil, errors.Wrap(err, "mongo.NewClient failed")
 	}
-
 	ctx, cancel := context.WithTimeout(context.Background(), options.Mongo.ConnectTimeout)
 	defer cancel()
 	if err := client.Connect(ctx); err != nil {
 		return nil, errors.Wrap(err, "mongo.Client.Connect failed")
 	}
-
 	ctx, cancel = context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 	if err := client.Ping(ctx, readpref.Primary()); err != nil {
 		return nil, errors.Wrap(err, "mongo.Client.Ping failed")
 	}
 
-	w := &MongoClientWrapper{
-		obj:              client,
-		retry:            retry,
-		options:          &options.Wrapper,
-		rateLimiterGroup: rateLimiterGroup,
-	}
+	w.obj = client
 
-	if w.options.EnableMetric {
-		w.CreateMetric(w.options)
-	}
-
-	return w, nil
+	return &w, nil
 }
 
 func NewMongoClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*MongoClientWrapper, error) {

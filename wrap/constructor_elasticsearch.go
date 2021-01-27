@@ -30,13 +30,20 @@ type ESClientWrapperOptions struct {
 }
 
 func NewESClientWrapperWithOptions(options *ESClientWrapperOptions) (*ESClientWrapper, error) {
-	retry, err := NewRetryWithOptions(&options.Retry)
+	var w ESClientWrapper
+	var err error
+
+	w.options = &options.Wrapper
+	w.retry, err = NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroup(&options.RateLimiterGroup)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
+	}
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
 	}
 
 	client, err := elastic.NewClient(
@@ -51,25 +58,13 @@ func NewESClientWrapperWithOptions(options *ESClientWrapperOptions) (*ESClientWr
 	if err != nil {
 		return nil, errors.Wrap(err, "elastic.NewClient failed")
 	}
-
 	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
 	defer cancel()
 	if _, _, err := client.Ping(options.ES.URI).Do(ctx); err != nil {
 		return nil, errors.Wrap(err, "elastic.Client.Ping failed")
 	}
-
-	w := &ESClientWrapper{
-		obj:              client,
-		retry:            retry,
-		options:          &options.Wrapper,
-		rateLimiterGroup: rateLimiterGroup,
-	}
-
-	if w.options.EnableMetric {
-		w.CreateMetric(w.options)
-	}
-
-	return w, nil
+	w.obj = client
+	return &w, nil
 }
 
 func NewESClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*ESClientWrapper, error) {

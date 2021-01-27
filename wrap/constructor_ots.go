@@ -48,14 +48,20 @@ type OTSTableStoreClientWrapperOptions struct {
 }
 
 func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrapperOptions) (*OTSTableStoreClientWrapper, error) {
-	retry, err := NewRetryWithOptions(&options.Retry)
+	var w OTSTableStoreClientWrapper
+	var err error
+
+	w.options = &options.Wrapper
+	w.retry, err = NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-
-	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroup(&options.RateLimiterGroup)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
+	}
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
 	}
 
 	if options.OTS.AccessKeyID != "" {
@@ -63,37 +69,21 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 		if _, err := client.ListTable(); err != nil {
 			return nil, errors.Wrap(err, "tablestore.TableStoreClient.ListTable failed")
 		}
-		return &OTSTableStoreClientWrapper{
-			obj:              client,
-			retry:            retry,
-			options:          &options.Wrapper,
-			rateLimiterGroup: rateLimiterGroup,
-		}, nil
+		w.obj = client
+	} else {
+		res, err := alics.ECSMetaDataRamSecurityCredentials()
+		if err != nil {
+			return nil, errors.Wrap(err, "alics.ECSMetaDataRamSecurityCredentials failed")
+		}
+		client := tablestore.NewClientWithConfig(options.OTS.Endpoint, options.OTS.InstanceName, res.AccessKeyID, res.AccessKeySecret, res.SecurityToken, nil)
+		if _, err := client.ListTable(); err != nil {
+			return nil, errors.Wrap(err, "tablestore.TableStoreClient.ListTable failed")
+		}
+		w.obj = client
+		go w.UpdateCredentialByECSRole(res, &options.OTS)
 	}
 
-	res, err := alics.ECSMetaDataRamSecurityCredentials()
-	if err != nil {
-		return nil, errors.Wrap(err, "alics.ECSMetaDataRamSecurityCredentials failed")
-	}
-	client := tablestore.NewClientWithConfig(options.OTS.Endpoint, options.OTS.InstanceName, res.AccessKeyID, res.AccessKeySecret, res.SecurityToken, nil)
-	if _, err := client.ListTable(); err != nil {
-		return nil, errors.Wrap(err, "tablestore.TableStoreClient.ListTable failed")
-	}
-
-	w := &OTSTableStoreClientWrapper{
-		obj:              client,
-		retry:            retry,
-		options:          &options.Wrapper,
-		rateLimiterGroup: rateLimiterGroup,
-	}
-
-	if w.options.EnableMetric {
-		w.CreateMetric(w.options)
-	}
-
-	go w.UpdateCredentialByECSRole(res, &options.OTS)
-
-	return w, nil
+	return &w, nil
 }
 
 func NewOTSTableStoreClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*OTSTableStoreClientWrapper, error) {
@@ -135,7 +125,6 @@ func NewOTSTableStoreClientWrapperWithConfig(cfg *config.Config, opts ...refx.Op
 		}
 		w.obj = client
 		go w.UpdateCredentialByECSRole(res, &options)
-
 		return nil
 	})
 

@@ -47,13 +47,20 @@ type OSSClientWrapperOptions struct {
 }
 
 func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClientWrapper, error) {
-	retry, err := NewRetryWithOptions(&options.Retry)
+	var w OSSClientWrapper
+	var err error
+
+	w.options = &options.Wrapper
+	w.retry, err = NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroup(&options.RateLimiterGroup)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
+	}
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
 	}
 
 	if options.OSS.AccessKeyID != "" {
@@ -64,39 +71,24 @@ func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClien
 		if _, err := client.ListBuckets(); err != nil {
 			return nil, errors.Wrap(err, "oss.Client.ListBuckets failed")
 		}
-		return &OSSClientWrapper{
-			obj:              client,
-			retry:            retry,
-			options:          &options.Wrapper,
-			rateLimiterGroup: rateLimiterGroup,
-		}, nil
+		w.obj = client
+	} else {
+		res, err := alics.ECSMetaDataRamSecurityCredentials()
+		if err != nil {
+			return nil, errors.Wrap(err, "alics.ECSMetaDataRamSecurityCredentials failed")
+		}
+		client, err := oss.New(options.OSS.Endpoint, res.AccessKeyID, res.AccessKeySecret, oss.SecurityToken(res.SecurityToken))
+		if err != nil {
+			return nil, errors.Wrap(err, "oss.New failed")
+		}
+		if _, err := client.ListBuckets(); err != nil {
+			return nil, errors.Wrap(err, "oss.Client.ListBuckets failed")
+		}
+		w.obj = client
+		go w.UpdateCredentialByECSRole(res, &options.OSS)
 	}
 
-	res, err := alics.ECSMetaDataRamSecurityCredentials()
-	if err != nil {
-		return nil, errors.Wrap(err, "alics.ECSMetaDataRamSecurityCredentials failed")
-	}
-	client, err := oss.New(options.OSS.Endpoint, res.AccessKeyID, res.AccessKeySecret, oss.SecurityToken(res.SecurityToken))
-	if err != nil {
-		return nil, errors.Wrap(err, "oss.New failed")
-	}
-	if _, err := client.ListBuckets(); err != nil {
-		return nil, errors.Wrap(err, "oss.Client.ListBuckets failed")
-	}
-	w := &OSSClientWrapper{
-		obj:              client,
-		retry:            retry,
-		options:          &options.Wrapper,
-		rateLimiterGroup: rateLimiterGroup,
-	}
-
-	if w.options.EnableMetric {
-		w.CreateMetric(w.options)
-	}
-
-	go w.UpdateCredentialByECSRole(res, &options.OSS)
-
-	return w, nil
+	return &w, nil
 }
 
 func NewOSSClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*OSSClientWrapper, error) {
