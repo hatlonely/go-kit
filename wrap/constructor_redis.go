@@ -73,6 +73,7 @@ func NewRedisClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiterGroup"), w.OnRateLimiterGroupChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Redis"), func(cfg *config.Config) error {
 		var options RedisOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
@@ -152,6 +153,7 @@ func NewRedisClusterClientWrapperWithConfig(cfg *config.Config, opts ...refx.Opt
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiterGroup"), w.OnRateLimiterGroupChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RedisCluster"), func(cfg *config.Config) error {
 		var options RedisClusterOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {

@@ -55,6 +55,7 @@ func NewACMConfigClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiterGroup"), w.OnRateLimiterGroupChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("ACM"), func(cfg *config.Config) error {
 		var options constant.ClientConfig
 		if err := cfg.Unmarshal(&options, opts...); err != nil {

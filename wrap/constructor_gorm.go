@@ -79,6 +79,7 @@ func NewGORMDBWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*GORMD
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiterGroup"), w.OnRateLimiterGroupChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Gorm"), func(cfg *config.Config) error {
 		var options GormOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {

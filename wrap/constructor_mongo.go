@@ -74,6 +74,7 @@ func NewMongoClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiterGroup"), w.OnRateLimiterGroupChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Mongo"), func(cfg *config.Config) error {
 		var options MongoOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {

@@ -83,6 +83,7 @@ func NewOSSClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*OS
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiterGroup"), w.OnRateLimiterGroupChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("OSS"), func(cfg *config.Config) error {
 		var options OSSOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {

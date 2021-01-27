@@ -86,6 +86,7 @@ func NewOTSTableStoreClientWrapperWithConfig(cfg *config.Config, opts ...refx.Op
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiterGroup"), w.OnRateLimiterGroupChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("OTS"), func(cfg *config.Config) error {
 		var options OTSOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
