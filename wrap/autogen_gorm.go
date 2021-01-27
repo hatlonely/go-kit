@@ -86,6 +86,9 @@ func (w *GORMDBWrapper) CreateMetric(options *WrapperOptions) {
 
 func (w GORMDBWrapper) AddError(ctx context.Context, err error) error {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.AddError")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AddError")
 		for key, val := range w.options.Trace.ConstTags {
@@ -95,9 +98,6 @@ func (w GORMDBWrapper) AddError(ctx context.Context, err error) error {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.AddError")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -112,6 +112,9 @@ func (w GORMDBWrapper) AddError(ctx context.Context, err error) error {
 
 func (w GORMDBWrapper) AddForeignKey(ctx context.Context, field string, dest string, onDelete string, onUpdate string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.AddForeignKey")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AddForeignKey")
 		for key, val := range w.options.Trace.ConstTags {
@@ -121,9 +124,6 @@ func (w GORMDBWrapper) AddForeignKey(ctx context.Context, field string, dest str
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.AddForeignKey")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -138,6 +138,9 @@ func (w GORMDBWrapper) AddForeignKey(ctx context.Context, field string, dest str
 
 func (w GORMDBWrapper) AddIndex(ctx context.Context, indexName string, columns ...string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.AddIndex")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AddIndex")
 		for key, val := range w.options.Trace.ConstTags {
@@ -147,9 +150,6 @@ func (w GORMDBWrapper) AddIndex(ctx context.Context, indexName string, columns .
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.AddIndex")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -164,6 +164,9 @@ func (w GORMDBWrapper) AddIndex(ctx context.Context, indexName string, columns .
 
 func (w GORMDBWrapper) AddUniqueIndex(ctx context.Context, indexName string, columns ...string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.AddUniqueIndex")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AddUniqueIndex")
 		for key, val := range w.options.Trace.ConstTags {
@@ -173,9 +176,6 @@ func (w GORMDBWrapper) AddUniqueIndex(ctx context.Context, indexName string, col
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.AddUniqueIndex")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -190,6 +190,9 @@ func (w GORMDBWrapper) AddUniqueIndex(ctx context.Context, indexName string, col
 
 func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Assign")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Assign")
 		for key, val := range w.options.Trace.ConstTags {
@@ -199,9 +202,6 @@ func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBW
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Assign")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -216,6 +216,9 @@ func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBW
 
 func (w GORMDBWrapper) Association(ctx context.Context, column string) *gorm.Association {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Association")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Association")
 		for key, val := range w.options.Trace.ConstTags {
@@ -225,9 +228,6 @@ func (w GORMDBWrapper) Association(ctx context.Context, column string) *gorm.Ass
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Association")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -242,6 +242,9 @@ func (w GORMDBWrapper) Association(ctx context.Context, column string) *gorm.Ass
 
 func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Attrs")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Attrs")
 		for key, val := range w.options.Trace.ConstTags {
@@ -251,9 +254,6 @@ func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWr
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Attrs")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -268,6 +268,9 @@ func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWr
 
 func (w GORMDBWrapper) AutoMigrate(ctx context.Context, values ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.AutoMigrate")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AutoMigrate")
 		for key, val := range w.options.Trace.ConstTags {
@@ -277,9 +280,6 @@ func (w GORMDBWrapper) AutoMigrate(ctx context.Context, values ...interface{}) G
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.AutoMigrate")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -294,6 +294,9 @@ func (w GORMDBWrapper) AutoMigrate(ctx context.Context, values ...interface{}) G
 
 func (w GORMDBWrapper) Begin(ctx context.Context) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Begin")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Begin")
 		for key, val := range w.options.Trace.ConstTags {
@@ -303,9 +306,6 @@ func (w GORMDBWrapper) Begin(ctx context.Context) GORMDBWrapper {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Begin")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -320,6 +320,9 @@ func (w GORMDBWrapper) Begin(ctx context.Context) GORMDBWrapper {
 
 func (w GORMDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.BeginTx")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.BeginTx")
 		for key, val := range w.options.Trace.ConstTags {
@@ -329,9 +332,6 @@ func (w GORMDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) GORMDBW
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.BeginTx")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -346,6 +346,9 @@ func (w GORMDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) GORMDBW
 
 func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.BlockGlobalUpdate")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.BlockGlobalUpdate")
 		for key, val := range w.options.Trace.ConstTags {
@@ -355,9 +358,6 @@ func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMD
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.BlockGlobalUpdate")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -372,6 +372,9 @@ func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMD
 
 func (w GORMDBWrapper) Callback(ctx context.Context) *gorm.Callback {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Callback")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Callback")
 		for key, val := range w.options.Trace.ConstTags {
@@ -381,9 +384,6 @@ func (w GORMDBWrapper) Callback(ctx context.Context) *gorm.Callback {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Callback")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -430,6 +430,9 @@ func (w GORMDBWrapper) Close(ctx context.Context) error {
 
 func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Commit")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Commit")
 		for key, val := range w.options.Trace.ConstTags {
@@ -439,9 +442,6 @@ func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Commit")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -456,6 +456,9 @@ func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
 
 func (w GORMDBWrapper) CommonDB(ctx context.Context) gorm.SQLCommon {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.CommonDB")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.CommonDB")
 		for key, val := range w.options.Trace.ConstTags {
@@ -465,9 +468,6 @@ func (w GORMDBWrapper) CommonDB(ctx context.Context) gorm.SQLCommon {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.CommonDB")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -482,6 +482,9 @@ func (w GORMDBWrapper) CommonDB(ctx context.Context) gorm.SQLCommon {
 
 func (w GORMDBWrapper) Count(ctx context.Context, value interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Count")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Count")
 		for key, val := range w.options.Trace.ConstTags {
@@ -491,9 +494,6 @@ func (w GORMDBWrapper) Count(ctx context.Context, value interface{}) GORMDBWrapp
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Count")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -508,6 +508,9 @@ func (w GORMDBWrapper) Count(ctx context.Context, value interface{}) GORMDBWrapp
 
 func (w GORMDBWrapper) Create(ctx context.Context, value interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Create")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Create")
 		for key, val := range w.options.Trace.ConstTags {
@@ -517,9 +520,6 @@ func (w GORMDBWrapper) Create(ctx context.Context, value interface{}) GORMDBWrap
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Create")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -534,6 +534,9 @@ func (w GORMDBWrapper) Create(ctx context.Context, value interface{}) GORMDBWrap
 
 func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.CreateTable")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.CreateTable")
 		for key, val := range w.options.Trace.ConstTags {
@@ -543,9 +546,6 @@ func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) G
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.CreateTable")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -560,6 +560,9 @@ func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) G
 
 func (w GORMDBWrapper) DB(ctx context.Context) *sql.DB {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.DB")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.DB")
 		for key, val := range w.options.Trace.ConstTags {
@@ -569,9 +572,6 @@ func (w GORMDBWrapper) DB(ctx context.Context) *sql.DB {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.DB")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -586,6 +586,9 @@ func (w GORMDBWrapper) DB(ctx context.Context) *sql.DB {
 
 func (w GORMDBWrapper) Debug(ctx context.Context) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Debug")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Debug")
 		for key, val := range w.options.Trace.ConstTags {
@@ -595,9 +598,6 @@ func (w GORMDBWrapper) Debug(ctx context.Context) GORMDBWrapper {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Debug")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -612,6 +612,9 @@ func (w GORMDBWrapper) Debug(ctx context.Context) GORMDBWrapper {
 
 func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Delete")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Delete")
 		for key, val := range w.options.Trace.ConstTags {
@@ -621,9 +624,6 @@ func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...i
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Delete")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -638,6 +638,9 @@ func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...i
 
 func (w GORMDBWrapper) Dialect(ctx context.Context) gorm.Dialect {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Dialect")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Dialect")
 		for key, val := range w.options.Trace.ConstTags {
@@ -647,9 +650,6 @@ func (w GORMDBWrapper) Dialect(ctx context.Context) gorm.Dialect {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Dialect")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -664,6 +664,9 @@ func (w GORMDBWrapper) Dialect(ctx context.Context) gorm.Dialect {
 
 func (w GORMDBWrapper) DropColumn(ctx context.Context, column string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.DropColumn")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.DropColumn")
 		for key, val := range w.options.Trace.ConstTags {
@@ -673,9 +676,6 @@ func (w GORMDBWrapper) DropColumn(ctx context.Context, column string) GORMDBWrap
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.DropColumn")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -690,6 +690,9 @@ func (w GORMDBWrapper) DropColumn(ctx context.Context, column string) GORMDBWrap
 
 func (w GORMDBWrapper) DropTable(ctx context.Context, values ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.DropTable")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.DropTable")
 		for key, val := range w.options.Trace.ConstTags {
@@ -699,9 +702,6 @@ func (w GORMDBWrapper) DropTable(ctx context.Context, values ...interface{}) GOR
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.DropTable")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -716,6 +716,9 @@ func (w GORMDBWrapper) DropTable(ctx context.Context, values ...interface{}) GOR
 
 func (w GORMDBWrapper) DropTableIfExists(ctx context.Context, values ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.DropTableIfExists")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.DropTableIfExists")
 		for key, val := range w.options.Trace.ConstTags {
@@ -725,9 +728,6 @@ func (w GORMDBWrapper) DropTableIfExists(ctx context.Context, values ...interfac
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.DropTableIfExists")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -742,6 +742,9 @@ func (w GORMDBWrapper) DropTableIfExists(ctx context.Context, values ...interfac
 
 func (w GORMDBWrapper) Exec(ctx context.Context, sql string, values ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Exec")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Exec")
 		for key, val := range w.options.Trace.ConstTags {
@@ -751,9 +754,6 @@ func (w GORMDBWrapper) Exec(ctx context.Context, sql string, values ...interface
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Exec")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -768,6 +768,9 @@ func (w GORMDBWrapper) Exec(ctx context.Context, sql string, values ...interface
 
 func (w GORMDBWrapper) Find(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Find")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Find")
 		for key, val := range w.options.Trace.ConstTags {
@@ -777,9 +780,6 @@ func (w GORMDBWrapper) Find(ctx context.Context, out interface{}, where ...inter
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Find")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -794,6 +794,9 @@ func (w GORMDBWrapper) Find(ctx context.Context, out interface{}, where ...inter
 
 func (w GORMDBWrapper) First(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.First")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.First")
 		for key, val := range w.options.Trace.ConstTags {
@@ -803,9 +806,6 @@ func (w GORMDBWrapper) First(ctx context.Context, out interface{}, where ...inte
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.First")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -820,6 +820,9 @@ func (w GORMDBWrapper) First(ctx context.Context, out interface{}, where ...inte
 
 func (w GORMDBWrapper) FirstOrCreate(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.FirstOrCreate")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.FirstOrCreate")
 		for key, val := range w.options.Trace.ConstTags {
@@ -829,9 +832,6 @@ func (w GORMDBWrapper) FirstOrCreate(ctx context.Context, out interface{}, where
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.FirstOrCreate")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -846,6 +846,9 @@ func (w GORMDBWrapper) FirstOrCreate(ctx context.Context, out interface{}, where
 
 func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.FirstOrInit")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.FirstOrInit")
 		for key, val := range w.options.Trace.ConstTags {
@@ -855,9 +858,6 @@ func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where .
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.FirstOrInit")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -872,6 +872,9 @@ func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where .
 
 func (w GORMDBWrapper) Get(ctx context.Context, name string) (interface{}, bool) {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Get")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Get")
 		for key, val := range w.options.Trace.ConstTags {
@@ -881,9 +884,6 @@ func (w GORMDBWrapper) Get(ctx context.Context, name string) (interface{}, bool)
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Get")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -898,6 +898,9 @@ func (w GORMDBWrapper) Get(ctx context.Context, name string) (interface{}, bool)
 
 func (w GORMDBWrapper) GetErrors(ctx context.Context) []error {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.GetErrors")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.GetErrors")
 		for key, val := range w.options.Trace.ConstTags {
@@ -907,9 +910,6 @@ func (w GORMDBWrapper) GetErrors(ctx context.Context) []error {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.GetErrors")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -924,6 +924,9 @@ func (w GORMDBWrapper) GetErrors(ctx context.Context) []error {
 
 func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Group")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Group")
 		for key, val := range w.options.Trace.ConstTags {
@@ -933,9 +936,6 @@ func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Group")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -950,6 +950,9 @@ func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
 
 func (w GORMDBWrapper) HasBlockGlobalUpdate(ctx context.Context) bool {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.HasBlockGlobalUpdate")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.HasBlockGlobalUpdate")
 		for key, val := range w.options.Trace.ConstTags {
@@ -959,9 +962,6 @@ func (w GORMDBWrapper) HasBlockGlobalUpdate(ctx context.Context) bool {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.HasBlockGlobalUpdate")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -976,6 +976,9 @@ func (w GORMDBWrapper) HasBlockGlobalUpdate(ctx context.Context) bool {
 
 func (w GORMDBWrapper) HasTable(ctx context.Context, value interface{}) bool {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.HasTable")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.HasTable")
 		for key, val := range w.options.Trace.ConstTags {
@@ -985,9 +988,6 @@ func (w GORMDBWrapper) HasTable(ctx context.Context, value interface{}) bool {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.HasTable")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1002,6 +1002,9 @@ func (w GORMDBWrapper) HasTable(ctx context.Context, value interface{}) bool {
 
 func (w GORMDBWrapper) Having(ctx context.Context, query interface{}, values ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Having")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Having")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1011,9 +1014,6 @@ func (w GORMDBWrapper) Having(ctx context.Context, query interface{}, values ...
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Having")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1028,6 +1028,9 @@ func (w GORMDBWrapper) Having(ctx context.Context, query interface{}, values ...
 
 func (w GORMDBWrapper) InstantSet(ctx context.Context, name string, value interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.InstantSet")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.InstantSet")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1037,9 +1040,6 @@ func (w GORMDBWrapper) InstantSet(ctx context.Context, name string, value interf
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.InstantSet")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1054,6 +1054,9 @@ func (w GORMDBWrapper) InstantSet(ctx context.Context, name string, value interf
 
 func (w GORMDBWrapper) Joins(ctx context.Context, query string, args ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Joins")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Joins")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1063,9 +1066,6 @@ func (w GORMDBWrapper) Joins(ctx context.Context, query string, args ...interfac
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Joins")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1080,6 +1080,9 @@ func (w GORMDBWrapper) Joins(ctx context.Context, query string, args ...interfac
 
 func (w GORMDBWrapper) Last(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Last")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Last")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1089,9 +1092,6 @@ func (w GORMDBWrapper) Last(ctx context.Context, out interface{}, where ...inter
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Last")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1106,6 +1106,9 @@ func (w GORMDBWrapper) Last(ctx context.Context, out interface{}, where ...inter
 
 func (w GORMDBWrapper) Limit(ctx context.Context, limit interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Limit")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Limit")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1115,9 +1118,6 @@ func (w GORMDBWrapper) Limit(ctx context.Context, limit interface{}) GORMDBWrapp
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Limit")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1132,6 +1132,9 @@ func (w GORMDBWrapper) Limit(ctx context.Context, limit interface{}) GORMDBWrapp
 
 func (w GORMDBWrapper) LogMode(ctx context.Context, enable bool) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.LogMode")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.LogMode")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1141,9 +1144,6 @@ func (w GORMDBWrapper) LogMode(ctx context.Context, enable bool) GORMDBWrapper {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.LogMode")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1158,6 +1158,9 @@ func (w GORMDBWrapper) LogMode(ctx context.Context, enable bool) GORMDBWrapper {
 
 func (w GORMDBWrapper) Model(ctx context.Context, value interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Model")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Model")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1167,9 +1170,6 @@ func (w GORMDBWrapper) Model(ctx context.Context, value interface{}) GORMDBWrapp
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Model")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1184,6 +1184,9 @@ func (w GORMDBWrapper) Model(ctx context.Context, value interface{}) GORMDBWrapp
 
 func (w GORMDBWrapper) ModifyColumn(ctx context.Context, column string, typ string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.ModifyColumn")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.ModifyColumn")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1193,9 +1196,6 @@ func (w GORMDBWrapper) ModifyColumn(ctx context.Context, column string, typ stri
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.ModifyColumn")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1210,6 +1210,9 @@ func (w GORMDBWrapper) ModifyColumn(ctx context.Context, column string, typ stri
 
 func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.New")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.New")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1219,9 +1222,6 @@ func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.New")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1236,6 +1236,9 @@ func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
 
 func (w GORMDBWrapper) NewRecord(ctx context.Context, value interface{}) bool {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.NewRecord")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.NewRecord")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1245,9 +1248,6 @@ func (w GORMDBWrapper) NewRecord(ctx context.Context, value interface{}) bool {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.NewRecord")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1262,6 +1262,9 @@ func (w GORMDBWrapper) NewRecord(ctx context.Context, value interface{}) bool {
 
 func (w GORMDBWrapper) NewScope(ctx context.Context, value interface{}) *gorm.Scope {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.NewScope")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.NewScope")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1271,9 +1274,6 @@ func (w GORMDBWrapper) NewScope(ctx context.Context, value interface{}) *gorm.Sc
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.NewScope")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1288,6 +1288,9 @@ func (w GORMDBWrapper) NewScope(ctx context.Context, value interface{}) *gorm.Sc
 
 func (w GORMDBWrapper) Not(ctx context.Context, query interface{}, args ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Not")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Not")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1297,9 +1300,6 @@ func (w GORMDBWrapper) Not(ctx context.Context, query interface{}, args ...inter
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Not")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1314,6 +1314,9 @@ func (w GORMDBWrapper) Not(ctx context.Context, query interface{}, args ...inter
 
 func (w GORMDBWrapper) Offset(ctx context.Context, offset interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Offset")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Offset")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1323,9 +1326,6 @@ func (w GORMDBWrapper) Offset(ctx context.Context, offset interface{}) GORMDBWra
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Offset")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1340,6 +1340,9 @@ func (w GORMDBWrapper) Offset(ctx context.Context, offset interface{}) GORMDBWra
 
 func (w GORMDBWrapper) Omit(ctx context.Context, columns ...string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Omit")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Omit")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1349,9 +1352,6 @@ func (w GORMDBWrapper) Omit(ctx context.Context, columns ...string) GORMDBWrappe
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Omit")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1366,6 +1366,9 @@ func (w GORMDBWrapper) Omit(ctx context.Context, columns ...string) GORMDBWrappe
 
 func (w GORMDBWrapper) Or(ctx context.Context, query interface{}, args ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Or")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Or")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1375,9 +1378,6 @@ func (w GORMDBWrapper) Or(ctx context.Context, query interface{}, args ...interf
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Or")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1392,6 +1392,9 @@ func (w GORMDBWrapper) Or(ctx context.Context, query interface{}, args ...interf
 
 func (w GORMDBWrapper) Order(ctx context.Context, value interface{}, reorder ...bool) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Order")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Order")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1401,9 +1404,6 @@ func (w GORMDBWrapper) Order(ctx context.Context, value interface{}, reorder ...
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Order")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1418,6 +1418,9 @@ func (w GORMDBWrapper) Order(ctx context.Context, value interface{}, reorder ...
 
 func (w GORMDBWrapper) Pluck(ctx context.Context, column string, value interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Pluck")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Pluck")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1427,9 +1430,6 @@ func (w GORMDBWrapper) Pluck(ctx context.Context, column string, value interface
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Pluck")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1444,6 +1444,9 @@ func (w GORMDBWrapper) Pluck(ctx context.Context, column string, value interface
 
 func (w GORMDBWrapper) Preload(ctx context.Context, column string, conditions ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Preload")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Preload")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1453,9 +1456,6 @@ func (w GORMDBWrapper) Preload(ctx context.Context, column string, conditions ..
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Preload")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1470,6 +1470,9 @@ func (w GORMDBWrapper) Preload(ctx context.Context, column string, conditions ..
 
 func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Preloads")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Preloads")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1479,9 +1482,6 @@ func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrap
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Preloads")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1496,6 +1496,9 @@ func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrap
 
 func (w GORMDBWrapper) QueryExpr(ctx context.Context) *gorm.SqlExpr {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.QueryExpr")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.QueryExpr")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1505,9 +1508,6 @@ func (w GORMDBWrapper) QueryExpr(ctx context.Context) *gorm.SqlExpr {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.QueryExpr")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1522,6 +1522,9 @@ func (w GORMDBWrapper) QueryExpr(ctx context.Context) *gorm.SqlExpr {
 
 func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Raw")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Raw")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1531,9 +1534,6 @@ func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Raw")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1548,6 +1548,9 @@ func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{
 
 func (w GORMDBWrapper) RecordNotFound(ctx context.Context) bool {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.RecordNotFound")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.RecordNotFound")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1557,9 +1560,6 @@ func (w GORMDBWrapper) RecordNotFound(ctx context.Context) bool {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.RecordNotFound")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1574,6 +1574,9 @@ func (w GORMDBWrapper) RecordNotFound(ctx context.Context) bool {
 
 func (w GORMDBWrapper) Related(ctx context.Context, value interface{}, foreignKeys ...string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Related")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Related")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1583,9 +1586,6 @@ func (w GORMDBWrapper) Related(ctx context.Context, value interface{}, foreignKe
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Related")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1600,6 +1600,9 @@ func (w GORMDBWrapper) Related(ctx context.Context, value interface{}, foreignKe
 
 func (w GORMDBWrapper) RemoveForeignKey(ctx context.Context, field string, dest string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.RemoveForeignKey")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.RemoveForeignKey")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1609,9 +1612,6 @@ func (w GORMDBWrapper) RemoveForeignKey(ctx context.Context, field string, dest 
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.RemoveForeignKey")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1626,6 +1626,9 @@ func (w GORMDBWrapper) RemoveForeignKey(ctx context.Context, field string, dest 
 
 func (w GORMDBWrapper) RemoveIndex(ctx context.Context, indexName string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.RemoveIndex")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.RemoveIndex")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1635,9 +1638,6 @@ func (w GORMDBWrapper) RemoveIndex(ctx context.Context, indexName string) GORMDB
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.RemoveIndex")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1652,6 +1652,9 @@ func (w GORMDBWrapper) RemoveIndex(ctx context.Context, indexName string) GORMDB
 
 func (w GORMDBWrapper) Rollback(ctx context.Context) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Rollback")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Rollback")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1661,9 +1664,6 @@ func (w GORMDBWrapper) Rollback(ctx context.Context) GORMDBWrapper {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Rollback")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1678,6 +1678,9 @@ func (w GORMDBWrapper) Rollback(ctx context.Context) GORMDBWrapper {
 
 func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.RollbackUnlessCommitted")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.RollbackUnlessCommitted")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1687,9 +1690,6 @@ func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrappe
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.RollbackUnlessCommitted")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1704,6 +1704,9 @@ func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrappe
 
 func (w GORMDBWrapper) Row(ctx context.Context) *sql.Row {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Row")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Row")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1713,9 +1716,6 @@ func (w GORMDBWrapper) Row(ctx context.Context) *sql.Row {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Row")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1763,6 +1763,9 @@ func (w GORMDBWrapper) Rows(ctx context.Context) (*sql.Rows, error) {
 
 func (w GORMDBWrapper) Save(ctx context.Context, value interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Save")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Save")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1772,9 +1775,6 @@ func (w GORMDBWrapper) Save(ctx context.Context, value interface{}) GORMDBWrappe
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Save")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1789,6 +1789,9 @@ func (w GORMDBWrapper) Save(ctx context.Context, value interface{}) GORMDBWrappe
 
 func (w GORMDBWrapper) Scan(ctx context.Context, dest interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Scan")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Scan")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1798,9 +1801,6 @@ func (w GORMDBWrapper) Scan(ctx context.Context, dest interface{}) GORMDBWrapper
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Scan")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1847,6 +1847,9 @@ func (w GORMDBWrapper) ScanRows(ctx context.Context, rows *sql.Rows, result inte
 
 func (w GORMDBWrapper) Scopes(ctx context.Context, funcs ...func(*gorm.DB) *gorm.DB) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Scopes")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Scopes")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1856,9 +1859,6 @@ func (w GORMDBWrapper) Scopes(ctx context.Context, funcs ...func(*gorm.DB) *gorm
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Scopes")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1873,6 +1873,9 @@ func (w GORMDBWrapper) Scopes(ctx context.Context, funcs ...func(*gorm.DB) *gorm
 
 func (w GORMDBWrapper) Select(ctx context.Context, query interface{}, args ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Select")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Select")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1882,9 +1885,6 @@ func (w GORMDBWrapper) Select(ctx context.Context, query interface{}, args ...in
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Select")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1899,6 +1899,9 @@ func (w GORMDBWrapper) Select(ctx context.Context, query interface{}, args ...in
 
 func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Set")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Set")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1908,9 +1911,6 @@ func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) 
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Set")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1925,6 +1925,9 @@ func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) 
 
 func (w GORMDBWrapper) SetJoinTableHandler(ctx context.Context, source interface{}, column string, handler gorm.JoinTableHandlerInterface) {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.SetJoinTableHandler")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.SetJoinTableHandler")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1934,9 +1937,6 @@ func (w GORMDBWrapper) SetJoinTableHandler(ctx context.Context, source interface
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.SetJoinTableHandler")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1950,6 +1950,9 @@ func (w GORMDBWrapper) SetJoinTableHandler(ctx context.Context, source interface
 
 func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride func() time.Time) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.SetNowFuncOverride")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.SetNowFuncOverride")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1959,9 +1962,6 @@ func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride f
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.SetNowFuncOverride")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -1976,6 +1976,9 @@ func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride f
 
 func (w GORMDBWrapper) SingularTable(ctx context.Context, enable bool) {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.SingularTable")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.SingularTable")
 		for key, val := range w.options.Trace.ConstTags {
@@ -1985,9 +1988,6 @@ func (w GORMDBWrapper) SingularTable(ctx context.Context, enable bool) {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.SingularTable")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -2001,6 +2001,9 @@ func (w GORMDBWrapper) SingularTable(ctx context.Context, enable bool) {
 
 func (w GORMDBWrapper) SubQuery(ctx context.Context) *gorm.SqlExpr {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.SubQuery")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.SubQuery")
 		for key, val := range w.options.Trace.ConstTags {
@@ -2010,9 +2013,6 @@ func (w GORMDBWrapper) SubQuery(ctx context.Context) *gorm.SqlExpr {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.SubQuery")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -2027,6 +2027,9 @@ func (w GORMDBWrapper) SubQuery(ctx context.Context) *gorm.SqlExpr {
 
 func (w GORMDBWrapper) Table(ctx context.Context, name string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Table")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Table")
 		for key, val := range w.options.Trace.ConstTags {
@@ -2036,9 +2039,6 @@ func (w GORMDBWrapper) Table(ctx context.Context, name string) GORMDBWrapper {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Table")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -2053,6 +2053,9 @@ func (w GORMDBWrapper) Table(ctx context.Context, name string) GORMDBWrapper {
 
 func (w GORMDBWrapper) Take(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Take")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Take")
 		for key, val := range w.options.Trace.ConstTags {
@@ -2062,9 +2065,6 @@ func (w GORMDBWrapper) Take(ctx context.Context, out interface{}, where ...inter
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Take")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -2111,6 +2111,9 @@ func (w GORMDBWrapper) Transaction(ctx context.Context, fc func(tx *gorm.DB) err
 
 func (w GORMDBWrapper) Unscoped(ctx context.Context) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Unscoped")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Unscoped")
 		for key, val := range w.options.Trace.ConstTags {
@@ -2120,9 +2123,6 @@ func (w GORMDBWrapper) Unscoped(ctx context.Context) GORMDBWrapper {
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Unscoped")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -2137,6 +2137,9 @@ func (w GORMDBWrapper) Unscoped(ctx context.Context) GORMDBWrapper {
 
 func (w GORMDBWrapper) Update(ctx context.Context, attrs ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Update")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Update")
 		for key, val := range w.options.Trace.ConstTags {
@@ -2146,9 +2149,6 @@ func (w GORMDBWrapper) Update(ctx context.Context, attrs ...interface{}) GORMDBW
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Update")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -2163,6 +2163,9 @@ func (w GORMDBWrapper) Update(ctx context.Context, attrs ...interface{}) GORMDBW
 
 func (w GORMDBWrapper) UpdateColumn(ctx context.Context, attrs ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.UpdateColumn")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.UpdateColumn")
 		for key, val := range w.options.Trace.ConstTags {
@@ -2172,9 +2175,6 @@ func (w GORMDBWrapper) UpdateColumn(ctx context.Context, attrs ...interface{}) G
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.UpdateColumn")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -2189,6 +2189,9 @@ func (w GORMDBWrapper) UpdateColumn(ctx context.Context, attrs ...interface{}) G
 
 func (w GORMDBWrapper) UpdateColumns(ctx context.Context, values interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.UpdateColumns")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.UpdateColumns")
 		for key, val := range w.options.Trace.ConstTags {
@@ -2198,9 +2201,6 @@ func (w GORMDBWrapper) UpdateColumns(ctx context.Context, values interface{}) GO
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.UpdateColumns")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -2215,6 +2215,9 @@ func (w GORMDBWrapper) UpdateColumns(ctx context.Context, values interface{}) GO
 
 func (w GORMDBWrapper) Updates(ctx context.Context, values interface{}, ignoreProtectedAttrs ...bool) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Updates")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Updates")
 		for key, val := range w.options.Trace.ConstTags {
@@ -2224,9 +2227,6 @@ func (w GORMDBWrapper) Updates(ctx context.Context, values interface{}, ignorePr
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Updates")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
@@ -2241,6 +2241,9 @@ func (w GORMDBWrapper) Updates(ctx context.Context, values interface{}, ignorePr
 
 func (w GORMDBWrapper) Where(ctx context.Context, query interface{}, args ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "DB.Where")
+	}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Where")
 		for key, val := range w.options.Trace.ConstTags {
@@ -2250,9 +2253,6 @@ func (w GORMDBWrapper) Where(ctx context.Context, query interface{}, args ...int
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Where")
 	}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()

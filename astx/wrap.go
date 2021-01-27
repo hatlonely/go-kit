@@ -525,6 +525,11 @@ const WrapperFunctionBodyWithoutErrorTpl = `
 {{- if or .Rule.Trace .Rule.Metric}}
 	ctxOptions := FromContext(ctx)
 {{- end}}
+{{- if .Rule.RateLimiter}}
+	if w.rateLimiterGroup != nil {
+		_ = w.rateLimiterGroup.Wait(ctx, "{{.Class}}.{{.Function.Name}}")
+	}
+{{- end}}
 {{- if .Rule.Trace}}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}")
@@ -535,11 +540,6 @@ const WrapperFunctionBodyWithoutErrorTpl = `
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-{{- end}}
-{{- if .Rule.RateLimiter}}
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "{{.Class}}.{{.Function.Name}}")
 	}
 {{- end}}
 {{- if .Rule.Metric}}
