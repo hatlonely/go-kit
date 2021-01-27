@@ -1,6 +1,9 @@
 package wrap
 
 import (
+	"fmt"
+
+	alierr "github.com/aliyun/alibaba-cloud-sdk-go/sdk/errors"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/kms"
 	"github.com/pkg/errors"
 
@@ -8,6 +11,13 @@ import (
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/refx"
 )
+
+func init() {
+	RegisterErrCode(&alierr.ServerError{}, func(err error) string {
+		e := err.(*alierr.ServerError)
+		return fmt.Sprintf("pop_%v_%v", e.HttpStatus(), e.ErrorCode())
+	})
+}
 
 type KMSOptions struct {
 	RegionID        string

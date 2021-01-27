@@ -1,6 +1,7 @@
 package wrap
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
@@ -10,6 +11,13 @@ import (
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/refx"
 )
+
+func init() {
+	RegisterErrCode(&tablestore.OtsError{}, func(err error) string {
+		e := err.(*tablestore.OtsError)
+		return fmt.Sprintf("ots_%v_%v", e.HttpStatusCode, e.Code)
+	})
+}
 
 type OTSOptions struct {
 	Endpoint        string

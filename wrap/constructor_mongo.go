@@ -2,6 +2,7 @@ package wrap
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/pkg/errors"
@@ -12,6 +13,13 @@ import (
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/refx"
 )
+
+func init() {
+	RegisterErrCode(mongo.MongocryptError{}, func(err error) string {
+		e := err.(mongo.MongocryptError)
+		return fmt.Sprintf("mongo_%v", e.Code)
+	})
+}
 
 type MongoOptions struct {
 	URI            string        `dft:"mongodb://localhost:27017"`
