@@ -99,6 +99,7 @@ func NewOTSTableStoreClientWrapperWithConfig(cfg *config.Config, opts ...refx.Op
 			if _, err := client.ListTable(); err != nil {
 				return errors.Wrap(err, "tablestore.TableStoreClient.ListTable failed")
 			}
+			w.obj = client
 			return nil
 		}
 
