@@ -1,10 +1,10 @@
 # wrap
 
-wrap 对一些常见库进行 wrap 提供，保留原生库的所有功能，并提供通用的 trace/metric/retry 功能
+对一些常见库进行 wrap，保留原生库的所有功能，并提供通用的 trace/metric/retry/ratelimiter 功能
 
 ## Feature
 
-1. 支持 trace/metric/retry
+1. 支持 trace/metric/retry/ratelimiter
 2. 支持自动从 ecs role 中获取 ak/sk/token 更新 client
 3. 支持配置热加载
 4. wrap 代码自动生成
@@ -127,6 +127,23 @@ if w.options.EnableMetric {
 - `method`: 方法名
 - `errCode`: 错误码
 - `custom`: 用户自定义 Label，常见的使用场景是一个 client 有多种不同业务在使用，业务字段可以设置在这个字段上
+
+## RateLimiter
+
+```go
+type RateLimiterGroup interface {
+	Wait(ctx context.Context, key string) error
+}
+```
+
+基于 `golang.org/x/time/rate` 默认提供两种本地限流策略，
+
+- `LocalGroupRateLimiter`: 每个方法都有单独的限流器，互不干扰
+- `LocalShareRateLimiter`: 所有方法共享同一个限流器，不同的方法可以设置每次请求消耗的 token 数量
+
+### RateLimiter 的错误处理
+
+如果被 wrap 函数本身返回 error，这个错误会直接返回，否则这个错误会被忽略
 
 ## Context
 
