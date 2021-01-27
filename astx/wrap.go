@@ -138,7 +138,7 @@ type RenderInfo struct {
 		ResultList       string
 		LastResult       string
 		DeclareVariables string
-		ReturnVariables  string
+		ReturnList       string
 		IsChain          bool
 		IsReturnVoid     bool
 		IsReturnError    bool
@@ -260,7 +260,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		if len(results) != 0 {
 			info.Function.LastResult = results[len(results)-1]
 		}
-		info.Function.ReturnVariables = g.generateWrapperReturnVariables(function)
+		info.Function.ReturnList = g.generateWrapperReturnList(function)
 		info.Function.DeclareVariables = g.generateWrapperDeclareReturnVariables(function)
 		info.Rule.OnWrapperChange = g.MatchRule(function.Class, g.options.Rule.OnWrapperChange)
 		info.Rule.OnRetryChange = g.MatchRule(function.Class, g.options.Rule.OnRetryChange)
@@ -465,7 +465,7 @@ func (g *WrapperGenerator) generateWrapperDeclareReturnVariables(function *Funct
 	return strings.Join(vars, "\n")
 }
 
-func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) string {
+func (g *WrapperGenerator) generateWrapperReturnList(function *Function) string {
 	var results []string
 	for _, i := range function.Results {
 		cls := strings.TrimLeft(i.Type, "*")
@@ -487,7 +487,7 @@ func (g *WrapperGenerator) generateWrapperReturnVariables(function *Function) st
 		results = append(results, fmt.Sprintf("%s", i.Name))
 	}
 
-	return fmt.Sprintf("return %s", strings.Join(results, ", "))
+	return strings.Join(results, ", ")
 }
 
 const WrapperFunctionBodyWithoutErrorTpl = `
@@ -529,7 +529,7 @@ const WrapperFunctionBodyWithoutErrorTpl = `
 	w.obj.{{.Function.Name}}({{.Function.ParamList}})
 {{- else if not .Function.IsReturnError}}
 	{{.Function.ResultList}} := w.obj.{{.Function.Name}}({{.Function.ParamList}})
-	{{.Function.ReturnVariables}}
+	return {{.Function.ReturnList}}
 {{- end}}
 `
 
@@ -553,7 +553,7 @@ const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 {{- if .Rule.RateLimiter}}
 	if w.rateLimiterGroup != nil {
 		if err := w.rateLimiterGroup.Wait(ctx, "{{.Class}}.{{.Function.Name}}"); err != nil {
-			{{.Function.ReturnVariables}}
+			return {{.Function.ReturnList}}
 		}
 	}
 {{- end}}
@@ -567,7 +567,7 @@ const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 	}
 {{- end}}
 	{{.Function.ResultList}} = w.obj.{{.Function.Name}}({{.Function.ParamList}})
-	{{.Function.ReturnVariables}}
+	return {{.Function.ReturnList}}
 `
 
 const WrapperFunctionBodyWithErrorWithRetryTpl = `
@@ -607,7 +607,7 @@ const WrapperFunctionBodyWithErrorWithRetryTpl = `
 		{{.Function.ResultList}} = w.obj.{{.Function.Name}}({{.Function.ParamList}})
 		return {{.Function.LastResult}}
 	})
-{{.Function.ReturnVariables}}
+	return {{.Function.ReturnList}}
 `
 
 func (g *WrapperGenerator) generateWrapperFunctionBody(info *RenderInfo, function *Function) string {
