@@ -11,15 +11,20 @@ import (
 )
 
 type ACMConfigClientWrapperOptions struct {
-	Retry   RetryOptions
-	Wrapper WrapperOptions
-	ACM     constant.ClientConfig
+	Retry            RetryOptions
+	Wrapper          WrapperOptions
+	ACM              constant.ClientConfig
+	RateLimiterGroup RateLimiterGroupOptions
 }
 
 func NewACMConfigClientWrapperWithOptions(options *ACMConfigClientWrapperOptions) (*ACMConfigClientWrapper, error) {
 	retry, err := NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
+	}
+	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
 	}
 
 	client, err := clients.CreateConfigClient(map[string]interface{}{
@@ -30,9 +35,10 @@ func NewACMConfigClientWrapperWithOptions(options *ACMConfigClientWrapperOptions
 	}
 
 	w := &ACMConfigClientWrapper{
-		obj:     client.(*config_client.ConfigClient),
-		retry:   retry,
-		options: &options.Wrapper,
+		obj:              client.(*config_client.ConfigClient),
+		retry:            retry,
+		options:          &options.Wrapper,
+		rateLimiterGroup: rateLimiterGroup,
 	}
 
 	if w.options.EnableMetric {

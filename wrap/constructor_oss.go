@@ -18,15 +18,20 @@ type OSSOptions struct {
 }
 
 type OSSClientWrapperOptions struct {
-	Retry   RetryOptions
-	Wrapper WrapperOptions
-	OSS     OSSOptions
+	Retry            RetryOptions
+	Wrapper          WrapperOptions
+	OSS              OSSOptions
+	RateLimiterGroup RateLimiterGroupOptions
 }
 
 func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClientWrapper, error) {
 	retry, err := NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
+	}
+	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
 	}
 
 	if options.OSS.AccessKeyID != "" {
@@ -38,9 +43,10 @@ func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClien
 			return nil, errors.Wrap(err, "oss.Client.ListBuckets failed")
 		}
 		return &OSSClientWrapper{
-			obj:     client,
-			retry:   retry,
-			options: &options.Wrapper,
+			obj:              client,
+			retry:            retry,
+			options:          &options.Wrapper,
+			rateLimiterGroup: rateLimiterGroup,
 		}, nil
 	}
 
@@ -56,9 +62,10 @@ func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClien
 		return nil, errors.Wrap(err, "oss.Client.ListBuckets failed")
 	}
 	w := &OSSClientWrapper{
-		obj:     client,
-		retry:   retry,
-		options: &options.Wrapper,
+		obj:              client,
+		retry:            retry,
+		options:          &options.Wrapper,
+		rateLimiterGroup: rateLimiterGroup,
 	}
 
 	if w.options.EnableMetric {

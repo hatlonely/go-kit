@@ -23,15 +23,20 @@ type ESOptions struct {
 }
 
 type ESClientWrapperOptions struct {
-	Retry   RetryOptions
-	Wrapper WrapperOptions
-	ES      ESOptions
+	Retry            RetryOptions
+	Wrapper          WrapperOptions
+	ES               ESOptions
+	RateLimiterGroup RateLimiterGroupOptions
 }
 
 func NewESClientWrapperWithOptions(options *ESClientWrapperOptions) (*ESClientWrapper, error) {
 	retry, err := NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
+	}
+	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
 	}
 
 	client, err := elastic.NewClient(
@@ -54,9 +59,10 @@ func NewESClientWrapperWithOptions(options *ESClientWrapperOptions) (*ESClientWr
 	}
 
 	w := &ESClientWrapper{
-		obj:     client,
-		retry:   retry,
-		options: &options.Wrapper,
+		obj:              client,
+		retry:            retry,
+		options:          &options.Wrapper,
+		rateLimiterGroup: rateLimiterGroup,
 	}
 
 	if w.options.EnableMetric {

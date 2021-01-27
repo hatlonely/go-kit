@@ -16,15 +16,20 @@ type KMSOptions struct {
 }
 
 type KMSClientWrapperOptions struct {
-	Retry   RetryOptions
-	Wrapper WrapperOptions
-	KMS     KMSOptions
+	Retry            RetryOptions
+	Wrapper          WrapperOptions
+	KMS              KMSOptions
+	RateLimiterGroup RateLimiterGroupOptions
 }
 
 func NewKMSClientWrapperWithOptions(options *KMSClientWrapperOptions) (*KMSClientWrapper, error) {
 	retry, err := NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
+	}
+	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
 	}
 
 	if options.KMS.AccessKeyID != "" {
@@ -36,9 +41,10 @@ func NewKMSClientWrapperWithOptions(options *KMSClientWrapperOptions) (*KMSClien
 			return nil, errors.Wrap(err, "kms.Client.ListKeys failed")
 		}
 		return &KMSClientWrapper{
-			obj:     client,
-			retry:   retry,
-			options: &options.Wrapper,
+			obj:              client,
+			retry:            retry,
+			options:          &options.Wrapper,
+			rateLimiterGroup: rateLimiterGroup,
 		}, nil
 	}
 
@@ -56,9 +62,10 @@ func NewKMSClientWrapperWithOptions(options *KMSClientWrapperOptions) (*KMSClien
 	}
 
 	w := &KMSClientWrapper{
-		obj:     client,
-		retry:   retry,
-		options: &options.Wrapper,
+		obj:              client,
+		retry:            retry,
+		options:          &options.Wrapper,
+		rateLimiterGroup: rateLimiterGroup,
 	}
 
 	if w.options.EnableMetric {

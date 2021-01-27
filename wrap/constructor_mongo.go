@@ -20,15 +20,20 @@ type MongoOptions struct {
 }
 
 type MongoClientWrapperOptions struct {
-	Retry   RetryOptions
-	Wrapper WrapperOptions
-	Mongo   MongoOptions
+	Retry            RetryOptions
+	Wrapper          WrapperOptions
+	Mongo            MongoOptions
+	RateLimiterGroup RateLimiterGroupOptions
 }
 
 func NewMongoClientWrapperWithOptions(options *MongoClientWrapperOptions) (*MongoClientWrapper, error) {
 	retry, err := NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
+	}
+	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
 	}
 
 	client, err := mongo.NewClient(mopt.Client().ApplyURI(options.Mongo.URI))
@@ -49,9 +54,10 @@ func NewMongoClientWrapperWithOptions(options *MongoClientWrapperOptions) (*Mong
 	}
 
 	w := &MongoClientWrapper{
-		obj:     client,
-		retry:   retry,
-		options: &options.Wrapper,
+		obj:              client,
+		retry:            retry,
+		options:          &options.Wrapper,
+		rateLimiterGroup: rateLimiterGroup,
 	}
 
 	if w.options.EnableMetric {

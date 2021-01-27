@@ -31,7 +31,7 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
 
-	rateLimiter, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
 	}
@@ -42,9 +42,10 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 			return nil, errors.Wrap(err, "tablestore.TableStoreClient.ListTable failed")
 		}
 		return &OTSTableStoreClientWrapper{
-			obj:     client,
-			retry:   retry,
-			options: &options.Wrapper,
+			obj:              client,
+			retry:            retry,
+			options:          &options.Wrapper,
+			rateLimiterGroup: rateLimiterGroup,
 		}, nil
 	}
 
@@ -61,7 +62,7 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 		obj:              client,
 		retry:            retry,
 		options:          &options.Wrapper,
-		rateLimiterGroup: rateLimiter,
+		rateLimiterGroup: rateLimiterGroup,
 	}
 
 	if w.options.EnableMetric {

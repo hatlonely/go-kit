@@ -24,15 +24,20 @@ type GormOptions struct {
 }
 
 type GORMDBWrapperOptions struct {
-	Retry   RetryOptions
-	Wrapper WrapperOptions
-	Gorm    GormOptions
+	Retry            RetryOptions
+	Wrapper          WrapperOptions
+	Gorm             GormOptions
+	RateLimiterGroup RateLimiterGroupOptions
 }
 
 func NewGORMDBWrapperWithOptions(options *GORMDBWrapperOptions) (*GORMDBWrapper, error) {
 	retry, err := NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
+	}
+	rateLimiterGroup, err := NewRateLimiterGroup(&options.RateLimiterGroup)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
 	}
 
 	cli, err := gorm.Open("mysql", fmt.Sprintf(
@@ -54,9 +59,10 @@ func NewGORMDBWrapperWithOptions(options *GORMDBWrapperOptions) (*GORMDBWrapper,
 	cli.LogMode(options.Gorm.LogMode)
 
 	w := &GORMDBWrapper{
-		obj:     cli,
-		retry:   retry,
-		options: &options.Wrapper,
+		obj:              cli,
+		retry:            retry,
+		options:          &options.Wrapper,
+		rateLimiterGroup: rateLimiterGroup,
 	}
 
 	if w.options.EnableMetric {
