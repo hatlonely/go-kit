@@ -2,6 +2,8 @@ package wrap
 
 import (
 	"fmt"
+	"net/http"
+	"strings"
 
 	alierr "github.com/aliyun/alibaba-cloud-sdk-go/sdk/errors"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/kms"
@@ -16,6 +18,18 @@ func init() {
 	RegisterErrCode(&alierr.ServerError{}, func(err error) string {
 		e := err.(*alierr.ServerError)
 		return fmt.Sprintf("pop_%v_%v", e.HttpStatus(), e.ErrorCode())
+	})
+	RegisterRetryRetryIf("POP", func(err error) bool {
+		switch e := err.(type) {
+		case *alierr.ServerError:
+			if e.HttpStatus() >= http.StatusInternalServerError {
+				return true
+			}
+			if strings.Contains(e.Error(), "timeout") {
+				return true
+			}
+		}
+		return false
 	})
 }
 
