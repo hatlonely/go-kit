@@ -35,8 +35,8 @@ type LocalGroupRateLimiter struct {
 }
 
 type LocalGroupRateLimiterOptions map[string]struct {
-	Interval time.Duration
-	Burst    int
+	Interval time.Duration `rule:"x > 0"`
+	Burst    int           `rule:"x > 0"`
 }
 
 func NewLocalGroupRateLimiter(options *LocalGroupRateLimiterOptions) (*LocalGroupRateLimiter, error) {
@@ -65,8 +65,8 @@ func (r *LocalGroupRateLimiter) Wait(ctx context.Context, key string) error {
 }
 
 type LocalShareRateLimiterOptions struct {
-	Interval time.Duration
-	Burst    int
+	Interval time.Duration `rule:"x > 0"`
+	Burst    int           `rule:"x > 0"`
 	Cost     map[string]int
 }
 
