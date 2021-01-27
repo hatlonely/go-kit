@@ -66,7 +66,7 @@ func (r *LocalGroupRateLimiter) Wait(ctx context.Context, key string) error {
 
 type LocalShareRateLimiterOptions struct {
 	Interval time.Duration
-	Buckets  int
+	Burst    int
 	Cost     map[string]int
 }
 
@@ -77,7 +77,7 @@ type LocalShareRateLimiter struct {
 }
 
 func NewLocalShareRateLimiter(options *LocalShareRateLimiterOptions) (*LocalShareRateLimiter, error) {
-	limiter := rate.NewLimiter(rate.Every(options.Interval), options.Buckets)
+	limiter := rate.NewLimiter(rate.Every(options.Interval), options.Burst)
 
 	for _, cost := range options.Cost {
 		if cost <= 0 {
