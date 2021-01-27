@@ -121,7 +121,7 @@ wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packagePath "github.com/jinzhu/gorm" \
 		--packageName gorm \
 		--classPrefix GORM \
-		--enableRuleForChainFunc \
+		--enableRuleForNoErrorFunc \
 		--classes DB \
 		--rule.createMetric.include "^DB$$" \
 		--rule.onWrapperChange.include "^DB$$" \

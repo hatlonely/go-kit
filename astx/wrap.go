@@ -51,16 +51,16 @@ func (r Rule) MarshalJSON() ([]byte, error) {
 }
 
 type WrapperGeneratorOptions struct {
-	Debug                  bool     `flag:"usage: debug mode"`
-	SourcePath             string   `flag:"usage: source path; default: vendor"`
-	PackagePath            string   `flag:"usage: package path"`
-	PackageName            string   `flag:"usage: package name"`
-	OutputPackage          string   `flag:"usage: output package name; default: wrap" dft:"wrap"`
-	Classes                []string `flag:"usage: classes to wrap"`
-	StarClasses            []string `flag:"usage: star classes to wrap"`
-	ClassPrefix            string   `flag:"usage: wrap class name prefix"`
-	UnwrapFunc             string   `flag:"usage: unwrap function name; default: Unwrap" dft:"Unwrap"`
-	EnableRuleForChainFunc bool     `flag:"usage: enable trace on chain function"`
+	Debug                    bool     `flag:"usage: debug mode"`
+	SourcePath               string   `flag:"usage: source path; default: vendor"`
+	PackagePath              string   `flag:"usage: package path"`
+	PackageName              string   `flag:"usage: package name"`
+	OutputPackage            string   `flag:"usage: output package name; default: wrap" dft:"wrap"`
+	Classes                  []string `flag:"usage: classes to wrap"`
+	StarClasses              []string `flag:"usage: star classes to wrap"`
+	ClassPrefix              string   `flag:"usage: wrap class name prefix"`
+	UnwrapFunc               string   `flag:"usage: unwrap function name; default: Unwrap" dft:"Unwrap"`
+	EnableRuleForNoErrorFunc bool     `flag:"usage: enable trace for no error function"`
 
 	Rule struct {
 		Class                    Rule
@@ -148,8 +148,8 @@ type RenderInfo struct {
 		IsReturnError    bool
 	}
 
-	EnableRuleForChainFunc bool
-	Rule                   struct {
+	EnableRuleForNoErrorFunc bool
+	Rule                     struct {
 		OnWrapperChange          bool
 		OnRetryChange            bool
 		OnRateLimiterGroupChange bool
@@ -201,13 +201,13 @@ func (g *WrapperGenerator) Generate() (string, error) {
 	}
 
 	info := &RenderInfo{
-		Package:                g.options.PackageName,
-		WrapPackagePrefix:      g.wrapPackagePrefix,
-		UnwrapFunc:             g.options.UnwrapFunc,
-		Debug:                  g.options.Debug,
-		EnableRuleForChainFunc: g.options.EnableRuleForChainFunc,
-		OutputPackage:          g.options.OutputPackage,
-		PackagePath:            g.options.PackagePath,
+		Package:                  g.options.PackageName,
+		WrapPackagePrefix:        g.wrapPackagePrefix,
+		UnwrapFunc:               g.options.UnwrapFunc,
+		Debug:                    g.options.Debug,
+		EnableRuleForNoErrorFunc: g.options.EnableRuleForNoErrorFunc,
+		OutputPackage:            g.options.OutputPackage,
+		PackagePath:              g.options.PackagePath,
 	}
 
 	buf.WriteString(renderTemplate(WrapperImportTpl, info, "WrapperImportTpl"))
@@ -515,7 +515,7 @@ func (g *WrapperGenerator) generateWrapperReturnList(function *Function) string 
 }
 
 const WrapperFunctionBodyWithoutErrorTpl = `
-{{- if .EnableRuleForChainFunc}}
+{{- if .EnableRuleForNoErrorFunc}}
 {{- if or .Rule.Trace .Rule.Metric}}
 	ctxOptions := FromContext(ctx)
 {{- end}}
