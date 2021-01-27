@@ -36,7 +36,7 @@ type LocalGroupRateLimiter struct {
 
 type LocalGroupRateLimiterOptions map[string]struct {
 	Interval time.Duration
-	Buckets  int
+	Burst    int
 }
 
 func NewLocalGroupRateLimiter(options *LocalGroupRateLimiterOptions) (*LocalGroupRateLimiter, error) {
@@ -46,10 +46,10 @@ func NewLocalGroupRateLimiter(options *LocalGroupRateLimiterOptions) (*LocalGrou
 		if val.Interval <= 0 {
 			return nil, errors.Errorf("interval should be positive")
 		}
-		if val.Buckets <= 0 {
+		if val.Burst <= 0 {
 			return nil, errors.Errorf("bucket should be positive")
 		}
-		limiters[key] = rate.NewLimiter(rate.Every(val.Interval), val.Buckets)
+		limiters[key] = rate.NewLimiter(rate.Every(val.Interval), val.Burst)
 	}
 
 	return &LocalGroupRateLimiter{limiters: limiters}, nil
