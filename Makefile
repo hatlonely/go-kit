@@ -60,6 +60,7 @@ wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.createMetric.include "^TableStoreClient$$" \
 		--rule.onWrapperChange.include "^TableStoreClient$$" \
 		--rule.onRetryChange.include "^TableStoreClient$$" \
+		--rule.onRateLimiterGroupChange.include "^TableStoreClient$$" \
 		--output $@
 
 wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
@@ -71,6 +72,7 @@ wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.createMetric.include "^Client$$" \
 		--rule.onWrapperChange.include "^Client$$" \
 		--rule.onRetryChange.include "^Client$$" \
+		--rule.onRateLimiterGroupChange.include "^Client$$" \
 		--output $@
 
 wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
@@ -82,6 +84,7 @@ wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.createMetric.include "^ConfigClient$$" \
 		--rule.onWrapperChange.include "^ConfigClient$$" \
 		--rule.onRetryChange.include "^ConfigClient$$" \
+		--rule.onRateLimiterGroupChange.include "^ConfigClient$$" \
 		--output $@
 
 wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
@@ -93,6 +96,7 @@ wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.createMetric.include "^Client$$" \
 		--rule.onWrapperChange.include "^Client$$" \
 		--rule.onRetryChange.include "^Client$$" \
+		--rule.onRateLimiterGroupChange.include "^Client$$" \
 		--rule.trace '{"Client": {"exclude": "^Bucket$$"}}' \
 		--rule.retry '{"Client": {"exclude": "^Bucket$$"}}' \
 		--rule.metric '{"Client": {"exclude": "^Bucket$$"}}' \
@@ -109,6 +113,7 @@ wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.createMetric.include "^DB$$" \
 		--rule.onWrapperChange.include "^DB$$" \
 		--rule.onRetryChange.include "^DB$$" \
+		--rule.onRateLimiterGroupChange.include "^DB$$" \
 		--rule.function '{"DB": {"exclude": "^SetLogger$$"}}' \
 		--output $@
 
@@ -121,6 +126,7 @@ wrap/autogen_elasticsearch.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.createMetric.include "^Client$$" \
 		--rule.onWrapperChange.include "^Client$$" \
 		--rule.onRetryChange.include "^Client$$" \
+		--rule.onRateLimiterGroupChange.include "^Client$$" \
 		--rule.trace '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
 		--rule.retry '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
 		--rule.metric '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
@@ -136,6 +142,7 @@ wrap/autogen_mongo.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.createMetric.include "^Client$$" \
 		--rule.onWrapperChange.include "^Client$$" \
 		--rule.onRetryChange.include "^Client$$" \
+		--rule.onRateLimiterGroupChange.include "^Client$$" \
 		--rule.trace '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
 		--rule.metric '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
 		--rule.rateLimiter '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
@@ -150,4 +157,5 @@ wrap/autogen_redis.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.createMetric.include "^(?i:(Client)|(ClusterClient))$$" \
 		--rule.onWrapperChange.include "^(?i:(Client)|(ClusterClient))$$" \
 		--rule.onRetryChange.include "^(?i:(Client)|(ClusterClient))$$" \
+		--rule.onRateLimiterGroupChange.include "^(?i:(Client)|(ClusterClient))$$" \
 		--output $@

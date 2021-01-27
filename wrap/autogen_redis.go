@@ -54,6 +54,21 @@ func (w *RedisClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeH
 	}
 }
 
+func (w *RedisClientWrapper) OnRateLimiterGroupChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options RateLimiterGroupOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		rateLimiterGroup, err := NewRateLimiterGroup(&options)
+		if err != nil {
+			return errors.Wrap(err, "NewRateLimiterGroup failed")
+		}
+		w.rateLimiterGroup = rateLimiterGroup
+		return nil
+	}
+}
+
 func (w *RedisClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "redis_Client_durationMs",
@@ -103,6 +118,21 @@ func (w *RedisClusterClientWrapper) OnRetryChange(opts ...refx.Option) config.On
 			return errors.Wrap(err, "NewRetryWithOptions failed")
 		}
 		w.retry = retry
+		return nil
+	}
+}
+
+func (w *RedisClusterClientWrapper) OnRateLimiterGroupChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options RateLimiterGroupOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		rateLimiterGroup, err := NewRateLimiterGroup(&options)
+		if err != nil {
+			return errors.Wrap(err, "NewRateLimiterGroup failed")
+		}
+		w.rateLimiterGroup = rateLimiterGroup
 		return nil
 	}
 }

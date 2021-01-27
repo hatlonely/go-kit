@@ -63,16 +63,17 @@ type WrapperGeneratorOptions struct {
 	EnableRuleForChainFunc bool     `flag:"usage: enable trace on chain function"`
 
 	Rule struct {
-		Class           Rule
-		StarClass       Rule
-		OnWrapperChange Rule
-		OnRetryChange   Rule
-		CreateMetric    Rule
-		Function        map[string]Rule
-		Trace           map[string]Rule
-		Retry           map[string]Rule
-		Metric          map[string]Rule
-		RateLimiter     map[string]Rule
+		Class                    Rule
+		StarClass                Rule
+		OnWrapperChange          Rule
+		OnRetryChange            Rule
+		OnRateLimiterGroupChange Rule
+		CreateMetric             Rule
+		Function                 map[string]Rule
+		Trace                    map[string]Rule
+		Retry                    map[string]Rule
+		Metric                   map[string]Rule
+		RateLimiter              map[string]Rule
 	}
 }
 
@@ -94,14 +95,17 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 	if options.Rule.OnRetryChange.Exclude == nil {
 		options.Rule.OnRetryChange.Exclude = excludeAllRegex
 	}
+	if options.Rule.OnRateLimiterGroupChange.Exclude == nil {
+		options.Rule.OnRateLimiterGroupChange.Exclude = excludeAllRegex
+	}
+	if options.Rule.CreateMetric.Exclude == nil {
+		options.Rule.CreateMetric.Exclude = excludeAllRegex
+	}
 	if options.Rule.StarClass.Exclude == nil {
 		options.Rule.StarClass.Exclude = excludeAllRegex
 	}
 	if options.Rule.Class.Exclude == nil {
 		options.Rule.Class.Exclude = excludeAllRegex
-	}
-	if options.Rule.CreateMetric.Exclude == nil {
-		options.Rule.CreateMetric.Exclude = excludeAllRegex
 	}
 
 	var wrapPackagePrefix string
@@ -146,13 +150,14 @@ type RenderInfo struct {
 
 	EnableRuleForChainFunc bool
 	Rule                   struct {
-		OnWrapperChange bool
-		OnRetryChange   bool
-		CreateMetric    bool
-		Trace           bool
-		Retry           bool
-		Metric          bool
-		RateLimiter     bool
+		OnWrapperChange          bool
+		OnRetryChange            bool
+		OnRateLimiterGroupChange bool
+		CreateMetric             bool
+		Trace                    bool
+		Retry                    bool
+		Metric                   bool
+		RateLimiter              bool
 	}
 }
 
@@ -212,6 +217,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		info.WrapClass = g.wrapClassMap[cls]
 		info.Rule.OnWrapperChange = g.MatchRule(cls, g.options.Rule.OnWrapperChange)
 		info.Rule.OnRetryChange = g.MatchRule(cls, g.options.Rule.OnRetryChange)
+		info.Rule.OnRateLimiterGroupChange = g.MatchRule(cls, g.options.Rule.OnRateLimiterGroupChange)
 		info.Rule.CreateMetric = g.MatchRule(cls, g.options.Rule.CreateMetric)
 		info.IsStarClass = g.starClassSet[cls]
 
@@ -265,6 +271,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		info.Rule.OnWrapperChange = g.MatchRule(function.Class, g.options.Rule.OnWrapperChange)
 		info.Rule.OnRetryChange = g.MatchRule(function.Class, g.options.Rule.OnRetryChange)
 		info.Rule.CreateMetric = g.MatchRule(function.Class, g.options.Rule.CreateMetric)
+		info.Rule.OnRateLimiterGroupChange = g.MatchRule(function.Class, g.options.Rule.OnRateLimiterGroupChange)
 		info.Rule.Trace = g.MatchFunctionRule(function, g.options.Rule.Trace)
 		info.Rule.Metric = g.MatchFunctionRule(function, g.options.Rule.Metric)
 		info.Rule.Retry = g.MatchFunctionRule(function, g.options.Rule.Retry)
@@ -377,6 +384,23 @@ func (w *{{.WrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandl
 }
 {{- end}}
 
+{{- if .Rule.OnRateLimiterGroupChange}}
+
+func (w *{{.WrapClass}}) OnRateLimiterGroupChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options {{.WrapPackagePrefix}}RateLimiterGroupOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		rateLimiterGroup, err := {{.WrapPackagePrefix}}NewRateLimiterGroup(&options)
+		if err != nil {
+			return errors.Wrap(err, "NewRateLimiterGroup failed")
+		}
+		w.rateLimiterGroup = rateLimiterGroup
+		return nil
+	}
+}
+{{- end}}
 
 {{- if .Rule.CreateMetric}}
 

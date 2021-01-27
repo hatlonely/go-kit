@@ -58,6 +58,21 @@ func (w *MongoClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeH
 	}
 }
 
+func (w *MongoClientWrapper) OnRateLimiterGroupChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options RateLimiterGroupOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		rateLimiterGroup, err := NewRateLimiterGroup(&options)
+		if err != nil {
+			return errors.Wrap(err, "NewRateLimiterGroup failed")
+		}
+		w.rateLimiterGroup = rateLimiterGroup
+		return nil
+	}
+}
+
 func (w *MongoClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "mongo_Client_durationMs",
