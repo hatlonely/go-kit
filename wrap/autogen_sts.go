@@ -85,16 +85,6 @@ func (w *STSClientWrapper) CreateMetric(options *WrapperOptions) {
 
 func (w *STSClientWrapper) AssumeRole(ctx context.Context, request *sts.AssumeRoleRequest) (*sts.AssumeRoleResponse, error) {
 	ctxOptions := FromContext(ctx)
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "sts.Client.AssumeRole")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
 	var response *sts.AssumeRoleResponse
 	var err error
 	err = w.retry.Do(func() error {
@@ -103,7 +93,17 @@ func (w *STSClientWrapper) AssumeRole(ctx context.Context, request *sts.AssumeRo
 				return err
 			}
 		}
-		if w.options.EnableMetric {
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "sts.Client.AssumeRole")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
 			defer func() {
 				w.totalMetric.WithLabelValues("sts.Client.AssumeRole", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
@@ -128,16 +128,6 @@ func (w *STSClientWrapper) AssumeRoleWithChan(request *sts.AssumeRoleRequest) (<
 
 func (w *STSClientWrapper) AssumeRoleWithSAML(ctx context.Context, request *sts.AssumeRoleWithSAMLRequest) (*sts.AssumeRoleWithSAMLResponse, error) {
 	ctxOptions := FromContext(ctx)
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "sts.Client.AssumeRoleWithSAML")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
 	var response *sts.AssumeRoleWithSAMLResponse
 	var err error
 	err = w.retry.Do(func() error {
@@ -146,7 +136,17 @@ func (w *STSClientWrapper) AssumeRoleWithSAML(ctx context.Context, request *sts.
 				return err
 			}
 		}
-		if w.options.EnableMetric {
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "sts.Client.AssumeRoleWithSAML")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
 			defer func() {
 				w.totalMetric.WithLabelValues("sts.Client.AssumeRoleWithSAML", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
@@ -171,16 +171,6 @@ func (w *STSClientWrapper) AssumeRoleWithSAMLWithChan(request *sts.AssumeRoleWit
 
 func (w *STSClientWrapper) GetCallerIdentity(ctx context.Context, request *sts.GetCallerIdentityRequest) (*sts.GetCallerIdentityResponse, error) {
 	ctxOptions := FromContext(ctx)
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "sts.Client.GetCallerIdentity")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
 	var response *sts.GetCallerIdentityResponse
 	var err error
 	err = w.retry.Do(func() error {
@@ -189,7 +179,17 @@ func (w *STSClientWrapper) GetCallerIdentity(ctx context.Context, request *sts.G
 				return err
 			}
 		}
-		if w.options.EnableMetric {
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "sts.Client.GetCallerIdentity")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
 			defer func() {
 				w.totalMetric.WithLabelValues("sts.Client.GetCallerIdentity", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()

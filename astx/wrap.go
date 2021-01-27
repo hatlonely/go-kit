@@ -567,6 +567,14 @@ const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 {{- if or .Rule.Trace .Rule.Metric}}
 	ctxOptions := FromContext(ctx)
 {{- end}}
+{{.Function.DeclareVariables}}
+{{- if .Rule.RateLimiter}}
+	if w.rateLimiterGroup != nil {
+		if err := w.rateLimiterGroup.Wait(ctx, "{{.Class}}.{{.Function.Name}}"); err != nil {
+			return {{.Function.ReturnList}}
+		}
+	}
+{{- end}}
 {{- if .Rule.Trace}}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}")
@@ -577,14 +585,6 @@ const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 			span.SetTag(key, val)
 		}
 		defer span.Finish()
-	}
-{{- end}}
-{{.Function.DeclareVariables}}
-{{- if .Rule.RateLimiter}}
-	if w.rateLimiterGroup != nil {
-		if err := w.rateLimiterGroup.Wait(ctx, "{{.Class}}.{{.Function.Name}}"); err != nil {
-			return {{.Function.ReturnList}}
-		}
 	}
 {{- end}}
 {{- if .Rule.Metric}}
@@ -604,18 +604,6 @@ const WrapperFunctionBodyWithErrorWithRetryTpl = `
 {{- if or .Rule.Trace .Rule.Metric}}
 	ctxOptions := FromContext(ctx)
 {{- end}}
-{{- if .Rule.Trace}}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-{{- end}}
 {{.Function.DeclareVariables}}
 	err = w.retry.Do(func() error {
 {{- if .Rule.RateLimiter}}
@@ -625,8 +613,20 @@ const WrapperFunctionBodyWithErrorWithRetryTpl = `
 			}
 		}
 {{- end}}
+{{- if .Rule.Trace}}
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+{{- end}}
 {{- if .Rule.Metric}}
-		if w.options.EnableMetric {
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
 			defer func() {
 				w.totalMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", {{.Function.ErrCode}}, ctxOptions.MetricCustomLabelValue).Inc()

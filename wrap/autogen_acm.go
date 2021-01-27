@@ -87,16 +87,6 @@ func (w *ACMConfigClientWrapper) CreateMetric(options *WrapperOptions) {
 
 func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param vo.ConfigParam) error {
 	ctxOptions := FromContext(ctx)
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.CancelListenConfig")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiterGroup != nil {
@@ -104,7 +94,17 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 				return err
 			}
 		}
-		if w.options.EnableMetric {
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.CancelListenConfig")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
 			defer func() {
 				w.totalMetric.WithLabelValues("config_client.ConfigClient.CancelListenConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
@@ -119,16 +119,6 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 
 func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.ConfigParam) (bool, error) {
 	ctxOptions := FromContext(ctx)
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.DeleteConfig")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
 	var deleted bool
 	var err error
 	err = w.retry.Do(func() error {
@@ -137,7 +127,17 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 				return err
 			}
 		}
-		if w.options.EnableMetric {
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.DeleteConfig")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
 			defer func() {
 				w.totalMetric.WithLabelValues("config_client.ConfigClient.DeleteConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
@@ -152,16 +152,6 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 
 func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigParam) (string, error) {
 	ctxOptions := FromContext(ctx)
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.GetConfig")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
 	var content string
 	var err error
 	err = w.retry.Do(func() error {
@@ -170,7 +160,17 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 				return err
 			}
 		}
-		if w.options.EnableMetric {
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.GetConfig")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
 			defer func() {
 				w.totalMetric.WithLabelValues("config_client.ConfigClient.GetConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
@@ -185,16 +185,6 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 
 func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.ConfigParam) error {
 	ctxOptions := FromContext(ctx)
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.ListenConfig")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiterGroup != nil {
@@ -202,7 +192,17 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 				return err
 			}
 		}
-		if w.options.EnableMetric {
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.ListenConfig")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
 			defer func() {
 				w.totalMetric.WithLabelValues("config_client.ConfigClient.ListenConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
@@ -217,16 +217,6 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 
 func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.ConfigParam) (bool, error) {
 	ctxOptions := FromContext(ctx)
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.PublishConfig")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
 	var published bool
 	var err error
 	err = w.retry.Do(func() error {
@@ -235,7 +225,17 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 				return err
 			}
 		}
-		if w.options.EnableMetric {
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.PublishConfig")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
 			defer func() {
 				w.totalMetric.WithLabelValues("config_client.ConfigClient.PublishConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
@@ -250,16 +250,6 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 
 func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.SearchConfigParm) (*model.ConfigPage, error) {
 	ctxOptions := FromContext(ctx)
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.SearchConfig")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
 	var res0 *model.ConfigPage
 	var err error
 	err = w.retry.Do(func() error {
@@ -268,7 +258,17 @@ func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.Sear
 				return err
 			}
 		}
-		if w.options.EnableMetric {
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.SearchConfig")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
 			defer func() {
 				w.totalMetric.WithLabelValues("config_client.ConfigClient.SearchConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
