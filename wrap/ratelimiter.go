@@ -32,12 +32,17 @@ func RegisterRateLimiterGroup(key string, constructor interface{}) {
 		panic("constructor should return an error")
 	}
 
-	rateLimiterGroupMap[key] = &RateLimiterGroupConstructor{
+	info := &RateLimiterGroupConstructor{
 		HasParam:    rt.NumIn() == 1,
 		ReturnError: rt.NumOut() == 2,
-		ParamType:   rt.In(0),
 		FuncValue:   reflect.ValueOf(constructor),
 	}
+
+	if rt.NumIn() > 0 {
+		info.ParamType = rt.In(0)
+	}
+
+	rateLimiterGroupMap[key] = info
 }
 
 type RateLimiterGroupConstructor struct {
@@ -61,7 +66,7 @@ func NewRateLimiterGroupWithOptions(options *RateLimiterGroupOptions, opts ...re
 
 	var result []reflect.Value
 	if constructor.HasParam {
-		params := reflect.New(reflect.TypeOf(&LocalGroupRateLimiterOptions{}))
+		params := reflect.New(constructor.ParamType)
 		if err := refx.InterfaceToStruct(options.RateLimiter, params.Interface(), opts...); err != nil {
 			return nil, errors.Wrap(err, "refx.InterfaceToStruct failed")
 		}
