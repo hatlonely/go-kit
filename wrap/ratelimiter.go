@@ -3,15 +3,11 @@ package wrap
 import (
 	"context"
 	"reflect"
-	"time"
 
 	"github.com/pkg/errors"
-	"golang.org/x/time/rate"
 
 	"github.com/hatlonely/go-kit/refx"
 )
-
-//func MustConstructorWithOption
 
 func RegisterRateLimiterGroup(key string, fun interface{}) {
 	rt := reflect.TypeOf(fun)
@@ -61,7 +57,7 @@ func NewRateLimiterGroupWithOptions(options *RateLimiterGroupOptions, opts ...re
 	var result []reflect.Value
 	if constructor.HasParam {
 		params := reflect.New(reflect.TypeOf(&LocalGroupRateLimiterOptions{}))
-		if err := refx.InterfaceToStruct(options.V, params.Interface(), opts...); err != nil {
+		if err := refx.InterfaceToStruct(options.RateLimiter, params.Interface(), opts...); err != nil {
 			return nil, errors.Wrap(err, "refx.InterfaceToStruct failed")
 		}
 		result = constructor.FuncValue.Call([]reflect.Value{params.Elem()})
@@ -80,83 +76,6 @@ func NewRateLimiterGroupWithOptions(options *RateLimiterGroupOptions, opts ...re
 }
 
 type RateLimiterGroupOptions struct {
-	Type                  string
-	LocalGroupRateLimiter LocalGroupRateLimiterOptions
-	LocalShareRateLimiter LocalShareRateLimiterOptions
-	V                     interface{}
-}
-
-func init() {
-	RegisterRateLimiterGroup("LocalGroup", NewLocalGroupRateLimiterWithOptions)
-	RegisterRateLimiterGroup("ShareGroup", NewLocalShareRateLimiterWithOptions)
-}
-
-type LocalGroupRateLimiter struct {
-	limiters map[string]*rate.Limiter
-}
-
-type LocalGroupRateLimiterOptions map[string]struct {
-	Interval time.Duration `rule:"x > 0"`
-	Burst    int           `rule:"x > 0"`
-}
-
-func NewLocalGroupRateLimiterWithOptions(options *LocalGroupRateLimiterOptions) (*LocalGroupRateLimiter, error) {
-	limiters := map[string]*rate.Limiter{}
-
-	for key, val := range *options {
-		if val.Interval <= 0 {
-			return nil, errors.Errorf("interval should be positive")
-		}
-		if val.Burst <= 0 {
-			return nil, errors.Errorf("bucket should be positive")
-		}
-		limiters[key] = rate.NewLimiter(rate.Every(val.Interval), val.Burst)
-	}
-
-	return &LocalGroupRateLimiter{limiters: limiters}, nil
-}
-
-func (r *LocalGroupRateLimiter) Wait(ctx context.Context, key string) error {
-	limiter, ok := r.limiters[key]
-	if !ok {
-		return nil
-	}
-
-	return limiter.Wait(ctx)
-}
-
-type LocalShareRateLimiterOptions struct {
-	Interval time.Duration `rule:"x > 0"`
-	Burst    int           `rule:"x > 0"`
-	Cost     map[string]int
-}
-
-type LocalShareRateLimiter struct {
-	limiter *rate.Limiter
-
-	cost map[string]int
-}
-
-func NewLocalShareRateLimiterWithOptions(options *LocalShareRateLimiterOptions) (*LocalShareRateLimiter, error) {
-	limiter := rate.NewLimiter(rate.Every(options.Interval), options.Burst)
-
-	for _, cost := range options.Cost {
-		if cost <= 0 {
-			return nil, errors.Errorf("cost should be positive")
-		}
-	}
-
-	return &LocalShareRateLimiter{
-		limiter: limiter,
-		cost:    options.Cost,
-	}, nil
-}
-
-func (r *LocalShareRateLimiter) Wait(ctx context.Context, key string) error {
-	cost, ok := r.cost[key]
-	if !ok {
-		return nil
-	}
-
-	return r.limiter.WaitN(ctx, cost)
+	Type        string
+	RateLimiter interface{}
 }
