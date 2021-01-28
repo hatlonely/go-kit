@@ -17,7 +17,7 @@ type ACMConfigClientWrapperOptions struct {
 	RateLimiterGroup RateLimiterGroupOptions
 }
 
-func NewACMConfigClientWrapperWithOptions(options *ACMConfigClientWrapperOptions) (*ACMConfigClientWrapper, error) {
+func NewACMConfigClientWrapperWithOptions(options *ACMConfigClientWrapperOptions, opts ...refx.Option) (*ACMConfigClientWrapper, error) {
 	var w ACMConfigClientWrapper
 	var err error
 
@@ -26,7 +26,7 @@ func NewACMConfigClientWrapperWithOptions(options *ACMConfigClientWrapperOptions
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
 	}
@@ -54,7 +54,7 @@ func NewACMConfigClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, errors.Wrap(err, "config.Config.Unmarshal failed")
 	}
-	w, err := NewACMConfigClientWrapperWithOptions(&options)
+	w, err := NewACMConfigClientWrapperWithOptions(&options, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewACMConfigClientWrapperWithOptions failed")
 	}

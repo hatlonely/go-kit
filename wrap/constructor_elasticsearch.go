@@ -29,7 +29,7 @@ type ESClientWrapperOptions struct {
 	RateLimiterGroup RateLimiterGroupOptions
 }
 
-func NewESClientWrapperWithOptions(options *ESClientWrapperOptions) (*ESClientWrapper, error) {
+func NewESClientWrapperWithOptions(options *ESClientWrapperOptions, opts ...refx.Option) (*ESClientWrapper, error) {
 	var w ESClientWrapper
 	var err error
 
@@ -38,7 +38,7 @@ func NewESClientWrapperWithOptions(options *ESClientWrapperOptions) (*ESClientWr
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
 	}
@@ -72,7 +72,7 @@ func NewESClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*ESC
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, errors.Wrap(err, "config.Config.Unmarshal failed")
 	}
-	w, err := NewESClientWrapperWithOptions(&options)
+	w, err := NewESClientWrapperWithOptions(&options, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewMongoClientWrapperWithOptions failed")
 	}

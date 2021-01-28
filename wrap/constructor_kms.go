@@ -46,7 +46,7 @@ type KMSClientWrapperOptions struct {
 	RateLimiterGroup RateLimiterGroupOptions
 }
 
-func NewKMSClientWrapperWithOptions(options *KMSClientWrapperOptions) (*KMSClientWrapper, error) {
+func NewKMSClientWrapperWithOptions(options *KMSClientWrapperOptions, opts ...refx.Option) (*KMSClientWrapper, error) {
 	var w KMSClientWrapper
 	var err error
 
@@ -55,7 +55,7 @@ func NewKMSClientWrapperWithOptions(options *KMSClientWrapperOptions) (*KMSClien
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
 	}
@@ -96,7 +96,7 @@ func NewKMSClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*KM
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, errors.Wrap(err, "config.Config.Unmarshal failed")
 	}
-	w, err := NewKMSClientWrapperWithOptions(&options)
+	w, err := NewKMSClientWrapperWithOptions(&options, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewKMSClientWrapperWithOptions failed")
 	}

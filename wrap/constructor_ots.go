@@ -47,7 +47,7 @@ type OTSTableStoreClientWrapperOptions struct {
 	RateLimiterGroup RateLimiterGroupOptions
 }
 
-func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrapperOptions) (*OTSTableStoreClientWrapper, error) {
+func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrapperOptions, opts ...refx.Option) (*OTSTableStoreClientWrapper, error) {
 	var w OTSTableStoreClientWrapper
 	var err error
 
@@ -56,7 +56,7 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
 	}
@@ -91,7 +91,7 @@ func NewOTSTableStoreClientWrapperWithConfig(cfg *config.Config, opts ...refx.Op
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, errors.Wrap(err, "config.Config.Unmarshal failed")
 	}
-	w, err := NewOTSTableStoreClientWrapperWithOptions(&options)
+	w, err := NewOTSTableStoreClientWrapperWithOptions(&options, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewOTSTableStoreClientWrapperWithOptions failed")
 	}

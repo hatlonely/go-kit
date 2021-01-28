@@ -28,7 +28,7 @@ type RedisClientWrapperOptions struct {
 	RateLimiterGroup RateLimiterGroupOptions
 }
 
-func NewRedisClientWrapperWithOptions(options *RedisClientWrapperOptions) (*RedisClientWrapper, error) {
+func NewRedisClientWrapperWithOptions(options *RedisClientWrapperOptions, opts ...refx.Option) (*RedisClientWrapper, error) {
 	var w RedisClientWrapper
 	var err error
 
@@ -37,7 +37,7 @@ func NewRedisClientWrapperWithOptions(options *RedisClientWrapperOptions) (*Redi
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
 	}
@@ -68,7 +68,7 @@ func NewRedisClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, errors.Wrap(err, "config.Config.Unmarshal failed")
 	}
-	w, err := NewRedisClientWrapperWithOptions(&options)
+	w, err := NewRedisClientWrapperWithOptions(&options, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRedisClusterClientWrapperWithOptions failed")
 	}

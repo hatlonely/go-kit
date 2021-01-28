@@ -46,7 +46,7 @@ type OSSClientWrapperOptions struct {
 	RateLimiterGroup RateLimiterGroupOptions
 }
 
-func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClientWrapper, error) {
+func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions, opts ...refx.Option) (*OSSClientWrapper, error) {
 	var w OSSClientWrapper
 	var err error
 
@@ -55,7 +55,7 @@ func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions) (*OSSClien
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
 	}
@@ -96,7 +96,7 @@ func NewOSSClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*OS
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, errors.Wrap(err, "config.Config.Unmarshal failed")
 	}
-	w, err := NewOSSClientWrapperWithOptions(&options)
+	w, err := NewOSSClientWrapperWithOptions(&options, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewOSSClientWrapperWithOptions failed")
 	}
