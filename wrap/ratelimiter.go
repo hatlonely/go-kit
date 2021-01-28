@@ -2,6 +2,7 @@ package wrap
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 
 	"github.com/pkg/errors"
@@ -9,29 +10,33 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-func RegisterRateLimiterGroup(key string, fun interface{}) {
-	rt := reflect.TypeOf(fun)
+func RegisterRateLimiterGroup(key string, constructor interface{}) {
+	if _, ok := rateLimiterGroupMap[key]; ok {
+		panic(fmt.Sprintf("ratelimiter type [%v] is already registered", key))
+	}
+
+	rt := reflect.TypeOf(constructor)
 	if rt.Kind() != reflect.Func {
-		panic("fun should be a function type")
+		panic("constructor should be a function type")
 	}
 	if rt.NumIn() > 1 {
-		panic("fun parameters number should not greater than 1")
+		panic("constructor parameters number should not greater than 1")
 	}
 	if rt.NumOut() > 2 {
-		panic("fun return number should not greater than 2")
+		panic("constructor return number should not greater than 2")
 	}
 	if rt.NumOut() == 0 || !rt.Out(0).Implements(reflect.TypeOf((*RateLimiterGroup)(nil)).Elem()) {
-		panic("fun should return a RateLimiterGroup")
+		panic("constructor should return a RateLimiterGroup")
 	}
 	if rt.NumOut() == 2 && rt.Out(1) != reflect.TypeOf((*error)(nil)).Elem() {
-		panic("fun should return an error")
+		panic("constructor should return an error")
 	}
 
 	rateLimiterGroupMap[key] = &RateLimiterGroupConstructor{
 		HasParam:    rt.NumIn() == 1,
 		ReturnError: rt.NumOut() == 2,
 		ParamType:   rt.In(0),
-		FuncValue:   reflect.ValueOf(fun),
+		FuncValue:   reflect.ValueOf(constructor),
 	}
 }
 

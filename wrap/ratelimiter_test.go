@@ -22,7 +22,7 @@ func Test1(t *testing.T) {
 	Convey("Test2", t, func() {
 		v := map[string]interface{}{
 			"type": "LocalGroup",
-			"v": map[string]interface{}{
+			"rateLimiter": map[string]interface{}{
 				"DB.First": map[string]interface{}{
 					"interval": "2s",
 					"burst":    1,
@@ -47,8 +47,6 @@ func Test1(t *testing.T) {
 
 func TestReflect(t *testing.T) {
 	Convey("TestReflect", t, func() {
-		//RegisterRateLimiterGroup("hello", "world")
-
 		rt := reflect.TypeOf(NewLocalGroupRateLimiterWithOptions)
 		fmt.Println(rt.Kind() == reflect.Func)
 
