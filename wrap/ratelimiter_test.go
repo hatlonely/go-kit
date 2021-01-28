@@ -19,12 +19,32 @@ func Test1(t *testing.T) {
 		limiter.Allow()
 	})
 
+	Convey("Test1", t, func() {
+		options := RateLimiterGroupOptions{
+			Type: "LocalGroup",
+			RateLimiter: &LocalGroupRateLimiterOptions{
+				"DB.First": {
+					Interval: 1 * time.Second,
+					Burst:    1,
+				},
+			},
+		}
+
+		rateLimiterGroup, err := NewRateLimiterGroupWithOptions(&options)
+		So(err, ShouldBeNil)
+
+		for i := 0; i < 5; i++ {
+			rateLimiterGroup.Wait(context.Background(), "DB.First")
+			fmt.Println("hello world")
+		}
+	})
+
 	Convey("Test2", t, func() {
 		v := map[string]interface{}{
 			"type": "LocalGroup",
 			"rateLimiter": map[string]interface{}{
 				"DB.First": map[string]interface{}{
-					"interval": "2s",
+					"interval": "1s",
 					"burst":    1,
 				},
 			},
@@ -37,11 +57,10 @@ func Test1(t *testing.T) {
 		rateLimiterGroup, err := NewRateLimiterGroupWithOptions(&options, refx.WithCamelName())
 		So(err, ShouldBeNil)
 
-		for i := 0; i < 10; i++ {
+		for i := 0; i < 5; i++ {
 			rateLimiterGroup.Wait(context.Background(), "DB.First")
 			fmt.Println("hello world")
 		}
-		fmt.Println(options)
 	})
 }
 

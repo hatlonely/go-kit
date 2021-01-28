@@ -66,11 +66,15 @@ func NewRateLimiterGroupWithOptions(options *RateLimiterGroupOptions, opts ...re
 
 	var result []reflect.Value
 	if constructor.HasParam {
-		params := reflect.New(constructor.ParamType)
-		if err := refx.InterfaceToStruct(options.RateLimiter, params.Interface(), opts...); err != nil {
-			return nil, errors.Wrap(err, "refx.InterfaceToStruct failed")
+		if reflect.TypeOf(options.RateLimiter) == constructor.ParamType {
+			result = constructor.FuncValue.Call([]reflect.Value{reflect.ValueOf(options.RateLimiter)})
+		} else {
+			params := reflect.New(constructor.ParamType)
+			if err := refx.InterfaceToStruct(options.RateLimiter, params.Interface(), opts...); err != nil {
+				return nil, errors.Wrap(err, "refx.InterfaceToStruct failed")
+			}
+			result = constructor.FuncValue.Call([]reflect.Value{params.Elem()})
 		}
-		result = constructor.FuncValue.Call([]reflect.Value{params.Elem()})
 	} else {
 		result = constructor.FuncValue.Call(nil)
 	}
