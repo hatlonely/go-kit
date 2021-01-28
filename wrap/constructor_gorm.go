@@ -30,7 +30,7 @@ type GORMDBWrapperOptions struct {
 	RateLimiterGroup RateLimiterGroupOptions
 }
 
-func NewGORMDBWrapperWithOptions(options *GORMDBWrapperOptions) (*GORMDBWrapper, error) {
+func NewGORMDBWrapperWithOptions(options *GORMDBWrapperOptions, opts ...refx.Option) (*GORMDBWrapper, error) {
 	var w GORMDBWrapper
 	var err error
 
@@ -39,7 +39,7 @@ func NewGORMDBWrapperWithOptions(options *GORMDBWrapperOptions) (*GORMDBWrapper,
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
 	}
@@ -74,7 +74,7 @@ func NewGORMDBWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*GORMD
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, errors.Wrap(err, "config.Config.Unmarshal failed")
 	}
-	w, err := NewGORMDBWrapperWithOptions(&options)
+	w, err := NewGORMDBWrapperWithOptions(&options, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewGORMDBWrapperWithOptions failed")
 	}
