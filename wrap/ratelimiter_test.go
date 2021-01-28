@@ -22,9 +22,9 @@ func Test1(t *testing.T) {
 	Convey("Test1", t, func() {
 		options := RateLimiterGroupOptions{
 			Type: "LocalGroup",
-			RateLimiter: &LocalGroupRateLimiterOptions{
+			Options: &LocalGroupRateLimiterOptions{
 				"DB.First": {
-					Interval: 1 * time.Second,
+					Interval: 20 * time.Millisecond,
 					Burst:    1,
 				},
 			},
@@ -42,7 +42,7 @@ func Test1(t *testing.T) {
 	Convey("Test2", t, func() {
 		v := map[string]interface{}{
 			"type": "LocalGroup",
-			"rateLimiter": map[string]interface{}{
+			"options": map[string]interface{}{
 				"DB.First": map[string]interface{}{
 					"interval": "1s",
 					"burst":    1,

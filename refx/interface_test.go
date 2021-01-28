@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"testing"
+	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -935,6 +936,7 @@ func TestRegex(t *testing.T) {
 		type Rule struct {
 			Include *regexp.Regexp
 			Exclude *regexp.Regexp
+			t       time.Time
 		}
 
 		type Rules struct {

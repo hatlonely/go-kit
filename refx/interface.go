@@ -297,10 +297,6 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 		}
 	}
 
-	if src == nil {
-		return nil
-	}
-
 	switch dst.(type) {
 	case *time.Time, **regexp.Regexp:
 		if err := cast.SetInterface(dst, src); err != nil {
@@ -317,6 +313,10 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 	}
 	if rt.Kind() == reflect.Interface {
 		rv.Set(reflect.ValueOf(src))
+		return nil
+	}
+
+	if src == nil {
 		return nil
 	}
 
