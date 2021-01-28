@@ -336,7 +336,7 @@ type {{.WrapClass}} struct {
 	retry            *{{.WrapPackagePrefix}}Retry
 	options          *{{.WrapPackagePrefix}}WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -411,11 +411,11 @@ func (w *{{.WrapClass}}) CreateMetric(options *{{.WrapPackagePrefix}}WrapperOpti
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
-	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name:        "{{.Package}}_{{.Class}}_total",
-		Help:        "{{.Package}} {{.Class}} request total",
+	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name:        "{{.Package}}_{{.Class}}_inflight",
+		Help:        "{{.Package}} {{.Class}} inflight",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode", "custom"})
+	}, []string{"method", "custom"})
 }
 {{- end}}
 `
@@ -507,9 +507,9 @@ func (g *WrapperGenerator) generateWrapperReturnList(function *Function) string 
 		cls = strings.TrimPrefix(cls, g.options.PackageName+".")
 		if wrapCls, ok := g.wrapClassMap[cls]; ok {
 			if g.starClassSet[cls] {
-				results = append(results, fmt.Sprintf(`&%s{obj: %s, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}`, wrapCls, i.Name))
+				results = append(results, fmt.Sprintf(`&%s{obj: %s, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}`, wrapCls, i.Name))
 			} else {
-				results = append(results, fmt.Sprintf(`%s{obj: %s, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}`, wrapCls, i.Name))
+				results = append(results, fmt.Sprintf(`%s{obj: %s, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}`, wrapCls, i.Name))
 			}
 			continue
 		}
@@ -545,8 +545,9 @@ const WrapperFunctionBodyWithoutErrorTpl = `
 {{- if .Rule.Metric}}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
+		w.inflightMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", ctxOptions.MetricCustomLabelValue).Inc()
 		defer func() {
-			w.totalMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", {{.Function.ErrCode}}, ctxOptions.MetricCustomLabelValue).Inc()
+			w.inflightMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", ctxOptions.MetricCustomLabelValue).Dec()
 			w.durationMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", {{.Function.ErrCode}}, ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
@@ -590,8 +591,9 @@ const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 {{- if .Rule.Metric}}
 	if w.options.EnableMetric && !ctxOptions.DisableMetric {
 		ts := time.Now()
+		w.inflightMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", ctxOptions.MetricCustomLabelValue).Inc()
 		defer func() {
-			w.totalMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", {{.Function.ErrCode}}, ctxOptions.MetricCustomLabelValue).Inc()
+			w.inflightMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", ctxOptions.MetricCustomLabelValue).Dec()
 			w.durationMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", {{.Function.ErrCode}}, ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 		}()
 	}
@@ -628,8 +630,9 @@ const WrapperFunctionBodyWithErrorWithRetryTpl = `
 {{- if .Rule.Metric}}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", {{.Function.ErrCode}}, ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("{{.Package}}.{{.Class}}.{{.Function.Name}}", {{.Function.ErrCode}}, ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}

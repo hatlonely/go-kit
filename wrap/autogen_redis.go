@@ -20,7 +20,7 @@ type RedisClientWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -76,11 +76,11 @@ func (w *RedisClientWrapper) CreateMetric(options *WrapperOptions) {
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
-	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name:        "redis_Client_total",
-		Help:        "redis Client request total",
+	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name:        "redis_Client_inflight",
+		Help:        "redis Client inflight",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode", "custom"})
+	}, []string{"method", "custom"})
 }
 
 type RedisClusterClientWrapper struct {
@@ -88,7 +88,7 @@ type RedisClusterClientWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -144,11 +144,11 @@ func (w *RedisClusterClientWrapper) CreateMetric(options *WrapperOptions) {
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
-	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name:        "redis_ClusterClient_total",
-		Help:        "redis ClusterClient request total",
+	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name:        "redis_ClusterClient_inflight",
+		Help:        "redis ClusterClient inflight",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode", "custom"})
+	}, []string{"method", "custom"})
 }
 
 func (w *RedisClientWrapper) Context() context.Context {
@@ -193,8 +193,9 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("redis.Client.Pipelined", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("redis.Client.Pipelined", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("redis.Client.Pipelined", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("redis.Client.Pipelined", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -246,8 +247,9 @@ func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipe
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("redis.Client.TxPipelined", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("redis.Client.TxPipelined", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("redis.Client.TxPipelined", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("redis.Client.TxPipelined", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -278,8 +280,9 @@ func (w *RedisClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("redis.Client.Watch", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("redis.Client.Watch", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("redis.Client.Watch", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("redis.Client.Watch", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -315,8 +318,9 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("redis.ClusterClient.Close", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("redis.ClusterClient.Close", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("redis.ClusterClient.Close", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("redis.ClusterClient.Close", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -362,8 +366,9 @@ func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(c
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("redis.ClusterClient.ForEachMaster", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("redis.ClusterClient.ForEachMaster", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("redis.ClusterClient.ForEachMaster", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("redis.ClusterClient.ForEachMaster", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -394,8 +399,9 @@ func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(cli
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("redis.ClusterClient.ForEachNode", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("redis.ClusterClient.ForEachNode", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("redis.ClusterClient.ForEachNode", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("redis.ClusterClient.ForEachNode", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -426,8 +432,9 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("redis.ClusterClient.ForEachSlave", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("redis.ClusterClient.ForEachSlave", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("redis.ClusterClient.ForEachSlave", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("redis.ClusterClient.ForEachSlave", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -474,8 +481,9 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("redis.ClusterClient.Pipelined", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("redis.ClusterClient.Pipelined", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("redis.ClusterClient.Pipelined", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("redis.ClusterClient.Pipelined", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -511,8 +519,9 @@ func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("redis.ClusterClient.Process", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("redis.ClusterClient.Process", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("redis.ClusterClient.Process", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("redis.ClusterClient.Process", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -543,8 +552,9 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("redis.ClusterClient.ReloadState", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("redis.ClusterClient.ReloadState", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("redis.ClusterClient.ReloadState", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("redis.ClusterClient.ReloadState", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -586,8 +596,9 @@ func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(red
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("redis.ClusterClient.TxPipelined", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("redis.ClusterClient.TxPipelined", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("redis.ClusterClient.TxPipelined", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("redis.ClusterClient.TxPipelined", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -618,8 +629,9 @@ func (w *RedisClusterClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("redis.ClusterClient.Watch", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("redis.ClusterClient.Watch", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("redis.ClusterClient.Watch", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("redis.ClusterClient.Watch", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}

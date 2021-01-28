@@ -24,7 +24,7 @@ type MongoClientWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -80,11 +80,11 @@ func (w *MongoClientWrapper) CreateMetric(options *WrapperOptions) {
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
-	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name:        "mongo_Client_total",
-		Help:        "mongo Client request total",
+	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name:        "mongo_Client_inflight",
+		Help:        "mongo Client inflight",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode", "custom"})
+	}, []string{"method", "custom"})
 }
 
 type MongoCollectionWrapper struct {
@@ -92,7 +92,7 @@ type MongoCollectionWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -105,7 +105,7 @@ type MongoDatabaseWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -134,8 +134,9 @@ func (w *MongoClientWrapper) Connect(ctx context.Context) error {
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Client.Connect", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Client.Connect", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Client.Connect", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Client.Connect", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -147,7 +148,7 @@ func (w *MongoClientWrapper) Connect(ctx context.Context) error {
 
 func (w *MongoClientWrapper) Database(name string, opts ...*options.DatabaseOptions) *MongoDatabaseWrapper {
 	res0 := w.obj.Database(name, opts...)
-	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *MongoClientWrapper) Disconnect(ctx context.Context) error {
@@ -171,8 +172,9 @@ func (w *MongoClientWrapper) Disconnect(ctx context.Context) error {
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Client.Disconnect", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Client.Disconnect", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Client.Disconnect", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Client.Disconnect", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -204,8 +206,9 @@ func (w *MongoClientWrapper) ListDatabaseNames(ctx context.Context, filter inter
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Client.ListDatabaseNames", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Client.ListDatabaseNames", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Client.ListDatabaseNames", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Client.ListDatabaseNames", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -237,8 +240,9 @@ func (w *MongoClientWrapper) ListDatabases(ctx context.Context, filter interface
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Client.ListDatabases", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Client.ListDatabases", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Client.ListDatabases", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Client.ListDatabases", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -274,8 +278,9 @@ func (w *MongoClientWrapper) Ping(ctx context.Context, rp *readpref.ReadPref) er
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Client.Ping", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Client.Ping", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Client.Ping", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Client.Ping", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -307,8 +312,9 @@ func (w *MongoClientWrapper) StartSession(ctx context.Context, opts ...*options.
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Client.StartSession", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Client.StartSession", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Client.StartSession", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Client.StartSession", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -339,8 +345,9 @@ func (w *MongoClientWrapper) UseSession(ctx context.Context, fn func(mongo.Sessi
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Client.UseSession", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Client.UseSession", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Client.UseSession", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Client.UseSession", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -371,8 +378,9 @@ func (w *MongoClientWrapper) UseSessionWithOptions(ctx context.Context, opts *op
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Client.UseSessionWithOptions", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Client.UseSessionWithOptions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Client.UseSessionWithOptions", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Client.UseSessionWithOptions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -404,8 +412,9 @@ func (w *MongoClientWrapper) Watch(ctx context.Context, pipeline interface{}, op
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Client.Watch", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Client.Watch", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Client.Watch", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Client.Watch", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -437,8 +446,9 @@ func (w *MongoCollectionWrapper) Aggregate(ctx context.Context, pipeline interfa
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.Aggregate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.Aggregate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.Aggregate", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.Aggregate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -470,8 +480,9 @@ func (w *MongoCollectionWrapper) BulkWrite(ctx context.Context, models []mongo.W
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.BulkWrite", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.BulkWrite", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.BulkWrite", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.BulkWrite", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -503,15 +514,16 @@ func (w *MongoCollectionWrapper) Clone(ctx context.Context, opts ...*options.Col
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.Clone", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.Clone", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.Clone", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.Clone", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0, err = w.obj.Clone(opts...)
 		return err
 	})
-	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}, err
+	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}, err
 }
 
 func (w *MongoCollectionWrapper) CountDocuments(ctx context.Context, filter interface{}, opts ...*options.CountOptions) (int64, error) {
@@ -536,8 +548,9 @@ func (w *MongoCollectionWrapper) CountDocuments(ctx context.Context, filter inte
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.CountDocuments", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.CountDocuments", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.CountDocuments", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.CountDocuments", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -549,7 +562,7 @@ func (w *MongoCollectionWrapper) CountDocuments(ctx context.Context, filter inte
 
 func (w *MongoCollectionWrapper) Database() *MongoDatabaseWrapper {
 	res0 := w.obj.Database()
-	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *MongoCollectionWrapper) DeleteMany(ctx context.Context, filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
@@ -574,8 +587,9 @@ func (w *MongoCollectionWrapper) DeleteMany(ctx context.Context, filter interfac
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.DeleteMany", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.DeleteMany", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.DeleteMany", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.DeleteMany", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -607,8 +621,9 @@ func (w *MongoCollectionWrapper) DeleteOne(ctx context.Context, filter interface
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.DeleteOne", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.DeleteOne", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.DeleteOne", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.DeleteOne", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -640,8 +655,9 @@ func (w *MongoCollectionWrapper) Distinct(ctx context.Context, fieldName string,
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.Distinct", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.Distinct", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.Distinct", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.Distinct", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -672,8 +688,9 @@ func (w *MongoCollectionWrapper) Drop(ctx context.Context) error {
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.Drop", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.Drop", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.Drop", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.Drop", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -705,8 +722,9 @@ func (w *MongoCollectionWrapper) EstimatedDocumentCount(ctx context.Context, opt
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.EstimatedDocumentCount", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.EstimatedDocumentCount", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.EstimatedDocumentCount", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.EstimatedDocumentCount", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -738,8 +756,9 @@ func (w *MongoCollectionWrapper) Find(ctx context.Context, filter interface{}, o
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.Find", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.Find", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.Find", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.Find", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -796,8 +815,9 @@ func (w *MongoCollectionWrapper) InsertMany(ctx context.Context, documents []int
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.InsertMany", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.InsertMany", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.InsertMany", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.InsertMany", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -829,8 +849,9 @@ func (w *MongoCollectionWrapper) InsertOne(ctx context.Context, document interfa
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.InsertOne", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.InsertOne", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.InsertOne", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.InsertOne", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -867,8 +888,9 @@ func (w *MongoCollectionWrapper) ReplaceOne(ctx context.Context, filter interfac
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.ReplaceOne", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.ReplaceOne", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.ReplaceOne", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.ReplaceOne", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -900,8 +922,9 @@ func (w *MongoCollectionWrapper) UpdateMany(ctx context.Context, filter interfac
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.UpdateMany", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.UpdateMany", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.UpdateMany", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.UpdateMany", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -933,8 +956,9 @@ func (w *MongoCollectionWrapper) UpdateOne(ctx context.Context, filter interface
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.UpdateOne", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.UpdateOne", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.UpdateOne", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.UpdateOne", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -966,8 +990,9 @@ func (w *MongoCollectionWrapper) Watch(ctx context.Context, pipeline interface{}
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Collection.Watch", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Collection.Watch", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Collection.Watch", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Collection.Watch", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -999,8 +1024,9 @@ func (w *MongoDatabaseWrapper) Aggregate(ctx context.Context, pipeline interface
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Database.Aggregate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Database.Aggregate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Database.Aggregate", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Database.Aggregate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1012,12 +1038,12 @@ func (w *MongoDatabaseWrapper) Aggregate(ctx context.Context, pipeline interface
 
 func (w *MongoDatabaseWrapper) Client() *MongoClientWrapper {
 	res0 := w.obj.Client()
-	return &MongoClientWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &MongoClientWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *MongoDatabaseWrapper) Collection(name string, opts ...*options.CollectionOptions) *MongoCollectionWrapper {
 	res0 := w.obj.Collection(name, opts...)
-	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *MongoDatabaseWrapper) CreateCollection(ctx context.Context, name string, opts ...*options.CreateCollectionOptions) error {
@@ -1041,8 +1067,9 @@ func (w *MongoDatabaseWrapper) CreateCollection(ctx context.Context, name string
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Database.CreateCollection", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Database.CreateCollection", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Database.CreateCollection", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Database.CreateCollection", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1073,8 +1100,9 @@ func (w *MongoDatabaseWrapper) CreateView(ctx context.Context, viewName string, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Database.CreateView", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Database.CreateView", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Database.CreateView", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Database.CreateView", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1105,8 +1133,9 @@ func (w *MongoDatabaseWrapper) Drop(ctx context.Context) error {
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Database.Drop", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Database.Drop", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Database.Drop", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Database.Drop", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1138,8 +1167,9 @@ func (w *MongoDatabaseWrapper) ListCollectionNames(ctx context.Context, filter i
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Database.ListCollectionNames", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Database.ListCollectionNames", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Database.ListCollectionNames", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Database.ListCollectionNames", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1171,8 +1201,9 @@ func (w *MongoDatabaseWrapper) ListCollections(ctx context.Context, filter inter
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Database.ListCollections", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Database.ListCollections", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Database.ListCollections", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Database.ListCollections", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1224,8 +1255,9 @@ func (w *MongoDatabaseWrapper) RunCommandCursor(ctx context.Context, runCommand 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Database.RunCommandCursor", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Database.RunCommandCursor", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Database.RunCommandCursor", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Database.RunCommandCursor", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1257,8 +1289,9 @@ func (w *MongoDatabaseWrapper) Watch(ctx context.Context, pipeline interface{}, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("mongo.Database.Watch", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("mongo.Database.Watch", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("mongo.Database.Watch", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("mongo.Database.Watch", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}

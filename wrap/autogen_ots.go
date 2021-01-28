@@ -20,7 +20,7 @@ type OTSTableStoreClientWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -76,11 +76,11 @@ func (w *OTSTableStoreClientWrapper) CreateMetric(options *WrapperOptions) {
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
-	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name:        "tablestore_TableStoreClient_total",
-		Help:        "tablestore TableStoreClient request total",
+	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name:        "tablestore_TableStoreClient_inflight",
+		Help:        "tablestore TableStoreClient inflight",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode", "custom"})
+	}, []string{"method", "custom"})
 }
 
 func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, request *tablestore.AbortTransactionRequest) (*tablestore.AbortTransactionResponse, error) {
@@ -105,8 +105,9 @@ func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, reque
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.AbortTransaction", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.AbortTransaction", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.AbortTransaction", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.AbortTransaction", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -138,8 +139,9 @@ func (w *OTSTableStoreClientWrapper) BatchGetRow(ctx context.Context, request *t
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.BatchGetRow", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.BatchGetRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.BatchGetRow", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.BatchGetRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -171,8 +173,9 @@ func (w *OTSTableStoreClientWrapper) BatchWriteRow(ctx context.Context, request 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.BatchWriteRow", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.BatchWriteRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.BatchWriteRow", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.BatchWriteRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -204,8 +207,9 @@ func (w *OTSTableStoreClientWrapper) CommitTransaction(ctx context.Context, requ
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.CommitTransaction", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CommitTransaction", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.CommitTransaction", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CommitTransaction", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -237,8 +241,9 @@ func (w *OTSTableStoreClientWrapper) ComputeSplitPointsBySize(ctx context.Contex
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.ComputeSplitPointsBySize", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ComputeSplitPointsBySize", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.ComputeSplitPointsBySize", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ComputeSplitPointsBySize", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -270,8 +275,9 @@ func (w *OTSTableStoreClientWrapper) CreateIndex(ctx context.Context, request *t
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.CreateIndex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CreateIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.CreateIndex", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CreateIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -303,8 +309,9 @@ func (w *OTSTableStoreClientWrapper) CreateSearchIndex(ctx context.Context, requ
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.CreateSearchIndex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CreateSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.CreateSearchIndex", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CreateSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -336,8 +343,9 @@ func (w *OTSTableStoreClientWrapper) CreateTable(ctx context.Context, request *t
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.CreateTable", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.CreateTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.CreateTable", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.CreateTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -369,8 +377,9 @@ func (w *OTSTableStoreClientWrapper) DeleteIndex(ctx context.Context, request *t
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DeleteIndex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DeleteIndex", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -402,8 +411,9 @@ func (w *OTSTableStoreClientWrapper) DeleteRow(ctx context.Context, request *tab
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DeleteRow", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DeleteRow", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -435,8 +445,9 @@ func (w *OTSTableStoreClientWrapper) DeleteSearchIndex(ctx context.Context, requ
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DeleteSearchIndex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DeleteSearchIndex", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -468,8 +479,9 @@ func (w *OTSTableStoreClientWrapper) DeleteTable(ctx context.Context, request *t
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DeleteTable", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DeleteTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DeleteTable", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -501,8 +513,9 @@ func (w *OTSTableStoreClientWrapper) DescribeSearchIndex(ctx context.Context, re
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DescribeSearchIndex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DescribeSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DescribeSearchIndex", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DescribeSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -534,8 +547,9 @@ func (w *OTSTableStoreClientWrapper) DescribeStream(ctx context.Context, req *ta
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DescribeStream", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DescribeStream", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DescribeStream", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DescribeStream", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -567,8 +581,9 @@ func (w *OTSTableStoreClientWrapper) DescribeTable(ctx context.Context, request 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DescribeTable", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.DescribeTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DescribeTable", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DescribeTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -600,8 +615,9 @@ func (w *OTSTableStoreClientWrapper) GetRange(ctx context.Context, request *tabl
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.GetRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetRange", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.GetRange", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetRange", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -633,8 +649,9 @@ func (w *OTSTableStoreClientWrapper) GetRow(ctx context.Context, request *tables
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.GetRow", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.GetRow", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -666,8 +683,9 @@ func (w *OTSTableStoreClientWrapper) GetShardIterator(ctx context.Context, req *
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.GetShardIterator", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetShardIterator", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.GetShardIterator", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetShardIterator", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -699,8 +717,9 @@ func (w *OTSTableStoreClientWrapper) GetStreamRecord(ctx context.Context, req *t
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.GetStreamRecord", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.GetStreamRecord", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.GetStreamRecord", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetStreamRecord", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -732,8 +751,9 @@ func (w *OTSTableStoreClientWrapper) ListSearchIndex(ctx context.Context, reques
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.ListSearchIndex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ListSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.ListSearchIndex", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ListSearchIndex", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -765,8 +785,9 @@ func (w *OTSTableStoreClientWrapper) ListStream(ctx context.Context, req *tables
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.ListStream", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ListStream", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.ListStream", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ListStream", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -798,8 +819,9 @@ func (w *OTSTableStoreClientWrapper) ListTable(ctx context.Context) (*tablestore
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.ListTable", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.ListTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.ListTable", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.ListTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -831,8 +853,9 @@ func (w *OTSTableStoreClientWrapper) PutRow(ctx context.Context, request *tables
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.PutRow", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.PutRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.PutRow", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.PutRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -864,8 +887,9 @@ func (w *OTSTableStoreClientWrapper) Search(ctx context.Context, request *tables
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.Search", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.Search", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.Search", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.Search", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -897,8 +921,9 @@ func (w *OTSTableStoreClientWrapper) StartLocalTransaction(ctx context.Context, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.StartLocalTransaction", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.StartLocalTransaction", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.StartLocalTransaction", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.StartLocalTransaction", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -930,8 +955,9 @@ func (w *OTSTableStoreClientWrapper) UpdateRow(ctx context.Context, request *tab
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.UpdateRow", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.UpdateRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.UpdateRow", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.UpdateRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -963,8 +989,9 @@ func (w *OTSTableStoreClientWrapper) UpdateTable(ctx context.Context, request *t
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.UpdateTable", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("tablestore.TableStoreClient.UpdateTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.UpdateTable", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.UpdateTable", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}

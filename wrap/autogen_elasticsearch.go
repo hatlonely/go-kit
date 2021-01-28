@@ -21,7 +21,7 @@ type ESAliasServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -34,7 +34,7 @@ type ESAliasesServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -47,7 +47,7 @@ type ESBulkProcessorServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -60,7 +60,7 @@ type ESBulkServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -73,7 +73,7 @@ type ESCatAliasesServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -86,7 +86,7 @@ type ESCatAllocationServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -99,7 +99,7 @@ type ESCatCountServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -112,7 +112,7 @@ type ESCatHealthServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -125,7 +125,7 @@ type ESCatIndicesServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -138,7 +138,7 @@ type ESCatShardsServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -151,7 +151,7 @@ type ESClearScrollServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -164,7 +164,7 @@ type ESClientWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -220,11 +220,11 @@ func (w *ESClientWrapper) CreateMetric(options *WrapperOptions) {
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
-	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name:        "elastic_Client_total",
-		Help:        "elastic Client request total",
+	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name:        "elastic_Client_inflight",
+		Help:        "elastic Client inflight",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode", "custom"})
+	}, []string{"method", "custom"})
 }
 
 type ESClusterHealthServiceWrapper struct {
@@ -232,7 +232,7 @@ type ESClusterHealthServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -245,7 +245,7 @@ type ESClusterRerouteServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -258,7 +258,7 @@ type ESClusterStateServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -271,7 +271,7 @@ type ESClusterStatsServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -284,7 +284,7 @@ type ESCountServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -297,7 +297,7 @@ type ESDeleteByQueryServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -310,7 +310,7 @@ type ESDeleteScriptServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -323,7 +323,7 @@ type ESDeleteServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -336,7 +336,7 @@ type ESExistsServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -349,7 +349,7 @@ type ESExplainServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -362,7 +362,7 @@ type ESFieldCapsServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -375,7 +375,7 @@ type ESGetScriptServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -388,7 +388,7 @@ type ESGetServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -401,7 +401,7 @@ type ESIndexServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -414,7 +414,7 @@ type ESIndicesAnalyzeServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -427,7 +427,7 @@ type ESIndicesClearCacheServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -440,7 +440,7 @@ type ESIndicesCloseServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -453,7 +453,7 @@ type ESIndicesCreateServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -466,7 +466,7 @@ type ESIndicesDeleteIndexTemplateServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -479,7 +479,7 @@ type ESIndicesDeleteServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -492,7 +492,7 @@ type ESIndicesDeleteTemplateServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -505,7 +505,7 @@ type ESIndicesExistsServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -518,7 +518,7 @@ type ESIndicesExistsTemplateServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -531,7 +531,7 @@ type ESIndicesFlushServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -544,7 +544,7 @@ type ESIndicesForcemergeServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -557,7 +557,7 @@ type ESIndicesFreezeServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -570,7 +570,7 @@ type ESIndicesGetFieldMappingServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -583,7 +583,7 @@ type ESIndicesGetIndexTemplateServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -596,7 +596,7 @@ type ESIndicesGetMappingServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -609,7 +609,7 @@ type ESIndicesGetServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -622,7 +622,7 @@ type ESIndicesGetSettingsServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -635,7 +635,7 @@ type ESIndicesGetTemplateServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -648,7 +648,7 @@ type ESIndicesOpenServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -661,7 +661,7 @@ type ESIndicesPutIndexTemplateServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -674,7 +674,7 @@ type ESIndicesPutMappingServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -687,7 +687,7 @@ type ESIndicesPutSettingsServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -700,7 +700,7 @@ type ESIndicesPutTemplateServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -713,7 +713,7 @@ type ESIndicesRolloverServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -726,7 +726,7 @@ type ESIndicesSegmentsServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -739,7 +739,7 @@ type ESIndicesShrinkServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -752,7 +752,7 @@ type ESIndicesStatsServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -765,7 +765,7 @@ type ESIndicesSyncedFlushServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -778,7 +778,7 @@ type ESIndicesUnfreezeServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -791,7 +791,7 @@ type ESIngestDeletePipelineServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -804,7 +804,7 @@ type ESIngestGetPipelineServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -817,7 +817,7 @@ type ESIngestPutPipelineServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -830,7 +830,7 @@ type ESIngestSimulatePipelineServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -843,7 +843,7 @@ type ESMgetServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -856,7 +856,7 @@ type ESMultiSearchServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -869,7 +869,7 @@ type ESMultiTermvectorServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -882,7 +882,7 @@ type ESNodesInfoServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -895,7 +895,7 @@ type ESNodesStatsServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -908,7 +908,7 @@ type ESPingServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -921,7 +921,7 @@ type ESPutScriptServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -934,7 +934,7 @@ type ESRefreshServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -947,7 +947,7 @@ type ESReindexServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -960,7 +960,7 @@ type ESScrollServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -973,7 +973,7 @@ type ESSearchServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -986,7 +986,7 @@ type ESSearchShardsServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -999,7 +999,7 @@ type ESSnapshotCreateRepositoryServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1012,7 +1012,7 @@ type ESSnapshotCreateServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1025,7 +1025,7 @@ type ESSnapshotDeleteRepositoryServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1038,7 +1038,7 @@ type ESSnapshotDeleteServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1051,7 +1051,7 @@ type ESSnapshotGetRepositoryServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1064,7 +1064,7 @@ type ESSnapshotGetServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1077,7 +1077,7 @@ type ESSnapshotRestoreServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1090,7 +1090,7 @@ type ESSnapshotStatusServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1103,7 +1103,7 @@ type ESSnapshotVerifyRepositoryServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1116,7 +1116,7 @@ type ESTasksCancelServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1129,7 +1129,7 @@ type ESTasksGetTaskServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1142,7 +1142,7 @@ type ESTasksListServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1155,7 +1155,7 @@ type ESTermvectorsServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1168,7 +1168,7 @@ type ESUpdateByQueryServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1181,7 +1181,7 @@ type ESUpdateServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1194,7 +1194,7 @@ type ESValidateServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1207,7 +1207,7 @@ type ESXPackIlmDeleteLifecycleServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1220,7 +1220,7 @@ type ESXPackIlmGetLifecycleServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1233,7 +1233,7 @@ type ESXPackIlmPutLifecycleServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1246,7 +1246,7 @@ type ESXPackInfoServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1259,7 +1259,7 @@ type ESXPackSecurityChangePasswordServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1272,7 +1272,7 @@ type ESXPackSecurityDeleteRoleMappingServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1285,7 +1285,7 @@ type ESXPackSecurityDeleteRoleServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1298,7 +1298,7 @@ type ESXPackSecurityDeleteUserServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1311,7 +1311,7 @@ type ESXPackSecurityDisableUserServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1324,7 +1324,7 @@ type ESXPackSecurityEnableUserServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1337,7 +1337,7 @@ type ESXPackSecurityGetRoleMappingServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1350,7 +1350,7 @@ type ESXPackSecurityGetRoleServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1363,7 +1363,7 @@ type ESXPackSecurityGetUserServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1376,7 +1376,7 @@ type ESXPackSecurityPutRoleMappingServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1389,7 +1389,7 @@ type ESXPackSecurityPutRoleServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1402,7 +1402,7 @@ type ESXPackSecurityPutUserServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1415,7 +1415,7 @@ type ESXPackWatcherAckWatchServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1428,7 +1428,7 @@ type ESXPackWatcherActivateWatchServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1441,7 +1441,7 @@ type ESXPackWatcherDeactivateWatchServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1454,7 +1454,7 @@ type ESXPackWatcherDeleteWatchServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1467,7 +1467,7 @@ type ESXPackWatcherExecuteWatchServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1480,7 +1480,7 @@ type ESXPackWatcherGetWatchServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1493,7 +1493,7 @@ type ESXPackWatcherPutWatchServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1506,7 +1506,7 @@ type ESXPackWatcherStartServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1519,7 +1519,7 @@ type ESXPackWatcherStatsServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1532,7 +1532,7 @@ type ESXPackWatcherStopServiceWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -1577,8 +1577,9 @@ func (w *ESAliasServiceWrapper) Do(ctx context.Context) (*elastic.AliasResult, e
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.AliasService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.AliasService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.AliasService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.AliasService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1650,8 +1651,9 @@ func (w *ESAliasesServiceWrapper) Do(ctx context.Context) (*elastic.AliasesResul
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.AliasesService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.AliasesService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.AliasesService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.AliasesService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1743,8 +1745,9 @@ func (w *ESBulkProcessorServiceWrapper) Do(ctx context.Context) (*elastic.BulkPr
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.BulkProcessorService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.BulkProcessorService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.BulkProcessorService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.BulkProcessorService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1806,8 +1809,9 @@ func (w *ESBulkServiceWrapper) Do(ctx context.Context) (*elastic.BulkResponse, e
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.BulkService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.BulkService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.BulkService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.BulkService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1933,8 +1937,9 @@ func (w *ESCatAliasesServiceWrapper) Do(ctx context.Context) (elastic.CatAliases
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.CatAliasesService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.CatAliasesService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.CatAliasesService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.CatAliasesService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2021,8 +2026,9 @@ func (w *ESCatAllocationServiceWrapper) Do(ctx context.Context) (elastic.CatAllo
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.CatAllocationService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.CatAllocationService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.CatAllocationService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.CatAllocationService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2109,8 +2115,9 @@ func (w *ESCatCountServiceWrapper) Do(ctx context.Context) (elastic.CatCountResp
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.CatCountService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.CatCountService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.CatCountService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.CatCountService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2202,8 +2209,9 @@ func (w *ESCatHealthServiceWrapper) Do(ctx context.Context) (elastic.CatHealthRe
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.CatHealthService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.CatHealthService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.CatHealthService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.CatHealthService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2290,8 +2298,9 @@ func (w *ESCatIndicesServiceWrapper) Do(ctx context.Context) (elastic.CatIndices
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.CatIndicesService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.CatIndicesService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.CatIndicesService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.CatIndicesService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2393,8 +2402,9 @@ func (w *ESCatShardsServiceWrapper) Do(ctx context.Context) (elastic.CatShardsRe
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.CatShardsService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.CatShardsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.CatShardsService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.CatShardsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2481,8 +2491,9 @@ func (w *ESClearScrollServiceWrapper) Do(ctx context.Context) (*elastic.ClearScr
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.ClearScrollService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ClearScrollService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.ClearScrollService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.ClearScrollService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2535,117 +2546,117 @@ func (w *ESClearScrollServiceWrapper) Validate() error {
 
 func (w *ESClientWrapper) Alias() *ESAliasServiceWrapper {
 	res0 := w.obj.Alias()
-	return &ESAliasServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESAliasServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Aliases() *ESAliasesServiceWrapper {
 	res0 := w.obj.Aliases()
-	return &ESAliasesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESAliasesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Bulk() *ESBulkServiceWrapper {
 	res0 := w.obj.Bulk()
-	return &ESBulkServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESBulkServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) BulkProcessor() *ESBulkProcessorServiceWrapper {
 	res0 := w.obj.BulkProcessor()
-	return &ESBulkProcessorServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESBulkProcessorServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) CatAliases() *ESCatAliasesServiceWrapper {
 	res0 := w.obj.CatAliases()
-	return &ESCatAliasesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESCatAliasesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) CatAllocation() *ESCatAllocationServiceWrapper {
 	res0 := w.obj.CatAllocation()
-	return &ESCatAllocationServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESCatAllocationServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) CatCount() *ESCatCountServiceWrapper {
 	res0 := w.obj.CatCount()
-	return &ESCatCountServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESCatCountServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) CatHealth() *ESCatHealthServiceWrapper {
 	res0 := w.obj.CatHealth()
-	return &ESCatHealthServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESCatHealthServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) CatIndices() *ESCatIndicesServiceWrapper {
 	res0 := w.obj.CatIndices()
-	return &ESCatIndicesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESCatIndicesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) CatShards() *ESCatShardsServiceWrapper {
 	res0 := w.obj.CatShards()
-	return &ESCatShardsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESCatShardsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) ClearCache(indices ...string) *ESIndicesClearCacheServiceWrapper {
 	res0 := w.obj.ClearCache(indices...)
-	return &ESIndicesClearCacheServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesClearCacheServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) ClearScroll(scrollIds ...string) *ESClearScrollServiceWrapper {
 	res0 := w.obj.ClearScroll(scrollIds...)
-	return &ESClearScrollServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESClearScrollServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) CloseIndex(name string) *ESIndicesCloseServiceWrapper {
 	res0 := w.obj.CloseIndex(name)
-	return &ESIndicesCloseServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesCloseServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) ClusterHealth() *ESClusterHealthServiceWrapper {
 	res0 := w.obj.ClusterHealth()
-	return &ESClusterHealthServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESClusterHealthServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) ClusterReroute() *ESClusterRerouteServiceWrapper {
 	res0 := w.obj.ClusterReroute()
-	return &ESClusterRerouteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESClusterRerouteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) ClusterState() *ESClusterStateServiceWrapper {
 	res0 := w.obj.ClusterState()
-	return &ESClusterStateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESClusterStateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) ClusterStats() *ESClusterStatsServiceWrapper {
 	res0 := w.obj.ClusterStats()
-	return &ESClusterStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESClusterStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Count(indices ...string) *ESCountServiceWrapper {
 	res0 := w.obj.Count(indices...)
-	return &ESCountServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESCountServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) CreateIndex(name string) *ESIndicesCreateServiceWrapper {
 	res0 := w.obj.CreateIndex(name)
-	return &ESIndicesCreateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesCreateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Delete() *ESDeleteServiceWrapper {
 	res0 := w.obj.Delete()
-	return &ESDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) DeleteByQuery(indices ...string) *ESDeleteByQueryServiceWrapper {
 	res0 := w.obj.DeleteByQuery(indices...)
-	return &ESDeleteByQueryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESDeleteByQueryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) DeleteIndex(indices ...string) *ESIndicesDeleteServiceWrapper {
 	res0 := w.obj.DeleteIndex(indices...)
-	return &ESIndicesDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) DeleteScript() *ESDeleteScriptServiceWrapper {
 	res0 := w.obj.DeleteScript()
-	return &ESDeleteScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESDeleteScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) ElasticsearchVersion(url string) (string, error) {
@@ -2657,52 +2668,52 @@ func (w *ESClientWrapper) ElasticsearchVersion(url string) (string, error) {
 
 func (w *ESClientWrapper) Exists() *ESExistsServiceWrapper {
 	res0 := w.obj.Exists()
-	return &ESExistsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESExistsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Explain(index string, typ string, id string) *ESExplainServiceWrapper {
 	res0 := w.obj.Explain(index, typ, id)
-	return &ESExplainServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESExplainServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) FieldCaps(indices ...string) *ESFieldCapsServiceWrapper {
 	res0 := w.obj.FieldCaps(indices...)
-	return &ESFieldCapsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESFieldCapsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Flush(indices ...string) *ESIndicesFlushServiceWrapper {
 	res0 := w.obj.Flush(indices...)
-	return &ESIndicesFlushServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesFlushServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Forcemerge(indices ...string) *ESIndicesForcemergeServiceWrapper {
 	res0 := w.obj.Forcemerge(indices...)
-	return &ESIndicesForcemergeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesForcemergeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) FreezeIndex(name string) *ESIndicesFreezeServiceWrapper {
 	res0 := w.obj.FreezeIndex(name)
-	return &ESIndicesFreezeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesFreezeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Get() *ESGetServiceWrapper {
 	res0 := w.obj.Get()
-	return &ESGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) GetFieldMapping() *ESIndicesGetFieldMappingServiceWrapper {
 	res0 := w.obj.GetFieldMapping()
-	return &ESIndicesGetFieldMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesGetFieldMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) GetMapping() *ESIndicesGetMappingServiceWrapper {
 	res0 := w.obj.GetMapping()
-	return &ESIndicesGetMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesGetMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) GetScript() *ESGetScriptServiceWrapper {
 	res0 := w.obj.GetScript()
-	return &ESGetScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESGetScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) HasPlugin(name string) (bool, error) {
@@ -2714,47 +2725,47 @@ func (w *ESClientWrapper) HasPlugin(name string) (bool, error) {
 
 func (w *ESClientWrapper) Index() *ESIndexServiceWrapper {
 	res0 := w.obj.Index()
-	return &ESIndexServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndexServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IndexAnalyze() *ESIndicesAnalyzeServiceWrapper {
 	res0 := w.obj.IndexAnalyze()
-	return &ESIndicesAnalyzeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesAnalyzeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IndexDeleteIndexTemplate(name string) *ESIndicesDeleteIndexTemplateServiceWrapper {
 	res0 := w.obj.IndexDeleteIndexTemplate(name)
-	return &ESIndicesDeleteIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesDeleteIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IndexDeleteTemplate(name string) *ESIndicesDeleteTemplateServiceWrapper {
 	res0 := w.obj.IndexDeleteTemplate(name)
-	return &ESIndicesDeleteTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesDeleteTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IndexExists(indices ...string) *ESIndicesExistsServiceWrapper {
 	res0 := w.obj.IndexExists(indices...)
-	return &ESIndicesExistsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesExistsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IndexGet(indices ...string) *ESIndicesGetServiceWrapper {
 	res0 := w.obj.IndexGet(indices...)
-	return &ESIndicesGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IndexGetIndexTemplate(name string) *ESIndicesGetIndexTemplateServiceWrapper {
 	res0 := w.obj.IndexGetIndexTemplate(name)
-	return &ESIndicesGetIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesGetIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IndexGetSettings(indices ...string) *ESIndicesGetSettingsServiceWrapper {
 	res0 := w.obj.IndexGetSettings(indices...)
-	return &ESIndicesGetSettingsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesGetSettingsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IndexGetTemplate(names ...string) *ESIndicesGetTemplateServiceWrapper {
 	res0 := w.obj.IndexGetTemplate(names...)
-	return &ESIndicesGetTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesGetTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IndexNames() ([]string, error) {
@@ -2766,52 +2777,52 @@ func (w *ESClientWrapper) IndexNames() ([]string, error) {
 
 func (w *ESClientWrapper) IndexPutIndexTemplate(name string) *ESIndicesPutIndexTemplateServiceWrapper {
 	res0 := w.obj.IndexPutIndexTemplate(name)
-	return &ESIndicesPutIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesPutIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IndexPutSettings(indices ...string) *ESIndicesPutSettingsServiceWrapper {
 	res0 := w.obj.IndexPutSettings(indices...)
-	return &ESIndicesPutSettingsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesPutSettingsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IndexPutTemplate(name string) *ESIndicesPutTemplateServiceWrapper {
 	res0 := w.obj.IndexPutTemplate(name)
-	return &ESIndicesPutTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesPutTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IndexSegments(indices ...string) *ESIndicesSegmentsServiceWrapper {
 	res0 := w.obj.IndexSegments(indices...)
-	return &ESIndicesSegmentsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesSegmentsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IndexStats(indices ...string) *ESIndicesStatsServiceWrapper {
 	res0 := w.obj.IndexStats(indices...)
-	return &ESIndicesStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IndexTemplateExists(name string) *ESIndicesExistsTemplateServiceWrapper {
 	res0 := w.obj.IndexTemplateExists(name)
-	return &ESIndicesExistsTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesExistsTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IngestDeletePipeline(id string) *ESIngestDeletePipelineServiceWrapper {
 	res0 := w.obj.IngestDeletePipeline(id)
-	return &ESIngestDeletePipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIngestDeletePipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IngestGetPipeline(ids ...string) *ESIngestGetPipelineServiceWrapper {
 	res0 := w.obj.IngestGetPipeline(ids...)
-	return &ESIngestGetPipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIngestGetPipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IngestPutPipeline(id string) *ESIngestPutPipelineServiceWrapper {
 	res0 := w.obj.IngestPutPipeline(id)
-	return &ESIngestPutPipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIngestPutPipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IngestSimulatePipeline() *ESIngestSimulatePipelineServiceWrapper {
 	res0 := w.obj.IngestSimulatePipeline()
-	return &ESIngestSimulatePipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIngestSimulatePipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) IsRunning() bool {
@@ -2821,37 +2832,37 @@ func (w *ESClientWrapper) IsRunning() bool {
 
 func (w *ESClientWrapper) Mget() *ESMgetServiceWrapper {
 	res0 := w.obj.Mget()
-	return &ESMgetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESMgetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) MultiGet() *ESMgetServiceWrapper {
 	res0 := w.obj.MultiGet()
-	return &ESMgetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESMgetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) MultiSearch() *ESMultiSearchServiceWrapper {
 	res0 := w.obj.MultiSearch()
-	return &ESMultiSearchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESMultiSearchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) MultiTermVectors() *ESMultiTermvectorServiceWrapper {
 	res0 := w.obj.MultiTermVectors()
-	return &ESMultiTermvectorServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESMultiTermvectorServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) NodesInfo() *ESNodesInfoServiceWrapper {
 	res0 := w.obj.NodesInfo()
-	return &ESNodesInfoServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESNodesInfoServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) NodesStats() *ESNodesStatsServiceWrapper {
 	res0 := w.obj.NodesStats()
-	return &ESNodesStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESNodesStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) OpenIndex(name string) *ESIndicesOpenServiceWrapper {
 	res0 := w.obj.OpenIndex(name)
-	return &ESIndicesOpenServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesOpenServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) PerformRequest(ctx context.Context, opt elastic.PerformRequestOptions) (*elastic.Response, error) {
@@ -2863,7 +2874,7 @@ func (w *ESClientWrapper) PerformRequest(ctx context.Context, opt elastic.Perfor
 
 func (w *ESClientWrapper) Ping(url string) *ESPingServiceWrapper {
 	res0 := w.obj.Ping(url)
-	return &ESPingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESPingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Plugins() ([]string, error) {
@@ -2875,92 +2886,92 @@ func (w *ESClientWrapper) Plugins() ([]string, error) {
 
 func (w *ESClientWrapper) PutMapping() *ESIndicesPutMappingServiceWrapper {
 	res0 := w.obj.PutMapping()
-	return &ESIndicesPutMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesPutMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) PutScript() *ESPutScriptServiceWrapper {
 	res0 := w.obj.PutScript()
-	return &ESPutScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESPutScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Refresh(indices ...string) *ESRefreshServiceWrapper {
 	res0 := w.obj.Refresh(indices...)
-	return &ESRefreshServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESRefreshServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Reindex() *ESReindexServiceWrapper {
 	res0 := w.obj.Reindex()
-	return &ESReindexServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESReindexServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) RolloverIndex(alias string) *ESIndicesRolloverServiceWrapper {
 	res0 := w.obj.RolloverIndex(alias)
-	return &ESIndicesRolloverServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesRolloverServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Scroll(indices ...string) *ESScrollServiceWrapper {
 	res0 := w.obj.Scroll(indices...)
-	return &ESScrollServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESScrollServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Search(indices ...string) *ESSearchServiceWrapper {
 	res0 := w.obj.Search(indices...)
-	return &ESSearchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSearchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) SearchShards(indices ...string) *ESSearchShardsServiceWrapper {
 	res0 := w.obj.SearchShards(indices...)
-	return &ESSearchShardsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSearchShardsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) ShrinkIndex(source string, target string) *ESIndicesShrinkServiceWrapper {
 	res0 := w.obj.ShrinkIndex(source, target)
-	return &ESIndicesShrinkServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesShrinkServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) SnapshotCreate(repository string, snapshot string) *ESSnapshotCreateServiceWrapper {
 	res0 := w.obj.SnapshotCreate(repository, snapshot)
-	return &ESSnapshotCreateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotCreateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) SnapshotCreateRepository(repository string) *ESSnapshotCreateRepositoryServiceWrapper {
 	res0 := w.obj.SnapshotCreateRepository(repository)
-	return &ESSnapshotCreateRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotCreateRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) SnapshotDelete(repository string, snapshot string) *ESSnapshotDeleteServiceWrapper {
 	res0 := w.obj.SnapshotDelete(repository, snapshot)
-	return &ESSnapshotDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) SnapshotDeleteRepository(repositories ...string) *ESSnapshotDeleteRepositoryServiceWrapper {
 	res0 := w.obj.SnapshotDeleteRepository(repositories...)
-	return &ESSnapshotDeleteRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotDeleteRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) SnapshotGet(repository string) *ESSnapshotGetServiceWrapper {
 	res0 := w.obj.SnapshotGet(repository)
-	return &ESSnapshotGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) SnapshotGetRepository(repositories ...string) *ESSnapshotGetRepositoryServiceWrapper {
 	res0 := w.obj.SnapshotGetRepository(repositories...)
-	return &ESSnapshotGetRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotGetRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) SnapshotRestore(repository string, snapshot string) *ESSnapshotRestoreServiceWrapper {
 	res0 := w.obj.SnapshotRestore(repository, snapshot)
-	return &ESSnapshotRestoreServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotRestoreServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) SnapshotStatus() *ESSnapshotStatusServiceWrapper {
 	res0 := w.obj.SnapshotStatus()
-	return &ESSnapshotStatusServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotStatusServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) SnapshotVerifyRepository(repository string) *ESSnapshotVerifyRepositoryServiceWrapper {
 	res0 := w.obj.SnapshotVerifyRepository(repository)
-	return &ESSnapshotVerifyRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotVerifyRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Start() {
@@ -2978,47 +2989,47 @@ func (w *ESClientWrapper) String() string {
 
 func (w *ESClientWrapper) SyncedFlush(indices ...string) *ESIndicesSyncedFlushServiceWrapper {
 	res0 := w.obj.SyncedFlush(indices...)
-	return &ESIndicesSyncedFlushServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesSyncedFlushServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) TasksCancel() *ESTasksCancelServiceWrapper {
 	res0 := w.obj.TasksCancel()
-	return &ESTasksCancelServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESTasksCancelServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) TasksGetTask() *ESTasksGetTaskServiceWrapper {
 	res0 := w.obj.TasksGetTask()
-	return &ESTasksGetTaskServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESTasksGetTaskServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) TasksList() *ESTasksListServiceWrapper {
 	res0 := w.obj.TasksList()
-	return &ESTasksListServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESTasksListServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) TermVectors(index string) *ESTermvectorsServiceWrapper {
 	res0 := w.obj.TermVectors(index)
-	return &ESTermvectorsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESTermvectorsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) UnfreezeIndex(name string) *ESIndicesUnfreezeServiceWrapper {
 	res0 := w.obj.UnfreezeIndex(name)
-	return &ESIndicesUnfreezeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesUnfreezeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Update() *ESUpdateServiceWrapper {
 	res0 := w.obj.Update()
-	return &ESUpdateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESUpdateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) UpdateByQuery(indices ...string) *ESUpdateByQueryServiceWrapper {
 	res0 := w.obj.UpdateByQuery(indices...)
-	return &ESUpdateByQueryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESUpdateByQueryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) Validate(indices ...string) *ESValidateServiceWrapper {
 	res0 := w.obj.Validate(indices...)
-	return &ESValidateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESValidateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) WaitForGreenStatus(timeout string) error {
@@ -3056,132 +3067,132 @@ func (w *ESClientWrapper) XPackAsyncSearchSubmit() *elastic.XPackAsyncSearchSubm
 
 func (w *ESClientWrapper) XPackIlmDeleteLifecycle() *ESXPackIlmDeleteLifecycleServiceWrapper {
 	res0 := w.obj.XPackIlmDeleteLifecycle()
-	return &ESXPackIlmDeleteLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackIlmDeleteLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackIlmGetLifecycle() *ESXPackIlmGetLifecycleServiceWrapper {
 	res0 := w.obj.XPackIlmGetLifecycle()
-	return &ESXPackIlmGetLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackIlmGetLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackIlmPutLifecycle() *ESXPackIlmPutLifecycleServiceWrapper {
 	res0 := w.obj.XPackIlmPutLifecycle()
-	return &ESXPackIlmPutLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackIlmPutLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackInfo() *ESXPackInfoServiceWrapper {
 	res0 := w.obj.XPackInfo()
-	return &ESXPackInfoServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackInfoServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackSecurityChangePassword(username string) *ESXPackSecurityChangePasswordServiceWrapper {
 	res0 := w.obj.XPackSecurityChangePassword(username)
-	return &ESXPackSecurityChangePasswordServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityChangePasswordServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackSecurityDeleteRole(roleName string) *ESXPackSecurityDeleteRoleServiceWrapper {
 	res0 := w.obj.XPackSecurityDeleteRole(roleName)
-	return &ESXPackSecurityDeleteRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityDeleteRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackSecurityDeleteRoleMapping(roleMappingName string) *ESXPackSecurityDeleteRoleMappingServiceWrapper {
 	res0 := w.obj.XPackSecurityDeleteRoleMapping(roleMappingName)
-	return &ESXPackSecurityDeleteRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityDeleteRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackSecurityDeleteUser(username string) *ESXPackSecurityDeleteUserServiceWrapper {
 	res0 := w.obj.XPackSecurityDeleteUser(username)
-	return &ESXPackSecurityDeleteUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityDeleteUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackSecurityDisableUser(username string) *ESXPackSecurityDisableUserServiceWrapper {
 	res0 := w.obj.XPackSecurityDisableUser(username)
-	return &ESXPackSecurityDisableUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityDisableUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackSecurityEnableUser(username string) *ESXPackSecurityEnableUserServiceWrapper {
 	res0 := w.obj.XPackSecurityEnableUser(username)
-	return &ESXPackSecurityEnableUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityEnableUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackSecurityGetRole(roleName string) *ESXPackSecurityGetRoleServiceWrapper {
 	res0 := w.obj.XPackSecurityGetRole(roleName)
-	return &ESXPackSecurityGetRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityGetRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackSecurityGetRoleMapping(roleMappingName string) *ESXPackSecurityGetRoleMappingServiceWrapper {
 	res0 := w.obj.XPackSecurityGetRoleMapping(roleMappingName)
-	return &ESXPackSecurityGetRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityGetRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackSecurityGetUser(usernames ...string) *ESXPackSecurityGetUserServiceWrapper {
 	res0 := w.obj.XPackSecurityGetUser(usernames...)
-	return &ESXPackSecurityGetUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityGetUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackSecurityPutRole(roleName string) *ESXPackSecurityPutRoleServiceWrapper {
 	res0 := w.obj.XPackSecurityPutRole(roleName)
-	return &ESXPackSecurityPutRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityPutRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackSecurityPutRoleMapping(roleMappingName string) *ESXPackSecurityPutRoleMappingServiceWrapper {
 	res0 := w.obj.XPackSecurityPutRoleMapping(roleMappingName)
-	return &ESXPackSecurityPutRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityPutRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackSecurityPutUser(username string) *ESXPackSecurityPutUserServiceWrapper {
 	res0 := w.obj.XPackSecurityPutUser(username)
-	return &ESXPackSecurityPutUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityPutUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackWatchAck(watchId string) *ESXPackWatcherAckWatchServiceWrapper {
 	res0 := w.obj.XPackWatchAck(watchId)
-	return &ESXPackWatcherAckWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherAckWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackWatchActivate(watchId string) *ESXPackWatcherActivateWatchServiceWrapper {
 	res0 := w.obj.XPackWatchActivate(watchId)
-	return &ESXPackWatcherActivateWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherActivateWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackWatchDeactivate(watchId string) *ESXPackWatcherDeactivateWatchServiceWrapper {
 	res0 := w.obj.XPackWatchDeactivate(watchId)
-	return &ESXPackWatcherDeactivateWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherDeactivateWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackWatchDelete(watchId string) *ESXPackWatcherDeleteWatchServiceWrapper {
 	res0 := w.obj.XPackWatchDelete(watchId)
-	return &ESXPackWatcherDeleteWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherDeleteWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackWatchExecute() *ESXPackWatcherExecuteWatchServiceWrapper {
 	res0 := w.obj.XPackWatchExecute()
-	return &ESXPackWatcherExecuteWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherExecuteWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackWatchGet(watchId string) *ESXPackWatcherGetWatchServiceWrapper {
 	res0 := w.obj.XPackWatchGet(watchId)
-	return &ESXPackWatcherGetWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherGetWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackWatchPut(watchId string) *ESXPackWatcherPutWatchServiceWrapper {
 	res0 := w.obj.XPackWatchPut(watchId)
-	return &ESXPackWatcherPutWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherPutWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackWatchStart() *ESXPackWatcherStartServiceWrapper {
 	res0 := w.obj.XPackWatchStart()
-	return &ESXPackWatcherStartServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherStartServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackWatchStats() *ESXPackWatcherStatsServiceWrapper {
 	res0 := w.obj.XPackWatchStats()
-	return &ESXPackWatcherStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClientWrapper) XPackWatchStop() *ESXPackWatcherStopServiceWrapper {
 	res0 := w.obj.XPackWatchStop()
-	return &ESXPackWatcherStopServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherStopServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w *ESClusterHealthServiceWrapper) Do(ctx context.Context) (*elastic.ClusterHealthResponse, error) {
@@ -3206,8 +3217,9 @@ func (w *ESClusterHealthServiceWrapper) Do(ctx context.Context) (*elastic.Cluste
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.ClusterHealthService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ClusterHealthService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.ClusterHealthService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.ClusterHealthService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3340,8 +3352,9 @@ func (w *ESClusterRerouteServiceWrapper) Do(ctx context.Context) (*elastic.Clust
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.ClusterRerouteService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ClusterRerouteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.ClusterRerouteService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.ClusterRerouteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3444,8 +3457,9 @@ func (w *ESClusterStateServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.ClusterStateService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ClusterStateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.ClusterStateService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.ClusterStateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3548,8 +3562,9 @@ func (w *ESClusterStatsServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.ClusterStatsService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ClusterStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.ClusterStatsService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.ClusterStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3662,8 +3677,9 @@ func (w *ESCountServiceWrapper) Do(ctx context.Context) (int64, error) {
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.CountService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.CountService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.CountService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.CountService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3841,8 +3857,9 @@ func (w *ESDeleteByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.DeleteByQueryService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.DeleteByQueryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.DeleteByQueryService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.DeleteByQueryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3874,8 +3891,9 @@ func (w *ESDeleteByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.DeleteByQueryService.DoAsync", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.DeleteByQueryService.DoAsync", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.DeleteByQueryService.DoAsync", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.DeleteByQueryService.DoAsync", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -4153,8 +4171,9 @@ func (w *ESDeleteScriptServiceWrapper) Do(ctx context.Context) (*elastic.DeleteS
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.DeleteScriptService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.DeleteScriptService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.DeleteScriptService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.DeleteScriptService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -4237,8 +4256,9 @@ func (w *ESDeleteServiceWrapper) Do(ctx context.Context) (*elastic.DeleteRespons
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.DeleteService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.DeleteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.DeleteService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.DeleteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -4366,8 +4386,9 @@ func (w *ESExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.ExistsService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ExistsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.ExistsService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.ExistsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -4505,8 +4526,9 @@ func (w *ESExplainServiceWrapper) Do(ctx context.Context) (*elastic.ExplainRespo
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.ExplainService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ExplainService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.ExplainService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.ExplainService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -4664,8 +4686,9 @@ func (w *ESFieldCapsServiceWrapper) Do(ctx context.Context) (*elastic.FieldCapsR
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.FieldCapsService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.FieldCapsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.FieldCapsService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.FieldCapsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -4753,8 +4776,9 @@ func (w *ESGetScriptServiceWrapper) Do(ctx context.Context) (*elastic.GetScriptR
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.GetScriptService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.GetScriptService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.GetScriptService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.GetScriptService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -4827,8 +4851,9 @@ func (w *ESGetServiceWrapper) Do(ctx context.Context) (*elastic.GetResult, error
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.GetService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.GetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.GetService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.GetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -4976,8 +5001,9 @@ func (w *ESIndexServiceWrapper) Do(ctx context.Context) (*elastic.IndexResponse,
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndexService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndexService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndexService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndexService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -5155,8 +5181,9 @@ func (w *ESIndicesAnalyzeServiceWrapper) Do(ctx context.Context) (*elastic.Indic
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesAnalyzeService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesAnalyzeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesAnalyzeService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesAnalyzeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -5274,8 +5301,9 @@ func (w *ESIndicesClearCacheServiceWrapper) Do(ctx context.Context) (*elastic.In
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesClearCacheService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesClearCacheService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesClearCacheService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesClearCacheService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -5383,8 +5411,9 @@ func (w *ESIndicesCloseServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesCloseService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesCloseService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesCloseService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesCloseService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -5492,8 +5521,9 @@ func (w *ESIndicesCreateServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesCreateService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesCreateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesCreateService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesCreateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -5570,8 +5600,9 @@ func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Do(ctx context.Context) (*e
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesDeleteIndexTemplateService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesDeleteIndexTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesDeleteIndexTemplateService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesDeleteIndexTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -5654,8 +5685,9 @@ func (w *ESIndicesDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesDeleteService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesDeleteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesDeleteService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesDeleteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -5738,8 +5770,9 @@ func (w *ESIndicesDeleteTemplateServiceWrapper) Do(ctx context.Context) (*elasti
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesDeleteTemplateService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesDeleteTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesDeleteTemplateService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesDeleteTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -5827,8 +5860,9 @@ func (w *ESIndicesExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesExistsService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesExistsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesExistsService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesExistsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -5916,8 +5950,9 @@ func (w *ESIndicesExistsTemplateServiceWrapper) Do(ctx context.Context) (bool, e
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesExistsTemplateService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesExistsTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesExistsTemplateService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesExistsTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -6005,8 +6040,9 @@ func (w *ESIndicesFlushServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesFlushService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesFlushService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesFlushService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesFlushService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -6104,8 +6140,9 @@ func (w *ESIndicesForcemergeServiceWrapper) Do(ctx context.Context) (*elastic.In
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesForcemergeService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesForcemergeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesForcemergeService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesForcemergeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -6208,8 +6245,9 @@ func (w *ESIndicesFreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesFreezeService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesFreezeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesFreezeService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesFreezeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -6312,8 +6350,9 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Do(ctx context.Context) (map[st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesGetFieldMappingService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesGetFieldMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesGetFieldMappingService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesGetFieldMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -6411,8 +6450,9 @@ func (w *ESIndicesGetIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesGetIndexTemplateService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesGetIndexTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesGetIndexTemplateService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesGetIndexTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -6505,8 +6545,9 @@ func (w *ESIndicesGetMappingServiceWrapper) Do(ctx context.Context) (map[string]
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesGetMappingService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesGetMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesGetMappingService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesGetMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -6604,8 +6645,9 @@ func (w *ESIndicesGetServiceWrapper) Do(ctx context.Context) (map[string]*elasti
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesGetService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesGetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesGetService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesGetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -6703,8 +6745,9 @@ func (w *ESIndicesGetSettingsServiceWrapper) Do(ctx context.Context) (map[string
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesGetSettingsService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesGetSettingsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesGetSettingsService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesGetSettingsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -6802,8 +6845,9 @@ func (w *ESIndicesGetTemplateServiceWrapper) Do(ctx context.Context) (map[string
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesGetTemplateService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesGetTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesGetTemplateService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesGetTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -6891,8 +6935,9 @@ func (w *ESIndicesOpenServiceWrapper) Do(ctx context.Context) (*elastic.IndicesO
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesOpenService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesOpenService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesOpenService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesOpenService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -7010,8 +7055,9 @@ func (w *ESIndicesPutIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesPutIndexTemplateService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesPutIndexTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesPutIndexTemplateService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesPutIndexTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -7104,8 +7150,9 @@ func (w *ESIndicesPutMappingServiceWrapper) Do(ctx context.Context) (*elastic.Pu
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesPutMappingService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesPutMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesPutMappingService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesPutMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -7218,8 +7265,9 @@ func (w *ESIndicesPutSettingsServiceWrapper) Do(ctx context.Context) (*elastic.I
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesPutSettingsService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesPutSettingsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesPutSettingsService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesPutSettingsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -7332,8 +7380,9 @@ func (w *ESIndicesPutTemplateServiceWrapper) Do(ctx context.Context) (*elastic.I
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesPutTemplateService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesPutTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesPutTemplateService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesPutTemplateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -7476,8 +7525,9 @@ func (w *ESIndicesRolloverServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesRolloverService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesRolloverService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesRolloverService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesRolloverService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -7585,8 +7635,9 @@ func (w *ESIndicesSegmentsServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesSegmentsService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesSegmentsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesSegmentsService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesSegmentsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -7689,8 +7740,9 @@ func (w *ESIndicesShrinkServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesShrinkService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesShrinkService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesShrinkService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesShrinkService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -7788,8 +7840,9 @@ func (w *ESIndicesStatsServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesStatsService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesStatsService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -7897,8 +7950,9 @@ func (w *ESIndicesSyncedFlushServiceWrapper) Do(ctx context.Context) (*elastic.I
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesSyncedFlushService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesSyncedFlushService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesSyncedFlushService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesSyncedFlushService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -7986,8 +8040,9 @@ func (w *ESIndicesUnfreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IndicesUnfreezeService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IndicesUnfreezeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IndicesUnfreezeService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IndicesUnfreezeService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -8085,8 +8140,9 @@ func (w *ESIngestDeletePipelineServiceWrapper) Do(ctx context.Context) (*elastic
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IngestDeletePipelineService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IngestDeletePipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IngestDeletePipelineService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IngestDeletePipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -8169,8 +8225,9 @@ func (w *ESIngestGetPipelineServiceWrapper) Do(ctx context.Context) (elastic.Ing
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IngestGetPipelineService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IngestGetPipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IngestGetPipelineService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IngestGetPipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -8258,8 +8315,9 @@ func (w *ESIngestPutPipelineServiceWrapper) Do(ctx context.Context) (*elastic.In
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IngestPutPipelineService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IngestPutPipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IngestPutPipelineService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IngestPutPipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -8352,8 +8410,9 @@ func (w *ESIngestSimulatePipelineServiceWrapper) Do(ctx context.Context) (*elast
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.IngestSimulatePipelineService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.IngestSimulatePipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.IngestSimulatePipelineService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.IngestSimulatePipelineService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -8436,8 +8495,9 @@ func (w *ESMgetServiceWrapper) Do(ctx context.Context) (*elastic.MgetResponse, e
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.MgetService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.MgetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.MgetService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.MgetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -8536,8 +8596,9 @@ func (w *ESMultiSearchServiceWrapper) Do(ctx context.Context) (*elastic.MultiSea
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.MultiSearchService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.MultiSearchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.MultiSearchService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.MultiSearchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -8629,8 +8690,9 @@ func (w *ESMultiTermvectorServiceWrapper) Do(ctx context.Context) (*elastic.Mult
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.MultiTermvectorService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.MultiTermvectorService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.MultiTermvectorService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.MultiTermvectorService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -8778,8 +8840,9 @@ func (w *ESNodesInfoServiceWrapper) Do(ctx context.Context) (*elastic.NodesInfoR
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.NodesInfoService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.NodesInfoService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.NodesInfoService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.NodesInfoService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -8867,8 +8930,9 @@ func (w *ESNodesStatsServiceWrapper) Do(ctx context.Context) (*elastic.NodesStat
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.NodesStatsService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.NodesStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.NodesStatsService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.NodesStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -8982,8 +9046,9 @@ func (w *ESPingServiceWrapper) Do(ctx context.Context) (*elastic.PingResult, int
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.PingService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.PingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.PingService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.PingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -9075,8 +9140,9 @@ func (w *ESPutScriptServiceWrapper) Do(ctx context.Context) (*elastic.PutScriptR
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.PutScriptService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.PutScriptService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.PutScriptService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.PutScriptService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -9159,8 +9225,9 @@ func (w *ESRefreshServiceWrapper) Do(ctx context.Context) (*elastic.RefreshResul
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.RefreshService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.RefreshService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.RefreshService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.RefreshService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -9257,8 +9324,9 @@ func (w *ESReindexServiceWrapper) Do(ctx context.Context) (*elastic.BulkIndexByS
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.ReindexService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ReindexService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.ReindexService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.ReindexService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -9290,8 +9358,9 @@ func (w *ESReindexServiceWrapper) DoAsync(ctx context.Context) (*elastic.StartTa
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.ReindexService.DoAsync", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ReindexService.DoAsync", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.ReindexService.DoAsync", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.ReindexService.DoAsync", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -9430,8 +9499,9 @@ func (w *ESScrollServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.ScrollService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ScrollService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.ScrollService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.ScrollService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -9693,8 +9763,9 @@ func (w *ESSearchServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.SearchService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SearchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.SearchService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.SearchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -10007,8 +10078,9 @@ func (w *ESSearchShardsServiceWrapper) Do(ctx context.Context) (*elastic.SearchS
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.SearchShardsService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SearchShardsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.SearchShardsService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.SearchShardsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -10116,8 +10188,9 @@ func (w *ESSnapshotCreateRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.SnapshotCreateRepositoryService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotCreateRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.SnapshotCreateRepositoryService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.SnapshotCreateRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -10230,8 +10303,9 @@ func (w *ESSnapshotCreateServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.SnapshotCreateService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotCreateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.SnapshotCreateService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.SnapshotCreateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -10319,8 +10393,9 @@ func (w *ESSnapshotDeleteRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.SnapshotDeleteRepositoryService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotDeleteRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.SnapshotDeleteRepositoryService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.SnapshotDeleteRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -10403,8 +10478,9 @@ func (w *ESSnapshotDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.SnapshotDeleteService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotDeleteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.SnapshotDeleteService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.SnapshotDeleteService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -10482,8 +10558,9 @@ func (w *ESSnapshotGetRepositoryServiceWrapper) Do(ctx context.Context) (elastic
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.SnapshotGetRepositoryService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotGetRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.SnapshotGetRepositoryService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.SnapshotGetRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -10566,8 +10643,9 @@ func (w *ESSnapshotGetServiceWrapper) Do(ctx context.Context) (*elastic.Snapshot
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.SnapshotGetService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotGetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.SnapshotGetService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.SnapshotGetService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -10665,8 +10743,9 @@ func (w *ESSnapshotRestoreServiceWrapper) Do(ctx context.Context) (*elastic.Snap
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.SnapshotRestoreService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotRestoreService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.SnapshotRestoreService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.SnapshotRestoreService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -10794,8 +10873,9 @@ func (w *ESSnapshotStatusServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.SnapshotStatusService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotStatusService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.SnapshotStatusService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.SnapshotStatusService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -10878,8 +10958,9 @@ func (w *ESSnapshotVerifyRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.SnapshotVerifyRepositoryService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.SnapshotVerifyRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.SnapshotVerifyRepositoryService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.SnapshotVerifyRepositoryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -10967,8 +11048,9 @@ func (w *ESTasksCancelServiceWrapper) Do(ctx context.Context) (*elastic.TasksLis
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.TasksCancelService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.TasksCancelService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.TasksCancelService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.TasksCancelService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -11061,8 +11143,9 @@ func (w *ESTasksGetTaskServiceWrapper) Do(ctx context.Context) (*elastic.TasksGe
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.TasksGetTaskService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.TasksGetTaskService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.TasksGetTaskService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.TasksGetTaskService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -11155,8 +11238,9 @@ func (w *ESTasksListServiceWrapper) Do(ctx context.Context) (*elastic.TasksListR
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.TasksListService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.TasksListService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.TasksListService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.TasksListService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -11264,8 +11348,9 @@ func (w *ESTermvectorsServiceWrapper) Do(ctx context.Context) (*elastic.Termvect
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.TermvectorsService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.TermvectorsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.TermvectorsService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.TermvectorsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -11463,8 +11548,9 @@ func (w *ESUpdateByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.UpdateByQueryService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.UpdateByQueryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.UpdateByQueryService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.UpdateByQueryService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -11496,8 +11582,9 @@ func (w *ESUpdateByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.UpdateByQueryService.DoAsync", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.UpdateByQueryService.DoAsync", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.UpdateByQueryService.DoAsync", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.UpdateByQueryService.DoAsync", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -11795,8 +11882,9 @@ func (w *ESUpdateServiceWrapper) Do(ctx context.Context) (*elastic.UpdateRespons
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.UpdateService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.UpdateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.UpdateService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.UpdateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -12003,8 +12091,9 @@ func (w *ESValidateServiceWrapper) Do(ctx context.Context) (*elastic.ValidateRes
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.ValidateService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.ValidateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.ValidateService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.ValidateService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -12117,8 +12206,9 @@ func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Do(ctx context.Context) (*elas
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackIlmDeleteLifecycleService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackIlmDeleteLifecycleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackIlmDeleteLifecycleService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackIlmDeleteLifecycleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -12206,8 +12296,9 @@ func (w *ESXPackIlmGetLifecycleServiceWrapper) Do(ctx context.Context) (map[stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackIlmGetLifecycleService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackIlmGetLifecycleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackIlmGetLifecycleService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackIlmGetLifecycleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -12305,8 +12396,9 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) Do(ctx context.Context) (*elastic
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackIlmPutLifecycleService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackIlmPutLifecycleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackIlmPutLifecycleService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackIlmPutLifecycleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -12394,8 +12486,9 @@ func (w *ESXPackInfoServiceWrapper) Do(ctx context.Context) (*elastic.XPackInfoS
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackInfoService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackInfoService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackInfoService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackInfoService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -12468,8 +12561,9 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Do(ctx context.Context) (*
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackSecurityChangePasswordService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityChangePasswordService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackSecurityChangePasswordService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackSecurityChangePasswordService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -12552,8 +12646,9 @@ func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Do(ctx context.Context)
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleMappingService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleMappingService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -12626,8 +12721,9 @@ func (w *ESXPackSecurityDeleteRoleServiceWrapper) Do(ctx context.Context) (*elas
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackSecurityDeleteRoleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -12700,8 +12796,9 @@ func (w *ESXPackSecurityDeleteUserServiceWrapper) Do(ctx context.Context) (*elas
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackSecurityDeleteUserService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityDeleteUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackSecurityDeleteUserService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackSecurityDeleteUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -12779,8 +12876,9 @@ func (w *ESXPackSecurityDisableUserServiceWrapper) Do(ctx context.Context) (*ela
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackSecurityDisableUserService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityDisableUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackSecurityDisableUserService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackSecurityDisableUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -12858,8 +12956,9 @@ func (w *ESXPackSecurityEnableUserServiceWrapper) Do(ctx context.Context) (*elas
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackSecurityEnableUserService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityEnableUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackSecurityEnableUserService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackSecurityEnableUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -12937,8 +13036,9 @@ func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Do(ctx context.Context) (*
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackSecurityGetRoleMappingService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityGetRoleMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackSecurityGetRoleMappingService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackSecurityGetRoleMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -13011,8 +13111,9 @@ func (w *ESXPackSecurityGetRoleServiceWrapper) Do(ctx context.Context) (*elastic
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackSecurityGetRoleService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityGetRoleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackSecurityGetRoleService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackSecurityGetRoleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -13085,8 +13186,9 @@ func (w *ESXPackSecurityGetUserServiceWrapper) Do(ctx context.Context) (*elastic
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackSecurityGetUserService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityGetUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackSecurityGetUserService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackSecurityGetUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -13164,8 +13266,9 @@ func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Do(ctx context.Context) (*
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackSecurityPutRoleMappingService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityPutRoleMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackSecurityPutRoleMappingService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackSecurityPutRoleMappingService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -13243,8 +13346,9 @@ func (w *ESXPackSecurityPutRoleServiceWrapper) Do(ctx context.Context) (*elastic
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackSecurityPutRoleService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityPutRoleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackSecurityPutRoleService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackSecurityPutRoleService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -13322,8 +13426,9 @@ func (w *ESXPackSecurityPutUserServiceWrapper) Do(ctx context.Context) (*elastic
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackSecurityPutUserService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackSecurityPutUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackSecurityPutUserService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackSecurityPutUserService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -13411,8 +13516,9 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) Do(ctx context.Context) (*elastic
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackWatcherAckWatchService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherAckWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackWatcherAckWatchService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackWatcherAckWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -13490,8 +13596,9 @@ func (w *ESXPackWatcherActivateWatchServiceWrapper) Do(ctx context.Context) (*el
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackWatcherActivateWatchService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherActivateWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackWatcherActivateWatchService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackWatcherActivateWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -13569,8 +13676,9 @@ func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Do(ctx context.Context) (*
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackWatcherDeactivateWatchService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherDeactivateWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackWatcherDeactivateWatchService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackWatcherDeactivateWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -13648,8 +13756,9 @@ func (w *ESXPackWatcherDeleteWatchServiceWrapper) Do(ctx context.Context) (*elas
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackWatcherDeleteWatchService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherDeleteWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackWatcherDeleteWatchService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackWatcherDeleteWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -13742,8 +13851,9 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Do(ctx context.Context) (*ela
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackWatcherExecuteWatchService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherExecuteWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackWatcherExecuteWatchService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackWatcherExecuteWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -13816,8 +13926,9 @@ func (w *ESXPackWatcherGetWatchServiceWrapper) Do(ctx context.Context) (*elastic
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackWatcherGetWatchService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherGetWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackWatcherGetWatchService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackWatcherGetWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -13900,8 +14011,9 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Do(ctx context.Context) (*elastic
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackWatcherPutWatchService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherPutWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackWatcherPutWatchService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackWatcherPutWatchService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -13989,8 +14101,9 @@ func (w *ESXPackWatcherStartServiceWrapper) Do(ctx context.Context) (*elastic.XP
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackWatcherStartService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherStartService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackWatcherStartService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackWatcherStartService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -14058,8 +14171,9 @@ func (w *ESXPackWatcherStatsServiceWrapper) Do(ctx context.Context) (*elastic.XP
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackWatcherStatsService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackWatcherStatsService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackWatcherStatsService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -14137,8 +14251,9 @@ func (w *ESXPackWatcherStopServiceWrapper) Do(ctx context.Context) (*elastic.XPa
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("elastic.XPackWatcherStopService.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("elastic.XPackWatcherStopService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("elastic.XPackWatcherStopService.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("elastic.XPackWatcherStopService.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}

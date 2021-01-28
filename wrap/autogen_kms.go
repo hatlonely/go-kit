@@ -20,7 +20,7 @@ type KMSClientWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -76,11 +76,11 @@ func (w *KMSClientWrapper) CreateMetric(options *WrapperOptions) {
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
-	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name:        "kms_Client_total",
-		Help:        "kms Client request total",
+	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name:        "kms_Client_inflight",
+		Help:        "kms Client inflight",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode", "custom"})
+	}, []string{"method", "custom"})
 }
 
 func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.AsymmetricDecryptRequest) (*kms.AsymmetricDecryptResponse, error) {
@@ -105,8 +105,9 @@ func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.A
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.AsymmetricDecrypt", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.AsymmetricDecrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.AsymmetricDecrypt", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.AsymmetricDecrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -148,8 +149,9 @@ func (w *KMSClientWrapper) AsymmetricEncrypt(ctx context.Context, request *kms.A
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.AsymmetricEncrypt", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.AsymmetricEncrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.AsymmetricEncrypt", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.AsymmetricEncrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -191,8 +193,9 @@ func (w *KMSClientWrapper) AsymmetricSign(ctx context.Context, request *kms.Asym
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.AsymmetricSign", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.AsymmetricSign", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.AsymmetricSign", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.AsymmetricSign", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -234,8 +237,9 @@ func (w *KMSClientWrapper) AsymmetricVerify(ctx context.Context, request *kms.As
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.AsymmetricVerify", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.AsymmetricVerify", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.AsymmetricVerify", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.AsymmetricVerify", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -277,8 +281,9 @@ func (w *KMSClientWrapper) CancelKeyDeletion(ctx context.Context, request *kms.C
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.CancelKeyDeletion", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CancelKeyDeletion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.CancelKeyDeletion", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.CancelKeyDeletion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -320,8 +325,9 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecrypt(ctx context.Context, req
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecrypt", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecrypt", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeyDecrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -363,8 +369,9 @@ func (w *KMSClientWrapper) CertificatePrivateKeySign(ctx context.Context, reques
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.CertificatePrivateKeySign", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CertificatePrivateKeySign", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.CertificatePrivateKeySign", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.CertificatePrivateKeySign", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -406,8 +413,9 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncrypt(ctx context.Context, requ
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncrypt", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncrypt", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyEncrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -449,8 +457,9 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerify(ctx context.Context, reque
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerify", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerify", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerify", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.CertificatePublicKeyVerify", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -492,8 +501,9 @@ func (w *KMSClientWrapper) CreateAlias(ctx context.Context, request *kms.CreateA
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.CreateAlias", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CreateAlias", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.CreateAlias", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.CreateAlias", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -535,8 +545,9 @@ func (w *KMSClientWrapper) CreateCertificate(ctx context.Context, request *kms.C
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.CreateCertificate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CreateCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.CreateCertificate", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.CreateCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -578,8 +589,9 @@ func (w *KMSClientWrapper) CreateKey(ctx context.Context, request *kms.CreateKey
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.CreateKey", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CreateKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.CreateKey", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.CreateKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -611,8 +623,9 @@ func (w *KMSClientWrapper) CreateKeyVersion(ctx context.Context, request *kms.Cr
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.CreateKeyVersion", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CreateKeyVersion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.CreateKeyVersion", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.CreateKeyVersion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -664,8 +677,9 @@ func (w *KMSClientWrapper) CreateSecret(ctx context.Context, request *kms.Create
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.CreateSecret", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.CreateSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.CreateSecret", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.CreateSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -707,8 +721,9 @@ func (w *KMSClientWrapper) Decrypt(ctx context.Context, request *kms.DecryptRequ
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.Decrypt", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.Decrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.Decrypt", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.Decrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -750,8 +765,9 @@ func (w *KMSClientWrapper) DeleteAlias(ctx context.Context, request *kms.DeleteA
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.DeleteAlias", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DeleteAlias", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.DeleteAlias", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.DeleteAlias", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -793,8 +809,9 @@ func (w *KMSClientWrapper) DeleteCertificate(ctx context.Context, request *kms.D
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.DeleteCertificate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DeleteCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.DeleteCertificate", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.DeleteCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -836,8 +853,9 @@ func (w *KMSClientWrapper) DeleteKeyMaterial(ctx context.Context, request *kms.D
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.DeleteKeyMaterial", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DeleteKeyMaterial", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.DeleteKeyMaterial", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.DeleteKeyMaterial", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -879,8 +897,9 @@ func (w *KMSClientWrapper) DeleteSecret(ctx context.Context, request *kms.Delete
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.DeleteSecret", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DeleteSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.DeleteSecret", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.DeleteSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -922,8 +941,9 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatus(ctx context.Context, request
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatus", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatus", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatus", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.DescribeAccountKmsStatus", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -965,8 +985,9 @@ func (w *KMSClientWrapper) DescribeCertificate(ctx context.Context, request *kms
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.DescribeCertificate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DescribeCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.DescribeCertificate", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.DescribeCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1008,8 +1029,9 @@ func (w *KMSClientWrapper) DescribeKey(ctx context.Context, request *kms.Describ
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.DescribeKey", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DescribeKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.DescribeKey", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.DescribeKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1041,8 +1063,9 @@ func (w *KMSClientWrapper) DescribeKeyVersion(ctx context.Context, request *kms.
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.DescribeKeyVersion", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DescribeKeyVersion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.DescribeKeyVersion", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.DescribeKeyVersion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1094,8 +1117,9 @@ func (w *KMSClientWrapper) DescribeRegions(ctx context.Context, request *kms.Des
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.DescribeRegions", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DescribeRegions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.DescribeRegions", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.DescribeRegions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1137,8 +1161,9 @@ func (w *KMSClientWrapper) DescribeSecret(ctx context.Context, request *kms.Desc
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.DescribeSecret", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DescribeSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.DescribeSecret", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.DescribeSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1180,8 +1205,9 @@ func (w *KMSClientWrapper) DescribeService(ctx context.Context, request *kms.Des
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.DescribeService", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DescribeService", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.DescribeService", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.DescribeService", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1223,8 +1249,9 @@ func (w *KMSClientWrapper) DisableKey(ctx context.Context, request *kms.DisableK
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.DisableKey", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.DisableKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.DisableKey", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.DisableKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1266,8 +1293,9 @@ func (w *KMSClientWrapper) EnableKey(ctx context.Context, request *kms.EnableKey
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.EnableKey", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.EnableKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.EnableKey", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.EnableKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1309,8 +1337,9 @@ func (w *KMSClientWrapper) Encrypt(ctx context.Context, request *kms.EncryptRequ
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.Encrypt", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.Encrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.Encrypt", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.Encrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1352,8 +1381,9 @@ func (w *KMSClientWrapper) ExportCertificate(ctx context.Context, request *kms.E
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ExportCertificate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ExportCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ExportCertificate", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ExportCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1395,8 +1425,9 @@ func (w *KMSClientWrapper) ExportDataKey(ctx context.Context, request *kms.Expor
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ExportDataKey", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ExportDataKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ExportDataKey", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ExportDataKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1438,8 +1469,9 @@ func (w *KMSClientWrapper) GenerateAndExportDataKey(ctx context.Context, request
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.GenerateAndExportDataKey", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GenerateAndExportDataKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.GenerateAndExportDataKey", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.GenerateAndExportDataKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1481,8 +1513,9 @@ func (w *KMSClientWrapper) GenerateDataKey(ctx context.Context, request *kms.Gen
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.GenerateDataKey", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GenerateDataKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.GenerateDataKey", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.GenerateDataKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1524,8 +1557,9 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintext(ctx context.Context, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintext", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintext", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintext", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.GenerateDataKeyWithoutPlaintext", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1567,8 +1601,9 @@ func (w *KMSClientWrapper) GetCertificate(ctx context.Context, request *kms.GetC
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.GetCertificate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GetCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.GetCertificate", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.GetCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1610,8 +1645,9 @@ func (w *KMSClientWrapper) GetParametersForImport(ctx context.Context, request *
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.GetParametersForImport", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GetParametersForImport", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.GetParametersForImport", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.GetParametersForImport", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1653,8 +1689,9 @@ func (w *KMSClientWrapper) GetPublicKey(ctx context.Context, request *kms.GetPub
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.GetPublicKey", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GetPublicKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.GetPublicKey", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.GetPublicKey", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1696,8 +1733,9 @@ func (w *KMSClientWrapper) GetRandomPassword(ctx context.Context, request *kms.G
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.GetRandomPassword", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GetRandomPassword", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.GetRandomPassword", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.GetRandomPassword", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1739,8 +1777,9 @@ func (w *KMSClientWrapper) GetSecretValue(ctx context.Context, request *kms.GetS
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.GetSecretValue", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.GetSecretValue", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.GetSecretValue", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.GetSecretValue", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1782,8 +1821,9 @@ func (w *KMSClientWrapper) ImportCertificate(ctx context.Context, request *kms.I
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ImportCertificate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ImportCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ImportCertificate", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ImportCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1825,8 +1865,9 @@ func (w *KMSClientWrapper) ImportEncryptionCertificate(ctx context.Context, requ
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ImportEncryptionCertificate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ImportEncryptionCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ImportEncryptionCertificate", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ImportEncryptionCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1868,8 +1909,9 @@ func (w *KMSClientWrapper) ImportKeyMaterial(ctx context.Context, request *kms.I
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ImportKeyMaterial", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ImportKeyMaterial", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ImportKeyMaterial", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ImportKeyMaterial", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1911,8 +1953,9 @@ func (w *KMSClientWrapper) ListAliases(ctx context.Context, request *kms.ListAli
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ListAliases", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListAliases", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ListAliases", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ListAliases", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1944,8 +1987,9 @@ func (w *KMSClientWrapper) ListAliasesByKeyId(ctx context.Context, request *kms.
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ListAliasesByKeyId", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListAliasesByKeyId", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ListAliasesByKeyId", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ListAliasesByKeyId", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1997,8 +2041,9 @@ func (w *KMSClientWrapper) ListCertificates(ctx context.Context, request *kms.Li
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ListCertificates", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListCertificates", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ListCertificates", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ListCertificates", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2040,8 +2085,9 @@ func (w *KMSClientWrapper) ListKeyVersions(ctx context.Context, request *kms.Lis
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ListKeyVersions", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListKeyVersions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ListKeyVersions", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ListKeyVersions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2083,8 +2129,9 @@ func (w *KMSClientWrapper) ListKeys(ctx context.Context, request *kms.ListKeysRe
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ListKeys", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListKeys", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ListKeys", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ListKeys", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2126,8 +2173,9 @@ func (w *KMSClientWrapper) ListResourceTags(ctx context.Context, request *kms.Li
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ListResourceTags", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListResourceTags", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ListResourceTags", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ListResourceTags", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2169,8 +2217,9 @@ func (w *KMSClientWrapper) ListSecretVersionIds(ctx context.Context, request *km
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ListSecretVersionIds", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListSecretVersionIds", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ListSecretVersionIds", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ListSecretVersionIds", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2212,8 +2261,9 @@ func (w *KMSClientWrapper) ListSecrets(ctx context.Context, request *kms.ListSec
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ListSecrets", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ListSecrets", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ListSecrets", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ListSecrets", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2255,8 +2305,9 @@ func (w *KMSClientWrapper) OpenKmsService(ctx context.Context, request *kms.Open
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.OpenKmsService", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.OpenKmsService", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.OpenKmsService", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.OpenKmsService", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2298,8 +2349,9 @@ func (w *KMSClientWrapper) PutSecretValue(ctx context.Context, request *kms.PutS
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.PutSecretValue", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.PutSecretValue", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.PutSecretValue", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.PutSecretValue", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2341,8 +2393,9 @@ func (w *KMSClientWrapper) ReEncrypt(ctx context.Context, request *kms.ReEncrypt
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ReEncrypt", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ReEncrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ReEncrypt", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ReEncrypt", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2384,8 +2437,9 @@ func (w *KMSClientWrapper) RestoreSecret(ctx context.Context, request *kms.Resto
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.RestoreSecret", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.RestoreSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.RestoreSecret", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.RestoreSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2427,8 +2481,9 @@ func (w *KMSClientWrapper) RotateSecret(ctx context.Context, request *kms.Rotate
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.RotateSecret", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.RotateSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.RotateSecret", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.RotateSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2470,8 +2525,9 @@ func (w *KMSClientWrapper) ScheduleKeyDeletion(ctx context.Context, request *kms
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.ScheduleKeyDeletion", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.ScheduleKeyDeletion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.ScheduleKeyDeletion", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.ScheduleKeyDeletion", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2513,8 +2569,9 @@ func (w *KMSClientWrapper) TagResource(ctx context.Context, request *kms.TagReso
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.TagResource", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.TagResource", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.TagResource", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.TagResource", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2556,8 +2613,9 @@ func (w *KMSClientWrapper) UntagResource(ctx context.Context, request *kms.Untag
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.UntagResource", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UntagResource", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.UntagResource", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.UntagResource", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2599,8 +2657,9 @@ func (w *KMSClientWrapper) UpdateAlias(ctx context.Context, request *kms.UpdateA
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.UpdateAlias", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UpdateAlias", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.UpdateAlias", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.UpdateAlias", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2642,8 +2701,9 @@ func (w *KMSClientWrapper) UpdateCertificateStatus(ctx context.Context, request 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.UpdateCertificateStatus", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UpdateCertificateStatus", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.UpdateCertificateStatus", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.UpdateCertificateStatus", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2685,8 +2745,9 @@ func (w *KMSClientWrapper) UpdateKeyDescription(ctx context.Context, request *km
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.UpdateKeyDescription", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UpdateKeyDescription", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.UpdateKeyDescription", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.UpdateKeyDescription", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2728,8 +2789,9 @@ func (w *KMSClientWrapper) UpdateRotationPolicy(ctx context.Context, request *km
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.UpdateRotationPolicy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UpdateRotationPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.UpdateRotationPolicy", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.UpdateRotationPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2771,8 +2833,9 @@ func (w *KMSClientWrapper) UpdateSecret(ctx context.Context, request *kms.Update
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.UpdateSecret", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UpdateSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.UpdateSecret", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.UpdateSecret", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2804,8 +2867,9 @@ func (w *KMSClientWrapper) UpdateSecretRotationPolicy(ctx context.Context, reque
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.UpdateSecretRotationPolicy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UpdateSecretRotationPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.UpdateSecretRotationPolicy", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.UpdateSecretRotationPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2847,8 +2911,9 @@ func (w *KMSClientWrapper) UpdateSecretVersionStage(ctx context.Context, request
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.UpdateSecretVersionStage", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UpdateSecretVersionStage", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.UpdateSecretVersionStage", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.UpdateSecretVersionStage", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2900,8 +2965,9 @@ func (w *KMSClientWrapper) UploadCertificate(ctx context.Context, request *kms.U
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("kms.Client.UploadCertificate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("kms.Client.UploadCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("kms.Client.UploadCertificate", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("kms.Client.UploadCertificate", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}

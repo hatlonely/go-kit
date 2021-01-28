@@ -23,7 +23,7 @@ type OSSBucketWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -36,7 +36,7 @@ type OSSClientWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -92,11 +92,11 @@ func (w *OSSClientWrapper) CreateMetric(options *WrapperOptions) {
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
-	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name:        "oss_Client_total",
-		Help:        "oss Client request total",
+	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name:        "oss_Client_inflight",
+		Help:        "oss Client inflight",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode", "custom"})
+	}, []string{"method", "custom"})
 }
 
 func (w *OSSBucketWrapper) AbortMultipartUpload(ctx context.Context, imur oss.InitiateMultipartUploadResult, options ...oss.Option) error {
@@ -120,8 +120,9 @@ func (w *OSSBucketWrapper) AbortMultipartUpload(ctx context.Context, imur oss.In
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.AbortMultipartUpload", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.AbortMultipartUpload", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.AbortMultipartUpload", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.AbortMultipartUpload", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -153,8 +154,9 @@ func (w *OSSBucketWrapper) AppendObject(ctx context.Context, objectKey string, r
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.AppendObject", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.AppendObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.AppendObject", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.AppendObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -186,8 +188,9 @@ func (w *OSSBucketWrapper) CompleteMultipartUpload(ctx context.Context, imur oss
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.CompleteMultipartUpload", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CompleteMultipartUpload", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.CompleteMultipartUpload", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.CompleteMultipartUpload", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -218,8 +221,9 @@ func (w *OSSBucketWrapper) CopyFile(ctx context.Context, srcBucketName string, s
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.CopyFile", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CopyFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.CopyFile", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.CopyFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -251,8 +255,9 @@ func (w *OSSBucketWrapper) CopyObject(ctx context.Context, srcObjectKey string, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.CopyObject", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CopyObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.CopyObject", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.CopyObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -284,8 +289,9 @@ func (w *OSSBucketWrapper) CopyObjectFrom(ctx context.Context, srcBucketName str
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.CopyObjectFrom", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CopyObjectFrom", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.CopyObjectFrom", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.CopyObjectFrom", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -317,8 +323,9 @@ func (w *OSSBucketWrapper) CopyObjectTo(ctx context.Context, destBucketName stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.CopyObjectTo", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CopyObjectTo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.CopyObjectTo", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.CopyObjectTo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -350,8 +357,9 @@ func (w *OSSBucketWrapper) CreateLiveChannel(ctx context.Context, channelName st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.CreateLiveChannel", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CreateLiveChannel", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.CreateLiveChannel", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.CreateLiveChannel", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -383,8 +391,9 @@ func (w *OSSBucketWrapper) CreateSelectCsvObjectMeta(ctx context.Context, key st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.CreateSelectCsvObjectMeta", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CreateSelectCsvObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.CreateSelectCsvObjectMeta", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.CreateSelectCsvObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -416,8 +425,9 @@ func (w *OSSBucketWrapper) CreateSelectJsonObjectMeta(ctx context.Context, key s
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.CreateSelectJsonObjectMeta", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.CreateSelectJsonObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.CreateSelectJsonObjectMeta", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.CreateSelectJsonObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -448,8 +458,9 @@ func (w *OSSBucketWrapper) DeleteLiveChannel(ctx context.Context, channelName st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.DeleteLiveChannel", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DeleteLiveChannel", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.DeleteLiveChannel", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.DeleteLiveChannel", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -480,8 +491,9 @@ func (w *OSSBucketWrapper) DeleteObject(ctx context.Context, objectKey string, o
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.DeleteObject", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.DeleteObject", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -512,8 +524,9 @@ func (w *OSSBucketWrapper) DeleteObjectTagging(ctx context.Context, objectKey st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.DeleteObjectTagging", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObjectTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.DeleteObjectTagging", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObjectTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -545,8 +558,9 @@ func (w *OSSBucketWrapper) DeleteObjectVersions(ctx context.Context, objectVersi
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.DeleteObjectVersions", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObjectVersions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.DeleteObjectVersions", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObjectVersions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -578,8 +592,9 @@ func (w *OSSBucketWrapper) DeleteObjects(ctx context.Context, objectKeys []strin
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.DeleteObjects", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DeleteObjects", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.DeleteObjects", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.DeleteObjects", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -611,8 +626,9 @@ func (w *OSSBucketWrapper) Do(ctx context.Context, method string, objectName str
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.Do", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.Do", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -644,8 +660,9 @@ func (w *OSSBucketWrapper) DoAppendObject(ctx context.Context, request *oss.Appe
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.DoAppendObject", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DoAppendObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.DoAppendObject", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.DoAppendObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -677,8 +694,9 @@ func (w *OSSBucketWrapper) DoGetObject(ctx context.Context, request *oss.GetObje
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.DoGetObject", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DoGetObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.DoGetObject", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.DoGetObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -710,8 +728,9 @@ func (w *OSSBucketWrapper) DoGetObjectWithURL(ctx context.Context, signedURL str
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.DoGetObjectWithURL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DoGetObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.DoGetObjectWithURL", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.DoGetObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -743,8 +762,9 @@ func (w *OSSBucketWrapper) DoPostSelectObject(ctx context.Context, key string, p
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.DoPostSelectObject", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DoPostSelectObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.DoPostSelectObject", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.DoPostSelectObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -776,8 +796,9 @@ func (w *OSSBucketWrapper) DoPutObject(ctx context.Context, request *oss.PutObje
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.DoPutObject", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DoPutObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.DoPutObject", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.DoPutObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -809,8 +830,9 @@ func (w *OSSBucketWrapper) DoPutObjectWithURL(ctx context.Context, signedURL str
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.DoPutObjectWithURL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DoPutObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.DoPutObjectWithURL", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.DoPutObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -842,8 +864,9 @@ func (w *OSSBucketWrapper) DoUploadPart(ctx context.Context, request *oss.Upload
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.DoUploadPart", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DoUploadPart", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.DoUploadPart", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.DoUploadPart", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -874,8 +897,9 @@ func (w *OSSBucketWrapper) DownloadFile(ctx context.Context, objectKey string, f
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.DownloadFile", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.DownloadFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.DownloadFile", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.DownloadFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -912,8 +936,9 @@ func (w *OSSBucketWrapper) GetLiveChannelHistory(ctx context.Context, channelNam
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.GetLiveChannelHistory", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetLiveChannelHistory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.GetLiveChannelHistory", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.GetLiveChannelHistory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -945,8 +970,9 @@ func (w *OSSBucketWrapper) GetLiveChannelInfo(ctx context.Context, channelName s
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.GetLiveChannelInfo", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetLiveChannelInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.GetLiveChannelInfo", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.GetLiveChannelInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -978,8 +1004,9 @@ func (w *OSSBucketWrapper) GetLiveChannelStat(ctx context.Context, channelName s
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.GetLiveChannelStat", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetLiveChannelStat", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.GetLiveChannelStat", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.GetLiveChannelStat", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1011,8 +1038,9 @@ func (w *OSSBucketWrapper) GetObject(ctx context.Context, objectKey string, opti
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.GetObject", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.GetObject", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.GetObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1044,8 +1072,9 @@ func (w *OSSBucketWrapper) GetObjectACL(ctx context.Context, objectKey string, o
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.GetObjectACL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.GetObjectACL", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1077,8 +1106,9 @@ func (w *OSSBucketWrapper) GetObjectDetailedMeta(ctx context.Context, objectKey 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.GetObjectDetailedMeta", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectDetailedMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.GetObjectDetailedMeta", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectDetailedMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1110,8 +1140,9 @@ func (w *OSSBucketWrapper) GetObjectMeta(ctx context.Context, objectKey string, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.GetObjectMeta", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.GetObjectMeta", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1143,8 +1174,9 @@ func (w *OSSBucketWrapper) GetObjectTagging(ctx context.Context, objectKey strin
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.GetObjectTagging", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.GetObjectTagging", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1175,8 +1207,9 @@ func (w *OSSBucketWrapper) GetObjectToFile(ctx context.Context, objectKey string
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.GetObjectToFile", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectToFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.GetObjectToFile", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectToFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1207,8 +1240,9 @@ func (w *OSSBucketWrapper) GetObjectToFileWithURL(ctx context.Context, signedURL
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.GetObjectToFileWithURL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectToFileWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.GetObjectToFileWithURL", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectToFileWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1240,8 +1274,9 @@ func (w *OSSBucketWrapper) GetObjectWithURL(ctx context.Context, signedURL strin
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.GetObjectWithURL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.GetObjectWithURL", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.GetObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1273,8 +1308,9 @@ func (w *OSSBucketWrapper) GetSymlink(ctx context.Context, objectKey string, opt
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.GetSymlink", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetSymlink", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.GetSymlink", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.GetSymlink", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1306,8 +1342,9 @@ func (w *OSSBucketWrapper) GetVodPlaylist(ctx context.Context, channelName strin
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.GetVodPlaylist", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.GetVodPlaylist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.GetVodPlaylist", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.GetVodPlaylist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1339,8 +1376,9 @@ func (w *OSSBucketWrapper) InitiateMultipartUpload(ctx context.Context, objectKe
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.InitiateMultipartUpload", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.InitiateMultipartUpload", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.InitiateMultipartUpload", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.InitiateMultipartUpload", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1372,8 +1410,9 @@ func (w *OSSBucketWrapper) IsObjectExist(ctx context.Context, objectKey string, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.IsObjectExist", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.IsObjectExist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.IsObjectExist", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.IsObjectExist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1405,8 +1444,9 @@ func (w *OSSBucketWrapper) ListLiveChannel(ctx context.Context, options ...oss.O
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.ListLiveChannel", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.ListLiveChannel", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.ListLiveChannel", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.ListLiveChannel", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1438,8 +1478,9 @@ func (w *OSSBucketWrapper) ListMultipartUploads(ctx context.Context, options ...
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.ListMultipartUploads", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.ListMultipartUploads", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.ListMultipartUploads", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.ListMultipartUploads", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1471,8 +1512,9 @@ func (w *OSSBucketWrapper) ListObjectVersions(ctx context.Context, options ...os
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.ListObjectVersions", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.ListObjectVersions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.ListObjectVersions", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.ListObjectVersions", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1504,8 +1546,9 @@ func (w *OSSBucketWrapper) ListObjects(ctx context.Context, options ...oss.Optio
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.ListObjects", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.ListObjects", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.ListObjects", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.ListObjects", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1537,8 +1580,9 @@ func (w *OSSBucketWrapper) ListObjectsV2(ctx context.Context, options ...oss.Opt
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.ListObjectsV2", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.ListObjectsV2", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.ListObjectsV2", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.ListObjectsV2", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1570,8 +1614,9 @@ func (w *OSSBucketWrapper) ListUploadedParts(ctx context.Context, imur oss.Initi
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.ListUploadedParts", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.ListUploadedParts", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.ListUploadedParts", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.ListUploadedParts", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1603,8 +1648,9 @@ func (w *OSSBucketWrapper) OptionsMethod(ctx context.Context, objectKey string, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.OptionsMethod", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.OptionsMethod", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.OptionsMethod", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.OptionsMethod", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1635,8 +1681,9 @@ func (w *OSSBucketWrapper) PostVodPlaylist(ctx context.Context, channelName stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.PostVodPlaylist", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PostVodPlaylist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.PostVodPlaylist", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.PostVodPlaylist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1668,8 +1715,9 @@ func (w *OSSBucketWrapper) ProcessObject(ctx context.Context, objectKey string, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.ProcessObject", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.ProcessObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.ProcessObject", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.ProcessObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1700,8 +1748,9 @@ func (w *OSSBucketWrapper) PutLiveChannelStatus(ctx context.Context, channelName
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.PutLiveChannelStatus", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PutLiveChannelStatus", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.PutLiveChannelStatus", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.PutLiveChannelStatus", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1732,8 +1781,9 @@ func (w *OSSBucketWrapper) PutObject(ctx context.Context, objectKey string, read
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.PutObject", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PutObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.PutObject", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.PutObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1764,8 +1814,9 @@ func (w *OSSBucketWrapper) PutObjectFromFile(ctx context.Context, objectKey stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.PutObjectFromFile", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectFromFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.PutObjectFromFile", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectFromFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1796,8 +1847,9 @@ func (w *OSSBucketWrapper) PutObjectFromFileWithURL(ctx context.Context, signedU
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.PutObjectFromFileWithURL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectFromFileWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.PutObjectFromFileWithURL", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectFromFileWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1828,8 +1880,9 @@ func (w *OSSBucketWrapper) PutObjectTagging(ctx context.Context, objectKey strin
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.PutObjectTagging", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.PutObjectTagging", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1860,8 +1913,9 @@ func (w *OSSBucketWrapper) PutObjectWithURL(ctx context.Context, signedURL strin
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.PutObjectWithURL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PutObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.PutObjectWithURL", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.PutObjectWithURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1892,8 +1946,9 @@ func (w *OSSBucketWrapper) PutSymlink(ctx context.Context, symObjectKey string, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.PutSymlink", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.PutSymlink", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.PutSymlink", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.PutSymlink", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1924,8 +1979,9 @@ func (w *OSSBucketWrapper) RestoreObject(ctx context.Context, objectKey string, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.RestoreObject", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.RestoreObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.RestoreObject", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.RestoreObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1956,8 +2012,9 @@ func (w *OSSBucketWrapper) RestoreObjectDetail(ctx context.Context, objectKey st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.RestoreObjectDetail", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.RestoreObjectDetail", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.RestoreObjectDetail", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.RestoreObjectDetail", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -1988,8 +2045,9 @@ func (w *OSSBucketWrapper) RestoreObjectXML(ctx context.Context, objectKey strin
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.RestoreObjectXML", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.RestoreObjectXML", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.RestoreObjectXML", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.RestoreObjectXML", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2021,8 +2079,9 @@ func (w *OSSBucketWrapper) SelectObject(ctx context.Context, key string, selectR
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.SelectObject", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.SelectObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.SelectObject", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.SelectObject", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2053,8 +2112,9 @@ func (w *OSSBucketWrapper) SelectObjectIntoFile(ctx context.Context, key string,
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.SelectObjectIntoFile", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.SelectObjectIntoFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.SelectObjectIntoFile", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.SelectObjectIntoFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2085,8 +2145,9 @@ func (w *OSSBucketWrapper) SetObjectACL(ctx context.Context, objectKey string, o
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.SetObjectACL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.SetObjectACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.SetObjectACL", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.SetObjectACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2117,8 +2178,9 @@ func (w *OSSBucketWrapper) SetObjectMeta(ctx context.Context, objectKey string, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.SetObjectMeta", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.SetObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.SetObjectMeta", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.SetObjectMeta", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2150,8 +2212,9 @@ func (w *OSSBucketWrapper) SignRtmpURL(ctx context.Context, channelName string, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.SignRtmpURL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.SignRtmpURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.SignRtmpURL", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.SignRtmpURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2183,8 +2246,9 @@ func (w *OSSBucketWrapper) SignURL(ctx context.Context, objectKey string, method
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.SignURL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.SignURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.SignURL", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.SignURL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2215,8 +2279,9 @@ func (w *OSSBucketWrapper) UploadFile(ctx context.Context, objectKey string, fil
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.UploadFile", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.UploadFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.UploadFile", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.UploadFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2248,8 +2313,9 @@ func (w *OSSBucketWrapper) UploadPart(ctx context.Context, imur oss.InitiateMult
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.UploadPart", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.UploadPart", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.UploadPart", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.UploadPart", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2281,8 +2347,9 @@ func (w *OSSBucketWrapper) UploadPartCopy(ctx context.Context, imur oss.Initiate
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.UploadPartCopy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.UploadPartCopy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.UploadPartCopy", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.UploadPartCopy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2314,8 +2381,9 @@ func (w *OSSBucketWrapper) UploadPartFromFile(ctx context.Context, imur oss.Init
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Bucket.UploadPartFromFile", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Bucket.UploadPartFromFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Bucket.UploadPartFromFile", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Bucket.UploadPartFromFile", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2346,8 +2414,9 @@ func (w *OSSClientWrapper) AbortBucketWorm(ctx context.Context, bucketName strin
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.AbortBucketWorm", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.AbortBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.AbortBucketWorm", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.AbortBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2361,7 +2430,7 @@ func (w *OSSClientWrapper) Bucket(bucketName string) (*OSSBucketWrapper, error) 
 	var res0 *oss.Bucket
 	var err error
 	res0, err = w.obj.Bucket(bucketName)
-	return &OSSBucketWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, totalMetric: w.totalMetric, rateLimiterGroup: w.rateLimiterGroup}, err
+	return &OSSBucketWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}, err
 }
 
 func (w *OSSClientWrapper) CompleteBucketWorm(ctx context.Context, bucketName string, wormID string, options ...oss.Option) error {
@@ -2385,8 +2454,9 @@ func (w *OSSClientWrapper) CompleteBucketWorm(ctx context.Context, bucketName st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.CompleteBucketWorm", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.CompleteBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.CompleteBucketWorm", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.CompleteBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2417,8 +2487,9 @@ func (w *OSSClientWrapper) CreateBucket(ctx context.Context, bucketName string, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.CreateBucket", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.CreateBucket", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.CreateBucket", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.CreateBucket", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2449,8 +2520,9 @@ func (w *OSSClientWrapper) DeleteBucket(ctx context.Context, bucketName string, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.DeleteBucket", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucket", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.DeleteBucket", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.DeleteBucket", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2481,8 +2553,9 @@ func (w *OSSClientWrapper) DeleteBucketCORS(ctx context.Context, bucketName stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketCORS", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketCORS", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketCORS", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketCORS", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2513,8 +2586,9 @@ func (w *OSSClientWrapper) DeleteBucketEncryption(ctx context.Context, bucketNam
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketEncryption", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketEncryption", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketEncryption", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketEncryption", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2545,8 +2619,9 @@ func (w *OSSClientWrapper) DeleteBucketInventory(ctx context.Context, bucketName
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketInventory", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketInventory", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2577,8 +2652,9 @@ func (w *OSSClientWrapper) DeleteBucketLifecycle(ctx context.Context, bucketName
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketLifecycle", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketLifecycle", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketLifecycle", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketLifecycle", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2609,8 +2685,9 @@ func (w *OSSClientWrapper) DeleteBucketLogging(ctx context.Context, bucketName s
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketLogging", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketLogging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketLogging", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketLogging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2641,8 +2718,9 @@ func (w *OSSClientWrapper) DeleteBucketPolicy(ctx context.Context, bucketName st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketPolicy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketPolicy", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2673,8 +2751,9 @@ func (w *OSSClientWrapper) DeleteBucketQosInfo(ctx context.Context, bucketName s
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketQosInfo", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketQosInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketQosInfo", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketQosInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2705,8 +2784,9 @@ func (w *OSSClientWrapper) DeleteBucketTagging(ctx context.Context, bucketName s
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketTagging", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketTagging", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2737,8 +2817,9 @@ func (w *OSSClientWrapper) DeleteBucketWebsite(ctx context.Context, bucketName s
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketWebsite", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.DeleteBucketWebsite", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.DeleteBucketWebsite", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.DeleteBucketWebsite", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2769,8 +2850,9 @@ func (w *OSSClientWrapper) ExtendBucketWorm(ctx context.Context, bucketName stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.ExtendBucketWorm", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.ExtendBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.ExtendBucketWorm", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.ExtendBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2802,8 +2884,9 @@ func (w *OSSClientWrapper) GetBucketACL(ctx context.Context, bucketName string) 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketACL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketACL", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2835,8 +2918,9 @@ func (w *OSSClientWrapper) GetBucketAsyncTask(ctx context.Context, bucketName st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketAsyncTask", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketAsyncTask", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketAsyncTask", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketAsyncTask", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2868,8 +2952,9 @@ func (w *OSSClientWrapper) GetBucketCORS(ctx context.Context, bucketName string)
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketCORS", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketCORS", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketCORS", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketCORS", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2901,8 +2986,9 @@ func (w *OSSClientWrapper) GetBucketEncryption(ctx context.Context, bucketName s
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketEncryption", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketEncryption", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketEncryption", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketEncryption", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2934,8 +3020,9 @@ func (w *OSSClientWrapper) GetBucketInfo(ctx context.Context, bucketName string,
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketInfo", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketInfo", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -2967,8 +3054,9 @@ func (w *OSSClientWrapper) GetBucketInventory(ctx context.Context, bucketName st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketInventory", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketInventory", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3000,8 +3088,9 @@ func (w *OSSClientWrapper) GetBucketLifecycle(ctx context.Context, bucketName st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketLifecycle", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketLifecycle", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketLifecycle", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketLifecycle", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3033,8 +3122,9 @@ func (w *OSSClientWrapper) GetBucketLocation(ctx context.Context, bucketName str
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketLocation", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketLocation", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketLocation", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketLocation", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3066,8 +3156,9 @@ func (w *OSSClientWrapper) GetBucketLogging(ctx context.Context, bucketName stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketLogging", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketLogging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketLogging", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketLogging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3099,8 +3190,9 @@ func (w *OSSClientWrapper) GetBucketPolicy(ctx context.Context, bucketName strin
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketPolicy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketPolicy", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3132,8 +3224,9 @@ func (w *OSSClientWrapper) GetBucketQosInfo(ctx context.Context, bucketName stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketQosInfo", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketQosInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketQosInfo", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketQosInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3165,8 +3258,9 @@ func (w *OSSClientWrapper) GetBucketReferer(ctx context.Context, bucketName stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketReferer", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketReferer", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketReferer", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketReferer", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3198,8 +3292,9 @@ func (w *OSSClientWrapper) GetBucketRequestPayment(ctx context.Context, bucketNa
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketRequestPayment", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketRequestPayment", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketRequestPayment", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketRequestPayment", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3231,8 +3326,9 @@ func (w *OSSClientWrapper) GetBucketStat(ctx context.Context, bucketName string)
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketStat", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketStat", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketStat", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketStat", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3264,8 +3360,9 @@ func (w *OSSClientWrapper) GetBucketTagging(ctx context.Context, bucketName stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketTagging", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketTagging", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3297,8 +3394,9 @@ func (w *OSSClientWrapper) GetBucketVersioning(ctx context.Context, bucketName s
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketVersioning", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketVersioning", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketVersioning", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketVersioning", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3330,8 +3428,9 @@ func (w *OSSClientWrapper) GetBucketWebsite(ctx context.Context, bucketName stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketWebsite", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketWebsite", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketWebsite", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketWebsite", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3363,8 +3462,9 @@ func (w *OSSClientWrapper) GetBucketWorm(ctx context.Context, bucketName string,
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetBucketWorm", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetBucketWorm", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3396,8 +3496,9 @@ func (w *OSSClientWrapper) GetUserQoSInfo(ctx context.Context, options ...oss.Op
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.GetUserQoSInfo", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.GetUserQoSInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.GetUserQoSInfo", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.GetUserQoSInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3429,8 +3530,9 @@ func (w *OSSClientWrapper) InitiateBucketWorm(ctx context.Context, bucketName st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.InitiateBucketWorm", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.InitiateBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.InitiateBucketWorm", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.InitiateBucketWorm", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3462,8 +3564,9 @@ func (w *OSSClientWrapper) IsBucketExist(ctx context.Context, bucketName string)
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.IsBucketExist", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.IsBucketExist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.IsBucketExist", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.IsBucketExist", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3494,8 +3597,9 @@ func (w *OSSClientWrapper) LimitUploadSpeed(ctx context.Context, upSpeed int) er
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.LimitUploadSpeed", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.LimitUploadSpeed", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.LimitUploadSpeed", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.LimitUploadSpeed", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3527,8 +3631,9 @@ func (w *OSSClientWrapper) ListBucketInventory(ctx context.Context, bucketName s
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.ListBucketInventory", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.ListBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.ListBucketInventory", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.ListBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3560,8 +3665,9 @@ func (w *OSSClientWrapper) ListBuckets(ctx context.Context, options ...oss.Optio
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.ListBuckets", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.ListBuckets", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.ListBuckets", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.ListBuckets", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3592,8 +3698,9 @@ func (w *OSSClientWrapper) SetBucketACL(ctx context.Context, bucketName string, 
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketACL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketACL", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketACL", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3625,8 +3732,9 @@ func (w *OSSClientWrapper) SetBucketAsyncTask(ctx context.Context, bucketName st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketAsyncTask", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketAsyncTask", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketAsyncTask", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketAsyncTask", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3657,8 +3765,9 @@ func (w *OSSClientWrapper) SetBucketCORS(ctx context.Context, bucketName string,
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketCORS", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketCORS", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketCORS", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketCORS", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3689,8 +3798,9 @@ func (w *OSSClientWrapper) SetBucketEncryption(ctx context.Context, bucketName s
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketEncryption", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketEncryption", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketEncryption", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketEncryption", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3721,8 +3831,9 @@ func (w *OSSClientWrapper) SetBucketInventory(ctx context.Context, bucketName st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketInventory", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketInventory", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketInventory", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3753,8 +3864,9 @@ func (w *OSSClientWrapper) SetBucketLifecycle(ctx context.Context, bucketName st
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketLifecycle", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketLifecycle", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketLifecycle", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketLifecycle", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3785,8 +3897,9 @@ func (w *OSSClientWrapper) SetBucketLogging(ctx context.Context, bucketName stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketLogging", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketLogging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketLogging", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketLogging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3817,8 +3930,9 @@ func (w *OSSClientWrapper) SetBucketPolicy(ctx context.Context, bucketName strin
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketPolicy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketPolicy", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketPolicy", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3849,8 +3963,9 @@ func (w *OSSClientWrapper) SetBucketQoSInfo(ctx context.Context, bucketName stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketQoSInfo", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketQoSInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketQoSInfo", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketQoSInfo", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3881,8 +3996,9 @@ func (w *OSSClientWrapper) SetBucketReferer(ctx context.Context, bucketName stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketReferer", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketReferer", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketReferer", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketReferer", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3913,8 +4029,9 @@ func (w *OSSClientWrapper) SetBucketRequestPayment(ctx context.Context, bucketNa
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketRequestPayment", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketRequestPayment", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketRequestPayment", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketRequestPayment", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3945,8 +4062,9 @@ func (w *OSSClientWrapper) SetBucketTagging(ctx context.Context, bucketName stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketTagging", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketTagging", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketTagging", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -3977,8 +4095,9 @@ func (w *OSSClientWrapper) SetBucketVersioning(ctx context.Context, bucketName s
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketVersioning", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketVersioning", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketVersioning", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketVersioning", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -4009,8 +4128,9 @@ func (w *OSSClientWrapper) SetBucketWebsite(ctx context.Context, bucketName stri
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketWebsite", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketWebsite", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketWebsite", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketWebsite", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -4041,8 +4161,9 @@ func (w *OSSClientWrapper) SetBucketWebsiteDetail(ctx context.Context, bucketNam
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketWebsiteDetail", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketWebsiteDetail", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketWebsiteDetail", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketWebsiteDetail", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -4073,8 +4194,9 @@ func (w *OSSClientWrapper) SetBucketWebsiteXml(ctx context.Context, bucketName s
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("oss.Client.SetBucketWebsiteXml", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("oss.Client.SetBucketWebsiteXml", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("oss.Client.SetBucketWebsiteXml", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("oss.Client.SetBucketWebsiteXml", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}

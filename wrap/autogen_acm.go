@@ -22,7 +22,7 @@ type ACMConfigClientWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -78,11 +78,11 @@ func (w *ACMConfigClientWrapper) CreateMetric(options *WrapperOptions) {
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
-	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name:        "config_client_ConfigClient_total",
-		Help:        "config_client ConfigClient request total",
+	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name:        "config_client_ConfigClient_inflight",
+		Help:        "config_client ConfigClient inflight",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode", "custom"})
+	}, []string{"method", "custom"})
 }
 
 func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param vo.ConfigParam) error {
@@ -106,8 +106,9 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("config_client.ConfigClient.CancelListenConfig", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("config_client.ConfigClient.CancelListenConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("config_client.ConfigClient.CancelListenConfig", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("config_client.ConfigClient.CancelListenConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -139,8 +140,9 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("config_client.ConfigClient.DeleteConfig", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("config_client.ConfigClient.DeleteConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("config_client.ConfigClient.DeleteConfig", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("config_client.ConfigClient.DeleteConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -172,8 +174,9 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("config_client.ConfigClient.GetConfig", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("config_client.ConfigClient.GetConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("config_client.ConfigClient.GetConfig", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("config_client.ConfigClient.GetConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -204,8 +207,9 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("config_client.ConfigClient.ListenConfig", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("config_client.ConfigClient.ListenConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("config_client.ConfigClient.ListenConfig", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("config_client.ConfigClient.ListenConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -237,8 +241,9 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("config_client.ConfigClient.PublishConfig", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("config_client.ConfigClient.PublishConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("config_client.ConfigClient.PublishConfig", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("config_client.ConfigClient.PublishConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -270,8 +275,9 @@ func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.Sear
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("config_client.ConfigClient.SearchConfig", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("config_client.ConfigClient.SearchConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("config_client.ConfigClient.SearchConfig", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("config_client.ConfigClient.SearchConfig", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}

@@ -20,7 +20,7 @@ type STSClientWrapper struct {
 	retry            *Retry
 	options          *WrapperOptions
 	durationMetric   *prometheus.HistogramVec
-	totalMetric      *prometheus.CounterVec
+	inflightMetric   *prometheus.GaugeVec
 	rateLimiterGroup RateLimiterGroup
 }
 
@@ -76,11 +76,11 @@ func (w *STSClientWrapper) CreateMetric(options *WrapperOptions) {
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
-	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name:        "sts_Client_total",
-		Help:        "sts Client request total",
+	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name:        "sts_Client_inflight",
+		Help:        "sts Client inflight",
 		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode", "custom"})
+	}, []string{"method", "custom"})
 }
 
 func (w *STSClientWrapper) AssumeRole(ctx context.Context, request *sts.AssumeRoleRequest) (*sts.AssumeRoleResponse, error) {
@@ -105,8 +105,9 @@ func (w *STSClientWrapper) AssumeRole(ctx context.Context, request *sts.AssumeRo
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("sts.Client.AssumeRole", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("sts.Client.AssumeRole", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("sts.Client.AssumeRole", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("sts.Client.AssumeRole", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -148,8 +149,9 @@ func (w *STSClientWrapper) AssumeRoleWithSAML(ctx context.Context, request *sts.
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("sts.Client.AssumeRoleWithSAML", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("sts.Client.AssumeRoleWithSAML", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("sts.Client.AssumeRoleWithSAML", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("sts.Client.AssumeRoleWithSAML", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
@@ -191,8 +193,9 @@ func (w *STSClientWrapper) GetCallerIdentity(ctx context.Context, request *sts.G
 		}
 		if w.options.EnableMetric && !ctxOptions.DisableMetric {
 			ts := time.Now()
+			w.inflightMetric.WithLabelValues("sts.Client.GetCallerIdentity", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
-				w.totalMetric.WithLabelValues("sts.Client.GetCallerIdentity", ErrCode(err), ctxOptions.MetricCustomLabelValue).Inc()
+				w.inflightMetric.WithLabelValues("sts.Client.GetCallerIdentity", ctxOptions.MetricCustomLabelValue).Dec()
 				w.durationMetric.WithLabelValues("sts.Client.GetCallerIdentity", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
