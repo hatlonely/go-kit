@@ -3,6 +3,7 @@ package wrap
 import (
 	"context"
 	"fmt"
+	"reflect"
 	"testing"
 	"time"
 
@@ -21,7 +22,7 @@ func Test1(t *testing.T) {
 	Convey("Test2", t, func() {
 		v := map[string]interface{}{
 			"type": "LocalGroup",
-			"localGroupRateLimiter": map[string]interface{}{
+			"v": map[string]interface{}{
 				"DB.First": map[string]interface{}{
 					"interval": "2s",
 					"burst":    1,
@@ -33,7 +34,7 @@ func Test1(t *testing.T) {
 
 		So(refx.InterfaceToStruct(v, &options, refx.WithCamelName()), ShouldBeNil)
 
-		rateLimiterGroup, err := NewRateLimiterGroup(&options)
+		rateLimiterGroup, err := NewRateLimiterGroupWithOptions(&options, refx.WithCamelName())
 		So(err, ShouldBeNil)
 
 		for i := 0; i < 10; i++ {
@@ -41,5 +42,23 @@ func Test1(t *testing.T) {
 			fmt.Println("hello world")
 		}
 		fmt.Println(options)
+	})
+}
+
+func TestReflect(t *testing.T) {
+	Convey("TestReflect", t, func() {
+		//RegisterRateLimiterGroup("hello", "world")
+
+		rt := reflect.TypeOf(NewLocalGroupRateLimiterWithOptions)
+		fmt.Println(rt.Kind() == reflect.Func)
+
+		fmt.Println(rt.NumIn())
+		fmt.Println(rt.NumOut())
+		fmt.Println(rt.Out(0))
+		fmt.Println(rt.Out(0).Implements(reflect.TypeOf((*RateLimiterGroup)(nil)).Elem()))
+		fmt.Println(rt.Out(1).Implements(reflect.TypeOf((*error)(nil)).Elem()))
+
+		rv := reflect.ValueOf(NewLocalGroupRateLimiterWithOptions).Call([]reflect.Value{reflect.ValueOf(&LocalGroupRateLimiterOptions{})})
+		fmt.Println(rv)
 	})
 }

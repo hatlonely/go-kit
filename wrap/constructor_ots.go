@@ -56,9 +56,9 @@ func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrappe
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	w.rateLimiterGroup, err = NewRateLimiterGroup(&options.RateLimiterGroup)
+	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup)
 	if err != nil {
-		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
+		return nil, errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
 	}
 	if w.options.EnableMetric {
 		w.CreateMetric(w.options)

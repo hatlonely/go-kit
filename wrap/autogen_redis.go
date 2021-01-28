@@ -60,9 +60,9 @@ func (w *RedisClientWrapper) OnRateLimiterGroupChange(opts ...refx.Option) confi
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		rateLimiterGroup, err := NewRateLimiterGroup(&options)
+		rateLimiterGroup, err := NewRateLimiterGroupWithOptions(&options, opts...)
 		if err != nil {
-			return errors.Wrap(err, "NewRateLimiterGroup failed")
+			return errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
 		}
 		w.rateLimiterGroup = rateLimiterGroup
 		return nil
@@ -128,9 +128,9 @@ func (w *RedisClusterClientWrapper) OnRateLimiterGroupChange(opts ...refx.Option
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		rateLimiterGroup, err := NewRateLimiterGroup(&options)
+		rateLimiterGroup, err := NewRateLimiterGroupWithOptions(&options, opts...)
 		if err != nil {
-			return errors.Wrap(err, "NewRateLimiterGroup failed")
+			return errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
 		}
 		w.rateLimiterGroup = rateLimiterGroup
 		return nil

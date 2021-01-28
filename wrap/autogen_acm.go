@@ -62,9 +62,9 @@ func (w *ACMConfigClientWrapper) OnRateLimiterGroupChange(opts ...refx.Option) c
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		rateLimiterGroup, err := NewRateLimiterGroup(&options)
+		rateLimiterGroup, err := NewRateLimiterGroupWithOptions(&options, opts...)
 		if err != nil {
-			return errors.Wrap(err, "NewRateLimiterGroup failed")
+			return errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
 		}
 		w.rateLimiterGroup = rateLimiterGroup
 		return nil

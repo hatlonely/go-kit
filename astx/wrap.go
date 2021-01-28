@@ -392,9 +392,9 @@ func (w *{{.WrapClass}}) OnRateLimiterGroupChange(opts ...refx.Option) config.On
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		rateLimiterGroup, err := {{.WrapPackagePrefix}}NewRateLimiterGroup(&options)
+		rateLimiterGroup, err := {{.WrapPackagePrefix}}NewRateLimiterGroupWithOptions(&options, opts...)
 		if err != nil {
-			return errors.Wrap(err, "NewRateLimiterGroup failed")
+			return errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
 		}
 		w.rateLimiterGroup = rateLimiterGroup
 		return nil
