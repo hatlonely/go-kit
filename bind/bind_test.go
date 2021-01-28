@@ -17,6 +17,7 @@ func TestBind(t *testing.T) {
 			Key2 string
 			Key4 time.Duration `dft:"4s"`
 			Key6 []string      `dft:"hello,world"`
+			Key7 interface{}
 		}
 
 		type B struct {
@@ -49,6 +50,7 @@ func TestBind(t *testing.T) {
 			"Key1":          "val14",
 			"Key2":          "val15",
 			"Key4":          "1m",
+			"Key7.Key8":     "val16",
 		})})
 		So(err, ShouldBeNil)
 		fmt.Println(strx.JsonMarshalIndent(b))
@@ -70,5 +72,6 @@ func TestBind(t *testing.T) {
 		So(b.A1.Key6, ShouldResemble, []string{"hello", "world"})
 		So(b.A5["hello"].Key1, ShouldEqual, "val12")
 		So(b.A5["hello"].Key2, ShouldEqual, "val13")
+		So(b.Key7, ShouldResemble, map[string]interface{}{"Key8": "val16"})
 	})
 }

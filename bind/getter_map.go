@@ -1,13 +1,20 @@
 package bind
 
 import (
+	"sort"
+
 	"github.com/hatlonely/go-kit/refx"
 )
 
 func NewMapGetter(m map[string]interface{}) MapGetter {
 	var v interface{}
-	for key, val := range m {
-		if err := refx.InterfaceSet(&v, key, val); err != nil {
+	var keys []string
+	for key := range m {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		if err := refx.InterfaceSet(&v, key, m[key]); err != nil {
 			panic(err)
 		}
 	}

@@ -118,8 +118,13 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, options *refx
 		if !ok {
 			continue
 		}
-		if err := cast.SetInterface(v, src); err != nil {
-			return 0, &Error{Code: ErrInvalidFormat, Key: prefix, Err: errors.Wrap(err, "cast.SetInterface failed")}
+		switch v.(type) {
+		case *interface{}:
+			rv.Set(reflect.ValueOf(src))
+		default:
+			if err := cast.SetInterface(v, src); err != nil {
+				return 0, &Error{Code: ErrInvalidFormat, Key: prefix, Err: errors.Wrap(err, "cast.SetInterface failed")}
+			}
 		}
 		return 1, nil
 	}
