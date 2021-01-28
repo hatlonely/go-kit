@@ -95,7 +95,7 @@ func ParseFunction(path string, pkg string) ([]*Function, error) {
 	var functions []*Function
 	for _, fn := range funcDecls {
 		// 跳过私有函数
-		if strx.IsLower(fn.Name.String()[0]) {
+		if strx.IsLower(fn.Name.String()[0]) || fn.Name.String()[0] == '_' {
 			continue
 		}
 		var f Function

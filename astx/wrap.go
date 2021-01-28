@@ -51,17 +51,18 @@ func (r Rule) MarshalJSON() ([]byte, error) {
 }
 
 type WrapperGeneratorOptions struct {
-	Debug                    bool     `flag:"usage: debug mode"`
-	SourcePath               string   `flag:"usage: source path; default: vendor"`
-	PackagePath              string   `flag:"usage: package path"`
-	PackageName              string   `flag:"usage: package name"`
-	OutputPackage            string   `flag:"usage: output package name; default: wrap" dft:"wrap"`
-	Classes                  []string `flag:"usage: classes to wrap"`
-	StarClasses              []string `flag:"usage: star classes to wrap"`
-	ClassPrefix              string   `flag:"usage: wrap class name prefix"`
-	UnwrapFunc               string   `flag:"usage: unwrap function name; default: Unwrap" dft:"Unwrap"`
-	ErrorField               string   `flag:"usage: function return no error, error is a filed in result"`
-	EnableRuleForNoErrorFunc bool     `flag:"usage: enable trace for no error function"`
+	Debug                    bool                `flag:"usage: debug mode"`
+	SourcePath               string              `flag:"usage: source path; default: vendor"`
+	PackagePath              string              `flag:"usage: package path"`
+	PackageName              string              `flag:"usage: package name"`
+	OutputPackage            string              `flag:"usage: output package name; default: wrap" dft:"wrap"`
+	Classes                  []string            `flag:"usage: classes to wrap"`
+	StarClasses              []string            `flag:"usage: star classes to wrap"`
+	ClassPrefix              string              `flag:"usage: wrap class name prefix"`
+	UnwrapFunc               string              `flag:"usage: unwrap function name; default: Unwrap" dft:"Unwrap"`
+	ErrorField               string              `flag:"usage: function return no error, error is a filed in result"`
+	Inherit                  map[string][]string `flag:"usage: inherit map"`
+	EnableRuleForNoErrorFunc bool                `flag:"usage: enable trace for no error function"`
 
 	Rule struct {
 		Class                    Rule
@@ -238,65 +239,85 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		buf.WriteString(renderTemplate(WrapperClassTpl, info, "WrapperClassTpl"))
 	}
 
-	for _, function := range functions {
-		if !function.IsMethod {
-			continue
+	inheritMap := map[string][]string{}
+	for key, vals := range g.options.Inherit {
+		for _, val := range vals {
+			inheritMap[val] = append(inheritMap[val], key)
 		}
-		if _, ok := g.wrapClassMap[function.Class]; !ok {
-			continue
-		}
-		if !g.MatchFunctionRule(function, g.options.Rule.Function) {
-			continue
-		}
+	}
 
-		info.Class = function.Class
-		info.WrapClass = g.wrapClassMap[function.Class]
-		info.Function.Name = function.Name
-		info.Function.IsChain = function.IsChain
-		info.Function.IsReturnVoid = function.IsReturnVoid
-		info.Function.IsReturnError = function.IsReturnError
-		info.Function.ErrCode = "ErrCode(err)"
-		if !function.IsReturnError {
-			info.Function.ErrCode = `"OK"`
+	traveled := map[string]bool{}
+	for _, cls := range classes {
+		clsset := map[string]bool{
+			cls: true,
 		}
-		var params []string
-		for _, i := range function.Params {
-			if strings.HasPrefix(i.Type, "...") {
-				params = append(params, fmt.Sprintf("%s...", i.Name))
-			} else {
-				params = append(params, i.Name)
+		for _, c := range g.options.Inherit[cls] {
+			clsset[c] = true
+		}
+		for _, function := range functions {
+			if !function.IsMethod {
+				continue
 			}
-		}
-		info.Function.ParamList = strings.Join(params, ", ")
-		var results []string
-		for _, i := range function.Results {
-			results = append(results, fmt.Sprintf("%s", i.Name))
-		}
-		info.Function.ResultList = strings.Join(results, ", ")
-		if len(results) != 0 {
-			info.Function.LastResult = results[len(results)-1]
-		}
-		info.Function.ReturnList = g.generateWrapperReturnList(function)
-		info.Function.DeclareVariables = g.generateWrapperDeclareReturnVariables(function)
-		info.Rule.OnWrapperChange = g.MatchRule(function.Class, g.options.Rule.OnWrapperChange)
-		info.Rule.OnRetryChange = g.MatchRule(function.Class, g.options.Rule.OnRetryChange)
-		info.Rule.CreateMetric = g.MatchRule(function.Class, g.options.Rule.CreateMetric)
-		info.Rule.OnRateLimiterGroupChange = g.MatchRule(function.Class, g.options.Rule.OnRateLimiterGroupChange)
-		info.Rule.Trace = g.MatchFunctionRule(function, g.options.Rule.Trace)
-		info.Rule.Metric = g.MatchFunctionRule(function, g.options.Rule.Metric)
-		info.Rule.Retry = g.MatchFunctionRule(function, g.options.Rule.Retry)
-		info.Rule.RateLimiter = g.MatchFunctionRule(function, g.options.Rule.RateLimiter)
-		if len(function.Results) == 1 {
-			info.Rule.ErrorInResult = g.MatchRule(function.Results[0].Type, g.options.Rule.ErrorInResult)
-		} else {
-			info.Rule.ErrorInResult = false
-		}
+			if !clsset[function.Class] {
+				continue
+			}
+			if traveled[cls+function.Name] {
+				continue
+			}
+			traveled[cls+function.Name] = true
+			if !g.MatchFunctionRule(function.Name, cls, g.options.Rule.Function) {
+				continue
+			}
 
-		buf.WriteString("\n")
-		buf.WriteString(g.generateWrapperFunctionDeclare(info, function))
-		buf.WriteString(" {")
-		buf.WriteString(g.generateWrapperFunctionBody(info, function))
-		buf.WriteString("}\n")
+			info.Class = cls
+			info.WrapClass = g.wrapClassMap[cls]
+			info.Function.Name = function.Name
+			info.Function.IsChain = function.IsChain
+			info.Function.IsReturnVoid = function.IsReturnVoid
+			info.Function.IsReturnError = function.IsReturnError
+			info.Function.ErrCode = "ErrCode(err)"
+			if !function.IsReturnError {
+				info.Function.ErrCode = `"OK"`
+			}
+			var params []string
+			for _, i := range function.Params {
+				if strings.HasPrefix(i.Type, "...") {
+					params = append(params, fmt.Sprintf("%s...", i.Name))
+				} else {
+					params = append(params, i.Name)
+				}
+			}
+			info.Function.ParamList = strings.Join(params, ", ")
+			var results []string
+			for _, i := range function.Results {
+				results = append(results, fmt.Sprintf("%s", i.Name))
+			}
+			info.Function.ResultList = strings.Join(results, ", ")
+			if len(results) != 0 {
+				info.Function.LastResult = results[len(results)-1]
+			}
+			info.Function.ReturnList = g.generateWrapperReturnList(function)
+			info.Function.DeclareVariables = g.generateWrapperDeclareReturnVariables(function)
+			info.Rule.OnWrapperChange = g.MatchRule(cls, g.options.Rule.OnWrapperChange)
+			info.Rule.OnRetryChange = g.MatchRule(cls, g.options.Rule.OnRetryChange)
+			info.Rule.CreateMetric = g.MatchRule(cls, g.options.Rule.CreateMetric)
+			info.Rule.OnRateLimiterGroupChange = g.MatchRule(cls, g.options.Rule.OnRateLimiterGroupChange)
+			info.Rule.Trace = g.MatchFunctionRule(function.Name, cls, g.options.Rule.Trace)
+			info.Rule.Metric = g.MatchFunctionRule(function.Name, cls, g.options.Rule.Metric)
+			info.Rule.Retry = g.MatchFunctionRule(function.Name, cls, g.options.Rule.Retry)
+			info.Rule.RateLimiter = g.MatchFunctionRule(function.Name, cls, g.options.Rule.RateLimiter)
+			if len(function.Results) == 1 {
+				info.Rule.ErrorInResult = g.MatchRule(function.Results[0].Type, g.options.Rule.ErrorInResult)
+			} else {
+				info.Rule.ErrorInResult = false
+			}
+
+			buf.WriteString("\n")
+			buf.WriteString(g.generateWrapperFunctionDeclare(info, function))
+			buf.WriteString(" {")
+			buf.WriteString(g.generateWrapperFunctionBody(info, function))
+			buf.WriteString("}\n")
+		}
 	}
 
 	return buf.String(), nil
@@ -440,10 +461,10 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(info *RenderInfo, func
 
 	buf.WriteString("func ")
 	if function.Recv != nil {
-		if g.starClassSet[function.Class] {
-			buf.WriteString(fmt.Sprintf("(w *%s)", g.wrapClassMap[function.Class]))
+		if g.starClassSet[info.Class] {
+			buf.WriteString(fmt.Sprintf("(w *%s)", g.wrapClassMap[info.Class]))
 		} else {
-			buf.WriteString(fmt.Sprintf("(w %s)", g.wrapClassMap[function.Class]))
+			buf.WriteString(fmt.Sprintf("(w %s)", g.wrapClassMap[info.Class]))
 		}
 	}
 
@@ -455,7 +476,7 @@ func (g *WrapperGenerator) generateWrapperFunctionDeclare(info *RenderInfo, func
 	var params []string
 	if len(function.Params) == 0 || function.Params[0].Type != "context.Context" {
 		if !function.IsReturnError {
-			if info.EnableRuleForNoErrorFunc && (info.Rule.Trace || info.Rule.Retry) {
+			if (info.EnableRuleForNoErrorFunc || info.Rule.ErrorInResult) && (info.Rule.Trace || info.Rule.Retry) {
 				params = append(params, "ctx context.Context")
 			}
 		} else {
@@ -676,9 +697,9 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(info *RenderInfo, functio
 	return buf.String()
 }
 
-func (g *WrapperGenerator) MatchFunctionRule(function *Function, rules map[string]Rule) bool {
-	fun := function.Name
-	cls := function.Class
+func (g *WrapperGenerator) MatchFunctionRule(fun string, cls string, rules map[string]Rule) bool {
+	//fun := function.Name
+	//cls := function.Class
 
 	if _, ok := rules[cls]; ok {
 		return g.MatchRule(fun, rules[cls])

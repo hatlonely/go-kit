@@ -168,9 +168,12 @@ wrap/autogen_redis.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packagePath "github.com/go-redis/redis" \
 		--packageName redis \
 		--classPrefix Redis \
+		--errorField "Err()" \
+		--inherit '{"Client": ["cmdable", "baseClient"], "ClusterClient": ["cmdable"]}' \
 		--starClasses Client,ClusterClient \
 		--rule.createMetric.include "^(?i:(Client)|(ClusterClient))$$" \
 		--rule.onWrapperChange.include "^(?i:(Client)|(ClusterClient))$$" \
 		--rule.onRetryChange.include "^(?i:(Client)|(ClusterClient))$$" \
 		--rule.onRateLimiterGroupChange.include "^(?i:(Client)|(ClusterClient))$$" \
+		--rule.errorInResult.include "^\*redis\..*Cmd$$" \
 		--output $@
