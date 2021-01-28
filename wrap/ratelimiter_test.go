@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"regexp"
 	"testing"
 	"time"
 
@@ -61,6 +62,13 @@ func Test1(t *testing.T) {
 			rateLimiterGroup.Wait(context.Background(), "DB.First")
 			fmt.Println("hello world")
 		}
+	})
+}
+
+func TestRegex(t *testing.T) {
+	Convey("TestRegex", t, func() {
+		re := regexp.MustCompile(`^DB$`)
+		fmt.Println(re.MatchString("*gorm.DB"))
 	})
 }
 

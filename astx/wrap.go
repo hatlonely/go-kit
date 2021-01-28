@@ -60,6 +60,7 @@ type WrapperGeneratorOptions struct {
 	StarClasses              []string `flag:"usage: star classes to wrap"`
 	ClassPrefix              string   `flag:"usage: wrap class name prefix"`
 	UnwrapFunc               string   `flag:"usage: unwrap function name; default: Unwrap" dft:"Unwrap"`
+	ErrorField               string   `flag:"usage: function return no error, error is a filed in result"`
 	EnableRuleForNoErrorFunc bool     `flag:"usage: enable trace for no error function"`
 
 	Rule struct {
@@ -69,6 +70,7 @@ type WrapperGeneratorOptions struct {
 		OnRetryChange            Rule
 		OnRateLimiterGroupChange Rule
 		CreateMetric             Rule
+		ErrorInResult            Rule
 		Function                 map[string]Rule
 		Trace                    map[string]Rule
 		Retry                    map[string]Rule
@@ -107,6 +109,9 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 	if options.Rule.Class.Exclude == nil {
 		options.Rule.Class.Exclude = excludeAllRegex
 	}
+	if options.Rule.ErrorInResult.Exclude == nil {
+		options.Rule.ErrorInResult.Exclude = excludeAllRegex
+	}
 
 	var wrapPackagePrefix string
 	if options.OutputPackage != "wrap" {
@@ -134,7 +139,9 @@ type RenderInfo struct {
 	WrapClass         string
 	OutputPackage     string
 	PackagePath       string
+	ErrorField        string
 	IsStarClass       bool
+	NewLine           string
 	Function          struct {
 		Name             string
 		ErrCode          string
@@ -158,6 +165,7 @@ type RenderInfo struct {
 		Retry                    bool
 		Metric                   bool
 		RateLimiter              bool
+		ErrorInResult            bool
 	}
 }
 
@@ -208,6 +216,8 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		EnableRuleForNoErrorFunc: g.options.EnableRuleForNoErrorFunc,
 		OutputPackage:            g.options.OutputPackage,
 		PackagePath:              g.options.PackagePath,
+		ErrorField:               g.options.ErrorField,
+		NewLine:                  "\n",
 	}
 
 	buf.WriteString(renderTemplate(WrapperImportTpl, info, "WrapperImportTpl"))
@@ -276,6 +286,11 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		info.Rule.Metric = g.MatchFunctionRule(function, g.options.Rule.Metric)
 		info.Rule.Retry = g.MatchFunctionRule(function, g.options.Rule.Retry)
 		info.Rule.RateLimiter = g.MatchFunctionRule(function, g.options.Rule.RateLimiter)
+		if len(function.Results) == 1 {
+			info.Rule.ErrorInResult = g.MatchRule(function.Results[0].Type, g.options.Rule.ErrorInResult)
+		} else {
+			info.Rule.ErrorInResult = false
+		}
 
 		buf.WriteString("\n")
 		buf.WriteString(g.generateWrapperFunctionDeclare(info, function))
@@ -568,7 +583,7 @@ const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 {{- if or .Rule.Trace .Rule.Metric}}
 	ctxOptions := FromContext(ctx)
 {{- end}}
-{{.Function.DeclareVariables}}
+	{{.Function.DeclareVariables}}
 {{- if .Rule.RateLimiter}}
 	if w.rateLimiterGroup != nil {
 		if err := w.rateLimiterGroup.Wait(ctx, "{{.Class}}.{{.Function.Name}}"); err != nil {
@@ -606,8 +621,8 @@ const WrapperFunctionBodyWithErrorWithRetryTpl = `
 {{- if or .Rule.Trace .Rule.Metric}}
 	ctxOptions := FromContext(ctx)
 {{- end}}
-{{.Function.DeclareVariables}}
-	err = w.retry.Do(func() error {
+	{{.Function.DeclareVariables}}{{.NewLine}}
+	{{- if or .Function.IsReturnError}}err{{else}}_{{- end}} = w.retry.Do(func() error {
 {{- if .Rule.RateLimiter}}
 		if w.rateLimiterGroup != nil {
 			if err := w.rateLimiterGroup.Wait(ctx, "{{.Class}}.{{.Function.Name}}"); err != nil {
@@ -638,7 +653,7 @@ const WrapperFunctionBodyWithErrorWithRetryTpl = `
 		}
 {{- end}}
 		{{.Function.ResultList}} = w.obj.{{.Function.Name}}({{.Function.ParamList}})
-		return {{.Function.LastResult}}
+		return {{.Function.LastResult}}{{- if .Rule.ErrorInResult}}.{{.ErrorField}}{{- end}}
 	})
 	return {{.Function.ReturnList}}
 `
@@ -646,7 +661,11 @@ const WrapperFunctionBodyWithErrorWithRetryTpl = `
 func (g *WrapperGenerator) generateWrapperFunctionBody(info *RenderInfo, function *Function) string {
 	var buf bytes.Buffer
 	if !function.IsReturnError {
-		buf.WriteString(renderTemplate(WrapperFunctionBodyWithoutErrorTpl, info, "WrapperFunctionBodyWithoutErrorTpl"))
+		if info.Rule.ErrorInResult && info.Rule.Retry && len(function.Results) == 1 {
+			buf.WriteString(renderTemplate(WrapperFunctionBodyWithErrorWithRetryTpl, info, "WrapperFunctionBodyWithErrorWithRetryTpl"))
+		} else {
+			buf.WriteString(renderTemplate(WrapperFunctionBodyWithoutErrorTpl, info, "WrapperFunctionBodyWithoutErrorTpl"))
+		}
 		return buf.String()
 	}
 	if !info.Rule.Retry {

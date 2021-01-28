@@ -123,10 +123,12 @@ wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--classPrefix GORM \
 		--enableRuleForNoErrorFunc \
 		--classes DB \
+		--errorField Error \
 		--rule.createMetric.include "^DB$$" \
 		--rule.onWrapperChange.include "^DB$$" \
 		--rule.onRetryChange.include "^DB$$" \
 		--rule.onRateLimiterGroupChange.include "^DB$$" \
+		--rule.errorInResult.include "^\*gorm.DB$$" \
 		--rule.function '{"DB": {"exclude": "^SetLogger$$"}}' \
 		--output $@
 
