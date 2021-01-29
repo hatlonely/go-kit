@@ -28,12 +28,9 @@ type Writer interface {
 	Close() error
 }
 
-func NewWriterWithConfig(cfg *config.Config, opts ...refx.Option) (Writer, error) {
-	var options WriterOptions
-	if err := cfg.Unmarshal(&options, opts...); err != nil {
-		return nil, errors.Wrap(err, "cfg.Unmarshal failed.")
-	}
-	return NewWriterWithOptions(&options, opts...)
+type WriterOptions struct {
+	Type    string
+	Options interface{}
 }
 
 func NewWriterWithOptions(options *WriterOptions, opts ...refx.Option) (Writer, error) {
@@ -57,7 +54,10 @@ func NewWriterWithOptions(options *WriterOptions, opts ...refx.Option) (Writer, 
 	return result[0].Interface().(Writer), nil
 }
 
-type WriterOptions struct {
-	Type    string
-	Options interface{}
+func NewWriterWithConfig(cfg *config.Config, opts ...refx.Option) (Writer, error) {
+	var options WriterOptions
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
+		return nil, errors.Wrap(err, "cfg.Unmarshal failed.")
+	}
+	return NewWriterWithOptions(&options, opts...)
 }
