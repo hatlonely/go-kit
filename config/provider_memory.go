@@ -2,10 +2,6 @@ package config
 
 import "context"
 
-func init() {
-	RegisterProvider("Memory", NewMemoryProviderWithOptions)
-}
-
 type MemoryProvider struct {
 	buf []byte
 }

@@ -15,10 +15,6 @@ import (
 	"github.com/hatlonely/go-kit/strx"
 )
 
-func init() {
-	RegisterProvider("OTSLegacy", NewOTSLegacyProviderWithOptions)
-}
-
 type OTSLegacyProviderOptions struct {
 	Endpoint        string
 	AccessKeyID     string

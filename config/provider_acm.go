@@ -12,10 +12,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-func init() {
-	RegisterProvider("ACM", NewACMProviderWithOptions)
-}
-
 type ACMProviderOptions struct {
 	Endpoint        string
 	Namespace       string
