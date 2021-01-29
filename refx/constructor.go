@@ -71,7 +71,7 @@ func NewConstructor(constructor interface{}, implement reflect.Type) (*Construct
 		return nil, errors.New("constructor return number should not greater than 2")
 	}
 	if rt.NumOut() == 0 || !rt.Out(0).Implements(implement) {
-		return nil, errors.New("constructor should return a RateLimiterGroup")
+		return nil, errors.Errorf("constructor should return a %s", implement)
 	}
 	if rt.NumOut() == 2 && rt.Out(1) != reflect.TypeOf((*error)(nil)).Elem() {
 		return nil, errors.New("constructor should return an error")

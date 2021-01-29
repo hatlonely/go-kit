@@ -6,15 +6,13 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func init() {
-	RegisterDecoder("Yaml", func() *YamlDecoder {
-		return &YamlDecoder{}
-	})
+func NewYamlDecoder() YamlDecoder {
+	return YamlDecoder{}
 }
 
 type YamlDecoder struct{}
 
-func (d *YamlDecoder) Decode(buf []byte) (*Storage, error) {
+func (d YamlDecoder) Decode(buf []byte) (*Storage, error) {
 	var data interface{}
 	if err := yaml.Unmarshal(buf, &data); err != nil {
 		return nil, err
@@ -22,7 +20,7 @@ func (d *YamlDecoder) Decode(buf []byte) (*Storage, error) {
 	return NewStorage(data)
 }
 
-func (d *YamlDecoder) Encode(storage *Storage) ([]byte, error) {
+func (d YamlDecoder) Encode(storage *Storage) ([]byte, error) {
 	var buf bytes.Buffer
 	enc := yaml.NewEncoder(&buf)
 	enc.SetIndent(2)

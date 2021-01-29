@@ -9,10 +9,8 @@ import (
 	"github.com/hatlonely/go-kit/cast"
 )
 
-func init() {
-	RegisterDecoder("Ini", func() *IniDecoder {
-		return &IniDecoder{}
-	})
+func NewIniDecoder() IniDecoder {
+	return IniDecoder{}
 }
 
 // @see https://en.wikipedia.org/wiki/INI_file
@@ -99,7 +97,7 @@ func escape(str string) string {
 	return buf.String()
 }
 
-func (d *IniDecoder) Decode(buf []byte) (*Storage, error) {
+func (d IniDecoder) Decode(buf []byte) (*Storage, error) {
 	storage, _ := NewStorage(nil)
 
 	lines := strings.FieldsFunc(string(buf), func(r rune) bool {
@@ -137,7 +135,7 @@ func (d *IniDecoder) Decode(buf []byte) (*Storage, error) {
 	return storage, nil
 }
 
-func (d *IniDecoder) Encode(storage *Storage) ([]byte, error) {
+func (d IniDecoder) Encode(storage *Storage) ([]byte, error) {
 	var buf bytes.Buffer
 
 	var globalKeys []string

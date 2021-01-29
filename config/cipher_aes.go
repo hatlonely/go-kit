@@ -15,10 +15,6 @@ import (
 	"github.com/hatlonely/go-kit/alics"
 )
 
-func init() {
-	RegisterCipher("AES", NewAESCipherWithOptions)
-}
-
 const AESMaxKeyLen = 32
 
 func NewAESCipherWithOptions(options *AESCipherOptions) (*AESCipher, error) {

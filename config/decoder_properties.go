@@ -12,16 +12,14 @@ import (
 	"github.com/hatlonely/go-kit/cast"
 )
 
-func init() {
-	RegisterDecoder("Prop", func() *PropDecoder {
-		return &PropDecoder{}
-	})
+func NewPropDecoder() PropDecoder {
+	return PropDecoder{}
 }
 
 // @see https://docs.oracle.com/cd/E23095_01/Platform.93/ATGProgGuide/html/s0204propertiesfileformat01.html
 type PropDecoder struct{}
 
-func (d *PropDecoder) Decode(buf []byte) (*Storage, error) {
+func (d PropDecoder) Decode(buf []byte) (*Storage, error) {
 	storage, _ := NewStorage(nil)
 
 	lines := strings.FieldsFunc(string(buf), func(r rune) bool {
@@ -58,7 +56,7 @@ func (d *PropDecoder) Decode(buf []byte) (*Storage, error) {
 	return storage, nil
 }
 
-func (d *PropDecoder) Encode(storage *Storage) ([]byte, error) {
+func (d PropDecoder) Encode(storage *Storage) ([]byte, error) {
 	var buf bytes.Buffer
 	var keys []string
 	kvs := map[string]string{}

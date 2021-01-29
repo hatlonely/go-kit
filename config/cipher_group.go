@@ -4,10 +4,6 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-func init() {
-	RegisterCipher("Group", NewCipherGroupWithOptions)
-}
-
 // CipherGroup is also an cipher
 type CipherGroup struct {
 	ciphers []Cipher
