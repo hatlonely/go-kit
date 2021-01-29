@@ -20,7 +20,7 @@ func NewStdoutTextLogger() *Logger {
 			Options: &StdoutWriterOptions{
 				Formatter: FormatterOptions{
 					Type: "Text",
-					TextFormat: TextFormatOptions{
+					Options: &TextFormatOptions{
 						Format: "{{.time}} [{{.level}}] [{{.caller}}:{{.file}}] {{.data}}",
 					},
 				},

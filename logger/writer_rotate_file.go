@@ -26,8 +26,8 @@ func NewRotateFileWriterWithConfig(cfg *config.Config, opts ...refx.Option) (*Ro
 	return NewRotateFileWriterWithOptions(&options)
 }
 
-func NewRotateFileWriterWithOptions(options *RotateFileWriterOptions) (*RotateFileWriter, error) {
-	formatter, err := NewFormatterWithOptions(&options.Formatter)
+func NewRotateFileWriterWithOptions(options *RotateFileWriterOptions, opts ...refx.Option) (*RotateFileWriter, error) {
+	formatter, err := NewFormatterWithOptions(&options.Formatter, opts...)
 	if err != nil {
 		return nil, errors.WithMessage(err, "NewFormatterWithOptions failed")
 	}

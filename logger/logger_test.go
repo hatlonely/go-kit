@@ -17,7 +17,7 @@ func TestLogger(t *testing.T) {
 				Options: &StdoutWriterOptions{
 					Formatter: FormatterOptions{
 						Type: "Text",
-						TextFormat: TextFormatOptions{
+						Options: &TextFormatOptions{
 							Format: "{{.time}} [{{.level}}] [{{.caller}}:{{.file}}] {{.data}}",
 						},
 					},

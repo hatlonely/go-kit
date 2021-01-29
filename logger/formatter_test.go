@@ -28,7 +28,7 @@ func TestTextFormatter(t *testing.T) {
 	Convey("TestTextFormatter", t, func() {
 		formatter, err := NewFormatterWithOptions(&FormatterOptions{
 			Type: "Text",
-			TextFormat: TextFormatOptions{
+			Options: &TextFormatOptions{
 				Format: "{{.time}} [{{.level}}] [{{.caller}}:{{.file}}] {{.data}}",
 			},
 		})

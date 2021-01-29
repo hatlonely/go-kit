@@ -5,13 +5,15 @@ import (
 	"os"
 
 	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/refx"
 )
 
 func NewStdoutWriter() *StdoutWriter {
 	writer, _ := NewStdoutWriterWithOptions(&StdoutWriterOptions{
 		Formatter: FormatterOptions{
 			Type: "Text",
-			TextFormat: TextFormatOptions{
+			Options: &TextFormatOptions{
 				Format: "{{.time}} [{{.level}}] [{{.caller}}:{{.file}}] {{.data}}",
 			},
 		},
@@ -19,8 +21,8 @@ func NewStdoutWriter() *StdoutWriter {
 	return writer
 }
 
-func NewStdoutWriterWithOptions(options *StdoutWriterOptions) (*StdoutWriter, error) {
-	formatter, err := NewFormatterWithOptions(&options.Formatter)
+func NewStdoutWriterWithOptions(options *StdoutWriterOptions, opts ...refx.Option) (*StdoutWriter, error) {
+	formatter, err := NewFormatterWithOptions(&options.Formatter, opts...)
 	if err != nil {
 		return nil, errors.WithMessage(err, "NewFormatterWithOptions failed")
 	}
