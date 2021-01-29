@@ -87,60 +87,40 @@ type Options struct {
 
 func NewLogger(level Level, writers ...Writer) *Logger {
 	return &Logger{
-		level:          level,
-		writers:        writers,
-		withValues:     map[string]interface{}{},
-		withValueFuncs: map[string]func() interface{}{},
+		level:   level,
+		writers: writers,
 	}
 }
 
 type Logger struct {
+	parent  *Logger
 	writers []Writer
 	level   Level
 	flatMap bool
 
-	withValues     map[string]interface{}
-	withValueFuncs map[string]func() interface{}
+	useVal bool
+	key    string
+	val    interface{}
+	fun    func() interface{}
 }
 
 func (l *Logger) With(key string, val interface{}) *Logger {
-	log := &Logger{
-		writers:        l.writers,
-		level:          l.level,
-		flatMap:        l.flatMap,
-		withValues:     map[string]interface{}{},
-		withValueFuncs: map[string]func() interface{}{},
+	return &Logger{
+		parent: l,
+		useVal: true,
+		level:  l.level,
+		key:    key,
+		val:    val,
 	}
-
-	for key, val := range l.withValues {
-		log.withValues[key] = val
-	}
-	for key, val := range l.withValueFuncs {
-		log.withValueFuncs[key] = val
-	}
-
-	log.withValues[key] = val
-	return log
 }
 
 func (l *Logger) WithFunc(key string, val func() interface{}) *Logger {
-	log := &Logger{
-		writers:        l.writers,
-		level:          l.level,
-		flatMap:        l.flatMap,
-		withValues:     map[string]interface{}{},
-		withValueFuncs: map[string]func() interface{}{},
+	return &Logger{
+		parent: l,
+		level:  l.level,
+		key:    key,
+		fun:    val,
 	}
-
-	for key, val := range l.withValues {
-		log.withValues[key] = val
-	}
-	for key, val := range l.withValueFuncs {
-		log.withValueFuncs[key] = val
-	}
-
-	log.withValueFuncs[key] = val
-	return log
 }
 
 //go:generate enumer -type Level -trimprefix Level -text
@@ -211,14 +191,18 @@ func (l *Logger) Log(level Level, v interface{}) {
 	} else {
 		kvs["data"] = v
 	}
-	for key, val := range l.withValues {
-		kvs[key] = val
-	}
-	for key, val := range l.withValueFuncs {
-		kvs[key] = val()
+
+	node := l
+	for node.parent != nil {
+		if node.useVal {
+			kvs[node.key] = node.val
+		} else {
+			kvs[node.key] = node.fun()
+		}
+		node = node.parent
 	}
 
-	for _, writer := range l.writers {
+	for _, writer := range node.writers {
 		_ = writer.Write(kvs)
 	}
 }
