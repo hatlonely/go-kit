@@ -7,6 +7,9 @@ import (
 )
 
 func init() {
+	RegisterDecoder("", func() *Json5Decoder {
+		return &Json5Decoder{}
+	})
 	RegisterDecoder("Json", func() *Json5Decoder {
 		return &Json5Decoder{}
 	})

@@ -13,6 +13,10 @@ import (
 	"github.com/hatlonely/go-kit/strx"
 )
 
+func init() {
+	RegisterProvider("OTS", NewOTSProviderWithOptions)
+}
+
 type OTSProviderOptions struct {
 	Endpoint        string
 	AccessKeyID     string

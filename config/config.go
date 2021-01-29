@@ -18,16 +18,16 @@ type Options struct {
 	Provider ProviderOptions
 }
 
-func NewConfigWithOptions(options *Options) (*Config, error) {
-	cipher, err := NewCipherWithOptions(&options.Cipher)
+func NewConfigWithOptions(options *Options, opts ...refx.Option) (*Config, error) {
+	cipher, err := NewCipherWithOptions(&options.Cipher, opts...)
 	if err != nil {
 		return nil, err
 	}
-	decoder, err := NewDecoderWithOptions(&options.Decoder)
+	decoder, err := NewDecoderWithOptions(&options.Decoder, opts...)
 	if err != nil {
 		return nil, err
 	}
-	provider, err := NewProviderWithOptions(&options.Provider)
+	provider, err := NewProviderWithOptions(&options.Provider, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func NewConfigWithBaseFile(filename string, opts ...refx.Option) (*Config, error
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, errors.Wrap(err, "cfg.Unmarshal failed.")
 	}
-	return NewConfigWithOptions(&options)
+	return NewConfigWithOptions(&options, opts...)
 }
 
 type SimpleFileOptions struct {
@@ -105,7 +105,7 @@ func NewConfigWithSimpleFile(filename string, opts ...SimpleFileOption) (*Config
 		},
 		Provider: ProviderOptions{
 			Type: "Local",
-			LocalProvider: LocalProviderOptions{
+			Options: &LocalProviderOptions{
 				Filename: filename,
 			},
 		},

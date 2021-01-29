@@ -28,7 +28,7 @@ func NewAESCipherWithOptions(options *AESCipherOptions) (*AESCipher, error) {
 	if options.Base64Key != "" {
 		buf, err := base64.StdEncoding.DecodeString(options.Base64Key)
 		if err != nil {
-			return nil, errors.Wrap(err, "base64 decode key failed.")
+			return nil, errors.Wrap(err, "base64.StdEncoding.DecodeString failed.")
 		}
 		return NewAESCipher(buf, options.PaddingType)
 	}

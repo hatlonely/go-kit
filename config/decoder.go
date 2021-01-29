@@ -10,8 +10,8 @@ import (
 )
 
 func RegisterDecoder(key string, constructor interface{}) {
-	if _, ok := cipherConstructorGroup[key]; ok {
-		panic(fmt.Sprintf("cipher type [%v] is already registered", key))
+	if _, ok := decoderConstructorMap[key]; ok {
+		panic(fmt.Sprintf("decoder type [%v] is already registered", key))
 	}
 
 	info, err := refx.NewConstructorInfo(constructor, reflect.TypeOf((*Decoder)(nil)).Elem())

@@ -2,11 +2,26 @@ package config
 
 import (
 	"context"
+	"fmt"
+	"reflect"
 
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/refx"
 )
+
+func RegisterProvider(key string, constructor interface{}) {
+	if _, ok := providerConstructorMap[key]; ok {
+		panic(fmt.Sprintf("provider type [%v] is already registered", key))
+	}
+
+	info, err := refx.NewConstructorInfo(constructor, reflect.TypeOf((*Provider)(nil)).Elem())
+	refx.Must(err)
+
+	providerConstructorMap[key] = info
+}
+
+var providerConstructorMap = map[string]*refx.ConstructorInfo{}
 
 type Provider interface {
 	Events() <-chan struct{}
@@ -24,27 +39,38 @@ func NewProviderWithConfig(cfg *Config, opts ...refx.Option) (Provider, error) {
 	return NewProviderWithOptions(&options)
 }
 
-func NewProviderWithOptions(options *ProviderOptions) (Provider, error) {
-	switch options.Type {
-	case "", "Local":
-		return NewLocalProviderWithOptions(&options.LocalProvider)
-	case "OTS":
-		return NewOTSProviderWithOptions(&options.OTSProvider)
-	case "ACM":
-		return NewACMProviderWithOptions(&options.ACMProvider)
-	case "OTSLegacy":
-		return NewOTSLegacyProviderWithOptions(&options.OTSLegacyProvider)
-	case "Memory":
-		return NewMemoryProviderWithOptions(&options.MemoryProvider), nil
+func NewProviderWithOptions(options *ProviderOptions, opts ...refx.Option) (Provider, error) {
+	constructor, ok := providerConstructorMap[options.Type]
+	if !ok {
+		return nil, errors.Errorf("unsupported provider type: [%v]", options.Type)
 	}
-	return nil, errors.Errorf("unsupported provider type [%v]", options.Type)
+
+	var result []reflect.Value
+	if constructor.HasParam {
+		if reflect.TypeOf(options.Options) == constructor.ParamType {
+			result = constructor.FuncValue.Call([]reflect.Value{reflect.ValueOf(options.Options)})
+		} else {
+			params := reflect.New(constructor.ParamType)
+			if err := refx.InterfaceToStruct(options.Options, params.Interface(), opts...); err != nil {
+				return nil, errors.Wrap(err, "refx.InterfaceToStruct failed")
+			}
+			result = constructor.FuncValue.Call([]reflect.Value{params.Elem()})
+		}
+	} else {
+		result = constructor.FuncValue.Call(nil)
+	}
+
+	if constructor.ReturnError {
+		if !result[1].IsNil() {
+			return nil, result[1].Interface().(error)
+		}
+		return result[0].Interface().(Provider), nil
+	}
+
+	return result[0].Interface().(Provider), nil
 }
 
 type ProviderOptions struct {
-	Type              string
-	LocalProvider     LocalProviderOptions
-	OTSProvider       OTSProviderOptions
-	ACMProvider       ACMProviderOptions
-	OTSLegacyProvider OTSLegacyProviderOptions
-	MemoryProvider    MemoryProviderOptions
+	Type    string
+	Options interface{}
 }

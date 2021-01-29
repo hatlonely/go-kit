@@ -50,24 +50,29 @@ func NewCipherWithOptions(options *CipherOptions, opts ...refx.Option) (Cipher, 
 		return nil, errors.Errorf("unsupported cipher type: [%v]", options.Type)
 	}
 
+	var params []reflect.Value
 	var result []reflect.Value
 	if constructor.HasParam {
 		if reflect.TypeOf(options.Options) == constructor.ParamType {
-			result = constructor.FuncValue.Call([]reflect.Value{reflect.ValueOf(options.Options)})
+			params = append(params, reflect.ValueOf(options.Options))
 		} else {
-			params := reflect.New(constructor.ParamType)
-			if err := refx.InterfaceToStruct(options.Options, params.Interface(), opts...); err != nil {
+			param := reflect.New(constructor.ParamType)
+			if err := refx.InterfaceToStruct(options.Options, param.Interface(), opts...); err != nil {
 				return nil, errors.Wrap(err, "refx.InterfaceToStruct failed")
 			}
-			result = constructor.FuncValue.Call([]reflect.Value{params.Elem()})
+			params = append(params, param.Elem())
 		}
-	} else {
-		result = constructor.FuncValue.Call(nil)
 	}
+	if constructor.HasOption {
+		for _, opt := range opts {
+			params = append(params, reflect.ValueOf(opt))
+		}
+	}
+	result = constructor.FuncValue.Call(params)
 
 	if constructor.ReturnError {
 		if !result[1].IsNil() {
-			return nil, result[1].Interface().(error)
+			return nil, errors.Wrapf(result[1].Interface().(error), "NewCipher failed. type: [%v]", options.Type)
 		}
 		return result[0].Interface().(Cipher), nil
 	}

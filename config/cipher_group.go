@@ -1,5 +1,9 @@
 package config
 
+import (
+	"github.com/hatlonely/go-kit/refx"
+)
+
 func init() {
 	RegisterCipher("Group", NewCipherGroupWithOptions)
 }
@@ -9,10 +13,10 @@ type CipherGroup struct {
 	ciphers []Cipher
 }
 
-func NewCipherGroupWithOptions(options *CipherGroupOptions) (*CipherGroup, error) {
+func NewCipherGroupWithOptions(options *CipherGroupOptions, opts ...refx.Option) (*CipherGroup, error) {
 	var ciphers []Cipher
 	for _, opt := range *options {
-		cipher, err := NewCipherWithOptions(&opt)
+		cipher, err := NewCipherWithOptions(&opt, opts...)
 		if err != nil {
 			return nil, err
 		}

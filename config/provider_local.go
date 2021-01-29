@@ -12,6 +12,11 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
+func init() {
+	RegisterProvider("", NewLocalProviderWithOptions)
+	RegisterProvider("Local", NewLocalProviderWithOptions)
+}
+
 func NewLocalProvider(filename string) (*LocalProvider, error) {
 	return NewLocalProviderWithOptions(&LocalProviderOptions{Filename: filename})
 }

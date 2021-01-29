@@ -91,15 +91,15 @@ func CreateBaseFile() {
   },
   "provider": {
     "type": "Local",
-	"localProvider": {
+	"options": {
       "filename": "test.json"
     }
   },
   "cipher": {
     "type": "Group",
-    "cipherGroup": [{
+    "options": [{
       "type": "AES",
-      "aesCipher": {
+      "options": {
         "base64Key": "IrjXy4vx7iwgCLaUeu5TVUA9TkgMwSw3QWcgE/IW5W0="
       }
     }, {
@@ -309,6 +309,7 @@ func TestNewConfigWithBaseFile(t *testing.T) {
 		CreateBaseFile()
 
 		cfg, err := NewConfigWithBaseFile("base.json", refx.WithCamelName())
+		fmt.Printf("%+v", err)
 		So(err, ShouldBeNil)
 		So(cfg.GetInt("grpc.port"), ShouldEqual, 6080)
 		So(cfg.GetInt("http.port"), ShouldEqual, 80)
@@ -331,7 +332,7 @@ func TestConfig_Transform(t *testing.T) {
 				},
 				Provider: ProviderOptions{
 					Type: "Local",
-					LocalProvider: LocalProviderOptions{
+					Options: &LocalProviderOptions{
 						Filename: "test.yaml",
 					},
 				},
