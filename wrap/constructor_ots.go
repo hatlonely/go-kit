@@ -1,9 +1,6 @@
 package wrap
 
 import (
-	"fmt"
-	"net/http"
-	"strings"
 	"time"
 
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
@@ -13,25 +10,6 @@ import (
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/refx"
 )
-
-func init() {
-	RegisterErrCode(&tablestore.OtsError{}, func(err error) string {
-		e := err.(*tablestore.OtsError)
-		return fmt.Sprintf("ots_%v_%v", e.HttpStatusCode, e.Code)
-	})
-	RegisterRetryRetryIf("OTS", func(err error) bool {
-		switch e := err.(type) {
-		case *tablestore.OtsError:
-			if e.HttpStatusCode >= http.StatusInternalServerError {
-				return true
-			}
-			if strings.Contains(e.Error(), "timeout") {
-				return true
-			}
-		}
-		return false
-	})
-}
 
 type OTSOptions struct {
 	Endpoint        string

@@ -8,11 +8,6 @@ import (
 	"golang.org/x/time/rate"
 )
 
-func init() {
-	RegisterRateLimiterGroup("LocalGroup", NewLocalGroupRateLimiterWithOptions)
-	RegisterRateLimiterGroup("ShareGroup", NewLocalShareRateLimiterWithOptions)
-}
-
 type LocalGroupRateLimiter struct {
 	limiters map[string]*rate.Limiter
 }

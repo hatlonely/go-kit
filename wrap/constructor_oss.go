@@ -1,9 +1,6 @@
 package wrap
 
 import (
-	"fmt"
-	"net/http"
-	"strings"
 	"time"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
@@ -13,25 +10,6 @@ import (
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/refx"
 )
-
-func init() {
-	RegisterErrCode(oss.ServiceError{}, func(err error) string {
-		e := err.(oss.ServiceError)
-		return fmt.Sprintf("oss_%v_%v", e.StatusCode, e.Code)
-	})
-	RegisterRetryRetryIf("OSS", func(err error) bool {
-		switch e := err.(type) {
-		case oss.ServiceError:
-			if e.StatusCode >= http.StatusInternalServerError {
-				return true
-			}
-			if strings.Contains(e.Error(), "timeout") {
-				return true
-			}
-		}
-		return false
-	})
-}
 
 type OSSOptions struct {
 	Endpoint        string
