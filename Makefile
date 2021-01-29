@@ -121,14 +121,13 @@ wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packagePath "github.com/jinzhu/gorm" \
 		--packageName gorm \
 		--classPrefix GORM \
-		--enableRuleForNoErrorFunc \
-		--classes DB \
+		--classes DB,Association \
 		--errorField Error \
 		--rule.createMetric.include "^DB$$" \
 		--rule.onWrapperChange.include "^DB$$" \
 		--rule.onRetryChange.include "^DB$$" \
 		--rule.onRateLimiterGroupChange.include "^DB$$" \
-		--rule.errorInResult.include "^\*gorm.DB$$" \
+		--rule.errorInResult.include "^(?i:(\*gorm.DB)|(\*gorm.Association))$$" \
 		--rule.function '{"DB": {"exclude": "^SetLogger$$"}}' \
 		--output $@
 

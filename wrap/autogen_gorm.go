@@ -16,6 +16,19 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
+type GORMAssociationWrapper struct {
+	obj              *gorm.Association
+	retry            *Retry
+	options          *WrapperOptions
+	durationMetric   *prometheus.HistogramVec
+	inflightMetric   *prometheus.GaugeVec
+	rateLimiterGroup RateLimiterGroup
+}
+
+func (w GORMAssociationWrapper) Unwrap() *gorm.Association {
+	return w.obj
+}
+
 type GORMDBWrapper struct {
 	obj              *gorm.DB
 	retry            *Retry
@@ -84,29 +97,177 @@ func (w *GORMDBWrapper) CreateMetric(options *WrapperOptions) {
 	}, []string{"method", "custom"})
 }
 
-func (w GORMDBWrapper) AddError(ctx context.Context, err error) error {
+func (w GORMAssociationWrapper) Append(ctx context.Context, values ...interface{}) GORMAssociationWrapper {
 	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.AddError")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AddError")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
+	var res0 *gorm.Association
+	_ = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Association.Append"); err != nil {
+				return err
+			}
 		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.Association.Append")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
 		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.AddError", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.AddError", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.AddError", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("gorm.Association.Append", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("gorm.Association.Append", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("gorm.Association.Append", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		res0 = w.obj.Append(values...)
+		return res0.Error
+	})
+	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+}
+
+func (w GORMAssociationWrapper) Clear(ctx context.Context) GORMAssociationWrapper {
+	ctxOptions := FromContext(ctx)
+	var res0 *gorm.Association
+	_ = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Association.Clear"); err != nil {
+				return err
+			}
+		}
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.Association.Clear")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("gorm.Association.Clear", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("gorm.Association.Clear", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("gorm.Association.Clear", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		res0 = w.obj.Clear()
+		return res0.Error
+	})
+	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+}
+
+func (w GORMAssociationWrapper) Count() int {
+	res0 := w.obj.Count()
+	return res0
+}
+
+func (w GORMAssociationWrapper) Delete(ctx context.Context, values ...interface{}) GORMAssociationWrapper {
+	ctxOptions := FromContext(ctx)
+	var res0 *gorm.Association
+	_ = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Association.Delete"); err != nil {
+				return err
+			}
+		}
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.Association.Delete")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("gorm.Association.Delete", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("gorm.Association.Delete", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("gorm.Association.Delete", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		res0 = w.obj.Delete(values...)
+		return res0.Error
+	})
+	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+}
+
+func (w GORMAssociationWrapper) Find(ctx context.Context, value interface{}) GORMAssociationWrapper {
+	ctxOptions := FromContext(ctx)
+	var res0 *gorm.Association
+	_ = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Association.Find"); err != nil {
+				return err
+			}
+		}
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.Association.Find")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("gorm.Association.Find", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("gorm.Association.Find", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("gorm.Association.Find", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		res0 = w.obj.Find(value)
+		return res0.Error
+	})
+	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+}
+
+func (w GORMAssociationWrapper) Replace(ctx context.Context, values ...interface{}) GORMAssociationWrapper {
+	ctxOptions := FromContext(ctx)
+	var res0 *gorm.Association
+	_ = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "Association.Replace"); err != nil {
+				return err
+			}
+		}
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.Association.Replace")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("gorm.Association.Replace", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("gorm.Association.Replace", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("gorm.Association.Replace", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		res0 = w.obj.Replace(values...)
+		return res0.Error
+	})
+	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+}
+
+func (w GORMDBWrapper) AddError(err error) error {
 	res0 := w.obj.AddError(err)
 	return res0
 }
@@ -243,31 +404,37 @@ func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBW
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
-func (w GORMDBWrapper) Association(ctx context.Context, column string) *gorm.Association {
+func (w GORMDBWrapper) Association(ctx context.Context, column string) GORMAssociationWrapper {
 	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Association")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Association")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
+	var res0 *gorm.Association
+	_ = w.retry.Do(func() error {
+		if w.rateLimiterGroup != nil {
+			if err := w.rateLimiterGroup.Wait(ctx, "DB.Association"); err != nil {
+				return err
+			}
 		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Association")
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
 		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.Association", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.Association", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.Association", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
-	res0 := w.obj.Association(column)
-	return res0
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("gorm.DB.Association", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("gorm.DB.Association", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("gorm.DB.Association", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		res0 = w.obj.Association(column)
+		return res0.Error
+	})
+	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
 func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWrapper {
@@ -435,29 +602,7 @@ func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMD
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
-func (w GORMDBWrapper) Callback(ctx context.Context) *gorm.Callback {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Callback")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Callback")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.Callback", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.Callback", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.Callback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) Callback() *gorm.Callback {
 	res0 := w.obj.Callback()
 	return res0
 }
@@ -528,29 +673,7 @@ func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
-func (w GORMDBWrapper) CommonDB(ctx context.Context) gorm.SQLCommon {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.CommonDB")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.CommonDB")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.CommonDB", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.CommonDB", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.CommonDB", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) CommonDB() gorm.SQLCommon {
 	res0 := w.obj.CommonDB()
 	return res0
 }
@@ -654,29 +777,7 @@ func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) G
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
-func (w GORMDBWrapper) DB(ctx context.Context) *sql.DB {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.DB")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.DB")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.DB", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.DB", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.DB", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) DB() *sql.DB {
 	res0 := w.obj.DB()
 	return res0
 }
@@ -747,29 +848,7 @@ func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...i
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
-func (w GORMDBWrapper) Dialect(ctx context.Context) gorm.Dialect {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Dialect")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Dialect")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.Dialect", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.Dialect", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.Dialect", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) Dialect() gorm.Dialect {
 	res0 := w.obj.Dialect()
 	return res0
 }
@@ -1038,56 +1117,12 @@ func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where .
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
-func (w GORMDBWrapper) Get(ctx context.Context, name string) (interface{}, bool) {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Get")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Get")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.Get", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.Get", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.Get", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) Get(name string) (interface{}, bool) {
 	value, ok := w.obj.Get(name)
 	return value, ok
 }
 
-func (w GORMDBWrapper) GetErrors(ctx context.Context) []error {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.GetErrors")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.GetErrors")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.GetErrors", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.GetErrors", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.GetErrors", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) GetErrors() []error {
 	res0 := w.obj.GetErrors()
 	return res0
 }
@@ -1125,56 +1160,12 @@ func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
-func (w GORMDBWrapper) HasBlockGlobalUpdate(ctx context.Context) bool {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.HasBlockGlobalUpdate")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.HasBlockGlobalUpdate")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.HasBlockGlobalUpdate", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.HasBlockGlobalUpdate", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.HasBlockGlobalUpdate", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) HasBlockGlobalUpdate() bool {
 	res0 := w.obj.HasBlockGlobalUpdate()
 	return res0
 }
 
-func (w GORMDBWrapper) HasTable(ctx context.Context, value interface{}) bool {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.HasTable")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.HasTable")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.HasTable", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.HasTable", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.HasTable", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) HasTable(value interface{}) bool {
 	res0 := w.obj.HasTable(value)
 	return res0
 }
@@ -1476,56 +1467,12 @@ func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
-func (w GORMDBWrapper) NewRecord(ctx context.Context, value interface{}) bool {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.NewRecord")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.NewRecord")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.NewRecord", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.NewRecord", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.NewRecord", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) NewRecord(value interface{}) bool {
 	res0 := w.obj.NewRecord(value)
 	return res0
 }
 
-func (w GORMDBWrapper) NewScope(ctx context.Context, value interface{}) *gorm.Scope {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.NewScope")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.NewScope")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.NewScope", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.NewScope", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.NewScope", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) NewScope(value interface{}) *gorm.Scope {
 	res0 := w.obj.NewScope(value)
 	return res0
 }
@@ -1794,29 +1741,7 @@ func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrap
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
-func (w GORMDBWrapper) QueryExpr(ctx context.Context) *gorm.SqlExpr {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.QueryExpr")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.QueryExpr")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.QueryExpr", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.QueryExpr", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.QueryExpr", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) QueryExpr() *gorm.SqlExpr {
 	res0 := w.obj.QueryExpr()
 	return res0
 }
@@ -1854,29 +1779,7 @@ func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
-func (w GORMDBWrapper) RecordNotFound(ctx context.Context) bool {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.RecordNotFound")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.RecordNotFound")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.RecordNotFound", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.RecordNotFound", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.RecordNotFound", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) RecordNotFound() bool {
 	res0 := w.obj.RecordNotFound()
 	return res0
 }
@@ -2046,29 +1949,7 @@ func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrappe
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
-func (w GORMDBWrapper) Row(ctx context.Context) *sql.Row {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.Row")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Row")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.Row", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.Row", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.Row", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) Row() *sql.Row {
 	res0 := w.obj.Row()
 	return res0
 }
@@ -2305,29 +2186,7 @@ func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) 
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
-func (w GORMDBWrapper) SetJoinTableHandler(ctx context.Context, source interface{}, column string, handler gorm.JoinTableHandlerInterface) {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.SetJoinTableHandler")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.SetJoinTableHandler")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.SetJoinTableHandler", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.SetJoinTableHandler", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.SetJoinTableHandler", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) SetJoinTableHandler(source interface{}, column string, handler gorm.JoinTableHandlerInterface) {
 	w.obj.SetJoinTableHandler(source, column, handler)
 }
 
@@ -2364,55 +2223,11 @@ func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride f
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
 }
 
-func (w GORMDBWrapper) SingularTable(ctx context.Context, enable bool) {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.SingularTable")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.SingularTable")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.SingularTable", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.SingularTable", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.SingularTable", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) SingularTable(enable bool) {
 	w.obj.SingularTable(enable)
 }
 
-func (w GORMDBWrapper) SubQuery(ctx context.Context) *gorm.SqlExpr {
-	ctxOptions := FromContext(ctx)
-	if w.rateLimiterGroup != nil {
-		_ = w.rateLimiterGroup.Wait(ctx, "DB.SubQuery")
-	}
-	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.SubQuery")
-		for key, val := range w.options.Trace.ConstTags {
-			span.SetTag(key, val)
-		}
-		for key, val := range ctxOptions.TraceTags {
-			span.SetTag(key, val)
-		}
-		defer span.Finish()
-	}
-	if w.options.EnableMetric && !ctxOptions.DisableMetric {
-		ts := time.Now()
-		w.inflightMetric.WithLabelValues("gorm.DB.SubQuery", ctxOptions.MetricCustomLabelValue).Inc()
-		defer func() {
-			w.inflightMetric.WithLabelValues("gorm.DB.SubQuery", ctxOptions.MetricCustomLabelValue).Dec()
-			w.durationMetric.WithLabelValues("gorm.DB.SubQuery", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-		}()
-	}
+func (w GORMDBWrapper) SubQuery() *gorm.SqlExpr {
 	res0 := w.obj.SubQuery()
 	return res0
 }
