@@ -19,17 +19,17 @@ func init() {
 }
 
 func RegisterCipher(key string, constructor interface{}) {
-	if _, ok := cipherConstructorGroup[key]; ok {
+	if _, ok := cipherConstructorMap[key]; ok {
 		panic(fmt.Sprintf("cipher type [%v] is already registered", key))
 	}
 
 	info, err := refx.NewConstructorInfo(constructor, reflect.TypeOf((*Cipher)(nil)).Elem())
 	refx.Must(err)
 
-	cipherConstructorGroup[key] = info
+	cipherConstructorMap[key] = info
 }
 
-var cipherConstructorGroup = map[string]*refx.ConstructorInfo{}
+var cipherConstructorMap = map[string]*refx.Constructor{}
 
 type Cipher interface {
 	Encrypt(textToEncrypt []byte) ([]byte, error)
@@ -39,36 +39,21 @@ type Cipher interface {
 func NewCipherWithConfig(cfg *Config, opts ...refx.Option) (Cipher, error) {
 	var options CipherOptions
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
-		return nil, errors.Wrap(err, "cfg.Unmarshal failed.")
+		return nil, errors.WithMessage(err, "cfg.Unmarshal failed.")
 	}
 	return NewCipherWithOptions(&options, opts...)
 }
 
 func NewCipherWithOptions(options *CipherOptions, opts ...refx.Option) (Cipher, error) {
-	constructor, ok := cipherConstructorGroup[options.Type]
+	constructor, ok := cipherConstructorMap[options.Type]
 	if !ok {
 		return nil, errors.Errorf("unsupported cipher type: [%v]", options.Type)
 	}
 
-	var params []reflect.Value
-	var result []reflect.Value
-	if constructor.HasParam {
-		if reflect.TypeOf(options.Options) == constructor.ParamType {
-			params = append(params, reflect.ValueOf(options.Options))
-		} else {
-			param := reflect.New(constructor.ParamType)
-			if err := refx.InterfaceToStruct(options.Options, param.Interface(), opts...); err != nil {
-				return nil, errors.Wrap(err, "refx.InterfaceToStruct failed")
-			}
-			params = append(params, param.Elem())
-		}
+	result, err := constructor.Call(options.Options, opts...)
+	if err != nil {
+		return nil, errors.WithMessage(err, "constructor.Call failed")
 	}
-	if constructor.HasOption {
-		for _, opt := range opts {
-			params = append(params, reflect.ValueOf(opt))
-		}
-	}
-	result = constructor.FuncValue.Call(params)
 
 	if constructor.ReturnError {
 		if !result[1].IsNil() {

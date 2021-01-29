@@ -12,7 +12,7 @@ func Must(err error) {
 	}
 }
 
-type ConstructorInfo struct {
+type Constructor struct {
 	HasParam    bool
 	HasOption   bool
 	ReturnError bool
@@ -20,8 +20,32 @@ type ConstructorInfo struct {
 	FuncValue   reflect.Value
 }
 
-func NewConstructorInfo(constructor interface{}, implement reflect.Type) (*ConstructorInfo, error) {
+func (c *Constructor) Call(v interface{}, opts ...Option) ([]reflect.Value, error) {
+	var params []reflect.Value
+	if c.HasParam {
+		if reflect.TypeOf(v) == c.ParamType {
+			params = append(params, reflect.ValueOf(v))
+		} else {
+			param := reflect.New(c.ParamType)
+			if err := InterfaceToStruct(v, param.Interface(), opts...); err != nil {
+				return nil, errors.WithMessage(err, "refx.InterfaceToStruct failed")
+			}
+			params = append(params, param.Elem())
+		}
+	}
+	if c.HasOption {
+		for _, opt := range opts {
+			params = append(params, reflect.ValueOf(opt))
+		}
+	}
+	return c.FuncValue.Call(params), nil
+}
+
+func NewConstructorInfo(constructor interface{}, implement reflect.Type) (*Constructor, error) {
 	rt := reflect.TypeOf(constructor)
+
+	var info Constructor
+	info.FuncValue = reflect.ValueOf(constructor)
 
 	if rt.Kind() != reflect.Func {
 		return nil, errors.New("constructor should be a function type")
@@ -32,6 +56,15 @@ func NewConstructorInfo(constructor interface{}, implement reflect.Type) (*Const
 	if rt.NumIn() == 2 {
 		if rt.In(1) != reflect.TypeOf([]Option{}) {
 			panic("constructor parameters should be []refx.Option")
+		}
+		info.HasParam = true
+		info.HasOption = true
+	}
+	if rt.NumIn() == 1 {
+		if rt.In(0) != reflect.TypeOf([]Option{}) {
+			info.HasParam = true
+		} else {
+			info.HasOption = true
 		}
 	}
 	if rt.NumOut() > 2 {
@@ -44,16 +77,11 @@ func NewConstructorInfo(constructor interface{}, implement reflect.Type) (*Const
 		return nil, errors.New("constructor should return an error")
 	}
 
-	info := &ConstructorInfo{
-		HasParam:    rt.NumIn() >= 1,
-		HasOption:   rt.NumIn() == 2,
-		ReturnError: rt.NumOut() == 2,
-		FuncValue:   reflect.ValueOf(constructor),
-	}
+	info.ReturnError = rt.NumOut() == 2
 
-	if rt.NumIn() > 0 {
+	if info.HasParam {
 		info.ParamType = rt.In(0)
 	}
 
-	return info, nil
+	return &info, nil
 }

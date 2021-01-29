@@ -21,7 +21,7 @@ func RegisterProvider(key string, constructor interface{}) {
 	providerConstructorMap[key] = info
 }
 
-var providerConstructorMap = map[string]*refx.ConstructorInfo{}
+var providerConstructorMap = map[string]*refx.Constructor{}
 
 type Provider interface {
 	Events() <-chan struct{}
@@ -34,7 +34,7 @@ type Provider interface {
 func NewProviderWithConfig(cfg *Config, opts ...refx.Option) (Provider, error) {
 	var options ProviderOptions
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
-		return nil, errors.Wrap(err, "cfg.Unmarshal failed.")
+		return nil, errors.WithMessage(err, "cfg.Unmarshal failed.")
 	}
 	return NewProviderWithOptions(&options)
 }
@@ -45,24 +45,14 @@ func NewProviderWithOptions(options *ProviderOptions, opts ...refx.Option) (Prov
 		return nil, errors.Errorf("unsupported provider type: [%v]", options.Type)
 	}
 
-	var result []reflect.Value
-	if constructor.HasParam {
-		if reflect.TypeOf(options.Options) == constructor.ParamType {
-			result = constructor.FuncValue.Call([]reflect.Value{reflect.ValueOf(options.Options)})
-		} else {
-			params := reflect.New(constructor.ParamType)
-			if err := refx.InterfaceToStruct(options.Options, params.Interface(), opts...); err != nil {
-				return nil, errors.Wrap(err, "refx.InterfaceToStruct failed")
-			}
-			result = constructor.FuncValue.Call([]reflect.Value{params.Elem()})
-		}
-	} else {
-		result = constructor.FuncValue.Call(nil)
+	result, err := constructor.Call(options.Options, opts...)
+	if err != nil {
+		return nil, errors.WithMessage(err, "constructor.Call failed")
 	}
 
 	if constructor.ReturnError {
 		if !result[1].IsNil() {
-			return nil, result[1].Interface().(error)
+			return nil, errors.Wrapf(result[1].Interface().(error), "NewProvider failed. type: [%v]", options.Type)
 		}
 		return result[0].Interface().(Provider), nil
 	}

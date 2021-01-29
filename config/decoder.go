@@ -20,7 +20,7 @@ func RegisterDecoder(key string, constructor interface{}) {
 	decoderConstructorMap[key] = info
 }
 
-var decoderConstructorMap = map[string]*refx.ConstructorInfo{}
+var decoderConstructorMap = map[string]*refx.Constructor{}
 
 type Decoder interface {
 	Decode(buf []byte) (*Storage, error)
@@ -33,24 +33,14 @@ func NewDecoderWithOptions(options *DecoderOptions, opts ...refx.Option) (Decode
 		return nil, errors.Errorf("unsupported decoder type: [%v]", options.Type)
 	}
 
-	var result []reflect.Value
-	if constructor.HasParam {
-		if reflect.TypeOf(options.Options) == constructor.ParamType {
-			result = constructor.FuncValue.Call([]reflect.Value{reflect.ValueOf(options.Options)})
-		} else {
-			params := reflect.New(constructor.ParamType)
-			if err := refx.InterfaceToStruct(options.Options, params.Interface(), opts...); err != nil {
-				return nil, errors.Wrap(err, "refx.InterfaceToStruct failed")
-			}
-			result = constructor.FuncValue.Call([]reflect.Value{params.Elem()})
-		}
-	} else {
-		result = constructor.FuncValue.Call(nil)
+	result, err := constructor.Call(options.Options, opts...)
+	if err != nil {
+		return nil, errors.WithMessage(err, "constructor.Call failed")
 	}
 
 	if constructor.ReturnError {
 		if !result[1].IsNil() {
-			return nil, result[1].Interface().(error)
+			return nil, errors.Wrapf(result[1].Interface().(error), "NewDecoder failed. type: [%v]", options.Type)
 		}
 		return result[0].Interface().(Decoder), nil
 	}
@@ -61,7 +51,7 @@ func NewDecoderWithOptions(options *DecoderOptions, opts ...refx.Option) (Decode
 func NewDecoderWithConfig(cfg *Config, opts ...refx.Option) (Decoder, error) {
 	var options DecoderOptions
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
-		return nil, errors.Wrap(err, "cfg.Unmarshal failed.")
+		return nil, errors.WithMessage(err, "cfg.Unmarshal failed.")
 	}
 	return NewDecoderWithOptions(&options)
 }
