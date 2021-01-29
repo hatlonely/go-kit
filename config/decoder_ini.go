@@ -9,6 +9,12 @@ import (
 	"github.com/hatlonely/go-kit/cast"
 )
 
+func init() {
+	RegisterDecoder("Ini", func() *IniDecoder {
+		return &IniDecoder{}
+	})
+}
+
 // @see https://en.wikipedia.org/wiki/INI_file
 type IniDecoder struct{}
 

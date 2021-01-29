@@ -6,6 +6,12 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
+func init() {
+	RegisterDecoder("Toml", func() *TomlDecoder {
+		return &TomlDecoder{}
+	})
+}
+
 // @see https://github.com/toml-lang/toml
 type TomlDecoder struct{}
 

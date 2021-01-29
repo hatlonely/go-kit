@@ -6,6 +6,12 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+func init() {
+	RegisterDecoder("Yaml", func() *YamlDecoder {
+		return &YamlDecoder{}
+	})
+}
+
 type YamlDecoder struct{}
 
 func (d *YamlDecoder) Decode(buf []byte) (*Storage, error) {
