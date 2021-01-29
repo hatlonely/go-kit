@@ -11,7 +11,7 @@ func TestStdoutWriter(t *testing.T) {
 	Convey("TestStdoutWriter", t, func() {
 		writer, err := NewWriterWithOptions(&WriterOptions{
 			Type: "Stdout",
-			StdoutWriter: StdoutWriterOptions{
+			Options: &StdoutWriterOptions{
 				Formatter: FormatterOptions{
 					Type: "Json",
 				},
@@ -30,7 +30,7 @@ func TestRotateFileWriter(t *testing.T) {
 	Convey("TestRotateFileWriter", t, func() {
 		writer, err := NewWriterWithOptions(&WriterOptions{
 			Type: "RotateFile",
-			RotateFileWriter: RotateFileWriterOptions{
+			Options: &RotateFileWriterOptions{
 				Formatter: FormatterOptions{
 					Type: "Json",
 				},

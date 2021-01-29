@@ -27,7 +27,7 @@ func TestElasticSearchWriter_Write(t *testing.T) {
 	Convey("", t, func() {
 		writer, err := NewWriterWithOptions(&WriterOptions{
 			Type: "ElasticSearch",
-			ElasticSearchWriter: ElasticSearchWriterOptions{
+			Options: &ElasticSearchWriterOptions{
 				Index:      "hatlonely",
 				IDField:    "requestID",
 				Timeout:    200 * time.Millisecond,

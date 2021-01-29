@@ -14,7 +14,7 @@ func TestLogger(t *testing.T) {
 			Level: "Info",
 			Writers: []WriterOptions{{
 				Type: "Stdout",
-				StdoutWriter: StdoutWriterOptions{
+				Options: &StdoutWriterOptions{
 					Formatter: FormatterOptions{
 						Type: "Text",
 						TextFormat: TextFormatOptions{
@@ -24,7 +24,7 @@ func TestLogger(t *testing.T) {
 				},
 			}, {
 				Type: "RotateFile",
-				RotateFileWriter: RotateFileWriterOptions{
+				Options: &RotateFileWriterOptions{
 					MaxAge:   24 * time.Hour,
 					Filename: "log/test.log",
 					Formatter: FormatterOptions{
@@ -65,7 +65,7 @@ func TestNewFlatMapLogger(t *testing.T) {
 			FlatMap: true,
 			Writers: []WriterOptions{{
 				Type: "Stdout",
-				StdoutWriter: StdoutWriterOptions{
+				Options: &StdoutWriterOptions{
 					Formatter: FormatterOptions{
 						Type: "Json",
 					},

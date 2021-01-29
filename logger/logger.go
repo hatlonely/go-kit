@@ -17,7 +17,7 @@ func NewStdoutTextLogger() *Logger {
 		Level: "Debug",
 		Writers: []WriterOptions{{
 			Type: "Stdout",
-			StdoutWriter: StdoutWriterOptions{
+			Options: &StdoutWriterOptions{
 				Formatter: FormatterOptions{
 					Type: "Text",
 					TextFormat: TextFormatOptions{
@@ -38,7 +38,7 @@ func NewStdoutJsonLogger() *Logger {
 		Level: "Debug",
 		Writers: []WriterOptions{{
 			Type: "Stdout",
-			StdoutWriter: StdoutWriterOptions{
+			Options: &StdoutWriterOptions{
 				Formatter: FormatterOptions{
 					Type: "Json",
 				},
@@ -56,13 +56,13 @@ func NewLoggerWithConfig(cfg *config.Config, opts ...refx.Option) (*Logger, erro
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, errors.Wrap(err, "cfg.Unmarshal failed.")
 	}
-	return NewLoggerWithOptions(&options)
+	return NewLoggerWithOptions(&options, opts...)
 }
 
-func NewLoggerWithOptions(options *Options) (*Logger, error) {
+func NewLoggerWithOptions(options *Options, opts ...refx.Option) (*Logger, error) {
 	var writers []Writer
 	for _, writerOpt := range options.Writers {
-		writer, err := NewWriterWithOptions(&writerOpt)
+		writer, err := NewWriterWithOptions(&writerOpt, opts...)
 		if err != nil {
 			return nil, errors.WithMessage(err, "NewWriterWithOptions failed")
 		}
