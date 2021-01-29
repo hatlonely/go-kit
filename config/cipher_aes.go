@@ -11,16 +11,51 @@ import (
 
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/kms"
 	"github.com/pkg/errors"
+
+	"github.com/hatlonely/go-kit/alics"
 )
 
 const AESMaxKeyLen = 32
 
-func NewAESWithKMSKeyCipherWithAccessKey(accessKeyID string, accessKeySecret string, regionID string, cipherText string, paddingType string) (*AESCipher, error) {
-	kmsCli, err := newKMSClient(accessKeyID, accessKeySecret, regionID)
-	if err != nil {
-		return nil, err
+func NewAESCipherWithOptions(options *AESCipherOptions) (*AESCipher, error) {
+	if options.Key != "" {
+		return NewAESCipher([]byte(options.Key), options.PaddingType)
 	}
-	return NewAESWithKMSKeyCipher(kmsCli, cipherText, paddingType)
+	if options.Base64Key != "" {
+		buf, err := base64.StdEncoding.DecodeString(options.Base64Key)
+		if err != nil {
+			return nil, errors.Wrap(err, "base64 decode key failed.")
+		}
+		return NewAESCipher(buf, options.PaddingType)
+	}
+	if options.KMSKey != "" {
+		return NewAESWithKMSKeyCipherWithAccessKey(
+			options.KMS.AccessKeyID, options.KMS.AccessKeySecret,
+			options.KMS.RegionID, options.KMSKey, options.PaddingType,
+		)
+	}
+	return nil, errors.New("no key found")
+}
+
+func NewAESWithKMSKeyCipherWithAccessKey(accessKeyID string, accessKeySecret string, regionID string, cipherText string, paddingType string) (*AESCipher, error) {
+	var client *kms.Client
+	var err error
+	if accessKeyID == "" {
+		role, err := alics.ECSMetaDataRamSecurityCredentialsRole()
+		if err != nil {
+			return nil, errors.Wrap(err, "alics.ECSMetaDataRamSecurityCredentialsRole failed")
+		}
+		client, err = kms.NewClientWithEcsRamRole(regionID, role)
+		if err != nil {
+			return nil, errors.Wrap(err, "kms.NewClientWithEcsRamRole failed")
+		}
+	} else {
+		client, err = kms.NewClientWithAccessKey(regionID, accessKeyID, accessKeySecret)
+		if err != nil {
+			return nil, errors.Wrap(err, "kms.NewClientWithAccessKey failed")
+		}
+	}
+	return NewAESWithKMSKeyCipher(client, cipherText, paddingType)
 }
 
 func NewAESWithKMSKeyCipher(kmsCli *kms.Client, cipherText string, paddingType string) (*AESCipher, error) {
@@ -65,26 +100,6 @@ func NewAESCipher(key []byte, paddingType string) (*AESCipher, error) {
 	}, nil
 }
 
-func NewAESCipherWithOptions(options *AESCipherOptions) (*AESCipher, error) {
-	if options.Key != "" {
-		return NewAESCipher([]byte(options.Key), options.PaddingType)
-	}
-	if options.Base64Key != "" {
-		buf, err := base64.StdEncoding.DecodeString(options.Base64Key)
-		if err != nil {
-			return nil, errors.Wrap(err, "base64 decode key failed.")
-		}
-		return NewAESCipher(buf, options.PaddingType)
-	}
-	if options.KMSKey != "" {
-		return NewAESWithKMSKeyCipherWithAccessKey(
-			options.KMS.AccessKeyID, options.KMS.AccessKeySecret,
-			options.KMS.RegionID, options.KMSKey, options.PaddingType,
-		)
-	}
-	return nil, errors.New("no key found")
-}
-
 type AESCipher struct {
 	cb cipher.Block
 
@@ -97,7 +112,7 @@ func (c *AESCipher) Encrypt(textToEncrypt []byte) ([]byte, error) {
 	encryptText := make([]byte, aes.BlockSize+len(plainText))
 	iv := encryptText[:aes.BlockSize]
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "io.ReadFull failed")
 	}
 	mode := cipher.NewCBCEncrypter(c.cb, iv)
 	mode.CryptBlocks(encryptText[aes.BlockSize:], plainText)
