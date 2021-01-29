@@ -698,9 +698,6 @@ func (g *WrapperGenerator) generateWrapperFunctionBody(info *RenderInfo, functio
 }
 
 func (g *WrapperGenerator) MatchFunctionRule(fun string, cls string, rules map[string]Rule) bool {
-	//fun := function.Name
-	//cls := function.Class
-
 	if _, ok := rules[cls]; ok {
 		return g.MatchRule(fun, rules[cls])
 	}
