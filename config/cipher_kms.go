@@ -7,6 +7,10 @@ import (
 	"github.com/hatlonely/go-kit/alics"
 )
 
+func init() {
+	RegisterCipher("KMS", NewKMSCipherWithOptions)
+}
+
 func NewKMSCipherWithOptions(options *KMSCipherOptions) (*KMSCipher, error) {
 	var err error
 	if options.RegionID == "" {

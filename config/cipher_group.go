@@ -1,5 +1,9 @@
 package config
 
+func init() {
+	RegisterCipher("Group", NewCipherGroupWithOptions)
+}
+
 // CipherGroup is also an cipher
 type CipherGroup struct {
 	ciphers []Cipher

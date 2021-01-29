@@ -81,14 +81,11 @@ func TestKMSCipher(t *testing.T) {
 		})
 		defer patches.Reset()
 
-		cipher, err := NewCipherWithOptions(&CipherOptions{
-			Type: "KMS",
-			KMSCipher: KMSCipherOptions{
-				AccessKeyID:     "xx",
-				AccessKeySecret: "xx",
-				RegionID:        "cn-shanghai",
-				KeyID:           "9f2d041b-2fb1-46a6-b37f-1f53edcf8414",
-			},
+		cipher, err := NewKMSCipherWithOptions(&KMSCipherOptions{
+			AccessKeyID:     "xx",
+			AccessKeySecret: "xx",
+			RegionID:        "cn-shanghai",
+			KeyID:           "9f2d041b-2fb1-46a6-b37f-1f53edcf8414",
 		})
 		So(err, ShouldBeNil)
 
@@ -99,7 +96,7 @@ func TestKMSCipher(t *testing.T) {
 		So(err, ShouldBeNil)
 		So(string(buf), ShouldEqual, "hello world")
 
-		plain, blob, err := cipher.(*KMSCipher).GenerateDataKey()
+		plain, blob, err := cipher.GenerateDataKey()
 		So(err, ShouldBeNil)
 		So(plain, ShouldEqual, "plain")
 		So(blob, ShouldEqual, "blob")

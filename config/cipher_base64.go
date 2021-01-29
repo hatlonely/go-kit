@@ -4,6 +4,10 @@ import (
 	"encoding/base64"
 )
 
+func init() {
+	RegisterCipher("Base64", NewBase64CipherWithOptions)
+}
+
 type Base64Cipher struct {
 	encoding *base64.Encoding
 }

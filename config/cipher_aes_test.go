@@ -11,11 +11,8 @@ import (
 
 func TestAESCipher(t *testing.T) {
 	Convey("TestAESCipher 1", t, func() {
-		cipher, err := NewCipherWithOptions(&CipherOptions{
-			Type: "AES",
-			AESCipher: AESCipherOptions{
-				Key: "123456",
-			},
+		cipher, err := NewAESCipherWithOptions(&AESCipherOptions{
+			Key: "123456",
 		})
 		So(err, ShouldBeNil)
 
@@ -27,12 +24,9 @@ func TestAESCipher(t *testing.T) {
 	})
 
 	Convey("TestAESCipher 2", t, func() {
-		cipher, err := NewCipherWithOptions(&CipherOptions{
-			Type: "AES",
-			AESCipher: AESCipherOptions{
-				Key:         "123456",
-				PaddingType: "Zero",
-			},
+		cipher, err := NewAESCipherWithOptions(&AESCipherOptions{
+			Key:         "123456",
+			PaddingType: "Zero",
 		})
 		So(err, ShouldBeNil)
 
@@ -52,19 +46,16 @@ func TestAESCipher(t *testing.T) {
 		})
 		defer patches.Reset()
 
-		cipher, err := NewCipherWithOptions(&CipherOptions{
-			Type: "AES",
-			AESCipher: AESCipherOptions{
-				KMSKey: "NWMzYmNjODQtNTgxMC00NGZmLTkwMTAtNWIwMGY1NzhiNTg129Uj83I4hoqFOFsKrx/SSiuSn+zOHr/vUVdi8t7z1Bw/swRjHwE5NoBV6wn8RMG5rM1pvgg70bZwEYjUHdzP+NS+AgiWmy/t",
-				KMS: struct {
-					AccessKeyID     string
-					AccessKeySecret string
-					RegionID        string
-				}{
-					AccessKeyID:     "xx",
-					AccessKeySecret: "xx",
-					RegionID:        "cn-shanghai",
-				},
+		cipher, err := NewAESCipherWithOptions(&AESCipherOptions{
+			KMSKey: "NWMzYmNjODQtNTgxMC00NGZmLTkwMTAtNWIwMGY1NzhiNTg129Uj83I4hoqFOFsKrx/SSiuSn+zOHr/vUVdi8t7z1Bw/swRjHwE5NoBV6wn8RMG5rM1pvgg70bZwEYjUHdzP+NS+AgiWmy/t",
+			KMS: struct {
+				AccessKeyID     string
+				AccessKeySecret string
+				RegionID        string
+			}{
+				AccessKeyID:     "xx",
+				AccessKeySecret: "xx",
+				RegionID:        "cn-shanghai",
 			},
 		})
 		So(err, ShouldBeNil)

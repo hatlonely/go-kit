@@ -113,7 +113,7 @@ func NewConfigWithSimpleFile(filename string, opts ...SimpleFileOption) (*Config
 	if simpleFileOptions.DecodeKey != "" {
 		options.Cipher = CipherOptions{
 			Type: "AES",
-			AESCipher: AESCipherOptions{
+			Options: &AESCipherOptions{
 				Key: simpleFileOptions.DecodeKey,
 			},
 		}

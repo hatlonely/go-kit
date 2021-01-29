@@ -28,17 +28,17 @@ func TestCipher(t *testing.T) {
 			Type: "Empty",
 		}, {}, {
 			Type: "Base64",
-			Base64Cipher: Base64CipherOptions{
+			Options: &Base64CipherOptions{
 				URLEncoding: true,
 			},
 		}, {
 			Type: "AES",
-			AESCipher: AESCipherOptions{
+			Options: &AESCipherOptions{
 				Key: "123456",
 			},
 		}, {
 			Type: "KMS",
-			KMSCipher: KMSCipherOptions{
+			Options: &KMSCipherOptions{
 				AccessKeyID:     "xx",
 				AccessKeySecret: "xx",
 				RegionID:        "cn-shanghai",
