@@ -47,7 +47,7 @@ func NewCipherWithConfig(cfg *Config, opts ...refx.Option) (Cipher, error) {
 func NewCipherWithOptions(options *CipherOptions, opts ...refx.Option) (Cipher, error) {
 	constructor, ok := cipherConstructorMap[options.Type]
 	if !ok {
-		return nil, errors.Errorf("unsupported cipher type: [%v]", options.Type)
+		return nil, errors.Errorf("unregistered cipher type: [%v]", options.Type)
 	}
 
 	result, err := constructor.Call(options.Options, opts...)

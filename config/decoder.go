@@ -30,7 +30,7 @@ type Decoder interface {
 func NewDecoderWithOptions(options *DecoderOptions, opts ...refx.Option) (Decoder, error) {
 	constructor, ok := decoderConstructorMap[options.Type]
 	if !ok {
-		return nil, errors.Errorf("unsupported decoder type: [%v]", options.Type)
+		return nil, errors.Errorf("unregistered decoder type: [%v]", options.Type)
 	}
 
 	result, err := constructor.Call(options.Options, opts...)

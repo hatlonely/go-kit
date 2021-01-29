@@ -42,7 +42,7 @@ func NewProviderWithConfig(cfg *Config, opts ...refx.Option) (Provider, error) {
 func NewProviderWithOptions(options *ProviderOptions, opts ...refx.Option) (Provider, error) {
 	constructor, ok := providerConstructorMap[options.Type]
 	if !ok {
-		return nil, errors.Errorf("unsupported provider type: [%v]", options.Type)
+		return nil, errors.Errorf("unregistered provider type: [%v]", options.Type)
 	}
 
 	result, err := constructor.Call(options.Options, opts...)
