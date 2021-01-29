@@ -41,7 +41,7 @@ func (c *Constructor) Call(v interface{}, opts ...Option) ([]reflect.Value, erro
 	return c.FuncValue.Call(params), nil
 }
 
-func NewConstructorInfo(constructor interface{}, implement reflect.Type) (*Constructor, error) {
+func NewConstructor(constructor interface{}, implement reflect.Type) (*Constructor, error) {
 	rt := reflect.TypeOf(constructor)
 
 	var info Constructor

@@ -15,7 +15,7 @@ func RegisterProvider(key string, constructor interface{}) {
 		panic(fmt.Sprintf("provider type [%v] is already registered", key))
 	}
 
-	info, err := refx.NewConstructorInfo(constructor, reflect.TypeOf((*Provider)(nil)).Elem())
+	info, err := refx.NewConstructor(constructor, reflect.TypeOf((*Provider)(nil)).Elem())
 	refx.Must(err)
 
 	providerConstructorMap[key] = info

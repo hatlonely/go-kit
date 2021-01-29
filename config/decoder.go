@@ -14,7 +14,7 @@ func RegisterDecoder(key string, constructor interface{}) {
 		panic(fmt.Sprintf("decoder type [%v] is already registered", key))
 	}
 
-	info, err := refx.NewConstructorInfo(constructor, reflect.TypeOf((*Decoder)(nil)).Elem())
+	info, err := refx.NewConstructor(constructor, reflect.TypeOf((*Decoder)(nil)).Elem())
 	refx.Must(err)
 
 	decoderConstructorMap[key] = info

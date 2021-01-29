@@ -23,7 +23,7 @@ func RegisterCipher(key string, constructor interface{}) {
 		panic(fmt.Sprintf("cipher type [%v] is already registered", key))
 	}
 
-	info, err := refx.NewConstructorInfo(constructor, reflect.TypeOf((*Cipher)(nil)).Elem())
+	info, err := refx.NewConstructor(constructor, reflect.TypeOf((*Cipher)(nil)).Elem())
 	refx.Must(err)
 
 	cipherConstructorMap[key] = info
