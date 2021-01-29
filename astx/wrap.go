@@ -275,10 +275,6 @@ func (g *WrapperGenerator) Generate() (string, error) {
 			info.Function.IsChain = function.IsChain
 			info.Function.IsReturnVoid = function.IsReturnVoid
 			info.Function.IsReturnError = function.IsReturnError
-			info.Function.ErrCode = "ErrCode(err)"
-			if !function.IsReturnError {
-				info.Function.ErrCode = `"OK"`
-			}
 			var params []string
 			for _, i := range function.Params {
 				if strings.HasPrefix(i.Type, "...") {
@@ -310,6 +306,22 @@ func (g *WrapperGenerator) Generate() (string, error) {
 				info.Rule.ErrorInResult = g.MatchRule(function.Results[0].Type, g.options.Rule.ErrorInResult)
 			} else {
 				info.Rule.ErrorInResult = false
+			}
+
+			if !function.IsReturnError && !(info.Rule.ErrorInResult && len(function.Results) == 1) {
+				info.Function.ErrCode = `"OK"`
+			} else if info.OutputPackage == "wrap" {
+				if info.Rule.ErrorInResult && len(function.Results) == 1 {
+					info.Function.ErrCode = fmt.Sprintf("ErrCode(res0.%s)", info.ErrorField)
+				} else {
+					info.Function.ErrCode = "ErrCode(err)"
+				}
+			} else {
+				if info.Rule.ErrorInResult && len(function.Results) == 1 {
+					info.Function.ErrCode = fmt.Sprintf("wrap.ErrCode(res0.%s)", info.ErrorField)
+				} else {
+					info.Function.ErrCode = "wrap.ErrCode(err)"
+				}
 			}
 
 			buf.WriteString("\n")
@@ -373,7 +385,7 @@ type {{.WrapClass}} struct {
 	options          *{{.WrapPackagePrefix}}WrapperOptions
 	durationMetric   *prometheus.HistogramVec
 	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	rateLimiterGroup {{.WrapPackagePrefix}}RateLimiterGroup
 }
 
 {{- if .IsStarClass}}
@@ -559,7 +571,7 @@ func (g *WrapperGenerator) generateWrapperReturnList(function *Function) string 
 const WrapperFunctionBodyWithoutErrorTpl = `
 {{- if .EnableRuleForNoErrorFunc}}
 {{- if or .Rule.Trace .Rule.Metric}}
-	ctxOptions := FromContext(ctx)
+	ctxOptions := {{.WrapPackagePrefix}}FromContext(ctx)
 {{- end}}
 {{- if .Rule.RateLimiter}}
 	if w.rateLimiterGroup != nil {
@@ -602,7 +614,7 @@ const WrapperFunctionBodyWithoutErrorTpl = `
 
 const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 {{- if or .Rule.Trace .Rule.Metric}}
-	ctxOptions := FromContext(ctx)
+	ctxOptions := {{.WrapPackagePrefix}}FromContext(ctx)
 {{- end}}
 	{{.Function.DeclareVariables}}
 {{- if .Rule.RateLimiter}}
@@ -640,7 +652,7 @@ const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 
 const WrapperFunctionBodyWithErrorWithRetryTpl = `
 {{- if or .Rule.Trace .Rule.Metric}}
-	ctxOptions := FromContext(ctx)
+	ctxOptions := {{.WrapPackagePrefix}}FromContext(ctx)
 {{- end}}
 	{{.Function.DeclareVariables}}{{.NewLine}}
 	{{- if or .Function.IsReturnError}}err{{else}}_{{- end}} = w.retry.Do(func() error {

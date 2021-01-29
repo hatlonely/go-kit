@@ -354,7 +354,7 @@ func (w *RedisClientWrapper) Do(ctx context.Context, args ...interface{}) *redis
 			w.inflightMetric.WithLabelValues("redis.Client.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Do", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Do", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Do", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Do(args...)
@@ -433,7 +433,7 @@ func (w *RedisClientWrapper) Append(ctx context.Context, key string, value strin
 			w.inflightMetric.WithLabelValues("redis.Client.Append", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Append", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Append", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Append", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Append(key, value)
@@ -466,7 +466,7 @@ func (w *RedisClientWrapper) BLPop(ctx context.Context, timeout time.Duration, k
 			w.inflightMetric.WithLabelValues("redis.Client.BLPop", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.BLPop", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.BLPop", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.BLPop", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BLPop(timeout, keys...)
@@ -499,7 +499,7 @@ func (w *RedisClientWrapper) BRPop(ctx context.Context, timeout time.Duration, k
 			w.inflightMetric.WithLabelValues("redis.Client.BRPop", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.BRPop", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.BRPop", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.BRPop", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BRPop(timeout, keys...)
@@ -532,7 +532,7 @@ func (w *RedisClientWrapper) BRPopLPush(ctx context.Context, source string, dest
 			w.inflightMetric.WithLabelValues("redis.Client.BRPopLPush", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.BRPopLPush", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.BRPopLPush", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.BRPopLPush", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BRPopLPush(source, destination, timeout)
@@ -565,7 +565,7 @@ func (w *RedisClientWrapper) BZPopMax(ctx context.Context, timeout time.Duration
 			w.inflightMetric.WithLabelValues("redis.Client.BZPopMax", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.BZPopMax", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.BZPopMax", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.BZPopMax", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BZPopMax(timeout, keys...)
@@ -598,7 +598,7 @@ func (w *RedisClientWrapper) BZPopMin(ctx context.Context, timeout time.Duration
 			w.inflightMetric.WithLabelValues("redis.Client.BZPopMin", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.BZPopMin", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.BZPopMin", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.BZPopMin", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BZPopMin(timeout, keys...)
@@ -631,7 +631,7 @@ func (w *RedisClientWrapper) BgRewriteAOF(ctx context.Context) *redis.StatusCmd 
 			w.inflightMetric.WithLabelValues("redis.Client.BgRewriteAOF", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.BgRewriteAOF", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.BgRewriteAOF", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.BgRewriteAOF", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BgRewriteAOF()
@@ -664,7 +664,7 @@ func (w *RedisClientWrapper) BgSave(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.BgSave", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.BgSave", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.BgSave", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.BgSave", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BgSave()
@@ -697,7 +697,7 @@ func (w *RedisClientWrapper) BitCount(ctx context.Context, key string, bitCount 
 			w.inflightMetric.WithLabelValues("redis.Client.BitCount", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.BitCount", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.BitCount", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.BitCount", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BitCount(key, bitCount)
@@ -730,7 +730,7 @@ func (w *RedisClientWrapper) BitOpAnd(ctx context.Context, destKey string, keys 
 			w.inflightMetric.WithLabelValues("redis.Client.BitOpAnd", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.BitOpAnd", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.BitOpAnd", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.BitOpAnd", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BitOpAnd(destKey, keys...)
@@ -763,7 +763,7 @@ func (w *RedisClientWrapper) BitOpNot(ctx context.Context, destKey string, key s
 			w.inflightMetric.WithLabelValues("redis.Client.BitOpNot", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.BitOpNot", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.BitOpNot", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.BitOpNot", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BitOpNot(destKey, key)
@@ -796,7 +796,7 @@ func (w *RedisClientWrapper) BitOpOr(ctx context.Context, destKey string, keys .
 			w.inflightMetric.WithLabelValues("redis.Client.BitOpOr", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.BitOpOr", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.BitOpOr", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.BitOpOr", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BitOpOr(destKey, keys...)
@@ -829,7 +829,7 @@ func (w *RedisClientWrapper) BitOpXor(ctx context.Context, destKey string, keys 
 			w.inflightMetric.WithLabelValues("redis.Client.BitOpXor", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.BitOpXor", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.BitOpXor", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.BitOpXor", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BitOpXor(destKey, keys...)
@@ -862,7 +862,7 @@ func (w *RedisClientWrapper) BitPos(ctx context.Context, key string, bit int64, 
 			w.inflightMetric.WithLabelValues("redis.Client.BitPos", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.BitPos", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.BitPos", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.BitPos", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BitPos(key, bit, pos...)
@@ -895,7 +895,7 @@ func (w *RedisClientWrapper) ClientGetName(ctx context.Context) *redis.StringCmd
 			w.inflightMetric.WithLabelValues("redis.Client.ClientGetName", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClientGetName", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClientGetName", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClientGetName", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientGetName()
@@ -928,7 +928,7 @@ func (w *RedisClientWrapper) ClientID(ctx context.Context) *redis.IntCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.ClientID", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClientID", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClientID", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClientID", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientID()
@@ -961,7 +961,7 @@ func (w *RedisClientWrapper) ClientKill(ctx context.Context, ipPort string) *red
 			w.inflightMetric.WithLabelValues("redis.Client.ClientKill", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClientKill", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClientKill", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClientKill", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientKill(ipPort)
@@ -994,7 +994,7 @@ func (w *RedisClientWrapper) ClientKillByFilter(ctx context.Context, keys ...str
 			w.inflightMetric.WithLabelValues("redis.Client.ClientKillByFilter", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClientKillByFilter", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClientKillByFilter", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClientKillByFilter", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientKillByFilter(keys...)
@@ -1027,7 +1027,7 @@ func (w *RedisClientWrapper) ClientList(ctx context.Context) *redis.StringCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.ClientList", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClientList", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClientList", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClientList", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientList()
@@ -1060,7 +1060,7 @@ func (w *RedisClientWrapper) ClientPause(ctx context.Context, dur time.Duration)
 			w.inflightMetric.WithLabelValues("redis.Client.ClientPause", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClientPause", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClientPause", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClientPause", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientPause(dur)
@@ -1093,7 +1093,7 @@ func (w *RedisClientWrapper) ClientUnblock(ctx context.Context, id int64) *redis
 			w.inflightMetric.WithLabelValues("redis.Client.ClientUnblock", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClientUnblock", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClientUnblock", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClientUnblock", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientUnblock(id)
@@ -1126,7 +1126,7 @@ func (w *RedisClientWrapper) ClientUnblockWithError(ctx context.Context, id int6
 			w.inflightMetric.WithLabelValues("redis.Client.ClientUnblockWithError", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClientUnblockWithError", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClientUnblockWithError", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClientUnblockWithError", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientUnblockWithError(id)
@@ -1159,7 +1159,7 @@ func (w *RedisClientWrapper) ClusterAddSlots(ctx context.Context, slots ...int) 
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterAddSlots", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterAddSlots", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterAddSlots", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterAddSlots", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterAddSlots(slots...)
@@ -1192,7 +1192,7 @@ func (w *RedisClientWrapper) ClusterAddSlotsRange(ctx context.Context, min int, 
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterAddSlotsRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterAddSlotsRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterAddSlotsRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterAddSlotsRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterAddSlotsRange(min, max)
@@ -1225,7 +1225,7 @@ func (w *RedisClientWrapper) ClusterCountFailureReports(ctx context.Context, nod
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterCountFailureReports", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterCountFailureReports", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterCountFailureReports", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterCountFailureReports", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterCountFailureReports(nodeID)
@@ -1258,7 +1258,7 @@ func (w *RedisClientWrapper) ClusterCountKeysInSlot(ctx context.Context, slot in
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterCountKeysInSlot", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterCountKeysInSlot", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterCountKeysInSlot", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterCountKeysInSlot", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterCountKeysInSlot(slot)
@@ -1291,7 +1291,7 @@ func (w *RedisClientWrapper) ClusterDelSlots(ctx context.Context, slots ...int) 
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterDelSlots", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterDelSlots", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterDelSlots", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterDelSlots", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterDelSlots(slots...)
@@ -1324,7 +1324,7 @@ func (w *RedisClientWrapper) ClusterDelSlotsRange(ctx context.Context, min int, 
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterDelSlotsRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterDelSlotsRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterDelSlotsRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterDelSlotsRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterDelSlotsRange(min, max)
@@ -1357,7 +1357,7 @@ func (w *RedisClientWrapper) ClusterFailover(ctx context.Context) *redis.StatusC
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterFailover", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterFailover", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterFailover", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterFailover", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterFailover()
@@ -1390,7 +1390,7 @@ func (w *RedisClientWrapper) ClusterForget(ctx context.Context, nodeID string) *
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterForget", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterForget", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterForget", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterForget", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterForget(nodeID)
@@ -1423,7 +1423,7 @@ func (w *RedisClientWrapper) ClusterGetKeysInSlot(ctx context.Context, slot int,
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterGetKeysInSlot", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterGetKeysInSlot", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterGetKeysInSlot", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterGetKeysInSlot", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterGetKeysInSlot(slot, count)
@@ -1456,7 +1456,7 @@ func (w *RedisClientWrapper) ClusterInfo(ctx context.Context) *redis.StringCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterInfo", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterInfo", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterInfo", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterInfo", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterInfo()
@@ -1489,7 +1489,7 @@ func (w *RedisClientWrapper) ClusterKeySlot(ctx context.Context, key string) *re
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterKeySlot", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterKeySlot", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterKeySlot", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterKeySlot", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterKeySlot(key)
@@ -1522,7 +1522,7 @@ func (w *RedisClientWrapper) ClusterMeet(ctx context.Context, host string, port 
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterMeet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterMeet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterMeet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterMeet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterMeet(host, port)
@@ -1555,7 +1555,7 @@ func (w *RedisClientWrapper) ClusterNodes(ctx context.Context) *redis.StringCmd 
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterNodes", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterNodes", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterNodes", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterNodes", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterNodes()
@@ -1588,7 +1588,7 @@ func (w *RedisClientWrapper) ClusterReplicate(ctx context.Context, nodeID string
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterReplicate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterReplicate", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterReplicate", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterReplicate", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterReplicate(nodeID)
@@ -1621,7 +1621,7 @@ func (w *RedisClientWrapper) ClusterResetHard(ctx context.Context) *redis.Status
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterResetHard", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterResetHard", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterResetHard", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterResetHard", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterResetHard()
@@ -1654,7 +1654,7 @@ func (w *RedisClientWrapper) ClusterResetSoft(ctx context.Context) *redis.Status
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterResetSoft", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterResetSoft", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterResetSoft", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterResetSoft", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterResetSoft()
@@ -1687,7 +1687,7 @@ func (w *RedisClientWrapper) ClusterSaveConfig(ctx context.Context) *redis.Statu
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterSaveConfig", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterSaveConfig", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterSaveConfig", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterSaveConfig", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterSaveConfig()
@@ -1720,7 +1720,7 @@ func (w *RedisClientWrapper) ClusterSlaves(ctx context.Context, nodeID string) *
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterSlaves", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterSlaves", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterSlaves", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterSlaves", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterSlaves(nodeID)
@@ -1753,7 +1753,7 @@ func (w *RedisClientWrapper) ClusterSlots(ctx context.Context) *redis.ClusterSlo
 			w.inflightMetric.WithLabelValues("redis.Client.ClusterSlots", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ClusterSlots", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ClusterSlots", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ClusterSlots", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterSlots()
@@ -1786,7 +1786,7 @@ func (w *RedisClientWrapper) Command(ctx context.Context) *redis.CommandsInfoCmd
 			w.inflightMetric.WithLabelValues("redis.Client.Command", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Command", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Command", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Command", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Command()
@@ -1819,7 +1819,7 @@ func (w *RedisClientWrapper) ConfigGet(ctx context.Context, parameter string) *r
 			w.inflightMetric.WithLabelValues("redis.Client.ConfigGet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ConfigGet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ConfigGet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ConfigGet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ConfigGet(parameter)
@@ -1852,7 +1852,7 @@ func (w *RedisClientWrapper) ConfigResetStat(ctx context.Context) *redis.StatusC
 			w.inflightMetric.WithLabelValues("redis.Client.ConfigResetStat", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ConfigResetStat", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ConfigResetStat", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ConfigResetStat", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ConfigResetStat()
@@ -1885,7 +1885,7 @@ func (w *RedisClientWrapper) ConfigRewrite(ctx context.Context) *redis.StatusCmd
 			w.inflightMetric.WithLabelValues("redis.Client.ConfigRewrite", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ConfigRewrite", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ConfigRewrite", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ConfigRewrite", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ConfigRewrite()
@@ -1918,7 +1918,7 @@ func (w *RedisClientWrapper) ConfigSet(ctx context.Context, parameter string, va
 			w.inflightMetric.WithLabelValues("redis.Client.ConfigSet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ConfigSet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ConfigSet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ConfigSet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ConfigSet(parameter, value)
@@ -1951,7 +1951,7 @@ func (w *RedisClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.DBSize", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.DBSize", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.DBSize", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.DBSize", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.DBSize()
@@ -1984,7 +1984,7 @@ func (w *RedisClientWrapper) DbSize(ctx context.Context) *redis.IntCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.DbSize", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.DbSize", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.DbSize", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.DbSize", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.DbSize()
@@ -2017,7 +2017,7 @@ func (w *RedisClientWrapper) DebugObject(ctx context.Context, key string) *redis
 			w.inflightMetric.WithLabelValues("redis.Client.DebugObject", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.DebugObject", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.DebugObject", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.DebugObject", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.DebugObject(key)
@@ -2050,7 +2050,7 @@ func (w *RedisClientWrapper) Decr(ctx context.Context, key string) *redis.IntCmd
 			w.inflightMetric.WithLabelValues("redis.Client.Decr", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Decr", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Decr", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Decr", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Decr(key)
@@ -2083,7 +2083,7 @@ func (w *RedisClientWrapper) DecrBy(ctx context.Context, key string, decrement i
 			w.inflightMetric.WithLabelValues("redis.Client.DecrBy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.DecrBy", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.DecrBy", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.DecrBy", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.DecrBy(key, decrement)
@@ -2116,7 +2116,7 @@ func (w *RedisClientWrapper) Del(ctx context.Context, keys ...string) *redis.Int
 			w.inflightMetric.WithLabelValues("redis.Client.Del", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Del", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Del", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Del", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Del(keys...)
@@ -2149,7 +2149,7 @@ func (w *RedisClientWrapper) Dump(ctx context.Context, key string) *redis.String
 			w.inflightMetric.WithLabelValues("redis.Client.Dump", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Dump", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Dump", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Dump", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Dump(key)
@@ -2182,7 +2182,7 @@ func (w *RedisClientWrapper) Echo(ctx context.Context, message interface{}) *red
 			w.inflightMetric.WithLabelValues("redis.Client.Echo", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Echo", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Echo", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Echo", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Echo(message)
@@ -2215,7 +2215,7 @@ func (w *RedisClientWrapper) Eval(ctx context.Context, script string, keys []str
 			w.inflightMetric.WithLabelValues("redis.Client.Eval", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Eval", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Eval", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Eval", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Eval(script, keys, args...)
@@ -2248,7 +2248,7 @@ func (w *RedisClientWrapper) EvalSha(ctx context.Context, sha1 string, keys []st
 			w.inflightMetric.WithLabelValues("redis.Client.EvalSha", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.EvalSha", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.EvalSha", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.EvalSha", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.EvalSha(sha1, keys, args...)
@@ -2281,7 +2281,7 @@ func (w *RedisClientWrapper) Exists(ctx context.Context, keys ...string) *redis.
 			w.inflightMetric.WithLabelValues("redis.Client.Exists", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Exists", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Exists", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Exists", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Exists(keys...)
@@ -2314,7 +2314,7 @@ func (w *RedisClientWrapper) Expire(ctx context.Context, key string, expiration 
 			w.inflightMetric.WithLabelValues("redis.Client.Expire", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Expire", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Expire", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Expire", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Expire(key, expiration)
@@ -2347,7 +2347,7 @@ func (w *RedisClientWrapper) ExpireAt(ctx context.Context, key string, tm time.T
 			w.inflightMetric.WithLabelValues("redis.Client.ExpireAt", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ExpireAt", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ExpireAt", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ExpireAt", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ExpireAt(key, tm)
@@ -2380,7 +2380,7 @@ func (w *RedisClientWrapper) FlushAll(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.FlushAll", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.FlushAll", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.FlushAll", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.FlushAll", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.FlushAll()
@@ -2413,7 +2413,7 @@ func (w *RedisClientWrapper) FlushAllAsync(ctx context.Context) *redis.StatusCmd
 			w.inflightMetric.WithLabelValues("redis.Client.FlushAllAsync", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.FlushAllAsync", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.FlushAllAsync", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.FlushAllAsync", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.FlushAllAsync()
@@ -2446,7 +2446,7 @@ func (w *RedisClientWrapper) FlushDB(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.FlushDB", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.FlushDB", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.FlushDB", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.FlushDB", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.FlushDB()
@@ -2479,7 +2479,7 @@ func (w *RedisClientWrapper) FlushDBAsync(ctx context.Context) *redis.StatusCmd 
 			w.inflightMetric.WithLabelValues("redis.Client.FlushDBAsync", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.FlushDBAsync", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.FlushDBAsync", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.FlushDBAsync", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.FlushDBAsync()
@@ -2512,7 +2512,7 @@ func (w *RedisClientWrapper) FlushDb(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.FlushDb", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.FlushDb", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.FlushDb", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.FlushDb", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.FlushDb()
@@ -2545,7 +2545,7 @@ func (w *RedisClientWrapper) GeoAdd(ctx context.Context, key string, geoLocation
 			w.inflightMetric.WithLabelValues("redis.Client.GeoAdd", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.GeoAdd", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.GeoAdd", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.GeoAdd", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoAdd(key, geoLocation...)
@@ -2578,7 +2578,7 @@ func (w *RedisClientWrapper) GeoDist(ctx context.Context, key string, member1 st
 			w.inflightMetric.WithLabelValues("redis.Client.GeoDist", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.GeoDist", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.GeoDist", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.GeoDist", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoDist(key, member1, member2, unit)
@@ -2611,7 +2611,7 @@ func (w *RedisClientWrapper) GeoHash(ctx context.Context, key string, members ..
 			w.inflightMetric.WithLabelValues("redis.Client.GeoHash", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.GeoHash", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.GeoHash", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.GeoHash", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoHash(key, members...)
@@ -2644,7 +2644,7 @@ func (w *RedisClientWrapper) GeoPos(ctx context.Context, key string, members ...
 			w.inflightMetric.WithLabelValues("redis.Client.GeoPos", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.GeoPos", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.GeoPos", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.GeoPos", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoPos(key, members...)
@@ -2677,7 +2677,7 @@ func (w *RedisClientWrapper) GeoRadius(ctx context.Context, key string, longitud
 			w.inflightMetric.WithLabelValues("redis.Client.GeoRadius", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.GeoRadius", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.GeoRadius", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.GeoRadius", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoRadius(key, longitude, latitude, query)
@@ -2710,7 +2710,7 @@ func (w *RedisClientWrapper) GeoRadiusByMember(ctx context.Context, key string, 
 			w.inflightMetric.WithLabelValues("redis.Client.GeoRadiusByMember", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.GeoRadiusByMember", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.GeoRadiusByMember", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.GeoRadiusByMember", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoRadiusByMember(key, member, query)
@@ -2743,7 +2743,7 @@ func (w *RedisClientWrapper) GeoRadiusByMemberRO(ctx context.Context, key string
 			w.inflightMetric.WithLabelValues("redis.Client.GeoRadiusByMemberRO", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.GeoRadiusByMemberRO", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.GeoRadiusByMemberRO", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.GeoRadiusByMemberRO", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoRadiusByMemberRO(key, member, query)
@@ -2776,7 +2776,7 @@ func (w *RedisClientWrapper) GeoRadiusRO(ctx context.Context, key string, longit
 			w.inflightMetric.WithLabelValues("redis.Client.GeoRadiusRO", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.GeoRadiusRO", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.GeoRadiusRO", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.GeoRadiusRO", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoRadiusRO(key, longitude, latitude, query)
@@ -2809,7 +2809,7 @@ func (w *RedisClientWrapper) Get(ctx context.Context, key string) *redis.StringC
 			w.inflightMetric.WithLabelValues("redis.Client.Get", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Get", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Get", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Get", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Get(key)
@@ -2842,7 +2842,7 @@ func (w *RedisClientWrapper) GetBit(ctx context.Context, key string, offset int6
 			w.inflightMetric.WithLabelValues("redis.Client.GetBit", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.GetBit", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.GetBit", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.GetBit", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GetBit(key, offset)
@@ -2875,7 +2875,7 @@ func (w *RedisClientWrapper) GetRange(ctx context.Context, key string, start int
 			w.inflightMetric.WithLabelValues("redis.Client.GetRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.GetRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.GetRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.GetRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GetRange(key, start, end)
@@ -2908,7 +2908,7 @@ func (w *RedisClientWrapper) GetSet(ctx context.Context, key string, value inter
 			w.inflightMetric.WithLabelValues("redis.Client.GetSet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.GetSet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.GetSet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.GetSet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GetSet(key, value)
@@ -2941,7 +2941,7 @@ func (w *RedisClientWrapper) HDel(ctx context.Context, key string, fields ...str
 			w.inflightMetric.WithLabelValues("redis.Client.HDel", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.HDel", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.HDel", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.HDel", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HDel(key, fields...)
@@ -2974,7 +2974,7 @@ func (w *RedisClientWrapper) HExists(ctx context.Context, key string, field stri
 			w.inflightMetric.WithLabelValues("redis.Client.HExists", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.HExists", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.HExists", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.HExists", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HExists(key, field)
@@ -3007,7 +3007,7 @@ func (w *RedisClientWrapper) HGet(ctx context.Context, key string, field string)
 			w.inflightMetric.WithLabelValues("redis.Client.HGet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.HGet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.HGet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.HGet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HGet(key, field)
@@ -3040,7 +3040,7 @@ func (w *RedisClientWrapper) HGetAll(ctx context.Context, key string) *redis.Str
 			w.inflightMetric.WithLabelValues("redis.Client.HGetAll", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.HGetAll", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.HGetAll", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.HGetAll", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HGetAll(key)
@@ -3073,7 +3073,7 @@ func (w *RedisClientWrapper) HIncrBy(ctx context.Context, key string, field stri
 			w.inflightMetric.WithLabelValues("redis.Client.HIncrBy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.HIncrBy", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.HIncrBy", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.HIncrBy", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HIncrBy(key, field, incr)
@@ -3106,7 +3106,7 @@ func (w *RedisClientWrapper) HIncrByFloat(ctx context.Context, key string, field
 			w.inflightMetric.WithLabelValues("redis.Client.HIncrByFloat", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.HIncrByFloat", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.HIncrByFloat", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.HIncrByFloat", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HIncrByFloat(key, field, incr)
@@ -3139,7 +3139,7 @@ func (w *RedisClientWrapper) HKeys(ctx context.Context, key string) *redis.Strin
 			w.inflightMetric.WithLabelValues("redis.Client.HKeys", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.HKeys", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.HKeys", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.HKeys", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HKeys(key)
@@ -3172,7 +3172,7 @@ func (w *RedisClientWrapper) HLen(ctx context.Context, key string) *redis.IntCmd
 			w.inflightMetric.WithLabelValues("redis.Client.HLen", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.HLen", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.HLen", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.HLen", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HLen(key)
@@ -3205,7 +3205,7 @@ func (w *RedisClientWrapper) HMGet(ctx context.Context, key string, fields ...st
 			w.inflightMetric.WithLabelValues("redis.Client.HMGet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.HMGet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.HMGet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.HMGet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HMGet(key, fields...)
@@ -3238,7 +3238,7 @@ func (w *RedisClientWrapper) HMSet(ctx context.Context, key string, fields map[s
 			w.inflightMetric.WithLabelValues("redis.Client.HMSet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.HMSet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.HMSet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.HMSet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HMSet(key, fields)
@@ -3271,7 +3271,7 @@ func (w *RedisClientWrapper) HScan(ctx context.Context, key string, cursor uint6
 			w.inflightMetric.WithLabelValues("redis.Client.HScan", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.HScan", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.HScan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.HScan", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HScan(key, cursor, match, count)
@@ -3304,7 +3304,7 @@ func (w *RedisClientWrapper) HSet(ctx context.Context, key string, field string,
 			w.inflightMetric.WithLabelValues("redis.Client.HSet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.HSet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.HSet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.HSet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HSet(key, field, value)
@@ -3337,7 +3337,7 @@ func (w *RedisClientWrapper) HSetNX(ctx context.Context, key string, field strin
 			w.inflightMetric.WithLabelValues("redis.Client.HSetNX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.HSetNX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.HSetNX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.HSetNX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HSetNX(key, field, value)
@@ -3370,7 +3370,7 @@ func (w *RedisClientWrapper) HVals(ctx context.Context, key string) *redis.Strin
 			w.inflightMetric.WithLabelValues("redis.Client.HVals", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.HVals", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.HVals", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.HVals", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HVals(key)
@@ -3403,7 +3403,7 @@ func (w *RedisClientWrapper) Incr(ctx context.Context, key string) *redis.IntCmd
 			w.inflightMetric.WithLabelValues("redis.Client.Incr", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Incr", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Incr", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Incr", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Incr(key)
@@ -3436,7 +3436,7 @@ func (w *RedisClientWrapper) IncrBy(ctx context.Context, key string, value int64
 			w.inflightMetric.WithLabelValues("redis.Client.IncrBy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.IncrBy", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.IncrBy", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.IncrBy", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.IncrBy(key, value)
@@ -3469,7 +3469,7 @@ func (w *RedisClientWrapper) IncrByFloat(ctx context.Context, key string, value 
 			w.inflightMetric.WithLabelValues("redis.Client.IncrByFloat", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.IncrByFloat", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.IncrByFloat", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.IncrByFloat", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.IncrByFloat(key, value)
@@ -3502,7 +3502,7 @@ func (w *RedisClientWrapper) Info(ctx context.Context, section ...string) *redis
 			w.inflightMetric.WithLabelValues("redis.Client.Info", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Info", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Info", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Info", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Info(section...)
@@ -3535,7 +3535,7 @@ func (w *RedisClientWrapper) Keys(ctx context.Context, pattern string) *redis.St
 			w.inflightMetric.WithLabelValues("redis.Client.Keys", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Keys", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Keys", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Keys", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Keys(pattern)
@@ -3568,7 +3568,7 @@ func (w *RedisClientWrapper) LIndex(ctx context.Context, key string, index int64
 			w.inflightMetric.WithLabelValues("redis.Client.LIndex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.LIndex", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.LIndex", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.LIndex", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LIndex(key, index)
@@ -3601,7 +3601,7 @@ func (w *RedisClientWrapper) LInsert(ctx context.Context, key string, op string,
 			w.inflightMetric.WithLabelValues("redis.Client.LInsert", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.LInsert", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.LInsert", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.LInsert", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LInsert(key, op, pivot, value)
@@ -3634,7 +3634,7 @@ func (w *RedisClientWrapper) LInsertAfter(ctx context.Context, key string, pivot
 			w.inflightMetric.WithLabelValues("redis.Client.LInsertAfter", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.LInsertAfter", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.LInsertAfter", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.LInsertAfter", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LInsertAfter(key, pivot, value)
@@ -3667,7 +3667,7 @@ func (w *RedisClientWrapper) LInsertBefore(ctx context.Context, key string, pivo
 			w.inflightMetric.WithLabelValues("redis.Client.LInsertBefore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.LInsertBefore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.LInsertBefore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.LInsertBefore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LInsertBefore(key, pivot, value)
@@ -3700,7 +3700,7 @@ func (w *RedisClientWrapper) LLen(ctx context.Context, key string) *redis.IntCmd
 			w.inflightMetric.WithLabelValues("redis.Client.LLen", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.LLen", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.LLen", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.LLen", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LLen(key)
@@ -3733,7 +3733,7 @@ func (w *RedisClientWrapper) LPop(ctx context.Context, key string) *redis.String
 			w.inflightMetric.WithLabelValues("redis.Client.LPop", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.LPop", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.LPop", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.LPop", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LPop(key)
@@ -3766,7 +3766,7 @@ func (w *RedisClientWrapper) LPush(ctx context.Context, key string, values ...in
 			w.inflightMetric.WithLabelValues("redis.Client.LPush", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.LPush", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.LPush", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.LPush", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LPush(key, values...)
@@ -3799,7 +3799,7 @@ func (w *RedisClientWrapper) LPushX(ctx context.Context, key string, value inter
 			w.inflightMetric.WithLabelValues("redis.Client.LPushX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.LPushX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.LPushX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.LPushX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LPushX(key, value)
@@ -3832,7 +3832,7 @@ func (w *RedisClientWrapper) LRange(ctx context.Context, key string, start int64
 			w.inflightMetric.WithLabelValues("redis.Client.LRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.LRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.LRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.LRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LRange(key, start, stop)
@@ -3865,7 +3865,7 @@ func (w *RedisClientWrapper) LRem(ctx context.Context, key string, count int64, 
 			w.inflightMetric.WithLabelValues("redis.Client.LRem", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.LRem", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.LRem", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.LRem", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LRem(key, count, value)
@@ -3898,7 +3898,7 @@ func (w *RedisClientWrapper) LSet(ctx context.Context, key string, index int64, 
 			w.inflightMetric.WithLabelValues("redis.Client.LSet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.LSet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.LSet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.LSet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LSet(key, index, value)
@@ -3931,7 +3931,7 @@ func (w *RedisClientWrapper) LTrim(ctx context.Context, key string, start int64,
 			w.inflightMetric.WithLabelValues("redis.Client.LTrim", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.LTrim", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.LTrim", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.LTrim", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LTrim(key, start, stop)
@@ -3964,7 +3964,7 @@ func (w *RedisClientWrapper) LastSave(ctx context.Context) *redis.IntCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.LastSave", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.LastSave", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.LastSave", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.LastSave", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LastSave()
@@ -3997,7 +3997,7 @@ func (w *RedisClientWrapper) MGet(ctx context.Context, keys ...string) *redis.Sl
 			w.inflightMetric.WithLabelValues("redis.Client.MGet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.MGet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.MGet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.MGet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.MGet(keys...)
@@ -4030,7 +4030,7 @@ func (w *RedisClientWrapper) MSet(ctx context.Context, pairs ...interface{}) *re
 			w.inflightMetric.WithLabelValues("redis.Client.MSet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.MSet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.MSet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.MSet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.MSet(pairs...)
@@ -4063,7 +4063,7 @@ func (w *RedisClientWrapper) MSetNX(ctx context.Context, pairs ...interface{}) *
 			w.inflightMetric.WithLabelValues("redis.Client.MSetNX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.MSetNX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.MSetNX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.MSetNX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.MSetNX(pairs...)
@@ -4096,7 +4096,7 @@ func (w *RedisClientWrapper) MemoryUsage(ctx context.Context, key string, sample
 			w.inflightMetric.WithLabelValues("redis.Client.MemoryUsage", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.MemoryUsage", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.MemoryUsage", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.MemoryUsage", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.MemoryUsage(key, samples...)
@@ -4129,7 +4129,7 @@ func (w *RedisClientWrapper) Migrate(ctx context.Context, host string, port stri
 			w.inflightMetric.WithLabelValues("redis.Client.Migrate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Migrate", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Migrate", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Migrate", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Migrate(host, port, key, db, timeout)
@@ -4162,7 +4162,7 @@ func (w *RedisClientWrapper) Move(ctx context.Context, key string, db int64) *re
 			w.inflightMetric.WithLabelValues("redis.Client.Move", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Move", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Move", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Move", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Move(key, db)
@@ -4195,7 +4195,7 @@ func (w *RedisClientWrapper) ObjectEncoding(ctx context.Context, key string) *re
 			w.inflightMetric.WithLabelValues("redis.Client.ObjectEncoding", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ObjectEncoding", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ObjectEncoding", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ObjectEncoding", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ObjectEncoding(key)
@@ -4228,7 +4228,7 @@ func (w *RedisClientWrapper) ObjectIdleTime(ctx context.Context, key string) *re
 			w.inflightMetric.WithLabelValues("redis.Client.ObjectIdleTime", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ObjectIdleTime", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ObjectIdleTime", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ObjectIdleTime", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ObjectIdleTime(key)
@@ -4261,7 +4261,7 @@ func (w *RedisClientWrapper) ObjectRefCount(ctx context.Context, key string) *re
 			w.inflightMetric.WithLabelValues("redis.Client.ObjectRefCount", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ObjectRefCount", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ObjectRefCount", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ObjectRefCount", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ObjectRefCount(key)
@@ -4294,7 +4294,7 @@ func (w *RedisClientWrapper) PExpire(ctx context.Context, key string, expiration
 			w.inflightMetric.WithLabelValues("redis.Client.PExpire", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.PExpire", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.PExpire", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.PExpire", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PExpire(key, expiration)
@@ -4327,7 +4327,7 @@ func (w *RedisClientWrapper) PExpireAt(ctx context.Context, key string, tm time.
 			w.inflightMetric.WithLabelValues("redis.Client.PExpireAt", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.PExpireAt", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.PExpireAt", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.PExpireAt", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PExpireAt(key, tm)
@@ -4360,7 +4360,7 @@ func (w *RedisClientWrapper) PFAdd(ctx context.Context, key string, els ...inter
 			w.inflightMetric.WithLabelValues("redis.Client.PFAdd", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.PFAdd", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.PFAdd", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.PFAdd", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PFAdd(key, els...)
@@ -4393,7 +4393,7 @@ func (w *RedisClientWrapper) PFCount(ctx context.Context, keys ...string) *redis
 			w.inflightMetric.WithLabelValues("redis.Client.PFCount", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.PFCount", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.PFCount", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.PFCount", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PFCount(keys...)
@@ -4426,7 +4426,7 @@ func (w *RedisClientWrapper) PFMerge(ctx context.Context, dest string, keys ...s
 			w.inflightMetric.WithLabelValues("redis.Client.PFMerge", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.PFMerge", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.PFMerge", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.PFMerge", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PFMerge(dest, keys...)
@@ -4459,7 +4459,7 @@ func (w *RedisClientWrapper) PTTL(ctx context.Context, key string) *redis.Durati
 			w.inflightMetric.WithLabelValues("redis.Client.PTTL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.PTTL", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.PTTL", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.PTTL", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PTTL(key)
@@ -4492,7 +4492,7 @@ func (w *RedisClientWrapper) Persist(ctx context.Context, key string) *redis.Boo
 			w.inflightMetric.WithLabelValues("redis.Client.Persist", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Persist", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Persist", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Persist", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Persist(key)
@@ -4525,7 +4525,7 @@ func (w *RedisClientWrapper) Ping(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.Ping", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Ping", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Ping", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Ping", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Ping()
@@ -4558,7 +4558,7 @@ func (w *RedisClientWrapper) PubSubChannels(ctx context.Context, pattern string)
 			w.inflightMetric.WithLabelValues("redis.Client.PubSubChannels", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.PubSubChannels", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.PubSubChannels", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.PubSubChannels", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PubSubChannels(pattern)
@@ -4591,7 +4591,7 @@ func (w *RedisClientWrapper) PubSubNumPat(ctx context.Context) *redis.IntCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.PubSubNumPat", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.PubSubNumPat", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.PubSubNumPat", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.PubSubNumPat", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PubSubNumPat()
@@ -4624,7 +4624,7 @@ func (w *RedisClientWrapper) PubSubNumSub(ctx context.Context, channels ...strin
 			w.inflightMetric.WithLabelValues("redis.Client.PubSubNumSub", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.PubSubNumSub", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.PubSubNumSub", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.PubSubNumSub", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PubSubNumSub(channels...)
@@ -4657,7 +4657,7 @@ func (w *RedisClientWrapper) Publish(ctx context.Context, channel string, messag
 			w.inflightMetric.WithLabelValues("redis.Client.Publish", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Publish", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Publish", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Publish", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Publish(channel, message)
@@ -4690,7 +4690,7 @@ func (w *RedisClientWrapper) Quit(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.Quit", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Quit", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Quit", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Quit", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Quit()
@@ -4723,7 +4723,7 @@ func (w *RedisClientWrapper) RPop(ctx context.Context, key string) *redis.String
 			w.inflightMetric.WithLabelValues("redis.Client.RPop", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.RPop", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.RPop", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.RPop", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RPop(key)
@@ -4756,7 +4756,7 @@ func (w *RedisClientWrapper) RPopLPush(ctx context.Context, source string, desti
 			w.inflightMetric.WithLabelValues("redis.Client.RPopLPush", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.RPopLPush", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.RPopLPush", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.RPopLPush", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RPopLPush(source, destination)
@@ -4789,7 +4789,7 @@ func (w *RedisClientWrapper) RPush(ctx context.Context, key string, values ...in
 			w.inflightMetric.WithLabelValues("redis.Client.RPush", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.RPush", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.RPush", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.RPush", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RPush(key, values...)
@@ -4822,7 +4822,7 @@ func (w *RedisClientWrapper) RPushX(ctx context.Context, key string, value inter
 			w.inflightMetric.WithLabelValues("redis.Client.RPushX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.RPushX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.RPushX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.RPushX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RPushX(key, value)
@@ -4855,7 +4855,7 @@ func (w *RedisClientWrapper) RandomKey(ctx context.Context) *redis.StringCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.RandomKey", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.RandomKey", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.RandomKey", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.RandomKey", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RandomKey()
@@ -4888,7 +4888,7 @@ func (w *RedisClientWrapper) ReadOnly(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.ReadOnly", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ReadOnly", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ReadOnly", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ReadOnly", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ReadOnly()
@@ -4921,7 +4921,7 @@ func (w *RedisClientWrapper) ReadWrite(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.ReadWrite", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ReadWrite", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ReadWrite", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ReadWrite", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ReadWrite()
@@ -4954,7 +4954,7 @@ func (w *RedisClientWrapper) Rename(ctx context.Context, key string, newkey stri
 			w.inflightMetric.WithLabelValues("redis.Client.Rename", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Rename", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Rename", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Rename", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Rename(key, newkey)
@@ -4987,7 +4987,7 @@ func (w *RedisClientWrapper) RenameNX(ctx context.Context, key string, newkey st
 			w.inflightMetric.WithLabelValues("redis.Client.RenameNX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.RenameNX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.RenameNX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.RenameNX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RenameNX(key, newkey)
@@ -5020,7 +5020,7 @@ func (w *RedisClientWrapper) Restore(ctx context.Context, key string, ttl time.D
 			w.inflightMetric.WithLabelValues("redis.Client.Restore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Restore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Restore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Restore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Restore(key, ttl, value)
@@ -5053,7 +5053,7 @@ func (w *RedisClientWrapper) RestoreReplace(ctx context.Context, key string, ttl
 			w.inflightMetric.WithLabelValues("redis.Client.RestoreReplace", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.RestoreReplace", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.RestoreReplace", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.RestoreReplace", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RestoreReplace(key, ttl, value)
@@ -5086,7 +5086,7 @@ func (w *RedisClientWrapper) SAdd(ctx context.Context, key string, members ...in
 			w.inflightMetric.WithLabelValues("redis.Client.SAdd", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SAdd", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SAdd", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SAdd", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SAdd(key, members...)
@@ -5119,7 +5119,7 @@ func (w *RedisClientWrapper) SCard(ctx context.Context, key string) *redis.IntCm
 			w.inflightMetric.WithLabelValues("redis.Client.SCard", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SCard", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SCard", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SCard", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SCard(key)
@@ -5152,7 +5152,7 @@ func (w *RedisClientWrapper) SDiff(ctx context.Context, keys ...string) *redis.S
 			w.inflightMetric.WithLabelValues("redis.Client.SDiff", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SDiff", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SDiff", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SDiff", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SDiff(keys...)
@@ -5185,7 +5185,7 @@ func (w *RedisClientWrapper) SDiffStore(ctx context.Context, destination string,
 			w.inflightMetric.WithLabelValues("redis.Client.SDiffStore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SDiffStore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SDiffStore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SDiffStore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SDiffStore(destination, keys...)
@@ -5218,7 +5218,7 @@ func (w *RedisClientWrapper) SInter(ctx context.Context, keys ...string) *redis.
 			w.inflightMetric.WithLabelValues("redis.Client.SInter", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SInter", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SInter", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SInter", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SInter(keys...)
@@ -5251,7 +5251,7 @@ func (w *RedisClientWrapper) SInterStore(ctx context.Context, destination string
 			w.inflightMetric.WithLabelValues("redis.Client.SInterStore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SInterStore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SInterStore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SInterStore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SInterStore(destination, keys...)
@@ -5284,7 +5284,7 @@ func (w *RedisClientWrapper) SIsMember(ctx context.Context, key string, member i
 			w.inflightMetric.WithLabelValues("redis.Client.SIsMember", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SIsMember", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SIsMember", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SIsMember", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SIsMember(key, member)
@@ -5317,7 +5317,7 @@ func (w *RedisClientWrapper) SMembers(ctx context.Context, key string) *redis.St
 			w.inflightMetric.WithLabelValues("redis.Client.SMembers", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SMembers", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SMembers", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SMembers", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SMembers(key)
@@ -5350,7 +5350,7 @@ func (w *RedisClientWrapper) SMembersMap(ctx context.Context, key string) *redis
 			w.inflightMetric.WithLabelValues("redis.Client.SMembersMap", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SMembersMap", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SMembersMap", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SMembersMap", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SMembersMap(key)
@@ -5383,7 +5383,7 @@ func (w *RedisClientWrapper) SMove(ctx context.Context, source string, destinati
 			w.inflightMetric.WithLabelValues("redis.Client.SMove", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SMove", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SMove", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SMove", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SMove(source, destination, member)
@@ -5416,7 +5416,7 @@ func (w *RedisClientWrapper) SPop(ctx context.Context, key string) *redis.String
 			w.inflightMetric.WithLabelValues("redis.Client.SPop", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SPop", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SPop", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SPop", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SPop(key)
@@ -5449,7 +5449,7 @@ func (w *RedisClientWrapper) SPopN(ctx context.Context, key string, count int64)
 			w.inflightMetric.WithLabelValues("redis.Client.SPopN", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SPopN", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SPopN", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SPopN", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SPopN(key, count)
@@ -5482,7 +5482,7 @@ func (w *RedisClientWrapper) SRandMember(ctx context.Context, key string) *redis
 			w.inflightMetric.WithLabelValues("redis.Client.SRandMember", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SRandMember", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SRandMember", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SRandMember", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SRandMember(key)
@@ -5515,7 +5515,7 @@ func (w *RedisClientWrapper) SRandMemberN(ctx context.Context, key string, count
 			w.inflightMetric.WithLabelValues("redis.Client.SRandMemberN", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SRandMemberN", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SRandMemberN", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SRandMemberN", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SRandMemberN(key, count)
@@ -5548,7 +5548,7 @@ func (w *RedisClientWrapper) SRem(ctx context.Context, key string, members ...in
 			w.inflightMetric.WithLabelValues("redis.Client.SRem", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SRem", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SRem", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SRem", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SRem(key, members...)
@@ -5581,7 +5581,7 @@ func (w *RedisClientWrapper) SScan(ctx context.Context, key string, cursor uint6
 			w.inflightMetric.WithLabelValues("redis.Client.SScan", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SScan", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SScan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SScan", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SScan(key, cursor, match, count)
@@ -5614,7 +5614,7 @@ func (w *RedisClientWrapper) SUnion(ctx context.Context, keys ...string) *redis.
 			w.inflightMetric.WithLabelValues("redis.Client.SUnion", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SUnion", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SUnion", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SUnion", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SUnion(keys...)
@@ -5647,7 +5647,7 @@ func (w *RedisClientWrapper) SUnionStore(ctx context.Context, destination string
 			w.inflightMetric.WithLabelValues("redis.Client.SUnionStore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SUnionStore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SUnionStore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SUnionStore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SUnionStore(destination, keys...)
@@ -5680,7 +5680,7 @@ func (w *RedisClientWrapper) Save(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.Save", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Save", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Save", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Save", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Save()
@@ -5713,7 +5713,7 @@ func (w *RedisClientWrapper) Scan(ctx context.Context, cursor uint64, match stri
 			w.inflightMetric.WithLabelValues("redis.Client.Scan", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Scan", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Scan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Scan", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Scan(cursor, match, count)
@@ -5746,7 +5746,7 @@ func (w *RedisClientWrapper) ScriptExists(ctx context.Context, hashes ...string)
 			w.inflightMetric.WithLabelValues("redis.Client.ScriptExists", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ScriptExists", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ScriptExists", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ScriptExists", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ScriptExists(hashes...)
@@ -5779,7 +5779,7 @@ func (w *RedisClientWrapper) ScriptFlush(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.ScriptFlush", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ScriptFlush", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ScriptFlush", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ScriptFlush", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ScriptFlush()
@@ -5812,7 +5812,7 @@ func (w *RedisClientWrapper) ScriptKill(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.ScriptKill", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ScriptKill", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ScriptKill", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ScriptKill", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ScriptKill()
@@ -5845,7 +5845,7 @@ func (w *RedisClientWrapper) ScriptLoad(ctx context.Context, script string) *red
 			w.inflightMetric.WithLabelValues("redis.Client.ScriptLoad", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ScriptLoad", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ScriptLoad", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ScriptLoad", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ScriptLoad(script)
@@ -5878,7 +5878,7 @@ func (w *RedisClientWrapper) Set(ctx context.Context, key string, value interfac
 			w.inflightMetric.WithLabelValues("redis.Client.Set", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Set", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Set", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Set", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Set(key, value, expiration)
@@ -5911,7 +5911,7 @@ func (w *RedisClientWrapper) SetBit(ctx context.Context, key string, offset int6
 			w.inflightMetric.WithLabelValues("redis.Client.SetBit", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SetBit", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SetBit", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SetBit", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SetBit(key, offset, value)
@@ -5944,7 +5944,7 @@ func (w *RedisClientWrapper) SetNX(ctx context.Context, key string, value interf
 			w.inflightMetric.WithLabelValues("redis.Client.SetNX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SetNX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SetNX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SetNX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SetNX(key, value, expiration)
@@ -5977,7 +5977,7 @@ func (w *RedisClientWrapper) SetRange(ctx context.Context, key string, offset in
 			w.inflightMetric.WithLabelValues("redis.Client.SetRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SetRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SetRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SetRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SetRange(key, offset, value)
@@ -6010,7 +6010,7 @@ func (w *RedisClientWrapper) SetXX(ctx context.Context, key string, value interf
 			w.inflightMetric.WithLabelValues("redis.Client.SetXX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SetXX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SetXX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SetXX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SetXX(key, value, expiration)
@@ -6043,7 +6043,7 @@ func (w *RedisClientWrapper) Shutdown(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.Shutdown", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Shutdown", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Shutdown", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Shutdown", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Shutdown()
@@ -6076,7 +6076,7 @@ func (w *RedisClientWrapper) ShutdownNoSave(ctx context.Context) *redis.StatusCm
 			w.inflightMetric.WithLabelValues("redis.Client.ShutdownNoSave", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ShutdownNoSave", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ShutdownNoSave", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ShutdownNoSave", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ShutdownNoSave()
@@ -6109,7 +6109,7 @@ func (w *RedisClientWrapper) ShutdownSave(ctx context.Context) *redis.StatusCmd 
 			w.inflightMetric.WithLabelValues("redis.Client.ShutdownSave", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ShutdownSave", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ShutdownSave", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ShutdownSave", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ShutdownSave()
@@ -6142,7 +6142,7 @@ func (w *RedisClientWrapper) SlaveOf(ctx context.Context, host string, port stri
 			w.inflightMetric.WithLabelValues("redis.Client.SlaveOf", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SlaveOf", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SlaveOf", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SlaveOf", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SlaveOf(host, port)
@@ -6179,7 +6179,7 @@ func (w *RedisClientWrapper) Sort(ctx context.Context, key string, sort *redis.S
 			w.inflightMetric.WithLabelValues("redis.Client.Sort", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Sort", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Sort", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Sort", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Sort(key, sort)
@@ -6212,7 +6212,7 @@ func (w *RedisClientWrapper) SortInterfaces(ctx context.Context, key string, sor
 			w.inflightMetric.WithLabelValues("redis.Client.SortInterfaces", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SortInterfaces", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SortInterfaces", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SortInterfaces", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SortInterfaces(key, sort)
@@ -6245,7 +6245,7 @@ func (w *RedisClientWrapper) SortStore(ctx context.Context, key string, store st
 			w.inflightMetric.WithLabelValues("redis.Client.SortStore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.SortStore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.SortStore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.SortStore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SortStore(key, store, sort)
@@ -6278,7 +6278,7 @@ func (w *RedisClientWrapper) StrLen(ctx context.Context, key string) *redis.IntC
 			w.inflightMetric.WithLabelValues("redis.Client.StrLen", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.StrLen", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.StrLen", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.StrLen", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.StrLen(key)
@@ -6315,7 +6315,7 @@ func (w *RedisClientWrapper) TTL(ctx context.Context, key string) *redis.Duratio
 			w.inflightMetric.WithLabelValues("redis.Client.TTL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.TTL", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.TTL", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.TTL", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.TTL(key)
@@ -6348,7 +6348,7 @@ func (w *RedisClientWrapper) Time(ctx context.Context) *redis.TimeCmd {
 			w.inflightMetric.WithLabelValues("redis.Client.Time", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Time", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Time", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Time", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Time()
@@ -6381,7 +6381,7 @@ func (w *RedisClientWrapper) Touch(ctx context.Context, keys ...string) *redis.I
 			w.inflightMetric.WithLabelValues("redis.Client.Touch", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Touch", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Touch", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Touch", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Touch(keys...)
@@ -6414,7 +6414,7 @@ func (w *RedisClientWrapper) Type(ctx context.Context, key string) *redis.Status
 			w.inflightMetric.WithLabelValues("redis.Client.Type", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Type", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Type", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Type", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Type(key)
@@ -6447,7 +6447,7 @@ func (w *RedisClientWrapper) Unlink(ctx context.Context, keys ...string) *redis.
 			w.inflightMetric.WithLabelValues("redis.Client.Unlink", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Unlink", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Unlink", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Unlink", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Unlink(keys...)
@@ -6480,7 +6480,7 @@ func (w *RedisClientWrapper) Wait(ctx context.Context, numSlaves int, timeout ti
 			w.inflightMetric.WithLabelValues("redis.Client.Wait", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.Wait", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.Wait", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.Wait", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Wait(numSlaves, timeout)
@@ -6513,7 +6513,7 @@ func (w *RedisClientWrapper) XAck(ctx context.Context, stream string, group stri
 			w.inflightMetric.WithLabelValues("redis.Client.XAck", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XAck", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XAck", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XAck", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XAck(stream, group, ids...)
@@ -6546,7 +6546,7 @@ func (w *RedisClientWrapper) XAdd(ctx context.Context, a *redis.XAddArgs) *redis
 			w.inflightMetric.WithLabelValues("redis.Client.XAdd", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XAdd", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XAdd", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XAdd", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XAdd(a)
@@ -6579,7 +6579,7 @@ func (w *RedisClientWrapper) XClaim(ctx context.Context, a *redis.XClaimArgs) *r
 			w.inflightMetric.WithLabelValues("redis.Client.XClaim", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XClaim", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XClaim", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XClaim", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XClaim(a)
@@ -6612,7 +6612,7 @@ func (w *RedisClientWrapper) XClaimJustID(ctx context.Context, a *redis.XClaimAr
 			w.inflightMetric.WithLabelValues("redis.Client.XClaimJustID", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XClaimJustID", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XClaimJustID", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XClaimJustID", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XClaimJustID(a)
@@ -6645,7 +6645,7 @@ func (w *RedisClientWrapper) XDel(ctx context.Context, stream string, ids ...str
 			w.inflightMetric.WithLabelValues("redis.Client.XDel", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XDel", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XDel", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XDel", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XDel(stream, ids...)
@@ -6678,7 +6678,7 @@ func (w *RedisClientWrapper) XGroupCreate(ctx context.Context, stream string, gr
 			w.inflightMetric.WithLabelValues("redis.Client.XGroupCreate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XGroupCreate", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XGroupCreate", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XGroupCreate", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XGroupCreate(stream, group, start)
@@ -6711,7 +6711,7 @@ func (w *RedisClientWrapper) XGroupCreateMkStream(ctx context.Context, stream st
 			w.inflightMetric.WithLabelValues("redis.Client.XGroupCreateMkStream", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XGroupCreateMkStream", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XGroupCreateMkStream", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XGroupCreateMkStream", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XGroupCreateMkStream(stream, group, start)
@@ -6744,7 +6744,7 @@ func (w *RedisClientWrapper) XGroupDelConsumer(ctx context.Context, stream strin
 			w.inflightMetric.WithLabelValues("redis.Client.XGroupDelConsumer", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XGroupDelConsumer", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XGroupDelConsumer", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XGroupDelConsumer", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XGroupDelConsumer(stream, group, consumer)
@@ -6777,7 +6777,7 @@ func (w *RedisClientWrapper) XGroupDestroy(ctx context.Context, stream string, g
 			w.inflightMetric.WithLabelValues("redis.Client.XGroupDestroy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XGroupDestroy", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XGroupDestroy", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XGroupDestroy", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XGroupDestroy(stream, group)
@@ -6810,7 +6810,7 @@ func (w *RedisClientWrapper) XGroupSetID(ctx context.Context, stream string, gro
 			w.inflightMetric.WithLabelValues("redis.Client.XGroupSetID", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XGroupSetID", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XGroupSetID", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XGroupSetID", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XGroupSetID(stream, group, start)
@@ -6843,7 +6843,7 @@ func (w *RedisClientWrapper) XLen(ctx context.Context, stream string) *redis.Int
 			w.inflightMetric.WithLabelValues("redis.Client.XLen", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XLen", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XLen", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XLen", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XLen(stream)
@@ -6876,7 +6876,7 @@ func (w *RedisClientWrapper) XPending(ctx context.Context, stream string, group 
 			w.inflightMetric.WithLabelValues("redis.Client.XPending", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XPending", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XPending", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XPending", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XPending(stream, group)
@@ -6909,7 +6909,7 @@ func (w *RedisClientWrapper) XPendingExt(ctx context.Context, a *redis.XPendingE
 			w.inflightMetric.WithLabelValues("redis.Client.XPendingExt", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XPendingExt", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XPendingExt", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XPendingExt", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XPendingExt(a)
@@ -6942,7 +6942,7 @@ func (w *RedisClientWrapper) XRange(ctx context.Context, stream string, start st
 			w.inflightMetric.WithLabelValues("redis.Client.XRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XRange(stream, start, stop)
@@ -6975,7 +6975,7 @@ func (w *RedisClientWrapper) XRangeN(ctx context.Context, stream string, start s
 			w.inflightMetric.WithLabelValues("redis.Client.XRangeN", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XRangeN", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XRangeN", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XRangeN", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XRangeN(stream, start, stop, count)
@@ -7008,7 +7008,7 @@ func (w *RedisClientWrapper) XRead(ctx context.Context, a *redis.XReadArgs) *red
 			w.inflightMetric.WithLabelValues("redis.Client.XRead", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XRead", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XRead", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XRead", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XRead(a)
@@ -7041,7 +7041,7 @@ func (w *RedisClientWrapper) XReadGroup(ctx context.Context, a *redis.XReadGroup
 			w.inflightMetric.WithLabelValues("redis.Client.XReadGroup", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XReadGroup", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XReadGroup", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XReadGroup", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XReadGroup(a)
@@ -7074,7 +7074,7 @@ func (w *RedisClientWrapper) XReadStreams(ctx context.Context, streams ...string
 			w.inflightMetric.WithLabelValues("redis.Client.XReadStreams", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XReadStreams", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XReadStreams", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XReadStreams", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XReadStreams(streams...)
@@ -7107,7 +7107,7 @@ func (w *RedisClientWrapper) XRevRange(ctx context.Context, stream string, start
 			w.inflightMetric.WithLabelValues("redis.Client.XRevRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XRevRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XRevRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XRevRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XRevRange(stream, start, stop)
@@ -7140,7 +7140,7 @@ func (w *RedisClientWrapper) XRevRangeN(ctx context.Context, stream string, star
 			w.inflightMetric.WithLabelValues("redis.Client.XRevRangeN", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XRevRangeN", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XRevRangeN", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XRevRangeN", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XRevRangeN(stream, start, stop, count)
@@ -7173,7 +7173,7 @@ func (w *RedisClientWrapper) XTrim(ctx context.Context, key string, maxLen int64
 			w.inflightMetric.WithLabelValues("redis.Client.XTrim", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XTrim", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XTrim", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XTrim", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XTrim(key, maxLen)
@@ -7206,7 +7206,7 @@ func (w *RedisClientWrapper) XTrimApprox(ctx context.Context, key string, maxLen
 			w.inflightMetric.WithLabelValues("redis.Client.XTrimApprox", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.XTrimApprox", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.XTrimApprox", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.XTrimApprox", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XTrimApprox(key, maxLen)
@@ -7239,7 +7239,7 @@ func (w *RedisClientWrapper) ZAdd(ctx context.Context, key string, members ...re
 			w.inflightMetric.WithLabelValues("redis.Client.ZAdd", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZAdd", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZAdd", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZAdd", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZAdd(key, members...)
@@ -7272,7 +7272,7 @@ func (w *RedisClientWrapper) ZAddCh(ctx context.Context, key string, members ...
 			w.inflightMetric.WithLabelValues("redis.Client.ZAddCh", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZAddCh", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZAddCh", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZAddCh", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZAddCh(key, members...)
@@ -7305,7 +7305,7 @@ func (w *RedisClientWrapper) ZAddNX(ctx context.Context, key string, members ...
 			w.inflightMetric.WithLabelValues("redis.Client.ZAddNX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZAddNX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZAddNX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZAddNX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZAddNX(key, members...)
@@ -7338,7 +7338,7 @@ func (w *RedisClientWrapper) ZAddNXCh(ctx context.Context, key string, members .
 			w.inflightMetric.WithLabelValues("redis.Client.ZAddNXCh", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZAddNXCh", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZAddNXCh", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZAddNXCh", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZAddNXCh(key, members...)
@@ -7371,7 +7371,7 @@ func (w *RedisClientWrapper) ZAddXX(ctx context.Context, key string, members ...
 			w.inflightMetric.WithLabelValues("redis.Client.ZAddXX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZAddXX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZAddXX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZAddXX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZAddXX(key, members...)
@@ -7404,7 +7404,7 @@ func (w *RedisClientWrapper) ZAddXXCh(ctx context.Context, key string, members .
 			w.inflightMetric.WithLabelValues("redis.Client.ZAddXXCh", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZAddXXCh", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZAddXXCh", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZAddXXCh", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZAddXXCh(key, members...)
@@ -7437,7 +7437,7 @@ func (w *RedisClientWrapper) ZCard(ctx context.Context, key string) *redis.IntCm
 			w.inflightMetric.WithLabelValues("redis.Client.ZCard", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZCard", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZCard", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZCard", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZCard(key)
@@ -7470,7 +7470,7 @@ func (w *RedisClientWrapper) ZCount(ctx context.Context, key string, min string,
 			w.inflightMetric.WithLabelValues("redis.Client.ZCount", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZCount", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZCount", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZCount", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZCount(key, min, max)
@@ -7503,7 +7503,7 @@ func (w *RedisClientWrapper) ZIncr(ctx context.Context, key string, member redis
 			w.inflightMetric.WithLabelValues("redis.Client.ZIncr", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZIncr", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZIncr", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZIncr", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZIncr(key, member)
@@ -7536,7 +7536,7 @@ func (w *RedisClientWrapper) ZIncrBy(ctx context.Context, key string, increment 
 			w.inflightMetric.WithLabelValues("redis.Client.ZIncrBy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZIncrBy", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZIncrBy", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZIncrBy", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZIncrBy(key, increment, member)
@@ -7569,7 +7569,7 @@ func (w *RedisClientWrapper) ZIncrNX(ctx context.Context, key string, member red
 			w.inflightMetric.WithLabelValues("redis.Client.ZIncrNX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZIncrNX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZIncrNX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZIncrNX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZIncrNX(key, member)
@@ -7602,7 +7602,7 @@ func (w *RedisClientWrapper) ZIncrXX(ctx context.Context, key string, member red
 			w.inflightMetric.WithLabelValues("redis.Client.ZIncrXX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZIncrXX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZIncrXX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZIncrXX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZIncrXX(key, member)
@@ -7635,7 +7635,7 @@ func (w *RedisClientWrapper) ZInterStore(ctx context.Context, destination string
 			w.inflightMetric.WithLabelValues("redis.Client.ZInterStore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZInterStore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZInterStore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZInterStore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZInterStore(destination, store, keys...)
@@ -7668,7 +7668,7 @@ func (w *RedisClientWrapper) ZLexCount(ctx context.Context, key string, min stri
 			w.inflightMetric.WithLabelValues("redis.Client.ZLexCount", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZLexCount", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZLexCount", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZLexCount", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZLexCount(key, min, max)
@@ -7701,7 +7701,7 @@ func (w *RedisClientWrapper) ZPopMax(ctx context.Context, key string, count ...i
 			w.inflightMetric.WithLabelValues("redis.Client.ZPopMax", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZPopMax", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZPopMax", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZPopMax", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZPopMax(key, count...)
@@ -7734,7 +7734,7 @@ func (w *RedisClientWrapper) ZPopMin(ctx context.Context, key string, count ...i
 			w.inflightMetric.WithLabelValues("redis.Client.ZPopMin", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZPopMin", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZPopMin", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZPopMin", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZPopMin(key, count...)
@@ -7767,7 +7767,7 @@ func (w *RedisClientWrapper) ZRange(ctx context.Context, key string, start int64
 			w.inflightMetric.WithLabelValues("redis.Client.ZRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRange(key, start, stop)
@@ -7800,7 +7800,7 @@ func (w *RedisClientWrapper) ZRangeByLex(ctx context.Context, key string, opt re
 			w.inflightMetric.WithLabelValues("redis.Client.ZRangeByLex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRangeByLex", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRangeByLex", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRangeByLex", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRangeByLex(key, opt)
@@ -7833,7 +7833,7 @@ func (w *RedisClientWrapper) ZRangeByScore(ctx context.Context, key string, opt 
 			w.inflightMetric.WithLabelValues("redis.Client.ZRangeByScore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRangeByScore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRangeByScore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRangeByScore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRangeByScore(key, opt)
@@ -7866,7 +7866,7 @@ func (w *RedisClientWrapper) ZRangeByScoreWithScores(ctx context.Context, key st
 			w.inflightMetric.WithLabelValues("redis.Client.ZRangeByScoreWithScores", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRangeByScoreWithScores", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRangeByScoreWithScores", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRangeByScoreWithScores", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRangeByScoreWithScores(key, opt)
@@ -7899,7 +7899,7 @@ func (w *RedisClientWrapper) ZRangeWithScores(ctx context.Context, key string, s
 			w.inflightMetric.WithLabelValues("redis.Client.ZRangeWithScores", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRangeWithScores", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRangeWithScores", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRangeWithScores", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRangeWithScores(key, start, stop)
@@ -7932,7 +7932,7 @@ func (w *RedisClientWrapper) ZRank(ctx context.Context, key string, member strin
 			w.inflightMetric.WithLabelValues("redis.Client.ZRank", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRank", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRank", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRank", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRank(key, member)
@@ -7965,7 +7965,7 @@ func (w *RedisClientWrapper) ZRem(ctx context.Context, key string, members ...in
 			w.inflightMetric.WithLabelValues("redis.Client.ZRem", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRem", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRem", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRem", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRem(key, members...)
@@ -7998,7 +7998,7 @@ func (w *RedisClientWrapper) ZRemRangeByLex(ctx context.Context, key string, min
 			w.inflightMetric.WithLabelValues("redis.Client.ZRemRangeByLex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRemRangeByLex", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRemRangeByLex", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRemRangeByLex", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRemRangeByLex(key, min, max)
@@ -8031,7 +8031,7 @@ func (w *RedisClientWrapper) ZRemRangeByRank(ctx context.Context, key string, st
 			w.inflightMetric.WithLabelValues("redis.Client.ZRemRangeByRank", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRemRangeByRank", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRemRangeByRank", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRemRangeByRank", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRemRangeByRank(key, start, stop)
@@ -8064,7 +8064,7 @@ func (w *RedisClientWrapper) ZRemRangeByScore(ctx context.Context, key string, m
 			w.inflightMetric.WithLabelValues("redis.Client.ZRemRangeByScore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRemRangeByScore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRemRangeByScore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRemRangeByScore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRemRangeByScore(key, min, max)
@@ -8097,7 +8097,7 @@ func (w *RedisClientWrapper) ZRevRange(ctx context.Context, key string, start in
 			w.inflightMetric.WithLabelValues("redis.Client.ZRevRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRevRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRevRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRevRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRevRange(key, start, stop)
@@ -8130,7 +8130,7 @@ func (w *RedisClientWrapper) ZRevRangeByLex(ctx context.Context, key string, opt
 			w.inflightMetric.WithLabelValues("redis.Client.ZRevRangeByLex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRevRangeByLex", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRevRangeByLex", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRevRangeByLex", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRevRangeByLex(key, opt)
@@ -8163,7 +8163,7 @@ func (w *RedisClientWrapper) ZRevRangeByScore(ctx context.Context, key string, o
 			w.inflightMetric.WithLabelValues("redis.Client.ZRevRangeByScore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRevRangeByScore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRevRangeByScore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRevRangeByScore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRevRangeByScore(key, opt)
@@ -8196,7 +8196,7 @@ func (w *RedisClientWrapper) ZRevRangeByScoreWithScores(ctx context.Context, key
 			w.inflightMetric.WithLabelValues("redis.Client.ZRevRangeByScoreWithScores", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRevRangeByScoreWithScores", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRevRangeByScoreWithScores", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRevRangeByScoreWithScores", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRevRangeByScoreWithScores(key, opt)
@@ -8229,7 +8229,7 @@ func (w *RedisClientWrapper) ZRevRangeWithScores(ctx context.Context, key string
 			w.inflightMetric.WithLabelValues("redis.Client.ZRevRangeWithScores", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRevRangeWithScores", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRevRangeWithScores", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRevRangeWithScores", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRevRangeWithScores(key, start, stop)
@@ -8262,7 +8262,7 @@ func (w *RedisClientWrapper) ZRevRank(ctx context.Context, key string, member st
 			w.inflightMetric.WithLabelValues("redis.Client.ZRevRank", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZRevRank", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZRevRank", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZRevRank", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRevRank(key, member)
@@ -8295,7 +8295,7 @@ func (w *RedisClientWrapper) ZScan(ctx context.Context, key string, cursor uint6
 			w.inflightMetric.WithLabelValues("redis.Client.ZScan", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZScan", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZScan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZScan", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZScan(key, cursor, match, count)
@@ -8328,7 +8328,7 @@ func (w *RedisClientWrapper) ZScore(ctx context.Context, key string, member stri
 			w.inflightMetric.WithLabelValues("redis.Client.ZScore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZScore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZScore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZScore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZScore(key, member)
@@ -8361,7 +8361,7 @@ func (w *RedisClientWrapper) ZUnionStore(ctx context.Context, dest string, store
 			w.inflightMetric.WithLabelValues("redis.Client.ZUnionStore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.Client.ZUnionStore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.Client.ZUnionStore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.Client.ZUnionStore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZUnionStore(dest, store, keys...)
@@ -8432,7 +8432,7 @@ func (w *RedisClusterClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.DBSize", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.DBSize", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.DBSize", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.DBSize", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.DBSize()
@@ -8465,7 +8465,7 @@ func (w *RedisClusterClientWrapper) Do(ctx context.Context, args ...interface{})
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Do", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Do", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Do", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Do", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Do(args...)
@@ -8807,7 +8807,7 @@ func (w *RedisClusterClientWrapper) Append(ctx context.Context, key string, valu
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Append", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Append", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Append", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Append", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Append(key, value)
@@ -8840,7 +8840,7 @@ func (w *RedisClusterClientWrapper) BLPop(ctx context.Context, timeout time.Dura
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.BLPop", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.BLPop", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.BLPop", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.BLPop", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BLPop(timeout, keys...)
@@ -8873,7 +8873,7 @@ func (w *RedisClusterClientWrapper) BRPop(ctx context.Context, timeout time.Dura
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.BRPop", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.BRPop", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.BRPop", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.BRPop", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BRPop(timeout, keys...)
@@ -8906,7 +8906,7 @@ func (w *RedisClusterClientWrapper) BRPopLPush(ctx context.Context, source strin
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.BRPopLPush", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.BRPopLPush", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.BRPopLPush", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.BRPopLPush", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BRPopLPush(source, destination, timeout)
@@ -8939,7 +8939,7 @@ func (w *RedisClusterClientWrapper) BZPopMax(ctx context.Context, timeout time.D
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.BZPopMax", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.BZPopMax", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.BZPopMax", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.BZPopMax", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BZPopMax(timeout, keys...)
@@ -8972,7 +8972,7 @@ func (w *RedisClusterClientWrapper) BZPopMin(ctx context.Context, timeout time.D
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.BZPopMin", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.BZPopMin", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.BZPopMin", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.BZPopMin", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BZPopMin(timeout, keys...)
@@ -9005,7 +9005,7 @@ func (w *RedisClusterClientWrapper) BgRewriteAOF(ctx context.Context) *redis.Sta
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.BgRewriteAOF", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.BgRewriteAOF", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.BgRewriteAOF", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.BgRewriteAOF", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BgRewriteAOF()
@@ -9038,7 +9038,7 @@ func (w *RedisClusterClientWrapper) BgSave(ctx context.Context) *redis.StatusCmd
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.BgSave", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.BgSave", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.BgSave", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.BgSave", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BgSave()
@@ -9071,7 +9071,7 @@ func (w *RedisClusterClientWrapper) BitCount(ctx context.Context, key string, bi
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.BitCount", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.BitCount", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.BitCount", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.BitCount", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BitCount(key, bitCount)
@@ -9104,7 +9104,7 @@ func (w *RedisClusterClientWrapper) BitOpAnd(ctx context.Context, destKey string
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.BitOpAnd", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.BitOpAnd", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.BitOpAnd", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.BitOpAnd", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BitOpAnd(destKey, keys...)
@@ -9137,7 +9137,7 @@ func (w *RedisClusterClientWrapper) BitOpNot(ctx context.Context, destKey string
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.BitOpNot", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.BitOpNot", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.BitOpNot", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.BitOpNot", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BitOpNot(destKey, key)
@@ -9170,7 +9170,7 @@ func (w *RedisClusterClientWrapper) BitOpOr(ctx context.Context, destKey string,
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.BitOpOr", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.BitOpOr", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.BitOpOr", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.BitOpOr", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BitOpOr(destKey, keys...)
@@ -9203,7 +9203,7 @@ func (w *RedisClusterClientWrapper) BitOpXor(ctx context.Context, destKey string
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.BitOpXor", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.BitOpXor", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.BitOpXor", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.BitOpXor", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BitOpXor(destKey, keys...)
@@ -9236,7 +9236,7 @@ func (w *RedisClusterClientWrapper) BitPos(ctx context.Context, key string, bit 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.BitPos", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.BitPos", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.BitPos", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.BitPos", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BitPos(key, bit, pos...)
@@ -9269,7 +9269,7 @@ func (w *RedisClusterClientWrapper) ClientGetName(ctx context.Context) *redis.St
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientGetName", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientGetName", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientGetName", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientGetName", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientGetName()
@@ -9302,7 +9302,7 @@ func (w *RedisClusterClientWrapper) ClientID(ctx context.Context) *redis.IntCmd 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientID", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientID", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientID", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientID", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientID()
@@ -9335,7 +9335,7 @@ func (w *RedisClusterClientWrapper) ClientKill(ctx context.Context, ipPort strin
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientKill", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientKill", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientKill", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientKill", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientKill(ipPort)
@@ -9368,7 +9368,7 @@ func (w *RedisClusterClientWrapper) ClientKillByFilter(ctx context.Context, keys
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientKillByFilter", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientKillByFilter", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientKillByFilter", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientKillByFilter", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientKillByFilter(keys...)
@@ -9401,7 +9401,7 @@ func (w *RedisClusterClientWrapper) ClientList(ctx context.Context) *redis.Strin
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientList", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientList", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientList", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientList", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientList()
@@ -9434,7 +9434,7 @@ func (w *RedisClusterClientWrapper) ClientPause(ctx context.Context, dur time.Du
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientPause", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientPause", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientPause", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientPause", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientPause(dur)
@@ -9467,7 +9467,7 @@ func (w *RedisClusterClientWrapper) ClientUnblock(ctx context.Context, id int64)
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientUnblock", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientUnblock", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientUnblock", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientUnblock", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientUnblock(id)
@@ -9500,7 +9500,7 @@ func (w *RedisClusterClientWrapper) ClientUnblockWithError(ctx context.Context, 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientUnblockWithError", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClientUnblockWithError", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientUnblockWithError", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClientUnblockWithError", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClientUnblockWithError(id)
@@ -9533,7 +9533,7 @@ func (w *RedisClusterClientWrapper) ClusterAddSlots(ctx context.Context, slots .
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterAddSlots", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterAddSlots", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterAddSlots", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterAddSlots", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterAddSlots(slots...)
@@ -9566,7 +9566,7 @@ func (w *RedisClusterClientWrapper) ClusterAddSlotsRange(ctx context.Context, mi
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterAddSlotsRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterAddSlotsRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterAddSlotsRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterAddSlotsRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterAddSlotsRange(min, max)
@@ -9599,7 +9599,7 @@ func (w *RedisClusterClientWrapper) ClusterCountFailureReports(ctx context.Conte
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterCountFailureReports", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterCountFailureReports", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterCountFailureReports", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterCountFailureReports", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterCountFailureReports(nodeID)
@@ -9632,7 +9632,7 @@ func (w *RedisClusterClientWrapper) ClusterCountKeysInSlot(ctx context.Context, 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterCountKeysInSlot", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterCountKeysInSlot", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterCountKeysInSlot", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterCountKeysInSlot", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterCountKeysInSlot(slot)
@@ -9665,7 +9665,7 @@ func (w *RedisClusterClientWrapper) ClusterDelSlots(ctx context.Context, slots .
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterDelSlots", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterDelSlots", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterDelSlots", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterDelSlots", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterDelSlots(slots...)
@@ -9698,7 +9698,7 @@ func (w *RedisClusterClientWrapper) ClusterDelSlotsRange(ctx context.Context, mi
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterDelSlotsRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterDelSlotsRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterDelSlotsRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterDelSlotsRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterDelSlotsRange(min, max)
@@ -9731,7 +9731,7 @@ func (w *RedisClusterClientWrapper) ClusterFailover(ctx context.Context) *redis.
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterFailover", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterFailover", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterFailover", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterFailover", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterFailover()
@@ -9764,7 +9764,7 @@ func (w *RedisClusterClientWrapper) ClusterForget(ctx context.Context, nodeID st
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterForget", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterForget", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterForget", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterForget", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterForget(nodeID)
@@ -9797,7 +9797,7 @@ func (w *RedisClusterClientWrapper) ClusterGetKeysInSlot(ctx context.Context, sl
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterGetKeysInSlot", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterGetKeysInSlot", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterGetKeysInSlot", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterGetKeysInSlot", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterGetKeysInSlot(slot, count)
@@ -9830,7 +9830,7 @@ func (w *RedisClusterClientWrapper) ClusterInfo(ctx context.Context) *redis.Stri
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterInfo", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterInfo", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterInfo", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterInfo", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterInfo()
@@ -9863,7 +9863,7 @@ func (w *RedisClusterClientWrapper) ClusterKeySlot(ctx context.Context, key stri
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterKeySlot", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterKeySlot", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterKeySlot", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterKeySlot", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterKeySlot(key)
@@ -9896,7 +9896,7 @@ func (w *RedisClusterClientWrapper) ClusterMeet(ctx context.Context, host string
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterMeet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterMeet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterMeet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterMeet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterMeet(host, port)
@@ -9929,7 +9929,7 @@ func (w *RedisClusterClientWrapper) ClusterNodes(ctx context.Context) *redis.Str
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterNodes", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterNodes", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterNodes", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterNodes", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterNodes()
@@ -9962,7 +9962,7 @@ func (w *RedisClusterClientWrapper) ClusterReplicate(ctx context.Context, nodeID
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterReplicate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterReplicate", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterReplicate", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterReplicate", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterReplicate(nodeID)
@@ -9995,7 +9995,7 @@ func (w *RedisClusterClientWrapper) ClusterResetHard(ctx context.Context) *redis
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterResetHard", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterResetHard", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterResetHard", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterResetHard", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterResetHard()
@@ -10028,7 +10028,7 @@ func (w *RedisClusterClientWrapper) ClusterResetSoft(ctx context.Context) *redis
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterResetSoft", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterResetSoft", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterResetSoft", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterResetSoft", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterResetSoft()
@@ -10061,7 +10061,7 @@ func (w *RedisClusterClientWrapper) ClusterSaveConfig(ctx context.Context) *redi
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterSaveConfig", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterSaveConfig", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterSaveConfig", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterSaveConfig", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterSaveConfig()
@@ -10094,7 +10094,7 @@ func (w *RedisClusterClientWrapper) ClusterSlaves(ctx context.Context, nodeID st
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterSlaves", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterSlaves", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterSlaves", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterSlaves", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterSlaves(nodeID)
@@ -10127,7 +10127,7 @@ func (w *RedisClusterClientWrapper) ClusterSlots(ctx context.Context) *redis.Clu
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterSlots", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ClusterSlots", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterSlots", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ClusterSlots", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ClusterSlots()
@@ -10160,7 +10160,7 @@ func (w *RedisClusterClientWrapper) Command(ctx context.Context) *redis.Commands
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Command", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Command", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Command", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Command", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Command()
@@ -10193,7 +10193,7 @@ func (w *RedisClusterClientWrapper) ConfigGet(ctx context.Context, parameter str
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ConfigGet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ConfigGet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ConfigGet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ConfigGet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ConfigGet(parameter)
@@ -10226,7 +10226,7 @@ func (w *RedisClusterClientWrapper) ConfigResetStat(ctx context.Context) *redis.
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ConfigResetStat", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ConfigResetStat", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ConfigResetStat", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ConfigResetStat", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ConfigResetStat()
@@ -10259,7 +10259,7 @@ func (w *RedisClusterClientWrapper) ConfigRewrite(ctx context.Context) *redis.St
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ConfigRewrite", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ConfigRewrite", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ConfigRewrite", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ConfigRewrite", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ConfigRewrite()
@@ -10292,7 +10292,7 @@ func (w *RedisClusterClientWrapper) ConfigSet(ctx context.Context, parameter str
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ConfigSet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ConfigSet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ConfigSet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ConfigSet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ConfigSet(parameter, value)
@@ -10325,7 +10325,7 @@ func (w *RedisClusterClientWrapper) DbSize(ctx context.Context) *redis.IntCmd {
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.DbSize", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.DbSize", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.DbSize", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.DbSize", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.DbSize()
@@ -10358,7 +10358,7 @@ func (w *RedisClusterClientWrapper) DebugObject(ctx context.Context, key string)
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.DebugObject", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.DebugObject", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.DebugObject", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.DebugObject", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.DebugObject(key)
@@ -10391,7 +10391,7 @@ func (w *RedisClusterClientWrapper) Decr(ctx context.Context, key string) *redis
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Decr", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Decr", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Decr", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Decr", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Decr(key)
@@ -10424,7 +10424,7 @@ func (w *RedisClusterClientWrapper) DecrBy(ctx context.Context, key string, decr
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.DecrBy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.DecrBy", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.DecrBy", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.DecrBy", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.DecrBy(key, decrement)
@@ -10457,7 +10457,7 @@ func (w *RedisClusterClientWrapper) Del(ctx context.Context, keys ...string) *re
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Del", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Del", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Del", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Del", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Del(keys...)
@@ -10490,7 +10490,7 @@ func (w *RedisClusterClientWrapper) Dump(ctx context.Context, key string) *redis
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Dump", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Dump", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Dump", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Dump", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Dump(key)
@@ -10523,7 +10523,7 @@ func (w *RedisClusterClientWrapper) Echo(ctx context.Context, message interface{
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Echo", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Echo", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Echo", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Echo", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Echo(message)
@@ -10556,7 +10556,7 @@ func (w *RedisClusterClientWrapper) Eval(ctx context.Context, script string, key
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Eval", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Eval", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Eval", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Eval", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Eval(script, keys, args...)
@@ -10589,7 +10589,7 @@ func (w *RedisClusterClientWrapper) EvalSha(ctx context.Context, sha1 string, ke
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.EvalSha", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.EvalSha", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.EvalSha", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.EvalSha", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.EvalSha(sha1, keys, args...)
@@ -10622,7 +10622,7 @@ func (w *RedisClusterClientWrapper) Exists(ctx context.Context, keys ...string) 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Exists", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Exists", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Exists", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Exists", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Exists(keys...)
@@ -10655,7 +10655,7 @@ func (w *RedisClusterClientWrapper) Expire(ctx context.Context, key string, expi
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Expire", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Expire", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Expire", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Expire", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Expire(key, expiration)
@@ -10688,7 +10688,7 @@ func (w *RedisClusterClientWrapper) ExpireAt(ctx context.Context, key string, tm
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ExpireAt", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ExpireAt", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ExpireAt", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ExpireAt", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ExpireAt(key, tm)
@@ -10721,7 +10721,7 @@ func (w *RedisClusterClientWrapper) FlushAll(ctx context.Context) *redis.StatusC
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.FlushAll", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.FlushAll", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.FlushAll", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.FlushAll", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.FlushAll()
@@ -10754,7 +10754,7 @@ func (w *RedisClusterClientWrapper) FlushAllAsync(ctx context.Context) *redis.St
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.FlushAllAsync", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.FlushAllAsync", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.FlushAllAsync", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.FlushAllAsync", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.FlushAllAsync()
@@ -10787,7 +10787,7 @@ func (w *RedisClusterClientWrapper) FlushDB(ctx context.Context) *redis.StatusCm
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.FlushDB", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.FlushDB", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.FlushDB", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.FlushDB", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.FlushDB()
@@ -10820,7 +10820,7 @@ func (w *RedisClusterClientWrapper) FlushDBAsync(ctx context.Context) *redis.Sta
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.FlushDBAsync", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.FlushDBAsync", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.FlushDBAsync", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.FlushDBAsync", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.FlushDBAsync()
@@ -10853,7 +10853,7 @@ func (w *RedisClusterClientWrapper) FlushDb(ctx context.Context) *redis.StatusCm
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.FlushDb", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.FlushDb", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.FlushDb", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.FlushDb", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.FlushDb()
@@ -10886,7 +10886,7 @@ func (w *RedisClusterClientWrapper) GeoAdd(ctx context.Context, key string, geoL
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoAdd", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoAdd", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoAdd", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoAdd", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoAdd(key, geoLocation...)
@@ -10919,7 +10919,7 @@ func (w *RedisClusterClientWrapper) GeoDist(ctx context.Context, key string, mem
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoDist", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoDist", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoDist", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoDist", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoDist(key, member1, member2, unit)
@@ -10952,7 +10952,7 @@ func (w *RedisClusterClientWrapper) GeoHash(ctx context.Context, key string, mem
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoHash", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoHash", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoHash", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoHash", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoHash(key, members...)
@@ -10985,7 +10985,7 @@ func (w *RedisClusterClientWrapper) GeoPos(ctx context.Context, key string, memb
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoPos", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoPos", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoPos", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoPos", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoPos(key, members...)
@@ -11018,7 +11018,7 @@ func (w *RedisClusterClientWrapper) GeoRadius(ctx context.Context, key string, l
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoRadius", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoRadius", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoRadius", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoRadius", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoRadius(key, longitude, latitude, query)
@@ -11051,7 +11051,7 @@ func (w *RedisClusterClientWrapper) GeoRadiusByMember(ctx context.Context, key s
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoRadiusByMember", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoRadiusByMember", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoRadiusByMember", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoRadiusByMember", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoRadiusByMember(key, member, query)
@@ -11084,7 +11084,7 @@ func (w *RedisClusterClientWrapper) GeoRadiusByMemberRO(ctx context.Context, key
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoRadiusByMemberRO", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoRadiusByMemberRO", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoRadiusByMemberRO", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoRadiusByMemberRO", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoRadiusByMemberRO(key, member, query)
@@ -11117,7 +11117,7 @@ func (w *RedisClusterClientWrapper) GeoRadiusRO(ctx context.Context, key string,
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoRadiusRO", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.GeoRadiusRO", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoRadiusRO", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.GeoRadiusRO", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GeoRadiusRO(key, longitude, latitude, query)
@@ -11150,7 +11150,7 @@ func (w *RedisClusterClientWrapper) Get(ctx context.Context, key string) *redis.
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Get", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Get", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Get", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Get", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Get(key)
@@ -11183,7 +11183,7 @@ func (w *RedisClusterClientWrapper) GetBit(ctx context.Context, key string, offs
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.GetBit", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.GetBit", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.GetBit", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.GetBit", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GetBit(key, offset)
@@ -11216,7 +11216,7 @@ func (w *RedisClusterClientWrapper) GetRange(ctx context.Context, key string, st
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.GetRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.GetRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.GetRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.GetRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GetRange(key, start, end)
@@ -11249,7 +11249,7 @@ func (w *RedisClusterClientWrapper) GetSet(ctx context.Context, key string, valu
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.GetSet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.GetSet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.GetSet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.GetSet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.GetSet(key, value)
@@ -11282,7 +11282,7 @@ func (w *RedisClusterClientWrapper) HDel(ctx context.Context, key string, fields
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.HDel", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.HDel", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.HDel", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.HDel", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HDel(key, fields...)
@@ -11315,7 +11315,7 @@ func (w *RedisClusterClientWrapper) HExists(ctx context.Context, key string, fie
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.HExists", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.HExists", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.HExists", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.HExists", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HExists(key, field)
@@ -11348,7 +11348,7 @@ func (w *RedisClusterClientWrapper) HGet(ctx context.Context, key string, field 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.HGet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.HGet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.HGet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.HGet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HGet(key, field)
@@ -11381,7 +11381,7 @@ func (w *RedisClusterClientWrapper) HGetAll(ctx context.Context, key string) *re
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.HGetAll", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.HGetAll", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.HGetAll", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.HGetAll", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HGetAll(key)
@@ -11414,7 +11414,7 @@ func (w *RedisClusterClientWrapper) HIncrBy(ctx context.Context, key string, fie
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.HIncrBy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.HIncrBy", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.HIncrBy", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.HIncrBy", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HIncrBy(key, field, incr)
@@ -11447,7 +11447,7 @@ func (w *RedisClusterClientWrapper) HIncrByFloat(ctx context.Context, key string
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.HIncrByFloat", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.HIncrByFloat", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.HIncrByFloat", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.HIncrByFloat", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HIncrByFloat(key, field, incr)
@@ -11480,7 +11480,7 @@ func (w *RedisClusterClientWrapper) HKeys(ctx context.Context, key string) *redi
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.HKeys", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.HKeys", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.HKeys", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.HKeys", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HKeys(key)
@@ -11513,7 +11513,7 @@ func (w *RedisClusterClientWrapper) HLen(ctx context.Context, key string) *redis
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.HLen", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.HLen", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.HLen", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.HLen", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HLen(key)
@@ -11546,7 +11546,7 @@ func (w *RedisClusterClientWrapper) HMGet(ctx context.Context, key string, field
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.HMGet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.HMGet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.HMGet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.HMGet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HMGet(key, fields...)
@@ -11579,7 +11579,7 @@ func (w *RedisClusterClientWrapper) HMSet(ctx context.Context, key string, field
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.HMSet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.HMSet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.HMSet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.HMSet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HMSet(key, fields)
@@ -11612,7 +11612,7 @@ func (w *RedisClusterClientWrapper) HScan(ctx context.Context, key string, curso
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.HScan", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.HScan", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.HScan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.HScan", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HScan(key, cursor, match, count)
@@ -11645,7 +11645,7 @@ func (w *RedisClusterClientWrapper) HSet(ctx context.Context, key string, field 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.HSet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.HSet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.HSet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.HSet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HSet(key, field, value)
@@ -11678,7 +11678,7 @@ func (w *RedisClusterClientWrapper) HSetNX(ctx context.Context, key string, fiel
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.HSetNX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.HSetNX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.HSetNX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.HSetNX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HSetNX(key, field, value)
@@ -11711,7 +11711,7 @@ func (w *RedisClusterClientWrapper) HVals(ctx context.Context, key string) *redi
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.HVals", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.HVals", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.HVals", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.HVals", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.HVals(key)
@@ -11744,7 +11744,7 @@ func (w *RedisClusterClientWrapper) Incr(ctx context.Context, key string) *redis
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Incr", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Incr", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Incr", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Incr", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Incr(key)
@@ -11777,7 +11777,7 @@ func (w *RedisClusterClientWrapper) IncrBy(ctx context.Context, key string, valu
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.IncrBy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.IncrBy", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.IncrBy", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.IncrBy", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.IncrBy(key, value)
@@ -11810,7 +11810,7 @@ func (w *RedisClusterClientWrapper) IncrByFloat(ctx context.Context, key string,
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.IncrByFloat", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.IncrByFloat", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.IncrByFloat", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.IncrByFloat", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.IncrByFloat(key, value)
@@ -11843,7 +11843,7 @@ func (w *RedisClusterClientWrapper) Info(ctx context.Context, section ...string)
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Info", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Info", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Info", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Info", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Info(section...)
@@ -11876,7 +11876,7 @@ func (w *RedisClusterClientWrapper) Keys(ctx context.Context, pattern string) *r
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Keys", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Keys", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Keys", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Keys", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Keys(pattern)
@@ -11909,7 +11909,7 @@ func (w *RedisClusterClientWrapper) LIndex(ctx context.Context, key string, inde
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.LIndex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.LIndex", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.LIndex", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.LIndex", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LIndex(key, index)
@@ -11942,7 +11942,7 @@ func (w *RedisClusterClientWrapper) LInsert(ctx context.Context, key string, op 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.LInsert", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.LInsert", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.LInsert", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.LInsert", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LInsert(key, op, pivot, value)
@@ -11975,7 +11975,7 @@ func (w *RedisClusterClientWrapper) LInsertAfter(ctx context.Context, key string
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.LInsertAfter", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.LInsertAfter", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.LInsertAfter", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.LInsertAfter", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LInsertAfter(key, pivot, value)
@@ -12008,7 +12008,7 @@ func (w *RedisClusterClientWrapper) LInsertBefore(ctx context.Context, key strin
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.LInsertBefore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.LInsertBefore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.LInsertBefore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.LInsertBefore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LInsertBefore(key, pivot, value)
@@ -12041,7 +12041,7 @@ func (w *RedisClusterClientWrapper) LLen(ctx context.Context, key string) *redis
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.LLen", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.LLen", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.LLen", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.LLen", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LLen(key)
@@ -12074,7 +12074,7 @@ func (w *RedisClusterClientWrapper) LPop(ctx context.Context, key string) *redis
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.LPop", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.LPop", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.LPop", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.LPop", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LPop(key)
@@ -12107,7 +12107,7 @@ func (w *RedisClusterClientWrapper) LPush(ctx context.Context, key string, value
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.LPush", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.LPush", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.LPush", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.LPush", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LPush(key, values...)
@@ -12140,7 +12140,7 @@ func (w *RedisClusterClientWrapper) LPushX(ctx context.Context, key string, valu
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.LPushX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.LPushX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.LPushX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.LPushX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LPushX(key, value)
@@ -12173,7 +12173,7 @@ func (w *RedisClusterClientWrapper) LRange(ctx context.Context, key string, star
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.LRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.LRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.LRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.LRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LRange(key, start, stop)
@@ -12206,7 +12206,7 @@ func (w *RedisClusterClientWrapper) LRem(ctx context.Context, key string, count 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.LRem", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.LRem", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.LRem", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.LRem", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LRem(key, count, value)
@@ -12239,7 +12239,7 @@ func (w *RedisClusterClientWrapper) LSet(ctx context.Context, key string, index 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.LSet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.LSet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.LSet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.LSet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LSet(key, index, value)
@@ -12272,7 +12272,7 @@ func (w *RedisClusterClientWrapper) LTrim(ctx context.Context, key string, start
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.LTrim", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.LTrim", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.LTrim", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.LTrim", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LTrim(key, start, stop)
@@ -12305,7 +12305,7 @@ func (w *RedisClusterClientWrapper) LastSave(ctx context.Context) *redis.IntCmd 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.LastSave", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.LastSave", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.LastSave", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.LastSave", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LastSave()
@@ -12338,7 +12338,7 @@ func (w *RedisClusterClientWrapper) MGet(ctx context.Context, keys ...string) *r
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.MGet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.MGet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.MGet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.MGet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.MGet(keys...)
@@ -12371,7 +12371,7 @@ func (w *RedisClusterClientWrapper) MSet(ctx context.Context, pairs ...interface
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.MSet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.MSet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.MSet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.MSet", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.MSet(pairs...)
@@ -12404,7 +12404,7 @@ func (w *RedisClusterClientWrapper) MSetNX(ctx context.Context, pairs ...interfa
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.MSetNX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.MSetNX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.MSetNX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.MSetNX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.MSetNX(pairs...)
@@ -12437,7 +12437,7 @@ func (w *RedisClusterClientWrapper) MemoryUsage(ctx context.Context, key string,
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.MemoryUsage", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.MemoryUsage", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.MemoryUsage", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.MemoryUsage", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.MemoryUsage(key, samples...)
@@ -12470,7 +12470,7 @@ func (w *RedisClusterClientWrapper) Migrate(ctx context.Context, host string, po
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Migrate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Migrate", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Migrate", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Migrate", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Migrate(host, port, key, db, timeout)
@@ -12503,7 +12503,7 @@ func (w *RedisClusterClientWrapper) Move(ctx context.Context, key string, db int
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Move", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Move", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Move", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Move", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Move(key, db)
@@ -12536,7 +12536,7 @@ func (w *RedisClusterClientWrapper) ObjectEncoding(ctx context.Context, key stri
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ObjectEncoding", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ObjectEncoding", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ObjectEncoding", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ObjectEncoding", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ObjectEncoding(key)
@@ -12569,7 +12569,7 @@ func (w *RedisClusterClientWrapper) ObjectIdleTime(ctx context.Context, key stri
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ObjectIdleTime", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ObjectIdleTime", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ObjectIdleTime", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ObjectIdleTime", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ObjectIdleTime(key)
@@ -12602,7 +12602,7 @@ func (w *RedisClusterClientWrapper) ObjectRefCount(ctx context.Context, key stri
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ObjectRefCount", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ObjectRefCount", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ObjectRefCount", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ObjectRefCount", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ObjectRefCount(key)
@@ -12635,7 +12635,7 @@ func (w *RedisClusterClientWrapper) PExpire(ctx context.Context, key string, exp
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.PExpire", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.PExpire", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.PExpire", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.PExpire", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PExpire(key, expiration)
@@ -12668,7 +12668,7 @@ func (w *RedisClusterClientWrapper) PExpireAt(ctx context.Context, key string, t
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.PExpireAt", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.PExpireAt", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.PExpireAt", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.PExpireAt", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PExpireAt(key, tm)
@@ -12701,7 +12701,7 @@ func (w *RedisClusterClientWrapper) PFAdd(ctx context.Context, key string, els .
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.PFAdd", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.PFAdd", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.PFAdd", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.PFAdd", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PFAdd(key, els...)
@@ -12734,7 +12734,7 @@ func (w *RedisClusterClientWrapper) PFCount(ctx context.Context, keys ...string)
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.PFCount", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.PFCount", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.PFCount", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.PFCount", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PFCount(keys...)
@@ -12767,7 +12767,7 @@ func (w *RedisClusterClientWrapper) PFMerge(ctx context.Context, dest string, ke
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.PFMerge", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.PFMerge", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.PFMerge", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.PFMerge", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PFMerge(dest, keys...)
@@ -12800,7 +12800,7 @@ func (w *RedisClusterClientWrapper) PTTL(ctx context.Context, key string) *redis
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.PTTL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.PTTL", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.PTTL", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.PTTL", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PTTL(key)
@@ -12833,7 +12833,7 @@ func (w *RedisClusterClientWrapper) Persist(ctx context.Context, key string) *re
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Persist", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Persist", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Persist", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Persist", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Persist(key)
@@ -12866,7 +12866,7 @@ func (w *RedisClusterClientWrapper) Ping(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Ping", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Ping", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Ping", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Ping", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Ping()
@@ -12899,7 +12899,7 @@ func (w *RedisClusterClientWrapper) PubSubChannels(ctx context.Context, pattern 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.PubSubChannels", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.PubSubChannels", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.PubSubChannels", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.PubSubChannels", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PubSubChannels(pattern)
@@ -12932,7 +12932,7 @@ func (w *RedisClusterClientWrapper) PubSubNumPat(ctx context.Context) *redis.Int
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.PubSubNumPat", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.PubSubNumPat", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.PubSubNumPat", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.PubSubNumPat", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PubSubNumPat()
@@ -12965,7 +12965,7 @@ func (w *RedisClusterClientWrapper) PubSubNumSub(ctx context.Context, channels .
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.PubSubNumSub", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.PubSubNumSub", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.PubSubNumSub", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.PubSubNumSub", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.PubSubNumSub(channels...)
@@ -12998,7 +12998,7 @@ func (w *RedisClusterClientWrapper) Publish(ctx context.Context, channel string,
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Publish", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Publish", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Publish", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Publish", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Publish(channel, message)
@@ -13031,7 +13031,7 @@ func (w *RedisClusterClientWrapper) Quit(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Quit", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Quit", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Quit", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Quit", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Quit()
@@ -13064,7 +13064,7 @@ func (w *RedisClusterClientWrapper) RPop(ctx context.Context, key string) *redis
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.RPop", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.RPop", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.RPop", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.RPop", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RPop(key)
@@ -13097,7 +13097,7 @@ func (w *RedisClusterClientWrapper) RPopLPush(ctx context.Context, source string
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.RPopLPush", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.RPopLPush", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.RPopLPush", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.RPopLPush", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RPopLPush(source, destination)
@@ -13130,7 +13130,7 @@ func (w *RedisClusterClientWrapper) RPush(ctx context.Context, key string, value
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.RPush", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.RPush", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.RPush", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.RPush", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RPush(key, values...)
@@ -13163,7 +13163,7 @@ func (w *RedisClusterClientWrapper) RPushX(ctx context.Context, key string, valu
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.RPushX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.RPushX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.RPushX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.RPushX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RPushX(key, value)
@@ -13196,7 +13196,7 @@ func (w *RedisClusterClientWrapper) RandomKey(ctx context.Context) *redis.String
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.RandomKey", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.RandomKey", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.RandomKey", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.RandomKey", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RandomKey()
@@ -13229,7 +13229,7 @@ func (w *RedisClusterClientWrapper) ReadOnly(ctx context.Context) *redis.StatusC
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ReadOnly", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ReadOnly", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ReadOnly", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ReadOnly", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ReadOnly()
@@ -13262,7 +13262,7 @@ func (w *RedisClusterClientWrapper) ReadWrite(ctx context.Context) *redis.Status
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ReadWrite", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ReadWrite", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ReadWrite", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ReadWrite", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ReadWrite()
@@ -13295,7 +13295,7 @@ func (w *RedisClusterClientWrapper) Rename(ctx context.Context, key string, newk
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Rename", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Rename", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Rename", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Rename", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Rename(key, newkey)
@@ -13328,7 +13328,7 @@ func (w *RedisClusterClientWrapper) RenameNX(ctx context.Context, key string, ne
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.RenameNX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.RenameNX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.RenameNX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.RenameNX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RenameNX(key, newkey)
@@ -13361,7 +13361,7 @@ func (w *RedisClusterClientWrapper) Restore(ctx context.Context, key string, ttl
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Restore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Restore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Restore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Restore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Restore(key, ttl, value)
@@ -13394,7 +13394,7 @@ func (w *RedisClusterClientWrapper) RestoreReplace(ctx context.Context, key stri
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.RestoreReplace", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.RestoreReplace", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.RestoreReplace", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.RestoreReplace", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RestoreReplace(key, ttl, value)
@@ -13427,7 +13427,7 @@ func (w *RedisClusterClientWrapper) SAdd(ctx context.Context, key string, member
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SAdd", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SAdd", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SAdd", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SAdd", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SAdd(key, members...)
@@ -13460,7 +13460,7 @@ func (w *RedisClusterClientWrapper) SCard(ctx context.Context, key string) *redi
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SCard", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SCard", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SCard", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SCard", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SCard(key)
@@ -13493,7 +13493,7 @@ func (w *RedisClusterClientWrapper) SDiff(ctx context.Context, keys ...string) *
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SDiff", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SDiff", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SDiff", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SDiff", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SDiff(keys...)
@@ -13526,7 +13526,7 @@ func (w *RedisClusterClientWrapper) SDiffStore(ctx context.Context, destination 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SDiffStore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SDiffStore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SDiffStore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SDiffStore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SDiffStore(destination, keys...)
@@ -13559,7 +13559,7 @@ func (w *RedisClusterClientWrapper) SInter(ctx context.Context, keys ...string) 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SInter", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SInter", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SInter", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SInter", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SInter(keys...)
@@ -13592,7 +13592,7 @@ func (w *RedisClusterClientWrapper) SInterStore(ctx context.Context, destination
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SInterStore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SInterStore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SInterStore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SInterStore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SInterStore(destination, keys...)
@@ -13625,7 +13625,7 @@ func (w *RedisClusterClientWrapper) SIsMember(ctx context.Context, key string, m
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SIsMember", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SIsMember", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SIsMember", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SIsMember", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SIsMember(key, member)
@@ -13658,7 +13658,7 @@ func (w *RedisClusterClientWrapper) SMembers(ctx context.Context, key string) *r
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SMembers", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SMembers", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SMembers", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SMembers", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SMembers(key)
@@ -13691,7 +13691,7 @@ func (w *RedisClusterClientWrapper) SMembersMap(ctx context.Context, key string)
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SMembersMap", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SMembersMap", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SMembersMap", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SMembersMap", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SMembersMap(key)
@@ -13724,7 +13724,7 @@ func (w *RedisClusterClientWrapper) SMove(ctx context.Context, source string, de
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SMove", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SMove", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SMove", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SMove", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SMove(source, destination, member)
@@ -13757,7 +13757,7 @@ func (w *RedisClusterClientWrapper) SPop(ctx context.Context, key string) *redis
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SPop", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SPop", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SPop", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SPop", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SPop(key)
@@ -13790,7 +13790,7 @@ func (w *RedisClusterClientWrapper) SPopN(ctx context.Context, key string, count
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SPopN", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SPopN", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SPopN", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SPopN", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SPopN(key, count)
@@ -13823,7 +13823,7 @@ func (w *RedisClusterClientWrapper) SRandMember(ctx context.Context, key string)
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SRandMember", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SRandMember", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SRandMember", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SRandMember", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SRandMember(key)
@@ -13856,7 +13856,7 @@ func (w *RedisClusterClientWrapper) SRandMemberN(ctx context.Context, key string
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SRandMemberN", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SRandMemberN", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SRandMemberN", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SRandMemberN", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SRandMemberN(key, count)
@@ -13889,7 +13889,7 @@ func (w *RedisClusterClientWrapper) SRem(ctx context.Context, key string, member
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SRem", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SRem", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SRem", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SRem", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SRem(key, members...)
@@ -13922,7 +13922,7 @@ func (w *RedisClusterClientWrapper) SScan(ctx context.Context, key string, curso
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SScan", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SScan", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SScan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SScan", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SScan(key, cursor, match, count)
@@ -13955,7 +13955,7 @@ func (w *RedisClusterClientWrapper) SUnion(ctx context.Context, keys ...string) 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SUnion", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SUnion", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SUnion", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SUnion", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SUnion(keys...)
@@ -13988,7 +13988,7 @@ func (w *RedisClusterClientWrapper) SUnionStore(ctx context.Context, destination
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SUnionStore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SUnionStore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SUnionStore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SUnionStore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SUnionStore(destination, keys...)
@@ -14021,7 +14021,7 @@ func (w *RedisClusterClientWrapper) Save(ctx context.Context) *redis.StatusCmd {
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Save", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Save", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Save", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Save", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Save()
@@ -14054,7 +14054,7 @@ func (w *RedisClusterClientWrapper) Scan(ctx context.Context, cursor uint64, mat
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Scan", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Scan", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Scan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Scan", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Scan(cursor, match, count)
@@ -14087,7 +14087,7 @@ func (w *RedisClusterClientWrapper) ScriptExists(ctx context.Context, hashes ...
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ScriptExists", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ScriptExists", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ScriptExists", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ScriptExists", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ScriptExists(hashes...)
@@ -14120,7 +14120,7 @@ func (w *RedisClusterClientWrapper) ScriptFlush(ctx context.Context) *redis.Stat
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ScriptFlush", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ScriptFlush", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ScriptFlush", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ScriptFlush", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ScriptFlush()
@@ -14153,7 +14153,7 @@ func (w *RedisClusterClientWrapper) ScriptKill(ctx context.Context) *redis.Statu
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ScriptKill", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ScriptKill", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ScriptKill", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ScriptKill", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ScriptKill()
@@ -14186,7 +14186,7 @@ func (w *RedisClusterClientWrapper) ScriptLoad(ctx context.Context, script strin
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ScriptLoad", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ScriptLoad", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ScriptLoad", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ScriptLoad", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ScriptLoad(script)
@@ -14219,7 +14219,7 @@ func (w *RedisClusterClientWrapper) Set(ctx context.Context, key string, value i
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Set", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Set", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Set", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Set", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Set(key, value, expiration)
@@ -14252,7 +14252,7 @@ func (w *RedisClusterClientWrapper) SetBit(ctx context.Context, key string, offs
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SetBit", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SetBit", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SetBit", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SetBit", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SetBit(key, offset, value)
@@ -14285,7 +14285,7 @@ func (w *RedisClusterClientWrapper) SetNX(ctx context.Context, key string, value
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SetNX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SetNX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SetNX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SetNX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SetNX(key, value, expiration)
@@ -14318,7 +14318,7 @@ func (w *RedisClusterClientWrapper) SetRange(ctx context.Context, key string, of
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SetRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SetRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SetRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SetRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SetRange(key, offset, value)
@@ -14351,7 +14351,7 @@ func (w *RedisClusterClientWrapper) SetXX(ctx context.Context, key string, value
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SetXX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SetXX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SetXX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SetXX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SetXX(key, value, expiration)
@@ -14384,7 +14384,7 @@ func (w *RedisClusterClientWrapper) Shutdown(ctx context.Context) *redis.StatusC
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Shutdown", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Shutdown", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Shutdown", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Shutdown", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Shutdown()
@@ -14417,7 +14417,7 @@ func (w *RedisClusterClientWrapper) ShutdownNoSave(ctx context.Context) *redis.S
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ShutdownNoSave", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ShutdownNoSave", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ShutdownNoSave", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ShutdownNoSave", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ShutdownNoSave()
@@ -14450,7 +14450,7 @@ func (w *RedisClusterClientWrapper) ShutdownSave(ctx context.Context) *redis.Sta
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ShutdownSave", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ShutdownSave", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ShutdownSave", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ShutdownSave", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ShutdownSave()
@@ -14483,7 +14483,7 @@ func (w *RedisClusterClientWrapper) SlaveOf(ctx context.Context, host string, po
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SlaveOf", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SlaveOf", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SlaveOf", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SlaveOf", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SlaveOf(host, port)
@@ -14520,7 +14520,7 @@ func (w *RedisClusterClientWrapper) Sort(ctx context.Context, key string, sort *
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Sort", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Sort", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Sort", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Sort", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Sort(key, sort)
@@ -14553,7 +14553,7 @@ func (w *RedisClusterClientWrapper) SortInterfaces(ctx context.Context, key stri
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SortInterfaces", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SortInterfaces", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SortInterfaces", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SortInterfaces", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SortInterfaces(key, sort)
@@ -14586,7 +14586,7 @@ func (w *RedisClusterClientWrapper) SortStore(ctx context.Context, key string, s
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.SortStore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.SortStore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.SortStore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.SortStore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SortStore(key, store, sort)
@@ -14619,7 +14619,7 @@ func (w *RedisClusterClientWrapper) StrLen(ctx context.Context, key string) *red
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.StrLen", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.StrLen", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.StrLen", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.StrLen", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.StrLen(key)
@@ -14656,7 +14656,7 @@ func (w *RedisClusterClientWrapper) TTL(ctx context.Context, key string) *redis.
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.TTL", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.TTL", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.TTL", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.TTL", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.TTL(key)
@@ -14689,7 +14689,7 @@ func (w *RedisClusterClientWrapper) Time(ctx context.Context) *redis.TimeCmd {
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Time", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Time", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Time", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Time", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Time()
@@ -14722,7 +14722,7 @@ func (w *RedisClusterClientWrapper) Touch(ctx context.Context, keys ...string) *
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Touch", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Touch", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Touch", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Touch", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Touch(keys...)
@@ -14755,7 +14755,7 @@ func (w *RedisClusterClientWrapper) Type(ctx context.Context, key string) *redis
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Type", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Type", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Type", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Type", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Type(key)
@@ -14788,7 +14788,7 @@ func (w *RedisClusterClientWrapper) Unlink(ctx context.Context, keys ...string) 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Unlink", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Unlink", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Unlink", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Unlink", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Unlink(keys...)
@@ -14821,7 +14821,7 @@ func (w *RedisClusterClientWrapper) Wait(ctx context.Context, numSlaves int, tim
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.Wait", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.Wait", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.Wait", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.Wait", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Wait(numSlaves, timeout)
@@ -14854,7 +14854,7 @@ func (w *RedisClusterClientWrapper) XAck(ctx context.Context, stream string, gro
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XAck", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XAck", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XAck", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XAck", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XAck(stream, group, ids...)
@@ -14887,7 +14887,7 @@ func (w *RedisClusterClientWrapper) XAdd(ctx context.Context, a *redis.XAddArgs)
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XAdd", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XAdd", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XAdd", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XAdd", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XAdd(a)
@@ -14920,7 +14920,7 @@ func (w *RedisClusterClientWrapper) XClaim(ctx context.Context, a *redis.XClaimA
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XClaim", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XClaim", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XClaim", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XClaim", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XClaim(a)
@@ -14953,7 +14953,7 @@ func (w *RedisClusterClientWrapper) XClaimJustID(ctx context.Context, a *redis.X
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XClaimJustID", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XClaimJustID", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XClaimJustID", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XClaimJustID", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XClaimJustID(a)
@@ -14986,7 +14986,7 @@ func (w *RedisClusterClientWrapper) XDel(ctx context.Context, stream string, ids
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XDel", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XDel", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XDel", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XDel", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XDel(stream, ids...)
@@ -15019,7 +15019,7 @@ func (w *RedisClusterClientWrapper) XGroupCreate(ctx context.Context, stream str
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XGroupCreate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XGroupCreate", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XGroupCreate", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XGroupCreate", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XGroupCreate(stream, group, start)
@@ -15052,7 +15052,7 @@ func (w *RedisClusterClientWrapper) XGroupCreateMkStream(ctx context.Context, st
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XGroupCreateMkStream", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XGroupCreateMkStream", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XGroupCreateMkStream", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XGroupCreateMkStream", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XGroupCreateMkStream(stream, group, start)
@@ -15085,7 +15085,7 @@ func (w *RedisClusterClientWrapper) XGroupDelConsumer(ctx context.Context, strea
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XGroupDelConsumer", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XGroupDelConsumer", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XGroupDelConsumer", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XGroupDelConsumer", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XGroupDelConsumer(stream, group, consumer)
@@ -15118,7 +15118,7 @@ func (w *RedisClusterClientWrapper) XGroupDestroy(ctx context.Context, stream st
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XGroupDestroy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XGroupDestroy", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XGroupDestroy", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XGroupDestroy", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XGroupDestroy(stream, group)
@@ -15151,7 +15151,7 @@ func (w *RedisClusterClientWrapper) XGroupSetID(ctx context.Context, stream stri
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XGroupSetID", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XGroupSetID", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XGroupSetID", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XGroupSetID", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XGroupSetID(stream, group, start)
@@ -15184,7 +15184,7 @@ func (w *RedisClusterClientWrapper) XLen(ctx context.Context, stream string) *re
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XLen", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XLen", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XLen", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XLen", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XLen(stream)
@@ -15217,7 +15217,7 @@ func (w *RedisClusterClientWrapper) XPending(ctx context.Context, stream string,
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XPending", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XPending", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XPending", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XPending", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XPending(stream, group)
@@ -15250,7 +15250,7 @@ func (w *RedisClusterClientWrapper) XPendingExt(ctx context.Context, a *redis.XP
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XPendingExt", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XPendingExt", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XPendingExt", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XPendingExt", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XPendingExt(a)
@@ -15283,7 +15283,7 @@ func (w *RedisClusterClientWrapper) XRange(ctx context.Context, stream string, s
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XRange(stream, start, stop)
@@ -15316,7 +15316,7 @@ func (w *RedisClusterClientWrapper) XRangeN(ctx context.Context, stream string, 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XRangeN", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XRangeN", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XRangeN", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XRangeN", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XRangeN(stream, start, stop, count)
@@ -15349,7 +15349,7 @@ func (w *RedisClusterClientWrapper) XRead(ctx context.Context, a *redis.XReadArg
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XRead", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XRead", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XRead", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XRead", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XRead(a)
@@ -15382,7 +15382,7 @@ func (w *RedisClusterClientWrapper) XReadGroup(ctx context.Context, a *redis.XRe
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XReadGroup", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XReadGroup", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XReadGroup", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XReadGroup", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XReadGroup(a)
@@ -15415,7 +15415,7 @@ func (w *RedisClusterClientWrapper) XReadStreams(ctx context.Context, streams ..
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XReadStreams", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XReadStreams", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XReadStreams", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XReadStreams", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XReadStreams(streams...)
@@ -15448,7 +15448,7 @@ func (w *RedisClusterClientWrapper) XRevRange(ctx context.Context, stream string
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XRevRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XRevRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XRevRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XRevRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XRevRange(stream, start, stop)
@@ -15481,7 +15481,7 @@ func (w *RedisClusterClientWrapper) XRevRangeN(ctx context.Context, stream strin
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XRevRangeN", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XRevRangeN", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XRevRangeN", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XRevRangeN", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XRevRangeN(stream, start, stop, count)
@@ -15514,7 +15514,7 @@ func (w *RedisClusterClientWrapper) XTrim(ctx context.Context, key string, maxLe
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XTrim", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XTrim", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XTrim", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XTrim", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XTrim(key, maxLen)
@@ -15547,7 +15547,7 @@ func (w *RedisClusterClientWrapper) XTrimApprox(ctx context.Context, key string,
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.XTrimApprox", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.XTrimApprox", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.XTrimApprox", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.XTrimApprox", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.XTrimApprox(key, maxLen)
@@ -15580,7 +15580,7 @@ func (w *RedisClusterClientWrapper) ZAdd(ctx context.Context, key string, member
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZAdd", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZAdd", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZAdd", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZAdd", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZAdd(key, members...)
@@ -15613,7 +15613,7 @@ func (w *RedisClusterClientWrapper) ZAddCh(ctx context.Context, key string, memb
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZAddCh", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZAddCh", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZAddCh", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZAddCh", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZAddCh(key, members...)
@@ -15646,7 +15646,7 @@ func (w *RedisClusterClientWrapper) ZAddNX(ctx context.Context, key string, memb
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZAddNX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZAddNX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZAddNX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZAddNX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZAddNX(key, members...)
@@ -15679,7 +15679,7 @@ func (w *RedisClusterClientWrapper) ZAddNXCh(ctx context.Context, key string, me
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZAddNXCh", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZAddNXCh", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZAddNXCh", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZAddNXCh", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZAddNXCh(key, members...)
@@ -15712,7 +15712,7 @@ func (w *RedisClusterClientWrapper) ZAddXX(ctx context.Context, key string, memb
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZAddXX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZAddXX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZAddXX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZAddXX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZAddXX(key, members...)
@@ -15745,7 +15745,7 @@ func (w *RedisClusterClientWrapper) ZAddXXCh(ctx context.Context, key string, me
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZAddXXCh", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZAddXXCh", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZAddXXCh", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZAddXXCh", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZAddXXCh(key, members...)
@@ -15778,7 +15778,7 @@ func (w *RedisClusterClientWrapper) ZCard(ctx context.Context, key string) *redi
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZCard", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZCard", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZCard", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZCard", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZCard(key)
@@ -15811,7 +15811,7 @@ func (w *RedisClusterClientWrapper) ZCount(ctx context.Context, key string, min 
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZCount", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZCount", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZCount", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZCount", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZCount(key, min, max)
@@ -15844,7 +15844,7 @@ func (w *RedisClusterClientWrapper) ZIncr(ctx context.Context, key string, membe
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZIncr", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZIncr", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZIncr", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZIncr", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZIncr(key, member)
@@ -15877,7 +15877,7 @@ func (w *RedisClusterClientWrapper) ZIncrBy(ctx context.Context, key string, inc
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZIncrBy", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZIncrBy", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZIncrBy", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZIncrBy", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZIncrBy(key, increment, member)
@@ -15910,7 +15910,7 @@ func (w *RedisClusterClientWrapper) ZIncrNX(ctx context.Context, key string, mem
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZIncrNX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZIncrNX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZIncrNX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZIncrNX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZIncrNX(key, member)
@@ -15943,7 +15943,7 @@ func (w *RedisClusterClientWrapper) ZIncrXX(ctx context.Context, key string, mem
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZIncrXX", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZIncrXX", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZIncrXX", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZIncrXX", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZIncrXX(key, member)
@@ -15976,7 +15976,7 @@ func (w *RedisClusterClientWrapper) ZInterStore(ctx context.Context, destination
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZInterStore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZInterStore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZInterStore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZInterStore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZInterStore(destination, store, keys...)
@@ -16009,7 +16009,7 @@ func (w *RedisClusterClientWrapper) ZLexCount(ctx context.Context, key string, m
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZLexCount", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZLexCount", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZLexCount", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZLexCount", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZLexCount(key, min, max)
@@ -16042,7 +16042,7 @@ func (w *RedisClusterClientWrapper) ZPopMax(ctx context.Context, key string, cou
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZPopMax", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZPopMax", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZPopMax", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZPopMax", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZPopMax(key, count...)
@@ -16075,7 +16075,7 @@ func (w *RedisClusterClientWrapper) ZPopMin(ctx context.Context, key string, cou
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZPopMin", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZPopMin", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZPopMin", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZPopMin", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZPopMin(key, count...)
@@ -16108,7 +16108,7 @@ func (w *RedisClusterClientWrapper) ZRange(ctx context.Context, key string, star
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRange(key, start, stop)
@@ -16141,7 +16141,7 @@ func (w *RedisClusterClientWrapper) ZRangeByLex(ctx context.Context, key string,
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRangeByLex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRangeByLex", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRangeByLex", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRangeByLex", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRangeByLex(key, opt)
@@ -16174,7 +16174,7 @@ func (w *RedisClusterClientWrapper) ZRangeByScore(ctx context.Context, key strin
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRangeByScore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRangeByScore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRangeByScore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRangeByScore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRangeByScore(key, opt)
@@ -16207,7 +16207,7 @@ func (w *RedisClusterClientWrapper) ZRangeByScoreWithScores(ctx context.Context,
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRangeByScoreWithScores", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRangeByScoreWithScores", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRangeByScoreWithScores", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRangeByScoreWithScores", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRangeByScoreWithScores(key, opt)
@@ -16240,7 +16240,7 @@ func (w *RedisClusterClientWrapper) ZRangeWithScores(ctx context.Context, key st
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRangeWithScores", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRangeWithScores", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRangeWithScores", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRangeWithScores", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRangeWithScores(key, start, stop)
@@ -16273,7 +16273,7 @@ func (w *RedisClusterClientWrapper) ZRank(ctx context.Context, key string, membe
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRank", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRank", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRank", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRank", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRank(key, member)
@@ -16306,7 +16306,7 @@ func (w *RedisClusterClientWrapper) ZRem(ctx context.Context, key string, member
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRem", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRem", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRem", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRem", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRem(key, members...)
@@ -16339,7 +16339,7 @@ func (w *RedisClusterClientWrapper) ZRemRangeByLex(ctx context.Context, key stri
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRemRangeByLex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRemRangeByLex", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRemRangeByLex", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRemRangeByLex", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRemRangeByLex(key, min, max)
@@ -16372,7 +16372,7 @@ func (w *RedisClusterClientWrapper) ZRemRangeByRank(ctx context.Context, key str
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRemRangeByRank", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRemRangeByRank", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRemRangeByRank", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRemRangeByRank", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRemRangeByRank(key, start, stop)
@@ -16405,7 +16405,7 @@ func (w *RedisClusterClientWrapper) ZRemRangeByScore(ctx context.Context, key st
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRemRangeByScore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRemRangeByScore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRemRangeByScore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRemRangeByScore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRemRangeByScore(key, min, max)
@@ -16438,7 +16438,7 @@ func (w *RedisClusterClientWrapper) ZRevRange(ctx context.Context, key string, s
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRevRange", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRevRange", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRevRange", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRevRange", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRevRange(key, start, stop)
@@ -16471,7 +16471,7 @@ func (w *RedisClusterClientWrapper) ZRevRangeByLex(ctx context.Context, key stri
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRevRangeByLex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRevRangeByLex", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRevRangeByLex", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRevRangeByLex", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRevRangeByLex(key, opt)
@@ -16504,7 +16504,7 @@ func (w *RedisClusterClientWrapper) ZRevRangeByScore(ctx context.Context, key st
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRevRangeByScore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRevRangeByScore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRevRangeByScore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRevRangeByScore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRevRangeByScore(key, opt)
@@ -16537,7 +16537,7 @@ func (w *RedisClusterClientWrapper) ZRevRangeByScoreWithScores(ctx context.Conte
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRevRangeByScoreWithScores", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRevRangeByScoreWithScores", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRevRangeByScoreWithScores", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRevRangeByScoreWithScores", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRevRangeByScoreWithScores(key, opt)
@@ -16570,7 +16570,7 @@ func (w *RedisClusterClientWrapper) ZRevRangeWithScores(ctx context.Context, key
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRevRangeWithScores", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRevRangeWithScores", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRevRangeWithScores", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRevRangeWithScores", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRevRangeWithScores(key, start, stop)
@@ -16603,7 +16603,7 @@ func (w *RedisClusterClientWrapper) ZRevRank(ctx context.Context, key string, me
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRevRank", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZRevRank", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRevRank", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZRevRank", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZRevRank(key, member)
@@ -16636,7 +16636,7 @@ func (w *RedisClusterClientWrapper) ZScan(ctx context.Context, key string, curso
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZScan", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZScan", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZScan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZScan", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZScan(key, cursor, match, count)
@@ -16669,7 +16669,7 @@ func (w *RedisClusterClientWrapper) ZScore(ctx context.Context, key string, memb
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZScore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZScore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZScore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZScore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZScore(key, member)
@@ -16702,7 +16702,7 @@ func (w *RedisClusterClientWrapper) ZUnionStore(ctx context.Context, dest string
 			w.inflightMetric.WithLabelValues("redis.ClusterClient.ZUnionStore", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("redis.ClusterClient.ZUnionStore", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("redis.ClusterClient.ZUnionStore", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("redis.ClusterClient.ZUnionStore", ErrCode(res0.Err()), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ZUnionStore(dest, store, keys...)

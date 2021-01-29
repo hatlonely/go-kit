@@ -121,7 +121,7 @@ func (w GORMAssociationWrapper) Append(ctx context.Context, values ...interface{
 			w.inflightMetric.WithLabelValues("gorm.Association.Append", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.Association.Append", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.Association.Append", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.Association.Append", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Append(values...)
@@ -154,7 +154,7 @@ func (w GORMAssociationWrapper) Clear(ctx context.Context) GORMAssociationWrappe
 			w.inflightMetric.WithLabelValues("gorm.Association.Clear", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.Association.Clear", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.Association.Clear", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.Association.Clear", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Clear()
@@ -192,7 +192,7 @@ func (w GORMAssociationWrapper) Delete(ctx context.Context, values ...interface{
 			w.inflightMetric.WithLabelValues("gorm.Association.Delete", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.Association.Delete", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.Association.Delete", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.Association.Delete", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Delete(values...)
@@ -225,7 +225,7 @@ func (w GORMAssociationWrapper) Find(ctx context.Context, value interface{}) GOR
 			w.inflightMetric.WithLabelValues("gorm.Association.Find", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.Association.Find", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.Association.Find", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.Association.Find", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Find(value)
@@ -258,7 +258,7 @@ func (w GORMAssociationWrapper) Replace(ctx context.Context, values ...interface
 			w.inflightMetric.WithLabelValues("gorm.Association.Replace", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.Association.Replace", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.Association.Replace", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.Association.Replace", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Replace(values...)
@@ -296,7 +296,7 @@ func (w GORMDBWrapper) AddForeignKey(ctx context.Context, field string, dest str
 			w.inflightMetric.WithLabelValues("gorm.DB.AddForeignKey", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.AddForeignKey", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.AddForeignKey", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.AddForeignKey", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.AddForeignKey(field, dest, onDelete, onUpdate)
@@ -329,7 +329,7 @@ func (w GORMDBWrapper) AddIndex(ctx context.Context, indexName string, columns .
 			w.inflightMetric.WithLabelValues("gorm.DB.AddIndex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.AddIndex", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.AddIndex", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.AddIndex", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.AddIndex(indexName, columns...)
@@ -362,7 +362,7 @@ func (w GORMDBWrapper) AddUniqueIndex(ctx context.Context, indexName string, col
 			w.inflightMetric.WithLabelValues("gorm.DB.AddUniqueIndex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.AddUniqueIndex", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.AddUniqueIndex", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.AddUniqueIndex", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.AddUniqueIndex(indexName, columns...)
@@ -395,7 +395,7 @@ func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBW
 			w.inflightMetric.WithLabelValues("gorm.DB.Assign", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Assign", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Assign", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Assign", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Assign(attrs...)
@@ -428,7 +428,7 @@ func (w GORMDBWrapper) Association(ctx context.Context, column string) GORMAssoc
 			w.inflightMetric.WithLabelValues("gorm.DB.Association", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Association", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Association", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Association", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Association(column)
@@ -461,7 +461,7 @@ func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWr
 			w.inflightMetric.WithLabelValues("gorm.DB.Attrs", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Attrs", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Attrs", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Attrs", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Attrs(attrs...)
@@ -494,7 +494,7 @@ func (w GORMDBWrapper) AutoMigrate(ctx context.Context, values ...interface{}) G
 			w.inflightMetric.WithLabelValues("gorm.DB.AutoMigrate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.AutoMigrate", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.AutoMigrate", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.AutoMigrate", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.AutoMigrate(values...)
@@ -527,7 +527,7 @@ func (w GORMDBWrapper) Begin(ctx context.Context) GORMDBWrapper {
 			w.inflightMetric.WithLabelValues("gorm.DB.Begin", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Begin", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Begin", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Begin", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Begin()
@@ -560,7 +560,7 @@ func (w GORMDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) GORMDBW
 			w.inflightMetric.WithLabelValues("gorm.DB.BeginTx", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.BeginTx", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.BeginTx", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.BeginTx", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BeginTx(ctx, opts)
@@ -593,7 +593,7 @@ func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMD
 			w.inflightMetric.WithLabelValues("gorm.DB.BlockGlobalUpdate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.BlockGlobalUpdate", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.BlockGlobalUpdate", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.BlockGlobalUpdate", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.BlockGlobalUpdate(enable)
@@ -664,7 +664,7 @@ func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
 			w.inflightMetric.WithLabelValues("gorm.DB.Commit", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Commit", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Commit", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Commit", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Commit()
@@ -702,7 +702,7 @@ func (w GORMDBWrapper) Count(ctx context.Context, value interface{}) GORMDBWrapp
 			w.inflightMetric.WithLabelValues("gorm.DB.Count", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Count", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Count", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Count", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Count(value)
@@ -735,7 +735,7 @@ func (w GORMDBWrapper) Create(ctx context.Context, value interface{}) GORMDBWrap
 			w.inflightMetric.WithLabelValues("gorm.DB.Create", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Create", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Create", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Create", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Create(value)
@@ -768,7 +768,7 @@ func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) G
 			w.inflightMetric.WithLabelValues("gorm.DB.CreateTable", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.CreateTable", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.CreateTable", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.CreateTable", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.CreateTable(models...)
@@ -806,7 +806,7 @@ func (w GORMDBWrapper) Debug(ctx context.Context) GORMDBWrapper {
 			w.inflightMetric.WithLabelValues("gorm.DB.Debug", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Debug", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Debug", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Debug", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Debug()
@@ -839,7 +839,7 @@ func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...i
 			w.inflightMetric.WithLabelValues("gorm.DB.Delete", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Delete", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Delete", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Delete", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Delete(value, where...)
@@ -877,7 +877,7 @@ func (w GORMDBWrapper) DropColumn(ctx context.Context, column string) GORMDBWrap
 			w.inflightMetric.WithLabelValues("gorm.DB.DropColumn", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.DropColumn", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.DropColumn", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.DropColumn", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.DropColumn(column)
@@ -910,7 +910,7 @@ func (w GORMDBWrapper) DropTable(ctx context.Context, values ...interface{}) GOR
 			w.inflightMetric.WithLabelValues("gorm.DB.DropTable", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.DropTable", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.DropTable", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.DropTable", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.DropTable(values...)
@@ -943,7 +943,7 @@ func (w GORMDBWrapper) DropTableIfExists(ctx context.Context, values ...interfac
 			w.inflightMetric.WithLabelValues("gorm.DB.DropTableIfExists", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.DropTableIfExists", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.DropTableIfExists", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.DropTableIfExists", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.DropTableIfExists(values...)
@@ -976,7 +976,7 @@ func (w GORMDBWrapper) Exec(ctx context.Context, sql string, values ...interface
 			w.inflightMetric.WithLabelValues("gorm.DB.Exec", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Exec", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Exec", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Exec", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Exec(sql, values...)
@@ -1009,7 +1009,7 @@ func (w GORMDBWrapper) Find(ctx context.Context, out interface{}, where ...inter
 			w.inflightMetric.WithLabelValues("gorm.DB.Find", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Find", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Find", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Find", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Find(out, where...)
@@ -1042,7 +1042,7 @@ func (w GORMDBWrapper) First(ctx context.Context, out interface{}, where ...inte
 			w.inflightMetric.WithLabelValues("gorm.DB.First", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.First", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.First", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.First", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.First(out, where...)
@@ -1075,7 +1075,7 @@ func (w GORMDBWrapper) FirstOrCreate(ctx context.Context, out interface{}, where
 			w.inflightMetric.WithLabelValues("gorm.DB.FirstOrCreate", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.FirstOrCreate", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.FirstOrCreate", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.FirstOrCreate", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.FirstOrCreate(out, where...)
@@ -1108,7 +1108,7 @@ func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where .
 			w.inflightMetric.WithLabelValues("gorm.DB.FirstOrInit", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.FirstOrInit", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.FirstOrInit", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.FirstOrInit", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.FirstOrInit(out, where...)
@@ -1151,7 +1151,7 @@ func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
 			w.inflightMetric.WithLabelValues("gorm.DB.Group", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Group", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Group", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Group", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Group(query)
@@ -1194,7 +1194,7 @@ func (w GORMDBWrapper) Having(ctx context.Context, query interface{}, values ...
 			w.inflightMetric.WithLabelValues("gorm.DB.Having", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Having", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Having", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Having", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Having(query, values...)
@@ -1227,7 +1227,7 @@ func (w GORMDBWrapper) InstantSet(ctx context.Context, name string, value interf
 			w.inflightMetric.WithLabelValues("gorm.DB.InstantSet", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.InstantSet", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.InstantSet", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.InstantSet", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.InstantSet(name, value)
@@ -1260,7 +1260,7 @@ func (w GORMDBWrapper) Joins(ctx context.Context, query string, args ...interfac
 			w.inflightMetric.WithLabelValues("gorm.DB.Joins", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Joins", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Joins", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Joins", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Joins(query, args...)
@@ -1293,7 +1293,7 @@ func (w GORMDBWrapper) Last(ctx context.Context, out interface{}, where ...inter
 			w.inflightMetric.WithLabelValues("gorm.DB.Last", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Last", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Last", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Last", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Last(out, where...)
@@ -1326,7 +1326,7 @@ func (w GORMDBWrapper) Limit(ctx context.Context, limit interface{}) GORMDBWrapp
 			w.inflightMetric.WithLabelValues("gorm.DB.Limit", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Limit", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Limit", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Limit", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Limit(limit)
@@ -1359,7 +1359,7 @@ func (w GORMDBWrapper) LogMode(ctx context.Context, enable bool) GORMDBWrapper {
 			w.inflightMetric.WithLabelValues("gorm.DB.LogMode", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.LogMode", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.LogMode", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.LogMode", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.LogMode(enable)
@@ -1392,7 +1392,7 @@ func (w GORMDBWrapper) Model(ctx context.Context, value interface{}) GORMDBWrapp
 			w.inflightMetric.WithLabelValues("gorm.DB.Model", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Model", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Model", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Model", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Model(value)
@@ -1425,7 +1425,7 @@ func (w GORMDBWrapper) ModifyColumn(ctx context.Context, column string, typ stri
 			w.inflightMetric.WithLabelValues("gorm.DB.ModifyColumn", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.ModifyColumn", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.ModifyColumn", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.ModifyColumn", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.ModifyColumn(column, typ)
@@ -1458,7 +1458,7 @@ func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
 			w.inflightMetric.WithLabelValues("gorm.DB.New", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.New", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.New", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.New", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.New()
@@ -1501,7 +1501,7 @@ func (w GORMDBWrapper) Not(ctx context.Context, query interface{}, args ...inter
 			w.inflightMetric.WithLabelValues("gorm.DB.Not", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Not", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Not", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Not", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Not(query, args...)
@@ -1534,7 +1534,7 @@ func (w GORMDBWrapper) Offset(ctx context.Context, offset interface{}) GORMDBWra
 			w.inflightMetric.WithLabelValues("gorm.DB.Offset", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Offset", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Offset", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Offset", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Offset(offset)
@@ -1567,7 +1567,7 @@ func (w GORMDBWrapper) Omit(ctx context.Context, columns ...string) GORMDBWrappe
 			w.inflightMetric.WithLabelValues("gorm.DB.Omit", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Omit", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Omit", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Omit", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Omit(columns...)
@@ -1600,7 +1600,7 @@ func (w GORMDBWrapper) Or(ctx context.Context, query interface{}, args ...interf
 			w.inflightMetric.WithLabelValues("gorm.DB.Or", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Or", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Or", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Or", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Or(query, args...)
@@ -1633,7 +1633,7 @@ func (w GORMDBWrapper) Order(ctx context.Context, value interface{}, reorder ...
 			w.inflightMetric.WithLabelValues("gorm.DB.Order", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Order", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Order", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Order", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Order(value, reorder...)
@@ -1666,7 +1666,7 @@ func (w GORMDBWrapper) Pluck(ctx context.Context, column string, value interface
 			w.inflightMetric.WithLabelValues("gorm.DB.Pluck", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Pluck", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Pluck", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Pluck", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Pluck(column, value)
@@ -1699,7 +1699,7 @@ func (w GORMDBWrapper) Preload(ctx context.Context, column string, conditions ..
 			w.inflightMetric.WithLabelValues("gorm.DB.Preload", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Preload", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Preload", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Preload", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Preload(column, conditions...)
@@ -1732,7 +1732,7 @@ func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrap
 			w.inflightMetric.WithLabelValues("gorm.DB.Preloads", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Preloads", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Preloads", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Preloads", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Preloads(out)
@@ -1770,7 +1770,7 @@ func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{
 			w.inflightMetric.WithLabelValues("gorm.DB.Raw", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Raw", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Raw", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Raw", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Raw(sql, values...)
@@ -1808,7 +1808,7 @@ func (w GORMDBWrapper) Related(ctx context.Context, value interface{}, foreignKe
 			w.inflightMetric.WithLabelValues("gorm.DB.Related", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Related", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Related", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Related", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Related(value, foreignKeys...)
@@ -1841,7 +1841,7 @@ func (w GORMDBWrapper) RemoveForeignKey(ctx context.Context, field string, dest 
 			w.inflightMetric.WithLabelValues("gorm.DB.RemoveForeignKey", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.RemoveForeignKey", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.RemoveForeignKey", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.RemoveForeignKey", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RemoveForeignKey(field, dest)
@@ -1874,7 +1874,7 @@ func (w GORMDBWrapper) RemoveIndex(ctx context.Context, indexName string) GORMDB
 			w.inflightMetric.WithLabelValues("gorm.DB.RemoveIndex", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.RemoveIndex", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.RemoveIndex", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.RemoveIndex", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RemoveIndex(indexName)
@@ -1907,7 +1907,7 @@ func (w GORMDBWrapper) Rollback(ctx context.Context) GORMDBWrapper {
 			w.inflightMetric.WithLabelValues("gorm.DB.Rollback", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Rollback", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Rollback", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Rollback", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Rollback()
@@ -1940,7 +1940,7 @@ func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrappe
 			w.inflightMetric.WithLabelValues("gorm.DB.RollbackUnlessCommitted", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.RollbackUnlessCommitted", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.RollbackUnlessCommitted", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.RollbackUnlessCommitted", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.RollbackUnlessCommitted()
@@ -2012,7 +2012,7 @@ func (w GORMDBWrapper) Save(ctx context.Context, value interface{}) GORMDBWrappe
 			w.inflightMetric.WithLabelValues("gorm.DB.Save", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Save", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Save", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Save", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Save(value)
@@ -2045,7 +2045,7 @@ func (w GORMDBWrapper) Scan(ctx context.Context, dest interface{}) GORMDBWrapper
 			w.inflightMetric.WithLabelValues("gorm.DB.Scan", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Scan", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Scan", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Scan", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Scan(dest)
@@ -2111,7 +2111,7 @@ func (w GORMDBWrapper) Scopes(ctx context.Context, funcs ...func(*gorm.DB) *gorm
 			w.inflightMetric.WithLabelValues("gorm.DB.Scopes", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Scopes", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Scopes", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Scopes", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Scopes(funcs...)
@@ -2144,7 +2144,7 @@ func (w GORMDBWrapper) Select(ctx context.Context, query interface{}, args ...in
 			w.inflightMetric.WithLabelValues("gorm.DB.Select", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Select", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Select", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Select", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Select(query, args...)
@@ -2177,7 +2177,7 @@ func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) 
 			w.inflightMetric.WithLabelValues("gorm.DB.Set", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Set", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Set", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Set", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Set(name, value)
@@ -2214,7 +2214,7 @@ func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride f
 			w.inflightMetric.WithLabelValues("gorm.DB.SetNowFuncOverride", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.SetNowFuncOverride", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.SetNowFuncOverride", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.SetNowFuncOverride", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.SetNowFuncOverride(nowFuncOverride)
@@ -2256,7 +2256,7 @@ func (w GORMDBWrapper) Table(ctx context.Context, name string) GORMDBWrapper {
 			w.inflightMetric.WithLabelValues("gorm.DB.Table", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Table", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Table", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Table", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Table(name)
@@ -2289,7 +2289,7 @@ func (w GORMDBWrapper) Take(ctx context.Context, out interface{}, where ...inter
 			w.inflightMetric.WithLabelValues("gorm.DB.Take", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Take", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Take", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Take", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Take(out, where...)
@@ -2355,7 +2355,7 @@ func (w GORMDBWrapper) Unscoped(ctx context.Context) GORMDBWrapper {
 			w.inflightMetric.WithLabelValues("gorm.DB.Unscoped", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Unscoped", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Unscoped", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Unscoped", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Unscoped()
@@ -2388,7 +2388,7 @@ func (w GORMDBWrapper) Update(ctx context.Context, attrs ...interface{}) GORMDBW
 			w.inflightMetric.WithLabelValues("gorm.DB.Update", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Update", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Update", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Update", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Update(attrs...)
@@ -2421,7 +2421,7 @@ func (w GORMDBWrapper) UpdateColumn(ctx context.Context, attrs ...interface{}) G
 			w.inflightMetric.WithLabelValues("gorm.DB.UpdateColumn", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.UpdateColumn", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.UpdateColumn", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.UpdateColumn", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.UpdateColumn(attrs...)
@@ -2454,7 +2454,7 @@ func (w GORMDBWrapper) UpdateColumns(ctx context.Context, values interface{}) GO
 			w.inflightMetric.WithLabelValues("gorm.DB.UpdateColumns", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.UpdateColumns", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.UpdateColumns", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.UpdateColumns", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.UpdateColumns(values)
@@ -2487,7 +2487,7 @@ func (w GORMDBWrapper) Updates(ctx context.Context, values interface{}, ignorePr
 			w.inflightMetric.WithLabelValues("gorm.DB.Updates", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Updates", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Updates", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Updates", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Updates(values, ignoreProtectedAttrs...)
@@ -2520,7 +2520,7 @@ func (w GORMDBWrapper) Where(ctx context.Context, query interface{}, args ...int
 			w.inflightMetric.WithLabelValues("gorm.DB.Where", ctxOptions.MetricCustomLabelValue).Inc()
 			defer func() {
 				w.inflightMetric.WithLabelValues("gorm.DB.Where", ctxOptions.MetricCustomLabelValue).Dec()
-				w.durationMetric.WithLabelValues("gorm.DB.Where", "OK", ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+				w.durationMetric.WithLabelValues("gorm.DB.Where", ErrCode(res0.Error), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
 			}()
 		}
 		res0 = w.obj.Where(query, args...)

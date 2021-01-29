@@ -75,7 +75,7 @@ func NewPlaybookRunnerWithVariable(playbookFile string, v interface{}) (*Playboo
 		},
 		Provider: config.ProviderOptions{
 			Type: "Memory",
-			MemoryProvider: config.MemoryProviderOptions{
+			Options: &config.MemoryProviderOptions{
 				Buffer: renderBuf.String(),
 			},
 		},
