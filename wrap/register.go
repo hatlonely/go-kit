@@ -12,7 +12,7 @@ import (
 
 func init() {
 	RegisterRateLimiterGroup("LocalGroup", NewLocalGroupRateLimiterWithOptions)
-	RegisterRateLimiterGroup("ShareGroup", NewLocalShareRateLimiterWithOptions)
+	RegisterRateLimiterGroup("LocalShare", NewLocalShareRateLimiterWithOptions)
 
 	RegisterErrCode(&alierr.ServerError{}, func(err error) string {
 		e := err.(*alierr.ServerError)
