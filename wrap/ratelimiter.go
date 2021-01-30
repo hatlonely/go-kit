@@ -30,7 +30,7 @@ type RateLimiterGroup interface {
 func NewRateLimiterGroupWithOptions(options *RateLimiterGroupOptions, opts ...refx.Option) (RateLimiterGroup, error) {
 	constructor, ok := rateLimiterGroupConstructorMap[options.Type]
 	if !ok {
-		return nil, errors.Errorf("unregistered decoder type: [%v]", options.Type)
+		return nil, errors.Errorf("unregistered RateLimiterGroup type: [%v]", options.Type)
 	}
 
 	result, err := constructor.Call(options.Options, opts...)
@@ -40,7 +40,7 @@ func NewRateLimiterGroupWithOptions(options *RateLimiterGroupOptions, opts ...re
 
 	if constructor.ReturnError {
 		if !result[1].IsNil() {
-			return nil, errors.Wrapf(result[1].Interface().(error), "NewDecoder failed. type: [%v]", options.Type)
+			return nil, errors.Wrapf(result[1].Interface().(error), "NewRateLimiterGroupWithOptions failed. type: [%v]", options.Type)
 		}
 		return result[0].Interface().(RateLimiterGroup), nil
 	}
