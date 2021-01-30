@@ -288,7 +288,7 @@ func (c *Config) Watch() error {
 				}
 				c.storage = storage
 				c.log.Infof("reload config success. storage: [%v]", strx.JsonMarshalSortKeys(c.storage.Interface()))
-				c.log.Infof("diffKeys: ", strx.JsonMarshalSortKeys(diffKeys))
+				c.log.Infof("diffKeys: %v", strx.JsonMarshalSortKeys(diffKeys))
 				traveled := map[string]bool{}
 				for _, key := range diffKeys {
 					for key != "" {
