@@ -41,19 +41,15 @@ func Test1(t *testing.T) {
 	})
 
 	Convey("Test2", t, func() {
-		v := map[string]interface{}{
-			"type": "LocalGroup",
-			"options": map[string]interface{}{
+		options := RateLimiterGroupOptions{
+			Type: "LocalGroup",
+			Options: map[string]interface{}{
 				"DB.First": map[string]interface{}{
 					"interval": "1s",
 					"burst":    1,
 				},
 			},
 		}
-
-		var options RateLimiterGroupOptions
-
-		So(refx.InterfaceToStruct(v, &options, refx.WithCamelName()), ShouldBeNil)
 
 		rateLimiterGroup, err := NewRateLimiterGroupWithOptions(&options, refx.WithCamelName())
 		So(err, ShouldBeNil)
