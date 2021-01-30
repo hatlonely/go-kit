@@ -9,15 +9,6 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-func init() {
-	RegisterCipher("", func() (Cipher, error) {
-		return EmptyCipher{}, nil
-	})
-	RegisterCipher("Empty", func() (Cipher, error) {
-		return EmptyCipher{}, nil
-	})
-}
-
 func RegisterCipher(key string, constructor interface{}) {
 	if _, ok := cipherConstructorMap[key]; ok {
 		panic(fmt.Sprintf("cipher type [%v] is already registered", key))
@@ -63,6 +54,10 @@ func NewCipherWithOptions(options *CipherOptions, opts ...refx.Option) (Cipher, 
 	}
 
 	return result[0].Interface().(Cipher), nil
+}
+
+func NewEmptyCipher() EmptyCipher {
+	return EmptyCipher{}
 }
 
 type CipherOptions struct {
