@@ -34,6 +34,24 @@ type MongoClientWrapperOptions struct {
 	RateLimiterGroup RateLimiterGroupOptions
 }
 
+func NewMongoClientWithOptions(options *MongoOptions) (*mongo.Client, error) {
+	client, err := mongo.NewClient(mopt.Client().ApplyURI(options.URI))
+	if err != nil {
+		return nil, errors.Wrap(err, "mongo.NewClient failed")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), options.ConnectTimeout)
+	defer cancel()
+	if err := client.Connect(ctx); err != nil {
+		return nil, errors.Wrap(err, "mongo.Client.Connect failed")
+	}
+	ctx, cancel = context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	if err := client.Ping(ctx, readpref.Primary()); err != nil {
+		return nil, errors.Wrap(err, "mongo.Client.Ping failed")
+	}
+	return client, nil
+}
+
 func NewMongoClientWrapperWithOptions(options *MongoClientWrapperOptions, opts ...refx.Option) (*MongoClientWrapper, error) {
 	var w MongoClientWrapper
 	var err error
@@ -50,22 +68,10 @@ func NewMongoClientWrapperWithOptions(options *MongoClientWrapperOptions, opts .
 	if w.options.EnableMetric {
 		w.CreateMetric(w.options)
 	}
-
-	client, err := mongo.NewClient(mopt.Client().ApplyURI(options.Mongo.URI))
+	client, err := NewMongoClientWithOptions(&options.Mongo)
 	if err != nil {
-		return nil, errors.Wrap(err, "mongo.NewClient failed")
+		return nil, errors.Wrap(err, "NewMongoClientWithOptions failed")
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), options.Mongo.ConnectTimeout)
-	defer cancel()
-	if err := client.Connect(ctx); err != nil {
-		return nil, errors.Wrap(err, "mongo.Client.Connect failed")
-	}
-	ctx, cancel = context.WithTimeout(context.Background(), 2*time.Second)
-	defer cancel()
-	if err := client.Ping(ctx, readpref.Primary()); err != nil {
-		return nil, errors.Wrap(err, "mongo.Client.Ping failed")
-	}
-
 	w.obj = client
 
 	return &w, nil
@@ -90,24 +96,10 @@ func NewMongoClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-
-		client, err := mongo.NewClient(mopt.Client().ApplyURI(options.URI))
+		client, err := NewMongoClientWithOptions(&options)
 		if err != nil {
-			return errors.Wrap(err, "mongo.NewClient failed")
+			return errors.Wrap(err, "NewMongoClientWithOptions failed")
 		}
-
-		ctx, cancel := context.WithTimeout(context.Background(), options.ConnectTimeout)
-		defer cancel()
-		if err := client.Connect(ctx); err != nil {
-			return errors.Wrap(err, "mongo.Client.Connect failed")
-		}
-
-		ctx, cancel = context.WithTimeout(context.Background(), 2*time.Second)
-		defer cancel()
-		if err := client.Ping(ctx, readpref.Primary()); err != nil {
-			return errors.Wrap(err, "mongo.Client.Ping failed")
-		}
-
 		w.obj = client
 		return nil
 	})
