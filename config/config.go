@@ -146,7 +146,7 @@ type Config struct {
 
 func (c *Config) Get(key string) (interface{}, bool) {
 	if c.parent != nil {
-		return c.parent.Get(refx.PrefixAppendKey(c.prefix, key))
+		return c.parent.Get(refx.PrefixAppendKeyWithoutEscape(c.prefix, key))
 	}
 
 	val, err := c.GetE(key)
@@ -158,14 +158,14 @@ func (c *Config) Get(key string) (interface{}, bool) {
 
 func (c *Config) GetE(key string) (interface{}, error) {
 	if c.parent != nil {
-		return c.parent.GetE(refx.PrefixAppendKey(c.prefix, key))
+		return c.parent.GetE(refx.PrefixAppendKeyWithoutEscape(c.prefix, key))
 	}
 	return c.storage.Get(key)
 }
 
 func (c *Config) UnsafeSet(key string, val interface{}) error {
 	if c.parent != nil {
-		return c.parent.UnsafeSet(refx.PrefixAppendKey(c.prefix, key), val)
+		return c.parent.UnsafeSet(refx.PrefixAppendKeyWithoutEscape(c.prefix, key), val)
 	}
 	return c.storage.Set(key, val)
 }

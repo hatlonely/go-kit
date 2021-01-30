@@ -443,6 +443,13 @@ type KeyInfo struct {
 	Mod int
 }
 
+func PrefixAppendKeyWithoutEscape(prefix string, key string) string {
+	if prefix == "" {
+		return key
+	}
+	return fmt.Sprintf("%v.%v", prefix, key)
+}
+
 func PrefixAppendKey(prefix string, key string) string {
 	if prefix == "" {
 		return key
