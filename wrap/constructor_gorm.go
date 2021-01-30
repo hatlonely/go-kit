@@ -30,6 +30,27 @@ type GORMDBWrapperOptions struct {
 	RateLimiterGroup RateLimiterGroupOptions
 }
 
+func NewGORMDBWithOptions(options *GormOptions) (*gorm.DB, error) {
+	client, err := gorm.Open("mysql", fmt.Sprintf(
+		"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
+		options.Username, options.Password, options.Host, options.Port, options.Database,
+	))
+	if err != nil {
+		return nil, errors.Wrap(err, "gorm.Open failed")
+	}
+	if options.ConnMaxLifeTime != 0 {
+		client.DB().SetConnMaxLifetime(options.ConnMaxLifeTime)
+	}
+	if options.MaxOpenConns != 0 {
+		client.DB().SetMaxOpenConns(options.MaxOpenConns)
+	}
+	if options.MaxIdleConns != 0 {
+		client.DB().SetMaxIdleConns(options.MaxIdleConns)
+	}
+	client.LogMode(options.LogMode)
+	return client, nil
+}
+
 func NewGORMDBWrapperWithOptions(options *GORMDBWrapperOptions, opts ...refx.Option) (*GORMDBWrapper, error) {
 	var w GORMDBWrapper
 	var err error
@@ -46,24 +67,10 @@ func NewGORMDBWrapperWithOptions(options *GORMDBWrapperOptions, opts ...refx.Opt
 	if w.options.EnableMetric {
 		w.CreateMetric(w.options)
 	}
-
-	client, err := gorm.Open("mysql", fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
-		options.Gorm.Username, options.Gorm.Password, options.Gorm.Host, options.Gorm.Port, options.Gorm.Database,
-	))
+	client, err := NewGORMDBWithOptions(&options.Gorm)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithMessage(err, "NewGORMDBWithOptions failed")
 	}
-	if options.Gorm.ConnMaxLifeTime != 0 {
-		client.DB().SetConnMaxLifetime(options.Gorm.ConnMaxLifeTime)
-	}
-	if options.Gorm.MaxOpenConns != 0 {
-		client.DB().SetMaxOpenConns(options.Gorm.MaxOpenConns)
-	}
-	if options.Gorm.MaxIdleConns != 0 {
-		client.DB().SetMaxIdleConns(options.Gorm.MaxIdleConns)
-	}
-	client.LogMode(options.Gorm.LogMode)
 	w.obj = client
 
 	return &w, nil
@@ -88,21 +95,9 @@ func NewGORMDBWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*GORMD
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		client, err := gorm.Open("mysql", fmt.Sprintf(
-			"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
-			options.Username, options.Password, options.Host, options.Port, options.Database,
-		))
+		client, err := NewGORMDBWithOptions(&options.Gorm)
 		if err != nil {
-			return errors.Wrap(err, "gorm.Open failed")
-		}
-		if options.ConnMaxLifeTime != 0 {
-			client.DB().SetConnMaxLifetime(options.ConnMaxLifeTime)
-		}
-		if options.MaxOpenConns != 0 {
-			client.DB().SetMaxOpenConns(options.MaxOpenConns)
-		}
-		if options.MaxIdleConns != 0 {
-			client.DB().SetMaxIdleConns(options.MaxIdleConns)
+			return errors.WithMessage(err, "NewGORMDBWithOptions failed")
 		}
 		w.obj = client
 		return nil
