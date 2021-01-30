@@ -5,6 +5,7 @@ go 1.13
 require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/PaesslerAG/gval v1.1.0
+	github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5
 	github.com/agiledragon/gomonkey v2.0.1+incompatible
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.884
 	github.com/aliyun/aliyun-oss-go-sdk v2.1.6+incompatible
@@ -16,7 +17,6 @@ require (
 	github.com/generikvault/gvalstrings v0.0.0-20180926130504-471f38f0112a
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.6.3
-	github.com/go-errors/errors v1.0.1
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/go-redis/redis v6.15.8+incompatible
 	github.com/golang/protobuf v1.4.3

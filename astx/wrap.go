@@ -63,6 +63,7 @@ type WrapperGeneratorOptions struct {
 	ErrorField               string              `flag:"usage: function return no error, error is a filed in result"`
 	Inherit                  map[string][]string `flag:"usage: inherit map"`
 	EnableRuleForNoErrorFunc bool                `flag:"usage: enable trace for no error function"`
+	EnableHystrix            bool                `flag:"usage: enable hystrix code"`
 
 	Rule struct {
 		Class                    Rule
@@ -77,6 +78,7 @@ type WrapperGeneratorOptions struct {
 		Retry                    map[string]Rule
 		Metric                   map[string]Rule
 		RateLimiter              map[string]Rule
+		Hystrix                  map[string]Rule
 	}
 }
 
@@ -113,6 +115,13 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 	if options.Rule.ErrorInResult.Exclude == nil {
 		options.Rule.ErrorInResult.Exclude = excludeAllRegex
 	}
+	if len(options.Rule.Hystrix) == 0 {
+		options.Rule.Hystrix = map[string]Rule{
+			"default": {
+				Exclude: regexp.MustCompile(`^.*$`),
+			},
+		}
+	}
 
 	var wrapPackagePrefix string
 	if options.OutputPackage != "wrap" {
@@ -141,6 +150,8 @@ type RenderInfo struct {
 	OutputPackage     string
 	PackagePath       string
 	ErrorField        string
+	Interface         string
+	EnableHystrix     bool
 	IsStarClass       bool
 	NewLine           string
 	Function          struct {
@@ -165,6 +176,7 @@ type RenderInfo struct {
 		Trace                    bool
 		Retry                    bool
 		Metric                   bool
+		Hystrix                  bool
 		RateLimiter              bool
 		ErrorInResult            bool
 	}
@@ -218,6 +230,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		OutputPackage:            g.options.OutputPackage,
 		PackagePath:              g.options.PackagePath,
 		ErrorField:               g.options.ErrorField,
+		EnableHystrix:            g.options.EnableHystrix,
 		NewLine:                  "\n",
 	}
 
@@ -231,6 +244,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		info.Rule.OnRateLimiterGroupChange = g.MatchRule(cls, g.options.Rule.OnRateLimiterGroupChange)
 		info.Rule.CreateMetric = g.MatchRule(cls, g.options.Rule.CreateMetric)
 		info.IsStarClass = g.starClassSet[cls]
+		info.Interface = fmt.Sprintf("I%s%s", g.options.ClassPrefix, cls)
 
 		if g.options.Debug {
 			fmt.Printf("process class: %v, info: %v\n", cls, strx.JsonMarshalIndent(info))
@@ -254,6 +268,10 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		for _, c := range g.options.Inherit[cls] {
 			clsset[c] = true
 		}
+
+		info.Interface = fmt.Sprintf("I%s%s", g.options.ClassPrefix, cls)
+		var interfaceBuffer bytes.Buffer
+		interfaceBuffer.WriteString(fmt.Sprintf("\ntype %s interface {", info.Interface))
 		for _, function := range functions {
 			if !function.IsMethod {
 				continue
@@ -267,6 +285,20 @@ func (g *WrapperGenerator) Generate() (string, error) {
 			traveled[cls+function.Name] = true
 			if !g.MatchFunctionRule(function.Name, cls, g.options.Rule.Function) {
 				continue
+			}
+
+			var paramTypes []string
+			for _, i := range function.Params {
+				paramTypes = append(paramTypes, i.Type)
+			}
+			var resultTypes []string
+			for _, i := range function.Results {
+				resultTypes = append(resultTypes, i.Type)
+			}
+			if len(resultTypes) >= 2 {
+				interfaceBuffer.WriteString(fmt.Sprintf("\t%s(%s) (%s)\n", function.Name, strings.Join(paramTypes, ", "), strings.Join(resultTypes, ",")))
+			} else {
+				interfaceBuffer.WriteString(fmt.Sprintf("\t%s(%s) %s\n", function.Name, strings.Join(paramTypes, ", "), strings.Join(resultTypes, ",")))
 			}
 
 			info.Class = cls
@@ -302,6 +334,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 			info.Rule.Metric = g.MatchFunctionRule(function.Name, cls, g.options.Rule.Metric)
 			info.Rule.Retry = g.MatchFunctionRule(function.Name, cls, g.options.Rule.Retry)
 			info.Rule.RateLimiter = g.MatchFunctionRule(function.Name, cls, g.options.Rule.RateLimiter)
+			info.Rule.Hystrix = g.MatchFunctionRule(function.Name, cls, g.options.Rule.Hystrix)
 			if len(function.Results) == 1 {
 				info.Rule.ErrorInResult = g.MatchRule(function.Results[0].Type, g.options.Rule.ErrorInResult)
 			} else {
@@ -329,6 +362,11 @@ func (g *WrapperGenerator) Generate() (string, error) {
 			buf.WriteString(" {")
 			buf.WriteString(g.generateWrapperFunctionBody(info, function))
 			buf.WriteString("}\n")
+		}
+		interfaceBuffer.WriteString("}\n")
+
+		if info.EnableHystrix {
+			buf.WriteString(interfaceBuffer.String())
 		}
 	}
 
@@ -381,6 +419,9 @@ func renderTemplate(tplStr string, vals interface{}, tplName string) string {
 const WrapperClassTpl = `
 type {{.WrapClass}} struct {
 	obj              *{{.Package}}.{{.Class}}
+{{- if .EnableHystrix}}
+	backupObj        {{.Interface}}
+{{- end}}
 	retry            *{{.WrapPackagePrefix}}Retry
 	options          *{{.WrapPackagePrefix}}WrapperOptions
 	durationMetric   *prometheus.HistogramVec
@@ -619,7 +660,7 @@ const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 	{{.Function.DeclareVariables}}
 {{- if .Rule.RateLimiter}}
 	if w.rateLimiterGroup != nil {
-		if err := w.rateLimiterGroup.Wait(ctx, "{{.Class}}.{{.Function.Name}}"); err != nil {
+		if {{.Function.LastResult}} = w.rateLimiterGroup.Wait(ctx, "{{.Class}}.{{.Function.Name}}"); {{.Function.LastResult}} != nil {
 			return {{.Function.ReturnList}}
 		}
 	}
@@ -685,7 +726,24 @@ const WrapperFunctionBodyWithErrorWithRetryTpl = `
 			}()
 		}
 {{- end}}
+{{- if .Rule.Hystrix}}
+		if w.options.EnableHystrix {
+			{{- if or .Function.IsReturnError}}err{{else}}_{{- end}} = hystrix.DoC(ctx, "{{.Class}}.{{.Function.Name}}", func(ctx context.Context) error {
+				{{.Function.ResultList}} = w.obj.{{.Function.Name}}({{.Function.ParamList}})
+				return {{.Function.LastResult}}{{- if .Rule.ErrorInResult}}.{{.ErrorField}}{{- end}}
+			}, func(ctx context.Context, err error) error {
+				if w.backupObj == nil {
+					return {{.Function.LastResult}}{{- if .Rule.ErrorInResult}}.{{.ErrorField}}{{- end}}
+				}
+				{{.Function.ResultList}} = w.backupObj.{{.Function.Name}}({{.Function.ParamList}})
+				return {{.Function.LastResult}}{{- if .Rule.ErrorInResult}}.{{.ErrorField}}{{- end}}
+			})
+		} else {
+			{{.Function.ResultList}} = w.obj.{{.Function.Name}}({{.Function.ParamList}})
+		}
+{{- else}}
 		{{.Function.ResultList}} = w.obj.{{.Function.Name}}({{.Function.ParamList}})
+{{- end}}
 		return {{.Function.LastResult}}{{- if .Rule.ErrorInResult}}.{{.ErrorField}}{{- end}}
 	})
 	return {{.Function.ReturnList}}

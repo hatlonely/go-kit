@@ -2,18 +2,23 @@ package wrap
 
 import (
 	"context"
+
+	"github.com/afex/hystrix-go/hystrix"
 )
 
 type WrapperOptions struct {
-	EnableTrace  bool
-	EnableMetric bool
-	Trace        struct {
+	Name          string
+	EnableTrace   bool
+	EnableMetric  bool
+	EnableHystrix bool
+	Trace         struct {
 		ConstTags map[string]string
 	}
 	Metric struct {
 		Buckets     []float64
 		ConstLabels map[string]string
 	}
+	Hystrix hystrix.CommandConfig
 }
 
 type CtxOptions struct {
