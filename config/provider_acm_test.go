@@ -5,10 +5,10 @@ import (
 	"errors"
 	"reflect"
 	"testing"
-	"time"
 
 	. "github.com/agiledragon/gomonkey"
 	"github.com/nacos-group/nacos-sdk-go/clients/config_client"
+	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/vo"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -30,13 +30,15 @@ func TestACMProvider(t *testing.T) {
 			defer patches.Reset()
 
 			provider, err := NewACMProviderWithOptions(&ACMProviderOptions{
-				Endpoint:        "acm.aliyun.com",
-				Namespace:       "test-namespace",
-				AccessKeyID:     "test-access-key-id",
-				AccessKeySecret: "test-access-key-secret",
-				Timeout:         5 * time.Second,
-				DataID:          "test-data-id",
-				Group:           "test-group",
+				ClientConfig: constant.ClientConfig{
+					Endpoint:    "acm.aliyun.com:8080",
+					NamespaceId: "test-namespace",
+					AccessKey:   "test-access-key-id",
+					SecretKey:   "test-access-key-secret",
+					TimeoutMs:   5000,
+				},
+				DataID: "test-data-id",
+				Group:  "test-group",
 			})
 			So(err, ShouldBeNil)
 
@@ -59,13 +61,15 @@ func TestACMProvider(t *testing.T) {
 			defer patches.Reset()
 
 			provider, err := NewACMProviderWithOptions(&ACMProviderOptions{
-				Endpoint:        "acm.aliyun.com",
-				Namespace:       "test-namespace",
-				AccessKeyID:     "test-access-key-id",
-				AccessKeySecret: "test-access-key-secret",
-				Timeout:         5 * time.Second,
-				DataID:          "test-data-id",
-				Group:           "test-group",
+				ClientConfig: constant.ClientConfig{
+					Endpoint:    "acm.aliyun.com:8080",
+					NamespaceId: "test-namespace",
+					AccessKey:   "test-access-key-id",
+					SecretKey:   "test-access-key-secret",
+					TimeoutMs:   5000,
+				},
+				DataID: "test-data-id",
+				Group:  "test-group",
 			})
 			So(err, ShouldNotBeNil)
 			So(provider, ShouldBeNil)
@@ -83,13 +87,15 @@ func TestACMProvider(t *testing.T) {
 			defer patches.Reset()
 
 			provider, err := NewACMProviderWithOptions(&ACMProviderOptions{
-				Endpoint:        "acm.aliyun.com",
-				Namespace:       "test-namespace",
-				AccessKeyID:     "test-access-key-id",
-				AccessKeySecret: "test-access-key-secret",
-				Timeout:         5 * time.Second,
-				DataID:          "test-data-id",
-				Group:           "test-group",
+				ClientConfig: constant.ClientConfig{
+					Endpoint:    "acm.aliyun.com:8080",
+					NamespaceId: "test-namespace",
+					AccessKey:   "test-access-key-id",
+					SecretKey:   "test-access-key-secret",
+					TimeoutMs:   5000,
+				},
+				DataID: "test-data-id",
+				Group:  "test-group",
 			})
 			So(err, ShouldBeNil)
 			So(provider.Dump([]byte("hello world")), ShouldNotBeNil)
@@ -119,13 +125,15 @@ func TestACMProvider(t *testing.T) {
 			defer patches.Reset()
 
 			provider, err := NewACMProviderWithOptions(&ACMProviderOptions{
-				Endpoint:        "acm.aliyun.com",
-				Namespace:       "test-namespace",
-				AccessKeyID:     "test-access-key-id",
-				AccessKeySecret: "test-access-key-secret",
-				Timeout:         5 * time.Second,
-				DataID:          "test-data-id",
-				Group:           "test-group",
+				ClientConfig: constant.ClientConfig{
+					Endpoint:    "acm.aliyun.com:8080",
+					NamespaceId: "test-namespace",
+					AccessKey:   "test-access-key-id",
+					SecretKey:   "test-access-key-secret",
+					TimeoutMs:   5000,
+				},
+				DataID: "test-data-id",
+				Group:  "test-group",
 			})
 			So(err, ShouldBeNil)
 

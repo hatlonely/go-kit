@@ -2,7 +2,6 @@ package config
 
 import (
 	"context"
-	"time"
 
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/clients/config_client"
@@ -13,13 +12,9 @@ import (
 )
 
 type ACMProviderOptions struct {
-	Endpoint        string
-	Namespace       string
-	AccessKeyID     string
-	AccessKeySecret string
-	Timeout         time.Duration
-	DataID          string
-	Group           string
+	constant.ClientConfig
+	DataID string
+	Group  string
 }
 
 type ACMProvider struct {
@@ -33,13 +28,7 @@ type ACMProvider struct {
 
 func NewACMProviderWithOptions(options *ACMProviderOptions) (*ACMProvider, error) {
 	client, err := clients.CreateConfigClient(map[string]interface{}{
-		"clientConfig": constant.ClientConfig{
-			Endpoint:    options.Endpoint + ":8080",
-			NamespaceId: options.Namespace,
-			AccessKey:   options.AccessKeyID,
-			SecretKey:   options.AccessKeySecret,
-			TimeoutMs:   uint64(options.Timeout.Milliseconds()),
-		},
+		"clientConfig": options.ClientConfig,
 	})
 	if err != nil {
 		return nil, errors.Wrap(err, "clients.CreateConfigClient failed")
