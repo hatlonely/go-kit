@@ -304,7 +304,7 @@ func (c *Config) Watch() error {
 								c.log.Infof("OnItemChangeHandler success. key: [%v], handlersNum: [%v]", key, len(c.itemHandlers[key]))
 							}
 						}
-						_, key, err = getLastToken(key)
+						_, key, err = refx.GetLastToken(key)
 						if err != nil {
 							c.log.Warnf("getLastToken failed. key: [%v], err: [%+v]", key, err)
 							continue out

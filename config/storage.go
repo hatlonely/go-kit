@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"reflect"
 	"sort"
-	"strconv"
-	"strings"
 
 	"github.com/pkg/errors"
 
@@ -82,11 +80,11 @@ func (s *Storage) Encrypt(cipher Cipher) error {
 		if err != nil {
 			return fmt.Errorf("encrypt failed. key: [%v], err: [%v]", key, err)
 		}
-		info, prev, err := getLastToken(key)
+		info, prev, err := refx.GetLastToken(key)
 		if err != nil {
 			return err
 		}
-		if err := s.Set(prefixAppendKey(prev, "@"+info.key), string(blob)); err != nil {
+		if err := s.Set(prefixAppendKey(prev, "@"+info.Key), string(blob)); err != nil {
 			return err
 		}
 		if err := s.Del(key); err != nil {
@@ -104,14 +102,14 @@ func (s *Storage) Decrypt(cipher Cipher) error {
 	cipherKeyValMap := map[string]string{}
 	var toDeleteKeys []string
 	if err := s.Travel(func(key string, val interface{}) error {
-		info, prev, err := getLastToken(key)
+		info, prev, err := refx.GetLastToken(key)
 		if err != nil {
 			return err
 		}
-		if info.mod == ArrMod {
+		if info.Mod == refx.ArrMod {
 			return nil
 		}
-		if info.key[0] != '@' {
+		if info.Key[0] != '@' {
 			return nil
 		}
 
@@ -123,7 +121,7 @@ func (s *Storage) Decrypt(cipher Cipher) error {
 		if err != nil {
 			return err
 		}
-		cipherKeyValMap[prefixAppendKey(prev, info.key[1:])] = string(text)
+		cipherKeyValMap[prefixAppendKey(prev, info.Key[1:])] = string(text)
 		toDeleteKeys = append(toDeleteKeys, key)
 
 		return nil
@@ -224,86 +222,4 @@ func prefixAppendIdx(prefix string, idx int) string {
 		return fmt.Sprintf("[%v]", idx)
 	}
 	return fmt.Sprintf("%v[%v]", prefix, idx)
-}
-
-func getLastToken(key string) (info KeyInfo, prev string, err error) {
-	if key[len(key)-1] == ']' {
-		pos := strings.LastIndex(key, "[")
-		// "123]" => error
-		if pos == -1 {
-			return info, "", fmt.Errorf("miss '[' in key. key: [%v]", key)
-		}
-		sub := key[pos+1 : len(key)-1]
-		// "[]" => error
-		if sub == "" {
-			return info, "", fmt.Errorf("idx should not be empty. key: [%v]", key)
-		}
-		// "[abc]" => error
-		idx, err := strconv.Atoi(sub)
-		if err != nil {
-			return info, "", fmt.Errorf("idx to int fail. key: [%v], sub: [%v]", key, sub)
-		}
-		// "key[3]" => 3, "key"
-		return KeyInfo{idx: idx, mod: ArrMod}, key[:pos], nil
-	}
-	pos := strings.LastIndex(key, ".")
-	// "key" => "key", ""
-	if pos == -1 {
-		return KeyInfo{key: key, mod: MapMod}, "", nil
-	}
-	// "key1.key2." => error
-	if key[pos+1:] == "" {
-		return info, "", fmt.Errorf("key should not be empty. key: [%v]", key)
-	}
-	// "key1[3].key2" => "key2", "key1[3]"
-	return KeyInfo{key: key[pos+1:], mod: MapMod}, key[:pos], nil
-}
-
-func getToken(key string) (info KeyInfo, next string, err error) {
-	if key[0] == '[' {
-		pos := strings.Index(key, "]")
-		// "[123" => error
-		if pos == -1 {
-			return info, next, fmt.Errorf("miss ']' in key. key: [%v]", key)
-		}
-		// "[]" => error
-		if key[1:pos] == "" {
-			return info, next, fmt.Errorf("idx should not be empty. key: [%v]", key)
-		}
-		idx, err := strconv.Atoi(key[1:pos])
-		// "[abc]" => error
-		if err != nil {
-			return info, next, fmt.Errorf("idx to int fail. key: [%v], sub: [%v]", key, key[1:pos])
-		}
-		// "[1].key" => "1", "key"
-		if pos+1 < len(key) && key[pos+1] == '.' {
-			return KeyInfo{idx: idx, mod: ArrMod}, key[pos+2:], nil
-		}
-		// "[1][2]" => 1, "[2]"
-		return KeyInfo{idx: idx, mod: ArrMod}, key[pos+1:], nil
-	}
-	pos := strings.IndexAny(key, ".[")
-	// "key" => "key", ""
-	if pos == -1 {
-		return KeyInfo{key: key, mod: MapMod}, "", nil
-	}
-	// "key[0]" => "key", "[0]"
-	if key[pos] == '[' {
-		return KeyInfo{key: key[:pos], mod: MapMod}, key[pos:], nil
-	}
-	// ".key1.key2" => error
-	if key[:pos] == "" {
-		return info, "", fmt.Errorf("key should not be empty. key: [%v]", key)
-	}
-	// "key1.key2.key3" => "key1", "key2.key3"
-	return KeyInfo{key: key[:pos], mod: MapMod}, key[pos+1:], nil
-}
-
-const MapMod = 1
-const ArrMod = 2
-
-type KeyInfo struct {
-	key string
-	idx int
-	mod int
 }

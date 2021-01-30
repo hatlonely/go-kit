@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/hatlonely/go-kit/cast"
+	"github.com/hatlonely/go-kit/refx"
 )
 
 func NewIniDecoder() IniDecoder {
@@ -142,18 +143,18 @@ func (d IniDecoder) Encode(storage *Storage) ([]byte, error) {
 	globalKeySet := map[string]bool{}
 	// 获取全局的 key
 	if err := storage.Travel(func(key string, val interface{}) error {
-		info, next, err := getToken(key)
+		info, next, err := refx.GetToken(key)
 		if err != nil {
 			return err
 		}
 		if next != "" {
 			return nil
 		}
-		if info.mod != MapMod {
+		if info.Mod != refx.MapMod {
 			return fmt.Errorf("info is not a map")
 		}
-		globalKeys = append(globalKeys, info.key)
-		globalKeySet[info.key] = true
+		globalKeys = append(globalKeys, info.Key)
+		globalKeySet[info.Key] = true
 		return nil
 	}); err != nil {
 		return nil, err
