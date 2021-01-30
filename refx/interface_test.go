@@ -889,6 +889,7 @@ func TestInterfaceDiff(t *testing.T) {
 						"Key8": []interface{}{1, 2, 4, 3},
 					},
 					"Key9": "val9",
+					//"Key11.Key12": "val11",
 				},
 			},
 		}
@@ -904,6 +905,7 @@ func TestInterfaceDiff(t *testing.T) {
 						"Key8": []interface{}{1, 2, 3},
 					},
 					"Key10": "val10",
+					//"Key11.Key12": "val11",
 				},
 			},
 		}

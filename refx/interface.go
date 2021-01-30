@@ -146,7 +146,7 @@ func InterfaceDiff(v1 interface{}, v2 interface{}) ([]string, error) {
 
 // todo remove value if map or slice is empty, use recursive implement
 func InterfaceDel(pv *interface{}, key string) error {
-	info, prev, err := getLastToken(key)
+	info, prev, err := GetLastToken(key)
 	if err != nil {
 		return err
 	}
@@ -186,7 +186,7 @@ func interfaceSetRecursive(pv *interface{}, key string, val interface{}, prefix 
 		*pv = val
 		return nil
 	}
-	info, next, err := getToken(key)
+	info, next, err := GetToken(key)
 	if err != nil {
 		return fmt.Errorf("get token failed. prefix: [%v], err: [%v]", prefix, err)
 	}
@@ -249,7 +249,7 @@ func interfaceGetRecursive(v interface{}, key string, prefix string) (interface{
 	if key == "" {
 		return v, nil
 	}
-	info, next, err := getToken(key)
+	info, next, err := GetToken(key)
 	if err != nil {
 		return nil, fmt.Errorf("get token failed. prefix: [%v], err: [%v]", prefix, err)
 	}
@@ -457,7 +457,7 @@ func prefixAppendIdx(prefix string, idx int) string {
 	return fmt.Sprintf("%v[%v]", prefix, idx)
 }
 
-func getLastToken(key string) (info KeyInfo, prev string, err error) {
+func GetLastToken(key string) (info KeyInfo, prev string, err error) {
 	if key[len(key)-1] == ']' {
 		pos := strings.LastIndex(key, "[")
 		// "123]" => error
@@ -490,7 +490,7 @@ func getLastToken(key string) (info KeyInfo, prev string, err error) {
 	return KeyInfo{key: key[pos+1:], mod: MapMod}, key[:pos], nil
 }
 
-func getToken(key string) (info KeyInfo, next string, err error) {
+func GetToken(key string) (info KeyInfo, next string, err error) {
 	if key[0] == '[' {
 		pos := strings.Index(key, "]")
 		// "[123" => error
