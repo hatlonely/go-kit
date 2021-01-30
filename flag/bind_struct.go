@@ -52,7 +52,7 @@ func (f *Flag) bindStructRecursive(v interface{}, prefixKey string, options *ref
 					return err
 				}
 			} else {
-				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefixKey, options.FormatKey(key)), options); err != nil {
+				if err := f.bindStructRecursive(rv.Field(i).Addr().Interface(), refx.PrefixAppendKey(prefixKey, options.FormatKey(key)), options); err != nil {
 					return err
 				}
 			}
@@ -63,7 +63,7 @@ func (f *Flag) bindStructRecursive(v interface{}, prefixKey string, options *ref
 					return err
 				}
 			} else {
-				if err := f.bindStructRecursive(rv.Field(i).Interface(), prefixAppendKey(prefixKey, options.FormatKey(key)), options); err != nil {
+				if err := f.bindStructRecursive(rv.Field(i).Interface(), refx.PrefixAppendKey(prefixKey, options.FormatKey(key)), options); err != nil {
 					return err
 				}
 			}
@@ -86,7 +86,7 @@ var reKey = regexp.MustCompile(`[.\w_-]+`)
 func parseTag(tag string, key string, prefixKey string, typ reflect.Type, ropt *refx.Options) (*AddFlagOptions, error) {
 	var options AddFlagOptions
 	options.Refx = *ropt
-	options.Key = prefixAppendKey(prefixKey, ropt.FormatKey(key))
+	options.Key = refx.PrefixAppendKey(prefixKey, ropt.FormatKey(key))
 
 	tag = strings.TrimSpace(tag)
 	for _, field := range strings.Split(tag, ";") {
@@ -143,18 +143,4 @@ func parseTag(tag string, key string, prefixKey string, typ reflect.Type, ropt *
 	options.Type = typ
 
 	return &options, nil
-}
-
-func prefixAppendKey(prefix string, key string) string {
-	if prefix == "" {
-		return key
-	}
-	return fmt.Sprintf("%v.%v", prefix, key)
-}
-
-func prefixAppendName(prefix string, key string) string {
-	if prefix == "" {
-		return key
-	}
-	return fmt.Sprintf("%v-%v", prefix, key)
 }
