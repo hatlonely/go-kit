@@ -1,7 +1,6 @@
 package bind
 
 import (
-	"fmt"
 	"reflect"
 	"regexp"
 	"time"
@@ -58,7 +57,7 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, options *refx
 						count += cnt
 					}
 				} else {
-					if cnt, err := bindRecursive(rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, options.FormatKey(key)), getters, options); err != nil {
+					if cnt, err := bindRecursive(rv.Field(i).Addr().Interface(), refx.PrefixAppendKey(prefix, options.FormatKey(key)), getters, options); err != nil {
 						return 0, err
 					} else {
 						count += cnt
@@ -69,7 +68,7 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, options *refx
 		case reflect.Slice:
 			for i := 0; ; i++ {
 				nv := reflect.New(rv.Type().Elem())
-				if cnt, err := bindRecursive(nv.Interface(), prefixAppendIdx(prefix, i), getters, options); err != nil {
+				if cnt, err := bindRecursive(nv.Interface(), refx.PrefixAppendIdx(prefix, i), getters, options); err != nil {
 					return 0, err
 				} else if cnt != 0 {
 					count += cnt
@@ -98,7 +97,7 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, options *refx
 					}
 
 					nv := reflect.New(rv.Type().Elem())
-					if cnt, err := bindRecursive(nv.Interface(), prefixAppendKey(prefix, cast.ToString(newKey.Elem().Interface())), getters, options); err != nil {
+					if cnt, err := bindRecursive(nv.Interface(), refx.PrefixAppendKey(prefix, cast.ToString(newKey.Elem().Interface())), getters, options); err != nil {
 						return 0, err
 					} else {
 						count += cnt
@@ -130,18 +129,4 @@ func bindRecursive(v interface{}, prefix string, getters []Getter, options *refx
 	}
 
 	return 0, nil
-}
-
-func prefixAppendIdx(prefix string, idx int) string {
-	if prefix == "" {
-		return fmt.Sprintf("[%v]", idx)
-	}
-	return fmt.Sprintf("%v[%v]", prefix, idx)
-}
-
-func prefixAppendKey(prefix string, key string) string {
-	if prefix == "" {
-		return key
-	}
-	return fmt.Sprintf("%v.%v", prefix, key)
 }
