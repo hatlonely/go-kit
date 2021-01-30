@@ -95,7 +95,7 @@ func NewGORMDBWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*GORMD
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		client, err := NewGORMDBWithOptions(&options.Gorm)
+		client, err := NewGORMDBWithOptions(&options)
 		if err != nil {
 			return errors.WithMessage(err, "NewGORMDBWithOptions failed")
 		}

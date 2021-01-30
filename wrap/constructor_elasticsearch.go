@@ -31,20 +31,20 @@ type ESClientWrapperOptions struct {
 
 func NewESClientWithOptions(options *ESOptions) (*elastic.Client, error) {
 	client, err := elastic.NewClient(
-		elastic.SetURL(options.ES.URI),
-		elastic.SetSniff(options.ES.EnableSniff),
-		elastic.SetBasicAuth(options.ES.Username, options.ES.Password),
-		elastic.SetHealthcheck(options.ES.EnableHealthCheck),
-		elastic.SetHealthcheckInterval(options.ES.HealthCheckInterval),
-		elastic.SetHealthcheckTimeout(options.ES.HealthCheckTimeout),
-		elastic.SetHealthcheckTimeoutStartup(options.ES.HealthCheckTimeoutStartUp),
+		elastic.SetURL(options.URI),
+		elastic.SetSniff(options.EnableSniff),
+		elastic.SetBasicAuth(options.Username, options.Password),
+		elastic.SetHealthcheck(options.EnableHealthCheck),
+		elastic.SetHealthcheckInterval(options.HealthCheckInterval),
+		elastic.SetHealthcheckTimeout(options.HealthCheckTimeout),
+		elastic.SetHealthcheckTimeoutStartup(options.HealthCheckTimeoutStartUp),
 	)
 	if err != nil {
 		return nil, errors.Wrap(err, "elastic.NewClient failed")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
 	defer cancel()
-	if _, _, err := client.Ping(options.ES.URI).Do(ctx); err != nil {
+	if _, _, err := client.Ping(options.URI).Do(ctx); err != nil {
 		return nil, errors.Wrap(err, "elastic.Client.Ping failed")
 	}
 
