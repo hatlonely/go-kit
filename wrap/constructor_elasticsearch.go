@@ -29,23 +29,7 @@ type ESClientWrapperOptions struct {
 	RateLimiterGroup RateLimiterGroupOptions
 }
 
-func NewESClientWrapperWithOptions(options *ESClientWrapperOptions, opts ...refx.Option) (*ESClientWrapper, error) {
-	var w ESClientWrapper
-	var err error
-
-	w.options = &options.Wrapper
-	w.retry, err = NewRetryWithOptions(&options.Retry)
-	if err != nil {
-		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
-	}
-	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup, opts...)
-	if err != nil {
-		return nil, errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
-	}
-	if w.options.EnableMetric {
-		w.CreateMetric(w.options)
-	}
-
+func NewESClientWithOptions(options *ESOptions) (*elastic.Client, error) {
 	client, err := elastic.NewClient(
 		elastic.SetURL(options.ES.URI),
 		elastic.SetSniff(options.ES.EnableSniff),
@@ -62,6 +46,30 @@ func NewESClientWrapperWithOptions(options *ESClientWrapperOptions, opts ...refx
 	defer cancel()
 	if _, _, err := client.Ping(options.ES.URI).Do(ctx); err != nil {
 		return nil, errors.Wrap(err, "elastic.Client.Ping failed")
+	}
+
+	return client, nil
+}
+
+func NewESClientWrapperWithOptions(options *ESClientWrapperOptions, opts ...refx.Option) (*ESClientWrapper, error) {
+	var w ESClientWrapper
+	var err error
+
+	w.options = &options.Wrapper
+	w.retry, err = NewRetryWithOptions(&options.Retry)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
+	}
+	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup, opts...)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
+	}
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
+	}
+	client, err := NewESClientWithOptions(&options.ES)
+	if err != nil {
+		return nil, errors.WithMessage(err, "NewESClientWithOptions failed")
 	}
 	w.obj = client
 	return &w, nil
@@ -87,25 +95,10 @@ func NewESClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*ESC
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
 
-		client, err := elastic.NewClient(
-			elastic.SetURL(options.URI),
-			elastic.SetSniff(options.EnableSniff),
-			elastic.SetBasicAuth(options.Username, options.Password),
-			elastic.SetHealthcheck(options.EnableHealthCheck),
-			elastic.SetHealthcheckInterval(options.HealthCheckInterval),
-			elastic.SetHealthcheckTimeout(options.HealthCheckTimeout),
-			elastic.SetHealthcheckTimeoutStartup(options.HealthCheckTimeoutStartUp),
-		)
+		client, err := NewESClientWithOptions(&options)
 		if err != nil {
-			return errors.Wrap(err, "elastic.NewClient failed")
+			return errors.WithMessage(err, "NewESClientWithOptions failed")
 		}
-
-		ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-		defer cancel()
-		if _, _, err := client.Ping(options.URI).Do(ctx); err != nil {
-			return errors.Wrap(err, "elastic.Client.Ping failed")
-		}
-
 		w.obj = client
 		return nil
 	})
