@@ -1,11 +1,11 @@
 package refx
 
 import (
+	"bytes"
 	"fmt"
 	"reflect"
 	"regexp"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -447,7 +447,7 @@ func PrefixAppendKey(prefix string, key string) string {
 	if prefix == "" {
 		return key
 	}
-	return fmt.Sprintf("%v.%v", prefix, key)
+	return fmt.Sprintf("%v.%v", prefix, escape(key))
 }
 
 func PrefixAppendIdx(prefix string, idx int) string {
@@ -458,8 +458,16 @@ func PrefixAppendIdx(prefix string, idx int) string {
 }
 
 func GetLastToken(key string) (info KeyInfo, prev string, err error) {
-	if key[len(key)-1] == ']' {
-		pos := strings.LastIndex(key, "[")
+	if key[len(key)-1] == ']' && len(key) >= 2 && key[len(key)-2] != '\\' {
+		pos := len(key) - 2
+		for ; pos >= 0; pos-- {
+			if key[pos] == '[' && (pos == 0 || key[pos-1] != '\\') {
+				break
+			}
+			if !strx.IsDigit(key[pos]) {
+				return info, "", errors.Errorf("expected a digit. key: [%v], sub: [%v]", key, key[pos:])
+			}
+		}
 		// "123]" => error
 		if pos == -1 {
 			return info, "", fmt.Errorf("miss '[' in key. key: [%v]", key)
@@ -472,29 +480,51 @@ func GetLastToken(key string) (info KeyInfo, prev string, err error) {
 		// "[abc]" => error
 		idx, err := strconv.Atoi(sub)
 		if err != nil {
-			return info, "", fmt.Errorf("idx to int fail. key: [%v], sub: [%v]", key, sub)
+			return info, "", fmt.Errorf("strconv.Atoi failed. key: [%v], sub: [%v]", key, sub)
 		}
 		// "key[3]" => 3, "key"
 		return KeyInfo{Idx: idx, Mod: ArrMod}, key[:pos], nil
 	}
-	pos := strings.LastIndex(key, ".")
+
+	pos := len(key) - 1
+	for ; pos >= 0; pos-- {
+		if key[pos] == '.' && (pos == 0 || key[pos-1] != '\\') {
+			break
+		}
+		if key[pos] == '[' || key[pos] == ']' {
+			if pos != 0 && key[pos-1] == '\\' {
+				continue
+			} else {
+				return info, "", errors.Errorf("unescape token '%c', key: [%v], sub: [%v]", key[pos], key, key[pos:])
+			}
+		}
+	}
+
 	// "key" => "key", ""
 	if pos == -1 {
-		return KeyInfo{Key: key, Mod: MapMod}, "", nil
+		return KeyInfo{Key: unescape(key), Mod: MapMod}, "", nil
 	}
 	// "key1.key2." => error
 	if key[pos+1:] == "" {
 		return info, "", fmt.Errorf("key should not be empty. key: [%v]", key)
 	}
 	// "key1[3].key2" => "key2", "key1[3]"
-	return KeyInfo{Key: key[pos+1:], Mod: MapMod}, key[:pos], nil
+	return KeyInfo{Key: unescape(key[pos+1:]), Mod: MapMod}, key[:pos], nil
 }
 
 func GetToken(key string) (info KeyInfo, next string, err error) {
 	if key[0] == '[' {
-		pos := strings.Index(key, "]")
+		pos := 1
+		for ; pos < len(key); pos++ {
+			if key[pos] == ']' && key[pos-1] != '\\' {
+				break
+			}
+			if !strx.IsDigit(key[pos]) {
+				return info, "", errors.Errorf("expected a digit. key: [%v], sub: [%v]", key, key[pos:])
+			}
+		}
 		// "[123" => error
-		if pos == -1 {
+		if pos == len(key) {
 			return info, next, fmt.Errorf("miss ']' in key. key: [%v]", key)
 		}
 		// "[]" => error
@@ -513,19 +543,79 @@ func GetToken(key string) (info KeyInfo, next string, err error) {
 		// "[1][2]" => 1, "[2]"
 		return KeyInfo{Idx: idx, Mod: ArrMod}, key[pos+1:], nil
 	}
-	pos := strings.IndexAny(key, ".[")
+	//pos := strings.IndexAny(key, ".[")
+
+	pos := 0
+	for ; pos < len(key); pos++ {
+		if (key[pos] == '.' || key[pos] == '[') && (pos == 0 || key[pos-1] != '\\') {
+			break
+		}
+		if key[pos] == ']' {
+			if pos != 0 && key[pos-1] == '\\' {
+				continue
+			} else {
+				return info, "", errors.Errorf("unescape token '%c', key: [%v], sub: [%v]", key[pos], key, key[pos:])
+			}
+		}
+	}
+
 	// "key" => "key", ""
-	if pos == -1 {
-		return KeyInfo{Key: key, Mod: MapMod}, "", nil
+	if pos == len(key) {
+		return KeyInfo{Key: unescape(key), Mod: MapMod}, "", nil
 	}
 	// "key[0]" => "key", "[0]"
 	if key[pos] == '[' {
-		return KeyInfo{Key: key[:pos], Mod: MapMod}, key[pos:], nil
+		return KeyInfo{Key: unescape(key[:pos]), Mod: MapMod}, key[pos:], nil
 	}
 	// ".key1.key2" => error
 	if key[:pos] == "" {
 		return info, "", fmt.Errorf("key should not be empty. key: [%v]", key)
 	}
 	// "key1.key2.key3" => "key1", "key2.key3"
-	return KeyInfo{Key: key[:pos], Mod: MapMod}, key[pos+1:], nil
+	return KeyInfo{Key: unescape(key[:pos]), Mod: MapMod}, key[pos+1:], nil
+}
+
+func unescape(str string) string {
+	var buf bytes.Buffer
+	for i := 0; i < len(str); {
+		if str[i] == '\\' && i+1 < len(str) {
+			switch str[i+1] {
+			case '.':
+				buf.WriteByte('.')
+			case '[':
+				buf.WriteByte('[')
+			case ']':
+				buf.WriteByte(']')
+			case '\\':
+				buf.WriteByte('\\')
+			default:
+				buf.WriteByte('\\')
+				buf.WriteByte(str[i+1])
+			}
+			i += 2
+		} else {
+			buf.WriteByte(str[i])
+			i++
+		}
+	}
+	return buf.String()
+}
+
+func escape(str string) string {
+	var buf bytes.Buffer
+	for i := 0; i < len(str); i++ {
+		switch str[i] {
+		case '.':
+			buf.WriteString(`\.`)
+		case '[':
+			buf.WriteString(`\[`)
+		case ']':
+			buf.WriteString(`\]`)
+		case '\\':
+			buf.WriteString(`\\`)
+		default:
+			buf.WriteByte(str[i])
+		}
+	}
+	return buf.String()
 }

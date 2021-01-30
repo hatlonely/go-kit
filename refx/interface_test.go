@@ -888,8 +888,8 @@ func TestInterfaceDiff(t *testing.T) {
 						"Key7": "val7",
 						"Key8": []interface{}{1, 2, 4, 3},
 					},
-					"Key9": "val9",
-					//"Key11.Key12": "val11",
+					"Key9":        "val9",
+					"Key11.Key12": "val11",
 				},
 			},
 		}
@@ -904,8 +904,8 @@ func TestInterfaceDiff(t *testing.T) {
 						"Key7": "val7",
 						"Key8": []interface{}{1, 2, 3},
 					},
-					"Key10": "val10",
-					//"Key11.Key12": "val11",
+					"Key10":       "val10",
+					"Key11.Key12": "val11",
 				},
 			},
 		}
@@ -978,6 +978,11 @@ func TestGetToken(t *testing.T) {
 				{key: "[1][2]", info: KeyInfo{Idx: 1, Mod: ArrMod}, next: "[2]"},
 				{key: "key", info: KeyInfo{Key: "key", Mod: MapMod}, next: ""},
 				{key: "key[0]", info: KeyInfo{Key: "key", Mod: MapMod}, next: "[0]"},
+				{key: "key1\\.key2.key3", info: KeyInfo{Key: "key1.key2", Mod: MapMod}, next: "key3"},
+				{key: "key1\\.key2\\[0\\].key3", info: KeyInfo{Key: "key1.key2[0]", Mod: MapMod}, next: "key3"},
+				{key: "key1\\.key2\\[0\\]", info: KeyInfo{Key: "key1.key2[0]", Mod: MapMod}, next: ""},
+				{key: "\\.key1\\[\\].key2", info: KeyInfo{Key: ".key1[]", Mod: MapMod}, next: "key2"},
+				{key: "abc\\]de", info: KeyInfo{Key: "abc]de", Mod: MapMod}, next: ""},
 			} {
 				info, next, err := GetToken(unit.key)
 				So(err, ShouldBeNil)
@@ -990,7 +995,7 @@ func TestGetToken(t *testing.T) {
 
 		Convey("error", func() {
 			for _, key := range []string{
-				"[123", "[]", "[abc]", ".key1.key2",
+				"[123", "[]", "[abc]", ".key1.key2", "[", "abc]de",
 			} {
 				_, _, err := GetToken(key)
 				So(err, ShouldNotBeNil)
@@ -1009,7 +1014,12 @@ func TestGetLastToken(t *testing.T) {
 			}{
 				{key: "key[3]", info: KeyInfo{Idx: 3, Mod: ArrMod}, prev: "key"},
 				{key: "key", info: KeyInfo{Key: "key", Mod: MapMod}, prev: ""},
+				{key: "\\[key", info: KeyInfo{Key: "[key", Mod: MapMod}, prev: ""},
 				{key: "key1[3].key2", info: KeyInfo{Key: "key2", Mod: MapMod}, prev: "key1[3]"},
+				{key: "key1\\[3\\]", info: KeyInfo{Key: "key1[3]", Mod: MapMod}, prev: ""},
+				{key: "key1.key2\\.key3", info: KeyInfo{Key: "key2.key3", Mod: MapMod}, prev: "key1"},
+				{key: "key2\\.key3", info: KeyInfo{Key: "key2.key3", Mod: MapMod}, prev: ""},
+				{key: "key1.key2\\[0\\]\\.key3", info: KeyInfo{Key: "key2[0].key3", Mod: MapMod}, prev: "key1"},
 			} {
 				info, next, err := GetLastToken(unit.key)
 				So(err, ShouldBeNil)
@@ -1022,7 +1032,7 @@ func TestGetLastToken(t *testing.T) {
 
 		Convey("error", func() {
 			for _, key := range []string{
-				"123]", "[]", "[abc]", "key1.key2.",
+				"123]", "[]", "[abc]", "key1.key2.", "key1.key2[0]key3", "[abc",
 			} {
 				_, _, err := GetLastToken(key)
 				So(err, ShouldNotBeNil)
@@ -1042,5 +1052,12 @@ func TestPrefixAppendIdx(t *testing.T) {
 	Convey("TestPrefixAppendIdx", t, func() {
 		So(PrefixAppendIdx("key1.key2", 3), ShouldEqual, "key1.key2[3]")
 		So(PrefixAppendIdx("", 3), ShouldEqual, "[3]")
+	})
+}
+
+func TestEscape(t *testing.T) {
+	Convey("TestEscape", t, func() {
+		So(escape("@key1.key2[3]"), ShouldEqual, "@key1\\.key2\\[3\\]")
+		So(unescape("@key1\\.key2\\[3\\]"), ShouldEqual, "@key1.key2[3]")
 	})
 }
