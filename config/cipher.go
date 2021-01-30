@@ -56,21 +56,7 @@ func NewCipherWithOptions(options *CipherOptions, opts ...refx.Option) (Cipher, 
 	return result[0].Interface().(Cipher), nil
 }
 
-func NewEmptyCipher() EmptyCipher {
-	return EmptyCipher{}
-}
-
 type CipherOptions struct {
 	Type    string
 	Options interface{}
-}
-
-type EmptyCipher struct{}
-
-func (c EmptyCipher) Encrypt(textToEncrypt []byte) ([]byte, error) {
-	return textToEncrypt, nil
-}
-
-func (c EmptyCipher) Decrypt(textToDecrypt []byte) ([]byte, error) {
-	return textToDecrypt, nil
 }
