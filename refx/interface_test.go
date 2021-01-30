@@ -297,6 +297,7 @@ func TestInterfaceSet(t *testing.T) {
 			{key: "key3[0].key6.key8[0]", val: 1},
 			{key: "key3[0].key6.key8[1]", val: 2},
 			{key: "key3[0].key6.key8[2]", val: 3},
+			{key: "key3[0].key6.key8[0]", val: 4},
 		} {
 			So(InterfaceSet(&v, unit.key, unit.val), ShouldBeNil)
 		}
@@ -310,7 +311,7 @@ func TestInterfaceSet(t *testing.T) {
 					"key5": "val5",
 					"key6": map[string]interface{}{
 						"key7": "val7",
-						"key8": []interface{}{1, 2, 3},
+						"key8": []interface{}{4, 2, 3},
 					},
 				},
 			},
