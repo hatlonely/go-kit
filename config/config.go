@@ -71,12 +71,8 @@ func NewConfigWithBaseFile(filename string, opts ...refx.Option) (*Config, error
 }
 
 type SimpleFileOptions struct {
-	FileType  string
+	FileType  string `dft:"Json"`
 	DecodeKey string
-}
-
-var defaultSimpleFileOptions = SimpleFileOptions{
-	FileType: "Json",
 }
 
 type SimpleFileOption func(options *SimpleFileOptions)
@@ -94,7 +90,8 @@ func WithSimpleFileKey(key string) SimpleFileOption {
 }
 
 func NewConfigWithSimpleFile(filename string, opts ...SimpleFileOption) (*Config, error) {
-	simpleFileOptions := defaultSimpleFileOptions
+	var simpleFileOptions SimpleFileOptions
+	refx.SetDefaultValueP(&simpleFileOptions)
 	for _, opt := range opts {
 		opt(&simpleFileOptions)
 	}
