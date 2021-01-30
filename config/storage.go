@@ -84,7 +84,7 @@ func (s *Storage) Encrypt(cipher Cipher) error {
 		if err != nil {
 			return err
 		}
-		if err := s.Set(prefixAppendKey(prev, "@"+info.Key), string(blob)); err != nil {
+		if err := s.Set(refx.PrefixAppendKey(prev, "@"+info.Key), string(blob)); err != nil {
 			return err
 		}
 		if err := s.Del(key); err != nil {
@@ -121,7 +121,7 @@ func (s *Storage) Decrypt(cipher Cipher) error {
 		if err != nil {
 			return err
 		}
-		cipherKeyValMap[prefixAppendKey(prev, info.Key[1:])] = string(text)
+		cipherKeyValMap[refx.PrefixAppendKey(prev, info.Key[1:])] = string(text)
 		toDeleteKeys = append(toDeleteKeys, key)
 
 		return nil
@@ -208,18 +208,4 @@ func (s Storage) Diff(s2 Storage) ([]string, error) {
 
 func (s Storage) Travel(fun func(key string, val interface{}) error) error {
 	return refx.InterfaceTravel(s.root, fun)
-}
-
-func prefixAppendKey(prefix string, key string) string {
-	if prefix == "" {
-		return key
-	}
-	return fmt.Sprintf("%v.%v", prefix, key)
-}
-
-func prefixAppendIdx(prefix string, idx int) string {
-	if prefix == "" {
-		return fmt.Sprintf("[%v]", idx)
-	}
-	return fmt.Sprintf("%v[%v]", prefix, idx)
 }

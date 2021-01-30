@@ -1030,3 +1030,17 @@ func TestGetLastToken(t *testing.T) {
 		})
 	})
 }
+
+func TestPrefixAppendKey(t *testing.T) {
+	Convey("TestPrefixAppendKey", t, func() {
+		So(PrefixAppendKey("key1.key2", "key3"), ShouldEqual, "key1.key2.key3")
+		So(PrefixAppendKey("", "key1"), ShouldEqual, "key1")
+	})
+}
+
+func TestPrefixAppendIdx(t *testing.T) {
+	Convey("TestPrefixAppendIdx", t, func() {
+		So(PrefixAppendIdx("key1.key2", 3), ShouldEqual, "key1.key2[3]")
+		So(PrefixAppendIdx("", 3), ShouldEqual, "[3]")
+	})
+}

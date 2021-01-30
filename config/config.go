@@ -146,7 +146,7 @@ type Config struct {
 
 func (c *Config) Get(key string) (interface{}, bool) {
 	if c.parent != nil {
-		return c.parent.Get(prefixAppendKey(c.prefix, key))
+		return c.parent.Get(refx.PrefixAppendKey(c.prefix, key))
 	}
 
 	val, err := c.GetE(key)
@@ -158,14 +158,14 @@ func (c *Config) Get(key string) (interface{}, bool) {
 
 func (c *Config) GetE(key string) (interface{}, error) {
 	if c.parent != nil {
-		return c.parent.GetE(prefixAppendKey(c.prefix, key))
+		return c.parent.GetE(refx.PrefixAppendKey(c.prefix, key))
 	}
 	return c.storage.Get(key)
 }
 
 func (c *Config) UnsafeSet(key string, val interface{}) error {
 	if c.parent != nil {
-		return c.parent.UnsafeSet(prefixAppendKey(c.prefix, key), val)
+		return c.parent.UnsafeSet(refx.PrefixAppendKey(c.prefix, key), val)
 	}
 	return c.storage.Set(key, val)
 }
@@ -183,7 +183,7 @@ func (c *Config) Sub(key string) *Config {
 
 func (c *Config) SubArr(key string) ([]*Config, error) {
 	if c.parent != nil {
-		return c.parent.SubArr(prefixAppendKey(c.prefix, key))
+		return c.parent.SubArr(refx.PrefixAppendKey(c.prefix, key))
 	}
 
 	vs, err := c.storage.SubArr(key)
@@ -192,14 +192,14 @@ func (c *Config) SubArr(key string) ([]*Config, error) {
 	}
 	var configs []*Config
 	for i := range vs {
-		configs = append(configs, &Config{parent: c, prefix: prefixAppendIdx(key, i)})
+		configs = append(configs, &Config{parent: c, prefix: refx.PrefixAppendIdx(key, i)})
 	}
 	return configs, nil
 }
 
 func (c *Config) SubMap(key string) (map[string]*Config, error) {
 	if c.parent != nil {
-		return c.parent.SubMap(prefixAppendKey(c.prefix, key))
+		return c.parent.SubMap(refx.PrefixAppendKey(c.prefix, key))
 	}
 
 	kvs, err := c.storage.SubMap(key)
@@ -208,7 +208,7 @@ func (c *Config) SubMap(key string) (map[string]*Config, error) {
 	}
 	configMap := map[string]*Config{}
 	for k := range kvs {
-		configMap[k] = &Config{parent: c, prefix: prefixAppendKey(key, k)}
+		configMap[k] = &Config{parent: c, prefix: refx.PrefixAppendKey(key, k)}
 	}
 	return configMap, nil
 }
@@ -345,7 +345,7 @@ func (c *Config) AddOnChangeHandler(handler OnChangeHandler) {
 
 func (c *Config) AddOnItemChangeHandler(key string, handler OnChangeHandler) {
 	if c.parent != nil {
-		c.parent.AddOnItemChangeHandler(prefixAppendKey(c.prefix, key), handler)
+		c.parent.AddOnItemChangeHandler(refx.PrefixAppendKey(c.prefix, key), handler)
 		return
 	}
 	c.itemHandlers[key] = append(c.itemHandlers[key], handler)

@@ -112,17 +112,3 @@ func TestStorage_Decrypt(t *testing.T) {
 		}
 	})
 }
-
-func TestPrefixAppendKey(t *testing.T) {
-	Convey("TestPrefixAppendKey", t, func() {
-		So(prefixAppendKey("key1.key2", "key3"), ShouldEqual, "key1.key2.key3")
-		So(prefixAppendKey("", "key1"), ShouldEqual, "key1")
-	})
-}
-
-func TestPrefixAppendIdx(t *testing.T) {
-	Convey("TestPrefixAppendIdx", t, func() {
-		So(prefixAppendIdx("key1.key2", 3), ShouldEqual, "key1.key2[3]")
-		So(prefixAppendIdx("", 3), ShouldEqual, "[3]")
-	})
-}
