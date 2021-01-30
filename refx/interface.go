@@ -203,7 +203,7 @@ func interfaceSetRecursive(pv *interface{}, key string, val interface{}, prefix 
 		}
 		if info.Idx < len(v) {
 			sub := v[info.Idx]
-			if err := interfaceSetRecursive(&sub, next, val, prefixAppendIdx(prefix, info.Idx)); err != nil {
+			if err := interfaceSetRecursive(&sub, next, val, PrefixAppendIdx(prefix, info.Idx)); err != nil {
 				return err
 			}
 			v[info.Idx] = sub
@@ -211,7 +211,7 @@ func interfaceSetRecursive(pv *interface{}, key string, val interface{}, prefix 
 		}
 
 		var sub interface{}
-		if err := interfaceSetRecursive(&sub, next, val, prefixAppendIdx(prefix, info.Idx)); err != nil {
+		if err := interfaceSetRecursive(&sub, next, val, PrefixAppendIdx(prefix, info.Idx)); err != nil {
 			return err
 		}
 		v = append(v, sub)
@@ -225,13 +225,13 @@ func interfaceSetRecursive(pv *interface{}, key string, val interface{}, prefix 
 	switch (*pv).(type) {
 	case map[string]interface{}:
 		sub := (*pv).(map[string]interface{})[info.Key]
-		if err := interfaceSetRecursive(&sub, next, val, prefixAppendKey(prefix, info.Key)); err != nil {
+		if err := interfaceSetRecursive(&sub, next, val, PrefixAppendKey(prefix, info.Key)); err != nil {
 			return err
 		}
 		(*pv).(map[string]interface{})[info.Key] = sub
 	case map[interface{}]interface{}:
 		sub := (*pv).(map[interface{}]interface{})[info.Key]
-		if err := interfaceSetRecursive(&sub, next, val, prefixAppendKey(prefix, info.Key)); err != nil {
+		if err := interfaceSetRecursive(&sub, next, val, PrefixAppendKey(prefix, info.Key)); err != nil {
 			return err
 		}
 		(*pv).(map[interface{}]interface{})[info.Key] = sub
@@ -263,7 +263,7 @@ func interfaceGetRecursive(v interface{}, key string, prefix string) (interface{
 			if info.Idx >= rv.Len() {
 				return nil, errors.Errorf("index out of bounds. prefix: [%v], index: [%v]", prefix, info.Idx)
 			}
-			return interfaceGetRecursive(rv.Index(info.Idx).Interface(), next, prefixAppendIdx(prefix, info.Idx))
+			return interfaceGetRecursive(rv.Index(info.Idx).Interface(), next, PrefixAppendIdx(prefix, info.Idx))
 		default:
 			return nil, errors.Errorf("node is not a slice. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(v))
 		}
@@ -274,7 +274,7 @@ func interfaceGetRecursive(v interface{}, key string, prefix string) (interface{
 		if rv.MapIndex(reflect.ValueOf(info.Key)).Kind() == reflect.Invalid {
 			return nil, errors.Errorf("no such key. prefix [%v], key [%v]", prefix, key)
 		}
-		return interfaceGetRecursive(rv.MapIndex(reflect.ValueOf(info.Key)).Interface(), next, prefixAppendKey(prefix, info.Key))
+		return interfaceGetRecursive(rv.MapIndex(reflect.ValueOf(info.Key)).Interface(), next, PrefixAppendKey(prefix, info.Key))
 	default:
 		return nil, errors.Errorf("node is not a map. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(v))
 	}
@@ -352,7 +352,7 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 					return err
 				}
 			} else {
-				if err := interfaceToStructRecursive(val, rv.Field(i).Addr().Interface(), prefixAppendKey(prefix, key), options); err != nil {
+				if err := interfaceToStructRecursive(val, rv.Field(i).Addr().Interface(), PrefixAppendKey(prefix, key), options); err != nil {
 					return err
 				}
 			}
@@ -365,7 +365,7 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 
 		for idx := 0; idx < srv.Len(); idx++ {
 			nv := reflect.New(rt.Elem())
-			if err := interfaceToStructRecursive(srv.Index(idx).Interface(), nv.Interface(), prefixAppendIdx(prefix, idx), options); err != nil {
+			if err := interfaceToStructRecursive(srv.Index(idx).Interface(), nv.Interface(), PrefixAppendIdx(prefix, idx), options); err != nil {
 				return err
 			}
 			rv.Set(reflect.Append(rv, nv.Elem()))
@@ -382,7 +382,7 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 
 			val := srv.MapIndex(key).Interface()
 			nv := reflect.New(rt.Elem())
-			if err := interfaceToStructRecursive(val, nv.Interface(), prefixAppendKey(prefix, cast.ToString(newKey.Elem().Interface())), options); err != nil {
+			if err := interfaceToStructRecursive(val, nv.Interface(), PrefixAppendKey(prefix, cast.ToString(newKey.Elem().Interface())), options); err != nil {
 				return err
 			}
 			rv.SetMapIndex(newKey.Elem(), nv.Elem())
@@ -415,13 +415,13 @@ func interfaceTravelRecursive(v interface{}, fun func(key string, val interface{
 	case reflect.Map:
 		for _, key := range rv.MapKeys() {
 			val := rv.MapIndex(key).Interface()
-			if err := interfaceTravelRecursive(val, fun, prefixAppendKey(prefix, cast.ToString(key.Interface()))); err != nil {
+			if err := interfaceTravelRecursive(val, fun, PrefixAppendKey(prefix, cast.ToString(key.Interface()))); err != nil {
 				return err
 			}
 		}
 	case reflect.Slice:
 		for idx := 0; idx < rv.Len(); idx++ {
-			if err := interfaceTravelRecursive(rv.Index(idx).Interface(), fun, prefixAppendIdx(prefix, idx)); err != nil {
+			if err := interfaceTravelRecursive(rv.Index(idx).Interface(), fun, PrefixAppendIdx(prefix, idx)); err != nil {
 				return err
 			}
 		}
@@ -443,14 +443,14 @@ type KeyInfo struct {
 	Mod int
 }
 
-func prefixAppendKey(prefix string, key string) string {
+func PrefixAppendKey(prefix string, key string) string {
 	if prefix == "" {
 		return key
 	}
 	return fmt.Sprintf("%v.%v", prefix, key)
 }
 
-func prefixAppendIdx(prefix string, idx int) string {
+func PrefixAppendIdx(prefix string, idx int) string {
 	if prefix == "" {
 		return fmt.Sprintf("[%v]", idx)
 	}
