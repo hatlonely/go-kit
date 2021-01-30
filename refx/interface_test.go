@@ -964,3 +964,69 @@ func TestRegex(t *testing.T) {
 		fmt.Println(rules)
 	})
 }
+
+func TestGetToken(t *testing.T) {
+	Convey("TestGetToken", t, func() {
+		Convey("success", func() {
+			for _, unit := range []struct {
+				key  string
+				info KeyInfo
+				next string
+			}{
+				{key: "key1.key2", info: KeyInfo{key: "key1", mod: MapMod}, next: "key2"},
+				{key: "[1].key", info: KeyInfo{idx: 1, mod: ArrMod}, next: "key"},
+				{key: "[1][2]", info: KeyInfo{idx: 1, mod: ArrMod}, next: "[2]"},
+				{key: "key", info: KeyInfo{key: "key", mod: MapMod}, next: ""},
+				{key: "key[0]", info: KeyInfo{key: "key", mod: MapMod}, next: "[0]"},
+			} {
+				info, next, err := GetToken(unit.key)
+				So(err, ShouldBeNil)
+				So(info.key, ShouldEqual, unit.info.key)
+				So(info.mod, ShouldEqual, unit.info.mod)
+				So(info.idx, ShouldEqual, unit.info.idx)
+				So(next, ShouldEqual, unit.next)
+			}
+		})
+
+		Convey("error", func() {
+			for _, key := range []string{
+				"[123", "[]", "[abc]", ".key1.key2",
+			} {
+				_, _, err := GetToken(key)
+				So(err, ShouldNotBeNil)
+			}
+		})
+	})
+}
+
+func TestGetLastToken(t *testing.T) {
+	Convey("TestGetLastToken", t, func() {
+		Convey("success", func() {
+			for _, unit := range []struct {
+				key  string
+				info KeyInfo
+				prev string
+			}{
+				{key: "key[3]", info: KeyInfo{idx: 3, mod: ArrMod}, prev: "key"},
+				{key: "key", info: KeyInfo{key: "key", mod: MapMod}, prev: ""},
+				{key: "key1[3].key2", info: KeyInfo{key: "key2", mod: MapMod}, prev: "key1[3]"},
+			} {
+				info, next, err := GetLastToken(unit.key)
+				So(err, ShouldBeNil)
+				So(info.key, ShouldEqual, unit.info.key)
+				So(info.mod, ShouldEqual, unit.info.mod)
+				So(info.idx, ShouldEqual, unit.info.idx)
+				So(next, ShouldEqual, unit.prev)
+			}
+		})
+
+		Convey("error", func() {
+			for _, key := range []string{
+				"123]", "[]", "[abc]", "key1.key2.",
+			} {
+				_, _, err := GetLastToken(key)
+				So(err, ShouldNotBeNil)
+			}
+		})
+	})
+}
