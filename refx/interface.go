@@ -157,23 +157,23 @@ func InterfaceDel(pv *interface{}, key string) error {
 	if v == nil {
 		return nil
 	}
-	if info.mod == ArrMod {
+	if info.Mod == ArrMod {
 		val, ok := v.([]interface{})
 		if !ok {
 			return fmt.Errorf("unsupport slice type. prefix: [%v], type: [%v]", prev, reflect.TypeOf(*pv))
 		}
-		if info.idx >= len(val) {
+		if info.Idx >= len(val) {
 			return nil
 		}
-		val = append(val[:info.idx], val[info.idx+1:]...)
+		val = append(val[:info.Idx], val[info.Idx+1:]...)
 		return InterfaceSet(pv, prev, val)
 	}
 
 	switch v.(type) {
 	case map[string]interface{}:
-		delete(v.(map[string]interface{}), info.key)
+		delete(v.(map[string]interface{}), info.Key)
 	case map[interface{}]interface{}:
-		delete(v.(map[interface{}]interface{}), info.key)
+		delete(v.(map[interface{}]interface{}), info.Key)
 	default:
 		return fmt.Errorf("unsupport slice type. prefix: [%v], type: [%v]", prev, reflect.TypeOf(*pv))
 	}
@@ -190,7 +190,7 @@ func interfaceSetRecursive(pv *interface{}, key string, val interface{}, prefix 
 	if err != nil {
 		return fmt.Errorf("get token failed. prefix: [%v], err: [%v]", prefix, err)
 	}
-	if info.mod == ArrMod {
+	if info.Mod == ArrMod {
 		if *pv == nil {
 			*pv = []interface{}{}
 		}
@@ -198,20 +198,20 @@ func interfaceSetRecursive(pv *interface{}, key string, val interface{}, prefix 
 		if !ok {
 			return fmt.Errorf("unsupport slice type. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(*pv))
 		}
-		if info.idx > len(v) {
-			return fmt.Errorf("index out of bounds. prefix: [%v], index: [%v]", prefix, info.idx)
+		if info.Idx > len(v) {
+			return fmt.Errorf("index out of bounds. prefix: [%v], index: [%v]", prefix, info.Idx)
 		}
-		if info.idx < len(v) {
-			sub := v[info.idx]
-			if err := interfaceSetRecursive(&sub, next, val, prefixAppendIdx(prefix, info.idx)); err != nil {
+		if info.Idx < len(v) {
+			sub := v[info.Idx]
+			if err := interfaceSetRecursive(&sub, next, val, prefixAppendIdx(prefix, info.Idx)); err != nil {
 				return err
 			}
-			v[info.idx] = sub
+			v[info.Idx] = sub
 			return nil
 		}
 
 		var sub interface{}
-		if err := interfaceSetRecursive(&sub, next, val, prefixAppendIdx(prefix, info.idx)); err != nil {
+		if err := interfaceSetRecursive(&sub, next, val, prefixAppendIdx(prefix, info.Idx)); err != nil {
 			return err
 		}
 		v = append(v, sub)
@@ -224,17 +224,17 @@ func interfaceSetRecursive(pv *interface{}, key string, val interface{}, prefix 
 	}
 	switch (*pv).(type) {
 	case map[string]interface{}:
-		sub := (*pv).(map[string]interface{})[info.key]
-		if err := interfaceSetRecursive(&sub, next, val, prefixAppendKey(prefix, info.key)); err != nil {
+		sub := (*pv).(map[string]interface{})[info.Key]
+		if err := interfaceSetRecursive(&sub, next, val, prefixAppendKey(prefix, info.Key)); err != nil {
 			return err
 		}
-		(*pv).(map[string]interface{})[info.key] = sub
+		(*pv).(map[string]interface{})[info.Key] = sub
 	case map[interface{}]interface{}:
-		sub := (*pv).(map[interface{}]interface{})[info.key]
-		if err := interfaceSetRecursive(&sub, next, val, prefixAppendKey(prefix, info.key)); err != nil {
+		sub := (*pv).(map[interface{}]interface{})[info.Key]
+		if err := interfaceSetRecursive(&sub, next, val, prefixAppendKey(prefix, info.Key)); err != nil {
 			return err
 		}
-		(*pv).(map[interface{}]interface{})[info.key] = sub
+		(*pv).(map[interface{}]interface{})[info.Key] = sub
 	default:
 		return fmt.Errorf("unsupport map type. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(*pv))
 	}
@@ -257,13 +257,13 @@ func interfaceGetRecursive(v interface{}, key string, prefix string) (interface{
 	rt := reflect.TypeOf(v)
 	rv := reflect.ValueOf(v)
 
-	if info.mod == ArrMod {
+	if info.Mod == ArrMod {
 		switch rt.Kind() {
 		case reflect.Slice:
-			if info.idx >= rv.Len() {
-				return nil, errors.Errorf("index out of bounds. prefix: [%v], index: [%v]", prefix, info.idx)
+			if info.Idx >= rv.Len() {
+				return nil, errors.Errorf("index out of bounds. prefix: [%v], index: [%v]", prefix, info.Idx)
 			}
-			return interfaceGetRecursive(rv.Index(info.idx).Interface(), next, prefixAppendIdx(prefix, info.idx))
+			return interfaceGetRecursive(rv.Index(info.Idx).Interface(), next, prefixAppendIdx(prefix, info.Idx))
 		default:
 			return nil, errors.Errorf("node is not a slice. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(v))
 		}
@@ -271,10 +271,10 @@ func interfaceGetRecursive(v interface{}, key string, prefix string) (interface{
 
 	switch rt.Kind() {
 	case reflect.Map:
-		if rv.MapIndex(reflect.ValueOf(info.key)).Kind() == reflect.Invalid {
+		if rv.MapIndex(reflect.ValueOf(info.Key)).Kind() == reflect.Invalid {
 			return nil, errors.Errorf("no such key. prefix [%v], key [%v]", prefix, key)
 		}
-		return interfaceGetRecursive(rv.MapIndex(reflect.ValueOf(info.key)).Interface(), next, prefixAppendKey(prefix, info.key))
+		return interfaceGetRecursive(rv.MapIndex(reflect.ValueOf(info.Key)).Interface(), next, prefixAppendKey(prefix, info.Key))
 	default:
 		return nil, errors.Errorf("node is not a map. prefix: [%v], type: [%v]", prefix, reflect.TypeOf(v))
 	}
@@ -438,9 +438,9 @@ const MapMod = 1
 const ArrMod = 2
 
 type KeyInfo struct {
-	key string
-	idx int
-	mod int
+	Key string
+	Idx int
+	Mod int
 }
 
 func prefixAppendKey(prefix string, key string) string {
@@ -475,19 +475,19 @@ func GetLastToken(key string) (info KeyInfo, prev string, err error) {
 			return info, "", fmt.Errorf("idx to int fail. key: [%v], sub: [%v]", key, sub)
 		}
 		// "key[3]" => 3, "key"
-		return KeyInfo{idx: idx, mod: ArrMod}, key[:pos], nil
+		return KeyInfo{Idx: idx, Mod: ArrMod}, key[:pos], nil
 	}
 	pos := strings.LastIndex(key, ".")
 	// "key" => "key", ""
 	if pos == -1 {
-		return KeyInfo{key: key, mod: MapMod}, "", nil
+		return KeyInfo{Key: key, Mod: MapMod}, "", nil
 	}
 	// "key1.key2." => error
 	if key[pos+1:] == "" {
 		return info, "", fmt.Errorf("key should not be empty. key: [%v]", key)
 	}
 	// "key1[3].key2" => "key2", "key1[3]"
-	return KeyInfo{key: key[pos+1:], mod: MapMod}, key[:pos], nil
+	return KeyInfo{Key: key[pos+1:], Mod: MapMod}, key[:pos], nil
 }
 
 func GetToken(key string) (info KeyInfo, next string, err error) {
@@ -508,24 +508,24 @@ func GetToken(key string) (info KeyInfo, next string, err error) {
 		}
 		// "[1].key" => "1", "key"
 		if pos+1 < len(key) && key[pos+1] == '.' {
-			return KeyInfo{idx: idx, mod: ArrMod}, key[pos+2:], nil
+			return KeyInfo{Idx: idx, Mod: ArrMod}, key[pos+2:], nil
 		}
 		// "[1][2]" => 1, "[2]"
-		return KeyInfo{idx: idx, mod: ArrMod}, key[pos+1:], nil
+		return KeyInfo{Idx: idx, Mod: ArrMod}, key[pos+1:], nil
 	}
 	pos := strings.IndexAny(key, ".[")
 	// "key" => "key", ""
 	if pos == -1 {
-		return KeyInfo{key: key, mod: MapMod}, "", nil
+		return KeyInfo{Key: key, Mod: MapMod}, "", nil
 	}
 	// "key[0]" => "key", "[0]"
 	if key[pos] == '[' {
-		return KeyInfo{key: key[:pos], mod: MapMod}, key[pos:], nil
+		return KeyInfo{Key: key[:pos], Mod: MapMod}, key[pos:], nil
 	}
 	// ".key1.key2" => error
 	if key[:pos] == "" {
 		return info, "", fmt.Errorf("key should not be empty. key: [%v]", key)
 	}
 	// "key1.key2.key3" => "key1", "key2.key3"
-	return KeyInfo{key: key[:pos], mod: MapMod}, key[pos+1:], nil
+	return KeyInfo{Key: key[:pos], Mod: MapMod}, key[pos+1:], nil
 }

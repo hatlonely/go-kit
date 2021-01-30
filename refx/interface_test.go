@@ -973,17 +973,17 @@ func TestGetToken(t *testing.T) {
 				info KeyInfo
 				next string
 			}{
-				{key: "key1.key2", info: KeyInfo{key: "key1", mod: MapMod}, next: "key2"},
-				{key: "[1].key", info: KeyInfo{idx: 1, mod: ArrMod}, next: "key"},
-				{key: "[1][2]", info: KeyInfo{idx: 1, mod: ArrMod}, next: "[2]"},
-				{key: "key", info: KeyInfo{key: "key", mod: MapMod}, next: ""},
-				{key: "key[0]", info: KeyInfo{key: "key", mod: MapMod}, next: "[0]"},
+				{key: "key1.key2", info: KeyInfo{Key: "key1", Mod: MapMod}, next: "key2"},
+				{key: "[1].key", info: KeyInfo{Idx: 1, Mod: ArrMod}, next: "key"},
+				{key: "[1][2]", info: KeyInfo{Idx: 1, Mod: ArrMod}, next: "[2]"},
+				{key: "key", info: KeyInfo{Key: "key", Mod: MapMod}, next: ""},
+				{key: "key[0]", info: KeyInfo{Key: "key", Mod: MapMod}, next: "[0]"},
 			} {
 				info, next, err := GetToken(unit.key)
 				So(err, ShouldBeNil)
-				So(info.key, ShouldEqual, unit.info.key)
-				So(info.mod, ShouldEqual, unit.info.mod)
-				So(info.idx, ShouldEqual, unit.info.idx)
+				So(info.Key, ShouldEqual, unit.info.Key)
+				So(info.Mod, ShouldEqual, unit.info.Mod)
+				So(info.Idx, ShouldEqual, unit.info.Idx)
 				So(next, ShouldEqual, unit.next)
 			}
 		})
@@ -1007,15 +1007,15 @@ func TestGetLastToken(t *testing.T) {
 				info KeyInfo
 				prev string
 			}{
-				{key: "key[3]", info: KeyInfo{idx: 3, mod: ArrMod}, prev: "key"},
-				{key: "key", info: KeyInfo{key: "key", mod: MapMod}, prev: ""},
-				{key: "key1[3].key2", info: KeyInfo{key: "key2", mod: MapMod}, prev: "key1[3]"},
+				{key: "key[3]", info: KeyInfo{Idx: 3, Mod: ArrMod}, prev: "key"},
+				{key: "key", info: KeyInfo{Key: "key", Mod: MapMod}, prev: ""},
+				{key: "key1[3].key2", info: KeyInfo{Key: "key2", Mod: MapMod}, prev: "key1[3]"},
 			} {
 				info, next, err := GetLastToken(unit.key)
 				So(err, ShouldBeNil)
-				So(info.key, ShouldEqual, unit.info.key)
-				So(info.mod, ShouldEqual, unit.info.mod)
-				So(info.idx, ShouldEqual, unit.info.idx)
+				So(info.Key, ShouldEqual, unit.info.Key)
+				So(info.Mod, ShouldEqual, unit.info.Mod)
+				So(info.Idx, ShouldEqual, unit.info.Idx)
 				So(next, ShouldEqual, unit.prev)
 			}
 		})
