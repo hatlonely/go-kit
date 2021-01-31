@@ -9,6 +9,8 @@ import (
 
 	. "github.com/smartystreets/goconvey/convey"
 
+	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/wrap"
 )
 
@@ -62,4 +64,37 @@ func TestRedisRateLimiter_WaitN_Parallel(t *testing.T) {
 		}(i)
 	}
 	wg.Wait()
+}
+
+func TestNewRedisRateLimiterWithConfig(t *testing.T) {
+	Convey("t", t, func() {
+		cfg, err := config.NewConfigWithOptions(&config.Options{
+			Provider: config.ProviderOptions{
+				Type: "Memory",
+				Options: &config.MemoryProviderOptions{
+					Buffer: `{
+"rateLimiter": {
+    "redis": {
+      "wrapper": {
+        "enableTrace": true,
+        "enableMetric": true,
+      }
+    },
+    "qps": {
+      "DB.First": 1
+    }
+  },
+}`,
+				},
+			},
+		})
+
+		So(err, ShouldBeNil)
+		v, ok := cfg.Get("")
+		fmt.Println(v, ok)
+
+		r, err := NewRedisRateLimiterWithConfig(cfg.Sub("rateLimiter"), refx.WithCamelName())
+		So(err, ShouldBeNil)
+		So(r, ShouldNotBeNil)
+	})
 }

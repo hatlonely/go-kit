@@ -175,6 +175,9 @@ func (c *Config) Unmarshal(v interface{}, opts ...refx.Option) error {
 }
 
 func (c *Config) Sub(key string) *Config {
+	if c.parent != nil {
+		return &Config{parent: c.parent, prefix: refx.PrefixAppendKeyWithoutEscape(c.prefix, key)}
+	}
 	return &Config{parent: c, prefix: key}
 }
 
