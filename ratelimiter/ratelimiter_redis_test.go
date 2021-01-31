@@ -1,0 +1,65 @@
+package ratelimiter
+
+import (
+	"context"
+	"fmt"
+	"sync"
+	"testing"
+	"time"
+
+	. "github.com/smartystreets/goconvey/convey"
+
+	"github.com/hatlonely/go-kit/wrap"
+)
+
+func TestRedisRateLimiter(t *testing.T) {
+	Convey("TestRedisRateLimiter", t, func() {
+		r, err := NewRedisRateLimiterWithOptions(&RedisRateLimiterOptions{
+			Redis: wrap.RedisClientWrapperOptions{
+				Retry: wrap.RetryOptions{
+					Attempts: 3,
+					Delay:    time.Millisecond * 500,
+				},
+			},
+			QPS: map[string]int{
+				"Key1": 1,
+			},
+		})
+		So(err, ShouldBeNil)
+
+		for i := 0; i < 10; i++ {
+			ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*2500)
+			err := r.WaitN(ctx, "Key1", 2)
+			cancel()
+			fmt.Println("hello world")
+			So(err, ShouldBeNil)
+		}
+	})
+}
+
+func TestRedisRateLimiter_WaitN_Parallel(t *testing.T) {
+	r, _ := NewRedisRateLimiterWithOptions(&RedisRateLimiterOptions{
+		Redis: wrap.RedisClientWrapperOptions{
+			Retry: wrap.RetryOptions{
+				Attempts: 3,
+				Delay:    time.Millisecond * 500,
+			},
+		},
+		QPS: map[string]int{
+			"Key1": 10,
+		},
+	})
+
+	var wg sync.WaitGroup
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func(i int) {
+			for i := 0; i < 10; i++ {
+				err := r.WaitN(context.Background(), "Key1", 1)
+				fmt.Println("hello world", err, i)
+			}
+			wg.Done()
+		}(i)
+	}
+	wg.Wait()
+}
