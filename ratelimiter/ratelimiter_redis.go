@@ -8,6 +8,8 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/pkg/errors"
 
+	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/wrap"
 )
 
@@ -23,6 +25,31 @@ type RedisRateLimiter struct {
 
 // https://redislabs.com/redis-best-practices/basic-rate-limiting/
 // https://redis.io/commands/INCR#pattern-rate-limiter-1
+
+func NewRedisRateLimiterWithConfig(cfg *config.Config, opts ...refx.Option) (*RedisRateLimiter, error) {
+	var options RedisRateLimiterOptions
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
+		return nil, errors.WithMessage(err, "cfg.Unmarshal failed")
+	}
+
+	refxOptions := refx.NewOptions(opts...)
+	client, err := wrap.NewRedisClientWrapperWithConfig(cfg.Sub(refxOptions.FormatKey("Redis")), opts...)
+	if err != nil {
+		return nil, errors.WithMessage(err, "NewRedisRateLimiterWithConfig failed")
+	}
+	r := &RedisRateLimiter{client: client, options: &options}
+
+	cfg.AddOnChangeHandler(func(cfg *config.Config) error {
+		var options RedisRateLimiterOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.WithMessage(err, "cfg.Unmarshal failed")
+		}
+		r.options = &options
+		return nil
+	})
+
+	return r, nil
+}
 
 func NewRedisRateLimiterWithOptions(options *RedisRateLimiterOptions) (*RedisRateLimiter, error) {
 	client, err := wrap.NewRedisClientWrapperWithOptions(&options.Redis)
