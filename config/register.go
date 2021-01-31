@@ -1,20 +1,20 @@
 package config
 
 func init() {
-	RegisterCipher("", NewEmptyCipher)
-	RegisterCipher("Empty", NewEmptyCipher)
+	RegisterCipher("", EmptyCipher{})
+	RegisterCipher("Empty", EmptyCipher{})
 	RegisterCipher("AES", NewAESCipherWithOptions)
 	RegisterCipher("Base64", NewBase64CipherWithOptions)
 	RegisterCipher("Group", NewCipherGroupWithOptions)
 	RegisterCipher("KMS", NewKMSCipherWithOptions)
 
-	RegisterDecoder("", NewJson5Decoder)
-	RegisterDecoder("Json", NewJson5Decoder)
-	RegisterDecoder("Json5", NewJson5Decoder)
-	RegisterDecoder("Prop", NewPropDecoder)
-	RegisterDecoder("Toml", NewTomlDecoder)
-	RegisterDecoder("Yaml", NewYamlDecoder)
-	RegisterDecoder("Ini", NewIniDecoder)
+	RegisterDecoder("", Json5Decoder{})
+	RegisterDecoder("Json", Json5Decoder{})
+	RegisterDecoder("Json5", Json5Decoder{})
+	RegisterDecoder("Prop", PropDecoder{})
+	RegisterDecoder("Toml", TomlDecoder{})
+	RegisterDecoder("Yaml", YamlDecoder{})
+	RegisterDecoder("Ini", IniDecoder{})
 
 	RegisterProvider("", NewLocalProviderWithOptions)
 	RegisterProvider("Local", NewLocalProviderWithOptions)
