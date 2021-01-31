@@ -28,6 +28,10 @@ type RateLimiterGroup interface {
 }
 
 func NewRateLimiterGroupWithOptions(options *RateLimiterGroupOptions, opts ...refx.Option) (RateLimiterGroup, error) {
+	if options.Type == "" {
+		return nil, nil
+	}
+
 	constructor, ok := rateLimiterGroupConstructorMap[options.Type]
 	if !ok {
 		return nil, errors.Errorf("unregistered RateLimiterGroup type: [%v]", options.Type)
