@@ -16,11 +16,17 @@ type Constructor struct {
 	HasParam    bool
 	HasOption   bool
 	ReturnError bool
+	IsInstance  bool
+	Instance    reflect.Value
 	ParamType   reflect.Type
 	FuncValue   reflect.Value
 }
 
 func (c *Constructor) Call(v interface{}, opts ...Option) ([]reflect.Value, error) {
+	if c.IsInstance {
+		return []reflect.Value{c.Instance}, nil
+	}
+
 	var params []reflect.Value
 	if c.HasParam {
 		if reflect.TypeOf(v) == c.ParamType {
@@ -44,12 +50,20 @@ func (c *Constructor) Call(v interface{}, opts ...Option) ([]reflect.Value, erro
 func NewConstructor(constructor interface{}, implement reflect.Type) (*Constructor, error) {
 	rt := reflect.TypeOf(constructor)
 
-	var info Constructor
-	info.FuncValue = reflect.ValueOf(constructor)
+	if rt.Implements(implement) {
+		return &Constructor{
+			IsInstance: true,
+			Instance:   reflect.ValueOf(constructor),
+		}, nil
+	}
 
 	if rt.Kind() != reflect.Func {
 		return nil, errors.New("constructor should be a function type")
 	}
+
+	var info Constructor
+	info.FuncValue = reflect.ValueOf(constructor)
+
 	if rt.NumIn() > 2 {
 		return nil, errors.New("constructor parameters number should not greater than 2")
 	}

@@ -83,3 +83,26 @@ func TestReflect(t *testing.T) {
 		fmt.Println(rv)
 	})
 }
+
+func TestNewRateLimiterGroupWithOptions(t *testing.T) {
+	Convey("TestNewRateLimiterGroupWithOptions", t, func() {
+		r, err := NewLocalGroupRateLimiterWithOptions(&LocalGroupRateLimiterOptions{
+			"DB.First": {
+				Interval: time.Second,
+				Burst:    1,
+			},
+		})
+		So(err, ShouldBeNil)
+		RegisterRateLimiterGroup("Test", r)
+
+		rateLimiterGroup, err := NewRateLimiterGroupWithOptions(&RateLimiterGroupOptions{
+			Type: "Test",
+		})
+		So(err, ShouldBeNil)
+
+		for i := 0; i < 5; i++ {
+			rateLimiterGroup.Wait(context.Background(), "DB.First")
+			fmt.Println("hello world")
+		}
+	})
+}
