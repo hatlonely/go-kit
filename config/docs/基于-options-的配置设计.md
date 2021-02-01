@@ -56,9 +56,9 @@ if err != nil {
 1. 提供额外的 `OnChangeHandler(cfg *config.Config)`
 
 ```go
-func (c *MySQLCli) OnChangeHandler(cfg *config.Config) {
+func (c *MySQLCli) OnChangeHandler(cfg *config.Config, opts ...refx.Option) {
     var options MysqlOptions
-    if err := cfg.Unmarshal(&options, refx.WithCamelName(), refx.WithPlaygroundValidator()); err != nil {
+    if err := cfg.Unmarshal(&options, opts...); err != nil {
         fmt.Println(err)
         return
     }

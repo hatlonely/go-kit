@@ -6,10 +6,11 @@
 4. 支持监听配置变更事件
 5. 支持子配置，子配置依然是一个完全的配置对象
 6. 支持多种配置文件格式，包括 `Yaml`/`Json5`/`Toml`/`Ini`/`Properties`
-7. 支持多种配置文件后端，包括本地文件/阿里云表格存储OTS
+7. 支持多种配置文件后端，包括本地文件/阿里云表格存储OTS/阿里云配置服务ACM
 8. 支持配置项的自动加密解密
 9. 支持多种加密方式 `AES`/阿里云密钥服务KMS，以及多种加密方式的组合
 10. 提供配置管理工具 `cfg`
+11. 支持用户注册自己的配置后端，加解密服务，以及配置格式解析器
 
 ## Quick Start
 
@@ -180,15 +181,15 @@ func main() {
   },
   "provider": {
     "type": "Local",
-    "localProvider": {
+    "options": {
       "filename": "test.json"
     }
   },
   "cipher": {
     "type": "Group",
-    "cipherGroup": [{
+    "options": [{
       "type": "AES",
-      "aesCipher": {
+      "options": {
         "base64Key": "IrjXy4vx7iwgCLaUeu5TVUA9TkgMwSw3QWcgE/IW5W0="
       }
     }, {
