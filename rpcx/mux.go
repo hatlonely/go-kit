@@ -38,7 +38,7 @@ func NewMuxInterceptorWithOptions(options *MuxInterceptorOptions) (*MuxIntercept
 	return m, nil
 }
 
-func (m *MuxInterceptor) ServeMuxOption() []runtime.ServeMuxOption {
+func (m *MuxInterceptor) ServeMuxOptions() []runtime.ServeMuxOption {
 	var opts []runtime.ServeMuxOption
 	opts = append(opts, m.MuxMetaData())
 	opts = append(opts, m.MuxIncomingHeaderMatcher())

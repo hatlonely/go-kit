@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	grpc_opentracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
@@ -158,6 +159,19 @@ func (g *GRPCInterceptor) AddPreHandler(handlers ...func(ctx context.Context, re
 
 func (g *GRPCInterceptor) SetLogger(logger Logger) {
 	g.log = logger
+}
+
+func (g *GRPCInterceptor) DialOptions() []grpc.DialOption {
+	var opts []grpc.DialOption
+	opts = append(opts, grpc.WithInsecure())
+	if g.options.EnableTracing {
+		opts = append(opts, grpc.WithUnaryInterceptor(
+			grpc_opentracing.UnaryClientInterceptor(
+				grpc_opentracing.WithTracer(opentracing.GlobalTracer()),
+			),
+		))
+	}
+	return opts
 }
 
 func (g *GRPCInterceptor) ServerOption() grpc.ServerOption {

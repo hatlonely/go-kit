@@ -20,6 +20,7 @@ require (
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/go-redis/redis v6.15.8+incompatible
 	github.com/golang/protobuf v1.4.3
+	github.com/grpc-ecosystem/go-grpc-middleware v1.0.1-0.20190118093823-f849b5445de4
 	github.com/grpc-ecosystem/grpc-gateway v1.15.2
 	github.com/jinzhu/gorm v1.9.15
 	github.com/jonboulle/clockwork v0.2.0 // indirect
@@ -31,7 +32,6 @@ require (
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.9.0
-	github.com/prometheus/common v0.15.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/spf13/cast v1.3.1
