@@ -10,76 +10,87 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-
-	"github.com/hatlonely/go-kit/refx"
 )
 
-func MuxWithMetadata(opts ...MuxWithMetadataOption) runtime.ServeMuxOption {
-	var options MuxWithMetadataOptions
-	refx.SetDefaultValueP(&options)
-	for _, opt := range opts {
-		opt(&options)
+type MuxInterceptorOptions struct {
+	Headers          []string `dft:"X-Request-Id"`
+	ContentType      string   `dft:"application/json"`
+	UseFieldKey      bool
+	RequestIDMetaKey string `dft:"X-Request-Id"`
+	MarshalOmitempty bool
+}
+
+type MuxInterceptor struct {
+	options *MuxInterceptorOptions
+
+	detailMarshal func(detail *ErrorDetail) []byte
+}
+
+func NewMuxInterceptorWithOptions(options *MuxInterceptorOptions) (*MuxInterceptor, error) {
+	m := &MuxInterceptor{
+		options:       options,
+		detailMarshal: JsonMarshalErrorDetail,
+	}
+	if options.UseFieldKey {
+		m.detailMarshal = JsonMarshalErrorDetailWithFieldKey
 	}
 
+	return m, nil
+}
+
+func (m *MuxInterceptor) ServeMuxOption() []runtime.ServeMuxOption {
+	var opts []runtime.ServeMuxOption
+	opts = append(opts, m.MuxMetaData())
+	opts = append(opts, m.MuxIncomingHeaderMatcher())
+	opts = append(opts, m.MuxOutgoingHeaderMatcher())
+	opts = append(opts, m.MuxProtoErrorHandler())
+	if m.options.MarshalOmitempty {
+		opts = append(opts, m.MuxMarshalerOption())
+	}
+	return opts
+}
+
+func (m *MuxInterceptor) MuxMarshalerOption() runtime.ServeMuxOption {
+	return runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{OrigName: true, EmitDefaults: true})
+}
+
+func (m *MuxInterceptor) MuxMetaData() runtime.ServeMuxOption {
 	return runtime.WithMetadata(func(ctx context.Context, req *http.Request) metadata.MD {
-		requestID := req.Header.Get(options.RequestIDMetaKey)
+		requestID := req.Header.Get(m.options.RequestIDMetaKey)
 		if requestID == "" {
 			requestID = uuid.NewV4().String()
-			req.Header.Set(options.RequestIDMetaKey, requestID)
-			return metadata.Pairs("X-Remote-Addr", req.RemoteAddr, options.RequestIDMetaKey, requestID)
+			req.Header.Set(m.options.RequestIDMetaKey, requestID)
+			return metadata.Pairs("X-Remote-Addr", req.RemoteAddr, m.options.RequestIDMetaKey, requestID)
 		}
 		return metadata.Pairs("X-Remote-Addr", req.RemoteAddr)
 	})
 }
 
-type MuxWithMetadataOptions struct {
-	RequestIDMetaKey string `dft:"X-Request-Id"`
-}
-
-type MuxWithMetadataOption func(options *MuxWithMetadataOptions)
-
-func WithMuxMetadataRequestIDMetaKey(requestIDMetaKey string) MuxWithMetadataOption {
-	return func(options *MuxWithMetadataOptions) {
-		options.RequestIDMetaKey = requestIDMetaKey
-	}
-}
-
-func MuxWithIncomingHeaderMatcher() runtime.ServeMuxOption {
+func (m *MuxInterceptor) MuxIncomingHeaderMatcher() runtime.ServeMuxOption {
 	return runtime.WithIncomingHeaderMatcher(func(key string) (string, bool) {
 		if strings.HasPrefix(key, "X-") || strings.HasPrefix(key, "x-") {
 			return key, true
 		}
-
 		return runtime.DefaultHeaderMatcher(key)
 	})
 }
 
-func MuxWithOutgoingHeaderMatcher() runtime.ServeMuxOption {
+func (m *MuxInterceptor) MuxOutgoingHeaderMatcher() runtime.ServeMuxOption {
 	return runtime.WithOutgoingHeaderMatcher(func(key string) (string, bool) {
 		return key, true
 	})
 }
 
-func MuxWithProtoErrorHandler(opts ...MuxWithProtoErrorHandlerOption) runtime.ServeMuxOption {
-	var options MuxWithProtoErrorHandlerOptions
-	refx.SetDefaultValueP(&options)
-	for _, opt := range opts {
-		opt(&options)
-	}
-	detailMarshal := JsonMarshalErrorDetail
-	if options.UseFieldKey {
-		detailMarshal = JsonMarshalErrorDetailWithFieldKey
-	}
-
-	return runtime.WithProtoErrorHandler(func(ctx context.Context, mux *runtime.ServeMux, m runtime.Marshaler, res http.ResponseWriter, req *http.Request, err error) {
-		res.Header().Set("Content-Type", options.ContentType)
-		for _, header := range options.Headers {
+func (m *MuxInterceptor) MuxProtoErrorHandler() runtime.ServeMuxOption {
+	return runtime.WithProtoErrorHandler(func(ctx context.Context, mux *runtime.ServeMux, marshaler runtime.Marshaler, res http.ResponseWriter, req *http.Request, err error) {
+		res.Header().Set("Content-Type", m.options.ContentType)
+		for _, header := range m.options.Headers {
 			res.Header().Set(header, req.Header.Get(header))
 		}
 
-		e := StatusErrorDetail(err, req.Header.Get(options.RequestIDMetaKey))
+		e := StatusErrorDetail(err, req.Header.Get(m.options.RequestIDMetaKey))
 		res.WriteHeader(int(e.Status))
-		_, _ = res.Write(detailMarshal(e))
+		_, _ = res.Write(m.detailMarshal(e))
 	})
 }
 
@@ -120,37 +131,4 @@ func StatusErrorDetail(err error, requestID string) *ErrorDetail {
 		return NewErrorf(s.Code(), http.StatusText(runtime.HTTPStatusFromCode(s.Code())), s.Message()).SetRequestID(requestID).Detail
 	}
 	return NewInternalError(err).SetRequestID(requestID).Detail
-}
-
-type MuxWithProtoErrorHandlerOptions struct {
-	Headers          []string `dft:"X-Request-Id"`
-	ContentType      string   `dft:"application/json"`
-	UseFieldKey      bool
-	RequestIDMetaKey string `dft:"X-Request-Id"`
-}
-
-type MuxWithProtoErrorHandlerOption func(options *MuxWithProtoErrorHandlerOptions)
-
-func WithMuxProtoErrorHandlerHeaders(headers ...string) MuxWithProtoErrorHandlerOption {
-	return func(options *MuxWithProtoErrorHandlerOptions) {
-		options.Headers = headers
-	}
-}
-
-func WithMuxProtoErrorHandlerContentType(contentType string) MuxWithProtoErrorHandlerOption {
-	return func(options *MuxWithProtoErrorHandlerOptions) {
-		options.ContentType = contentType
-	}
-}
-
-func WithMuxProtoErrorHandlerUseFieldKey() MuxWithProtoErrorHandlerOption {
-	return func(options *MuxWithProtoErrorHandlerOptions) {
-		options.UseFieldKey = true
-	}
-}
-
-func WithMuxProtoErrorHandlerRequestIDMetaKey(requestIDMetaKey string) MuxWithProtoErrorHandlerOption {
-	return func(options *MuxWithProtoErrorHandlerOptions) {
-		options.RequestIDMetaKey = requestIDMetaKey
-	}
 }

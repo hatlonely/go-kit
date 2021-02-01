@@ -73,14 +73,6 @@ type Logger interface {
 	Info(v interface{})
 }
 
-func NewGRPCInterceptor(opts ...GRPCInterceptorOption) (*GRPCInterceptor, error) {
-	var options GRPCInterceptorOptions
-	for _, opt := range opts {
-		opt(&options)
-	}
-	return NewGRPCInterceptorWithOptions(&options)
-}
-
 func NewGRPCInterceptorWithOptions(options *GRPCInterceptorOptions) (*GRPCInterceptor, error) {
 	if options.Hostname == "" {
 		options.Hostname = Hostname()
@@ -295,44 +287,6 @@ type GRPCInterceptorOptions struct {
 	PascalNameKey    bool
 	RequestIDMetaKey string `dft:"x-request-id"`
 	EnableTracing    bool
-}
-
-type GRPCInterceptorOption func(options *GRPCInterceptorOptions)
-
-func WithGRPCUnaryInterceptorHeaders(headers ...string) GRPCInterceptorOption {
-	return func(options *GRPCInterceptorOptions) {
-		options.Headers = headers
-	}
-}
-
-func WithGRPCUnaryInterceptorPrivateIP(privateIP string) GRPCInterceptorOption {
-	return func(options *GRPCInterceptorOptions) {
-		options.PrivateIP = privateIP
-	}
-}
-
-func WithGRPCUnaryInterceptorHostname(hostname string) GRPCInterceptorOption {
-	return func(options *GRPCInterceptorOptions) {
-		options.Hostname = hostname
-	}
-}
-
-func WithGRPCUnaryInterceptorRequestIDMetaKey(requestIDMetaKey string) GRPCInterceptorOption {
-	return func(options *GRPCInterceptorOptions) {
-		options.RequestIDMetaKey = requestIDMetaKey
-	}
-}
-
-func WithGRPCUnaryInterceptorPascalNameKey() GRPCInterceptorOption {
-	return func(options *GRPCInterceptorOptions) {
-		options.PascalNameKey = true
-	}
-}
-
-func WithGRPCUnaryInterceptorEnableTracing() GRPCInterceptorOption {
-	return func(options *GRPCInterceptorOptions) {
-		options.EnableTracing = true
-	}
 }
 
 func PrivateIP() string {
