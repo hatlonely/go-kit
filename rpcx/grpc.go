@@ -21,7 +21,7 @@ import (
 	"google.golang.org/grpc/peer"
 	playgroundValidator "gopkg.in/go-playground/validator.v9"
 
-	"github.com/hatlonely/go-kit/refx"
+	"github.com/hatlonely/go-kit/logger"
 	"github.com/hatlonely/go-kit/strx"
 	"github.com/hatlonely/go-kit/validator"
 )
@@ -39,14 +39,14 @@ func MetaDataIncomingSet(ctx context.Context, key string, val string) {
 	}
 }
 
-type grpcCtxKey struct{}
+type rpcxCtxKey struct{}
 
 func NewRPCXContext(ctx context.Context) context.Context {
-	return context.WithValue(ctx, grpcCtxKey{}, map[string]interface{}{})
+	return context.WithValue(ctx, rpcxCtxKey{}, map[string]interface{}{})
 }
 
 func CtxSet(ctx context.Context, key string, val interface{}) {
-	m := ctx.Value(grpcCtxKey{})
+	m := ctx.Value(rpcxCtxKey{})
 	if m == nil {
 		return
 	}
@@ -54,7 +54,7 @@ func CtxSet(ctx context.Context, key string, val interface{}) {
 }
 
 func CtxGet(ctx context.Context, key string) interface{} {
-	m := ctx.Value(grpcCtxKey{})
+	m := ctx.Value(rpcxCtxKey{})
 	if m == nil {
 		return nil
 	}
@@ -62,7 +62,7 @@ func CtxGet(ctx context.Context, key string) interface{} {
 }
 
 func FromRPCXContext(ctx context.Context) map[string]interface{} {
-	m := ctx.Value(grpcCtxKey{})
+	m := ctx.Value(rpcxCtxKey{})
 	if m == nil {
 		return nil
 	}
@@ -73,76 +73,119 @@ type Logger interface {
 	Info(v interface{})
 }
 
-func GRPCUnaryInterceptor(log Logger, opts ...GRPCUnaryInterceptorOption) grpc.ServerOption {
-	var options GRPCUnaryInterceptorOptions
-	refx.SetDefaultValueP(&options)
+func NewGRPCInterceptor(opts ...GRPCInterceptorOption) (*GRPCInterceptor, error) {
+	var options GRPCInterceptorOptions
 	for _, opt := range opts {
 		opt(&options)
 	}
-	return GRPCUnaryInterceptorWithOptions(log, &options)
+	return NewGRPCInterceptorWithOptions(&options)
 }
 
-func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCUnaryInterceptorOptions) grpc.ServerOption {
+func NewGRPCInterceptorWithOptions(options *GRPCInterceptorOptions) (*GRPCInterceptor, error) {
 	if options.Hostname == "" {
 		options.Hostname = Hostname()
 	}
 	if options.PrivateIP == "" {
 		options.PrivateIP = PrivateIP()
 	}
-	for _, validate := range options.Validators {
-		switch validate {
-		case "playground":
-			WithGRPCUnaryInterceptorPlaygroundValidator()(options)
-		case "default":
-			WithGRPCUnaryInterceptorDefaultValidator()(options)
-		default:
-			panic(fmt.Sprintf("invalid validator [%v], should be one of [playground, default]", validate))
-		}
-	}
 	options.RequestIDMetaKey = strings.ToLower(options.RequestIDMetaKey)
 
-	requestIDKey := "requestID"
-	hostnameKey := "hostname"
-	privateIPKey := "privateIP"
-	remoteIPKey := "remoteIP"
-	clientIPKey := "clientIP"
-	methodKey := "method"
-	rpcCodeKey := "rpcCode"
-	errCodeKey := "errCode"
-	statusKey := "status"
-	metaKey := "meta"
-	reqKey := "req"
-	ctxKey := "ctx"
-	resKey := "res"
-	errKey := "err"
-	errStackKey := "errStack"
-	resTimeMsKey := "resTimeMs"
+	g := &GRPCInterceptor{
+		options: options,
+		log:     logger.NewStdoutJsonLogger(),
+	}
+	g.requestIDKey = "requestID"
+	g.hostnameKey = "hostname"
+	g.privateIPKey = "privateIP"
+	g.remoteIPKey = "remoteIP"
+	g.clientIPKey = "clientIP"
+	g.methodKey = "method"
+	g.rpcCodeKey = "rpcCode"
+	g.errCodeKey = "errCode"
+	g.statusKey = "status"
+	g.metaKey = "meta"
+	g.reqKey = "req"
+	g.ctxKey = "ctx"
+	g.resKey = "res"
+	g.errKey = "err"
+	g.errStackKey = "errStack"
+	g.resTimeMsKey = "resTimeMs"
 	if options.PascalNameKey {
 		for _, key := range []*string{
-			&requestIDKey, &hostnameKey, &privateIPKey, &remoteIPKey, &clientIPKey, &methodKey, &rpcCodeKey, &errCodeKey,
-			&statusKey, &metaKey, &reqKey, &ctxKey, &resKey, &errKey, &errStackKey, &resTimeMsKey,
+			&g.requestIDKey, &g.hostnameKey, &g.privateIPKey, &g.remoteIPKey, &g.clientIPKey, &g.methodKey, &g.rpcCodeKey, &g.errCodeKey,
+			&g.statusKey, &g.metaKey, &g.reqKey, &g.ctxKey, &g.resKey, &g.errKey, &g.errStackKey, &g.resTimeMsKey,
 		} {
 			*key = strx.PascalName(*key)
 		}
 	}
 
+	for _, v := range options.Validators {
+		switch v {
+		case "Playground":
+			validate := playgroundValidator.New()
+			g.validators = append(g.validators, validate.Struct)
+		case "Default":
+			g.validators = append(g.validators, validator.Validate)
+		default:
+			return nil, errors.Errorf("invalid validator type [%v]", v)
+		}
+	}
+
+	return g, nil
+}
+
+type GRPCInterceptor struct {
+	options *GRPCInterceptorOptions
+
+	validators  []func(interface{}) error
+	preHandlers []func(ctx context.Context, req interface{}) error
+
+	requestIDKey string
+	hostnameKey  string
+	privateIPKey string
+	remoteIPKey  string
+	clientIPKey  string
+	methodKey    string
+	rpcCodeKey   string
+	errCodeKey   string
+	statusKey    string
+	metaKey      string
+	reqKey       string
+	ctxKey       string
+	resKey       string
+	errKey       string
+	errStackKey  string
+	resTimeMsKey string
+
+	log Logger
+}
+
+func (g *GRPCInterceptor) AddPreHandler(handlers ...func(ctx context.Context, req interface{}) error) {
+	g.preHandlers = append(g.preHandlers, handlers...)
+}
+
+func (g *GRPCInterceptor) SetLogger(logger Logger) {
+	g.log = logger
+}
+
+func (g *GRPCInterceptor) ServerOption() grpc.ServerOption {
 	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (res interface{}, err error) {
 		var requestID, remoteIP string
 		md, ok := metadata.FromIncomingContext(ctx)
 		if ok {
-			requestID = strings.Join(md.Get(options.RequestIDMetaKey), ",")
+			requestID = strings.Join(md.Get(g.options.RequestIDMetaKey), ",")
 			if requestID == "" {
 				requestID = uuid.NewV4().String()
-				md.Set(options.RequestIDMetaKey, requestID)
+				md.Set(g.options.RequestIDMetaKey, requestID)
 			}
 			remoteIP = strings.Split(strings.Join(md.Get("x-remote-addr"), ","), ":")[0]
 		}
 
-		if options.EnableTracing {
+		if g.options.EnableTracing {
 			spanCtx, err := opentracing.GlobalTracer().Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(md))
 			if err == nil || err == opentracing.ErrSpanContextNotFound {
 				span := opentracing.GlobalTracer().StartSpan("GrpcInterceptor", ext.RPCServerOption(spanCtx))
-				span.SetTag(methodKey, info.FullMethod)
+				span.SetTag(g.methodKey, info.FullMethod)
 				ctx = opentracing.ContextWithSpan(ctx, span)
 				defer span.Finish()
 			}
@@ -177,27 +220,27 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCUnaryInterceptorOp
 				meta[key] = strings.Join(val, ",")
 			}
 
-			log.Info(map[string]interface{}{
-				requestIDKey: requestID,
-				hostnameKey:  options.Hostname,
-				privateIPKey: options.PrivateIP,
-				remoteIPKey:  remoteIP,
-				clientIPKey:  clientIP,
-				methodKey:    info.FullMethod,
-				rpcCodeKey:   rpcCode,
-				errCodeKey:   errCode,
-				statusKey:    status,
-				metaKey:      meta,
-				reqKey:       req,
-				ctxKey:       ctx.Value(grpcCtxKey{}),
-				resKey:       res,
-				errKey:       err,
-				errStackKey:  fmt.Sprintf("%+v", err),
-				resTimeMsKey: time.Now().Sub(ts).Milliseconds(),
+			g.log.Info(map[string]interface{}{
+				g.requestIDKey: requestID,
+				g.hostnameKey:  g.options.Hostname,
+				g.privateIPKey: g.options.PrivateIP,
+				g.remoteIPKey:  remoteIP,
+				g.clientIPKey:  clientIP,
+				g.methodKey:    info.FullMethod,
+				g.rpcCodeKey:   rpcCode,
+				g.errCodeKey:   errCode,
+				g.statusKey:    status,
+				g.metaKey:      meta,
+				g.reqKey:       req,
+				g.ctxKey:       ctx.Value(rpcxCtxKey{}),
+				g.resKey:       res,
+				g.errKey:       err,
+				g.errStackKey:  fmt.Sprintf("%+v", err),
+				g.resTimeMsKey: time.Now().Sub(ts).Milliseconds(),
 			})
 
 			headers := map[string]string{}
-			for _, header := range options.Headers {
+			for _, header := range g.options.Headers {
 				headers[header] = MetaDataIncomingGet(ctx, strings.ToLower(header))
 			}
 			_ = grpc.SendHeader(ctx, metadata.New(headers))
@@ -207,7 +250,7 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCUnaryInterceptorOp
 		}()
 
 		if err == nil {
-			for _, h := range options.preHandlers {
+			for _, h := range g.preHandlers {
 				if err = h(ctx, req); err != nil {
 					break
 				}
@@ -215,7 +258,7 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCUnaryInterceptorOp
 		}
 
 		if err == nil {
-			for _, validate := range options.validators {
+			for _, validate := range g.validators {
 				if err = validate(req); err != nil {
 					err = NewError(codes.InvalidArgument, "InvalidArgument", err.Error(), err)
 					break
@@ -244,7 +287,7 @@ func GRPCUnaryInterceptorWithOptions(log Logger, options *GRPCUnaryInterceptorOp
 	})
 }
 
-type GRPCUnaryInterceptorOptions struct {
+type GRPCInterceptorOptions struct {
 	Headers          []string `dft:"X-Request-Id"`
 	PrivateIP        string
 	Hostname         string
@@ -252,70 +295,42 @@ type GRPCUnaryInterceptorOptions struct {
 	PascalNameKey    bool
 	RequestIDMetaKey string `dft:"x-request-id"`
 	EnableTracing    bool
-
-	validators  []func(interface{}) error
-	preHandlers []func(ctx context.Context, req interface{}) error
 }
 
-type GRPCUnaryInterceptorOption func(options *GRPCUnaryInterceptorOptions)
+type GRPCInterceptorOption func(options *GRPCInterceptorOptions)
 
-func WithGRPCUnaryInterceptorPreHandlers(handlers ...func(ctx context.Context, req interface{}) error) GRPCUnaryInterceptorOption {
-	return func(options *GRPCUnaryInterceptorOptions) {
-		options.preHandlers = append(options.preHandlers, handlers...)
-	}
-}
-
-func WithGRPCUnaryInterceptorHeaders(headers ...string) GRPCUnaryInterceptorOption {
-	return func(options *GRPCUnaryInterceptorOptions) {
+func WithGRPCUnaryInterceptorHeaders(headers ...string) GRPCInterceptorOption {
+	return func(options *GRPCInterceptorOptions) {
 		options.Headers = headers
 	}
 }
 
-func WithGRPCUnaryInterceptorPrivateIP(privateIP string) GRPCUnaryInterceptorOption {
-	return func(options *GRPCUnaryInterceptorOptions) {
+func WithGRPCUnaryInterceptorPrivateIP(privateIP string) GRPCInterceptorOption {
+	return func(options *GRPCInterceptorOptions) {
 		options.PrivateIP = privateIP
 	}
 }
 
-func WithGRPCUnaryInterceptorHostname(hostname string) GRPCUnaryInterceptorOption {
-	return func(options *GRPCUnaryInterceptorOptions) {
+func WithGRPCUnaryInterceptorHostname(hostname string) GRPCInterceptorOption {
+	return func(options *GRPCInterceptorOptions) {
 		options.Hostname = hostname
 	}
 }
 
-func WithGRPCUnaryInterceptorRequestIDMetaKey(requestIDMetaKey string) GRPCUnaryInterceptorOption {
-	return func(options *GRPCUnaryInterceptorOptions) {
+func WithGRPCUnaryInterceptorRequestIDMetaKey(requestIDMetaKey string) GRPCInterceptorOption {
+	return func(options *GRPCInterceptorOptions) {
 		options.RequestIDMetaKey = requestIDMetaKey
 	}
 }
 
-func WithGRPCUnaryInterceptorPlaygroundValidator() GRPCUnaryInterceptorOption {
-	validate := playgroundValidator.New()
-	return func(options *GRPCUnaryInterceptorOptions) {
-		options.validators = append(options.validators, validate.Struct)
-	}
-}
-
-func WithGRPCUnaryInterceptorDefaultValidator() GRPCUnaryInterceptorOption {
-	return func(options *GRPCUnaryInterceptorOptions) {
-		options.validators = append(options.validators, validator.Validate)
-	}
-}
-
-func WithGRPCUnaryInterceptorValidators(fun ...func(interface{}) error) GRPCUnaryInterceptorOption {
-	return func(options *GRPCUnaryInterceptorOptions) {
-		options.validators = append(options.validators, fun...)
-	}
-}
-
-func WithGRPCUnaryInterceptorPascalNameKey() GRPCUnaryInterceptorOption {
-	return func(options *GRPCUnaryInterceptorOptions) {
+func WithGRPCUnaryInterceptorPascalNameKey() GRPCInterceptorOption {
+	return func(options *GRPCInterceptorOptions) {
 		options.PascalNameKey = true
 	}
 }
 
-func WithGRPCUnaryInterceptorEnableTracing() GRPCUnaryInterceptorOption {
-	return func(options *GRPCUnaryInterceptorOptions) {
+func WithGRPCUnaryInterceptorEnableTracing() GRPCInterceptorOption {
+	return func(options *GRPCInterceptorOptions) {
 		options.EnableTracing = true
 	}
 }
