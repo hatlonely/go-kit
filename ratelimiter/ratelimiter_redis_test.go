@@ -23,6 +23,7 @@ func TestRedisRateLimiter(t *testing.T) {
 					Delay:    time.Millisecond * 500,
 				},
 			},
+			DefaultQPS: 2,
 			QPS: map[string]int{
 				"Key1": 1,
 			},
@@ -31,7 +32,7 @@ func TestRedisRateLimiter(t *testing.T) {
 
 		for i := 0; i < 10; i++ {
 			ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*2500)
-			err := r.WaitN(ctx, "Key1", 2)
+			err := r.WaitNEx(ctx, "Key0", "key2", 1)
 			cancel()
 			fmt.Println("hello world")
 			So(err, ShouldBeNil)

@@ -14,8 +14,9 @@ import (
 )
 
 type RedisRateLimiterOptions struct {
-	Redis wrap.RedisClientWrapperOptions
-	QPS   map[string]int
+	Redis      wrap.RedisClientWrapperOptions
+	QPS        map[string]int
+	DefaultQPS int
 }
 
 type RedisRateLimiter struct {
@@ -61,9 +62,16 @@ func NewRedisRateLimiterWithOptions(options *RedisRateLimiterOptions) (*RedisRat
 }
 
 func (r *RedisRateLimiter) Allow(ctx context.Context, key string) bool {
-	qps, ok := r.options.QPS[key]
+	return r.AllowEx(ctx, key, key)
+}
+
+func (r *RedisRateLimiter) AllowEx(ctx context.Context, qpsKey string, key string) bool {
+	qps, ok := r.options.QPS[qpsKey]
 	if !ok {
-		return true
+		qps = r.options.DefaultQPS
+	}
+	if qps == 0 {
+		return false
 	}
 
 	now := time.Now()
@@ -82,12 +90,23 @@ func (r *RedisRateLimiter) Allow(ctx context.Context, key string) bool {
 }
 
 func (r *RedisRateLimiter) Wait(ctx context.Context, key string) error {
-	return r.WaitN(ctx, key, 1)
+	return r.WaitNEx(ctx, key, key, 1)
 }
 
 func (r *RedisRateLimiter) WaitN(ctx context.Context, key string, n int) error {
-	qps, ok := r.options.QPS[key]
+	return r.WaitNEx(ctx, key, key, n)
+}
+
+func (r *RedisRateLimiter) WaitEx(ctx context.Context, qpsKey string, key string) error {
+	return r.WaitNEx(ctx, qpsKey, key, 1)
+}
+
+func (r *RedisRateLimiter) WaitNEx(ctx context.Context, qpsKey string, key string, n int) error {
+	qps, ok := r.options.QPS[qpsKey]
 	if !ok {
+		qps = r.options.DefaultQPS
+	}
+	if qps == 0 {
 		return nil
 	}
 
