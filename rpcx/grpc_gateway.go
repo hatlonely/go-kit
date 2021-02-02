@@ -52,6 +52,10 @@ func NewGRPCGatewayInterceptorWithOptions(options *GRPCGatewayInterceptorOptions
 	}, nil
 }
 
+func (g *GRPCGatewayInterceptor) SetLogger(logger Logger) {
+	g.grpcInterceptor.SetLogger(logger)
+}
+
 func (g *GRPCGatewayInterceptor) ServerOption() grpc.ServerOption {
 	return g.grpcInterceptor.ServerOption()
 }
