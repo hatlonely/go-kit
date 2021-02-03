@@ -79,6 +79,7 @@ func NewGRPCGatewayInterceptorWithOptions(options *GrpcGatewayOptions) (*GrpcGat
 	g := &GrpcGateway{
 		grpcInterceptor: grpcInterceptor,
 		muxInterceptor:  muxInterceptor,
+		options:         options,
 		appLog:          logger.NewStdoutTextLogger(),
 		appRpc:          logger.NewStdoutJsonLogger(),
 	}
