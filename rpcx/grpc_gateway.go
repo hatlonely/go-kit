@@ -19,7 +19,7 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-type GRPCGatewayInterceptorOptions struct {
+type GrpcGatewayOptions struct {
 	HttpPort    int
 	GrpcPort    int
 	ExitTimeout time.Duration
@@ -39,7 +39,7 @@ type GRPCGatewayInterceptorOptions struct {
 	Jaeger jaegercfg.Configuration
 }
 
-type GRPCGatewayInterceptor struct {
+type GrpcGateway struct {
 	grpcInterceptor *GRPCInterceptor
 	muxInterceptor  *MuxInterceptor
 
@@ -48,13 +48,13 @@ type GRPCGatewayInterceptor struct {
 	httpServer  *http.Server
 	traceCloser io.Closer
 
-	options *GRPCGatewayInterceptorOptions
+	options *GrpcGatewayOptions
 
 	appLog Logger
 	appRpc Logger
 }
 
-func NewGRPCGatewayInterceptorWithOptions(options *GRPCGatewayInterceptorOptions) (*GRPCGatewayInterceptor, error) {
+func NewGRPCGatewayInterceptorWithOptions(options *GrpcGatewayOptions) (*GrpcGateway, error) {
 	grpcInterceptor, err := NewGRPCInterceptorWithOptions(&GRPCInterceptorOptions{
 		Headers:          options.Headers,
 		PrivateIP:        options.PrivateIP,
@@ -76,7 +76,7 @@ func NewGRPCGatewayInterceptorWithOptions(options *GRPCGatewayInterceptorOptions
 		MarshalOmitempty: options.MarshalOmitempty,
 	})
 
-	g := &GRPCGatewayInterceptor{
+	g := &GrpcGateway{
 		grpcInterceptor: grpcInterceptor,
 		muxInterceptor:  muxInterceptor,
 		appLog:          logger.NewStdoutTextLogger(),
@@ -98,21 +98,25 @@ func NewGRPCGatewayInterceptorWithOptions(options *GRPCGatewayInterceptorOptions
 	return g, nil
 }
 
-func (g *GRPCGatewayInterceptor) SetLogger(log, rpc Logger) {
+func (g *GrpcGateway) SetLogger(log, rpc Logger) {
 	g.grpcInterceptor.SetLogger(rpc)
 	g.appLog = log
 	g.appRpc = rpc
 }
 
-func (g *GRPCGatewayInterceptor) GRPCServer() *grpc.Server {
+func (g *GrpcGateway) GRPCServer() *grpc.Server {
 	return g.grpcServer
 }
 
-func (g *GRPCGatewayInterceptor) MuxServer() *runtime.ServeMux {
+func (g *GrpcGateway) MuxServer() *runtime.ServeMux {
 	return g.muxServer
 }
 
-func (g *GRPCGatewayInterceptor) Run() {
+func (g *GrpcGateway) RegisterServiceHandlerFunc(fun func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error)) error {
+	return fun(context.Background(), g.muxServer, fmt.Sprintf("0.0.0.0:%v", g.options.GrpcPort), g.grpcInterceptor.DialOptions())
+}
+
+func (g *GrpcGateway) Run() {
 	go func() {
 		address, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%v", g.options.GrpcPort))
 		refx.Must(err)
@@ -139,7 +143,7 @@ func (g *GRPCGatewayInterceptor) Run() {
 	g.appLog.Infof("server start success. httpPort: [%v], grpcPort: [%v]", g.options.HttpPort, g.options.GrpcPort)
 }
 
-func (g *GRPCGatewayInterceptor) Stop() {
+func (g *GrpcGateway) Stop() {
 	ctx, cancel := context.WithTimeout(context.Background(), g.options.ExitTimeout)
 	defer cancel()
 	if err := g.httpServer.Shutdown(ctx); err != nil {
