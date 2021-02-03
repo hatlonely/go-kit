@@ -106,8 +106,10 @@ type GrpcInterceptor struct {
 	log Logger
 }
 
-func (g *GrpcInterceptor) AddPreHandler(handlers ...func(ctx context.Context, req interface{}) error) {
-	g.preHandlers = append(g.preHandlers, handlers...)
+type GrpcPreHandler func(ctx context.Context, req interface{}) error
+
+func (g *GrpcInterceptor) AddPreHandler(handler GrpcPreHandler) {
+	g.preHandlers = append(g.preHandlers, handler)
 }
 
 func (g *GrpcInterceptor) SetLogger(logger Logger) {

@@ -34,3 +34,13 @@ func MetricWrapper(h http.Handler) http.Handler {
 		}
 	})
 }
+
+func MapHandlerWrapper(h http.Handler, handlerMap map[string]http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if handler, ok := handlerMap[r.URL.Path]; ok {
+			handler.ServeHTTP(w, r)
+		} else {
+			h.ServeHTTP(w, r)
+		}
+	})
+}

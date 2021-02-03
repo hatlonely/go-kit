@@ -11,6 +11,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/uber/jaeger-client-go"
 	jaegercfg "github.com/uber/jaeger-client-go/config"
 	"google.golang.org/grpc"
@@ -47,6 +48,8 @@ type GrpcGateway struct {
 	muxServer   *runtime.ServeMux
 	httpServer  *http.Server
 	traceCloser io.Closer
+
+	httpHandlerMap map[string]http.Handler
 
 	options *GrpcGatewayOptions
 
@@ -117,6 +120,14 @@ func (g *GrpcGateway) RegisterServiceHandlerFunc(fun func(ctx context.Context, m
 	return fun(context.Background(), g.muxServer, fmt.Sprintf("0.0.0.0:%v", g.options.GrpcPort), g.grpcInterceptor.DialOptions())
 }
 
+func (g *GrpcGateway) AddGrpcPreHandlers(handler GrpcPreHandler) {
+	g.grpcInterceptor.AddPreHandler(handler)
+}
+
+func (g *GrpcGateway) AddHttpHandler(path string, handler http.Handler) {
+	g.httpHandlerMap[path] = handler
+}
+
 func (g *GrpcGateway) Run() {
 	go func() {
 		address, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%v", g.options.GrpcPort))
@@ -127,10 +138,13 @@ func (g *GrpcGateway) Run() {
 	var handler http.Handler
 	handler = g.muxServer
 	if g.options.EnableMetric {
-		handler = MetricWrapper(handler)
+		g.AddHttpHandler("/metrics", promhttp.Handler())
 	}
 	if g.options.EnableTrace {
 		handler = TraceWrapper(handler)
+	}
+	if len(g.httpHandlerMap) != 0 {
+		handler = MapHandlerWrapper(handler, g.httpHandlerMap)
 	}
 	g.httpServer = &http.Server{
 		Addr:    fmt.Sprintf(":%v", g.options.HttpPort),
