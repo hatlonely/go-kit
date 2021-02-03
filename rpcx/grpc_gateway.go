@@ -6,6 +6,7 @@ import (
 	"io"
 	"net"
 	"net/http"
+	_ "net/http/pprof"
 	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
