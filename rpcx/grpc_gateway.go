@@ -85,6 +85,7 @@ func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions) (*GrpcGateway, error
 		grpcInterceptor: grpcInterceptor,
 		muxInterceptor:  muxInterceptor,
 		options:         options,
+		httpHandlerMap:  map[string]http.Handler{},
 		appLog:          logger.NewStdoutTextLogger(),
 		appRpc:          logger.NewStdoutJsonLogger(),
 	}
