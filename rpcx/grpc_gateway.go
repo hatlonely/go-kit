@@ -40,7 +40,7 @@ type GrpcGatewayOptions struct {
 }
 
 type GrpcGateway struct {
-	grpcInterceptor *GRPCInterceptor
+	grpcInterceptor *GrpcInterceptor
 	muxInterceptor  *MuxInterceptor
 
 	grpcServer  *grpc.Server
@@ -54,8 +54,8 @@ type GrpcGateway struct {
 	appRpc Logger
 }
 
-func NewGRPCGatewayInterceptorWithOptions(options *GrpcGatewayOptions) (*GrpcGateway, error) {
-	grpcInterceptor, err := NewGRPCInterceptorWithOptions(&GRPCInterceptorOptions{
+func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions) (*GrpcGateway, error) {
+	grpcInterceptor, err := NewGrpcInterceptorWithOptions(&GrpcInterceptorOptions{
 		Headers:          options.Headers,
 		PrivateIP:        options.PrivateIP,
 		Hostname:         options.Hostname,
@@ -65,7 +65,7 @@ func NewGRPCGatewayInterceptorWithOptions(options *GrpcGatewayOptions) (*GrpcGat
 		EnableTrace:      options.EnableTrace,
 	})
 	if err != nil {
-		return nil, errors.Wrap(err, "NewGRPCInterceptorWithOptions failed")
+		return nil, errors.Wrap(err, "NewGrpcGatewayWithOptions failed")
 	}
 
 	muxInterceptor, _ := NewMuxInterceptorWithOptions(&MuxInterceptorOptions{

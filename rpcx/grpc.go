@@ -70,7 +70,7 @@ func FromRPCXContext(ctx context.Context) map[string]interface{} {
 	return m.(map[string]interface{})
 }
 
-func NewGRPCInterceptorWithOptions(options *GRPCInterceptorOptions) (*GRPCInterceptor, error) {
+func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions) (*GrpcInterceptor, error) {
 	if options.Hostname == "" {
 		options.Hostname = Hostname()
 	}
@@ -79,7 +79,7 @@ func NewGRPCInterceptorWithOptions(options *GRPCInterceptorOptions) (*GRPCInterc
 	}
 	options.RequestIDMetaKey = strings.ToLower(options.RequestIDMetaKey)
 
-	g := &GRPCInterceptor{
+	g := &GrpcInterceptor{
 		options: options,
 		log:     logger.NewStdoutJsonLogger(),
 	}
@@ -123,8 +123,8 @@ func NewGRPCInterceptorWithOptions(options *GRPCInterceptorOptions) (*GRPCInterc
 	return g, nil
 }
 
-type GRPCInterceptor struct {
-	options *GRPCInterceptorOptions
+type GrpcInterceptor struct {
+	options *GrpcInterceptorOptions
 
 	validators  []func(interface{}) error
 	preHandlers []func(ctx context.Context, req interface{}) error
@@ -149,15 +149,15 @@ type GRPCInterceptor struct {
 	log Logger
 }
 
-func (g *GRPCInterceptor) AddPreHandler(handlers ...func(ctx context.Context, req interface{}) error) {
+func (g *GrpcInterceptor) AddPreHandler(handlers ...func(ctx context.Context, req interface{}) error) {
 	g.preHandlers = append(g.preHandlers, handlers...)
 }
 
-func (g *GRPCInterceptor) SetLogger(logger Logger) {
+func (g *GrpcInterceptor) SetLogger(logger Logger) {
 	g.log = logger
 }
 
-func (g *GRPCInterceptor) DialOptions() []grpc.DialOption {
+func (g *GrpcInterceptor) DialOptions() []grpc.DialOption {
 	var opts []grpc.DialOption
 	opts = append(opts, grpc.WithInsecure())
 	if g.options.EnableTrace {
@@ -170,7 +170,7 @@ func (g *GRPCInterceptor) DialOptions() []grpc.DialOption {
 	return opts
 }
 
-func (g *GRPCInterceptor) ServerOption() grpc.ServerOption {
+func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (res interface{}, err error) {
 		var requestID, remoteIP string
 		md, ok := metadata.FromIncomingContext(ctx)
@@ -289,7 +289,7 @@ func (g *GRPCInterceptor) ServerOption() grpc.ServerOption {
 	})
 }
 
-type GRPCInterceptorOptions struct {
+type GrpcInterceptorOptions struct {
 	Headers          []string `dft:"X-Request-Id"`
 	PrivateIP        string
 	Hostname         string
