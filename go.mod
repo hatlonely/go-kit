@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/BurntSushi/toml v0.3.1
+	github.com/HdrHistogram/hdrhistogram-go v1.0.1 // indirect
 	github.com/PaesslerAG/gval v1.1.0
 	github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5
 	github.com/agiledragon/gomonkey v2.0.1+incompatible
@@ -37,6 +38,8 @@ require (
 	github.com/spf13/cast v1.3.1
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/tebeka/strftime v0.1.4 // indirect
+	github.com/uber/jaeger-client-go v2.25.0+incompatible
+	github.com/uber/jaeger-lib v2.4.0+incompatible // indirect
 	github.com/yosuke-furukawa/json5 v0.1.1
 	go.mongodb.org/mongo-driver v1.4.3
 	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324

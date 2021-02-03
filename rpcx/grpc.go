@@ -70,10 +70,6 @@ func FromRPCXContext(ctx context.Context) map[string]interface{} {
 	return m.(map[string]interface{})
 }
 
-type Logger interface {
-	Info(v interface{})
-}
-
 func NewGRPCInterceptorWithOptions(options *GRPCInterceptorOptions) (*GRPCInterceptor, error) {
 	if options.Hostname == "" {
 		options.Hostname = Hostname()
@@ -164,7 +160,7 @@ func (g *GRPCInterceptor) SetLogger(logger Logger) {
 func (g *GRPCInterceptor) DialOptions() []grpc.DialOption {
 	var opts []grpc.DialOption
 	opts = append(opts, grpc.WithInsecure())
-	if g.options.EnableTracing {
+	if g.options.EnableTrace {
 		opts = append(opts, grpc.WithUnaryInterceptor(
 			grpc_opentracing.UnaryClientInterceptor(
 				grpc_opentracing.WithTracer(opentracing.GlobalTracer()),
@@ -187,7 +183,7 @@ func (g *GRPCInterceptor) ServerOption() grpc.ServerOption {
 			remoteIP = strings.Split(strings.Join(md.Get("x-remote-addr"), ","), ":")[0]
 		}
 
-		if g.options.EnableTracing {
+		if g.options.EnableTrace {
 			spanCtx, err := opentracing.GlobalTracer().Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(md))
 			if err == nil || err == opentracing.ErrSpanContextNotFound {
 				span := opentracing.GlobalTracer().StartSpan("GrpcInterceptor", ext.RPCServerOption(spanCtx))
@@ -300,7 +296,7 @@ type GRPCInterceptorOptions struct {
 	Validators       []string
 	PascalNameKey    bool
 	RequestIDMetaKey string `dft:"x-request-id"`
-	EnableTracing    bool
+	EnableTrace      bool
 }
 
 func PrivateIP() string {
