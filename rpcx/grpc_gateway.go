@@ -6,7 +6,7 @@ import (
 	"io"
 	"net"
 	"net/http"
-	_ "net/http/pprof"
+	"net/http/pprof"
 	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -35,6 +35,7 @@ type GrpcGatewayOptions struct {
 	PascalNameKey    bool
 	EnableTrace      bool
 	EnableMetric     bool
+	EnablePprof      bool
 	UseFieldKey      bool
 	MarshalOmitempty bool
 
@@ -140,6 +141,13 @@ func (g *GrpcGateway) Run() {
 	handler = g.muxServer
 	if g.options.EnableMetric {
 		g.AddHttpHandler("/metrics", promhttp.Handler())
+	}
+	if g.options.EnablePprof {
+		g.AddHttpHandler("/debug/pprof/", http.HandlerFunc(pprof.Index))
+		g.AddHttpHandler("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
+		g.AddHttpHandler("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
+		g.AddHttpHandler("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
+		g.AddHttpHandler("/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
 	}
 	if g.options.EnableTrace {
 		handler = TraceWrapper(handler)
