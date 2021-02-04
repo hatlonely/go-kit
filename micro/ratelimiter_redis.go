@@ -1,8 +1,9 @@
-package ratelimiter
+package micro
 
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -61,17 +62,10 @@ func NewRedisRateLimiterWithOptions(options *RedisRateLimiterOptions) (*RedisRat
 	return &RedisRateLimiter{client: client, options: options}, nil
 }
 
-func (r *RedisRateLimiter) Allow(ctx context.Context, key string) bool {
-	return r.AllowEx(ctx, key, key)
-}
-
-func (r *RedisRateLimiter) AllowEx(ctx context.Context, qpsKey string, key string) bool {
-	qps, ok := r.options.QPS[qpsKey]
-	if !ok {
-		qps = r.options.DefaultQPS
-	}
+func (r *RedisRateLimiter) Allow(ctx context.Context, key string) error {
+	qps := r.calculateQPS(key)
 	if qps == 0 {
-		return false
+		return nil
 	}
 
 	now := time.Now()
@@ -83,29 +77,22 @@ func (r *RedisRateLimiter) AllowEx(ctx context.Context, qpsKey string, key strin
 		return nil
 	})
 	if err != nil {
-		return true
+		return errors.Wrap(err, "query redis failed")
 	}
 
-	return int(res.Val()) <= qps
+	if int(res.Val()) > qps {
+		return ErrFlowControl
+	}
+
+	return nil
 }
 
 func (r *RedisRateLimiter) Wait(ctx context.Context, key string) error {
-	return r.WaitNEx(ctx, key, key, 1)
+	return r.WaitN(ctx, key, 1)
 }
 
 func (r *RedisRateLimiter) WaitN(ctx context.Context, key string, n int) error {
-	return r.WaitNEx(ctx, key, key, n)
-}
-
-func (r *RedisRateLimiter) WaitEx(ctx context.Context, qpsKey string, key string) error {
-	return r.WaitNEx(ctx, qpsKey, key, 1)
-}
-
-func (r *RedisRateLimiter) WaitNEx(ctx context.Context, qpsKey string, key string, n int) error {
-	qps, ok := r.options.QPS[qpsKey]
-	if !ok {
-		qps = r.options.DefaultQPS
-	}
+	qps := r.calculateQPS(key)
 	if qps == 0 {
 		return nil
 	}
@@ -140,4 +127,18 @@ func (r *RedisRateLimiter) WaitNEx(ctx context.Context, qpsKey string, key strin
 		}
 	}
 	return nil
+}
+
+func (r *RedisRateLimiter) calculateQPS(key string) int {
+	if qps, ok := r.options.QPS[key]; ok {
+		return qps
+	}
+
+	if idx := strings.Index(key, "|"); idx != -1 {
+		if qps, ok := r.options.QPS[key[:idx]]; ok {
+			return qps
+		}
+	}
+
+	return r.options.DefaultQPS
 }

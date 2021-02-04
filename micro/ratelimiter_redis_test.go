@@ -1,4 +1,4 @@
-package ratelimiter
+package micro
 
 import (
 	"context"
@@ -32,7 +32,7 @@ func TestRedisRateLimiter(t *testing.T) {
 
 		for i := 0; i < 10; i++ {
 			ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*2500)
-			err := r.WaitNEx(ctx, "Key0", "key2", 1)
+			err := r.WaitN(ctx, "Key0", 1)
 			cancel()
 			fmt.Println("hello world")
 			So(err, ShouldBeNil)
