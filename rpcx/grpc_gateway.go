@@ -114,8 +114,8 @@ func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions, opts ...refx.Option)
 	return g, nil
 }
 
-func (g *GrpcGateway) SetLogger(log, rpc Logger) {
-	g.grpcInterceptor.SetLogger(rpc)
+func (g *GrpcGateway) SetLogger(log Logger, rpc Logger) {
+	g.grpcInterceptor.SetLogger(log, rpc)
 	g.appLog = log
 	g.appRpc = rpc
 }
