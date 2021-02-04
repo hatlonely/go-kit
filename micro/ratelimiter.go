@@ -15,9 +15,9 @@ import (
 var ErrFlowControl = errors.New("flow control")
 
 type RateLimiter interface {
+	Allow(ctx context.Context, key string) error
 	Wait(ctx context.Context, key string) error
 	WaitN(ctx context.Context, key string, n int) (err error)
-	Allow(key string) error
 }
 
 func RegisterRateLimiter(key string, constructor interface{}) {
@@ -33,7 +33,7 @@ func RegisterRateLimiter(key string, constructor interface{}) {
 
 var rateLimiterConstructorMap = map[string]*refx.Constructor{}
 
-func NewRateLimiterGroupWithOptions(options *RateLimiterOptions, opts ...refx.Option) (RateLimiter, error) {
+func NewRateLimiterWithOptions(options *RateLimiterOptions, opts ...refx.Option) (RateLimiter, error) {
 	if options.Type == "" {
 		return nil, nil
 	}
@@ -50,7 +50,7 @@ func NewRateLimiterGroupWithOptions(options *RateLimiterOptions, opts ...refx.Op
 
 	if constructor.ReturnError {
 		if !result[1].IsNil() {
-			return nil, errors.Wrapf(result[1].Interface().(error), "NewRateLimiterGroupWithOptions failed. type: [%v]", options.Type)
+			return nil, errors.Wrapf(result[1].Interface().(error), "NewRateLimiterWithOptions failed. type: [%v]", options.Type)
 		}
 		return result[0].Interface().(RateLimiter), nil
 	}

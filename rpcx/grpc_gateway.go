@@ -18,6 +18,7 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/hatlonely/go-kit/logger"
+	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
 )
 
@@ -39,7 +40,11 @@ type GrpcGatewayOptions struct {
 	UseFieldKey      bool
 	MarshalOmitempty bool
 
-	Jaeger jaegercfg.Configuration
+	RateLimiterHeader        string
+	ParallelControllerHeader string
+	RateLimiter              micro.RateLimiterOptions
+	ParallelController       micro.ParallelControllerGroupOptions
+	Jaeger                   jaegercfg.Configuration
 }
 
 type GrpcGateway struct {
@@ -59,16 +64,20 @@ type GrpcGateway struct {
 	appRpc Logger
 }
 
-func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions) (*GrpcGateway, error) {
+func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions, opts ...refx.Option) (*GrpcGateway, error) {
 	grpcInterceptor, err := NewGrpcInterceptorWithOptions(&GrpcInterceptorOptions{
-		Headers:          options.Headers,
-		PrivateIP:        options.PrivateIP,
-		Hostname:         options.Hostname,
-		Validators:       options.Validators,
-		PascalNameKey:    options.PascalNameKey,
-		RequestIDMetaKey: options.RequestIDMetaKey,
-		EnableTrace:      options.EnableTrace,
-	})
+		Headers:                  options.Headers,
+		PrivateIP:                options.PrivateIP,
+		Hostname:                 options.Hostname,
+		Validators:               options.Validators,
+		PascalNameKey:            options.PascalNameKey,
+		RequestIDMetaKey:         options.RequestIDMetaKey,
+		EnableTrace:              options.EnableTrace,
+		RateLimiter:              options.RateLimiter,
+		ParallelController:       options.ParallelController,
+		RateLimiterHeader:        options.RateLimiterHeader,
+		ParallelControllerHeader: options.ParallelControllerHeader,
+	}, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewGrpcGatewayWithOptions failed")
 	}

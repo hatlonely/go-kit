@@ -28,7 +28,7 @@ func RegisterParallelControllerGroup(key string, constructor interface{}) {
 
 var parallelControllerGroupConstructorMap = map[string]*refx.Constructor{}
 
-func NewParallelControllerGroupGroupWithOptions(options *ParallelControllerGroupOptions, opts ...refx.Option) (ParallelControllerGroup, error) {
+func NewParallelControllerGroupWithOptions(options *ParallelControllerGroupOptions, opts ...refx.Option) (ParallelControllerGroup, error) {
 	if options.Type == "" {
 		return nil, nil
 	}
@@ -45,7 +45,7 @@ func NewParallelControllerGroupGroupWithOptions(options *ParallelControllerGroup
 
 	if constructor.ReturnError {
 		if !result[1].IsNil() {
-			return nil, errors.Wrapf(result[1].Interface().(error), "NewParallelControllerGroupGroupWithOptions failed. type: [%v]", options.Type)
+			return nil, errors.Wrapf(result[1].Interface().(error), "NewParallelControllerGroupWithOptions failed. type: [%v]", options.Type)
 		}
 		return result[0].Interface().(ParallelControllerGroup), nil
 	}

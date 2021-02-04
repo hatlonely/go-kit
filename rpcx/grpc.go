@@ -23,11 +23,13 @@ import (
 	playgroundValidator "gopkg.in/go-playground/validator.v9"
 
 	"github.com/hatlonely/go-kit/logger"
+	"github.com/hatlonely/go-kit/micro"
+	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/strx"
 	"github.com/hatlonely/go-kit/validator"
 )
 
-func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions) (*GrpcInterceptor, error) {
+func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions, opts ...refx.Option) (*GrpcInterceptor, error) {
 	if options.Hostname == "" {
 		options.Hostname = Hostname()
 	}
@@ -38,7 +40,7 @@ func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions) (*GrpcInterc
 
 	g := &GrpcInterceptor{
 		options: options,
-		log:     logger.NewStdoutJsonLogger(),
+		appRpc:  logger.NewStdoutJsonLogger(),
 	}
 	g.requestIDKey = "requestID"
 	g.hostnameKey = "hostname"
@@ -77,11 +79,25 @@ func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions) (*GrpcInterc
 		}
 	}
 
+	rateLimiter, err := micro.NewRateLimiterWithOptions(&options.RateLimiter, opts...)
+	if err != nil {
+		return nil, errors.Wrap(err, "micro.NewRateLimiterWithOptions failed")
+	}
+	g.rateLimiter = rateLimiter
+	parallelCtl, err := micro.NewParallelControllerGroupWithOptions(&options.ParallelController, opts...)
+	if err != nil {
+		return nil, errors.Wrap(err, "micro.NewParallelControllerGroupWithOptions failed")
+	}
+	g.parallelCtl = parallelCtl
+
 	return g, nil
 }
 
 type GrpcInterceptor struct {
 	options *GrpcInterceptorOptions
+
+	rateLimiter micro.RateLimiter
+	parallelCtl micro.ParallelControllerGroup
 
 	validators  []func(interface{}) error
 	preHandlers []func(ctx context.Context, req interface{}) error
@@ -103,7 +119,8 @@ type GrpcInterceptor struct {
 	errStackKey  string
 	resTimeMsKey string
 
-	log Logger
+	appRpc Logger
+	appLog Logger
 }
 
 type GrpcPreHandler func(ctx context.Context, req interface{}) error
@@ -112,8 +129,9 @@ func (g *GrpcInterceptor) AddPreHandler(handler GrpcPreHandler) {
 	g.preHandlers = append(g.preHandlers, handler)
 }
 
-func (g *GrpcInterceptor) SetLogger(logger Logger) {
-	g.log = logger
+func (g *GrpcInterceptor) SetLogger(log, rpc Logger) {
+	g.appLog = log
+	g.appRpc = rpc
 }
 
 func (g *GrpcInterceptor) DialOptions() []grpc.DialOption {
@@ -181,7 +199,7 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 				meta[key] = strings.Join(val, ",")
 			}
 
-			g.log.Info(map[string]interface{}{
+			g.appRpc.Info(map[string]interface{}{
 				g.requestIDKey: requestID,
 				g.hostnameKey:  g.options.Hostname,
 				g.privateIPKey: g.options.PrivateIP,
@@ -209,6 +227,41 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 				err = err.(*Error).SetRequestID(requestID).ToStatus().Err()
 			}
 		}()
+
+		if err == nil {
+			if g.rateLimiter != nil {
+				key := info.FullMethod
+				if g.options.RateLimiterHeader != "" {
+					key = fmt.Sprintf("%s|%s", strings.Join(md.Get(g.options.RateLimiterHeader), ","), info.FullMethod)
+				}
+				if err = g.rateLimiter.Allow(ctx, key); err != nil {
+					if err == micro.ErrFlowControl {
+						err = NewError(codes.ResourceExhausted, "ResourceExhausted", err.Error(), err)
+					}
+				}
+			}
+		}
+
+		if err == nil {
+			if g.parallelCtl != nil {
+				key := info.FullMethod
+				if g.options.ParallelControllerHeader != "" {
+					key = fmt.Sprintf("%s|%s", strings.Join(md.Get(g.options.ParallelControllerHeader), ","), info.FullMethod)
+				}
+				if err = g.parallelCtl.GetToken(ctx, key); err != nil {
+					if err == micro.ErrFlowControl {
+						err = NewError(codes.ResourceExhausted, "ResourceExhausted", err.Error(), err)
+					} else {
+						g.appLog.Warnf("g.parallelCtl.GetToken failed. err: [%+v]", err)
+					}
+				}
+				defer func() {
+					if err := g.parallelCtl.PutToken(ctx, key); err != nil {
+						g.appLog.Warnf("g.parallelCtl.PutToken failed. err: [%+v]", err)
+					}
+				}()
+			}
+		}
 
 		if err == nil {
 			for _, h := range g.preHandlers {
@@ -256,6 +309,11 @@ type GrpcInterceptorOptions struct {
 	PascalNameKey    bool
 	RequestIDMetaKey string `dft:"x-request-id"`
 	EnableTrace      bool
+
+	RateLimiterHeader        string
+	ParallelControllerHeader string
+	RateLimiter              micro.RateLimiterOptions
+	ParallelController       micro.ParallelControllerGroupOptions
 }
 
 func PrivateIP() string {
