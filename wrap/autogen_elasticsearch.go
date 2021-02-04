@@ -1565,8 +1565,9 @@ func (w *ESAliasServiceWrapper) Do(ctx context.Context) (*elastic.AliasResult, e
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.AliasService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.AliasService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1584,6 +1585,9 @@ func (w *ESAliasServiceWrapper) Do(ctx context.Context) (*elastic.AliasResult, e
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -1639,8 +1643,9 @@ func (w *ESAliasesServiceWrapper) Do(ctx context.Context) (*elastic.AliasesResul
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.AliasesService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.AliasesService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1658,6 +1663,9 @@ func (w *ESAliasesServiceWrapper) Do(ctx context.Context) (*elastic.AliasesResul
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -1733,8 +1741,9 @@ func (w *ESBulkProcessorServiceWrapper) Do(ctx context.Context) (*elastic.BulkPr
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.BulkProcessorService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.BulkProcessorService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1752,6 +1761,9 @@ func (w *ESBulkProcessorServiceWrapper) Do(ctx context.Context) (*elastic.BulkPr
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -1797,8 +1809,9 @@ func (w *ESBulkServiceWrapper) Do(ctx context.Context) (*elastic.BulkResponse, e
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.BulkService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.BulkService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1816,6 +1829,9 @@ func (w *ESBulkServiceWrapper) Do(ctx context.Context) (*elastic.BulkResponse, e
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -1925,8 +1941,9 @@ func (w *ESCatAliasesServiceWrapper) Do(ctx context.Context) (elastic.CatAliases
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.CatAliasesService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.CatAliasesService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1944,6 +1961,9 @@ func (w *ESCatAliasesServiceWrapper) Do(ctx context.Context) (elastic.CatAliases
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -2014,8 +2034,9 @@ func (w *ESCatAllocationServiceWrapper) Do(ctx context.Context) (elastic.CatAllo
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.CatAllocationService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.CatAllocationService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2033,6 +2054,9 @@ func (w *ESCatAllocationServiceWrapper) Do(ctx context.Context) (elastic.CatAllo
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -2103,8 +2127,9 @@ func (w *ESCatCountServiceWrapper) Do(ctx context.Context) (elastic.CatCountResp
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.CatCountService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.CatCountService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2122,6 +2147,9 @@ func (w *ESCatCountServiceWrapper) Do(ctx context.Context) (elastic.CatCountResp
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -2197,8 +2225,9 @@ func (w *ESCatHealthServiceWrapper) Do(ctx context.Context) (elastic.CatHealthRe
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.CatHealthService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.CatHealthService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2216,6 +2245,9 @@ func (w *ESCatHealthServiceWrapper) Do(ctx context.Context) (elastic.CatHealthRe
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -2286,8 +2318,9 @@ func (w *ESCatIndicesServiceWrapper) Do(ctx context.Context) (elastic.CatIndices
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.CatIndicesService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.CatIndicesService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2305,6 +2338,9 @@ func (w *ESCatIndicesServiceWrapper) Do(ctx context.Context) (elastic.CatIndices
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -2390,8 +2426,9 @@ func (w *ESCatShardsServiceWrapper) Do(ctx context.Context) (elastic.CatShardsRe
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.CatShardsService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.CatShardsService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2409,6 +2446,9 @@ func (w *ESCatShardsServiceWrapper) Do(ctx context.Context) (elastic.CatShardsRe
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -2479,8 +2519,9 @@ func (w *ESClearScrollServiceWrapper) Do(ctx context.Context) (*elastic.ClearScr
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ClearScrollService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ClearScrollService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2498,6 +2539,9 @@ func (w *ESClearScrollServiceWrapper) Do(ctx context.Context) (*elastic.ClearScr
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -3205,8 +3249,9 @@ func (w *ESClusterHealthServiceWrapper) Do(ctx context.Context) (*elastic.Cluste
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ClusterHealthService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ClusterHealthService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3224,6 +3269,9 @@ func (w *ESClusterHealthServiceWrapper) Do(ctx context.Context) (*elastic.Cluste
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -3340,8 +3388,9 @@ func (w *ESClusterRerouteServiceWrapper) Do(ctx context.Context) (*elastic.Clust
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ClusterRerouteService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ClusterRerouteService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3359,6 +3408,9 @@ func (w *ESClusterRerouteServiceWrapper) Do(ctx context.Context) (*elastic.Clust
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -3445,8 +3497,9 @@ func (w *ESClusterStateServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ClusterStateService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ClusterStateService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3464,6 +3517,9 @@ func (w *ESClusterStateServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -3550,8 +3606,9 @@ func (w *ESClusterStatsServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ClusterStatsService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ClusterStatsService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3569,6 +3626,9 @@ func (w *ESClusterStatsServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -3665,8 +3725,9 @@ func (w *ESCountServiceWrapper) Do(ctx context.Context) (int64, error) {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.CountService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.CountService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3684,6 +3745,9 @@ func (w *ESCountServiceWrapper) Do(ctx context.Context) (int64, error) {
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -3845,8 +3909,9 @@ func (w *ESDeleteByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.DeleteByQueryService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.DeleteByQueryService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3864,6 +3929,9 @@ func (w *ESDeleteByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -3879,8 +3947,9 @@ func (w *ESDeleteByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.DeleteByQueryService.DoAsync")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.DeleteByQueryService.DoAsync")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3898,6 +3967,9 @@ func (w *ESDeleteByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 			}()
 		}
 		res0, err = w.obj.DoAsync(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -4159,8 +4231,9 @@ func (w *ESDeleteScriptServiceWrapper) Do(ctx context.Context) (*elastic.DeleteS
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.DeleteScriptService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.DeleteScriptService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4178,6 +4251,9 @@ func (w *ESDeleteScriptServiceWrapper) Do(ctx context.Context) (*elastic.DeleteS
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -4244,8 +4320,9 @@ func (w *ESDeleteServiceWrapper) Do(ctx context.Context) (*elastic.DeleteRespons
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.DeleteService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.DeleteService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4263,6 +4340,9 @@ func (w *ESDeleteServiceWrapper) Do(ctx context.Context) (*elastic.DeleteRespons
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -4374,8 +4454,9 @@ func (w *ESExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ExistsService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ExistsService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4393,6 +4474,9 @@ func (w *ESExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -4514,8 +4598,9 @@ func (w *ESExplainServiceWrapper) Do(ctx context.Context) (*elastic.ExplainRespo
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ExplainService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ExplainService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4533,6 +4618,9 @@ func (w *ESExplainServiceWrapper) Do(ctx context.Context) (*elastic.ExplainRespo
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -4674,8 +4762,9 @@ func (w *ESFieldCapsServiceWrapper) Do(ctx context.Context) (*elastic.FieldCapsR
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.FieldCapsService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.FieldCapsService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4693,6 +4782,9 @@ func (w *ESFieldCapsServiceWrapper) Do(ctx context.Context) (*elastic.FieldCapsR
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -4764,8 +4856,9 @@ func (w *ESGetScriptServiceWrapper) Do(ctx context.Context) (*elastic.GetScriptR
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.GetScriptService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.GetScriptService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4783,6 +4876,9 @@ func (w *ESGetScriptServiceWrapper) Do(ctx context.Context) (*elastic.GetScriptR
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -4839,8 +4935,9 @@ func (w *ESGetServiceWrapper) Do(ctx context.Context) (*elastic.GetResult, error
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.GetService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.GetService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4858,6 +4955,9 @@ func (w *ESGetServiceWrapper) Do(ctx context.Context) (*elastic.GetResult, error
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -4989,8 +5089,9 @@ func (w *ESIndexServiceWrapper) Do(ctx context.Context) (*elastic.IndexResponse,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndexService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndexService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5008,6 +5109,9 @@ func (w *ESIndexServiceWrapper) Do(ctx context.Context) (*elastic.IndexResponse,
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -5169,8 +5273,9 @@ func (w *ESIndicesAnalyzeServiceWrapper) Do(ctx context.Context) (*elastic.Indic
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesAnalyzeService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesAnalyzeService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5188,6 +5293,9 @@ func (w *ESIndicesAnalyzeServiceWrapper) Do(ctx context.Context) (*elastic.Indic
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -5289,8 +5397,9 @@ func (w *ESIndicesClearCacheServiceWrapper) Do(ctx context.Context) (*elastic.In
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesClearCacheService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesClearCacheService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5308,6 +5417,9 @@ func (w *ESIndicesClearCacheServiceWrapper) Do(ctx context.Context) (*elastic.In
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -5399,8 +5511,9 @@ func (w *ESIndicesCloseServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesCloseService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesCloseService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5418,6 +5531,9 @@ func (w *ESIndicesCloseServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -5509,8 +5625,9 @@ func (w *ESIndicesCreateServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesCreateService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesCreateService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5528,6 +5645,9 @@ func (w *ESIndicesCreateServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -5588,8 +5708,9 @@ func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Do(ctx context.Context) (*e
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesDeleteIndexTemplateService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesDeleteIndexTemplateService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5607,6 +5728,9 @@ func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Do(ctx context.Context) (*e
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -5673,8 +5797,9 @@ func (w *ESIndicesDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesDeleteService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesDeleteService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5692,6 +5817,9 @@ func (w *ESIndicesDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -5758,8 +5886,9 @@ func (w *ESIndicesDeleteTemplateServiceWrapper) Do(ctx context.Context) (*elasti
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesDeleteTemplateService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesDeleteTemplateService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5777,6 +5906,9 @@ func (w *ESIndicesDeleteTemplateServiceWrapper) Do(ctx context.Context) (*elasti
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -5848,8 +5980,9 @@ func (w *ESIndicesExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesExistsService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesExistsService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5867,6 +6000,9 @@ func (w *ESIndicesExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -5938,8 +6074,9 @@ func (w *ESIndicesExistsTemplateServiceWrapper) Do(ctx context.Context) (bool, e
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesExistsTemplateService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesExistsTemplateService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5957,6 +6094,9 @@ func (w *ESIndicesExistsTemplateServiceWrapper) Do(ctx context.Context) (bool, e
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -6028,8 +6168,9 @@ func (w *ESIndicesFlushServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesFlushService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesFlushService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6047,6 +6188,9 @@ func (w *ESIndicesFlushServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -6128,8 +6272,9 @@ func (w *ESIndicesForcemergeServiceWrapper) Do(ctx context.Context) (*elastic.In
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesForcemergeService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesForcemergeService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6147,6 +6292,9 @@ func (w *ESIndicesForcemergeServiceWrapper) Do(ctx context.Context) (*elastic.In
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -6233,8 +6381,9 @@ func (w *ESIndicesFreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesFreezeService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesFreezeService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6252,6 +6401,9 @@ func (w *ESIndicesFreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -6338,8 +6490,9 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Do(ctx context.Context) (map[st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetFieldMappingService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetFieldMappingService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6357,6 +6510,9 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Do(ctx context.Context) (map[st
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -6438,8 +6594,9 @@ func (w *ESIndicesGetIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetIndexTemplateService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetIndexTemplateService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6457,6 +6614,9 @@ func (w *ESIndicesGetIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -6533,8 +6693,9 @@ func (w *ESIndicesGetMappingServiceWrapper) Do(ctx context.Context) (map[string]
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetMappingService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetMappingService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6552,6 +6713,9 @@ func (w *ESIndicesGetMappingServiceWrapper) Do(ctx context.Context) (map[string]
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -6633,8 +6797,9 @@ func (w *ESIndicesGetServiceWrapper) Do(ctx context.Context) (map[string]*elasti
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6652,6 +6817,9 @@ func (w *ESIndicesGetServiceWrapper) Do(ctx context.Context) (map[string]*elasti
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -6733,8 +6901,9 @@ func (w *ESIndicesGetSettingsServiceWrapper) Do(ctx context.Context) (map[string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetSettingsService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetSettingsService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6752,6 +6921,9 @@ func (w *ESIndicesGetSettingsServiceWrapper) Do(ctx context.Context) (map[string
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -6833,8 +7005,9 @@ func (w *ESIndicesGetTemplateServiceWrapper) Do(ctx context.Context) (map[string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetTemplateService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetTemplateService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6852,6 +7025,9 @@ func (w *ESIndicesGetTemplateServiceWrapper) Do(ctx context.Context) (map[string
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -6923,8 +7099,9 @@ func (w *ESIndicesOpenServiceWrapper) Do(ctx context.Context) (*elastic.IndicesO
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesOpenService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesOpenService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6942,6 +7119,9 @@ func (w *ESIndicesOpenServiceWrapper) Do(ctx context.Context) (*elastic.IndicesO
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -7043,8 +7223,9 @@ func (w *ESIndicesPutIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutIndexTemplateService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutIndexTemplateService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7062,6 +7243,9 @@ func (w *ESIndicesPutIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -7138,8 +7322,9 @@ func (w *ESIndicesPutMappingServiceWrapper) Do(ctx context.Context) (*elastic.Pu
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutMappingService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutMappingService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7157,6 +7342,9 @@ func (w *ESIndicesPutMappingServiceWrapper) Do(ctx context.Context) (*elastic.Pu
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -7253,8 +7441,9 @@ func (w *ESIndicesPutSettingsServiceWrapper) Do(ctx context.Context) (*elastic.I
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutSettingsService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutSettingsService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7272,6 +7461,9 @@ func (w *ESIndicesPutSettingsServiceWrapper) Do(ctx context.Context) (*elastic.I
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -7368,8 +7560,9 @@ func (w *ESIndicesPutTemplateServiceWrapper) Do(ctx context.Context) (*elastic.I
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutTemplateService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutTemplateService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7387,6 +7580,9 @@ func (w *ESIndicesPutTemplateServiceWrapper) Do(ctx context.Context) (*elastic.I
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -7513,8 +7709,9 @@ func (w *ESIndicesRolloverServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesRolloverService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesRolloverService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7532,6 +7729,9 @@ func (w *ESIndicesRolloverServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -7623,8 +7823,9 @@ func (w *ESIndicesSegmentsServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesSegmentsService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesSegmentsService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7642,6 +7843,9 @@ func (w *ESIndicesSegmentsServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -7728,8 +7932,9 @@ func (w *ESIndicesShrinkServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesShrinkService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesShrinkService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7747,6 +7952,9 @@ func (w *ESIndicesShrinkServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -7828,8 +8036,9 @@ func (w *ESIndicesStatsServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesStatsService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesStatsService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7847,6 +8056,9 @@ func (w *ESIndicesStatsServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -7938,8 +8150,9 @@ func (w *ESIndicesSyncedFlushServiceWrapper) Do(ctx context.Context) (*elastic.I
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesSyncedFlushService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesSyncedFlushService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7957,6 +8170,9 @@ func (w *ESIndicesSyncedFlushServiceWrapper) Do(ctx context.Context) (*elastic.I
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -8028,8 +8244,9 @@ func (w *ESIndicesUnfreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IndicesUnfreezeService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesUnfreezeService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8047,6 +8264,9 @@ func (w *ESIndicesUnfreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -8128,8 +8348,9 @@ func (w *ESIngestDeletePipelineServiceWrapper) Do(ctx context.Context) (*elastic
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IngestDeletePipelineService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IngestDeletePipelineService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8147,6 +8368,9 @@ func (w *ESIngestDeletePipelineServiceWrapper) Do(ctx context.Context) (*elastic
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -8213,8 +8437,9 @@ func (w *ESIngestGetPipelineServiceWrapper) Do(ctx context.Context) (elastic.Ing
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IngestGetPipelineService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IngestGetPipelineService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8232,6 +8457,9 @@ func (w *ESIngestGetPipelineServiceWrapper) Do(ctx context.Context) (elastic.Ing
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -8303,8 +8531,9 @@ func (w *ESIngestPutPipelineServiceWrapper) Do(ctx context.Context) (*elastic.In
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IngestPutPipelineService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IngestPutPipelineService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8322,6 +8551,9 @@ func (w *ESIngestPutPipelineServiceWrapper) Do(ctx context.Context) (*elastic.In
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -8398,8 +8630,9 @@ func (w *ESIngestSimulatePipelineServiceWrapper) Do(ctx context.Context) (*elast
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.IngestSimulatePipelineService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IngestSimulatePipelineService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8417,6 +8650,9 @@ func (w *ESIngestSimulatePipelineServiceWrapper) Do(ctx context.Context) (*elast
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -8483,8 +8719,9 @@ func (w *ESMgetServiceWrapper) Do(ctx context.Context) (*elastic.MgetResponse, e
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.MgetService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.MgetService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8502,6 +8739,9 @@ func (w *ESMgetServiceWrapper) Do(ctx context.Context) (*elastic.MgetResponse, e
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -8584,8 +8824,9 @@ func (w *ESMultiSearchServiceWrapper) Do(ctx context.Context) (*elastic.MultiSea
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.MultiSearchService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.MultiSearchService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8603,6 +8844,9 @@ func (w *ESMultiSearchServiceWrapper) Do(ctx context.Context) (*elastic.MultiSea
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -8678,8 +8922,9 @@ func (w *ESMultiTermvectorServiceWrapper) Do(ctx context.Context) (*elastic.Mult
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.MultiTermvectorService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.MultiTermvectorService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8697,6 +8942,9 @@ func (w *ESMultiTermvectorServiceWrapper) Do(ctx context.Context) (*elastic.Mult
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -8828,8 +9076,9 @@ func (w *ESNodesInfoServiceWrapper) Do(ctx context.Context) (*elastic.NodesInfoR
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.NodesInfoService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.NodesInfoService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8847,6 +9096,9 @@ func (w *ESNodesInfoServiceWrapper) Do(ctx context.Context) (*elastic.NodesInfoR
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -8918,8 +9170,9 @@ func (w *ESNodesStatsServiceWrapper) Do(ctx context.Context) (*elastic.NodesStat
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.NodesStatsService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.NodesStatsService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8937,6 +9190,9 @@ func (w *ESNodesStatsServiceWrapper) Do(ctx context.Context) (*elastic.NodesStat
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -9034,8 +9290,9 @@ func (w *ESPingServiceWrapper) Do(ctx context.Context) (*elastic.PingResult, int
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.PingService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.PingService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9053,6 +9310,9 @@ func (w *ESPingServiceWrapper) Do(ctx context.Context) (*elastic.PingResult, int
 			}()
 		}
 		res0, res1, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, res1, err
@@ -9128,8 +9388,9 @@ func (w *ESPutScriptServiceWrapper) Do(ctx context.Context) (*elastic.PutScriptR
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.PutScriptService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.PutScriptService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9147,6 +9408,9 @@ func (w *ESPutScriptServiceWrapper) Do(ctx context.Context) (*elastic.PutScriptR
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -9213,8 +9477,9 @@ func (w *ESRefreshServiceWrapper) Do(ctx context.Context) (*elastic.RefreshResul
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.RefreshService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.RefreshService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9232,6 +9497,9 @@ func (w *ESRefreshServiceWrapper) Do(ctx context.Context) (*elastic.RefreshResul
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -9312,8 +9580,9 @@ func (w *ESReindexServiceWrapper) Do(ctx context.Context) (*elastic.BulkIndexByS
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ReindexService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ReindexService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9331,6 +9600,9 @@ func (w *ESReindexServiceWrapper) Do(ctx context.Context) (*elastic.BulkIndexByS
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -9346,8 +9618,9 @@ func (w *ESReindexServiceWrapper) DoAsync(ctx context.Context) (*elastic.StartTa
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ReindexService.DoAsync")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ReindexService.DoAsync")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9365,6 +9638,9 @@ func (w *ESReindexServiceWrapper) DoAsync(ctx context.Context) (*elastic.StartTa
 			}()
 		}
 		res0, err = w.obj.DoAsync(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -9487,8 +9763,9 @@ func (w *ESScrollServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ScrollService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ScrollService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9506,6 +9783,9 @@ func (w *ESScrollServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -9751,8 +10031,9 @@ func (w *ESSearchServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SearchService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SearchService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9770,6 +10051,9 @@ func (w *ESSearchServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -10066,8 +10350,9 @@ func (w *ESSearchShardsServiceWrapper) Do(ctx context.Context) (*elastic.SearchS
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SearchShardsService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SearchShardsService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10085,6 +10370,9 @@ func (w *ESSearchShardsServiceWrapper) Do(ctx context.Context) (*elastic.SearchS
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -10176,8 +10464,9 @@ func (w *ESSnapshotCreateRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotCreateRepositoryService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SnapshotCreateRepositoryService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10195,6 +10484,9 @@ func (w *ESSnapshotCreateRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -10291,8 +10583,9 @@ func (w *ESSnapshotCreateServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotCreateService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SnapshotCreateService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10310,6 +10603,9 @@ func (w *ESSnapshotCreateServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -10381,8 +10677,9 @@ func (w *ESSnapshotDeleteRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotDeleteRepositoryService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SnapshotDeleteRepositoryService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10400,6 +10697,9 @@ func (w *ESSnapshotDeleteRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -10466,8 +10766,9 @@ func (w *ESSnapshotDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotDeleteService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SnapshotDeleteService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10485,6 +10786,9 @@ func (w *ESSnapshotDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -10546,8 +10850,9 @@ func (w *ESSnapshotGetRepositoryServiceWrapper) Do(ctx context.Context) (elastic
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotGetRepositoryService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SnapshotGetRepositoryService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10565,6 +10870,9 @@ func (w *ESSnapshotGetRepositoryServiceWrapper) Do(ctx context.Context) (elastic
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -10631,8 +10939,9 @@ func (w *ESSnapshotGetServiceWrapper) Do(ctx context.Context) (*elastic.Snapshot
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotGetService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SnapshotGetService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10650,6 +10959,9 @@ func (w *ESSnapshotGetServiceWrapper) Do(ctx context.Context) (*elastic.Snapshot
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -10731,8 +11043,9 @@ func (w *ESSnapshotRestoreServiceWrapper) Do(ctx context.Context) (*elastic.Snap
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotRestoreService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SnapshotRestoreService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10750,6 +11063,9 @@ func (w *ESSnapshotRestoreServiceWrapper) Do(ctx context.Context) (*elastic.Snap
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -10861,8 +11177,9 @@ func (w *ESSnapshotStatusServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotStatusService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SnapshotStatusService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10880,6 +11197,9 @@ func (w *ESSnapshotStatusServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -10946,8 +11266,9 @@ func (w *ESSnapshotVerifyRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.SnapshotVerifyRepositoryService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SnapshotVerifyRepositoryService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10965,6 +11286,9 @@ func (w *ESSnapshotVerifyRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -11036,8 +11360,9 @@ func (w *ESTasksCancelServiceWrapper) Do(ctx context.Context) (*elastic.TasksLis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.TasksCancelService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.TasksCancelService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11055,6 +11380,9 @@ func (w *ESTasksCancelServiceWrapper) Do(ctx context.Context) (*elastic.TasksLis
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -11131,8 +11459,9 @@ func (w *ESTasksGetTaskServiceWrapper) Do(ctx context.Context) (*elastic.TasksGe
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.TasksGetTaskService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.TasksGetTaskService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11150,6 +11479,9 @@ func (w *ESTasksGetTaskServiceWrapper) Do(ctx context.Context) (*elastic.TasksGe
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -11226,8 +11558,9 @@ func (w *ESTasksListServiceWrapper) Do(ctx context.Context) (*elastic.TasksListR
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.TasksListService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.TasksListService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11245,6 +11578,9 @@ func (w *ESTasksListServiceWrapper) Do(ctx context.Context) (*elastic.TasksListR
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -11336,8 +11672,9 @@ func (w *ESTermvectorsServiceWrapper) Do(ctx context.Context) (*elastic.Termvect
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.TermvectorsService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.TermvectorsService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11355,6 +11692,9 @@ func (w *ESTermvectorsServiceWrapper) Do(ctx context.Context) (*elastic.Termvect
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -11536,8 +11876,9 @@ func (w *ESUpdateByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.UpdateByQueryService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.UpdateByQueryService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11555,6 +11896,9 @@ func (w *ESUpdateByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -11570,8 +11914,9 @@ func (w *ESUpdateByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.UpdateByQueryService.DoAsync")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.UpdateByQueryService.DoAsync")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11589,6 +11934,9 @@ func (w *ESUpdateByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 			}()
 		}
 		res0, err = w.obj.DoAsync(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -11870,8 +12218,9 @@ func (w *ESUpdateServiceWrapper) Do(ctx context.Context) (*elastic.UpdateRespons
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.UpdateService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.UpdateService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11889,6 +12238,9 @@ func (w *ESUpdateServiceWrapper) Do(ctx context.Context) (*elastic.UpdateRespons
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -12079,8 +12431,9 @@ func (w *ESValidateServiceWrapper) Do(ctx context.Context) (*elastic.ValidateRes
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.ValidateService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ValidateService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12098,6 +12451,9 @@ func (w *ESValidateServiceWrapper) Do(ctx context.Context) (*elastic.ValidateRes
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -12194,8 +12550,9 @@ func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Do(ctx context.Context) (*elas
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackIlmDeleteLifecycleService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackIlmDeleteLifecycleService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12213,6 +12570,9 @@ func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Do(ctx context.Context) (*elas
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -12284,8 +12644,9 @@ func (w *ESXPackIlmGetLifecycleServiceWrapper) Do(ctx context.Context) (map[stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackIlmGetLifecycleService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackIlmGetLifecycleService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12303,6 +12664,9 @@ func (w *ESXPackIlmGetLifecycleServiceWrapper) Do(ctx context.Context) (map[stri
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -12384,8 +12748,9 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) Do(ctx context.Context) (*elastic
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackIlmPutLifecycleService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackIlmPutLifecycleService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12403,6 +12768,9 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) Do(ctx context.Context) (*elastic
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -12474,8 +12842,9 @@ func (w *ESXPackInfoServiceWrapper) Do(ctx context.Context) (*elastic.XPackInfoS
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackInfoService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackInfoService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12493,6 +12862,9 @@ func (w *ESXPackInfoServiceWrapper) Do(ctx context.Context) (*elastic.XPackInfoS
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -12549,8 +12921,9 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Do(ctx context.Context) (*
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityChangePasswordService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityChangePasswordService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12568,6 +12941,9 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Do(ctx context.Context) (*
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -12634,8 +13010,9 @@ func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Do(ctx context.Context)
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDeleteRoleMappingService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDeleteRoleMappingService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12653,6 +13030,9 @@ func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Do(ctx context.Context)
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -12709,8 +13089,9 @@ func (w *ESXPackSecurityDeleteRoleServiceWrapper) Do(ctx context.Context) (*elas
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDeleteRoleService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDeleteRoleService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12728,6 +13109,9 @@ func (w *ESXPackSecurityDeleteRoleServiceWrapper) Do(ctx context.Context) (*elas
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -12784,8 +13168,9 @@ func (w *ESXPackSecurityDeleteUserServiceWrapper) Do(ctx context.Context) (*elas
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDeleteUserService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDeleteUserService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12803,6 +13188,9 @@ func (w *ESXPackSecurityDeleteUserServiceWrapper) Do(ctx context.Context) (*elas
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -12864,8 +13252,9 @@ func (w *ESXPackSecurityDisableUserServiceWrapper) Do(ctx context.Context) (*ela
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDisableUserService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDisableUserService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12883,6 +13272,9 @@ func (w *ESXPackSecurityDisableUserServiceWrapper) Do(ctx context.Context) (*ela
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -12944,8 +13336,9 @@ func (w *ESXPackSecurityEnableUserServiceWrapper) Do(ctx context.Context) (*elas
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityEnableUserService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityEnableUserService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12963,6 +13356,9 @@ func (w *ESXPackSecurityEnableUserServiceWrapper) Do(ctx context.Context) (*elas
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -13024,8 +13420,9 @@ func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Do(ctx context.Context) (*
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityGetRoleMappingService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityGetRoleMappingService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13043,6 +13440,9 @@ func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Do(ctx context.Context) (*
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -13099,8 +13499,9 @@ func (w *ESXPackSecurityGetRoleServiceWrapper) Do(ctx context.Context) (*elastic
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityGetRoleService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityGetRoleService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13118,6 +13519,9 @@ func (w *ESXPackSecurityGetRoleServiceWrapper) Do(ctx context.Context) (*elastic
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -13174,8 +13578,9 @@ func (w *ESXPackSecurityGetUserServiceWrapper) Do(ctx context.Context) (*elastic
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityGetUserService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityGetUserService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13193,6 +13598,9 @@ func (w *ESXPackSecurityGetUserServiceWrapper) Do(ctx context.Context) (*elastic
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -13254,8 +13662,9 @@ func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Do(ctx context.Context) (*
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityPutRoleMappingService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityPutRoleMappingService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13273,6 +13682,9 @@ func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Do(ctx context.Context) (*
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -13334,8 +13746,9 @@ func (w *ESXPackSecurityPutRoleServiceWrapper) Do(ctx context.Context) (*elastic
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityPutRoleService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityPutRoleService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13353,6 +13766,9 @@ func (w *ESXPackSecurityPutRoleServiceWrapper) Do(ctx context.Context) (*elastic
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -13414,8 +13830,9 @@ func (w *ESXPackSecurityPutUserServiceWrapper) Do(ctx context.Context) (*elastic
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityPutUserService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityPutUserService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13433,6 +13850,9 @@ func (w *ESXPackSecurityPutUserServiceWrapper) Do(ctx context.Context) (*elastic
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -13504,8 +13924,9 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) Do(ctx context.Context) (*elastic
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherAckWatchService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherAckWatchService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13523,6 +13944,9 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) Do(ctx context.Context) (*elastic
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -13584,8 +14008,9 @@ func (w *ESXPackWatcherActivateWatchServiceWrapper) Do(ctx context.Context) (*el
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherActivateWatchService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherActivateWatchService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13603,6 +14028,9 @@ func (w *ESXPackWatcherActivateWatchServiceWrapper) Do(ctx context.Context) (*el
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -13664,8 +14092,9 @@ func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Do(ctx context.Context) (*
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherDeactivateWatchService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherDeactivateWatchService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13683,6 +14112,9 @@ func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Do(ctx context.Context) (*
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -13744,8 +14176,9 @@ func (w *ESXPackWatcherDeleteWatchServiceWrapper) Do(ctx context.Context) (*elas
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherDeleteWatchService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherDeleteWatchService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13763,6 +14196,9 @@ func (w *ESXPackWatcherDeleteWatchServiceWrapper) Do(ctx context.Context) (*elas
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -13839,8 +14275,9 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Do(ctx context.Context) (*ela
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherExecuteWatchService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherExecuteWatchService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13858,6 +14295,9 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Do(ctx context.Context) (*ela
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -13914,8 +14354,9 @@ func (w *ESXPackWatcherGetWatchServiceWrapper) Do(ctx context.Context) (*elastic
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherGetWatchService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherGetWatchService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13933,6 +14374,9 @@ func (w *ESXPackWatcherGetWatchServiceWrapper) Do(ctx context.Context) (*elastic
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -13999,8 +14443,9 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Do(ctx context.Context) (*elastic
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherPutWatchService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherPutWatchService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14018,6 +14463,9 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Do(ctx context.Context) (*elastic
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -14089,8 +14537,9 @@ func (w *ESXPackWatcherStartServiceWrapper) Do(ctx context.Context) (*elastic.XP
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherStartService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherStartService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14108,6 +14557,9 @@ func (w *ESXPackWatcherStartServiceWrapper) Do(ctx context.Context) (*elastic.XP
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -14159,8 +14611,9 @@ func (w *ESXPackWatcherStatsServiceWrapper) Do(ctx context.Context) (*elastic.XP
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherStatsService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherStatsService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14178,6 +14631,9 @@ func (w *ESXPackWatcherStatsServiceWrapper) Do(ctx context.Context) (*elastic.XP
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -14239,8 +14695,9 @@ func (w *ESXPackWatcherStopServiceWrapper) Do(ctx context.Context) (*elastic.XPa
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherStopService.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherStopService.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14258,6 +14715,9 @@ func (w *ESXPackWatcherStopServiceWrapper) Do(ctx context.Context) (*elastic.XPa
 			}()
 		}
 		res0, err = w.obj.Do(ctx)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err

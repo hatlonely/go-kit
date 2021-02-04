@@ -106,8 +106,9 @@ func (w GORMAssociationWrapper) Append(ctx context.Context, values ...interface{
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.Association.Append")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Append")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -125,6 +126,9 @@ func (w GORMAssociationWrapper) Append(ctx context.Context, values ...interface{
 			}()
 		}
 		res0 = w.obj.Append(values...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -139,8 +143,9 @@ func (w GORMAssociationWrapper) Clear(ctx context.Context) GORMAssociationWrappe
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.Association.Clear")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Clear")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -158,6 +163,9 @@ func (w GORMAssociationWrapper) Clear(ctx context.Context) GORMAssociationWrappe
 			}()
 		}
 		res0 = w.obj.Clear()
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -177,8 +185,9 @@ func (w GORMAssociationWrapper) Delete(ctx context.Context, values ...interface{
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.Association.Delete")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Delete")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -196,6 +205,9 @@ func (w GORMAssociationWrapper) Delete(ctx context.Context, values ...interface{
 			}()
 		}
 		res0 = w.obj.Delete(values...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -210,8 +222,9 @@ func (w GORMAssociationWrapper) Find(ctx context.Context, value interface{}) GOR
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.Association.Find")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Find")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -229,6 +242,9 @@ func (w GORMAssociationWrapper) Find(ctx context.Context, value interface{}) GOR
 			}()
 		}
 		res0 = w.obj.Find(value)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -243,8 +259,9 @@ func (w GORMAssociationWrapper) Replace(ctx context.Context, values ...interface
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.Association.Replace")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Replace")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -262,6 +279,9 @@ func (w GORMAssociationWrapper) Replace(ctx context.Context, values ...interface
 			}()
 		}
 		res0 = w.obj.Replace(values...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -281,8 +301,9 @@ func (w GORMDBWrapper) AddForeignKey(ctx context.Context, field string, dest str
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AddForeignKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AddForeignKey")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -300,6 +321,9 @@ func (w GORMDBWrapper) AddForeignKey(ctx context.Context, field string, dest str
 			}()
 		}
 		res0 = w.obj.AddForeignKey(field, dest, onDelete, onUpdate)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -314,8 +338,9 @@ func (w GORMDBWrapper) AddIndex(ctx context.Context, indexName string, columns .
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AddIndex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AddIndex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -333,6 +358,9 @@ func (w GORMDBWrapper) AddIndex(ctx context.Context, indexName string, columns .
 			}()
 		}
 		res0 = w.obj.AddIndex(indexName, columns...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -347,8 +375,9 @@ func (w GORMDBWrapper) AddUniqueIndex(ctx context.Context, indexName string, col
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AddUniqueIndex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AddUniqueIndex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -366,6 +395,9 @@ func (w GORMDBWrapper) AddUniqueIndex(ctx context.Context, indexName string, col
 			}()
 		}
 		res0 = w.obj.AddUniqueIndex(indexName, columns...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -380,8 +412,9 @@ func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBW
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Assign")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Assign")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -399,6 +432,9 @@ func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBW
 			}()
 		}
 		res0 = w.obj.Assign(attrs...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -413,8 +449,9 @@ func (w GORMDBWrapper) Association(ctx context.Context, column string) GORMAssoc
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Association")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Association")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -432,6 +469,9 @@ func (w GORMDBWrapper) Association(ctx context.Context, column string) GORMAssoc
 			}()
 		}
 		res0 = w.obj.Association(column)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -446,8 +486,9 @@ func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWr
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Attrs")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Attrs")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -465,6 +506,9 @@ func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWr
 			}()
 		}
 		res0 = w.obj.Attrs(attrs...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -479,8 +523,9 @@ func (w GORMDBWrapper) AutoMigrate(ctx context.Context, values ...interface{}) G
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.AutoMigrate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AutoMigrate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -498,6 +543,9 @@ func (w GORMDBWrapper) AutoMigrate(ctx context.Context, values ...interface{}) G
 			}()
 		}
 		res0 = w.obj.AutoMigrate(values...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -512,8 +560,9 @@ func (w GORMDBWrapper) Begin(ctx context.Context) GORMDBWrapper {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Begin")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Begin")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -531,6 +580,9 @@ func (w GORMDBWrapper) Begin(ctx context.Context) GORMDBWrapper {
 			}()
 		}
 		res0 = w.obj.Begin()
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -545,8 +597,9 @@ func (w GORMDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) GORMDBW
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.BeginTx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.BeginTx")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -564,6 +617,9 @@ func (w GORMDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) GORMDBW
 			}()
 		}
 		res0 = w.obj.BeginTx(ctx, opts)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -578,8 +634,9 @@ func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMD
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.BlockGlobalUpdate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.BlockGlobalUpdate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -597,6 +654,9 @@ func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMD
 			}()
 		}
 		res0 = w.obj.BlockGlobalUpdate(enable)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -616,8 +676,9 @@ func (w GORMDBWrapper) Close(ctx context.Context) error {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Close")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Close")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -635,6 +696,9 @@ func (w GORMDBWrapper) Close(ctx context.Context) error {
 			}()
 		}
 		err = w.obj.Close()
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -649,8 +713,9 @@ func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Commit")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Commit")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -668,6 +733,9 @@ func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
 			}()
 		}
 		res0 = w.obj.Commit()
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -687,8 +755,9 @@ func (w GORMDBWrapper) Count(ctx context.Context, value interface{}) GORMDBWrapp
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Count")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Count")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -706,6 +775,9 @@ func (w GORMDBWrapper) Count(ctx context.Context, value interface{}) GORMDBWrapp
 			}()
 		}
 		res0 = w.obj.Count(value)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -720,8 +792,9 @@ func (w GORMDBWrapper) Create(ctx context.Context, value interface{}) GORMDBWrap
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Create")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Create")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -739,6 +812,9 @@ func (w GORMDBWrapper) Create(ctx context.Context, value interface{}) GORMDBWrap
 			}()
 		}
 		res0 = w.obj.Create(value)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -753,8 +829,9 @@ func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) G
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.CreateTable")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.CreateTable")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -772,6 +849,9 @@ func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) G
 			}()
 		}
 		res0 = w.obj.CreateTable(models...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -791,8 +871,9 @@ func (w GORMDBWrapper) Debug(ctx context.Context) GORMDBWrapper {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Debug")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Debug")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -810,6 +891,9 @@ func (w GORMDBWrapper) Debug(ctx context.Context) GORMDBWrapper {
 			}()
 		}
 		res0 = w.obj.Debug()
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -824,8 +908,9 @@ func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...i
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Delete")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Delete")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -843,6 +928,9 @@ func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...i
 			}()
 		}
 		res0 = w.obj.Delete(value, where...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -862,8 +950,9 @@ func (w GORMDBWrapper) DropColumn(ctx context.Context, column string) GORMDBWrap
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.DropColumn")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.DropColumn")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -881,6 +970,9 @@ func (w GORMDBWrapper) DropColumn(ctx context.Context, column string) GORMDBWrap
 			}()
 		}
 		res0 = w.obj.DropColumn(column)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -895,8 +987,9 @@ func (w GORMDBWrapper) DropTable(ctx context.Context, values ...interface{}) GOR
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.DropTable")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.DropTable")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -914,6 +1007,9 @@ func (w GORMDBWrapper) DropTable(ctx context.Context, values ...interface{}) GOR
 			}()
 		}
 		res0 = w.obj.DropTable(values...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -928,8 +1024,9 @@ func (w GORMDBWrapper) DropTableIfExists(ctx context.Context, values ...interfac
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.DropTableIfExists")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.DropTableIfExists")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -947,6 +1044,9 @@ func (w GORMDBWrapper) DropTableIfExists(ctx context.Context, values ...interfac
 			}()
 		}
 		res0 = w.obj.DropTableIfExists(values...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -961,8 +1061,9 @@ func (w GORMDBWrapper) Exec(ctx context.Context, sql string, values ...interface
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Exec")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Exec")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -980,6 +1081,9 @@ func (w GORMDBWrapper) Exec(ctx context.Context, sql string, values ...interface
 			}()
 		}
 		res0 = w.obj.Exec(sql, values...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -994,8 +1098,9 @@ func (w GORMDBWrapper) Find(ctx context.Context, out interface{}, where ...inter
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Find")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Find")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1013,6 +1118,9 @@ func (w GORMDBWrapper) Find(ctx context.Context, out interface{}, where ...inter
 			}()
 		}
 		res0 = w.obj.Find(out, where...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1027,8 +1135,9 @@ func (w GORMDBWrapper) First(ctx context.Context, out interface{}, where ...inte
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.First")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.First")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1046,6 +1155,9 @@ func (w GORMDBWrapper) First(ctx context.Context, out interface{}, where ...inte
 			}()
 		}
 		res0 = w.obj.First(out, where...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1060,8 +1172,9 @@ func (w GORMDBWrapper) FirstOrCreate(ctx context.Context, out interface{}, where
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.FirstOrCreate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.FirstOrCreate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1079,6 +1192,9 @@ func (w GORMDBWrapper) FirstOrCreate(ctx context.Context, out interface{}, where
 			}()
 		}
 		res0 = w.obj.FirstOrCreate(out, where...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1093,8 +1209,9 @@ func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where .
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.FirstOrInit")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.FirstOrInit")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1112,6 +1229,9 @@ func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where .
 			}()
 		}
 		res0 = w.obj.FirstOrInit(out, where...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1136,8 +1256,9 @@ func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Group")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Group")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1155,6 +1276,9 @@ func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
 			}()
 		}
 		res0 = w.obj.Group(query)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1179,8 +1303,9 @@ func (w GORMDBWrapper) Having(ctx context.Context, query interface{}, values ...
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Having")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Having")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1198,6 +1323,9 @@ func (w GORMDBWrapper) Having(ctx context.Context, query interface{}, values ...
 			}()
 		}
 		res0 = w.obj.Having(query, values...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1212,8 +1340,9 @@ func (w GORMDBWrapper) InstantSet(ctx context.Context, name string, value interf
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.InstantSet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.InstantSet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1231,6 +1360,9 @@ func (w GORMDBWrapper) InstantSet(ctx context.Context, name string, value interf
 			}()
 		}
 		res0 = w.obj.InstantSet(name, value)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1245,8 +1377,9 @@ func (w GORMDBWrapper) Joins(ctx context.Context, query string, args ...interfac
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Joins")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Joins")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1264,6 +1397,9 @@ func (w GORMDBWrapper) Joins(ctx context.Context, query string, args ...interfac
 			}()
 		}
 		res0 = w.obj.Joins(query, args...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1278,8 +1414,9 @@ func (w GORMDBWrapper) Last(ctx context.Context, out interface{}, where ...inter
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Last")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Last")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1297,6 +1434,9 @@ func (w GORMDBWrapper) Last(ctx context.Context, out interface{}, where ...inter
 			}()
 		}
 		res0 = w.obj.Last(out, where...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1311,8 +1451,9 @@ func (w GORMDBWrapper) Limit(ctx context.Context, limit interface{}) GORMDBWrapp
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Limit")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Limit")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1330,6 +1471,9 @@ func (w GORMDBWrapper) Limit(ctx context.Context, limit interface{}) GORMDBWrapp
 			}()
 		}
 		res0 = w.obj.Limit(limit)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1344,8 +1488,9 @@ func (w GORMDBWrapper) LogMode(ctx context.Context, enable bool) GORMDBWrapper {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.LogMode")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.LogMode")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1363,6 +1508,9 @@ func (w GORMDBWrapper) LogMode(ctx context.Context, enable bool) GORMDBWrapper {
 			}()
 		}
 		res0 = w.obj.LogMode(enable)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1377,8 +1525,9 @@ func (w GORMDBWrapper) Model(ctx context.Context, value interface{}) GORMDBWrapp
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Model")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Model")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1396,6 +1545,9 @@ func (w GORMDBWrapper) Model(ctx context.Context, value interface{}) GORMDBWrapp
 			}()
 		}
 		res0 = w.obj.Model(value)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1410,8 +1562,9 @@ func (w GORMDBWrapper) ModifyColumn(ctx context.Context, column string, typ stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.ModifyColumn")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.ModifyColumn")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1429,6 +1582,9 @@ func (w GORMDBWrapper) ModifyColumn(ctx context.Context, column string, typ stri
 			}()
 		}
 		res0 = w.obj.ModifyColumn(column, typ)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1443,8 +1599,9 @@ func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.New")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.New")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1462,6 +1619,9 @@ func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
 			}()
 		}
 		res0 = w.obj.New()
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1486,8 +1646,9 @@ func (w GORMDBWrapper) Not(ctx context.Context, query interface{}, args ...inter
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Not")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Not")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1505,6 +1666,9 @@ func (w GORMDBWrapper) Not(ctx context.Context, query interface{}, args ...inter
 			}()
 		}
 		res0 = w.obj.Not(query, args...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1519,8 +1683,9 @@ func (w GORMDBWrapper) Offset(ctx context.Context, offset interface{}) GORMDBWra
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Offset")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Offset")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1538,6 +1703,9 @@ func (w GORMDBWrapper) Offset(ctx context.Context, offset interface{}) GORMDBWra
 			}()
 		}
 		res0 = w.obj.Offset(offset)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1552,8 +1720,9 @@ func (w GORMDBWrapper) Omit(ctx context.Context, columns ...string) GORMDBWrappe
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Omit")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Omit")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1571,6 +1740,9 @@ func (w GORMDBWrapper) Omit(ctx context.Context, columns ...string) GORMDBWrappe
 			}()
 		}
 		res0 = w.obj.Omit(columns...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1585,8 +1757,9 @@ func (w GORMDBWrapper) Or(ctx context.Context, query interface{}, args ...interf
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Or")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Or")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1604,6 +1777,9 @@ func (w GORMDBWrapper) Or(ctx context.Context, query interface{}, args ...interf
 			}()
 		}
 		res0 = w.obj.Or(query, args...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1618,8 +1794,9 @@ func (w GORMDBWrapper) Order(ctx context.Context, value interface{}, reorder ...
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Order")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Order")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1637,6 +1814,9 @@ func (w GORMDBWrapper) Order(ctx context.Context, value interface{}, reorder ...
 			}()
 		}
 		res0 = w.obj.Order(value, reorder...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1651,8 +1831,9 @@ func (w GORMDBWrapper) Pluck(ctx context.Context, column string, value interface
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Pluck")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Pluck")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1670,6 +1851,9 @@ func (w GORMDBWrapper) Pluck(ctx context.Context, column string, value interface
 			}()
 		}
 		res0 = w.obj.Pluck(column, value)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1684,8 +1868,9 @@ func (w GORMDBWrapper) Preload(ctx context.Context, column string, conditions ..
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Preload")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Preload")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1703,6 +1888,9 @@ func (w GORMDBWrapper) Preload(ctx context.Context, column string, conditions ..
 			}()
 		}
 		res0 = w.obj.Preload(column, conditions...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1717,8 +1905,9 @@ func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrap
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Preloads")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Preloads")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1736,6 +1925,9 @@ func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrap
 			}()
 		}
 		res0 = w.obj.Preloads(out)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1755,8 +1947,9 @@ func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Raw")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Raw")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1774,6 +1967,9 @@ func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{
 			}()
 		}
 		res0 = w.obj.Raw(sql, values...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1793,8 +1989,9 @@ func (w GORMDBWrapper) Related(ctx context.Context, value interface{}, foreignKe
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Related")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Related")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1812,6 +2009,9 @@ func (w GORMDBWrapper) Related(ctx context.Context, value interface{}, foreignKe
 			}()
 		}
 		res0 = w.obj.Related(value, foreignKeys...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1826,8 +2026,9 @@ func (w GORMDBWrapper) RemoveForeignKey(ctx context.Context, field string, dest 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.RemoveForeignKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.RemoveForeignKey")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1845,6 +2046,9 @@ func (w GORMDBWrapper) RemoveForeignKey(ctx context.Context, field string, dest 
 			}()
 		}
 		res0 = w.obj.RemoveForeignKey(field, dest)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1859,8 +2063,9 @@ func (w GORMDBWrapper) RemoveIndex(ctx context.Context, indexName string) GORMDB
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.RemoveIndex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.RemoveIndex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1878,6 +2083,9 @@ func (w GORMDBWrapper) RemoveIndex(ctx context.Context, indexName string) GORMDB
 			}()
 		}
 		res0 = w.obj.RemoveIndex(indexName)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1892,8 +2100,9 @@ func (w GORMDBWrapper) Rollback(ctx context.Context) GORMDBWrapper {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Rollback")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Rollback")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1911,6 +2120,9 @@ func (w GORMDBWrapper) Rollback(ctx context.Context) GORMDBWrapper {
 			}()
 		}
 		res0 = w.obj.Rollback()
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1925,8 +2137,9 @@ func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrappe
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.RollbackUnlessCommitted")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.RollbackUnlessCommitted")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1944,6 +2157,9 @@ func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrappe
 			}()
 		}
 		res0 = w.obj.RollbackUnlessCommitted()
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -1964,8 +2180,9 @@ func (w GORMDBWrapper) Rows(ctx context.Context) (*sql.Rows, error) {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Rows")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Rows")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1983,6 +2200,9 @@ func (w GORMDBWrapper) Rows(ctx context.Context) (*sql.Rows, error) {
 			}()
 		}
 		res0, err = w.obj.Rows()
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -1997,8 +2217,9 @@ func (w GORMDBWrapper) Save(ctx context.Context, value interface{}) GORMDBWrappe
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Save")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Save")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2016,6 +2237,9 @@ func (w GORMDBWrapper) Save(ctx context.Context, value interface{}) GORMDBWrappe
 			}()
 		}
 		res0 = w.obj.Save(value)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -2030,8 +2254,9 @@ func (w GORMDBWrapper) Scan(ctx context.Context, dest interface{}) GORMDBWrapper
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Scan")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Scan")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2049,6 +2274,9 @@ func (w GORMDBWrapper) Scan(ctx context.Context, dest interface{}) GORMDBWrapper
 			}()
 		}
 		res0 = w.obj.Scan(dest)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -2063,8 +2291,9 @@ func (w GORMDBWrapper) ScanRows(ctx context.Context, rows *sql.Rows, result inte
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.ScanRows")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.ScanRows")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2082,6 +2311,9 @@ func (w GORMDBWrapper) ScanRows(ctx context.Context, rows *sql.Rows, result inte
 			}()
 		}
 		err = w.obj.ScanRows(rows, result)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -2096,8 +2328,9 @@ func (w GORMDBWrapper) Scopes(ctx context.Context, funcs ...func(*gorm.DB) *gorm
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Scopes")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Scopes")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2115,6 +2348,9 @@ func (w GORMDBWrapper) Scopes(ctx context.Context, funcs ...func(*gorm.DB) *gorm
 			}()
 		}
 		res0 = w.obj.Scopes(funcs...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -2129,8 +2365,9 @@ func (w GORMDBWrapper) Select(ctx context.Context, query interface{}, args ...in
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Select")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Select")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2148,6 +2385,9 @@ func (w GORMDBWrapper) Select(ctx context.Context, query interface{}, args ...in
 			}()
 		}
 		res0 = w.obj.Select(query, args...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -2162,8 +2402,9 @@ func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Set")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Set")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2181,6 +2422,9 @@ func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) 
 			}()
 		}
 		res0 = w.obj.Set(name, value)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -2199,8 +2443,9 @@ func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride f
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.SetNowFuncOverride")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.SetNowFuncOverride")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2218,6 +2463,9 @@ func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride f
 			}()
 		}
 		res0 = w.obj.SetNowFuncOverride(nowFuncOverride)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -2241,8 +2489,9 @@ func (w GORMDBWrapper) Table(ctx context.Context, name string) GORMDBWrapper {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Table")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Table")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2260,6 +2509,9 @@ func (w GORMDBWrapper) Table(ctx context.Context, name string) GORMDBWrapper {
 			}()
 		}
 		res0 = w.obj.Table(name)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -2274,8 +2526,9 @@ func (w GORMDBWrapper) Take(ctx context.Context, out interface{}, where ...inter
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Take")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Take")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2293,6 +2546,9 @@ func (w GORMDBWrapper) Take(ctx context.Context, out interface{}, where ...inter
 			}()
 		}
 		res0 = w.obj.Take(out, where...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -2307,8 +2563,9 @@ func (w GORMDBWrapper) Transaction(ctx context.Context, fc func(tx *gorm.DB) err
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Transaction")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Transaction")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2326,6 +2583,9 @@ func (w GORMDBWrapper) Transaction(ctx context.Context, fc func(tx *gorm.DB) err
 			}()
 		}
 		err = w.obj.Transaction(fc)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -2340,8 +2600,9 @@ func (w GORMDBWrapper) Unscoped(ctx context.Context) GORMDBWrapper {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Unscoped")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Unscoped")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2359,6 +2620,9 @@ func (w GORMDBWrapper) Unscoped(ctx context.Context) GORMDBWrapper {
 			}()
 		}
 		res0 = w.obj.Unscoped()
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -2373,8 +2637,9 @@ func (w GORMDBWrapper) Update(ctx context.Context, attrs ...interface{}) GORMDBW
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Update")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Update")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2392,6 +2657,9 @@ func (w GORMDBWrapper) Update(ctx context.Context, attrs ...interface{}) GORMDBW
 			}()
 		}
 		res0 = w.obj.Update(attrs...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -2406,8 +2674,9 @@ func (w GORMDBWrapper) UpdateColumn(ctx context.Context, attrs ...interface{}) G
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.UpdateColumn")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.UpdateColumn")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2425,6 +2694,9 @@ func (w GORMDBWrapper) UpdateColumn(ctx context.Context, attrs ...interface{}) G
 			}()
 		}
 		res0 = w.obj.UpdateColumn(attrs...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -2439,8 +2711,9 @@ func (w GORMDBWrapper) UpdateColumns(ctx context.Context, values interface{}) GO
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.UpdateColumns")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.UpdateColumns")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2458,6 +2731,9 @@ func (w GORMDBWrapper) UpdateColumns(ctx context.Context, values interface{}) GO
 			}()
 		}
 		res0 = w.obj.UpdateColumns(values)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -2472,8 +2748,9 @@ func (w GORMDBWrapper) Updates(ctx context.Context, values interface{}, ignorePr
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Updates")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Updates")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2491,6 +2768,9 @@ func (w GORMDBWrapper) Updates(ctx context.Context, values interface{}, ignorePr
 			}()
 		}
 		res0 = w.obj.Updates(values, ignoreProtectedAttrs...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
@@ -2505,8 +2785,9 @@ func (w GORMDBWrapper) Where(ctx context.Context, query interface{}, args ...int
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "gorm.DB.Where")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Where")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2524,6 +2805,9 @@ func (w GORMDBWrapper) Where(ctx context.Context, query interface{}, args ...int
 			}()
 		}
 		res0 = w.obj.Where(query, args...)
+		if res0.Error != nil && span != nil {
+			span.SetTag("error", res0.Error.Error())
+		}
 		return res0.Error
 	})
 	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}

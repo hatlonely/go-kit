@@ -93,8 +93,9 @@ func (w *STSClientWrapper) AssumeRole(ctx context.Context, request *sts.AssumeRo
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "sts.Client.AssumeRole")
+			span, _ = opentracing.StartSpanFromContext(ctx, "sts.Client.AssumeRole")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -112,6 +113,9 @@ func (w *STSClientWrapper) AssumeRole(ctx context.Context, request *sts.AssumeRo
 			}()
 		}
 		response, err = w.obj.AssumeRole(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -137,8 +141,9 @@ func (w *STSClientWrapper) AssumeRoleWithSAML(ctx context.Context, request *sts.
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "sts.Client.AssumeRoleWithSAML")
+			span, _ = opentracing.StartSpanFromContext(ctx, "sts.Client.AssumeRoleWithSAML")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -156,6 +161,9 @@ func (w *STSClientWrapper) AssumeRoleWithSAML(ctx context.Context, request *sts.
 			}()
 		}
 		response, err = w.obj.AssumeRoleWithSAML(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -181,8 +189,9 @@ func (w *STSClientWrapper) GetCallerIdentity(ctx context.Context, request *sts.G
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "sts.Client.GetCallerIdentity")
+			span, _ = opentracing.StartSpanFromContext(ctx, "sts.Client.GetCallerIdentity")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -200,6 +209,9 @@ func (w *STSClientWrapper) GetCallerIdentity(ctx context.Context, request *sts.G
 			}()
 		}
 		response, err = w.obj.GetCallerIdentity(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err

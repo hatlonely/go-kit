@@ -666,8 +666,9 @@ const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 	}
 {{- end}}
 {{- if .Rule.Trace}}
+	var span opentracing.Span
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}")
+		span, _ = opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}")
 		for key, val := range w.options.Trace.ConstTags {
 			span.SetTag(key, val)
 		}
@@ -688,6 +689,11 @@ const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 	}
 {{- end}}
 	{{.Function.ResultList}} = w.obj.{{.Function.Name}}({{.Function.ParamList}})
+{{- if .Rule.Trace}}
+	if {{.Function.LastResult}}{{- if .Rule.ErrorInResult}}.{{.ErrorField}}{{- end}} != nil && span != nil {
+		span.SetTag("error", {{.Function.LastResult}}{{- if .Rule.ErrorInResult}}.{{.ErrorField}}{{- end}}.Error())
+	}
+{{- end}}
 	return {{.Function.ReturnList}}
 `
 
@@ -705,8 +711,9 @@ const WrapperFunctionBodyWithErrorWithRetryTpl = `
 		}
 {{- end}}
 {{- if .Rule.Trace}}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}")
+			span, _ = opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -743,6 +750,11 @@ const WrapperFunctionBodyWithErrorWithRetryTpl = `
 		}
 {{- else}}
 		{{.Function.ResultList}} = w.obj.{{.Function.Name}}({{.Function.ParamList}})
+{{- end}}
+{{- if .Rule.Trace}}
+	if {{.Function.LastResult}}{{- if .Rule.ErrorInResult}}.{{.ErrorField}}{{- end}} != nil && span != nil {
+		span.SetTag("error", {{.Function.LastResult}}{{- if .Rule.ErrorInResult}}.{{.ErrorField}}{{- end}}.Error())
+	}
 {{- end}}
 		return {{.Function.LastResult}}{{- if .Rule.ErrorInResult}}.{{.ErrorField}}{{- end}}
 	})

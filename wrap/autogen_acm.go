@@ -94,8 +94,9 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.CancelListenConfig")
+			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.CancelListenConfig")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -113,6 +114,9 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 			}()
 		}
 		err = w.obj.CancelListenConfig(param)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -128,8 +132,9 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.DeleteConfig")
+			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.DeleteConfig")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -147,6 +152,9 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 			}()
 		}
 		deleted, err = w.obj.DeleteConfig(param)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return deleted, err
@@ -162,8 +170,9 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.GetConfig")
+			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.GetConfig")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -181,6 +190,9 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 			}()
 		}
 		content, err = w.obj.GetConfig(param)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return content, err
@@ -195,8 +207,9 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.ListenConfig")
+			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.ListenConfig")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -214,6 +227,9 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 			}()
 		}
 		err = w.obj.ListenConfig(param)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -229,8 +245,9 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.PublishConfig")
+			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.PublishConfig")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -248,6 +265,9 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 			}()
 		}
 		published, err = w.obj.PublishConfig(param)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return published, err
@@ -263,8 +283,9 @@ func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.Sear
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.SearchConfig")
+			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.SearchConfig")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -282,6 +303,9 @@ func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.Sear
 			}()
 		}
 		res0, err = w.obj.SearchConfig(param)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err

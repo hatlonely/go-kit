@@ -181,8 +181,9 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Pipelined")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Pipelined")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -200,6 +201,9 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 			}()
 		}
 		res0, err = w.obj.Pipelined(fn)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -235,8 +239,9 @@ func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipe
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.TxPipelined")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.TxPipelined")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -254,6 +259,9 @@ func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipe
 			}()
 		}
 		res0, err = w.obj.TxPipelined(fn)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -268,8 +276,9 @@ func (w *RedisClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Watch")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Watch")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -287,6 +296,9 @@ func (w *RedisClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error
 			}()
 		}
 		err = w.obj.Watch(fn, keys...)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -306,8 +318,9 @@ func (w *RedisClientWrapper) Close(ctx context.Context) error {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Close")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Close")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -325,6 +338,9 @@ func (w *RedisClientWrapper) Close(ctx context.Context) error {
 			}()
 		}
 		err = w.obj.Close()
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -339,8 +355,9 @@ func (w *RedisClientWrapper) Do(ctx context.Context, args ...interface{}) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -358,6 +375,9 @@ func (w *RedisClientWrapper) Do(ctx context.Context, args ...interface{}) *redis
 			}()
 		}
 		res0 = w.obj.Do(args...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -372,8 +392,9 @@ func (w *RedisClientWrapper) Process(ctx context.Context, cmd redis.Cmder) error
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Process")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Process")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -391,6 +412,9 @@ func (w *RedisClientWrapper) Process(ctx context.Context, cmd redis.Cmder) error
 			}()
 		}
 		err = w.obj.Process(cmd)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -418,8 +442,9 @@ func (w *RedisClientWrapper) Append(ctx context.Context, key string, value strin
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Append")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Append")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -437,6 +462,9 @@ func (w *RedisClientWrapper) Append(ctx context.Context, key string, value strin
 			}()
 		}
 		res0 = w.obj.Append(key, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -451,8 +479,9 @@ func (w *RedisClientWrapper) BLPop(ctx context.Context, timeout time.Duration, k
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.BLPop")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BLPop")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -470,6 +499,9 @@ func (w *RedisClientWrapper) BLPop(ctx context.Context, timeout time.Duration, k
 			}()
 		}
 		res0 = w.obj.BLPop(timeout, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -484,8 +516,9 @@ func (w *RedisClientWrapper) BRPop(ctx context.Context, timeout time.Duration, k
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.BRPop")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BRPop")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -503,6 +536,9 @@ func (w *RedisClientWrapper) BRPop(ctx context.Context, timeout time.Duration, k
 			}()
 		}
 		res0 = w.obj.BRPop(timeout, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -517,8 +553,9 @@ func (w *RedisClientWrapper) BRPopLPush(ctx context.Context, source string, dest
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.BRPopLPush")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BRPopLPush")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -536,6 +573,9 @@ func (w *RedisClientWrapper) BRPopLPush(ctx context.Context, source string, dest
 			}()
 		}
 		res0 = w.obj.BRPopLPush(source, destination, timeout)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -550,8 +590,9 @@ func (w *RedisClientWrapper) BZPopMax(ctx context.Context, timeout time.Duration
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.BZPopMax")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BZPopMax")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -569,6 +610,9 @@ func (w *RedisClientWrapper) BZPopMax(ctx context.Context, timeout time.Duration
 			}()
 		}
 		res0 = w.obj.BZPopMax(timeout, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -583,8 +627,9 @@ func (w *RedisClientWrapper) BZPopMin(ctx context.Context, timeout time.Duration
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.BZPopMin")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BZPopMin")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -602,6 +647,9 @@ func (w *RedisClientWrapper) BZPopMin(ctx context.Context, timeout time.Duration
 			}()
 		}
 		res0 = w.obj.BZPopMin(timeout, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -616,8 +664,9 @@ func (w *RedisClientWrapper) BgRewriteAOF(ctx context.Context) *redis.StatusCmd 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.BgRewriteAOF")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BgRewriteAOF")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -635,6 +684,9 @@ func (w *RedisClientWrapper) BgRewriteAOF(ctx context.Context) *redis.StatusCmd 
 			}()
 		}
 		res0 = w.obj.BgRewriteAOF()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -649,8 +701,9 @@ func (w *RedisClientWrapper) BgSave(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.BgSave")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BgSave")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -668,6 +721,9 @@ func (w *RedisClientWrapper) BgSave(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.BgSave()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -682,8 +738,9 @@ func (w *RedisClientWrapper) BitCount(ctx context.Context, key string, bitCount 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.BitCount")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BitCount")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -701,6 +758,9 @@ func (w *RedisClientWrapper) BitCount(ctx context.Context, key string, bitCount 
 			}()
 		}
 		res0 = w.obj.BitCount(key, bitCount)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -715,8 +775,9 @@ func (w *RedisClientWrapper) BitOpAnd(ctx context.Context, destKey string, keys 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.BitOpAnd")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BitOpAnd")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -734,6 +795,9 @@ func (w *RedisClientWrapper) BitOpAnd(ctx context.Context, destKey string, keys 
 			}()
 		}
 		res0 = w.obj.BitOpAnd(destKey, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -748,8 +812,9 @@ func (w *RedisClientWrapper) BitOpNot(ctx context.Context, destKey string, key s
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.BitOpNot")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BitOpNot")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -767,6 +832,9 @@ func (w *RedisClientWrapper) BitOpNot(ctx context.Context, destKey string, key s
 			}()
 		}
 		res0 = w.obj.BitOpNot(destKey, key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -781,8 +849,9 @@ func (w *RedisClientWrapper) BitOpOr(ctx context.Context, destKey string, keys .
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.BitOpOr")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BitOpOr")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -800,6 +869,9 @@ func (w *RedisClientWrapper) BitOpOr(ctx context.Context, destKey string, keys .
 			}()
 		}
 		res0 = w.obj.BitOpOr(destKey, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -814,8 +886,9 @@ func (w *RedisClientWrapper) BitOpXor(ctx context.Context, destKey string, keys 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.BitOpXor")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BitOpXor")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -833,6 +906,9 @@ func (w *RedisClientWrapper) BitOpXor(ctx context.Context, destKey string, keys 
 			}()
 		}
 		res0 = w.obj.BitOpXor(destKey, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -847,8 +923,9 @@ func (w *RedisClientWrapper) BitPos(ctx context.Context, key string, bit int64, 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.BitPos")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BitPos")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -866,6 +943,9 @@ func (w *RedisClientWrapper) BitPos(ctx context.Context, key string, bit int64, 
 			}()
 		}
 		res0 = w.obj.BitPos(key, bit, pos...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -880,8 +960,9 @@ func (w *RedisClientWrapper) ClientGetName(ctx context.Context) *redis.StringCmd
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClientGetName")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClientGetName")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -899,6 +980,9 @@ func (w *RedisClientWrapper) ClientGetName(ctx context.Context) *redis.StringCmd
 			}()
 		}
 		res0 = w.obj.ClientGetName()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -913,8 +997,9 @@ func (w *RedisClientWrapper) ClientID(ctx context.Context) *redis.IntCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClientID")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClientID")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -932,6 +1017,9 @@ func (w *RedisClientWrapper) ClientID(ctx context.Context) *redis.IntCmd {
 			}()
 		}
 		res0 = w.obj.ClientID()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -946,8 +1034,9 @@ func (w *RedisClientWrapper) ClientKill(ctx context.Context, ipPort string) *red
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClientKill")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClientKill")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -965,6 +1054,9 @@ func (w *RedisClientWrapper) ClientKill(ctx context.Context, ipPort string) *red
 			}()
 		}
 		res0 = w.obj.ClientKill(ipPort)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -979,8 +1071,9 @@ func (w *RedisClientWrapper) ClientKillByFilter(ctx context.Context, keys ...str
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClientKillByFilter")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClientKillByFilter")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -998,6 +1091,9 @@ func (w *RedisClientWrapper) ClientKillByFilter(ctx context.Context, keys ...str
 			}()
 		}
 		res0 = w.obj.ClientKillByFilter(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1012,8 +1108,9 @@ func (w *RedisClientWrapper) ClientList(ctx context.Context) *redis.StringCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClientList")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClientList")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1031,6 +1128,9 @@ func (w *RedisClientWrapper) ClientList(ctx context.Context) *redis.StringCmd {
 			}()
 		}
 		res0 = w.obj.ClientList()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1045,8 +1145,9 @@ func (w *RedisClientWrapper) ClientPause(ctx context.Context, dur time.Duration)
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClientPause")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClientPause")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1064,6 +1165,9 @@ func (w *RedisClientWrapper) ClientPause(ctx context.Context, dur time.Duration)
 			}()
 		}
 		res0 = w.obj.ClientPause(dur)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1078,8 +1182,9 @@ func (w *RedisClientWrapper) ClientUnblock(ctx context.Context, id int64) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClientUnblock")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClientUnblock")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1097,6 +1202,9 @@ func (w *RedisClientWrapper) ClientUnblock(ctx context.Context, id int64) *redis
 			}()
 		}
 		res0 = w.obj.ClientUnblock(id)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1111,8 +1219,9 @@ func (w *RedisClientWrapper) ClientUnblockWithError(ctx context.Context, id int6
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClientUnblockWithError")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClientUnblockWithError")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1130,6 +1239,9 @@ func (w *RedisClientWrapper) ClientUnblockWithError(ctx context.Context, id int6
 			}()
 		}
 		res0 = w.obj.ClientUnblockWithError(id)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1144,8 +1256,9 @@ func (w *RedisClientWrapper) ClusterAddSlots(ctx context.Context, slots ...int) 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterAddSlots")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterAddSlots")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1163,6 +1276,9 @@ func (w *RedisClientWrapper) ClusterAddSlots(ctx context.Context, slots ...int) 
 			}()
 		}
 		res0 = w.obj.ClusterAddSlots(slots...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1177,8 +1293,9 @@ func (w *RedisClientWrapper) ClusterAddSlotsRange(ctx context.Context, min int, 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterAddSlotsRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterAddSlotsRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1196,6 +1313,9 @@ func (w *RedisClientWrapper) ClusterAddSlotsRange(ctx context.Context, min int, 
 			}()
 		}
 		res0 = w.obj.ClusterAddSlotsRange(min, max)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1210,8 +1330,9 @@ func (w *RedisClientWrapper) ClusterCountFailureReports(ctx context.Context, nod
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterCountFailureReports")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterCountFailureReports")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1229,6 +1350,9 @@ func (w *RedisClientWrapper) ClusterCountFailureReports(ctx context.Context, nod
 			}()
 		}
 		res0 = w.obj.ClusterCountFailureReports(nodeID)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1243,8 +1367,9 @@ func (w *RedisClientWrapper) ClusterCountKeysInSlot(ctx context.Context, slot in
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterCountKeysInSlot")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterCountKeysInSlot")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1262,6 +1387,9 @@ func (w *RedisClientWrapper) ClusterCountKeysInSlot(ctx context.Context, slot in
 			}()
 		}
 		res0 = w.obj.ClusterCountKeysInSlot(slot)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1276,8 +1404,9 @@ func (w *RedisClientWrapper) ClusterDelSlots(ctx context.Context, slots ...int) 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterDelSlots")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterDelSlots")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1295,6 +1424,9 @@ func (w *RedisClientWrapper) ClusterDelSlots(ctx context.Context, slots ...int) 
 			}()
 		}
 		res0 = w.obj.ClusterDelSlots(slots...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1309,8 +1441,9 @@ func (w *RedisClientWrapper) ClusterDelSlotsRange(ctx context.Context, min int, 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterDelSlotsRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterDelSlotsRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1328,6 +1461,9 @@ func (w *RedisClientWrapper) ClusterDelSlotsRange(ctx context.Context, min int, 
 			}()
 		}
 		res0 = w.obj.ClusterDelSlotsRange(min, max)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1342,8 +1478,9 @@ func (w *RedisClientWrapper) ClusterFailover(ctx context.Context) *redis.StatusC
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterFailover")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterFailover")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1361,6 +1498,9 @@ func (w *RedisClientWrapper) ClusterFailover(ctx context.Context) *redis.StatusC
 			}()
 		}
 		res0 = w.obj.ClusterFailover()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1375,8 +1515,9 @@ func (w *RedisClientWrapper) ClusterForget(ctx context.Context, nodeID string) *
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterForget")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterForget")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1394,6 +1535,9 @@ func (w *RedisClientWrapper) ClusterForget(ctx context.Context, nodeID string) *
 			}()
 		}
 		res0 = w.obj.ClusterForget(nodeID)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1408,8 +1552,9 @@ func (w *RedisClientWrapper) ClusterGetKeysInSlot(ctx context.Context, slot int,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterGetKeysInSlot")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterGetKeysInSlot")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1427,6 +1572,9 @@ func (w *RedisClientWrapper) ClusterGetKeysInSlot(ctx context.Context, slot int,
 			}()
 		}
 		res0 = w.obj.ClusterGetKeysInSlot(slot, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1441,8 +1589,9 @@ func (w *RedisClientWrapper) ClusterInfo(ctx context.Context) *redis.StringCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterInfo")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterInfo")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1460,6 +1609,9 @@ func (w *RedisClientWrapper) ClusterInfo(ctx context.Context) *redis.StringCmd {
 			}()
 		}
 		res0 = w.obj.ClusterInfo()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1474,8 +1626,9 @@ func (w *RedisClientWrapper) ClusterKeySlot(ctx context.Context, key string) *re
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterKeySlot")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterKeySlot")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1493,6 +1646,9 @@ func (w *RedisClientWrapper) ClusterKeySlot(ctx context.Context, key string) *re
 			}()
 		}
 		res0 = w.obj.ClusterKeySlot(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1507,8 +1663,9 @@ func (w *RedisClientWrapper) ClusterMeet(ctx context.Context, host string, port 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterMeet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterMeet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1526,6 +1683,9 @@ func (w *RedisClientWrapper) ClusterMeet(ctx context.Context, host string, port 
 			}()
 		}
 		res0 = w.obj.ClusterMeet(host, port)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1540,8 +1700,9 @@ func (w *RedisClientWrapper) ClusterNodes(ctx context.Context) *redis.StringCmd 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterNodes")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterNodes")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1559,6 +1720,9 @@ func (w *RedisClientWrapper) ClusterNodes(ctx context.Context) *redis.StringCmd 
 			}()
 		}
 		res0 = w.obj.ClusterNodes()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1573,8 +1737,9 @@ func (w *RedisClientWrapper) ClusterReplicate(ctx context.Context, nodeID string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterReplicate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterReplicate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1592,6 +1757,9 @@ func (w *RedisClientWrapper) ClusterReplicate(ctx context.Context, nodeID string
 			}()
 		}
 		res0 = w.obj.ClusterReplicate(nodeID)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1606,8 +1774,9 @@ func (w *RedisClientWrapper) ClusterResetHard(ctx context.Context) *redis.Status
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterResetHard")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterResetHard")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1625,6 +1794,9 @@ func (w *RedisClientWrapper) ClusterResetHard(ctx context.Context) *redis.Status
 			}()
 		}
 		res0 = w.obj.ClusterResetHard()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1639,8 +1811,9 @@ func (w *RedisClientWrapper) ClusterResetSoft(ctx context.Context) *redis.Status
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterResetSoft")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterResetSoft")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1658,6 +1831,9 @@ func (w *RedisClientWrapper) ClusterResetSoft(ctx context.Context) *redis.Status
 			}()
 		}
 		res0 = w.obj.ClusterResetSoft()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1672,8 +1848,9 @@ func (w *RedisClientWrapper) ClusterSaveConfig(ctx context.Context) *redis.Statu
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterSaveConfig")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterSaveConfig")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1691,6 +1868,9 @@ func (w *RedisClientWrapper) ClusterSaveConfig(ctx context.Context) *redis.Statu
 			}()
 		}
 		res0 = w.obj.ClusterSaveConfig()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1705,8 +1885,9 @@ func (w *RedisClientWrapper) ClusterSlaves(ctx context.Context, nodeID string) *
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterSlaves")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterSlaves")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1724,6 +1905,9 @@ func (w *RedisClientWrapper) ClusterSlaves(ctx context.Context, nodeID string) *
 			}()
 		}
 		res0 = w.obj.ClusterSlaves(nodeID)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1738,8 +1922,9 @@ func (w *RedisClientWrapper) ClusterSlots(ctx context.Context) *redis.ClusterSlo
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterSlots")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterSlots")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1757,6 +1942,9 @@ func (w *RedisClientWrapper) ClusterSlots(ctx context.Context) *redis.ClusterSlo
 			}()
 		}
 		res0 = w.obj.ClusterSlots()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1771,8 +1959,9 @@ func (w *RedisClientWrapper) Command(ctx context.Context) *redis.CommandsInfoCmd
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Command")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Command")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1790,6 +1979,9 @@ func (w *RedisClientWrapper) Command(ctx context.Context) *redis.CommandsInfoCmd
 			}()
 		}
 		res0 = w.obj.Command()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1804,8 +1996,9 @@ func (w *RedisClientWrapper) ConfigGet(ctx context.Context, parameter string) *r
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ConfigGet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ConfigGet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1823,6 +2016,9 @@ func (w *RedisClientWrapper) ConfigGet(ctx context.Context, parameter string) *r
 			}()
 		}
 		res0 = w.obj.ConfigGet(parameter)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1837,8 +2033,9 @@ func (w *RedisClientWrapper) ConfigResetStat(ctx context.Context) *redis.StatusC
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ConfigResetStat")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ConfigResetStat")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1856,6 +2053,9 @@ func (w *RedisClientWrapper) ConfigResetStat(ctx context.Context) *redis.StatusC
 			}()
 		}
 		res0 = w.obj.ConfigResetStat()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1870,8 +2070,9 @@ func (w *RedisClientWrapper) ConfigRewrite(ctx context.Context) *redis.StatusCmd
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ConfigRewrite")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ConfigRewrite")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1889,6 +2090,9 @@ func (w *RedisClientWrapper) ConfigRewrite(ctx context.Context) *redis.StatusCmd
 			}()
 		}
 		res0 = w.obj.ConfigRewrite()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1903,8 +2107,9 @@ func (w *RedisClientWrapper) ConfigSet(ctx context.Context, parameter string, va
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ConfigSet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ConfigSet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1922,6 +2127,9 @@ func (w *RedisClientWrapper) ConfigSet(ctx context.Context, parameter string, va
 			}()
 		}
 		res0 = w.obj.ConfigSet(parameter, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1936,8 +2144,9 @@ func (w *RedisClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.DBSize")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.DBSize")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1955,6 +2164,9 @@ func (w *RedisClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 			}()
 		}
 		res0 = w.obj.DBSize()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -1969,8 +2181,9 @@ func (w *RedisClientWrapper) DbSize(ctx context.Context) *redis.IntCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.DbSize")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.DbSize")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1988,6 +2201,9 @@ func (w *RedisClientWrapper) DbSize(ctx context.Context) *redis.IntCmd {
 			}()
 		}
 		res0 = w.obj.DbSize()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2002,8 +2218,9 @@ func (w *RedisClientWrapper) DebugObject(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.DebugObject")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.DebugObject")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2021,6 +2238,9 @@ func (w *RedisClientWrapper) DebugObject(ctx context.Context, key string) *redis
 			}()
 		}
 		res0 = w.obj.DebugObject(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2035,8 +2255,9 @@ func (w *RedisClientWrapper) Decr(ctx context.Context, key string) *redis.IntCmd
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Decr")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Decr")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2054,6 +2275,9 @@ func (w *RedisClientWrapper) Decr(ctx context.Context, key string) *redis.IntCmd
 			}()
 		}
 		res0 = w.obj.Decr(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2068,8 +2292,9 @@ func (w *RedisClientWrapper) DecrBy(ctx context.Context, key string, decrement i
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.DecrBy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.DecrBy")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2087,6 +2312,9 @@ func (w *RedisClientWrapper) DecrBy(ctx context.Context, key string, decrement i
 			}()
 		}
 		res0 = w.obj.DecrBy(key, decrement)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2101,8 +2329,9 @@ func (w *RedisClientWrapper) Del(ctx context.Context, keys ...string) *redis.Int
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Del")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Del")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2120,6 +2349,9 @@ func (w *RedisClientWrapper) Del(ctx context.Context, keys ...string) *redis.Int
 			}()
 		}
 		res0 = w.obj.Del(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2134,8 +2366,9 @@ func (w *RedisClientWrapper) Dump(ctx context.Context, key string) *redis.String
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Dump")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Dump")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2153,6 +2386,9 @@ func (w *RedisClientWrapper) Dump(ctx context.Context, key string) *redis.String
 			}()
 		}
 		res0 = w.obj.Dump(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2167,8 +2403,9 @@ func (w *RedisClientWrapper) Echo(ctx context.Context, message interface{}) *red
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Echo")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Echo")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2186,6 +2423,9 @@ func (w *RedisClientWrapper) Echo(ctx context.Context, message interface{}) *red
 			}()
 		}
 		res0 = w.obj.Echo(message)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2200,8 +2440,9 @@ func (w *RedisClientWrapper) Eval(ctx context.Context, script string, keys []str
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Eval")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Eval")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2219,6 +2460,9 @@ func (w *RedisClientWrapper) Eval(ctx context.Context, script string, keys []str
 			}()
 		}
 		res0 = w.obj.Eval(script, keys, args...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2233,8 +2477,9 @@ func (w *RedisClientWrapper) EvalSha(ctx context.Context, sha1 string, keys []st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.EvalSha")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.EvalSha")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2252,6 +2497,9 @@ func (w *RedisClientWrapper) EvalSha(ctx context.Context, sha1 string, keys []st
 			}()
 		}
 		res0 = w.obj.EvalSha(sha1, keys, args...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2266,8 +2514,9 @@ func (w *RedisClientWrapper) Exists(ctx context.Context, keys ...string) *redis.
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Exists")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Exists")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2285,6 +2534,9 @@ func (w *RedisClientWrapper) Exists(ctx context.Context, keys ...string) *redis.
 			}()
 		}
 		res0 = w.obj.Exists(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2299,8 +2551,9 @@ func (w *RedisClientWrapper) Expire(ctx context.Context, key string, expiration 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Expire")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Expire")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2318,6 +2571,9 @@ func (w *RedisClientWrapper) Expire(ctx context.Context, key string, expiration 
 			}()
 		}
 		res0 = w.obj.Expire(key, expiration)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2332,8 +2588,9 @@ func (w *RedisClientWrapper) ExpireAt(ctx context.Context, key string, tm time.T
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ExpireAt")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ExpireAt")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2351,6 +2608,9 @@ func (w *RedisClientWrapper) ExpireAt(ctx context.Context, key string, tm time.T
 			}()
 		}
 		res0 = w.obj.ExpireAt(key, tm)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2365,8 +2625,9 @@ func (w *RedisClientWrapper) FlushAll(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.FlushAll")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.FlushAll")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2384,6 +2645,9 @@ func (w *RedisClientWrapper) FlushAll(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.FlushAll()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2398,8 +2662,9 @@ func (w *RedisClientWrapper) FlushAllAsync(ctx context.Context) *redis.StatusCmd
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.FlushAllAsync")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.FlushAllAsync")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2417,6 +2682,9 @@ func (w *RedisClientWrapper) FlushAllAsync(ctx context.Context) *redis.StatusCmd
 			}()
 		}
 		res0 = w.obj.FlushAllAsync()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2431,8 +2699,9 @@ func (w *RedisClientWrapper) FlushDB(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.FlushDB")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.FlushDB")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2450,6 +2719,9 @@ func (w *RedisClientWrapper) FlushDB(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.FlushDB()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2464,8 +2736,9 @@ func (w *RedisClientWrapper) FlushDBAsync(ctx context.Context) *redis.StatusCmd 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.FlushDBAsync")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.FlushDBAsync")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2483,6 +2756,9 @@ func (w *RedisClientWrapper) FlushDBAsync(ctx context.Context) *redis.StatusCmd 
 			}()
 		}
 		res0 = w.obj.FlushDBAsync()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2497,8 +2773,9 @@ func (w *RedisClientWrapper) FlushDb(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.FlushDb")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.FlushDb")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2516,6 +2793,9 @@ func (w *RedisClientWrapper) FlushDb(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.FlushDb()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2530,8 +2810,9 @@ func (w *RedisClientWrapper) GeoAdd(ctx context.Context, key string, geoLocation
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.GeoAdd")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GeoAdd")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2549,6 +2830,9 @@ func (w *RedisClientWrapper) GeoAdd(ctx context.Context, key string, geoLocation
 			}()
 		}
 		res0 = w.obj.GeoAdd(key, geoLocation...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2563,8 +2847,9 @@ func (w *RedisClientWrapper) GeoDist(ctx context.Context, key string, member1 st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.GeoDist")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GeoDist")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2582,6 +2867,9 @@ func (w *RedisClientWrapper) GeoDist(ctx context.Context, key string, member1 st
 			}()
 		}
 		res0 = w.obj.GeoDist(key, member1, member2, unit)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2596,8 +2884,9 @@ func (w *RedisClientWrapper) GeoHash(ctx context.Context, key string, members ..
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.GeoHash")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GeoHash")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2615,6 +2904,9 @@ func (w *RedisClientWrapper) GeoHash(ctx context.Context, key string, members ..
 			}()
 		}
 		res0 = w.obj.GeoHash(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2629,8 +2921,9 @@ func (w *RedisClientWrapper) GeoPos(ctx context.Context, key string, members ...
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.GeoPos")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GeoPos")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2648,6 +2941,9 @@ func (w *RedisClientWrapper) GeoPos(ctx context.Context, key string, members ...
 			}()
 		}
 		res0 = w.obj.GeoPos(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2662,8 +2958,9 @@ func (w *RedisClientWrapper) GeoRadius(ctx context.Context, key string, longitud
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.GeoRadius")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GeoRadius")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2681,6 +2978,9 @@ func (w *RedisClientWrapper) GeoRadius(ctx context.Context, key string, longitud
 			}()
 		}
 		res0 = w.obj.GeoRadius(key, longitude, latitude, query)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2695,8 +2995,9 @@ func (w *RedisClientWrapper) GeoRadiusByMember(ctx context.Context, key string, 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.GeoRadiusByMember")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GeoRadiusByMember")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2714,6 +3015,9 @@ func (w *RedisClientWrapper) GeoRadiusByMember(ctx context.Context, key string, 
 			}()
 		}
 		res0 = w.obj.GeoRadiusByMember(key, member, query)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2728,8 +3032,9 @@ func (w *RedisClientWrapper) GeoRadiusByMemberRO(ctx context.Context, key string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.GeoRadiusByMemberRO")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GeoRadiusByMemberRO")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2747,6 +3052,9 @@ func (w *RedisClientWrapper) GeoRadiusByMemberRO(ctx context.Context, key string
 			}()
 		}
 		res0 = w.obj.GeoRadiusByMemberRO(key, member, query)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2761,8 +3069,9 @@ func (w *RedisClientWrapper) GeoRadiusRO(ctx context.Context, key string, longit
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.GeoRadiusRO")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GeoRadiusRO")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2780,6 +3089,9 @@ func (w *RedisClientWrapper) GeoRadiusRO(ctx context.Context, key string, longit
 			}()
 		}
 		res0 = w.obj.GeoRadiusRO(key, longitude, latitude, query)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2794,8 +3106,9 @@ func (w *RedisClientWrapper) Get(ctx context.Context, key string) *redis.StringC
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Get")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Get")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2813,6 +3126,9 @@ func (w *RedisClientWrapper) Get(ctx context.Context, key string) *redis.StringC
 			}()
 		}
 		res0 = w.obj.Get(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2827,8 +3143,9 @@ func (w *RedisClientWrapper) GetBit(ctx context.Context, key string, offset int6
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.GetBit")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GetBit")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2846,6 +3163,9 @@ func (w *RedisClientWrapper) GetBit(ctx context.Context, key string, offset int6
 			}()
 		}
 		res0 = w.obj.GetBit(key, offset)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2860,8 +3180,9 @@ func (w *RedisClientWrapper) GetRange(ctx context.Context, key string, start int
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.GetRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GetRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2879,6 +3200,9 @@ func (w *RedisClientWrapper) GetRange(ctx context.Context, key string, start int
 			}()
 		}
 		res0 = w.obj.GetRange(key, start, end)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2893,8 +3217,9 @@ func (w *RedisClientWrapper) GetSet(ctx context.Context, key string, value inter
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.GetSet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GetSet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2912,6 +3237,9 @@ func (w *RedisClientWrapper) GetSet(ctx context.Context, key string, value inter
 			}()
 		}
 		res0 = w.obj.GetSet(key, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2926,8 +3254,9 @@ func (w *RedisClientWrapper) HDel(ctx context.Context, key string, fields ...str
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.HDel")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HDel")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2945,6 +3274,9 @@ func (w *RedisClientWrapper) HDel(ctx context.Context, key string, fields ...str
 			}()
 		}
 		res0 = w.obj.HDel(key, fields...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2959,8 +3291,9 @@ func (w *RedisClientWrapper) HExists(ctx context.Context, key string, field stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.HExists")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HExists")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2978,6 +3311,9 @@ func (w *RedisClientWrapper) HExists(ctx context.Context, key string, field stri
 			}()
 		}
 		res0 = w.obj.HExists(key, field)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -2992,8 +3328,9 @@ func (w *RedisClientWrapper) HGet(ctx context.Context, key string, field string)
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.HGet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HGet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3011,6 +3348,9 @@ func (w *RedisClientWrapper) HGet(ctx context.Context, key string, field string)
 			}()
 		}
 		res0 = w.obj.HGet(key, field)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3025,8 +3365,9 @@ func (w *RedisClientWrapper) HGetAll(ctx context.Context, key string) *redis.Str
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.HGetAll")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HGetAll")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3044,6 +3385,9 @@ func (w *RedisClientWrapper) HGetAll(ctx context.Context, key string) *redis.Str
 			}()
 		}
 		res0 = w.obj.HGetAll(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3058,8 +3402,9 @@ func (w *RedisClientWrapper) HIncrBy(ctx context.Context, key string, field stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.HIncrBy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HIncrBy")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3077,6 +3422,9 @@ func (w *RedisClientWrapper) HIncrBy(ctx context.Context, key string, field stri
 			}()
 		}
 		res0 = w.obj.HIncrBy(key, field, incr)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3091,8 +3439,9 @@ func (w *RedisClientWrapper) HIncrByFloat(ctx context.Context, key string, field
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.HIncrByFloat")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HIncrByFloat")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3110,6 +3459,9 @@ func (w *RedisClientWrapper) HIncrByFloat(ctx context.Context, key string, field
 			}()
 		}
 		res0 = w.obj.HIncrByFloat(key, field, incr)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3124,8 +3476,9 @@ func (w *RedisClientWrapper) HKeys(ctx context.Context, key string) *redis.Strin
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.HKeys")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HKeys")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3143,6 +3496,9 @@ func (w *RedisClientWrapper) HKeys(ctx context.Context, key string) *redis.Strin
 			}()
 		}
 		res0 = w.obj.HKeys(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3157,8 +3513,9 @@ func (w *RedisClientWrapper) HLen(ctx context.Context, key string) *redis.IntCmd
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.HLen")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HLen")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3176,6 +3533,9 @@ func (w *RedisClientWrapper) HLen(ctx context.Context, key string) *redis.IntCmd
 			}()
 		}
 		res0 = w.obj.HLen(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3190,8 +3550,9 @@ func (w *RedisClientWrapper) HMGet(ctx context.Context, key string, fields ...st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.HMGet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HMGet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3209,6 +3570,9 @@ func (w *RedisClientWrapper) HMGet(ctx context.Context, key string, fields ...st
 			}()
 		}
 		res0 = w.obj.HMGet(key, fields...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3223,8 +3587,9 @@ func (w *RedisClientWrapper) HMSet(ctx context.Context, key string, fields map[s
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.HMSet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HMSet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3242,6 +3607,9 @@ func (w *RedisClientWrapper) HMSet(ctx context.Context, key string, fields map[s
 			}()
 		}
 		res0 = w.obj.HMSet(key, fields)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3256,8 +3624,9 @@ func (w *RedisClientWrapper) HScan(ctx context.Context, key string, cursor uint6
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.HScan")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HScan")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3275,6 +3644,9 @@ func (w *RedisClientWrapper) HScan(ctx context.Context, key string, cursor uint6
 			}()
 		}
 		res0 = w.obj.HScan(key, cursor, match, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3289,8 +3661,9 @@ func (w *RedisClientWrapper) HSet(ctx context.Context, key string, field string,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.HSet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HSet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3308,6 +3681,9 @@ func (w *RedisClientWrapper) HSet(ctx context.Context, key string, field string,
 			}()
 		}
 		res0 = w.obj.HSet(key, field, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3322,8 +3698,9 @@ func (w *RedisClientWrapper) HSetNX(ctx context.Context, key string, field strin
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.HSetNX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HSetNX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3341,6 +3718,9 @@ func (w *RedisClientWrapper) HSetNX(ctx context.Context, key string, field strin
 			}()
 		}
 		res0 = w.obj.HSetNX(key, field, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3355,8 +3735,9 @@ func (w *RedisClientWrapper) HVals(ctx context.Context, key string) *redis.Strin
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.HVals")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HVals")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3374,6 +3755,9 @@ func (w *RedisClientWrapper) HVals(ctx context.Context, key string) *redis.Strin
 			}()
 		}
 		res0 = w.obj.HVals(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3388,8 +3772,9 @@ func (w *RedisClientWrapper) Incr(ctx context.Context, key string) *redis.IntCmd
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Incr")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Incr")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3407,6 +3792,9 @@ func (w *RedisClientWrapper) Incr(ctx context.Context, key string) *redis.IntCmd
 			}()
 		}
 		res0 = w.obj.Incr(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3421,8 +3809,9 @@ func (w *RedisClientWrapper) IncrBy(ctx context.Context, key string, value int64
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.IncrBy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.IncrBy")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3440,6 +3829,9 @@ func (w *RedisClientWrapper) IncrBy(ctx context.Context, key string, value int64
 			}()
 		}
 		res0 = w.obj.IncrBy(key, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3454,8 +3846,9 @@ func (w *RedisClientWrapper) IncrByFloat(ctx context.Context, key string, value 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.IncrByFloat")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.IncrByFloat")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3473,6 +3866,9 @@ func (w *RedisClientWrapper) IncrByFloat(ctx context.Context, key string, value 
 			}()
 		}
 		res0 = w.obj.IncrByFloat(key, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3487,8 +3883,9 @@ func (w *RedisClientWrapper) Info(ctx context.Context, section ...string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Info")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Info")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3506,6 +3903,9 @@ func (w *RedisClientWrapper) Info(ctx context.Context, section ...string) *redis
 			}()
 		}
 		res0 = w.obj.Info(section...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3520,8 +3920,9 @@ func (w *RedisClientWrapper) Keys(ctx context.Context, pattern string) *redis.St
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Keys")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Keys")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3539,6 +3940,9 @@ func (w *RedisClientWrapper) Keys(ctx context.Context, pattern string) *redis.St
 			}()
 		}
 		res0 = w.obj.Keys(pattern)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3553,8 +3957,9 @@ func (w *RedisClientWrapper) LIndex(ctx context.Context, key string, index int64
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.LIndex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LIndex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3572,6 +3977,9 @@ func (w *RedisClientWrapper) LIndex(ctx context.Context, key string, index int64
 			}()
 		}
 		res0 = w.obj.LIndex(key, index)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3586,8 +3994,9 @@ func (w *RedisClientWrapper) LInsert(ctx context.Context, key string, op string,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.LInsert")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LInsert")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3605,6 +4014,9 @@ func (w *RedisClientWrapper) LInsert(ctx context.Context, key string, op string,
 			}()
 		}
 		res0 = w.obj.LInsert(key, op, pivot, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3619,8 +4031,9 @@ func (w *RedisClientWrapper) LInsertAfter(ctx context.Context, key string, pivot
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.LInsertAfter")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LInsertAfter")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3638,6 +4051,9 @@ func (w *RedisClientWrapper) LInsertAfter(ctx context.Context, key string, pivot
 			}()
 		}
 		res0 = w.obj.LInsertAfter(key, pivot, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3652,8 +4068,9 @@ func (w *RedisClientWrapper) LInsertBefore(ctx context.Context, key string, pivo
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.LInsertBefore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LInsertBefore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3671,6 +4088,9 @@ func (w *RedisClientWrapper) LInsertBefore(ctx context.Context, key string, pivo
 			}()
 		}
 		res0 = w.obj.LInsertBefore(key, pivot, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3685,8 +4105,9 @@ func (w *RedisClientWrapper) LLen(ctx context.Context, key string) *redis.IntCmd
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.LLen")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LLen")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3704,6 +4125,9 @@ func (w *RedisClientWrapper) LLen(ctx context.Context, key string) *redis.IntCmd
 			}()
 		}
 		res0 = w.obj.LLen(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3718,8 +4142,9 @@ func (w *RedisClientWrapper) LPop(ctx context.Context, key string) *redis.String
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.LPop")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LPop")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3737,6 +4162,9 @@ func (w *RedisClientWrapper) LPop(ctx context.Context, key string) *redis.String
 			}()
 		}
 		res0 = w.obj.LPop(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3751,8 +4179,9 @@ func (w *RedisClientWrapper) LPush(ctx context.Context, key string, values ...in
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.LPush")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LPush")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3770,6 +4199,9 @@ func (w *RedisClientWrapper) LPush(ctx context.Context, key string, values ...in
 			}()
 		}
 		res0 = w.obj.LPush(key, values...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3784,8 +4216,9 @@ func (w *RedisClientWrapper) LPushX(ctx context.Context, key string, value inter
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.LPushX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LPushX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3803,6 +4236,9 @@ func (w *RedisClientWrapper) LPushX(ctx context.Context, key string, value inter
 			}()
 		}
 		res0 = w.obj.LPushX(key, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3817,8 +4253,9 @@ func (w *RedisClientWrapper) LRange(ctx context.Context, key string, start int64
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.LRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3836,6 +4273,9 @@ func (w *RedisClientWrapper) LRange(ctx context.Context, key string, start int64
 			}()
 		}
 		res0 = w.obj.LRange(key, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3850,8 +4290,9 @@ func (w *RedisClientWrapper) LRem(ctx context.Context, key string, count int64, 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.LRem")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LRem")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3869,6 +4310,9 @@ func (w *RedisClientWrapper) LRem(ctx context.Context, key string, count int64, 
 			}()
 		}
 		res0 = w.obj.LRem(key, count, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3883,8 +4327,9 @@ func (w *RedisClientWrapper) LSet(ctx context.Context, key string, index int64, 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.LSet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LSet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3902,6 +4347,9 @@ func (w *RedisClientWrapper) LSet(ctx context.Context, key string, index int64, 
 			}()
 		}
 		res0 = w.obj.LSet(key, index, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3916,8 +4364,9 @@ func (w *RedisClientWrapper) LTrim(ctx context.Context, key string, start int64,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.LTrim")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LTrim")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3935,6 +4384,9 @@ func (w *RedisClientWrapper) LTrim(ctx context.Context, key string, start int64,
 			}()
 		}
 		res0 = w.obj.LTrim(key, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3949,8 +4401,9 @@ func (w *RedisClientWrapper) LastSave(ctx context.Context) *redis.IntCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.LastSave")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LastSave")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3968,6 +4421,9 @@ func (w *RedisClientWrapper) LastSave(ctx context.Context) *redis.IntCmd {
 			}()
 		}
 		res0 = w.obj.LastSave()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -3982,8 +4438,9 @@ func (w *RedisClientWrapper) MGet(ctx context.Context, keys ...string) *redis.Sl
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.MGet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.MGet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4001,6 +4458,9 @@ func (w *RedisClientWrapper) MGet(ctx context.Context, keys ...string) *redis.Sl
 			}()
 		}
 		res0 = w.obj.MGet(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4015,8 +4475,9 @@ func (w *RedisClientWrapper) MSet(ctx context.Context, pairs ...interface{}) *re
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.MSet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.MSet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4034,6 +4495,9 @@ func (w *RedisClientWrapper) MSet(ctx context.Context, pairs ...interface{}) *re
 			}()
 		}
 		res0 = w.obj.MSet(pairs...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4048,8 +4512,9 @@ func (w *RedisClientWrapper) MSetNX(ctx context.Context, pairs ...interface{}) *
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.MSetNX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.MSetNX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4067,6 +4532,9 @@ func (w *RedisClientWrapper) MSetNX(ctx context.Context, pairs ...interface{}) *
 			}()
 		}
 		res0 = w.obj.MSetNX(pairs...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4081,8 +4549,9 @@ func (w *RedisClientWrapper) MemoryUsage(ctx context.Context, key string, sample
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.MemoryUsage")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.MemoryUsage")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4100,6 +4569,9 @@ func (w *RedisClientWrapper) MemoryUsage(ctx context.Context, key string, sample
 			}()
 		}
 		res0 = w.obj.MemoryUsage(key, samples...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4114,8 +4586,9 @@ func (w *RedisClientWrapper) Migrate(ctx context.Context, host string, port stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Migrate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Migrate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4133,6 +4606,9 @@ func (w *RedisClientWrapper) Migrate(ctx context.Context, host string, port stri
 			}()
 		}
 		res0 = w.obj.Migrate(host, port, key, db, timeout)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4147,8 +4623,9 @@ func (w *RedisClientWrapper) Move(ctx context.Context, key string, db int64) *re
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Move")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Move")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4166,6 +4643,9 @@ func (w *RedisClientWrapper) Move(ctx context.Context, key string, db int64) *re
 			}()
 		}
 		res0 = w.obj.Move(key, db)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4180,8 +4660,9 @@ func (w *RedisClientWrapper) ObjectEncoding(ctx context.Context, key string) *re
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ObjectEncoding")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ObjectEncoding")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4199,6 +4680,9 @@ func (w *RedisClientWrapper) ObjectEncoding(ctx context.Context, key string) *re
 			}()
 		}
 		res0 = w.obj.ObjectEncoding(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4213,8 +4697,9 @@ func (w *RedisClientWrapper) ObjectIdleTime(ctx context.Context, key string) *re
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ObjectIdleTime")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ObjectIdleTime")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4232,6 +4717,9 @@ func (w *RedisClientWrapper) ObjectIdleTime(ctx context.Context, key string) *re
 			}()
 		}
 		res0 = w.obj.ObjectIdleTime(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4246,8 +4734,9 @@ func (w *RedisClientWrapper) ObjectRefCount(ctx context.Context, key string) *re
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ObjectRefCount")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ObjectRefCount")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4265,6 +4754,9 @@ func (w *RedisClientWrapper) ObjectRefCount(ctx context.Context, key string) *re
 			}()
 		}
 		res0 = w.obj.ObjectRefCount(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4279,8 +4771,9 @@ func (w *RedisClientWrapper) PExpire(ctx context.Context, key string, expiration
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.PExpire")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.PExpire")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4298,6 +4791,9 @@ func (w *RedisClientWrapper) PExpire(ctx context.Context, key string, expiration
 			}()
 		}
 		res0 = w.obj.PExpire(key, expiration)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4312,8 +4808,9 @@ func (w *RedisClientWrapper) PExpireAt(ctx context.Context, key string, tm time.
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.PExpireAt")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.PExpireAt")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4331,6 +4828,9 @@ func (w *RedisClientWrapper) PExpireAt(ctx context.Context, key string, tm time.
 			}()
 		}
 		res0 = w.obj.PExpireAt(key, tm)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4345,8 +4845,9 @@ func (w *RedisClientWrapper) PFAdd(ctx context.Context, key string, els ...inter
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.PFAdd")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.PFAdd")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4364,6 +4865,9 @@ func (w *RedisClientWrapper) PFAdd(ctx context.Context, key string, els ...inter
 			}()
 		}
 		res0 = w.obj.PFAdd(key, els...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4378,8 +4882,9 @@ func (w *RedisClientWrapper) PFCount(ctx context.Context, keys ...string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.PFCount")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.PFCount")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4397,6 +4902,9 @@ func (w *RedisClientWrapper) PFCount(ctx context.Context, keys ...string) *redis
 			}()
 		}
 		res0 = w.obj.PFCount(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4411,8 +4919,9 @@ func (w *RedisClientWrapper) PFMerge(ctx context.Context, dest string, keys ...s
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.PFMerge")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.PFMerge")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4430,6 +4939,9 @@ func (w *RedisClientWrapper) PFMerge(ctx context.Context, dest string, keys ...s
 			}()
 		}
 		res0 = w.obj.PFMerge(dest, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4444,8 +4956,9 @@ func (w *RedisClientWrapper) PTTL(ctx context.Context, key string) *redis.Durati
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.PTTL")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.PTTL")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4463,6 +4976,9 @@ func (w *RedisClientWrapper) PTTL(ctx context.Context, key string) *redis.Durati
 			}()
 		}
 		res0 = w.obj.PTTL(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4477,8 +4993,9 @@ func (w *RedisClientWrapper) Persist(ctx context.Context, key string) *redis.Boo
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Persist")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Persist")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4496,6 +5013,9 @@ func (w *RedisClientWrapper) Persist(ctx context.Context, key string) *redis.Boo
 			}()
 		}
 		res0 = w.obj.Persist(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4510,8 +5030,9 @@ func (w *RedisClientWrapper) Ping(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Ping")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Ping")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4529,6 +5050,9 @@ func (w *RedisClientWrapper) Ping(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.Ping()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4543,8 +5067,9 @@ func (w *RedisClientWrapper) PubSubChannels(ctx context.Context, pattern string)
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.PubSubChannels")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.PubSubChannels")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4562,6 +5087,9 @@ func (w *RedisClientWrapper) PubSubChannels(ctx context.Context, pattern string)
 			}()
 		}
 		res0 = w.obj.PubSubChannels(pattern)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4576,8 +5104,9 @@ func (w *RedisClientWrapper) PubSubNumPat(ctx context.Context) *redis.IntCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.PubSubNumPat")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.PubSubNumPat")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4595,6 +5124,9 @@ func (w *RedisClientWrapper) PubSubNumPat(ctx context.Context) *redis.IntCmd {
 			}()
 		}
 		res0 = w.obj.PubSubNumPat()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4609,8 +5141,9 @@ func (w *RedisClientWrapper) PubSubNumSub(ctx context.Context, channels ...strin
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.PubSubNumSub")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.PubSubNumSub")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4628,6 +5161,9 @@ func (w *RedisClientWrapper) PubSubNumSub(ctx context.Context, channels ...strin
 			}()
 		}
 		res0 = w.obj.PubSubNumSub(channels...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4642,8 +5178,9 @@ func (w *RedisClientWrapper) Publish(ctx context.Context, channel string, messag
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Publish")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Publish")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4661,6 +5198,9 @@ func (w *RedisClientWrapper) Publish(ctx context.Context, channel string, messag
 			}()
 		}
 		res0 = w.obj.Publish(channel, message)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4675,8 +5215,9 @@ func (w *RedisClientWrapper) Quit(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Quit")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Quit")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4694,6 +5235,9 @@ func (w *RedisClientWrapper) Quit(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.Quit()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4708,8 +5252,9 @@ func (w *RedisClientWrapper) RPop(ctx context.Context, key string) *redis.String
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.RPop")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.RPop")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4727,6 +5272,9 @@ func (w *RedisClientWrapper) RPop(ctx context.Context, key string) *redis.String
 			}()
 		}
 		res0 = w.obj.RPop(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4741,8 +5289,9 @@ func (w *RedisClientWrapper) RPopLPush(ctx context.Context, source string, desti
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.RPopLPush")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.RPopLPush")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4760,6 +5309,9 @@ func (w *RedisClientWrapper) RPopLPush(ctx context.Context, source string, desti
 			}()
 		}
 		res0 = w.obj.RPopLPush(source, destination)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4774,8 +5326,9 @@ func (w *RedisClientWrapper) RPush(ctx context.Context, key string, values ...in
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.RPush")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.RPush")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4793,6 +5346,9 @@ func (w *RedisClientWrapper) RPush(ctx context.Context, key string, values ...in
 			}()
 		}
 		res0 = w.obj.RPush(key, values...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4807,8 +5363,9 @@ func (w *RedisClientWrapper) RPushX(ctx context.Context, key string, value inter
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.RPushX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.RPushX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4826,6 +5383,9 @@ func (w *RedisClientWrapper) RPushX(ctx context.Context, key string, value inter
 			}()
 		}
 		res0 = w.obj.RPushX(key, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4840,8 +5400,9 @@ func (w *RedisClientWrapper) RandomKey(ctx context.Context) *redis.StringCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.RandomKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.RandomKey")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4859,6 +5420,9 @@ func (w *RedisClientWrapper) RandomKey(ctx context.Context) *redis.StringCmd {
 			}()
 		}
 		res0 = w.obj.RandomKey()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4873,8 +5437,9 @@ func (w *RedisClientWrapper) ReadOnly(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ReadOnly")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ReadOnly")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4892,6 +5457,9 @@ func (w *RedisClientWrapper) ReadOnly(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.ReadOnly()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4906,8 +5474,9 @@ func (w *RedisClientWrapper) ReadWrite(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ReadWrite")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ReadWrite")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4925,6 +5494,9 @@ func (w *RedisClientWrapper) ReadWrite(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.ReadWrite()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4939,8 +5511,9 @@ func (w *RedisClientWrapper) Rename(ctx context.Context, key string, newkey stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Rename")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Rename")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4958,6 +5531,9 @@ func (w *RedisClientWrapper) Rename(ctx context.Context, key string, newkey stri
 			}()
 		}
 		res0 = w.obj.Rename(key, newkey)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -4972,8 +5548,9 @@ func (w *RedisClientWrapper) RenameNX(ctx context.Context, key string, newkey st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.RenameNX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.RenameNX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4991,6 +5568,9 @@ func (w *RedisClientWrapper) RenameNX(ctx context.Context, key string, newkey st
 			}()
 		}
 		res0 = w.obj.RenameNX(key, newkey)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5005,8 +5585,9 @@ func (w *RedisClientWrapper) Restore(ctx context.Context, key string, ttl time.D
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Restore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Restore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5024,6 +5605,9 @@ func (w *RedisClientWrapper) Restore(ctx context.Context, key string, ttl time.D
 			}()
 		}
 		res0 = w.obj.Restore(key, ttl, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5038,8 +5622,9 @@ func (w *RedisClientWrapper) RestoreReplace(ctx context.Context, key string, ttl
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.RestoreReplace")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.RestoreReplace")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5057,6 +5642,9 @@ func (w *RedisClientWrapper) RestoreReplace(ctx context.Context, key string, ttl
 			}()
 		}
 		res0 = w.obj.RestoreReplace(key, ttl, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5071,8 +5659,9 @@ func (w *RedisClientWrapper) SAdd(ctx context.Context, key string, members ...in
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SAdd")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SAdd")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5090,6 +5679,9 @@ func (w *RedisClientWrapper) SAdd(ctx context.Context, key string, members ...in
 			}()
 		}
 		res0 = w.obj.SAdd(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5104,8 +5696,9 @@ func (w *RedisClientWrapper) SCard(ctx context.Context, key string) *redis.IntCm
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SCard")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SCard")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5123,6 +5716,9 @@ func (w *RedisClientWrapper) SCard(ctx context.Context, key string) *redis.IntCm
 			}()
 		}
 		res0 = w.obj.SCard(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5137,8 +5733,9 @@ func (w *RedisClientWrapper) SDiff(ctx context.Context, keys ...string) *redis.S
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SDiff")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SDiff")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5156,6 +5753,9 @@ func (w *RedisClientWrapper) SDiff(ctx context.Context, keys ...string) *redis.S
 			}()
 		}
 		res0 = w.obj.SDiff(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5170,8 +5770,9 @@ func (w *RedisClientWrapper) SDiffStore(ctx context.Context, destination string,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SDiffStore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SDiffStore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5189,6 +5790,9 @@ func (w *RedisClientWrapper) SDiffStore(ctx context.Context, destination string,
 			}()
 		}
 		res0 = w.obj.SDiffStore(destination, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5203,8 +5807,9 @@ func (w *RedisClientWrapper) SInter(ctx context.Context, keys ...string) *redis.
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SInter")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SInter")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5222,6 +5827,9 @@ func (w *RedisClientWrapper) SInter(ctx context.Context, keys ...string) *redis.
 			}()
 		}
 		res0 = w.obj.SInter(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5236,8 +5844,9 @@ func (w *RedisClientWrapper) SInterStore(ctx context.Context, destination string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SInterStore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SInterStore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5255,6 +5864,9 @@ func (w *RedisClientWrapper) SInterStore(ctx context.Context, destination string
 			}()
 		}
 		res0 = w.obj.SInterStore(destination, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5269,8 +5881,9 @@ func (w *RedisClientWrapper) SIsMember(ctx context.Context, key string, member i
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SIsMember")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SIsMember")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5288,6 +5901,9 @@ func (w *RedisClientWrapper) SIsMember(ctx context.Context, key string, member i
 			}()
 		}
 		res0 = w.obj.SIsMember(key, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5302,8 +5918,9 @@ func (w *RedisClientWrapper) SMembers(ctx context.Context, key string) *redis.St
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SMembers")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SMembers")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5321,6 +5938,9 @@ func (w *RedisClientWrapper) SMembers(ctx context.Context, key string) *redis.St
 			}()
 		}
 		res0 = w.obj.SMembers(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5335,8 +5955,9 @@ func (w *RedisClientWrapper) SMembersMap(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SMembersMap")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SMembersMap")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5354,6 +5975,9 @@ func (w *RedisClientWrapper) SMembersMap(ctx context.Context, key string) *redis
 			}()
 		}
 		res0 = w.obj.SMembersMap(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5368,8 +5992,9 @@ func (w *RedisClientWrapper) SMove(ctx context.Context, source string, destinati
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SMove")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SMove")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5387,6 +6012,9 @@ func (w *RedisClientWrapper) SMove(ctx context.Context, source string, destinati
 			}()
 		}
 		res0 = w.obj.SMove(source, destination, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5401,8 +6029,9 @@ func (w *RedisClientWrapper) SPop(ctx context.Context, key string) *redis.String
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SPop")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SPop")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5420,6 +6049,9 @@ func (w *RedisClientWrapper) SPop(ctx context.Context, key string) *redis.String
 			}()
 		}
 		res0 = w.obj.SPop(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5434,8 +6066,9 @@ func (w *RedisClientWrapper) SPopN(ctx context.Context, key string, count int64)
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SPopN")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SPopN")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5453,6 +6086,9 @@ func (w *RedisClientWrapper) SPopN(ctx context.Context, key string, count int64)
 			}()
 		}
 		res0 = w.obj.SPopN(key, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5467,8 +6103,9 @@ func (w *RedisClientWrapper) SRandMember(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SRandMember")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SRandMember")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5486,6 +6123,9 @@ func (w *RedisClientWrapper) SRandMember(ctx context.Context, key string) *redis
 			}()
 		}
 		res0 = w.obj.SRandMember(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5500,8 +6140,9 @@ func (w *RedisClientWrapper) SRandMemberN(ctx context.Context, key string, count
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SRandMemberN")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SRandMemberN")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5519,6 +6160,9 @@ func (w *RedisClientWrapper) SRandMemberN(ctx context.Context, key string, count
 			}()
 		}
 		res0 = w.obj.SRandMemberN(key, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5533,8 +6177,9 @@ func (w *RedisClientWrapper) SRem(ctx context.Context, key string, members ...in
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SRem")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SRem")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5552,6 +6197,9 @@ func (w *RedisClientWrapper) SRem(ctx context.Context, key string, members ...in
 			}()
 		}
 		res0 = w.obj.SRem(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5566,8 +6214,9 @@ func (w *RedisClientWrapper) SScan(ctx context.Context, key string, cursor uint6
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SScan")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SScan")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5585,6 +6234,9 @@ func (w *RedisClientWrapper) SScan(ctx context.Context, key string, cursor uint6
 			}()
 		}
 		res0 = w.obj.SScan(key, cursor, match, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5599,8 +6251,9 @@ func (w *RedisClientWrapper) SUnion(ctx context.Context, keys ...string) *redis.
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SUnion")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SUnion")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5618,6 +6271,9 @@ func (w *RedisClientWrapper) SUnion(ctx context.Context, keys ...string) *redis.
 			}()
 		}
 		res0 = w.obj.SUnion(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5632,8 +6288,9 @@ func (w *RedisClientWrapper) SUnionStore(ctx context.Context, destination string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SUnionStore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SUnionStore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5651,6 +6308,9 @@ func (w *RedisClientWrapper) SUnionStore(ctx context.Context, destination string
 			}()
 		}
 		res0 = w.obj.SUnionStore(destination, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5665,8 +6325,9 @@ func (w *RedisClientWrapper) Save(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Save")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Save")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5684,6 +6345,9 @@ func (w *RedisClientWrapper) Save(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.Save()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5698,8 +6362,9 @@ func (w *RedisClientWrapper) Scan(ctx context.Context, cursor uint64, match stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Scan")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Scan")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5717,6 +6382,9 @@ func (w *RedisClientWrapper) Scan(ctx context.Context, cursor uint64, match stri
 			}()
 		}
 		res0 = w.obj.Scan(cursor, match, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5731,8 +6399,9 @@ func (w *RedisClientWrapper) ScriptExists(ctx context.Context, hashes ...string)
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ScriptExists")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ScriptExists")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5750,6 +6419,9 @@ func (w *RedisClientWrapper) ScriptExists(ctx context.Context, hashes ...string)
 			}()
 		}
 		res0 = w.obj.ScriptExists(hashes...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5764,8 +6436,9 @@ func (w *RedisClientWrapper) ScriptFlush(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ScriptFlush")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ScriptFlush")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5783,6 +6456,9 @@ func (w *RedisClientWrapper) ScriptFlush(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.ScriptFlush()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5797,8 +6473,9 @@ func (w *RedisClientWrapper) ScriptKill(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ScriptKill")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ScriptKill")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5816,6 +6493,9 @@ func (w *RedisClientWrapper) ScriptKill(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.ScriptKill()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5830,8 +6510,9 @@ func (w *RedisClientWrapper) ScriptLoad(ctx context.Context, script string) *red
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ScriptLoad")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ScriptLoad")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5849,6 +6530,9 @@ func (w *RedisClientWrapper) ScriptLoad(ctx context.Context, script string) *red
 			}()
 		}
 		res0 = w.obj.ScriptLoad(script)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5863,8 +6547,9 @@ func (w *RedisClientWrapper) Set(ctx context.Context, key string, value interfac
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Set")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Set")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5882,6 +6567,9 @@ func (w *RedisClientWrapper) Set(ctx context.Context, key string, value interfac
 			}()
 		}
 		res0 = w.obj.Set(key, value, expiration)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5896,8 +6584,9 @@ func (w *RedisClientWrapper) SetBit(ctx context.Context, key string, offset int6
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SetBit")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SetBit")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5915,6 +6604,9 @@ func (w *RedisClientWrapper) SetBit(ctx context.Context, key string, offset int6
 			}()
 		}
 		res0 = w.obj.SetBit(key, offset, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5929,8 +6621,9 @@ func (w *RedisClientWrapper) SetNX(ctx context.Context, key string, value interf
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SetNX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SetNX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5948,6 +6641,9 @@ func (w *RedisClientWrapper) SetNX(ctx context.Context, key string, value interf
 			}()
 		}
 		res0 = w.obj.SetNX(key, value, expiration)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5962,8 +6658,9 @@ func (w *RedisClientWrapper) SetRange(ctx context.Context, key string, offset in
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SetRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SetRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5981,6 +6678,9 @@ func (w *RedisClientWrapper) SetRange(ctx context.Context, key string, offset in
 			}()
 		}
 		res0 = w.obj.SetRange(key, offset, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -5995,8 +6695,9 @@ func (w *RedisClientWrapper) SetXX(ctx context.Context, key string, value interf
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SetXX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SetXX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6014,6 +6715,9 @@ func (w *RedisClientWrapper) SetXX(ctx context.Context, key string, value interf
 			}()
 		}
 		res0 = w.obj.SetXX(key, value, expiration)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6028,8 +6732,9 @@ func (w *RedisClientWrapper) Shutdown(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Shutdown")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Shutdown")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6047,6 +6752,9 @@ func (w *RedisClientWrapper) Shutdown(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.Shutdown()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6061,8 +6769,9 @@ func (w *RedisClientWrapper) ShutdownNoSave(ctx context.Context) *redis.StatusCm
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ShutdownNoSave")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ShutdownNoSave")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6080,6 +6789,9 @@ func (w *RedisClientWrapper) ShutdownNoSave(ctx context.Context) *redis.StatusCm
 			}()
 		}
 		res0 = w.obj.ShutdownNoSave()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6094,8 +6806,9 @@ func (w *RedisClientWrapper) ShutdownSave(ctx context.Context) *redis.StatusCmd 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ShutdownSave")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ShutdownSave")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6113,6 +6826,9 @@ func (w *RedisClientWrapper) ShutdownSave(ctx context.Context) *redis.StatusCmd 
 			}()
 		}
 		res0 = w.obj.ShutdownSave()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6127,8 +6843,9 @@ func (w *RedisClientWrapper) SlaveOf(ctx context.Context, host string, port stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SlaveOf")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SlaveOf")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6146,6 +6863,9 @@ func (w *RedisClientWrapper) SlaveOf(ctx context.Context, host string, port stri
 			}()
 		}
 		res0 = w.obj.SlaveOf(host, port)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6164,8 +6884,9 @@ func (w *RedisClientWrapper) Sort(ctx context.Context, key string, sort *redis.S
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Sort")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Sort")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6183,6 +6904,9 @@ func (w *RedisClientWrapper) Sort(ctx context.Context, key string, sort *redis.S
 			}()
 		}
 		res0 = w.obj.Sort(key, sort)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6197,8 +6921,9 @@ func (w *RedisClientWrapper) SortInterfaces(ctx context.Context, key string, sor
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SortInterfaces")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SortInterfaces")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6216,6 +6941,9 @@ func (w *RedisClientWrapper) SortInterfaces(ctx context.Context, key string, sor
 			}()
 		}
 		res0 = w.obj.SortInterfaces(key, sort)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6230,8 +6958,9 @@ func (w *RedisClientWrapper) SortStore(ctx context.Context, key string, store st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.SortStore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SortStore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6249,6 +6978,9 @@ func (w *RedisClientWrapper) SortStore(ctx context.Context, key string, store st
 			}()
 		}
 		res0 = w.obj.SortStore(key, store, sort)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6263,8 +6995,9 @@ func (w *RedisClientWrapper) StrLen(ctx context.Context, key string) *redis.IntC
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.StrLen")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.StrLen")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6282,6 +7015,9 @@ func (w *RedisClientWrapper) StrLen(ctx context.Context, key string) *redis.IntC
 			}()
 		}
 		res0 = w.obj.StrLen(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6300,8 +7036,9 @@ func (w *RedisClientWrapper) TTL(ctx context.Context, key string) *redis.Duratio
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.TTL")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.TTL")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6319,6 +7056,9 @@ func (w *RedisClientWrapper) TTL(ctx context.Context, key string) *redis.Duratio
 			}()
 		}
 		res0 = w.obj.TTL(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6333,8 +7073,9 @@ func (w *RedisClientWrapper) Time(ctx context.Context) *redis.TimeCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Time")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Time")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6352,6 +7093,9 @@ func (w *RedisClientWrapper) Time(ctx context.Context) *redis.TimeCmd {
 			}()
 		}
 		res0 = w.obj.Time()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6366,8 +7110,9 @@ func (w *RedisClientWrapper) Touch(ctx context.Context, keys ...string) *redis.I
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Touch")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Touch")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6385,6 +7130,9 @@ func (w *RedisClientWrapper) Touch(ctx context.Context, keys ...string) *redis.I
 			}()
 		}
 		res0 = w.obj.Touch(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6399,8 +7147,9 @@ func (w *RedisClientWrapper) Type(ctx context.Context, key string) *redis.Status
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Type")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Type")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6418,6 +7167,9 @@ func (w *RedisClientWrapper) Type(ctx context.Context, key string) *redis.Status
 			}()
 		}
 		res0 = w.obj.Type(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6432,8 +7184,9 @@ func (w *RedisClientWrapper) Unlink(ctx context.Context, keys ...string) *redis.
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Unlink")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Unlink")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6451,6 +7204,9 @@ func (w *RedisClientWrapper) Unlink(ctx context.Context, keys ...string) *redis.
 			}()
 		}
 		res0 = w.obj.Unlink(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6465,8 +7221,9 @@ func (w *RedisClientWrapper) Wait(ctx context.Context, numSlaves int, timeout ti
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.Wait")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Wait")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6484,6 +7241,9 @@ func (w *RedisClientWrapper) Wait(ctx context.Context, numSlaves int, timeout ti
 			}()
 		}
 		res0 = w.obj.Wait(numSlaves, timeout)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6498,8 +7258,9 @@ func (w *RedisClientWrapper) XAck(ctx context.Context, stream string, group stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XAck")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XAck")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6517,6 +7278,9 @@ func (w *RedisClientWrapper) XAck(ctx context.Context, stream string, group stri
 			}()
 		}
 		res0 = w.obj.XAck(stream, group, ids...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6531,8 +7295,9 @@ func (w *RedisClientWrapper) XAdd(ctx context.Context, a *redis.XAddArgs) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XAdd")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XAdd")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6550,6 +7315,9 @@ func (w *RedisClientWrapper) XAdd(ctx context.Context, a *redis.XAddArgs) *redis
 			}()
 		}
 		res0 = w.obj.XAdd(a)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6564,8 +7332,9 @@ func (w *RedisClientWrapper) XClaim(ctx context.Context, a *redis.XClaimArgs) *r
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XClaim")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XClaim")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6583,6 +7352,9 @@ func (w *RedisClientWrapper) XClaim(ctx context.Context, a *redis.XClaimArgs) *r
 			}()
 		}
 		res0 = w.obj.XClaim(a)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6597,8 +7369,9 @@ func (w *RedisClientWrapper) XClaimJustID(ctx context.Context, a *redis.XClaimAr
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XClaimJustID")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XClaimJustID")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6616,6 +7389,9 @@ func (w *RedisClientWrapper) XClaimJustID(ctx context.Context, a *redis.XClaimAr
 			}()
 		}
 		res0 = w.obj.XClaimJustID(a)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6630,8 +7406,9 @@ func (w *RedisClientWrapper) XDel(ctx context.Context, stream string, ids ...str
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XDel")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XDel")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6649,6 +7426,9 @@ func (w *RedisClientWrapper) XDel(ctx context.Context, stream string, ids ...str
 			}()
 		}
 		res0 = w.obj.XDel(stream, ids...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6663,8 +7443,9 @@ func (w *RedisClientWrapper) XGroupCreate(ctx context.Context, stream string, gr
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XGroupCreate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XGroupCreate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6682,6 +7463,9 @@ func (w *RedisClientWrapper) XGroupCreate(ctx context.Context, stream string, gr
 			}()
 		}
 		res0 = w.obj.XGroupCreate(stream, group, start)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6696,8 +7480,9 @@ func (w *RedisClientWrapper) XGroupCreateMkStream(ctx context.Context, stream st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XGroupCreateMkStream")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XGroupCreateMkStream")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6715,6 +7500,9 @@ func (w *RedisClientWrapper) XGroupCreateMkStream(ctx context.Context, stream st
 			}()
 		}
 		res0 = w.obj.XGroupCreateMkStream(stream, group, start)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6729,8 +7517,9 @@ func (w *RedisClientWrapper) XGroupDelConsumer(ctx context.Context, stream strin
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XGroupDelConsumer")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XGroupDelConsumer")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6748,6 +7537,9 @@ func (w *RedisClientWrapper) XGroupDelConsumer(ctx context.Context, stream strin
 			}()
 		}
 		res0 = w.obj.XGroupDelConsumer(stream, group, consumer)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6762,8 +7554,9 @@ func (w *RedisClientWrapper) XGroupDestroy(ctx context.Context, stream string, g
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XGroupDestroy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XGroupDestroy")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6781,6 +7574,9 @@ func (w *RedisClientWrapper) XGroupDestroy(ctx context.Context, stream string, g
 			}()
 		}
 		res0 = w.obj.XGroupDestroy(stream, group)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6795,8 +7591,9 @@ func (w *RedisClientWrapper) XGroupSetID(ctx context.Context, stream string, gro
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XGroupSetID")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XGroupSetID")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6814,6 +7611,9 @@ func (w *RedisClientWrapper) XGroupSetID(ctx context.Context, stream string, gro
 			}()
 		}
 		res0 = w.obj.XGroupSetID(stream, group, start)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6828,8 +7628,9 @@ func (w *RedisClientWrapper) XLen(ctx context.Context, stream string) *redis.Int
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XLen")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XLen")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6847,6 +7648,9 @@ func (w *RedisClientWrapper) XLen(ctx context.Context, stream string) *redis.Int
 			}()
 		}
 		res0 = w.obj.XLen(stream)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6861,8 +7665,9 @@ func (w *RedisClientWrapper) XPending(ctx context.Context, stream string, group 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XPending")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XPending")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6880,6 +7685,9 @@ func (w *RedisClientWrapper) XPending(ctx context.Context, stream string, group 
 			}()
 		}
 		res0 = w.obj.XPending(stream, group)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6894,8 +7702,9 @@ func (w *RedisClientWrapper) XPendingExt(ctx context.Context, a *redis.XPendingE
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XPendingExt")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XPendingExt")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6913,6 +7722,9 @@ func (w *RedisClientWrapper) XPendingExt(ctx context.Context, a *redis.XPendingE
 			}()
 		}
 		res0 = w.obj.XPendingExt(a)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6927,8 +7739,9 @@ func (w *RedisClientWrapper) XRange(ctx context.Context, stream string, start st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6946,6 +7759,9 @@ func (w *RedisClientWrapper) XRange(ctx context.Context, stream string, start st
 			}()
 		}
 		res0 = w.obj.XRange(stream, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6960,8 +7776,9 @@ func (w *RedisClientWrapper) XRangeN(ctx context.Context, stream string, start s
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XRangeN")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XRangeN")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6979,6 +7796,9 @@ func (w *RedisClientWrapper) XRangeN(ctx context.Context, stream string, start s
 			}()
 		}
 		res0 = w.obj.XRangeN(stream, start, stop, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -6993,8 +7813,9 @@ func (w *RedisClientWrapper) XRead(ctx context.Context, a *redis.XReadArgs) *red
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XRead")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XRead")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7012,6 +7833,9 @@ func (w *RedisClientWrapper) XRead(ctx context.Context, a *redis.XReadArgs) *red
 			}()
 		}
 		res0 = w.obj.XRead(a)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7026,8 +7850,9 @@ func (w *RedisClientWrapper) XReadGroup(ctx context.Context, a *redis.XReadGroup
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XReadGroup")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XReadGroup")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7045,6 +7870,9 @@ func (w *RedisClientWrapper) XReadGroup(ctx context.Context, a *redis.XReadGroup
 			}()
 		}
 		res0 = w.obj.XReadGroup(a)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7059,8 +7887,9 @@ func (w *RedisClientWrapper) XReadStreams(ctx context.Context, streams ...string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XReadStreams")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XReadStreams")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7078,6 +7907,9 @@ func (w *RedisClientWrapper) XReadStreams(ctx context.Context, streams ...string
 			}()
 		}
 		res0 = w.obj.XReadStreams(streams...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7092,8 +7924,9 @@ func (w *RedisClientWrapper) XRevRange(ctx context.Context, stream string, start
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XRevRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XRevRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7111,6 +7944,9 @@ func (w *RedisClientWrapper) XRevRange(ctx context.Context, stream string, start
 			}()
 		}
 		res0 = w.obj.XRevRange(stream, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7125,8 +7961,9 @@ func (w *RedisClientWrapper) XRevRangeN(ctx context.Context, stream string, star
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XRevRangeN")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XRevRangeN")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7144,6 +7981,9 @@ func (w *RedisClientWrapper) XRevRangeN(ctx context.Context, stream string, star
 			}()
 		}
 		res0 = w.obj.XRevRangeN(stream, start, stop, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7158,8 +7998,9 @@ func (w *RedisClientWrapper) XTrim(ctx context.Context, key string, maxLen int64
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XTrim")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XTrim")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7177,6 +8018,9 @@ func (w *RedisClientWrapper) XTrim(ctx context.Context, key string, maxLen int64
 			}()
 		}
 		res0 = w.obj.XTrim(key, maxLen)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7191,8 +8035,9 @@ func (w *RedisClientWrapper) XTrimApprox(ctx context.Context, key string, maxLen
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.XTrimApprox")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XTrimApprox")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7210,6 +8055,9 @@ func (w *RedisClientWrapper) XTrimApprox(ctx context.Context, key string, maxLen
 			}()
 		}
 		res0 = w.obj.XTrimApprox(key, maxLen)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7224,8 +8072,9 @@ func (w *RedisClientWrapper) ZAdd(ctx context.Context, key string, members ...re
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZAdd")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZAdd")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7243,6 +8092,9 @@ func (w *RedisClientWrapper) ZAdd(ctx context.Context, key string, members ...re
 			}()
 		}
 		res0 = w.obj.ZAdd(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7257,8 +8109,9 @@ func (w *RedisClientWrapper) ZAddCh(ctx context.Context, key string, members ...
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZAddCh")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZAddCh")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7276,6 +8129,9 @@ func (w *RedisClientWrapper) ZAddCh(ctx context.Context, key string, members ...
 			}()
 		}
 		res0 = w.obj.ZAddCh(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7290,8 +8146,9 @@ func (w *RedisClientWrapper) ZAddNX(ctx context.Context, key string, members ...
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZAddNX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZAddNX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7309,6 +8166,9 @@ func (w *RedisClientWrapper) ZAddNX(ctx context.Context, key string, members ...
 			}()
 		}
 		res0 = w.obj.ZAddNX(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7323,8 +8183,9 @@ func (w *RedisClientWrapper) ZAddNXCh(ctx context.Context, key string, members .
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZAddNXCh")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZAddNXCh")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7342,6 +8203,9 @@ func (w *RedisClientWrapper) ZAddNXCh(ctx context.Context, key string, members .
 			}()
 		}
 		res0 = w.obj.ZAddNXCh(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7356,8 +8220,9 @@ func (w *RedisClientWrapper) ZAddXX(ctx context.Context, key string, members ...
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZAddXX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZAddXX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7375,6 +8240,9 @@ func (w *RedisClientWrapper) ZAddXX(ctx context.Context, key string, members ...
 			}()
 		}
 		res0 = w.obj.ZAddXX(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7389,8 +8257,9 @@ func (w *RedisClientWrapper) ZAddXXCh(ctx context.Context, key string, members .
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZAddXXCh")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZAddXXCh")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7408,6 +8277,9 @@ func (w *RedisClientWrapper) ZAddXXCh(ctx context.Context, key string, members .
 			}()
 		}
 		res0 = w.obj.ZAddXXCh(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7422,8 +8294,9 @@ func (w *RedisClientWrapper) ZCard(ctx context.Context, key string) *redis.IntCm
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZCard")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZCard")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7441,6 +8314,9 @@ func (w *RedisClientWrapper) ZCard(ctx context.Context, key string) *redis.IntCm
 			}()
 		}
 		res0 = w.obj.ZCard(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7455,8 +8331,9 @@ func (w *RedisClientWrapper) ZCount(ctx context.Context, key string, min string,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZCount")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZCount")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7474,6 +8351,9 @@ func (w *RedisClientWrapper) ZCount(ctx context.Context, key string, min string,
 			}()
 		}
 		res0 = w.obj.ZCount(key, min, max)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7488,8 +8368,9 @@ func (w *RedisClientWrapper) ZIncr(ctx context.Context, key string, member redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZIncr")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZIncr")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7507,6 +8388,9 @@ func (w *RedisClientWrapper) ZIncr(ctx context.Context, key string, member redis
 			}()
 		}
 		res0 = w.obj.ZIncr(key, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7521,8 +8405,9 @@ func (w *RedisClientWrapper) ZIncrBy(ctx context.Context, key string, increment 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZIncrBy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZIncrBy")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7540,6 +8425,9 @@ func (w *RedisClientWrapper) ZIncrBy(ctx context.Context, key string, increment 
 			}()
 		}
 		res0 = w.obj.ZIncrBy(key, increment, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7554,8 +8442,9 @@ func (w *RedisClientWrapper) ZIncrNX(ctx context.Context, key string, member red
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZIncrNX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZIncrNX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7573,6 +8462,9 @@ func (w *RedisClientWrapper) ZIncrNX(ctx context.Context, key string, member red
 			}()
 		}
 		res0 = w.obj.ZIncrNX(key, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7587,8 +8479,9 @@ func (w *RedisClientWrapper) ZIncrXX(ctx context.Context, key string, member red
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZIncrXX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZIncrXX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7606,6 +8499,9 @@ func (w *RedisClientWrapper) ZIncrXX(ctx context.Context, key string, member red
 			}()
 		}
 		res0 = w.obj.ZIncrXX(key, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7620,8 +8516,9 @@ func (w *RedisClientWrapper) ZInterStore(ctx context.Context, destination string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZInterStore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZInterStore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7639,6 +8536,9 @@ func (w *RedisClientWrapper) ZInterStore(ctx context.Context, destination string
 			}()
 		}
 		res0 = w.obj.ZInterStore(destination, store, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7653,8 +8553,9 @@ func (w *RedisClientWrapper) ZLexCount(ctx context.Context, key string, min stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZLexCount")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZLexCount")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7672,6 +8573,9 @@ func (w *RedisClientWrapper) ZLexCount(ctx context.Context, key string, min stri
 			}()
 		}
 		res0 = w.obj.ZLexCount(key, min, max)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7686,8 +8590,9 @@ func (w *RedisClientWrapper) ZPopMax(ctx context.Context, key string, count ...i
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZPopMax")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZPopMax")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7705,6 +8610,9 @@ func (w *RedisClientWrapper) ZPopMax(ctx context.Context, key string, count ...i
 			}()
 		}
 		res0 = w.obj.ZPopMax(key, count...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7719,8 +8627,9 @@ func (w *RedisClientWrapper) ZPopMin(ctx context.Context, key string, count ...i
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZPopMin")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZPopMin")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7738,6 +8647,9 @@ func (w *RedisClientWrapper) ZPopMin(ctx context.Context, key string, count ...i
 			}()
 		}
 		res0 = w.obj.ZPopMin(key, count...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7752,8 +8664,9 @@ func (w *RedisClientWrapper) ZRange(ctx context.Context, key string, start int64
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7771,6 +8684,9 @@ func (w *RedisClientWrapper) ZRange(ctx context.Context, key string, start int64
 			}()
 		}
 		res0 = w.obj.ZRange(key, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7785,8 +8701,9 @@ func (w *RedisClientWrapper) ZRangeByLex(ctx context.Context, key string, opt re
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRangeByLex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRangeByLex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7804,6 +8721,9 @@ func (w *RedisClientWrapper) ZRangeByLex(ctx context.Context, key string, opt re
 			}()
 		}
 		res0 = w.obj.ZRangeByLex(key, opt)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7818,8 +8738,9 @@ func (w *RedisClientWrapper) ZRangeByScore(ctx context.Context, key string, opt 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRangeByScore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRangeByScore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7837,6 +8758,9 @@ func (w *RedisClientWrapper) ZRangeByScore(ctx context.Context, key string, opt 
 			}()
 		}
 		res0 = w.obj.ZRangeByScore(key, opt)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7851,8 +8775,9 @@ func (w *RedisClientWrapper) ZRangeByScoreWithScores(ctx context.Context, key st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRangeByScoreWithScores")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRangeByScoreWithScores")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7870,6 +8795,9 @@ func (w *RedisClientWrapper) ZRangeByScoreWithScores(ctx context.Context, key st
 			}()
 		}
 		res0 = w.obj.ZRangeByScoreWithScores(key, opt)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7884,8 +8812,9 @@ func (w *RedisClientWrapper) ZRangeWithScores(ctx context.Context, key string, s
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRangeWithScores")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRangeWithScores")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7903,6 +8832,9 @@ func (w *RedisClientWrapper) ZRangeWithScores(ctx context.Context, key string, s
 			}()
 		}
 		res0 = w.obj.ZRangeWithScores(key, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7917,8 +8849,9 @@ func (w *RedisClientWrapper) ZRank(ctx context.Context, key string, member strin
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRank")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRank")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7936,6 +8869,9 @@ func (w *RedisClientWrapper) ZRank(ctx context.Context, key string, member strin
 			}()
 		}
 		res0 = w.obj.ZRank(key, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7950,8 +8886,9 @@ func (w *RedisClientWrapper) ZRem(ctx context.Context, key string, members ...in
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRem")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRem")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7969,6 +8906,9 @@ func (w *RedisClientWrapper) ZRem(ctx context.Context, key string, members ...in
 			}()
 		}
 		res0 = w.obj.ZRem(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -7983,8 +8923,9 @@ func (w *RedisClientWrapper) ZRemRangeByLex(ctx context.Context, key string, min
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRemRangeByLex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRemRangeByLex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8002,6 +8943,9 @@ func (w *RedisClientWrapper) ZRemRangeByLex(ctx context.Context, key string, min
 			}()
 		}
 		res0 = w.obj.ZRemRangeByLex(key, min, max)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8016,8 +8960,9 @@ func (w *RedisClientWrapper) ZRemRangeByRank(ctx context.Context, key string, st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRemRangeByRank")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRemRangeByRank")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8035,6 +8980,9 @@ func (w *RedisClientWrapper) ZRemRangeByRank(ctx context.Context, key string, st
 			}()
 		}
 		res0 = w.obj.ZRemRangeByRank(key, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8049,8 +8997,9 @@ func (w *RedisClientWrapper) ZRemRangeByScore(ctx context.Context, key string, m
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRemRangeByScore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRemRangeByScore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8068,6 +9017,9 @@ func (w *RedisClientWrapper) ZRemRangeByScore(ctx context.Context, key string, m
 			}()
 		}
 		res0 = w.obj.ZRemRangeByScore(key, min, max)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8082,8 +9034,9 @@ func (w *RedisClientWrapper) ZRevRange(ctx context.Context, key string, start in
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8101,6 +9054,9 @@ func (w *RedisClientWrapper) ZRevRange(ctx context.Context, key string, start in
 			}()
 		}
 		res0 = w.obj.ZRevRange(key, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8115,8 +9071,9 @@ func (w *RedisClientWrapper) ZRevRangeByLex(ctx context.Context, key string, opt
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRangeByLex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRangeByLex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8134,6 +9091,9 @@ func (w *RedisClientWrapper) ZRevRangeByLex(ctx context.Context, key string, opt
 			}()
 		}
 		res0 = w.obj.ZRevRangeByLex(key, opt)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8148,8 +9108,9 @@ func (w *RedisClientWrapper) ZRevRangeByScore(ctx context.Context, key string, o
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRangeByScore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRangeByScore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8167,6 +9128,9 @@ func (w *RedisClientWrapper) ZRevRangeByScore(ctx context.Context, key string, o
 			}()
 		}
 		res0 = w.obj.ZRevRangeByScore(key, opt)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8181,8 +9145,9 @@ func (w *RedisClientWrapper) ZRevRangeByScoreWithScores(ctx context.Context, key
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRangeByScoreWithScores")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRangeByScoreWithScores")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8200,6 +9165,9 @@ func (w *RedisClientWrapper) ZRevRangeByScoreWithScores(ctx context.Context, key
 			}()
 		}
 		res0 = w.obj.ZRevRangeByScoreWithScores(key, opt)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8214,8 +9182,9 @@ func (w *RedisClientWrapper) ZRevRangeWithScores(ctx context.Context, key string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRangeWithScores")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRangeWithScores")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8233,6 +9202,9 @@ func (w *RedisClientWrapper) ZRevRangeWithScores(ctx context.Context, key string
 			}()
 		}
 		res0 = w.obj.ZRevRangeWithScores(key, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8247,8 +9219,9 @@ func (w *RedisClientWrapper) ZRevRank(ctx context.Context, key string, member st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRank")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRank")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8266,6 +9239,9 @@ func (w *RedisClientWrapper) ZRevRank(ctx context.Context, key string, member st
 			}()
 		}
 		res0 = w.obj.ZRevRank(key, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8280,8 +9256,9 @@ func (w *RedisClientWrapper) ZScan(ctx context.Context, key string, cursor uint6
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZScan")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZScan")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8299,6 +9276,9 @@ func (w *RedisClientWrapper) ZScan(ctx context.Context, key string, cursor uint6
 			}()
 		}
 		res0 = w.obj.ZScan(key, cursor, match, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8313,8 +9293,9 @@ func (w *RedisClientWrapper) ZScore(ctx context.Context, key string, member stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZScore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZScore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8332,6 +9313,9 @@ func (w *RedisClientWrapper) ZScore(ctx context.Context, key string, member stri
 			}()
 		}
 		res0 = w.obj.ZScore(key, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8346,8 +9330,9 @@ func (w *RedisClientWrapper) ZUnionStore(ctx context.Context, dest string, store
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.Client.ZUnionStore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZUnionStore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8365,6 +9350,9 @@ func (w *RedisClientWrapper) ZUnionStore(ctx context.Context, dest string, store
 			}()
 		}
 		res0 = w.obj.ZUnionStore(dest, store, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8379,8 +9367,9 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Close")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Close")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8398,6 +9387,9 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 			}()
 		}
 		err = w.obj.Close()
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -8417,8 +9409,9 @@ func (w *RedisClusterClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.DBSize")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.DBSize")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8436,6 +9429,9 @@ func (w *RedisClusterClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 			}()
 		}
 		res0 = w.obj.DBSize()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8450,8 +9446,9 @@ func (w *RedisClusterClientWrapper) Do(ctx context.Context, args ...interface{})
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Do")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Do")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8469,6 +9466,9 @@ func (w *RedisClusterClientWrapper) Do(ctx context.Context, args ...interface{})
 			}()
 		}
 		res0 = w.obj.Do(args...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8483,8 +9483,9 @@ func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(c
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ForEachMaster")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ForEachMaster")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8502,6 +9503,9 @@ func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(c
 			}()
 		}
 		err = w.obj.ForEachMaster(fn)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -8516,8 +9520,9 @@ func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(cli
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ForEachNode")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ForEachNode")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8535,6 +9540,9 @@ func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(cli
 			}()
 		}
 		err = w.obj.ForEachNode(fn)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -8549,8 +9557,9 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ForEachSlave")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ForEachSlave")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8568,6 +9577,9 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 			}()
 		}
 		err = w.obj.ForEachSlave(fn)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -8598,8 +9610,9 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Pipelined")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Pipelined")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8617,6 +9630,9 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 			}()
 		}
 		res0, err = w.obj.Pipelined(fn)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -8636,8 +9652,9 @@ func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Process")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Process")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8655,6 +9672,9 @@ func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder
 			}()
 		}
 		err = w.obj.Process(cmd)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -8669,8 +9689,9 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ReloadState")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ReloadState")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8688,6 +9709,9 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 			}()
 		}
 		err = w.obj.ReloadState()
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -8713,8 +9737,9 @@ func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(red
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.TxPipelined")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.TxPipelined")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8732,6 +9757,9 @@ func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(red
 			}()
 		}
 		res0, err = w.obj.TxPipelined(fn)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -8746,8 +9774,9 @@ func (w *RedisClusterClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Watch")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Watch")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8765,6 +9794,9 @@ func (w *RedisClusterClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx
 			}()
 		}
 		err = w.obj.Watch(fn, keys...)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return err
@@ -8792,8 +9824,9 @@ func (w *RedisClusterClientWrapper) Append(ctx context.Context, key string, valu
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Append")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Append")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8811,6 +9844,9 @@ func (w *RedisClusterClientWrapper) Append(ctx context.Context, key string, valu
 			}()
 		}
 		res0 = w.obj.Append(key, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8825,8 +9861,9 @@ func (w *RedisClusterClientWrapper) BLPop(ctx context.Context, timeout time.Dura
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BLPop")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BLPop")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8844,6 +9881,9 @@ func (w *RedisClusterClientWrapper) BLPop(ctx context.Context, timeout time.Dura
 			}()
 		}
 		res0 = w.obj.BLPop(timeout, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8858,8 +9898,9 @@ func (w *RedisClusterClientWrapper) BRPop(ctx context.Context, timeout time.Dura
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BRPop")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BRPop")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8877,6 +9918,9 @@ func (w *RedisClusterClientWrapper) BRPop(ctx context.Context, timeout time.Dura
 			}()
 		}
 		res0 = w.obj.BRPop(timeout, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8891,8 +9935,9 @@ func (w *RedisClusterClientWrapper) BRPopLPush(ctx context.Context, source strin
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BRPopLPush")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BRPopLPush")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8910,6 +9955,9 @@ func (w *RedisClusterClientWrapper) BRPopLPush(ctx context.Context, source strin
 			}()
 		}
 		res0 = w.obj.BRPopLPush(source, destination, timeout)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8924,8 +9972,9 @@ func (w *RedisClusterClientWrapper) BZPopMax(ctx context.Context, timeout time.D
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BZPopMax")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BZPopMax")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8943,6 +9992,9 @@ func (w *RedisClusterClientWrapper) BZPopMax(ctx context.Context, timeout time.D
 			}()
 		}
 		res0 = w.obj.BZPopMax(timeout, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8957,8 +10009,9 @@ func (w *RedisClusterClientWrapper) BZPopMin(ctx context.Context, timeout time.D
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BZPopMin")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BZPopMin")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -8976,6 +10029,9 @@ func (w *RedisClusterClientWrapper) BZPopMin(ctx context.Context, timeout time.D
 			}()
 		}
 		res0 = w.obj.BZPopMin(timeout, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -8990,8 +10046,9 @@ func (w *RedisClusterClientWrapper) BgRewriteAOF(ctx context.Context) *redis.Sta
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BgRewriteAOF")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BgRewriteAOF")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9009,6 +10066,9 @@ func (w *RedisClusterClientWrapper) BgRewriteAOF(ctx context.Context) *redis.Sta
 			}()
 		}
 		res0 = w.obj.BgRewriteAOF()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9023,8 +10083,9 @@ func (w *RedisClusterClientWrapper) BgSave(ctx context.Context) *redis.StatusCmd
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BgSave")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BgSave")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9042,6 +10103,9 @@ func (w *RedisClusterClientWrapper) BgSave(ctx context.Context) *redis.StatusCmd
 			}()
 		}
 		res0 = w.obj.BgSave()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9056,8 +10120,9 @@ func (w *RedisClusterClientWrapper) BitCount(ctx context.Context, key string, bi
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitCount")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitCount")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9075,6 +10140,9 @@ func (w *RedisClusterClientWrapper) BitCount(ctx context.Context, key string, bi
 			}()
 		}
 		res0 = w.obj.BitCount(key, bitCount)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9089,8 +10157,9 @@ func (w *RedisClusterClientWrapper) BitOpAnd(ctx context.Context, destKey string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitOpAnd")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitOpAnd")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9108,6 +10177,9 @@ func (w *RedisClusterClientWrapper) BitOpAnd(ctx context.Context, destKey string
 			}()
 		}
 		res0 = w.obj.BitOpAnd(destKey, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9122,8 +10194,9 @@ func (w *RedisClusterClientWrapper) BitOpNot(ctx context.Context, destKey string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitOpNot")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitOpNot")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9141,6 +10214,9 @@ func (w *RedisClusterClientWrapper) BitOpNot(ctx context.Context, destKey string
 			}()
 		}
 		res0 = w.obj.BitOpNot(destKey, key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9155,8 +10231,9 @@ func (w *RedisClusterClientWrapper) BitOpOr(ctx context.Context, destKey string,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitOpOr")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitOpOr")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9174,6 +10251,9 @@ func (w *RedisClusterClientWrapper) BitOpOr(ctx context.Context, destKey string,
 			}()
 		}
 		res0 = w.obj.BitOpOr(destKey, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9188,8 +10268,9 @@ func (w *RedisClusterClientWrapper) BitOpXor(ctx context.Context, destKey string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitOpXor")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitOpXor")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9207,6 +10288,9 @@ func (w *RedisClusterClientWrapper) BitOpXor(ctx context.Context, destKey string
 			}()
 		}
 		res0 = w.obj.BitOpXor(destKey, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9221,8 +10305,9 @@ func (w *RedisClusterClientWrapper) BitPos(ctx context.Context, key string, bit 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitPos")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitPos")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9240,6 +10325,9 @@ func (w *RedisClusterClientWrapper) BitPos(ctx context.Context, key string, bit 
 			}()
 		}
 		res0 = w.obj.BitPos(key, bit, pos...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9254,8 +10342,9 @@ func (w *RedisClusterClientWrapper) ClientGetName(ctx context.Context) *redis.St
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientGetName")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientGetName")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9273,6 +10362,9 @@ func (w *RedisClusterClientWrapper) ClientGetName(ctx context.Context) *redis.St
 			}()
 		}
 		res0 = w.obj.ClientGetName()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9287,8 +10379,9 @@ func (w *RedisClusterClientWrapper) ClientID(ctx context.Context) *redis.IntCmd 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientID")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientID")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9306,6 +10399,9 @@ func (w *RedisClusterClientWrapper) ClientID(ctx context.Context) *redis.IntCmd 
 			}()
 		}
 		res0 = w.obj.ClientID()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9320,8 +10416,9 @@ func (w *RedisClusterClientWrapper) ClientKill(ctx context.Context, ipPort strin
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientKill")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientKill")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9339,6 +10436,9 @@ func (w *RedisClusterClientWrapper) ClientKill(ctx context.Context, ipPort strin
 			}()
 		}
 		res0 = w.obj.ClientKill(ipPort)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9353,8 +10453,9 @@ func (w *RedisClusterClientWrapper) ClientKillByFilter(ctx context.Context, keys
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientKillByFilter")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientKillByFilter")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9372,6 +10473,9 @@ func (w *RedisClusterClientWrapper) ClientKillByFilter(ctx context.Context, keys
 			}()
 		}
 		res0 = w.obj.ClientKillByFilter(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9386,8 +10490,9 @@ func (w *RedisClusterClientWrapper) ClientList(ctx context.Context) *redis.Strin
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientList")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientList")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9405,6 +10510,9 @@ func (w *RedisClusterClientWrapper) ClientList(ctx context.Context) *redis.Strin
 			}()
 		}
 		res0 = w.obj.ClientList()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9419,8 +10527,9 @@ func (w *RedisClusterClientWrapper) ClientPause(ctx context.Context, dur time.Du
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientPause")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientPause")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9438,6 +10547,9 @@ func (w *RedisClusterClientWrapper) ClientPause(ctx context.Context, dur time.Du
 			}()
 		}
 		res0 = w.obj.ClientPause(dur)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9452,8 +10564,9 @@ func (w *RedisClusterClientWrapper) ClientUnblock(ctx context.Context, id int64)
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientUnblock")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientUnblock")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9471,6 +10584,9 @@ func (w *RedisClusterClientWrapper) ClientUnblock(ctx context.Context, id int64)
 			}()
 		}
 		res0 = w.obj.ClientUnblock(id)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9485,8 +10601,9 @@ func (w *RedisClusterClientWrapper) ClientUnblockWithError(ctx context.Context, 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientUnblockWithError")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientUnblockWithError")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9504,6 +10621,9 @@ func (w *RedisClusterClientWrapper) ClientUnblockWithError(ctx context.Context, 
 			}()
 		}
 		res0 = w.obj.ClientUnblockWithError(id)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9518,8 +10638,9 @@ func (w *RedisClusterClientWrapper) ClusterAddSlots(ctx context.Context, slots .
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterAddSlots")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterAddSlots")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9537,6 +10658,9 @@ func (w *RedisClusterClientWrapper) ClusterAddSlots(ctx context.Context, slots .
 			}()
 		}
 		res0 = w.obj.ClusterAddSlots(slots...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9551,8 +10675,9 @@ func (w *RedisClusterClientWrapper) ClusterAddSlotsRange(ctx context.Context, mi
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterAddSlotsRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterAddSlotsRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9570,6 +10695,9 @@ func (w *RedisClusterClientWrapper) ClusterAddSlotsRange(ctx context.Context, mi
 			}()
 		}
 		res0 = w.obj.ClusterAddSlotsRange(min, max)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9584,8 +10712,9 @@ func (w *RedisClusterClientWrapper) ClusterCountFailureReports(ctx context.Conte
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterCountFailureReports")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterCountFailureReports")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9603,6 +10732,9 @@ func (w *RedisClusterClientWrapper) ClusterCountFailureReports(ctx context.Conte
 			}()
 		}
 		res0 = w.obj.ClusterCountFailureReports(nodeID)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9617,8 +10749,9 @@ func (w *RedisClusterClientWrapper) ClusterCountKeysInSlot(ctx context.Context, 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterCountKeysInSlot")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterCountKeysInSlot")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9636,6 +10769,9 @@ func (w *RedisClusterClientWrapper) ClusterCountKeysInSlot(ctx context.Context, 
 			}()
 		}
 		res0 = w.obj.ClusterCountKeysInSlot(slot)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9650,8 +10786,9 @@ func (w *RedisClusterClientWrapper) ClusterDelSlots(ctx context.Context, slots .
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterDelSlots")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterDelSlots")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9669,6 +10806,9 @@ func (w *RedisClusterClientWrapper) ClusterDelSlots(ctx context.Context, slots .
 			}()
 		}
 		res0 = w.obj.ClusterDelSlots(slots...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9683,8 +10823,9 @@ func (w *RedisClusterClientWrapper) ClusterDelSlotsRange(ctx context.Context, mi
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterDelSlotsRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterDelSlotsRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9702,6 +10843,9 @@ func (w *RedisClusterClientWrapper) ClusterDelSlotsRange(ctx context.Context, mi
 			}()
 		}
 		res0 = w.obj.ClusterDelSlotsRange(min, max)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9716,8 +10860,9 @@ func (w *RedisClusterClientWrapper) ClusterFailover(ctx context.Context) *redis.
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterFailover")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterFailover")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9735,6 +10880,9 @@ func (w *RedisClusterClientWrapper) ClusterFailover(ctx context.Context) *redis.
 			}()
 		}
 		res0 = w.obj.ClusterFailover()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9749,8 +10897,9 @@ func (w *RedisClusterClientWrapper) ClusterForget(ctx context.Context, nodeID st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterForget")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterForget")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9768,6 +10917,9 @@ func (w *RedisClusterClientWrapper) ClusterForget(ctx context.Context, nodeID st
 			}()
 		}
 		res0 = w.obj.ClusterForget(nodeID)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9782,8 +10934,9 @@ func (w *RedisClusterClientWrapper) ClusterGetKeysInSlot(ctx context.Context, sl
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterGetKeysInSlot")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterGetKeysInSlot")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9801,6 +10954,9 @@ func (w *RedisClusterClientWrapper) ClusterGetKeysInSlot(ctx context.Context, sl
 			}()
 		}
 		res0 = w.obj.ClusterGetKeysInSlot(slot, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9815,8 +10971,9 @@ func (w *RedisClusterClientWrapper) ClusterInfo(ctx context.Context) *redis.Stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterInfo")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterInfo")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9834,6 +10991,9 @@ func (w *RedisClusterClientWrapper) ClusterInfo(ctx context.Context) *redis.Stri
 			}()
 		}
 		res0 = w.obj.ClusterInfo()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9848,8 +11008,9 @@ func (w *RedisClusterClientWrapper) ClusterKeySlot(ctx context.Context, key stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterKeySlot")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterKeySlot")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9867,6 +11028,9 @@ func (w *RedisClusterClientWrapper) ClusterKeySlot(ctx context.Context, key stri
 			}()
 		}
 		res0 = w.obj.ClusterKeySlot(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9881,8 +11045,9 @@ func (w *RedisClusterClientWrapper) ClusterMeet(ctx context.Context, host string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterMeet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterMeet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9900,6 +11065,9 @@ func (w *RedisClusterClientWrapper) ClusterMeet(ctx context.Context, host string
 			}()
 		}
 		res0 = w.obj.ClusterMeet(host, port)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9914,8 +11082,9 @@ func (w *RedisClusterClientWrapper) ClusterNodes(ctx context.Context) *redis.Str
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterNodes")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterNodes")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9933,6 +11102,9 @@ func (w *RedisClusterClientWrapper) ClusterNodes(ctx context.Context) *redis.Str
 			}()
 		}
 		res0 = w.obj.ClusterNodes()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9947,8 +11119,9 @@ func (w *RedisClusterClientWrapper) ClusterReplicate(ctx context.Context, nodeID
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterReplicate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterReplicate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9966,6 +11139,9 @@ func (w *RedisClusterClientWrapper) ClusterReplicate(ctx context.Context, nodeID
 			}()
 		}
 		res0 = w.obj.ClusterReplicate(nodeID)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -9980,8 +11156,9 @@ func (w *RedisClusterClientWrapper) ClusterResetHard(ctx context.Context) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterResetHard")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterResetHard")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -9999,6 +11176,9 @@ func (w *RedisClusterClientWrapper) ClusterResetHard(ctx context.Context) *redis
 			}()
 		}
 		res0 = w.obj.ClusterResetHard()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10013,8 +11193,9 @@ func (w *RedisClusterClientWrapper) ClusterResetSoft(ctx context.Context) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterResetSoft")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterResetSoft")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10032,6 +11213,9 @@ func (w *RedisClusterClientWrapper) ClusterResetSoft(ctx context.Context) *redis
 			}()
 		}
 		res0 = w.obj.ClusterResetSoft()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10046,8 +11230,9 @@ func (w *RedisClusterClientWrapper) ClusterSaveConfig(ctx context.Context) *redi
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterSaveConfig")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterSaveConfig")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10065,6 +11250,9 @@ func (w *RedisClusterClientWrapper) ClusterSaveConfig(ctx context.Context) *redi
 			}()
 		}
 		res0 = w.obj.ClusterSaveConfig()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10079,8 +11267,9 @@ func (w *RedisClusterClientWrapper) ClusterSlaves(ctx context.Context, nodeID st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterSlaves")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterSlaves")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10098,6 +11287,9 @@ func (w *RedisClusterClientWrapper) ClusterSlaves(ctx context.Context, nodeID st
 			}()
 		}
 		res0 = w.obj.ClusterSlaves(nodeID)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10112,8 +11304,9 @@ func (w *RedisClusterClientWrapper) ClusterSlots(ctx context.Context) *redis.Clu
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterSlots")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterSlots")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10131,6 +11324,9 @@ func (w *RedisClusterClientWrapper) ClusterSlots(ctx context.Context) *redis.Clu
 			}()
 		}
 		res0 = w.obj.ClusterSlots()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10145,8 +11341,9 @@ func (w *RedisClusterClientWrapper) Command(ctx context.Context) *redis.Commands
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Command")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Command")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10164,6 +11361,9 @@ func (w *RedisClusterClientWrapper) Command(ctx context.Context) *redis.Commands
 			}()
 		}
 		res0 = w.obj.Command()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10178,8 +11378,9 @@ func (w *RedisClusterClientWrapper) ConfigGet(ctx context.Context, parameter str
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ConfigGet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ConfigGet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10197,6 +11398,9 @@ func (w *RedisClusterClientWrapper) ConfigGet(ctx context.Context, parameter str
 			}()
 		}
 		res0 = w.obj.ConfigGet(parameter)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10211,8 +11415,9 @@ func (w *RedisClusterClientWrapper) ConfigResetStat(ctx context.Context) *redis.
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ConfigResetStat")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ConfigResetStat")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10230,6 +11435,9 @@ func (w *RedisClusterClientWrapper) ConfigResetStat(ctx context.Context) *redis.
 			}()
 		}
 		res0 = w.obj.ConfigResetStat()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10244,8 +11452,9 @@ func (w *RedisClusterClientWrapper) ConfigRewrite(ctx context.Context) *redis.St
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ConfigRewrite")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ConfigRewrite")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10263,6 +11472,9 @@ func (w *RedisClusterClientWrapper) ConfigRewrite(ctx context.Context) *redis.St
 			}()
 		}
 		res0 = w.obj.ConfigRewrite()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10277,8 +11489,9 @@ func (w *RedisClusterClientWrapper) ConfigSet(ctx context.Context, parameter str
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ConfigSet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ConfigSet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10296,6 +11509,9 @@ func (w *RedisClusterClientWrapper) ConfigSet(ctx context.Context, parameter str
 			}()
 		}
 		res0 = w.obj.ConfigSet(parameter, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10310,8 +11526,9 @@ func (w *RedisClusterClientWrapper) DbSize(ctx context.Context) *redis.IntCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.DbSize")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.DbSize")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10329,6 +11546,9 @@ func (w *RedisClusterClientWrapper) DbSize(ctx context.Context) *redis.IntCmd {
 			}()
 		}
 		res0 = w.obj.DbSize()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10343,8 +11563,9 @@ func (w *RedisClusterClientWrapper) DebugObject(ctx context.Context, key string)
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.DebugObject")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.DebugObject")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10362,6 +11583,9 @@ func (w *RedisClusterClientWrapper) DebugObject(ctx context.Context, key string)
 			}()
 		}
 		res0 = w.obj.DebugObject(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10376,8 +11600,9 @@ func (w *RedisClusterClientWrapper) Decr(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Decr")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Decr")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10395,6 +11620,9 @@ func (w *RedisClusterClientWrapper) Decr(ctx context.Context, key string) *redis
 			}()
 		}
 		res0 = w.obj.Decr(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10409,8 +11637,9 @@ func (w *RedisClusterClientWrapper) DecrBy(ctx context.Context, key string, decr
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.DecrBy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.DecrBy")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10428,6 +11657,9 @@ func (w *RedisClusterClientWrapper) DecrBy(ctx context.Context, key string, decr
 			}()
 		}
 		res0 = w.obj.DecrBy(key, decrement)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10442,8 +11674,9 @@ func (w *RedisClusterClientWrapper) Del(ctx context.Context, keys ...string) *re
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Del")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Del")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10461,6 +11694,9 @@ func (w *RedisClusterClientWrapper) Del(ctx context.Context, keys ...string) *re
 			}()
 		}
 		res0 = w.obj.Del(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10475,8 +11711,9 @@ func (w *RedisClusterClientWrapper) Dump(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Dump")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Dump")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10494,6 +11731,9 @@ func (w *RedisClusterClientWrapper) Dump(ctx context.Context, key string) *redis
 			}()
 		}
 		res0 = w.obj.Dump(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10508,8 +11748,9 @@ func (w *RedisClusterClientWrapper) Echo(ctx context.Context, message interface{
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Echo")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Echo")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10527,6 +11768,9 @@ func (w *RedisClusterClientWrapper) Echo(ctx context.Context, message interface{
 			}()
 		}
 		res0 = w.obj.Echo(message)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10541,8 +11785,9 @@ func (w *RedisClusterClientWrapper) Eval(ctx context.Context, script string, key
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Eval")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Eval")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10560,6 +11805,9 @@ func (w *RedisClusterClientWrapper) Eval(ctx context.Context, script string, key
 			}()
 		}
 		res0 = w.obj.Eval(script, keys, args...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10574,8 +11822,9 @@ func (w *RedisClusterClientWrapper) EvalSha(ctx context.Context, sha1 string, ke
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.EvalSha")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.EvalSha")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10593,6 +11842,9 @@ func (w *RedisClusterClientWrapper) EvalSha(ctx context.Context, sha1 string, ke
 			}()
 		}
 		res0 = w.obj.EvalSha(sha1, keys, args...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10607,8 +11859,9 @@ func (w *RedisClusterClientWrapper) Exists(ctx context.Context, keys ...string) 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Exists")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Exists")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10626,6 +11879,9 @@ func (w *RedisClusterClientWrapper) Exists(ctx context.Context, keys ...string) 
 			}()
 		}
 		res0 = w.obj.Exists(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10640,8 +11896,9 @@ func (w *RedisClusterClientWrapper) Expire(ctx context.Context, key string, expi
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Expire")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Expire")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10659,6 +11916,9 @@ func (w *RedisClusterClientWrapper) Expire(ctx context.Context, key string, expi
 			}()
 		}
 		res0 = w.obj.Expire(key, expiration)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10673,8 +11933,9 @@ func (w *RedisClusterClientWrapper) ExpireAt(ctx context.Context, key string, tm
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ExpireAt")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ExpireAt")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10692,6 +11953,9 @@ func (w *RedisClusterClientWrapper) ExpireAt(ctx context.Context, key string, tm
 			}()
 		}
 		res0 = w.obj.ExpireAt(key, tm)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10706,8 +11970,9 @@ func (w *RedisClusterClientWrapper) FlushAll(ctx context.Context) *redis.StatusC
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.FlushAll")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.FlushAll")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10725,6 +11990,9 @@ func (w *RedisClusterClientWrapper) FlushAll(ctx context.Context) *redis.StatusC
 			}()
 		}
 		res0 = w.obj.FlushAll()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10739,8 +12007,9 @@ func (w *RedisClusterClientWrapper) FlushAllAsync(ctx context.Context) *redis.St
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.FlushAllAsync")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.FlushAllAsync")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10758,6 +12027,9 @@ func (w *RedisClusterClientWrapper) FlushAllAsync(ctx context.Context) *redis.St
 			}()
 		}
 		res0 = w.obj.FlushAllAsync()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10772,8 +12044,9 @@ func (w *RedisClusterClientWrapper) FlushDB(ctx context.Context) *redis.StatusCm
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.FlushDB")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.FlushDB")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10791,6 +12064,9 @@ func (w *RedisClusterClientWrapper) FlushDB(ctx context.Context) *redis.StatusCm
 			}()
 		}
 		res0 = w.obj.FlushDB()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10805,8 +12081,9 @@ func (w *RedisClusterClientWrapper) FlushDBAsync(ctx context.Context) *redis.Sta
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.FlushDBAsync")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.FlushDBAsync")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10824,6 +12101,9 @@ func (w *RedisClusterClientWrapper) FlushDBAsync(ctx context.Context) *redis.Sta
 			}()
 		}
 		res0 = w.obj.FlushDBAsync()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10838,8 +12118,9 @@ func (w *RedisClusterClientWrapper) FlushDb(ctx context.Context) *redis.StatusCm
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.FlushDb")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.FlushDb")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10857,6 +12138,9 @@ func (w *RedisClusterClientWrapper) FlushDb(ctx context.Context) *redis.StatusCm
 			}()
 		}
 		res0 = w.obj.FlushDb()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10871,8 +12155,9 @@ func (w *RedisClusterClientWrapper) GeoAdd(ctx context.Context, key string, geoL
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoAdd")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoAdd")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10890,6 +12175,9 @@ func (w *RedisClusterClientWrapper) GeoAdd(ctx context.Context, key string, geoL
 			}()
 		}
 		res0 = w.obj.GeoAdd(key, geoLocation...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10904,8 +12192,9 @@ func (w *RedisClusterClientWrapper) GeoDist(ctx context.Context, key string, mem
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoDist")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoDist")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10923,6 +12212,9 @@ func (w *RedisClusterClientWrapper) GeoDist(ctx context.Context, key string, mem
 			}()
 		}
 		res0 = w.obj.GeoDist(key, member1, member2, unit)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10937,8 +12229,9 @@ func (w *RedisClusterClientWrapper) GeoHash(ctx context.Context, key string, mem
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoHash")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoHash")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10956,6 +12249,9 @@ func (w *RedisClusterClientWrapper) GeoHash(ctx context.Context, key string, mem
 			}()
 		}
 		res0 = w.obj.GeoHash(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -10970,8 +12266,9 @@ func (w *RedisClusterClientWrapper) GeoPos(ctx context.Context, key string, memb
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoPos")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoPos")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -10989,6 +12286,9 @@ func (w *RedisClusterClientWrapper) GeoPos(ctx context.Context, key string, memb
 			}()
 		}
 		res0 = w.obj.GeoPos(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11003,8 +12303,9 @@ func (w *RedisClusterClientWrapper) GeoRadius(ctx context.Context, key string, l
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoRadius")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoRadius")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11022,6 +12323,9 @@ func (w *RedisClusterClientWrapper) GeoRadius(ctx context.Context, key string, l
 			}()
 		}
 		res0 = w.obj.GeoRadius(key, longitude, latitude, query)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11036,8 +12340,9 @@ func (w *RedisClusterClientWrapper) GeoRadiusByMember(ctx context.Context, key s
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoRadiusByMember")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoRadiusByMember")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11055,6 +12360,9 @@ func (w *RedisClusterClientWrapper) GeoRadiusByMember(ctx context.Context, key s
 			}()
 		}
 		res0 = w.obj.GeoRadiusByMember(key, member, query)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11069,8 +12377,9 @@ func (w *RedisClusterClientWrapper) GeoRadiusByMemberRO(ctx context.Context, key
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoRadiusByMemberRO")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoRadiusByMemberRO")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11088,6 +12397,9 @@ func (w *RedisClusterClientWrapper) GeoRadiusByMemberRO(ctx context.Context, key
 			}()
 		}
 		res0 = w.obj.GeoRadiusByMemberRO(key, member, query)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11102,8 +12414,9 @@ func (w *RedisClusterClientWrapper) GeoRadiusRO(ctx context.Context, key string,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoRadiusRO")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoRadiusRO")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11121,6 +12434,9 @@ func (w *RedisClusterClientWrapper) GeoRadiusRO(ctx context.Context, key string,
 			}()
 		}
 		res0 = w.obj.GeoRadiusRO(key, longitude, latitude, query)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11135,8 +12451,9 @@ func (w *RedisClusterClientWrapper) Get(ctx context.Context, key string) *redis.
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Get")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Get")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11154,6 +12471,9 @@ func (w *RedisClusterClientWrapper) Get(ctx context.Context, key string) *redis.
 			}()
 		}
 		res0 = w.obj.Get(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11168,8 +12488,9 @@ func (w *RedisClusterClientWrapper) GetBit(ctx context.Context, key string, offs
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GetBit")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GetBit")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11187,6 +12508,9 @@ func (w *RedisClusterClientWrapper) GetBit(ctx context.Context, key string, offs
 			}()
 		}
 		res0 = w.obj.GetBit(key, offset)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11201,8 +12525,9 @@ func (w *RedisClusterClientWrapper) GetRange(ctx context.Context, key string, st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GetRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GetRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11220,6 +12545,9 @@ func (w *RedisClusterClientWrapper) GetRange(ctx context.Context, key string, st
 			}()
 		}
 		res0 = w.obj.GetRange(key, start, end)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11234,8 +12562,9 @@ func (w *RedisClusterClientWrapper) GetSet(ctx context.Context, key string, valu
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GetSet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GetSet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11253,6 +12582,9 @@ func (w *RedisClusterClientWrapper) GetSet(ctx context.Context, key string, valu
 			}()
 		}
 		res0 = w.obj.GetSet(key, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11267,8 +12599,9 @@ func (w *RedisClusterClientWrapper) HDel(ctx context.Context, key string, fields
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HDel")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HDel")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11286,6 +12619,9 @@ func (w *RedisClusterClientWrapper) HDel(ctx context.Context, key string, fields
 			}()
 		}
 		res0 = w.obj.HDel(key, fields...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11300,8 +12636,9 @@ func (w *RedisClusterClientWrapper) HExists(ctx context.Context, key string, fie
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HExists")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HExists")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11319,6 +12656,9 @@ func (w *RedisClusterClientWrapper) HExists(ctx context.Context, key string, fie
 			}()
 		}
 		res0 = w.obj.HExists(key, field)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11333,8 +12673,9 @@ func (w *RedisClusterClientWrapper) HGet(ctx context.Context, key string, field 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HGet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HGet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11352,6 +12693,9 @@ func (w *RedisClusterClientWrapper) HGet(ctx context.Context, key string, field 
 			}()
 		}
 		res0 = w.obj.HGet(key, field)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11366,8 +12710,9 @@ func (w *RedisClusterClientWrapper) HGetAll(ctx context.Context, key string) *re
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HGetAll")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HGetAll")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11385,6 +12730,9 @@ func (w *RedisClusterClientWrapper) HGetAll(ctx context.Context, key string) *re
 			}()
 		}
 		res0 = w.obj.HGetAll(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11399,8 +12747,9 @@ func (w *RedisClusterClientWrapper) HIncrBy(ctx context.Context, key string, fie
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HIncrBy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HIncrBy")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11418,6 +12767,9 @@ func (w *RedisClusterClientWrapper) HIncrBy(ctx context.Context, key string, fie
 			}()
 		}
 		res0 = w.obj.HIncrBy(key, field, incr)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11432,8 +12784,9 @@ func (w *RedisClusterClientWrapper) HIncrByFloat(ctx context.Context, key string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HIncrByFloat")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HIncrByFloat")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11451,6 +12804,9 @@ func (w *RedisClusterClientWrapper) HIncrByFloat(ctx context.Context, key string
 			}()
 		}
 		res0 = w.obj.HIncrByFloat(key, field, incr)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11465,8 +12821,9 @@ func (w *RedisClusterClientWrapper) HKeys(ctx context.Context, key string) *redi
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HKeys")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HKeys")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11484,6 +12841,9 @@ func (w *RedisClusterClientWrapper) HKeys(ctx context.Context, key string) *redi
 			}()
 		}
 		res0 = w.obj.HKeys(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11498,8 +12858,9 @@ func (w *RedisClusterClientWrapper) HLen(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HLen")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HLen")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11517,6 +12878,9 @@ func (w *RedisClusterClientWrapper) HLen(ctx context.Context, key string) *redis
 			}()
 		}
 		res0 = w.obj.HLen(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11531,8 +12895,9 @@ func (w *RedisClusterClientWrapper) HMGet(ctx context.Context, key string, field
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HMGet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HMGet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11550,6 +12915,9 @@ func (w *RedisClusterClientWrapper) HMGet(ctx context.Context, key string, field
 			}()
 		}
 		res0 = w.obj.HMGet(key, fields...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11564,8 +12932,9 @@ func (w *RedisClusterClientWrapper) HMSet(ctx context.Context, key string, field
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HMSet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HMSet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11583,6 +12952,9 @@ func (w *RedisClusterClientWrapper) HMSet(ctx context.Context, key string, field
 			}()
 		}
 		res0 = w.obj.HMSet(key, fields)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11597,8 +12969,9 @@ func (w *RedisClusterClientWrapper) HScan(ctx context.Context, key string, curso
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HScan")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HScan")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11616,6 +12989,9 @@ func (w *RedisClusterClientWrapper) HScan(ctx context.Context, key string, curso
 			}()
 		}
 		res0 = w.obj.HScan(key, cursor, match, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11630,8 +13006,9 @@ func (w *RedisClusterClientWrapper) HSet(ctx context.Context, key string, field 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HSet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HSet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11649,6 +13026,9 @@ func (w *RedisClusterClientWrapper) HSet(ctx context.Context, key string, field 
 			}()
 		}
 		res0 = w.obj.HSet(key, field, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11663,8 +13043,9 @@ func (w *RedisClusterClientWrapper) HSetNX(ctx context.Context, key string, fiel
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HSetNX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HSetNX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11682,6 +13063,9 @@ func (w *RedisClusterClientWrapper) HSetNX(ctx context.Context, key string, fiel
 			}()
 		}
 		res0 = w.obj.HSetNX(key, field, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11696,8 +13080,9 @@ func (w *RedisClusterClientWrapper) HVals(ctx context.Context, key string) *redi
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HVals")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HVals")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11715,6 +13100,9 @@ func (w *RedisClusterClientWrapper) HVals(ctx context.Context, key string) *redi
 			}()
 		}
 		res0 = w.obj.HVals(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11729,8 +13117,9 @@ func (w *RedisClusterClientWrapper) Incr(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Incr")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Incr")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11748,6 +13137,9 @@ func (w *RedisClusterClientWrapper) Incr(ctx context.Context, key string) *redis
 			}()
 		}
 		res0 = w.obj.Incr(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11762,8 +13154,9 @@ func (w *RedisClusterClientWrapper) IncrBy(ctx context.Context, key string, valu
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.IncrBy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.IncrBy")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11781,6 +13174,9 @@ func (w *RedisClusterClientWrapper) IncrBy(ctx context.Context, key string, valu
 			}()
 		}
 		res0 = w.obj.IncrBy(key, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11795,8 +13191,9 @@ func (w *RedisClusterClientWrapper) IncrByFloat(ctx context.Context, key string,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.IncrByFloat")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.IncrByFloat")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11814,6 +13211,9 @@ func (w *RedisClusterClientWrapper) IncrByFloat(ctx context.Context, key string,
 			}()
 		}
 		res0 = w.obj.IncrByFloat(key, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11828,8 +13228,9 @@ func (w *RedisClusterClientWrapper) Info(ctx context.Context, section ...string)
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Info")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Info")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11847,6 +13248,9 @@ func (w *RedisClusterClientWrapper) Info(ctx context.Context, section ...string)
 			}()
 		}
 		res0 = w.obj.Info(section...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11861,8 +13265,9 @@ func (w *RedisClusterClientWrapper) Keys(ctx context.Context, pattern string) *r
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Keys")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Keys")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11880,6 +13285,9 @@ func (w *RedisClusterClientWrapper) Keys(ctx context.Context, pattern string) *r
 			}()
 		}
 		res0 = w.obj.Keys(pattern)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11894,8 +13302,9 @@ func (w *RedisClusterClientWrapper) LIndex(ctx context.Context, key string, inde
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LIndex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LIndex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11913,6 +13322,9 @@ func (w *RedisClusterClientWrapper) LIndex(ctx context.Context, key string, inde
 			}()
 		}
 		res0 = w.obj.LIndex(key, index)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11927,8 +13339,9 @@ func (w *RedisClusterClientWrapper) LInsert(ctx context.Context, key string, op 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LInsert")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LInsert")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11946,6 +13359,9 @@ func (w *RedisClusterClientWrapper) LInsert(ctx context.Context, key string, op 
 			}()
 		}
 		res0 = w.obj.LInsert(key, op, pivot, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11960,8 +13376,9 @@ func (w *RedisClusterClientWrapper) LInsertAfter(ctx context.Context, key string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LInsertAfter")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LInsertAfter")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -11979,6 +13396,9 @@ func (w *RedisClusterClientWrapper) LInsertAfter(ctx context.Context, key string
 			}()
 		}
 		res0 = w.obj.LInsertAfter(key, pivot, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -11993,8 +13413,9 @@ func (w *RedisClusterClientWrapper) LInsertBefore(ctx context.Context, key strin
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LInsertBefore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LInsertBefore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12012,6 +13433,9 @@ func (w *RedisClusterClientWrapper) LInsertBefore(ctx context.Context, key strin
 			}()
 		}
 		res0 = w.obj.LInsertBefore(key, pivot, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12026,8 +13450,9 @@ func (w *RedisClusterClientWrapper) LLen(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LLen")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LLen")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12045,6 +13470,9 @@ func (w *RedisClusterClientWrapper) LLen(ctx context.Context, key string) *redis
 			}()
 		}
 		res0 = w.obj.LLen(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12059,8 +13487,9 @@ func (w *RedisClusterClientWrapper) LPop(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LPop")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LPop")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12078,6 +13507,9 @@ func (w *RedisClusterClientWrapper) LPop(ctx context.Context, key string) *redis
 			}()
 		}
 		res0 = w.obj.LPop(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12092,8 +13524,9 @@ func (w *RedisClusterClientWrapper) LPush(ctx context.Context, key string, value
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LPush")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LPush")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12111,6 +13544,9 @@ func (w *RedisClusterClientWrapper) LPush(ctx context.Context, key string, value
 			}()
 		}
 		res0 = w.obj.LPush(key, values...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12125,8 +13561,9 @@ func (w *RedisClusterClientWrapper) LPushX(ctx context.Context, key string, valu
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LPushX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LPushX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12144,6 +13581,9 @@ func (w *RedisClusterClientWrapper) LPushX(ctx context.Context, key string, valu
 			}()
 		}
 		res0 = w.obj.LPushX(key, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12158,8 +13598,9 @@ func (w *RedisClusterClientWrapper) LRange(ctx context.Context, key string, star
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12177,6 +13618,9 @@ func (w *RedisClusterClientWrapper) LRange(ctx context.Context, key string, star
 			}()
 		}
 		res0 = w.obj.LRange(key, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12191,8 +13635,9 @@ func (w *RedisClusterClientWrapper) LRem(ctx context.Context, key string, count 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LRem")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LRem")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12210,6 +13655,9 @@ func (w *RedisClusterClientWrapper) LRem(ctx context.Context, key string, count 
 			}()
 		}
 		res0 = w.obj.LRem(key, count, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12224,8 +13672,9 @@ func (w *RedisClusterClientWrapper) LSet(ctx context.Context, key string, index 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LSet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LSet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12243,6 +13692,9 @@ func (w *RedisClusterClientWrapper) LSet(ctx context.Context, key string, index 
 			}()
 		}
 		res0 = w.obj.LSet(key, index, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12257,8 +13709,9 @@ func (w *RedisClusterClientWrapper) LTrim(ctx context.Context, key string, start
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LTrim")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LTrim")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12276,6 +13729,9 @@ func (w *RedisClusterClientWrapper) LTrim(ctx context.Context, key string, start
 			}()
 		}
 		res0 = w.obj.LTrim(key, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12290,8 +13746,9 @@ func (w *RedisClusterClientWrapper) LastSave(ctx context.Context) *redis.IntCmd 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LastSave")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LastSave")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12309,6 +13766,9 @@ func (w *RedisClusterClientWrapper) LastSave(ctx context.Context) *redis.IntCmd 
 			}()
 		}
 		res0 = w.obj.LastSave()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12323,8 +13783,9 @@ func (w *RedisClusterClientWrapper) MGet(ctx context.Context, keys ...string) *r
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.MGet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.MGet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12342,6 +13803,9 @@ func (w *RedisClusterClientWrapper) MGet(ctx context.Context, keys ...string) *r
 			}()
 		}
 		res0 = w.obj.MGet(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12356,8 +13820,9 @@ func (w *RedisClusterClientWrapper) MSet(ctx context.Context, pairs ...interface
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.MSet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.MSet")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12375,6 +13840,9 @@ func (w *RedisClusterClientWrapper) MSet(ctx context.Context, pairs ...interface
 			}()
 		}
 		res0 = w.obj.MSet(pairs...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12389,8 +13857,9 @@ func (w *RedisClusterClientWrapper) MSetNX(ctx context.Context, pairs ...interfa
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.MSetNX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.MSetNX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12408,6 +13877,9 @@ func (w *RedisClusterClientWrapper) MSetNX(ctx context.Context, pairs ...interfa
 			}()
 		}
 		res0 = w.obj.MSetNX(pairs...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12422,8 +13894,9 @@ func (w *RedisClusterClientWrapper) MemoryUsage(ctx context.Context, key string,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.MemoryUsage")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.MemoryUsage")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12441,6 +13914,9 @@ func (w *RedisClusterClientWrapper) MemoryUsage(ctx context.Context, key string,
 			}()
 		}
 		res0 = w.obj.MemoryUsage(key, samples...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12455,8 +13931,9 @@ func (w *RedisClusterClientWrapper) Migrate(ctx context.Context, host string, po
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Migrate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Migrate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12474,6 +13951,9 @@ func (w *RedisClusterClientWrapper) Migrate(ctx context.Context, host string, po
 			}()
 		}
 		res0 = w.obj.Migrate(host, port, key, db, timeout)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12488,8 +13968,9 @@ func (w *RedisClusterClientWrapper) Move(ctx context.Context, key string, db int
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Move")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Move")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12507,6 +13988,9 @@ func (w *RedisClusterClientWrapper) Move(ctx context.Context, key string, db int
 			}()
 		}
 		res0 = w.obj.Move(key, db)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12521,8 +14005,9 @@ func (w *RedisClusterClientWrapper) ObjectEncoding(ctx context.Context, key stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ObjectEncoding")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ObjectEncoding")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12540,6 +14025,9 @@ func (w *RedisClusterClientWrapper) ObjectEncoding(ctx context.Context, key stri
 			}()
 		}
 		res0 = w.obj.ObjectEncoding(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12554,8 +14042,9 @@ func (w *RedisClusterClientWrapper) ObjectIdleTime(ctx context.Context, key stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ObjectIdleTime")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ObjectIdleTime")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12573,6 +14062,9 @@ func (w *RedisClusterClientWrapper) ObjectIdleTime(ctx context.Context, key stri
 			}()
 		}
 		res0 = w.obj.ObjectIdleTime(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12587,8 +14079,9 @@ func (w *RedisClusterClientWrapper) ObjectRefCount(ctx context.Context, key stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ObjectRefCount")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ObjectRefCount")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12606,6 +14099,9 @@ func (w *RedisClusterClientWrapper) ObjectRefCount(ctx context.Context, key stri
 			}()
 		}
 		res0 = w.obj.ObjectRefCount(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12620,8 +14116,9 @@ func (w *RedisClusterClientWrapper) PExpire(ctx context.Context, key string, exp
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PExpire")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PExpire")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12639,6 +14136,9 @@ func (w *RedisClusterClientWrapper) PExpire(ctx context.Context, key string, exp
 			}()
 		}
 		res0 = w.obj.PExpire(key, expiration)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12653,8 +14153,9 @@ func (w *RedisClusterClientWrapper) PExpireAt(ctx context.Context, key string, t
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PExpireAt")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PExpireAt")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12672,6 +14173,9 @@ func (w *RedisClusterClientWrapper) PExpireAt(ctx context.Context, key string, t
 			}()
 		}
 		res0 = w.obj.PExpireAt(key, tm)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12686,8 +14190,9 @@ func (w *RedisClusterClientWrapper) PFAdd(ctx context.Context, key string, els .
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PFAdd")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PFAdd")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12705,6 +14210,9 @@ func (w *RedisClusterClientWrapper) PFAdd(ctx context.Context, key string, els .
 			}()
 		}
 		res0 = w.obj.PFAdd(key, els...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12719,8 +14227,9 @@ func (w *RedisClusterClientWrapper) PFCount(ctx context.Context, keys ...string)
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PFCount")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PFCount")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12738,6 +14247,9 @@ func (w *RedisClusterClientWrapper) PFCount(ctx context.Context, keys ...string)
 			}()
 		}
 		res0 = w.obj.PFCount(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12752,8 +14264,9 @@ func (w *RedisClusterClientWrapper) PFMerge(ctx context.Context, dest string, ke
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PFMerge")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PFMerge")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12771,6 +14284,9 @@ func (w *RedisClusterClientWrapper) PFMerge(ctx context.Context, dest string, ke
 			}()
 		}
 		res0 = w.obj.PFMerge(dest, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12785,8 +14301,9 @@ func (w *RedisClusterClientWrapper) PTTL(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PTTL")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PTTL")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12804,6 +14321,9 @@ func (w *RedisClusterClientWrapper) PTTL(ctx context.Context, key string) *redis
 			}()
 		}
 		res0 = w.obj.PTTL(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12818,8 +14338,9 @@ func (w *RedisClusterClientWrapper) Persist(ctx context.Context, key string) *re
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Persist")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Persist")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12837,6 +14358,9 @@ func (w *RedisClusterClientWrapper) Persist(ctx context.Context, key string) *re
 			}()
 		}
 		res0 = w.obj.Persist(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12851,8 +14375,9 @@ func (w *RedisClusterClientWrapper) Ping(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Ping")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Ping")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12870,6 +14395,9 @@ func (w *RedisClusterClientWrapper) Ping(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.Ping()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12884,8 +14412,9 @@ func (w *RedisClusterClientWrapper) PubSubChannels(ctx context.Context, pattern 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PubSubChannels")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PubSubChannels")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12903,6 +14432,9 @@ func (w *RedisClusterClientWrapper) PubSubChannels(ctx context.Context, pattern 
 			}()
 		}
 		res0 = w.obj.PubSubChannels(pattern)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12917,8 +14449,9 @@ func (w *RedisClusterClientWrapper) PubSubNumPat(ctx context.Context) *redis.Int
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PubSubNumPat")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PubSubNumPat")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12936,6 +14469,9 @@ func (w *RedisClusterClientWrapper) PubSubNumPat(ctx context.Context) *redis.Int
 			}()
 		}
 		res0 = w.obj.PubSubNumPat()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12950,8 +14486,9 @@ func (w *RedisClusterClientWrapper) PubSubNumSub(ctx context.Context, channels .
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PubSubNumSub")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PubSubNumSub")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -12969,6 +14506,9 @@ func (w *RedisClusterClientWrapper) PubSubNumSub(ctx context.Context, channels .
 			}()
 		}
 		res0 = w.obj.PubSubNumSub(channels...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -12983,8 +14523,9 @@ func (w *RedisClusterClientWrapper) Publish(ctx context.Context, channel string,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Publish")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Publish")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13002,6 +14543,9 @@ func (w *RedisClusterClientWrapper) Publish(ctx context.Context, channel string,
 			}()
 		}
 		res0 = w.obj.Publish(channel, message)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13016,8 +14560,9 @@ func (w *RedisClusterClientWrapper) Quit(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Quit")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Quit")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13035,6 +14580,9 @@ func (w *RedisClusterClientWrapper) Quit(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.Quit()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13049,8 +14597,9 @@ func (w *RedisClusterClientWrapper) RPop(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RPop")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RPop")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13068,6 +14617,9 @@ func (w *RedisClusterClientWrapper) RPop(ctx context.Context, key string) *redis
 			}()
 		}
 		res0 = w.obj.RPop(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13082,8 +14634,9 @@ func (w *RedisClusterClientWrapper) RPopLPush(ctx context.Context, source string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RPopLPush")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RPopLPush")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13101,6 +14654,9 @@ func (w *RedisClusterClientWrapper) RPopLPush(ctx context.Context, source string
 			}()
 		}
 		res0 = w.obj.RPopLPush(source, destination)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13115,8 +14671,9 @@ func (w *RedisClusterClientWrapper) RPush(ctx context.Context, key string, value
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RPush")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RPush")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13134,6 +14691,9 @@ func (w *RedisClusterClientWrapper) RPush(ctx context.Context, key string, value
 			}()
 		}
 		res0 = w.obj.RPush(key, values...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13148,8 +14708,9 @@ func (w *RedisClusterClientWrapper) RPushX(ctx context.Context, key string, valu
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RPushX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RPushX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13167,6 +14728,9 @@ func (w *RedisClusterClientWrapper) RPushX(ctx context.Context, key string, valu
 			}()
 		}
 		res0 = w.obj.RPushX(key, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13181,8 +14745,9 @@ func (w *RedisClusterClientWrapper) RandomKey(ctx context.Context) *redis.String
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RandomKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RandomKey")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13200,6 +14765,9 @@ func (w *RedisClusterClientWrapper) RandomKey(ctx context.Context) *redis.String
 			}()
 		}
 		res0 = w.obj.RandomKey()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13214,8 +14782,9 @@ func (w *RedisClusterClientWrapper) ReadOnly(ctx context.Context) *redis.StatusC
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ReadOnly")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ReadOnly")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13233,6 +14802,9 @@ func (w *RedisClusterClientWrapper) ReadOnly(ctx context.Context) *redis.StatusC
 			}()
 		}
 		res0 = w.obj.ReadOnly()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13247,8 +14819,9 @@ func (w *RedisClusterClientWrapper) ReadWrite(ctx context.Context) *redis.Status
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ReadWrite")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ReadWrite")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13266,6 +14839,9 @@ func (w *RedisClusterClientWrapper) ReadWrite(ctx context.Context) *redis.Status
 			}()
 		}
 		res0 = w.obj.ReadWrite()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13280,8 +14856,9 @@ func (w *RedisClusterClientWrapper) Rename(ctx context.Context, key string, newk
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Rename")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Rename")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13299,6 +14876,9 @@ func (w *RedisClusterClientWrapper) Rename(ctx context.Context, key string, newk
 			}()
 		}
 		res0 = w.obj.Rename(key, newkey)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13313,8 +14893,9 @@ func (w *RedisClusterClientWrapper) RenameNX(ctx context.Context, key string, ne
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RenameNX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RenameNX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13332,6 +14913,9 @@ func (w *RedisClusterClientWrapper) RenameNX(ctx context.Context, key string, ne
 			}()
 		}
 		res0 = w.obj.RenameNX(key, newkey)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13346,8 +14930,9 @@ func (w *RedisClusterClientWrapper) Restore(ctx context.Context, key string, ttl
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Restore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Restore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13365,6 +14950,9 @@ func (w *RedisClusterClientWrapper) Restore(ctx context.Context, key string, ttl
 			}()
 		}
 		res0 = w.obj.Restore(key, ttl, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13379,8 +14967,9 @@ func (w *RedisClusterClientWrapper) RestoreReplace(ctx context.Context, key stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RestoreReplace")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RestoreReplace")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13398,6 +14987,9 @@ func (w *RedisClusterClientWrapper) RestoreReplace(ctx context.Context, key stri
 			}()
 		}
 		res0 = w.obj.RestoreReplace(key, ttl, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13412,8 +15004,9 @@ func (w *RedisClusterClientWrapper) SAdd(ctx context.Context, key string, member
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SAdd")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SAdd")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13431,6 +15024,9 @@ func (w *RedisClusterClientWrapper) SAdd(ctx context.Context, key string, member
 			}()
 		}
 		res0 = w.obj.SAdd(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13445,8 +15041,9 @@ func (w *RedisClusterClientWrapper) SCard(ctx context.Context, key string) *redi
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SCard")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SCard")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13464,6 +15061,9 @@ func (w *RedisClusterClientWrapper) SCard(ctx context.Context, key string) *redi
 			}()
 		}
 		res0 = w.obj.SCard(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13478,8 +15078,9 @@ func (w *RedisClusterClientWrapper) SDiff(ctx context.Context, keys ...string) *
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SDiff")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SDiff")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13497,6 +15098,9 @@ func (w *RedisClusterClientWrapper) SDiff(ctx context.Context, keys ...string) *
 			}()
 		}
 		res0 = w.obj.SDiff(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13511,8 +15115,9 @@ func (w *RedisClusterClientWrapper) SDiffStore(ctx context.Context, destination 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SDiffStore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SDiffStore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13530,6 +15135,9 @@ func (w *RedisClusterClientWrapper) SDiffStore(ctx context.Context, destination 
 			}()
 		}
 		res0 = w.obj.SDiffStore(destination, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13544,8 +15152,9 @@ func (w *RedisClusterClientWrapper) SInter(ctx context.Context, keys ...string) 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SInter")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SInter")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13563,6 +15172,9 @@ func (w *RedisClusterClientWrapper) SInter(ctx context.Context, keys ...string) 
 			}()
 		}
 		res0 = w.obj.SInter(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13577,8 +15189,9 @@ func (w *RedisClusterClientWrapper) SInterStore(ctx context.Context, destination
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SInterStore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SInterStore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13596,6 +15209,9 @@ func (w *RedisClusterClientWrapper) SInterStore(ctx context.Context, destination
 			}()
 		}
 		res0 = w.obj.SInterStore(destination, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13610,8 +15226,9 @@ func (w *RedisClusterClientWrapper) SIsMember(ctx context.Context, key string, m
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SIsMember")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SIsMember")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13629,6 +15246,9 @@ func (w *RedisClusterClientWrapper) SIsMember(ctx context.Context, key string, m
 			}()
 		}
 		res0 = w.obj.SIsMember(key, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13643,8 +15263,9 @@ func (w *RedisClusterClientWrapper) SMembers(ctx context.Context, key string) *r
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SMembers")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SMembers")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13662,6 +15283,9 @@ func (w *RedisClusterClientWrapper) SMembers(ctx context.Context, key string) *r
 			}()
 		}
 		res0 = w.obj.SMembers(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13676,8 +15300,9 @@ func (w *RedisClusterClientWrapper) SMembersMap(ctx context.Context, key string)
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SMembersMap")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SMembersMap")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13695,6 +15320,9 @@ func (w *RedisClusterClientWrapper) SMembersMap(ctx context.Context, key string)
 			}()
 		}
 		res0 = w.obj.SMembersMap(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13709,8 +15337,9 @@ func (w *RedisClusterClientWrapper) SMove(ctx context.Context, source string, de
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SMove")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SMove")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13728,6 +15357,9 @@ func (w *RedisClusterClientWrapper) SMove(ctx context.Context, source string, de
 			}()
 		}
 		res0 = w.obj.SMove(source, destination, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13742,8 +15374,9 @@ func (w *RedisClusterClientWrapper) SPop(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SPop")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SPop")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13761,6 +15394,9 @@ func (w *RedisClusterClientWrapper) SPop(ctx context.Context, key string) *redis
 			}()
 		}
 		res0 = w.obj.SPop(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13775,8 +15411,9 @@ func (w *RedisClusterClientWrapper) SPopN(ctx context.Context, key string, count
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SPopN")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SPopN")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13794,6 +15431,9 @@ func (w *RedisClusterClientWrapper) SPopN(ctx context.Context, key string, count
 			}()
 		}
 		res0 = w.obj.SPopN(key, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13808,8 +15448,9 @@ func (w *RedisClusterClientWrapper) SRandMember(ctx context.Context, key string)
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SRandMember")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SRandMember")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13827,6 +15468,9 @@ func (w *RedisClusterClientWrapper) SRandMember(ctx context.Context, key string)
 			}()
 		}
 		res0 = w.obj.SRandMember(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13841,8 +15485,9 @@ func (w *RedisClusterClientWrapper) SRandMemberN(ctx context.Context, key string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SRandMemberN")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SRandMemberN")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13860,6 +15505,9 @@ func (w *RedisClusterClientWrapper) SRandMemberN(ctx context.Context, key string
 			}()
 		}
 		res0 = w.obj.SRandMemberN(key, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13874,8 +15522,9 @@ func (w *RedisClusterClientWrapper) SRem(ctx context.Context, key string, member
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SRem")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SRem")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13893,6 +15542,9 @@ func (w *RedisClusterClientWrapper) SRem(ctx context.Context, key string, member
 			}()
 		}
 		res0 = w.obj.SRem(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13907,8 +15559,9 @@ func (w *RedisClusterClientWrapper) SScan(ctx context.Context, key string, curso
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SScan")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SScan")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13926,6 +15579,9 @@ func (w *RedisClusterClientWrapper) SScan(ctx context.Context, key string, curso
 			}()
 		}
 		res0 = w.obj.SScan(key, cursor, match, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13940,8 +15596,9 @@ func (w *RedisClusterClientWrapper) SUnion(ctx context.Context, keys ...string) 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SUnion")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SUnion")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13959,6 +15616,9 @@ func (w *RedisClusterClientWrapper) SUnion(ctx context.Context, keys ...string) 
 			}()
 		}
 		res0 = w.obj.SUnion(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -13973,8 +15633,9 @@ func (w *RedisClusterClientWrapper) SUnionStore(ctx context.Context, destination
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SUnionStore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SUnionStore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -13992,6 +15653,9 @@ func (w *RedisClusterClientWrapper) SUnionStore(ctx context.Context, destination
 			}()
 		}
 		res0 = w.obj.SUnionStore(destination, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14006,8 +15670,9 @@ func (w *RedisClusterClientWrapper) Save(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Save")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Save")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14025,6 +15690,9 @@ func (w *RedisClusterClientWrapper) Save(ctx context.Context) *redis.StatusCmd {
 			}()
 		}
 		res0 = w.obj.Save()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14039,8 +15707,9 @@ func (w *RedisClusterClientWrapper) Scan(ctx context.Context, cursor uint64, mat
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Scan")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Scan")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14058,6 +15727,9 @@ func (w *RedisClusterClientWrapper) Scan(ctx context.Context, cursor uint64, mat
 			}()
 		}
 		res0 = w.obj.Scan(cursor, match, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14072,8 +15744,9 @@ func (w *RedisClusterClientWrapper) ScriptExists(ctx context.Context, hashes ...
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ScriptExists")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ScriptExists")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14091,6 +15764,9 @@ func (w *RedisClusterClientWrapper) ScriptExists(ctx context.Context, hashes ...
 			}()
 		}
 		res0 = w.obj.ScriptExists(hashes...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14105,8 +15781,9 @@ func (w *RedisClusterClientWrapper) ScriptFlush(ctx context.Context) *redis.Stat
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ScriptFlush")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ScriptFlush")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14124,6 +15801,9 @@ func (w *RedisClusterClientWrapper) ScriptFlush(ctx context.Context) *redis.Stat
 			}()
 		}
 		res0 = w.obj.ScriptFlush()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14138,8 +15818,9 @@ func (w *RedisClusterClientWrapper) ScriptKill(ctx context.Context) *redis.Statu
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ScriptKill")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ScriptKill")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14157,6 +15838,9 @@ func (w *RedisClusterClientWrapper) ScriptKill(ctx context.Context) *redis.Statu
 			}()
 		}
 		res0 = w.obj.ScriptKill()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14171,8 +15855,9 @@ func (w *RedisClusterClientWrapper) ScriptLoad(ctx context.Context, script strin
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ScriptLoad")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ScriptLoad")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14190,6 +15875,9 @@ func (w *RedisClusterClientWrapper) ScriptLoad(ctx context.Context, script strin
 			}()
 		}
 		res0 = w.obj.ScriptLoad(script)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14204,8 +15892,9 @@ func (w *RedisClusterClientWrapper) Set(ctx context.Context, key string, value i
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Set")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Set")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14223,6 +15912,9 @@ func (w *RedisClusterClientWrapper) Set(ctx context.Context, key string, value i
 			}()
 		}
 		res0 = w.obj.Set(key, value, expiration)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14237,8 +15929,9 @@ func (w *RedisClusterClientWrapper) SetBit(ctx context.Context, key string, offs
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SetBit")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SetBit")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14256,6 +15949,9 @@ func (w *RedisClusterClientWrapper) SetBit(ctx context.Context, key string, offs
 			}()
 		}
 		res0 = w.obj.SetBit(key, offset, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14270,8 +15966,9 @@ func (w *RedisClusterClientWrapper) SetNX(ctx context.Context, key string, value
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SetNX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SetNX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14289,6 +15986,9 @@ func (w *RedisClusterClientWrapper) SetNX(ctx context.Context, key string, value
 			}()
 		}
 		res0 = w.obj.SetNX(key, value, expiration)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14303,8 +16003,9 @@ func (w *RedisClusterClientWrapper) SetRange(ctx context.Context, key string, of
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SetRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SetRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14322,6 +16023,9 @@ func (w *RedisClusterClientWrapper) SetRange(ctx context.Context, key string, of
 			}()
 		}
 		res0 = w.obj.SetRange(key, offset, value)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14336,8 +16040,9 @@ func (w *RedisClusterClientWrapper) SetXX(ctx context.Context, key string, value
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SetXX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SetXX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14355,6 +16060,9 @@ func (w *RedisClusterClientWrapper) SetXX(ctx context.Context, key string, value
 			}()
 		}
 		res0 = w.obj.SetXX(key, value, expiration)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14369,8 +16077,9 @@ func (w *RedisClusterClientWrapper) Shutdown(ctx context.Context) *redis.StatusC
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Shutdown")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Shutdown")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14388,6 +16097,9 @@ func (w *RedisClusterClientWrapper) Shutdown(ctx context.Context) *redis.StatusC
 			}()
 		}
 		res0 = w.obj.Shutdown()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14402,8 +16114,9 @@ func (w *RedisClusterClientWrapper) ShutdownNoSave(ctx context.Context) *redis.S
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ShutdownNoSave")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ShutdownNoSave")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14421,6 +16134,9 @@ func (w *RedisClusterClientWrapper) ShutdownNoSave(ctx context.Context) *redis.S
 			}()
 		}
 		res0 = w.obj.ShutdownNoSave()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14435,8 +16151,9 @@ func (w *RedisClusterClientWrapper) ShutdownSave(ctx context.Context) *redis.Sta
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ShutdownSave")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ShutdownSave")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14454,6 +16171,9 @@ func (w *RedisClusterClientWrapper) ShutdownSave(ctx context.Context) *redis.Sta
 			}()
 		}
 		res0 = w.obj.ShutdownSave()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14468,8 +16188,9 @@ func (w *RedisClusterClientWrapper) SlaveOf(ctx context.Context, host string, po
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SlaveOf")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SlaveOf")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14487,6 +16208,9 @@ func (w *RedisClusterClientWrapper) SlaveOf(ctx context.Context, host string, po
 			}()
 		}
 		res0 = w.obj.SlaveOf(host, port)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14505,8 +16229,9 @@ func (w *RedisClusterClientWrapper) Sort(ctx context.Context, key string, sort *
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Sort")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Sort")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14524,6 +16249,9 @@ func (w *RedisClusterClientWrapper) Sort(ctx context.Context, key string, sort *
 			}()
 		}
 		res0 = w.obj.Sort(key, sort)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14538,8 +16266,9 @@ func (w *RedisClusterClientWrapper) SortInterfaces(ctx context.Context, key stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SortInterfaces")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SortInterfaces")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14557,6 +16286,9 @@ func (w *RedisClusterClientWrapper) SortInterfaces(ctx context.Context, key stri
 			}()
 		}
 		res0 = w.obj.SortInterfaces(key, sort)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14571,8 +16303,9 @@ func (w *RedisClusterClientWrapper) SortStore(ctx context.Context, key string, s
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SortStore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SortStore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14590,6 +16323,9 @@ func (w *RedisClusterClientWrapper) SortStore(ctx context.Context, key string, s
 			}()
 		}
 		res0 = w.obj.SortStore(key, store, sort)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14604,8 +16340,9 @@ func (w *RedisClusterClientWrapper) StrLen(ctx context.Context, key string) *red
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.StrLen")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.StrLen")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14623,6 +16360,9 @@ func (w *RedisClusterClientWrapper) StrLen(ctx context.Context, key string) *red
 			}()
 		}
 		res0 = w.obj.StrLen(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14641,8 +16381,9 @@ func (w *RedisClusterClientWrapper) TTL(ctx context.Context, key string) *redis.
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.TTL")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.TTL")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14660,6 +16401,9 @@ func (w *RedisClusterClientWrapper) TTL(ctx context.Context, key string) *redis.
 			}()
 		}
 		res0 = w.obj.TTL(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14674,8 +16418,9 @@ func (w *RedisClusterClientWrapper) Time(ctx context.Context) *redis.TimeCmd {
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Time")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Time")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14693,6 +16438,9 @@ func (w *RedisClusterClientWrapper) Time(ctx context.Context) *redis.TimeCmd {
 			}()
 		}
 		res0 = w.obj.Time()
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14707,8 +16455,9 @@ func (w *RedisClusterClientWrapper) Touch(ctx context.Context, keys ...string) *
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Touch")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Touch")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14726,6 +16475,9 @@ func (w *RedisClusterClientWrapper) Touch(ctx context.Context, keys ...string) *
 			}()
 		}
 		res0 = w.obj.Touch(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14740,8 +16492,9 @@ func (w *RedisClusterClientWrapper) Type(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Type")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Type")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14759,6 +16512,9 @@ func (w *RedisClusterClientWrapper) Type(ctx context.Context, key string) *redis
 			}()
 		}
 		res0 = w.obj.Type(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14773,8 +16529,9 @@ func (w *RedisClusterClientWrapper) Unlink(ctx context.Context, keys ...string) 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Unlink")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Unlink")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14792,6 +16549,9 @@ func (w *RedisClusterClientWrapper) Unlink(ctx context.Context, keys ...string) 
 			}()
 		}
 		res0 = w.obj.Unlink(keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14806,8 +16566,9 @@ func (w *RedisClusterClientWrapper) Wait(ctx context.Context, numSlaves int, tim
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Wait")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Wait")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14825,6 +16586,9 @@ func (w *RedisClusterClientWrapper) Wait(ctx context.Context, numSlaves int, tim
 			}()
 		}
 		res0 = w.obj.Wait(numSlaves, timeout)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14839,8 +16603,9 @@ func (w *RedisClusterClientWrapper) XAck(ctx context.Context, stream string, gro
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XAck")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XAck")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14858,6 +16623,9 @@ func (w *RedisClusterClientWrapper) XAck(ctx context.Context, stream string, gro
 			}()
 		}
 		res0 = w.obj.XAck(stream, group, ids...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14872,8 +16640,9 @@ func (w *RedisClusterClientWrapper) XAdd(ctx context.Context, a *redis.XAddArgs)
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XAdd")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XAdd")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14891,6 +16660,9 @@ func (w *RedisClusterClientWrapper) XAdd(ctx context.Context, a *redis.XAddArgs)
 			}()
 		}
 		res0 = w.obj.XAdd(a)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14905,8 +16677,9 @@ func (w *RedisClusterClientWrapper) XClaim(ctx context.Context, a *redis.XClaimA
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XClaim")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XClaim")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14924,6 +16697,9 @@ func (w *RedisClusterClientWrapper) XClaim(ctx context.Context, a *redis.XClaimA
 			}()
 		}
 		res0 = w.obj.XClaim(a)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14938,8 +16714,9 @@ func (w *RedisClusterClientWrapper) XClaimJustID(ctx context.Context, a *redis.X
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XClaimJustID")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XClaimJustID")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14957,6 +16734,9 @@ func (w *RedisClusterClientWrapper) XClaimJustID(ctx context.Context, a *redis.X
 			}()
 		}
 		res0 = w.obj.XClaimJustID(a)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -14971,8 +16751,9 @@ func (w *RedisClusterClientWrapper) XDel(ctx context.Context, stream string, ids
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XDel")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XDel")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -14990,6 +16771,9 @@ func (w *RedisClusterClientWrapper) XDel(ctx context.Context, stream string, ids
 			}()
 		}
 		res0 = w.obj.XDel(stream, ids...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15004,8 +16788,9 @@ func (w *RedisClusterClientWrapper) XGroupCreate(ctx context.Context, stream str
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XGroupCreate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XGroupCreate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15023,6 +16808,9 @@ func (w *RedisClusterClientWrapper) XGroupCreate(ctx context.Context, stream str
 			}()
 		}
 		res0 = w.obj.XGroupCreate(stream, group, start)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15037,8 +16825,9 @@ func (w *RedisClusterClientWrapper) XGroupCreateMkStream(ctx context.Context, st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XGroupCreateMkStream")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XGroupCreateMkStream")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15056,6 +16845,9 @@ func (w *RedisClusterClientWrapper) XGroupCreateMkStream(ctx context.Context, st
 			}()
 		}
 		res0 = w.obj.XGroupCreateMkStream(stream, group, start)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15070,8 +16862,9 @@ func (w *RedisClusterClientWrapper) XGroupDelConsumer(ctx context.Context, strea
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XGroupDelConsumer")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XGroupDelConsumer")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15089,6 +16882,9 @@ func (w *RedisClusterClientWrapper) XGroupDelConsumer(ctx context.Context, strea
 			}()
 		}
 		res0 = w.obj.XGroupDelConsumer(stream, group, consumer)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15103,8 +16899,9 @@ func (w *RedisClusterClientWrapper) XGroupDestroy(ctx context.Context, stream st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XGroupDestroy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XGroupDestroy")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15122,6 +16919,9 @@ func (w *RedisClusterClientWrapper) XGroupDestroy(ctx context.Context, stream st
 			}()
 		}
 		res0 = w.obj.XGroupDestroy(stream, group)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15136,8 +16936,9 @@ func (w *RedisClusterClientWrapper) XGroupSetID(ctx context.Context, stream stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XGroupSetID")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XGroupSetID")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15155,6 +16956,9 @@ func (w *RedisClusterClientWrapper) XGroupSetID(ctx context.Context, stream stri
 			}()
 		}
 		res0 = w.obj.XGroupSetID(stream, group, start)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15169,8 +16973,9 @@ func (w *RedisClusterClientWrapper) XLen(ctx context.Context, stream string) *re
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XLen")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XLen")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15188,6 +16993,9 @@ func (w *RedisClusterClientWrapper) XLen(ctx context.Context, stream string) *re
 			}()
 		}
 		res0 = w.obj.XLen(stream)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15202,8 +17010,9 @@ func (w *RedisClusterClientWrapper) XPending(ctx context.Context, stream string,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XPending")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XPending")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15221,6 +17030,9 @@ func (w *RedisClusterClientWrapper) XPending(ctx context.Context, stream string,
 			}()
 		}
 		res0 = w.obj.XPending(stream, group)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15235,8 +17047,9 @@ func (w *RedisClusterClientWrapper) XPendingExt(ctx context.Context, a *redis.XP
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XPendingExt")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XPendingExt")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15254,6 +17067,9 @@ func (w *RedisClusterClientWrapper) XPendingExt(ctx context.Context, a *redis.XP
 			}()
 		}
 		res0 = w.obj.XPendingExt(a)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15268,8 +17084,9 @@ func (w *RedisClusterClientWrapper) XRange(ctx context.Context, stream string, s
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15287,6 +17104,9 @@ func (w *RedisClusterClientWrapper) XRange(ctx context.Context, stream string, s
 			}()
 		}
 		res0 = w.obj.XRange(stream, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15301,8 +17121,9 @@ func (w *RedisClusterClientWrapper) XRangeN(ctx context.Context, stream string, 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XRangeN")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XRangeN")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15320,6 +17141,9 @@ func (w *RedisClusterClientWrapper) XRangeN(ctx context.Context, stream string, 
 			}()
 		}
 		res0 = w.obj.XRangeN(stream, start, stop, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15334,8 +17158,9 @@ func (w *RedisClusterClientWrapper) XRead(ctx context.Context, a *redis.XReadArg
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XRead")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XRead")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15353,6 +17178,9 @@ func (w *RedisClusterClientWrapper) XRead(ctx context.Context, a *redis.XReadArg
 			}()
 		}
 		res0 = w.obj.XRead(a)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15367,8 +17195,9 @@ func (w *RedisClusterClientWrapper) XReadGroup(ctx context.Context, a *redis.XRe
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XReadGroup")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XReadGroup")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15386,6 +17215,9 @@ func (w *RedisClusterClientWrapper) XReadGroup(ctx context.Context, a *redis.XRe
 			}()
 		}
 		res0 = w.obj.XReadGroup(a)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15400,8 +17232,9 @@ func (w *RedisClusterClientWrapper) XReadStreams(ctx context.Context, streams ..
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XReadStreams")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XReadStreams")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15419,6 +17252,9 @@ func (w *RedisClusterClientWrapper) XReadStreams(ctx context.Context, streams ..
 			}()
 		}
 		res0 = w.obj.XReadStreams(streams...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15433,8 +17269,9 @@ func (w *RedisClusterClientWrapper) XRevRange(ctx context.Context, stream string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XRevRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XRevRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15452,6 +17289,9 @@ func (w *RedisClusterClientWrapper) XRevRange(ctx context.Context, stream string
 			}()
 		}
 		res0 = w.obj.XRevRange(stream, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15466,8 +17306,9 @@ func (w *RedisClusterClientWrapper) XRevRangeN(ctx context.Context, stream strin
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XRevRangeN")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XRevRangeN")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15485,6 +17326,9 @@ func (w *RedisClusterClientWrapper) XRevRangeN(ctx context.Context, stream strin
 			}()
 		}
 		res0 = w.obj.XRevRangeN(stream, start, stop, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15499,8 +17343,9 @@ func (w *RedisClusterClientWrapper) XTrim(ctx context.Context, key string, maxLe
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XTrim")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XTrim")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15518,6 +17363,9 @@ func (w *RedisClusterClientWrapper) XTrim(ctx context.Context, key string, maxLe
 			}()
 		}
 		res0 = w.obj.XTrim(key, maxLen)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15532,8 +17380,9 @@ func (w *RedisClusterClientWrapper) XTrimApprox(ctx context.Context, key string,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XTrimApprox")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XTrimApprox")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15551,6 +17400,9 @@ func (w *RedisClusterClientWrapper) XTrimApprox(ctx context.Context, key string,
 			}()
 		}
 		res0 = w.obj.XTrimApprox(key, maxLen)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15565,8 +17417,9 @@ func (w *RedisClusterClientWrapper) ZAdd(ctx context.Context, key string, member
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAdd")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAdd")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15584,6 +17437,9 @@ func (w *RedisClusterClientWrapper) ZAdd(ctx context.Context, key string, member
 			}()
 		}
 		res0 = w.obj.ZAdd(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15598,8 +17454,9 @@ func (w *RedisClusterClientWrapper) ZAddCh(ctx context.Context, key string, memb
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAddCh")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAddCh")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15617,6 +17474,9 @@ func (w *RedisClusterClientWrapper) ZAddCh(ctx context.Context, key string, memb
 			}()
 		}
 		res0 = w.obj.ZAddCh(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15631,8 +17491,9 @@ func (w *RedisClusterClientWrapper) ZAddNX(ctx context.Context, key string, memb
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAddNX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAddNX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15650,6 +17511,9 @@ func (w *RedisClusterClientWrapper) ZAddNX(ctx context.Context, key string, memb
 			}()
 		}
 		res0 = w.obj.ZAddNX(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15664,8 +17528,9 @@ func (w *RedisClusterClientWrapper) ZAddNXCh(ctx context.Context, key string, me
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAddNXCh")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAddNXCh")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15683,6 +17548,9 @@ func (w *RedisClusterClientWrapper) ZAddNXCh(ctx context.Context, key string, me
 			}()
 		}
 		res0 = w.obj.ZAddNXCh(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15697,8 +17565,9 @@ func (w *RedisClusterClientWrapper) ZAddXX(ctx context.Context, key string, memb
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAddXX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAddXX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15716,6 +17585,9 @@ func (w *RedisClusterClientWrapper) ZAddXX(ctx context.Context, key string, memb
 			}()
 		}
 		res0 = w.obj.ZAddXX(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15730,8 +17602,9 @@ func (w *RedisClusterClientWrapper) ZAddXXCh(ctx context.Context, key string, me
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAddXXCh")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAddXXCh")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15749,6 +17622,9 @@ func (w *RedisClusterClientWrapper) ZAddXXCh(ctx context.Context, key string, me
 			}()
 		}
 		res0 = w.obj.ZAddXXCh(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15763,8 +17639,9 @@ func (w *RedisClusterClientWrapper) ZCard(ctx context.Context, key string) *redi
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZCard")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZCard")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15782,6 +17659,9 @@ func (w *RedisClusterClientWrapper) ZCard(ctx context.Context, key string) *redi
 			}()
 		}
 		res0 = w.obj.ZCard(key)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15796,8 +17676,9 @@ func (w *RedisClusterClientWrapper) ZCount(ctx context.Context, key string, min 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZCount")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZCount")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15815,6 +17696,9 @@ func (w *RedisClusterClientWrapper) ZCount(ctx context.Context, key string, min 
 			}()
 		}
 		res0 = w.obj.ZCount(key, min, max)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15829,8 +17713,9 @@ func (w *RedisClusterClientWrapper) ZIncr(ctx context.Context, key string, membe
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZIncr")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZIncr")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15848,6 +17733,9 @@ func (w *RedisClusterClientWrapper) ZIncr(ctx context.Context, key string, membe
 			}()
 		}
 		res0 = w.obj.ZIncr(key, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15862,8 +17750,9 @@ func (w *RedisClusterClientWrapper) ZIncrBy(ctx context.Context, key string, inc
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZIncrBy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZIncrBy")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15881,6 +17770,9 @@ func (w *RedisClusterClientWrapper) ZIncrBy(ctx context.Context, key string, inc
 			}()
 		}
 		res0 = w.obj.ZIncrBy(key, increment, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15895,8 +17787,9 @@ func (w *RedisClusterClientWrapper) ZIncrNX(ctx context.Context, key string, mem
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZIncrNX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZIncrNX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15914,6 +17807,9 @@ func (w *RedisClusterClientWrapper) ZIncrNX(ctx context.Context, key string, mem
 			}()
 		}
 		res0 = w.obj.ZIncrNX(key, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15928,8 +17824,9 @@ func (w *RedisClusterClientWrapper) ZIncrXX(ctx context.Context, key string, mem
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZIncrXX")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZIncrXX")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15947,6 +17844,9 @@ func (w *RedisClusterClientWrapper) ZIncrXX(ctx context.Context, key string, mem
 			}()
 		}
 		res0 = w.obj.ZIncrXX(key, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15961,8 +17861,9 @@ func (w *RedisClusterClientWrapper) ZInterStore(ctx context.Context, destination
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZInterStore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZInterStore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -15980,6 +17881,9 @@ func (w *RedisClusterClientWrapper) ZInterStore(ctx context.Context, destination
 			}()
 		}
 		res0 = w.obj.ZInterStore(destination, store, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -15994,8 +17898,9 @@ func (w *RedisClusterClientWrapper) ZLexCount(ctx context.Context, key string, m
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZLexCount")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZLexCount")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16013,6 +17918,9 @@ func (w *RedisClusterClientWrapper) ZLexCount(ctx context.Context, key string, m
 			}()
 		}
 		res0 = w.obj.ZLexCount(key, min, max)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16027,8 +17935,9 @@ func (w *RedisClusterClientWrapper) ZPopMax(ctx context.Context, key string, cou
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZPopMax")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZPopMax")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16046,6 +17955,9 @@ func (w *RedisClusterClientWrapper) ZPopMax(ctx context.Context, key string, cou
 			}()
 		}
 		res0 = w.obj.ZPopMax(key, count...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16060,8 +17972,9 @@ func (w *RedisClusterClientWrapper) ZPopMin(ctx context.Context, key string, cou
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZPopMin")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZPopMin")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16079,6 +17992,9 @@ func (w *RedisClusterClientWrapper) ZPopMin(ctx context.Context, key string, cou
 			}()
 		}
 		res0 = w.obj.ZPopMin(key, count...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16093,8 +18009,9 @@ func (w *RedisClusterClientWrapper) ZRange(ctx context.Context, key string, star
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16112,6 +18029,9 @@ func (w *RedisClusterClientWrapper) ZRange(ctx context.Context, key string, star
 			}()
 		}
 		res0 = w.obj.ZRange(key, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16126,8 +18046,9 @@ func (w *RedisClusterClientWrapper) ZRangeByLex(ctx context.Context, key string,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRangeByLex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRangeByLex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16145,6 +18066,9 @@ func (w *RedisClusterClientWrapper) ZRangeByLex(ctx context.Context, key string,
 			}()
 		}
 		res0 = w.obj.ZRangeByLex(key, opt)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16159,8 +18083,9 @@ func (w *RedisClusterClientWrapper) ZRangeByScore(ctx context.Context, key strin
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRangeByScore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRangeByScore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16178,6 +18103,9 @@ func (w *RedisClusterClientWrapper) ZRangeByScore(ctx context.Context, key strin
 			}()
 		}
 		res0 = w.obj.ZRangeByScore(key, opt)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16192,8 +18120,9 @@ func (w *RedisClusterClientWrapper) ZRangeByScoreWithScores(ctx context.Context,
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRangeByScoreWithScores")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRangeByScoreWithScores")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16211,6 +18140,9 @@ func (w *RedisClusterClientWrapper) ZRangeByScoreWithScores(ctx context.Context,
 			}()
 		}
 		res0 = w.obj.ZRangeByScoreWithScores(key, opt)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16225,8 +18157,9 @@ func (w *RedisClusterClientWrapper) ZRangeWithScores(ctx context.Context, key st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRangeWithScores")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRangeWithScores")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16244,6 +18177,9 @@ func (w *RedisClusterClientWrapper) ZRangeWithScores(ctx context.Context, key st
 			}()
 		}
 		res0 = w.obj.ZRangeWithScores(key, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16258,8 +18194,9 @@ func (w *RedisClusterClientWrapper) ZRank(ctx context.Context, key string, membe
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRank")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRank")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16277,6 +18214,9 @@ func (w *RedisClusterClientWrapper) ZRank(ctx context.Context, key string, membe
 			}()
 		}
 		res0 = w.obj.ZRank(key, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16291,8 +18231,9 @@ func (w *RedisClusterClientWrapper) ZRem(ctx context.Context, key string, member
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRem")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRem")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16310,6 +18251,9 @@ func (w *RedisClusterClientWrapper) ZRem(ctx context.Context, key string, member
 			}()
 		}
 		res0 = w.obj.ZRem(key, members...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16324,8 +18268,9 @@ func (w *RedisClusterClientWrapper) ZRemRangeByLex(ctx context.Context, key stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRemRangeByLex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRemRangeByLex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16343,6 +18288,9 @@ func (w *RedisClusterClientWrapper) ZRemRangeByLex(ctx context.Context, key stri
 			}()
 		}
 		res0 = w.obj.ZRemRangeByLex(key, min, max)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16357,8 +18305,9 @@ func (w *RedisClusterClientWrapper) ZRemRangeByRank(ctx context.Context, key str
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRemRangeByRank")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRemRangeByRank")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16376,6 +18325,9 @@ func (w *RedisClusterClientWrapper) ZRemRangeByRank(ctx context.Context, key str
 			}()
 		}
 		res0 = w.obj.ZRemRangeByRank(key, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16390,8 +18342,9 @@ func (w *RedisClusterClientWrapper) ZRemRangeByScore(ctx context.Context, key st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRemRangeByScore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRemRangeByScore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16409,6 +18362,9 @@ func (w *RedisClusterClientWrapper) ZRemRangeByScore(ctx context.Context, key st
 			}()
 		}
 		res0 = w.obj.ZRemRangeByScore(key, min, max)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16423,8 +18379,9 @@ func (w *RedisClusterClientWrapper) ZRevRange(ctx context.Context, key string, s
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16442,6 +18399,9 @@ func (w *RedisClusterClientWrapper) ZRevRange(ctx context.Context, key string, s
 			}()
 		}
 		res0 = w.obj.ZRevRange(key, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16456,8 +18416,9 @@ func (w *RedisClusterClientWrapper) ZRevRangeByLex(ctx context.Context, key stri
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRangeByLex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRangeByLex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16475,6 +18436,9 @@ func (w *RedisClusterClientWrapper) ZRevRangeByLex(ctx context.Context, key stri
 			}()
 		}
 		res0 = w.obj.ZRevRangeByLex(key, opt)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16489,8 +18453,9 @@ func (w *RedisClusterClientWrapper) ZRevRangeByScore(ctx context.Context, key st
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRangeByScore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRangeByScore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16508,6 +18473,9 @@ func (w *RedisClusterClientWrapper) ZRevRangeByScore(ctx context.Context, key st
 			}()
 		}
 		res0 = w.obj.ZRevRangeByScore(key, opt)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16522,8 +18490,9 @@ func (w *RedisClusterClientWrapper) ZRevRangeByScoreWithScores(ctx context.Conte
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRangeByScoreWithScores")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRangeByScoreWithScores")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16541,6 +18510,9 @@ func (w *RedisClusterClientWrapper) ZRevRangeByScoreWithScores(ctx context.Conte
 			}()
 		}
 		res0 = w.obj.ZRevRangeByScoreWithScores(key, opt)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16555,8 +18527,9 @@ func (w *RedisClusterClientWrapper) ZRevRangeWithScores(ctx context.Context, key
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRangeWithScores")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRangeWithScores")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16574,6 +18547,9 @@ func (w *RedisClusterClientWrapper) ZRevRangeWithScores(ctx context.Context, key
 			}()
 		}
 		res0 = w.obj.ZRevRangeWithScores(key, start, stop)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16588,8 +18564,9 @@ func (w *RedisClusterClientWrapper) ZRevRank(ctx context.Context, key string, me
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRank")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRank")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16607,6 +18584,9 @@ func (w *RedisClusterClientWrapper) ZRevRank(ctx context.Context, key string, me
 			}()
 		}
 		res0 = w.obj.ZRevRank(key, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16621,8 +18601,9 @@ func (w *RedisClusterClientWrapper) ZScan(ctx context.Context, key string, curso
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZScan")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZScan")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16640,6 +18621,9 @@ func (w *RedisClusterClientWrapper) ZScan(ctx context.Context, key string, curso
 			}()
 		}
 		res0 = w.obj.ZScan(key, cursor, match, count)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16654,8 +18638,9 @@ func (w *RedisClusterClientWrapper) ZScore(ctx context.Context, key string, memb
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZScore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZScore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16673,6 +18658,9 @@ func (w *RedisClusterClientWrapper) ZScore(ctx context.Context, key string, memb
 			}()
 		}
 		res0 = w.obj.ZScore(key, member)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0
@@ -16687,8 +18675,9 @@ func (w *RedisClusterClientWrapper) ZUnionStore(ctx context.Context, dest string
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZUnionStore")
+			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZUnionStore")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -16706,6 +18695,9 @@ func (w *RedisClusterClientWrapper) ZUnionStore(ctx context.Context, dest string
 			}()
 		}
 		res0 = w.obj.ZUnionStore(dest, store, keys...)
+		if res0.Err() != nil && span != nil {
+			span.SetTag("error", res0.Err().Error())
+		}
 		return res0.Err()
 	})
 	return res0

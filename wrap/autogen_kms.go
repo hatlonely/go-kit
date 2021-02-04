@@ -93,8 +93,9 @@ func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.A
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricDecrypt")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricDecrypt")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -112,6 +113,9 @@ func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.A
 			}()
 		}
 		response, err = w.obj.AsymmetricDecrypt(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -137,8 +141,9 @@ func (w *KMSClientWrapper) AsymmetricEncrypt(ctx context.Context, request *kms.A
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricEncrypt")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricEncrypt")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -156,6 +161,9 @@ func (w *KMSClientWrapper) AsymmetricEncrypt(ctx context.Context, request *kms.A
 			}()
 		}
 		response, err = w.obj.AsymmetricEncrypt(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -181,8 +189,9 @@ func (w *KMSClientWrapper) AsymmetricSign(ctx context.Context, request *kms.Asym
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricSign")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricSign")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -200,6 +209,9 @@ func (w *KMSClientWrapper) AsymmetricSign(ctx context.Context, request *kms.Asym
 			}()
 		}
 		response, err = w.obj.AsymmetricSign(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -225,8 +237,9 @@ func (w *KMSClientWrapper) AsymmetricVerify(ctx context.Context, request *kms.As
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricVerify")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricVerify")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -244,6 +257,9 @@ func (w *KMSClientWrapper) AsymmetricVerify(ctx context.Context, request *kms.As
 			}()
 		}
 		response, err = w.obj.AsymmetricVerify(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -269,8 +285,9 @@ func (w *KMSClientWrapper) CancelKeyDeletion(ctx context.Context, request *kms.C
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CancelKeyDeletion")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CancelKeyDeletion")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -288,6 +305,9 @@ func (w *KMSClientWrapper) CancelKeyDeletion(ctx context.Context, request *kms.C
 			}()
 		}
 		response, err = w.obj.CancelKeyDeletion(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -313,8 +333,9 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecrypt(ctx context.Context, req
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePrivateKeyDecrypt")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePrivateKeyDecrypt")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -332,6 +353,9 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecrypt(ctx context.Context, req
 			}()
 		}
 		response, err = w.obj.CertificatePrivateKeyDecrypt(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -357,8 +381,9 @@ func (w *KMSClientWrapper) CertificatePrivateKeySign(ctx context.Context, reques
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePrivateKeySign")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePrivateKeySign")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -376,6 +401,9 @@ func (w *KMSClientWrapper) CertificatePrivateKeySign(ctx context.Context, reques
 			}()
 		}
 		response, err = w.obj.CertificatePrivateKeySign(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -401,8 +429,9 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncrypt(ctx context.Context, requ
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePublicKeyEncrypt")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePublicKeyEncrypt")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -420,6 +449,9 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncrypt(ctx context.Context, requ
 			}()
 		}
 		response, err = w.obj.CertificatePublicKeyEncrypt(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -445,8 +477,9 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerify(ctx context.Context, reque
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePublicKeyVerify")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePublicKeyVerify")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -464,6 +497,9 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerify(ctx context.Context, reque
 			}()
 		}
 		response, err = w.obj.CertificatePublicKeyVerify(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -489,8 +525,9 @@ func (w *KMSClientWrapper) CreateAlias(ctx context.Context, request *kms.CreateA
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateAlias")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CreateAlias")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -508,6 +545,9 @@ func (w *KMSClientWrapper) CreateAlias(ctx context.Context, request *kms.CreateA
 			}()
 		}
 		response, err = w.obj.CreateAlias(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -533,8 +573,9 @@ func (w *KMSClientWrapper) CreateCertificate(ctx context.Context, request *kms.C
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateCertificate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CreateCertificate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -552,6 +593,9 @@ func (w *KMSClientWrapper) CreateCertificate(ctx context.Context, request *kms.C
 			}()
 		}
 		response, err = w.obj.CreateCertificate(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -577,8 +621,9 @@ func (w *KMSClientWrapper) CreateKey(ctx context.Context, request *kms.CreateKey
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CreateKey")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -596,6 +641,9 @@ func (w *KMSClientWrapper) CreateKey(ctx context.Context, request *kms.CreateKey
 			}()
 		}
 		response, err = w.obj.CreateKey(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -611,8 +659,9 @@ func (w *KMSClientWrapper) CreateKeyVersion(ctx context.Context, request *kms.Cr
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateKeyVersion")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CreateKeyVersion")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -630,6 +679,9 @@ func (w *KMSClientWrapper) CreateKeyVersion(ctx context.Context, request *kms.Cr
 			}()
 		}
 		response, err = w.obj.CreateKeyVersion(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -665,8 +717,9 @@ func (w *KMSClientWrapper) CreateSecret(ctx context.Context, request *kms.Create
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.CreateSecret")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CreateSecret")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -684,6 +737,9 @@ func (w *KMSClientWrapper) CreateSecret(ctx context.Context, request *kms.Create
 			}()
 		}
 		response, err = w.obj.CreateSecret(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -709,8 +765,9 @@ func (w *KMSClientWrapper) Decrypt(ctx context.Context, request *kms.DecryptRequ
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.Decrypt")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.Decrypt")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -728,6 +785,9 @@ func (w *KMSClientWrapper) Decrypt(ctx context.Context, request *kms.DecryptRequ
 			}()
 		}
 		response, err = w.obj.Decrypt(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -753,8 +813,9 @@ func (w *KMSClientWrapper) DeleteAlias(ctx context.Context, request *kms.DeleteA
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteAlias")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteAlias")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -772,6 +833,9 @@ func (w *KMSClientWrapper) DeleteAlias(ctx context.Context, request *kms.DeleteA
 			}()
 		}
 		response, err = w.obj.DeleteAlias(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -797,8 +861,9 @@ func (w *KMSClientWrapper) DeleteCertificate(ctx context.Context, request *kms.D
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteCertificate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteCertificate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -816,6 +881,9 @@ func (w *KMSClientWrapper) DeleteCertificate(ctx context.Context, request *kms.D
 			}()
 		}
 		response, err = w.obj.DeleteCertificate(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -841,8 +909,9 @@ func (w *KMSClientWrapper) DeleteKeyMaterial(ctx context.Context, request *kms.D
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteKeyMaterial")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteKeyMaterial")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -860,6 +929,9 @@ func (w *KMSClientWrapper) DeleteKeyMaterial(ctx context.Context, request *kms.D
 			}()
 		}
 		response, err = w.obj.DeleteKeyMaterial(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -885,8 +957,9 @@ func (w *KMSClientWrapper) DeleteSecret(ctx context.Context, request *kms.Delete
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteSecret")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteSecret")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -904,6 +977,9 @@ func (w *KMSClientWrapper) DeleteSecret(ctx context.Context, request *kms.Delete
 			}()
 		}
 		response, err = w.obj.DeleteSecret(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -929,8 +1005,9 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatus(ctx context.Context, request
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeAccountKmsStatus")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeAccountKmsStatus")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -948,6 +1025,9 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatus(ctx context.Context, request
 			}()
 		}
 		response, err = w.obj.DescribeAccountKmsStatus(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -973,8 +1053,9 @@ func (w *KMSClientWrapper) DescribeCertificate(ctx context.Context, request *kms
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeCertificate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeCertificate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -992,6 +1073,9 @@ func (w *KMSClientWrapper) DescribeCertificate(ctx context.Context, request *kms
 			}()
 		}
 		response, err = w.obj.DescribeCertificate(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1017,8 +1101,9 @@ func (w *KMSClientWrapper) DescribeKey(ctx context.Context, request *kms.Describ
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeKey")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1036,6 +1121,9 @@ func (w *KMSClientWrapper) DescribeKey(ctx context.Context, request *kms.Describ
 			}()
 		}
 		response, err = w.obj.DescribeKey(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1051,8 +1139,9 @@ func (w *KMSClientWrapper) DescribeKeyVersion(ctx context.Context, request *kms.
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeKeyVersion")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeKeyVersion")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1070,6 +1159,9 @@ func (w *KMSClientWrapper) DescribeKeyVersion(ctx context.Context, request *kms.
 			}()
 		}
 		response, err = w.obj.DescribeKeyVersion(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1105,8 +1197,9 @@ func (w *KMSClientWrapper) DescribeRegions(ctx context.Context, request *kms.Des
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeRegions")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeRegions")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1124,6 +1217,9 @@ func (w *KMSClientWrapper) DescribeRegions(ctx context.Context, request *kms.Des
 			}()
 		}
 		response, err = w.obj.DescribeRegions(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1149,8 +1245,9 @@ func (w *KMSClientWrapper) DescribeSecret(ctx context.Context, request *kms.Desc
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeSecret")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeSecret")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1168,6 +1265,9 @@ func (w *KMSClientWrapper) DescribeSecret(ctx context.Context, request *kms.Desc
 			}()
 		}
 		response, err = w.obj.DescribeSecret(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1193,8 +1293,9 @@ func (w *KMSClientWrapper) DescribeService(ctx context.Context, request *kms.Des
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeService")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeService")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1212,6 +1313,9 @@ func (w *KMSClientWrapper) DescribeService(ctx context.Context, request *kms.Des
 			}()
 		}
 		response, err = w.obj.DescribeService(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1237,8 +1341,9 @@ func (w *KMSClientWrapper) DisableKey(ctx context.Context, request *kms.DisableK
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.DisableKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DisableKey")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1256,6 +1361,9 @@ func (w *KMSClientWrapper) DisableKey(ctx context.Context, request *kms.DisableK
 			}()
 		}
 		response, err = w.obj.DisableKey(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1281,8 +1389,9 @@ func (w *KMSClientWrapper) EnableKey(ctx context.Context, request *kms.EnableKey
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.EnableKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.EnableKey")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1300,6 +1409,9 @@ func (w *KMSClientWrapper) EnableKey(ctx context.Context, request *kms.EnableKey
 			}()
 		}
 		response, err = w.obj.EnableKey(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1325,8 +1437,9 @@ func (w *KMSClientWrapper) Encrypt(ctx context.Context, request *kms.EncryptRequ
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.Encrypt")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.Encrypt")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1344,6 +1457,9 @@ func (w *KMSClientWrapper) Encrypt(ctx context.Context, request *kms.EncryptRequ
 			}()
 		}
 		response, err = w.obj.Encrypt(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1369,8 +1485,9 @@ func (w *KMSClientWrapper) ExportCertificate(ctx context.Context, request *kms.E
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ExportCertificate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ExportCertificate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1388,6 +1505,9 @@ func (w *KMSClientWrapper) ExportCertificate(ctx context.Context, request *kms.E
 			}()
 		}
 		response, err = w.obj.ExportCertificate(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1413,8 +1533,9 @@ func (w *KMSClientWrapper) ExportDataKey(ctx context.Context, request *kms.Expor
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ExportDataKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ExportDataKey")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1432,6 +1553,9 @@ func (w *KMSClientWrapper) ExportDataKey(ctx context.Context, request *kms.Expor
 			}()
 		}
 		response, err = w.obj.ExportDataKey(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1457,8 +1581,9 @@ func (w *KMSClientWrapper) GenerateAndExportDataKey(ctx context.Context, request
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateAndExportDataKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateAndExportDataKey")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1476,6 +1601,9 @@ func (w *KMSClientWrapper) GenerateAndExportDataKey(ctx context.Context, request
 			}()
 		}
 		response, err = w.obj.GenerateAndExportDataKey(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1501,8 +1629,9 @@ func (w *KMSClientWrapper) GenerateDataKey(ctx context.Context, request *kms.Gen
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateDataKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateDataKey")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1520,6 +1649,9 @@ func (w *KMSClientWrapper) GenerateDataKey(ctx context.Context, request *kms.Gen
 			}()
 		}
 		response, err = w.obj.GenerateDataKey(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1545,8 +1677,9 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintext(ctx context.Context, 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateDataKeyWithoutPlaintext")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateDataKeyWithoutPlaintext")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1564,6 +1697,9 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintext(ctx context.Context, 
 			}()
 		}
 		response, err = w.obj.GenerateDataKeyWithoutPlaintext(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1589,8 +1725,9 @@ func (w *KMSClientWrapper) GetCertificate(ctx context.Context, request *kms.GetC
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetCertificate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.GetCertificate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1608,6 +1745,9 @@ func (w *KMSClientWrapper) GetCertificate(ctx context.Context, request *kms.GetC
 			}()
 		}
 		response, err = w.obj.GetCertificate(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1633,8 +1773,9 @@ func (w *KMSClientWrapper) GetParametersForImport(ctx context.Context, request *
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetParametersForImport")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.GetParametersForImport")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1652,6 +1793,9 @@ func (w *KMSClientWrapper) GetParametersForImport(ctx context.Context, request *
 			}()
 		}
 		response, err = w.obj.GetParametersForImport(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1677,8 +1821,9 @@ func (w *KMSClientWrapper) GetPublicKey(ctx context.Context, request *kms.GetPub
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetPublicKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.GetPublicKey")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1696,6 +1841,9 @@ func (w *KMSClientWrapper) GetPublicKey(ctx context.Context, request *kms.GetPub
 			}()
 		}
 		response, err = w.obj.GetPublicKey(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1721,8 +1869,9 @@ func (w *KMSClientWrapper) GetRandomPassword(ctx context.Context, request *kms.G
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetRandomPassword")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.GetRandomPassword")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1740,6 +1889,9 @@ func (w *KMSClientWrapper) GetRandomPassword(ctx context.Context, request *kms.G
 			}()
 		}
 		response, err = w.obj.GetRandomPassword(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1765,8 +1917,9 @@ func (w *KMSClientWrapper) GetSecretValue(ctx context.Context, request *kms.GetS
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.GetSecretValue")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.GetSecretValue")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1784,6 +1937,9 @@ func (w *KMSClientWrapper) GetSecretValue(ctx context.Context, request *kms.GetS
 			}()
 		}
 		response, err = w.obj.GetSecretValue(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1809,8 +1965,9 @@ func (w *KMSClientWrapper) ImportCertificate(ctx context.Context, request *kms.I
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ImportCertificate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ImportCertificate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1828,6 +1985,9 @@ func (w *KMSClientWrapper) ImportCertificate(ctx context.Context, request *kms.I
 			}()
 		}
 		response, err = w.obj.ImportCertificate(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1853,8 +2013,9 @@ func (w *KMSClientWrapper) ImportEncryptionCertificate(ctx context.Context, requ
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ImportEncryptionCertificate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ImportEncryptionCertificate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1872,6 +2033,9 @@ func (w *KMSClientWrapper) ImportEncryptionCertificate(ctx context.Context, requ
 			}()
 		}
 		response, err = w.obj.ImportEncryptionCertificate(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1897,8 +2061,9 @@ func (w *KMSClientWrapper) ImportKeyMaterial(ctx context.Context, request *kms.I
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ImportKeyMaterial")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ImportKeyMaterial")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1916,6 +2081,9 @@ func (w *KMSClientWrapper) ImportKeyMaterial(ctx context.Context, request *kms.I
 			}()
 		}
 		response, err = w.obj.ImportKeyMaterial(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1941,8 +2109,9 @@ func (w *KMSClientWrapper) ListAliases(ctx context.Context, request *kms.ListAli
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListAliases")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ListAliases")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1960,6 +2129,9 @@ func (w *KMSClientWrapper) ListAliases(ctx context.Context, request *kms.ListAli
 			}()
 		}
 		response, err = w.obj.ListAliases(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -1975,8 +2147,9 @@ func (w *KMSClientWrapper) ListAliasesByKeyId(ctx context.Context, request *kms.
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListAliasesByKeyId")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ListAliasesByKeyId")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1994,6 +2167,9 @@ func (w *KMSClientWrapper) ListAliasesByKeyId(ctx context.Context, request *kms.
 			}()
 		}
 		response, err = w.obj.ListAliasesByKeyId(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2029,8 +2205,9 @@ func (w *KMSClientWrapper) ListCertificates(ctx context.Context, request *kms.Li
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListCertificates")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ListCertificates")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2048,6 +2225,9 @@ func (w *KMSClientWrapper) ListCertificates(ctx context.Context, request *kms.Li
 			}()
 		}
 		response, err = w.obj.ListCertificates(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2073,8 +2253,9 @@ func (w *KMSClientWrapper) ListKeyVersions(ctx context.Context, request *kms.Lis
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListKeyVersions")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ListKeyVersions")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2092,6 +2273,9 @@ func (w *KMSClientWrapper) ListKeyVersions(ctx context.Context, request *kms.Lis
 			}()
 		}
 		response, err = w.obj.ListKeyVersions(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2117,8 +2301,9 @@ func (w *KMSClientWrapper) ListKeys(ctx context.Context, request *kms.ListKeysRe
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListKeys")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ListKeys")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2136,6 +2321,9 @@ func (w *KMSClientWrapper) ListKeys(ctx context.Context, request *kms.ListKeysRe
 			}()
 		}
 		response, err = w.obj.ListKeys(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2161,8 +2349,9 @@ func (w *KMSClientWrapper) ListResourceTags(ctx context.Context, request *kms.Li
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListResourceTags")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ListResourceTags")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2180,6 +2369,9 @@ func (w *KMSClientWrapper) ListResourceTags(ctx context.Context, request *kms.Li
 			}()
 		}
 		response, err = w.obj.ListResourceTags(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2205,8 +2397,9 @@ func (w *KMSClientWrapper) ListSecretVersionIds(ctx context.Context, request *km
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListSecretVersionIds")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ListSecretVersionIds")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2224,6 +2417,9 @@ func (w *KMSClientWrapper) ListSecretVersionIds(ctx context.Context, request *km
 			}()
 		}
 		response, err = w.obj.ListSecretVersionIds(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2249,8 +2445,9 @@ func (w *KMSClientWrapper) ListSecrets(ctx context.Context, request *kms.ListSec
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ListSecrets")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ListSecrets")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2268,6 +2465,9 @@ func (w *KMSClientWrapper) ListSecrets(ctx context.Context, request *kms.ListSec
 			}()
 		}
 		response, err = w.obj.ListSecrets(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2293,8 +2493,9 @@ func (w *KMSClientWrapper) OpenKmsService(ctx context.Context, request *kms.Open
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.OpenKmsService")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.OpenKmsService")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2312,6 +2513,9 @@ func (w *KMSClientWrapper) OpenKmsService(ctx context.Context, request *kms.Open
 			}()
 		}
 		response, err = w.obj.OpenKmsService(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2337,8 +2541,9 @@ func (w *KMSClientWrapper) PutSecretValue(ctx context.Context, request *kms.PutS
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.PutSecretValue")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.PutSecretValue")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2356,6 +2561,9 @@ func (w *KMSClientWrapper) PutSecretValue(ctx context.Context, request *kms.PutS
 			}()
 		}
 		response, err = w.obj.PutSecretValue(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2381,8 +2589,9 @@ func (w *KMSClientWrapper) ReEncrypt(ctx context.Context, request *kms.ReEncrypt
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ReEncrypt")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ReEncrypt")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2400,6 +2609,9 @@ func (w *KMSClientWrapper) ReEncrypt(ctx context.Context, request *kms.ReEncrypt
 			}()
 		}
 		response, err = w.obj.ReEncrypt(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2425,8 +2637,9 @@ func (w *KMSClientWrapper) RestoreSecret(ctx context.Context, request *kms.Resto
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.RestoreSecret")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.RestoreSecret")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2444,6 +2657,9 @@ func (w *KMSClientWrapper) RestoreSecret(ctx context.Context, request *kms.Resto
 			}()
 		}
 		response, err = w.obj.RestoreSecret(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2469,8 +2685,9 @@ func (w *KMSClientWrapper) RotateSecret(ctx context.Context, request *kms.Rotate
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.RotateSecret")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.RotateSecret")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2488,6 +2705,9 @@ func (w *KMSClientWrapper) RotateSecret(ctx context.Context, request *kms.Rotate
 			}()
 		}
 		response, err = w.obj.RotateSecret(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2513,8 +2733,9 @@ func (w *KMSClientWrapper) ScheduleKeyDeletion(ctx context.Context, request *kms
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.ScheduleKeyDeletion")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ScheduleKeyDeletion")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2532,6 +2753,9 @@ func (w *KMSClientWrapper) ScheduleKeyDeletion(ctx context.Context, request *kms
 			}()
 		}
 		response, err = w.obj.ScheduleKeyDeletion(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2557,8 +2781,9 @@ func (w *KMSClientWrapper) TagResource(ctx context.Context, request *kms.TagReso
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.TagResource")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.TagResource")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2576,6 +2801,9 @@ func (w *KMSClientWrapper) TagResource(ctx context.Context, request *kms.TagReso
 			}()
 		}
 		response, err = w.obj.TagResource(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2601,8 +2829,9 @@ func (w *KMSClientWrapper) UntagResource(ctx context.Context, request *kms.Untag
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UntagResource")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.UntagResource")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2620,6 +2849,9 @@ func (w *KMSClientWrapper) UntagResource(ctx context.Context, request *kms.Untag
 			}()
 		}
 		response, err = w.obj.UntagResource(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2645,8 +2877,9 @@ func (w *KMSClientWrapper) UpdateAlias(ctx context.Context, request *kms.UpdateA
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateAlias")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateAlias")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2664,6 +2897,9 @@ func (w *KMSClientWrapper) UpdateAlias(ctx context.Context, request *kms.UpdateA
 			}()
 		}
 		response, err = w.obj.UpdateAlias(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2689,8 +2925,9 @@ func (w *KMSClientWrapper) UpdateCertificateStatus(ctx context.Context, request 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateCertificateStatus")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateCertificateStatus")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2708,6 +2945,9 @@ func (w *KMSClientWrapper) UpdateCertificateStatus(ctx context.Context, request 
 			}()
 		}
 		response, err = w.obj.UpdateCertificateStatus(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2733,8 +2973,9 @@ func (w *KMSClientWrapper) UpdateKeyDescription(ctx context.Context, request *km
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateKeyDescription")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateKeyDescription")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2752,6 +2993,9 @@ func (w *KMSClientWrapper) UpdateKeyDescription(ctx context.Context, request *km
 			}()
 		}
 		response, err = w.obj.UpdateKeyDescription(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2777,8 +3021,9 @@ func (w *KMSClientWrapper) UpdateRotationPolicy(ctx context.Context, request *km
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateRotationPolicy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateRotationPolicy")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2796,6 +3041,9 @@ func (w *KMSClientWrapper) UpdateRotationPolicy(ctx context.Context, request *km
 			}()
 		}
 		response, err = w.obj.UpdateRotationPolicy(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2821,8 +3069,9 @@ func (w *KMSClientWrapper) UpdateSecret(ctx context.Context, request *kms.Update
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateSecret")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateSecret")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2840,6 +3089,9 @@ func (w *KMSClientWrapper) UpdateSecret(ctx context.Context, request *kms.Update
 			}()
 		}
 		response, err = w.obj.UpdateSecret(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2855,8 +3107,9 @@ func (w *KMSClientWrapper) UpdateSecretRotationPolicy(ctx context.Context, reque
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateSecretRotationPolicy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateSecretRotationPolicy")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2874,6 +3127,9 @@ func (w *KMSClientWrapper) UpdateSecretRotationPolicy(ctx context.Context, reque
 			}()
 		}
 		response, err = w.obj.UpdateSecretRotationPolicy(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2899,8 +3155,9 @@ func (w *KMSClientWrapper) UpdateSecretVersionStage(ctx context.Context, request
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateSecretVersionStage")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateSecretVersionStage")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2918,6 +3175,9 @@ func (w *KMSClientWrapper) UpdateSecretVersionStage(ctx context.Context, request
 			}()
 		}
 		response, err = w.obj.UpdateSecretVersionStage(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err
@@ -2953,8 +3213,9 @@ func (w *KMSClientWrapper) UploadCertificate(ctx context.Context, request *kms.U
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "kms.Client.UploadCertificate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.UploadCertificate")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2972,6 +3233,9 @@ func (w *KMSClientWrapper) UploadCertificate(ctx context.Context, request *kms.U
 			}()
 		}
 		response, err = w.obj.UploadCertificate(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return response, err

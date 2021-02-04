@@ -93,8 +93,9 @@ func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, reque
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.AbortTransaction")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.AbortTransaction")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -112,6 +113,9 @@ func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, reque
 			}()
 		}
 		res0, err = w.obj.AbortTransaction(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -127,8 +131,9 @@ func (w *OTSTableStoreClientWrapper) BatchGetRow(ctx context.Context, request *t
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.BatchGetRow")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.BatchGetRow")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -146,6 +151,9 @@ func (w *OTSTableStoreClientWrapper) BatchGetRow(ctx context.Context, request *t
 			}()
 		}
 		res0, err = w.obj.BatchGetRow(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -161,8 +169,9 @@ func (w *OTSTableStoreClientWrapper) BatchWriteRow(ctx context.Context, request 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.BatchWriteRow")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.BatchWriteRow")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -180,6 +189,9 @@ func (w *OTSTableStoreClientWrapper) BatchWriteRow(ctx context.Context, request 
 			}()
 		}
 		res0, err = w.obj.BatchWriteRow(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -195,8 +207,9 @@ func (w *OTSTableStoreClientWrapper) CommitTransaction(ctx context.Context, requ
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CommitTransaction")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CommitTransaction")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -214,6 +227,9 @@ func (w *OTSTableStoreClientWrapper) CommitTransaction(ctx context.Context, requ
 			}()
 		}
 		res0, err = w.obj.CommitTransaction(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -229,8 +245,9 @@ func (w *OTSTableStoreClientWrapper) ComputeSplitPointsBySize(ctx context.Contex
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ComputeSplitPointsBySize")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ComputeSplitPointsBySize")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -248,6 +265,9 @@ func (w *OTSTableStoreClientWrapper) ComputeSplitPointsBySize(ctx context.Contex
 			}()
 		}
 		res0, err = w.obj.ComputeSplitPointsBySize(req)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -263,8 +283,9 @@ func (w *OTSTableStoreClientWrapper) CreateIndex(ctx context.Context, request *t
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateIndex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateIndex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -282,6 +303,9 @@ func (w *OTSTableStoreClientWrapper) CreateIndex(ctx context.Context, request *t
 			}()
 		}
 		res0, err = w.obj.CreateIndex(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -297,8 +321,9 @@ func (w *OTSTableStoreClientWrapper) CreateSearchIndex(ctx context.Context, requ
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateSearchIndex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateSearchIndex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -316,6 +341,9 @@ func (w *OTSTableStoreClientWrapper) CreateSearchIndex(ctx context.Context, requ
 			}()
 		}
 		res0, err = w.obj.CreateSearchIndex(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -331,8 +359,9 @@ func (w *OTSTableStoreClientWrapper) CreateTable(ctx context.Context, request *t
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateTable")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateTable")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -350,6 +379,9 @@ func (w *OTSTableStoreClientWrapper) CreateTable(ctx context.Context, request *t
 			}()
 		}
 		res0, err = w.obj.CreateTable(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -365,8 +397,9 @@ func (w *OTSTableStoreClientWrapper) DeleteIndex(ctx context.Context, request *t
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteIndex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteIndex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -384,6 +417,9 @@ func (w *OTSTableStoreClientWrapper) DeleteIndex(ctx context.Context, request *t
 			}()
 		}
 		res0, err = w.obj.DeleteIndex(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -399,8 +435,9 @@ func (w *OTSTableStoreClientWrapper) DeleteRow(ctx context.Context, request *tab
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteRow")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteRow")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -418,6 +455,9 @@ func (w *OTSTableStoreClientWrapper) DeleteRow(ctx context.Context, request *tab
 			}()
 		}
 		res0, err = w.obj.DeleteRow(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -433,8 +473,9 @@ func (w *OTSTableStoreClientWrapper) DeleteSearchIndex(ctx context.Context, requ
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteSearchIndex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteSearchIndex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -452,6 +493,9 @@ func (w *OTSTableStoreClientWrapper) DeleteSearchIndex(ctx context.Context, requ
 			}()
 		}
 		res0, err = w.obj.DeleteSearchIndex(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -467,8 +511,9 @@ func (w *OTSTableStoreClientWrapper) DeleteTable(ctx context.Context, request *t
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteTable")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteTable")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -486,6 +531,9 @@ func (w *OTSTableStoreClientWrapper) DeleteTable(ctx context.Context, request *t
 			}()
 		}
 		res0, err = w.obj.DeleteTable(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -501,8 +549,9 @@ func (w *OTSTableStoreClientWrapper) DescribeSearchIndex(ctx context.Context, re
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeSearchIndex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeSearchIndex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -520,6 +569,9 @@ func (w *OTSTableStoreClientWrapper) DescribeSearchIndex(ctx context.Context, re
 			}()
 		}
 		res0, err = w.obj.DescribeSearchIndex(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -535,8 +587,9 @@ func (w *OTSTableStoreClientWrapper) DescribeStream(ctx context.Context, req *ta
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeStream")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeStream")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -554,6 +607,9 @@ func (w *OTSTableStoreClientWrapper) DescribeStream(ctx context.Context, req *ta
 			}()
 		}
 		res0, err = w.obj.DescribeStream(req)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -569,8 +625,9 @@ func (w *OTSTableStoreClientWrapper) DescribeTable(ctx context.Context, request 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeTable")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeTable")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -588,6 +645,9 @@ func (w *OTSTableStoreClientWrapper) DescribeTable(ctx context.Context, request 
 			}()
 		}
 		res0, err = w.obj.DescribeTable(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -603,8 +663,9 @@ func (w *OTSTableStoreClientWrapper) GetRange(ctx context.Context, request *tabl
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetRange")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetRange")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -622,6 +683,9 @@ func (w *OTSTableStoreClientWrapper) GetRange(ctx context.Context, request *tabl
 			}()
 		}
 		res0, err = w.obj.GetRange(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -637,8 +701,9 @@ func (w *OTSTableStoreClientWrapper) GetRow(ctx context.Context, request *tables
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetRow")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetRow")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -656,6 +721,9 @@ func (w *OTSTableStoreClientWrapper) GetRow(ctx context.Context, request *tables
 			}()
 		}
 		res0, err = w.obj.GetRow(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -671,8 +739,9 @@ func (w *OTSTableStoreClientWrapper) GetShardIterator(ctx context.Context, req *
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetShardIterator")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetShardIterator")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -690,6 +759,9 @@ func (w *OTSTableStoreClientWrapper) GetShardIterator(ctx context.Context, req *
 			}()
 		}
 		res0, err = w.obj.GetShardIterator(req)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -705,8 +777,9 @@ func (w *OTSTableStoreClientWrapper) GetStreamRecord(ctx context.Context, req *t
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetStreamRecord")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetStreamRecord")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -724,6 +797,9 @@ func (w *OTSTableStoreClientWrapper) GetStreamRecord(ctx context.Context, req *t
 			}()
 		}
 		res0, err = w.obj.GetStreamRecord(req)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -739,8 +815,9 @@ func (w *OTSTableStoreClientWrapper) ListSearchIndex(ctx context.Context, reques
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListSearchIndex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListSearchIndex")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -758,6 +835,9 @@ func (w *OTSTableStoreClientWrapper) ListSearchIndex(ctx context.Context, reques
 			}()
 		}
 		res0, err = w.obj.ListSearchIndex(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -773,8 +853,9 @@ func (w *OTSTableStoreClientWrapper) ListStream(ctx context.Context, req *tables
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListStream")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListStream")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -792,6 +873,9 @@ func (w *OTSTableStoreClientWrapper) ListStream(ctx context.Context, req *tables
 			}()
 		}
 		res0, err = w.obj.ListStream(req)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -807,8 +891,9 @@ func (w *OTSTableStoreClientWrapper) ListTable(ctx context.Context) (*tablestore
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListTable")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListTable")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -826,6 +911,9 @@ func (w *OTSTableStoreClientWrapper) ListTable(ctx context.Context) (*tablestore
 			}()
 		}
 		res0, err = w.obj.ListTable()
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -841,8 +929,9 @@ func (w *OTSTableStoreClientWrapper) PutRow(ctx context.Context, request *tables
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.PutRow")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.PutRow")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -860,6 +949,9 @@ func (w *OTSTableStoreClientWrapper) PutRow(ctx context.Context, request *tables
 			}()
 		}
 		res0, err = w.obj.PutRow(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -875,8 +967,9 @@ func (w *OTSTableStoreClientWrapper) Search(ctx context.Context, request *tables
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.Search")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.Search")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -894,6 +987,9 @@ func (w *OTSTableStoreClientWrapper) Search(ctx context.Context, request *tables
 			}()
 		}
 		res0, err = w.obj.Search(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -909,8 +1005,9 @@ func (w *OTSTableStoreClientWrapper) StartLocalTransaction(ctx context.Context, 
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.StartLocalTransaction")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.StartLocalTransaction")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -928,6 +1025,9 @@ func (w *OTSTableStoreClientWrapper) StartLocalTransaction(ctx context.Context, 
 			}()
 		}
 		res0, err = w.obj.StartLocalTransaction(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -943,8 +1043,9 @@ func (w *OTSTableStoreClientWrapper) UpdateRow(ctx context.Context, request *tab
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.UpdateRow")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.UpdateRow")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -962,6 +1063,9 @@ func (w *OTSTableStoreClientWrapper) UpdateRow(ctx context.Context, request *tab
 			}()
 		}
 		res0, err = w.obj.UpdateRow(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
@@ -977,8 +1081,9 @@ func (w *OTSTableStoreClientWrapper) UpdateTable(ctx context.Context, request *t
 				return err
 			}
 		}
+		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ := opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.UpdateTable")
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.UpdateTable")
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -996,6 +1101,9 @@ func (w *OTSTableStoreClientWrapper) UpdateTable(ctx context.Context, request *t
 			}()
 		}
 		res0, err = w.obj.UpdateTable(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
 		return err
 	})
 	return res0, err
