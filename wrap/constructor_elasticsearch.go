@@ -24,10 +24,11 @@ type ESOptions struct {
 }
 
 type ESClientWrapperOptions struct {
-	Retry       micro.RetryOptions
-	Wrapper     WrapperOptions
-	ES          ESOptions
-	RateLimiter micro.RateLimiterOptions
+	Retry              micro.RetryOptions
+	Wrapper            WrapperOptions
+	ES                 ESOptions
+	RateLimiter        micro.RateLimiterOptions
+	ParallelController micro.ParallelControllerOptions
 }
 
 func NewESClientWithOptions(options *ESOptions) (*elastic.Client, error) {
@@ -59,15 +60,20 @@ func NewESClientWrapperWithOptions(options *ESClientWrapperOptions, opts ...refx
 	w.options = &options.Wrapper
 	w.retry, err = micro.NewRetryWithOptions(&options.Retry)
 	if err != nil {
-		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
+		return nil, errors.Wrap(err, "micro.NewRetryWithOptions failed")
 	}
 	w.rateLimiter, err = micro.NewRateLimiterWithOptions(&options.RateLimiter, opts...)
 	if err != nil {
-		return nil, errors.Wrap(err, "NewRateLimiterWithOptions failed")
+		return nil, errors.Wrap(err, "micro.NewRateLimiterWithOptions failed")
+	}
+	w.parallelController, err = micro.NewParallelControllerWithOptions(&options.ParallelController, opts...)
+	if err != nil {
+		return nil, errors.Wrap(err, "micro.NewParallelControllerWithOptions failed")
 	}
 	if w.options.EnableMetric {
 		w.CreateMetric(w.options)
 	}
+
 	client, err := NewESClientWithOptions(&options.ES)
 	if err != nil {
 		return nil, errors.WithMessage(err, "NewESClientWithOptions failed")
@@ -90,6 +96,7 @@ func NewESClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*ESC
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiter"), w.OnRateLimiterChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("ParallelController"), w.OnParallelControllerChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("ES"), func(cfg *config.Config) error {
 		var options ESOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {

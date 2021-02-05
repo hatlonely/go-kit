@@ -19,10 +19,11 @@ type OSSOptions struct {
 }
 
 type OSSClientWrapperOptions struct {
-	Retry       micro.RetryOptions
-	Wrapper     WrapperOptions
-	OSS         OSSOptions
-	RateLimiter micro.RateLimiterOptions
+	Retry              micro.RetryOptions
+	Wrapper            WrapperOptions
+	OSS                OSSOptions
+	RateLimiter        micro.RateLimiterOptions
+	ParallelController micro.ParallelControllerOptions
 }
 
 func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions, opts ...refx.Option) (*OSSClientWrapper, error) {
@@ -32,11 +33,15 @@ func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions, opts ...re
 	w.options = &options.Wrapper
 	w.retry, err = micro.NewRetryWithOptions(&options.Retry)
 	if err != nil {
-		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
+		return nil, errors.Wrap(err, "micro.NewRetryWithOptions failed")
 	}
 	w.rateLimiter, err = micro.NewRateLimiterWithOptions(&options.RateLimiter, opts...)
 	if err != nil {
-		return nil, errors.Wrap(err, "NewRateLimiterWithOptions failed")
+		return nil, errors.Wrap(err, "micro.NewRateLimiterWithOptions failed")
+	}
+	w.parallelController, err = micro.NewParallelControllerWithOptions(&options.ParallelController, opts...)
+	if err != nil {
+		return nil, errors.Wrap(err, "micro.NewParallelControllerWithOptions failed")
 	}
 	if w.options.EnableMetric {
 		w.CreateMetric(w.options)
@@ -84,6 +89,7 @@ func NewOSSClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*OS
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiter"), w.OnRateLimiterChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("ParallelController"), w.OnParallelControllerChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("OSS"), func(cfg *config.Config) error {
 		var options OSSOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
