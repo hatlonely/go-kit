@@ -126,6 +126,11 @@ func (w *OSSBucketWrapper) AbortMultipartUpload(ctx context.Context, imur oss.In
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.AbortMultipartUpload"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.AbortMultipartUpload")
@@ -161,6 +166,11 @@ func (w *OSSBucketWrapper) AppendObject(ctx context.Context, objectKey string, r
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.AppendObject"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.AppendObject"); err != nil {
 				return err
 			}
 		}
@@ -202,6 +212,11 @@ func (w *OSSBucketWrapper) CompleteMultipartUpload(ctx context.Context, imur oss
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.CompleteMultipartUpload"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.CompleteMultipartUpload")
@@ -236,6 +251,11 @@ func (w *OSSBucketWrapper) CopyFile(ctx context.Context, srcBucketName string, s
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.CopyFile"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.CopyFile"); err != nil {
 				return err
 			}
 		}
@@ -277,6 +297,11 @@ func (w *OSSBucketWrapper) CopyObject(ctx context.Context, srcObjectKey string, 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.CopyObject"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.CopyObject")
@@ -312,6 +337,11 @@ func (w *OSSBucketWrapper) CopyObjectFrom(ctx context.Context, srcBucketName str
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.CopyObjectFrom"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.CopyObjectFrom"); err != nil {
 				return err
 			}
 		}
@@ -353,6 +383,11 @@ func (w *OSSBucketWrapper) CopyObjectTo(ctx context.Context, destBucketName stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.CopyObjectTo"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.CopyObjectTo")
@@ -388,6 +423,11 @@ func (w *OSSBucketWrapper) CreateLiveChannel(ctx context.Context, channelName st
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.CreateLiveChannel"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.CreateLiveChannel"); err != nil {
 				return err
 			}
 		}
@@ -429,6 +469,11 @@ func (w *OSSBucketWrapper) CreateSelectCsvObjectMeta(ctx context.Context, key st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.CreateSelectCsvObjectMeta"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.CreateSelectCsvObjectMeta")
@@ -464,6 +509,11 @@ func (w *OSSBucketWrapper) CreateSelectJsonObjectMeta(ctx context.Context, key s
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.CreateSelectJsonObjectMeta"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.CreateSelectJsonObjectMeta"); err != nil {
 				return err
 			}
 		}
@@ -504,6 +554,11 @@ func (w *OSSBucketWrapper) DeleteLiveChannel(ctx context.Context, channelName st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.DeleteLiveChannel"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.DeleteLiveChannel")
@@ -541,6 +596,11 @@ func (w *OSSBucketWrapper) DeleteObject(ctx context.Context, objectKey string, o
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.DeleteObject"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.DeleteObject")
@@ -575,6 +635,11 @@ func (w *OSSBucketWrapper) DeleteObjectTagging(ctx context.Context, objectKey st
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.DeleteObjectTagging"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.DeleteObjectTagging"); err != nil {
 				return err
 			}
 		}
@@ -616,6 +681,11 @@ func (w *OSSBucketWrapper) DeleteObjectVersions(ctx context.Context, objectVersi
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.DeleteObjectVersions"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.DeleteObjectVersions")
@@ -651,6 +721,11 @@ func (w *OSSBucketWrapper) DeleteObjects(ctx context.Context, objectKeys []strin
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.DeleteObjects"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.DeleteObjects"); err != nil {
 				return err
 			}
 		}
@@ -692,6 +767,11 @@ func (w *OSSBucketWrapper) Do(ctx context.Context, method string, objectName str
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.Do")
@@ -727,6 +807,11 @@ func (w *OSSBucketWrapper) DoAppendObject(ctx context.Context, request *oss.Appe
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.DoAppendObject"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.DoAppendObject"); err != nil {
 				return err
 			}
 		}
@@ -768,6 +853,11 @@ func (w *OSSBucketWrapper) DoGetObject(ctx context.Context, request *oss.GetObje
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.DoGetObject"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoGetObject")
@@ -803,6 +893,11 @@ func (w *OSSBucketWrapper) DoGetObjectWithURL(ctx context.Context, signedURL str
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.DoGetObjectWithURL"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.DoGetObjectWithURL"); err != nil {
 				return err
 			}
 		}
@@ -844,6 +939,11 @@ func (w *OSSBucketWrapper) DoPostSelectObject(ctx context.Context, key string, p
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.DoPostSelectObject"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoPostSelectObject")
@@ -879,6 +979,11 @@ func (w *OSSBucketWrapper) DoPutObject(ctx context.Context, request *oss.PutObje
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.DoPutObject"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.DoPutObject"); err != nil {
 				return err
 			}
 		}
@@ -920,6 +1025,11 @@ func (w *OSSBucketWrapper) DoPutObjectWithURL(ctx context.Context, signedURL str
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.DoPutObjectWithURL"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoPutObjectWithURL")
@@ -958,6 +1068,11 @@ func (w *OSSBucketWrapper) DoUploadPart(ctx context.Context, request *oss.Upload
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.DoUploadPart"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.DoUploadPart")
@@ -992,6 +1107,11 @@ func (w *OSSBucketWrapper) DownloadFile(ctx context.Context, objectKey string, f
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.DownloadFile"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.DownloadFile"); err != nil {
 				return err
 			}
 		}
@@ -1038,6 +1158,11 @@ func (w *OSSBucketWrapper) GetLiveChannelHistory(ctx context.Context, channelNam
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.GetLiveChannelHistory"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetLiveChannelHistory")
@@ -1073,6 +1198,11 @@ func (w *OSSBucketWrapper) GetLiveChannelInfo(ctx context.Context, channelName s
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.GetLiveChannelInfo"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.GetLiveChannelInfo"); err != nil {
 				return err
 			}
 		}
@@ -1114,6 +1244,11 @@ func (w *OSSBucketWrapper) GetLiveChannelStat(ctx context.Context, channelName s
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.GetLiveChannelStat"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetLiveChannelStat")
@@ -1149,6 +1284,11 @@ func (w *OSSBucketWrapper) GetObject(ctx context.Context, objectKey string, opti
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.GetObject"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.GetObject"); err != nil {
 				return err
 			}
 		}
@@ -1190,6 +1330,11 @@ func (w *OSSBucketWrapper) GetObjectACL(ctx context.Context, objectKey string, o
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.GetObjectACL"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectACL")
@@ -1225,6 +1370,11 @@ func (w *OSSBucketWrapper) GetObjectDetailedMeta(ctx context.Context, objectKey 
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.GetObjectDetailedMeta"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.GetObjectDetailedMeta"); err != nil {
 				return err
 			}
 		}
@@ -1266,6 +1416,11 @@ func (w *OSSBucketWrapper) GetObjectMeta(ctx context.Context, objectKey string, 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.GetObjectMeta"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectMeta")
@@ -1301,6 +1456,11 @@ func (w *OSSBucketWrapper) GetObjectTagging(ctx context.Context, objectKey strin
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.GetObjectTagging"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.GetObjectTagging"); err != nil {
 				return err
 			}
 		}
@@ -1341,6 +1501,11 @@ func (w *OSSBucketWrapper) GetObjectToFile(ctx context.Context, objectKey string
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.GetObjectToFile"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectToFile")
@@ -1375,6 +1540,11 @@ func (w *OSSBucketWrapper) GetObjectToFileWithURL(ctx context.Context, signedURL
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.GetObjectToFileWithURL"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.GetObjectToFileWithURL"); err != nil {
 				return err
 			}
 		}
@@ -1416,6 +1586,11 @@ func (w *OSSBucketWrapper) GetObjectWithURL(ctx context.Context, signedURL strin
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.GetObjectWithURL"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetObjectWithURL")
@@ -1451,6 +1626,11 @@ func (w *OSSBucketWrapper) GetSymlink(ctx context.Context, objectKey string, opt
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.GetSymlink"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.GetSymlink"); err != nil {
 				return err
 			}
 		}
@@ -1492,6 +1672,11 @@ func (w *OSSBucketWrapper) GetVodPlaylist(ctx context.Context, channelName strin
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.GetVodPlaylist"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.GetVodPlaylist")
@@ -1527,6 +1712,11 @@ func (w *OSSBucketWrapper) InitiateMultipartUpload(ctx context.Context, objectKe
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.InitiateMultipartUpload"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.InitiateMultipartUpload"); err != nil {
 				return err
 			}
 		}
@@ -1568,6 +1758,11 @@ func (w *OSSBucketWrapper) IsObjectExist(ctx context.Context, objectKey string, 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.IsObjectExist"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.IsObjectExist")
@@ -1603,6 +1798,11 @@ func (w *OSSBucketWrapper) ListLiveChannel(ctx context.Context, options ...oss.O
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.ListLiveChannel"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.ListLiveChannel"); err != nil {
 				return err
 			}
 		}
@@ -1644,6 +1844,11 @@ func (w *OSSBucketWrapper) ListMultipartUploads(ctx context.Context, options ...
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.ListMultipartUploads"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListMultipartUploads")
@@ -1679,6 +1884,11 @@ func (w *OSSBucketWrapper) ListObjectVersions(ctx context.Context, options ...os
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.ListObjectVersions"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.ListObjectVersions"); err != nil {
 				return err
 			}
 		}
@@ -1720,6 +1930,11 @@ func (w *OSSBucketWrapper) ListObjects(ctx context.Context, options ...oss.Optio
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.ListObjects"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListObjects")
@@ -1755,6 +1970,11 @@ func (w *OSSBucketWrapper) ListObjectsV2(ctx context.Context, options ...oss.Opt
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.ListObjectsV2"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.ListObjectsV2"); err != nil {
 				return err
 			}
 		}
@@ -1796,6 +2016,11 @@ func (w *OSSBucketWrapper) ListUploadedParts(ctx context.Context, imur oss.Initi
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.ListUploadedParts"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.ListUploadedParts")
@@ -1834,6 +2059,11 @@ func (w *OSSBucketWrapper) OptionsMethod(ctx context.Context, objectKey string, 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.OptionsMethod"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.OptionsMethod")
@@ -1868,6 +2098,11 @@ func (w *OSSBucketWrapper) PostVodPlaylist(ctx context.Context, channelName stri
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.PostVodPlaylist"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.PostVodPlaylist"); err != nil {
 				return err
 			}
 		}
@@ -1909,6 +2144,11 @@ func (w *OSSBucketWrapper) ProcessObject(ctx context.Context, objectKey string, 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.ProcessObject"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.ProcessObject")
@@ -1943,6 +2183,11 @@ func (w *OSSBucketWrapper) PutLiveChannelStatus(ctx context.Context, channelName
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.PutLiveChannelStatus"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.PutLiveChannelStatus"); err != nil {
 				return err
 			}
 		}
@@ -1983,6 +2228,11 @@ func (w *OSSBucketWrapper) PutObject(ctx context.Context, objectKey string, read
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.PutObject"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutObject")
@@ -2017,6 +2267,11 @@ func (w *OSSBucketWrapper) PutObjectFromFile(ctx context.Context, objectKey stri
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.PutObjectFromFile"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.PutObjectFromFile"); err != nil {
 				return err
 			}
 		}
@@ -2057,6 +2312,11 @@ func (w *OSSBucketWrapper) PutObjectFromFileWithURL(ctx context.Context, signedU
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.PutObjectFromFileWithURL"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutObjectFromFileWithURL")
@@ -2091,6 +2351,11 @@ func (w *OSSBucketWrapper) PutObjectTagging(ctx context.Context, objectKey strin
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.PutObjectTagging"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.PutObjectTagging"); err != nil {
 				return err
 			}
 		}
@@ -2131,6 +2396,11 @@ func (w *OSSBucketWrapper) PutObjectWithURL(ctx context.Context, signedURL strin
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.PutObjectWithURL"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.PutObjectWithURL")
@@ -2165,6 +2435,11 @@ func (w *OSSBucketWrapper) PutSymlink(ctx context.Context, symObjectKey string, 
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.PutSymlink"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.PutSymlink"); err != nil {
 				return err
 			}
 		}
@@ -2205,6 +2480,11 @@ func (w *OSSBucketWrapper) RestoreObject(ctx context.Context, objectKey string, 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.RestoreObject"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.RestoreObject")
@@ -2242,6 +2522,11 @@ func (w *OSSBucketWrapper) RestoreObjectDetail(ctx context.Context, objectKey st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.RestoreObjectDetail"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.RestoreObjectDetail")
@@ -2276,6 +2561,11 @@ func (w *OSSBucketWrapper) RestoreObjectXML(ctx context.Context, objectKey strin
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.RestoreObjectXML"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.RestoreObjectXML"); err != nil {
 				return err
 			}
 		}
@@ -2317,6 +2607,11 @@ func (w *OSSBucketWrapper) SelectObject(ctx context.Context, key string, selectR
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.SelectObject"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.SelectObject")
@@ -2351,6 +2646,11 @@ func (w *OSSBucketWrapper) SelectObjectIntoFile(ctx context.Context, key string,
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.SelectObjectIntoFile"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.SelectObjectIntoFile"); err != nil {
 				return err
 			}
 		}
@@ -2391,6 +2691,11 @@ func (w *OSSBucketWrapper) SetObjectACL(ctx context.Context, objectKey string, o
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.SetObjectACL"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.SetObjectACL")
@@ -2425,6 +2730,11 @@ func (w *OSSBucketWrapper) SetObjectMeta(ctx context.Context, objectKey string, 
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.SetObjectMeta"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.SetObjectMeta"); err != nil {
 				return err
 			}
 		}
@@ -2466,6 +2776,11 @@ func (w *OSSBucketWrapper) SignRtmpURL(ctx context.Context, channelName string, 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.SignRtmpURL"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.SignRtmpURL")
@@ -2504,6 +2819,11 @@ func (w *OSSBucketWrapper) SignURL(ctx context.Context, objectKey string, method
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.SignURL"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.SignURL")
@@ -2538,6 +2858,11 @@ func (w *OSSBucketWrapper) UploadFile(ctx context.Context, objectKey string, fil
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.UploadFile"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.UploadFile"); err != nil {
 				return err
 			}
 		}
@@ -2579,6 +2904,11 @@ func (w *OSSBucketWrapper) UploadPart(ctx context.Context, imur oss.InitiateMult
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.UploadPart"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.UploadPart")
@@ -2614,6 +2944,11 @@ func (w *OSSBucketWrapper) UploadPartCopy(ctx context.Context, imur oss.Initiate
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Bucket.UploadPartCopy"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.UploadPartCopy"); err != nil {
 				return err
 			}
 		}
@@ -2655,6 +2990,11 @@ func (w *OSSBucketWrapper) UploadPartFromFile(ctx context.Context, imur oss.Init
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Bucket.UploadPartFromFile"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Bucket.UploadPartFromFile")
@@ -2689,6 +3029,11 @@ func (w *OSSClientWrapper) AbortBucketWorm(ctx context.Context, bucketName strin
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.AbortBucketWorm"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.AbortBucketWorm"); err != nil {
 				return err
 			}
 		}
@@ -2736,6 +3081,11 @@ func (w *OSSClientWrapper) CompleteBucketWorm(ctx context.Context, bucketName st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.CompleteBucketWorm"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.CompleteBucketWorm")
@@ -2770,6 +3120,11 @@ func (w *OSSClientWrapper) CreateBucket(ctx context.Context, bucketName string, 
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.CreateBucket"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.CreateBucket"); err != nil {
 				return err
 			}
 		}
@@ -2810,6 +3165,11 @@ func (w *OSSClientWrapper) DeleteBucket(ctx context.Context, bucketName string, 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucket"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucket")
@@ -2844,6 +3204,11 @@ func (w *OSSClientWrapper) DeleteBucketCORS(ctx context.Context, bucketName stri
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.DeleteBucketCORS"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketCORS"); err != nil {
 				return err
 			}
 		}
@@ -2884,6 +3249,11 @@ func (w *OSSClientWrapper) DeleteBucketEncryption(ctx context.Context, bucketNam
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketEncryption"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketEncryption")
@@ -2918,6 +3288,11 @@ func (w *OSSClientWrapper) DeleteBucketInventory(ctx context.Context, bucketName
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.DeleteBucketInventory"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketInventory"); err != nil {
 				return err
 			}
 		}
@@ -2958,6 +3333,11 @@ func (w *OSSClientWrapper) DeleteBucketLifecycle(ctx context.Context, bucketName
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketLifecycle"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketLifecycle")
@@ -2992,6 +3372,11 @@ func (w *OSSClientWrapper) DeleteBucketLogging(ctx context.Context, bucketName s
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.DeleteBucketLogging"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketLogging"); err != nil {
 				return err
 			}
 		}
@@ -3032,6 +3417,11 @@ func (w *OSSClientWrapper) DeleteBucketPolicy(ctx context.Context, bucketName st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketPolicy"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketPolicy")
@@ -3066,6 +3456,11 @@ func (w *OSSClientWrapper) DeleteBucketQosInfo(ctx context.Context, bucketName s
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.DeleteBucketQosInfo"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketQosInfo"); err != nil {
 				return err
 			}
 		}
@@ -3106,6 +3501,11 @@ func (w *OSSClientWrapper) DeleteBucketTagging(ctx context.Context, bucketName s
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketTagging"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketTagging")
@@ -3143,6 +3543,11 @@ func (w *OSSClientWrapper) DeleteBucketWebsite(ctx context.Context, bucketName s
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketWebsite"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.DeleteBucketWebsite")
@@ -3177,6 +3582,11 @@ func (w *OSSClientWrapper) ExtendBucketWorm(ctx context.Context, bucketName stri
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ExtendBucketWorm"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ExtendBucketWorm"); err != nil {
 				return err
 			}
 		}
@@ -3218,6 +3628,11 @@ func (w *OSSClientWrapper) GetBucketACL(ctx context.Context, bucketName string) 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketACL"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketACL")
@@ -3253,6 +3668,11 @@ func (w *OSSClientWrapper) GetBucketAsyncTask(ctx context.Context, bucketName st
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketAsyncTask"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketAsyncTask"); err != nil {
 				return err
 			}
 		}
@@ -3294,6 +3714,11 @@ func (w *OSSClientWrapper) GetBucketCORS(ctx context.Context, bucketName string)
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketCORS"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketCORS")
@@ -3329,6 +3754,11 @@ func (w *OSSClientWrapper) GetBucketEncryption(ctx context.Context, bucketName s
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketEncryption"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketEncryption"); err != nil {
 				return err
 			}
 		}
@@ -3370,6 +3800,11 @@ func (w *OSSClientWrapper) GetBucketInfo(ctx context.Context, bucketName string,
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketInfo"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketInfo")
@@ -3405,6 +3840,11 @@ func (w *OSSClientWrapper) GetBucketInventory(ctx context.Context, bucketName st
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketInventory"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketInventory"); err != nil {
 				return err
 			}
 		}
@@ -3446,6 +3886,11 @@ func (w *OSSClientWrapper) GetBucketLifecycle(ctx context.Context, bucketName st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketLifecycle"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketLifecycle")
@@ -3481,6 +3926,11 @@ func (w *OSSClientWrapper) GetBucketLocation(ctx context.Context, bucketName str
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketLocation"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketLocation"); err != nil {
 				return err
 			}
 		}
@@ -3522,6 +3972,11 @@ func (w *OSSClientWrapper) GetBucketLogging(ctx context.Context, bucketName stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketLogging"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketLogging")
@@ -3557,6 +4012,11 @@ func (w *OSSClientWrapper) GetBucketPolicy(ctx context.Context, bucketName strin
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketPolicy"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketPolicy"); err != nil {
 				return err
 			}
 		}
@@ -3598,6 +4058,11 @@ func (w *OSSClientWrapper) GetBucketQosInfo(ctx context.Context, bucketName stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketQosInfo"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketQosInfo")
@@ -3633,6 +4098,11 @@ func (w *OSSClientWrapper) GetBucketReferer(ctx context.Context, bucketName stri
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketReferer"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketReferer"); err != nil {
 				return err
 			}
 		}
@@ -3674,6 +4144,11 @@ func (w *OSSClientWrapper) GetBucketRequestPayment(ctx context.Context, bucketNa
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketRequestPayment"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketRequestPayment")
@@ -3709,6 +4184,11 @@ func (w *OSSClientWrapper) GetBucketStat(ctx context.Context, bucketName string)
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketStat"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketStat"); err != nil {
 				return err
 			}
 		}
@@ -3750,6 +4230,11 @@ func (w *OSSClientWrapper) GetBucketTagging(ctx context.Context, bucketName stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketTagging"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketTagging")
@@ -3785,6 +4270,11 @@ func (w *OSSClientWrapper) GetBucketVersioning(ctx context.Context, bucketName s
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketVersioning"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketVersioning"); err != nil {
 				return err
 			}
 		}
@@ -3826,6 +4316,11 @@ func (w *OSSClientWrapper) GetBucketWebsite(ctx context.Context, bucketName stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketWebsite"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.GetBucketWebsite")
@@ -3861,6 +4356,11 @@ func (w *OSSClientWrapper) GetBucketWorm(ctx context.Context, bucketName string,
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketWorm"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBucketWorm"); err != nil {
 				return err
 			}
 		}
@@ -3902,6 +4402,11 @@ func (w *OSSClientWrapper) GetUserQoSInfo(ctx context.Context, options ...oss.Op
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetUserQoSInfo"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.GetUserQoSInfo")
@@ -3937,6 +4442,11 @@ func (w *OSSClientWrapper) InitiateBucketWorm(ctx context.Context, bucketName st
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.InitiateBucketWorm"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.InitiateBucketWorm"); err != nil {
 				return err
 			}
 		}
@@ -3978,6 +4488,11 @@ func (w *OSSClientWrapper) IsBucketExist(ctx context.Context, bucketName string)
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.IsBucketExist"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.IsBucketExist")
@@ -4012,6 +4527,11 @@ func (w *OSSClientWrapper) LimitUploadSpeed(ctx context.Context, upSpeed int) er
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.LimitUploadSpeed"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.LimitUploadSpeed"); err != nil {
 				return err
 			}
 		}
@@ -4053,6 +4573,11 @@ func (w *OSSClientWrapper) ListBucketInventory(ctx context.Context, bucketName s
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ListBucketInventory"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.ListBucketInventory")
@@ -4091,6 +4616,11 @@ func (w *OSSClientWrapper) ListBuckets(ctx context.Context, options ...oss.Optio
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ListBuckets"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.ListBuckets")
@@ -4125,6 +4655,11 @@ func (w *OSSClientWrapper) SetBucketACL(ctx context.Context, bucketName string, 
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketACL"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketACL"); err != nil {
 				return err
 			}
 		}
@@ -4166,6 +4701,11 @@ func (w *OSSClientWrapper) SetBucketAsyncTask(ctx context.Context, bucketName st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketAsyncTask"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketAsyncTask")
@@ -4200,6 +4740,11 @@ func (w *OSSClientWrapper) SetBucketCORS(ctx context.Context, bucketName string,
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketCORS"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketCORS"); err != nil {
 				return err
 			}
 		}
@@ -4240,6 +4785,11 @@ func (w *OSSClientWrapper) SetBucketEncryption(ctx context.Context, bucketName s
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketEncryption"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketEncryption")
@@ -4274,6 +4824,11 @@ func (w *OSSClientWrapper) SetBucketInventory(ctx context.Context, bucketName st
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketInventory"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketInventory"); err != nil {
 				return err
 			}
 		}
@@ -4314,6 +4869,11 @@ func (w *OSSClientWrapper) SetBucketLifecycle(ctx context.Context, bucketName st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketLifecycle"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketLifecycle")
@@ -4348,6 +4908,11 @@ func (w *OSSClientWrapper) SetBucketLogging(ctx context.Context, bucketName stri
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketLogging"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketLogging"); err != nil {
 				return err
 			}
 		}
@@ -4388,6 +4953,11 @@ func (w *OSSClientWrapper) SetBucketPolicy(ctx context.Context, bucketName strin
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketPolicy"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketPolicy")
@@ -4422,6 +4992,11 @@ func (w *OSSClientWrapper) SetBucketQoSInfo(ctx context.Context, bucketName stri
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketQoSInfo"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketQoSInfo"); err != nil {
 				return err
 			}
 		}
@@ -4462,6 +5037,11 @@ func (w *OSSClientWrapper) SetBucketReferer(ctx context.Context, bucketName stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketReferer"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketReferer")
@@ -4496,6 +5076,11 @@ func (w *OSSClientWrapper) SetBucketRequestPayment(ctx context.Context, bucketNa
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketRequestPayment"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketRequestPayment"); err != nil {
 				return err
 			}
 		}
@@ -4536,6 +5121,11 @@ func (w *OSSClientWrapper) SetBucketTagging(ctx context.Context, bucketName stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketTagging"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketTagging")
@@ -4570,6 +5160,11 @@ func (w *OSSClientWrapper) SetBucketVersioning(ctx context.Context, bucketName s
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketVersioning"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketVersioning"); err != nil {
 				return err
 			}
 		}
@@ -4610,6 +5205,11 @@ func (w *OSSClientWrapper) SetBucketWebsite(ctx context.Context, bucketName stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketWebsite"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketWebsite")
@@ -4647,6 +5247,11 @@ func (w *OSSClientWrapper) SetBucketWebsiteDetail(ctx context.Context, bucketNam
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketWebsiteDetail"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "oss.Client.SetBucketWebsiteDetail")
@@ -4681,6 +5286,11 @@ func (w *OSSClientWrapper) SetBucketWebsiteXml(ctx context.Context, bucketName s
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketWebsiteXml"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBucketWebsiteXml"); err != nil {
 				return err
 			}
 		}

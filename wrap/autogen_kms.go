@@ -110,6 +110,11 @@ func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.A
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.AsymmetricDecrypt"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricDecrypt")
@@ -155,6 +160,11 @@ func (w *KMSClientWrapper) AsymmetricEncrypt(ctx context.Context, request *kms.A
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.AsymmetricEncrypt"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.AsymmetricEncrypt"); err != nil {
 				return err
 			}
 		}
@@ -206,6 +216,11 @@ func (w *KMSClientWrapper) AsymmetricSign(ctx context.Context, request *kms.Asym
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.AsymmetricSign"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.AsymmetricSign")
@@ -251,6 +266,11 @@ func (w *KMSClientWrapper) AsymmetricVerify(ctx context.Context, request *kms.As
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.AsymmetricVerify"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.AsymmetricVerify"); err != nil {
 				return err
 			}
 		}
@@ -302,6 +322,11 @@ func (w *KMSClientWrapper) CancelKeyDeletion(ctx context.Context, request *kms.C
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.CancelKeyDeletion"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CancelKeyDeletion")
@@ -347,6 +372,11 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecrypt(ctx context.Context, req
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.CertificatePrivateKeyDecrypt"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.CertificatePrivateKeyDecrypt"); err != nil {
 				return err
 			}
 		}
@@ -398,6 +428,11 @@ func (w *KMSClientWrapper) CertificatePrivateKeySign(ctx context.Context, reques
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.CertificatePrivateKeySign"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePrivateKeySign")
@@ -443,6 +478,11 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncrypt(ctx context.Context, requ
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.CertificatePublicKeyEncrypt"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.CertificatePublicKeyEncrypt"); err != nil {
 				return err
 			}
 		}
@@ -494,6 +534,11 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerify(ctx context.Context, reque
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.CertificatePublicKeyVerify"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CertificatePublicKeyVerify")
@@ -539,6 +584,11 @@ func (w *KMSClientWrapper) CreateAlias(ctx context.Context, request *kms.CreateA
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.CreateAlias"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.CreateAlias"); err != nil {
 				return err
 			}
 		}
@@ -590,6 +640,11 @@ func (w *KMSClientWrapper) CreateCertificate(ctx context.Context, request *kms.C
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.CreateCertificate"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CreateCertificate")
@@ -638,6 +693,11 @@ func (w *KMSClientWrapper) CreateKey(ctx context.Context, request *kms.CreateKey
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.CreateKey"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CreateKey")
@@ -673,6 +733,11 @@ func (w *KMSClientWrapper) CreateKeyVersion(ctx context.Context, request *kms.Cr
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.CreateKeyVersion"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.CreateKeyVersion"); err != nil {
 				return err
 			}
 		}
@@ -734,6 +799,11 @@ func (w *KMSClientWrapper) CreateSecret(ctx context.Context, request *kms.Create
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.CreateSecret"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.CreateSecret")
@@ -779,6 +849,11 @@ func (w *KMSClientWrapper) Decrypt(ctx context.Context, request *kms.DecryptRequ
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Decrypt"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Decrypt"); err != nil {
 				return err
 			}
 		}
@@ -830,6 +905,11 @@ func (w *KMSClientWrapper) DeleteAlias(ctx context.Context, request *kms.DeleteA
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DeleteAlias"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteAlias")
@@ -875,6 +955,11 @@ func (w *KMSClientWrapper) DeleteCertificate(ctx context.Context, request *kms.D
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.DeleteCertificate"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DeleteCertificate"); err != nil {
 				return err
 			}
 		}
@@ -926,6 +1011,11 @@ func (w *KMSClientWrapper) DeleteKeyMaterial(ctx context.Context, request *kms.D
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DeleteKeyMaterial"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DeleteKeyMaterial")
@@ -971,6 +1061,11 @@ func (w *KMSClientWrapper) DeleteSecret(ctx context.Context, request *kms.Delete
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.DeleteSecret"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DeleteSecret"); err != nil {
 				return err
 			}
 		}
@@ -1022,6 +1117,11 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatus(ctx context.Context, request
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DescribeAccountKmsStatus"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeAccountKmsStatus")
@@ -1067,6 +1167,11 @@ func (w *KMSClientWrapper) DescribeCertificate(ctx context.Context, request *kms
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.DescribeCertificate"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DescribeCertificate"); err != nil {
 				return err
 			}
 		}
@@ -1118,6 +1223,11 @@ func (w *KMSClientWrapper) DescribeKey(ctx context.Context, request *kms.Describ
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DescribeKey"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeKey")
@@ -1153,6 +1263,11 @@ func (w *KMSClientWrapper) DescribeKeyVersion(ctx context.Context, request *kms.
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.DescribeKeyVersion"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DescribeKeyVersion"); err != nil {
 				return err
 			}
 		}
@@ -1214,6 +1329,11 @@ func (w *KMSClientWrapper) DescribeRegions(ctx context.Context, request *kms.Des
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DescribeRegions"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeRegions")
@@ -1259,6 +1379,11 @@ func (w *KMSClientWrapper) DescribeSecret(ctx context.Context, request *kms.Desc
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.DescribeSecret"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DescribeSecret"); err != nil {
 				return err
 			}
 		}
@@ -1310,6 +1435,11 @@ func (w *KMSClientWrapper) DescribeService(ctx context.Context, request *kms.Des
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DescribeService"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.DescribeService")
@@ -1355,6 +1485,11 @@ func (w *KMSClientWrapper) DisableKey(ctx context.Context, request *kms.DisableK
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.DisableKey"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DisableKey"); err != nil {
 				return err
 			}
 		}
@@ -1406,6 +1541,11 @@ func (w *KMSClientWrapper) EnableKey(ctx context.Context, request *kms.EnableKey
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.EnableKey"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.EnableKey")
@@ -1451,6 +1591,11 @@ func (w *KMSClientWrapper) Encrypt(ctx context.Context, request *kms.EncryptRequ
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Encrypt"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Encrypt"); err != nil {
 				return err
 			}
 		}
@@ -1502,6 +1647,11 @@ func (w *KMSClientWrapper) ExportCertificate(ctx context.Context, request *kms.E
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ExportCertificate"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ExportCertificate")
@@ -1547,6 +1697,11 @@ func (w *KMSClientWrapper) ExportDataKey(ctx context.Context, request *kms.Expor
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ExportDataKey"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ExportDataKey"); err != nil {
 				return err
 			}
 		}
@@ -1598,6 +1753,11 @@ func (w *KMSClientWrapper) GenerateAndExportDataKey(ctx context.Context, request
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GenerateAndExportDataKey"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateAndExportDataKey")
@@ -1643,6 +1803,11 @@ func (w *KMSClientWrapper) GenerateDataKey(ctx context.Context, request *kms.Gen
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GenerateDataKey"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GenerateDataKey"); err != nil {
 				return err
 			}
 		}
@@ -1694,6 +1859,11 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintext(ctx context.Context, 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GenerateDataKeyWithoutPlaintext"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.GenerateDataKeyWithoutPlaintext")
@@ -1739,6 +1909,11 @@ func (w *KMSClientWrapper) GetCertificate(ctx context.Context, request *kms.GetC
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetCertificate"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetCertificate"); err != nil {
 				return err
 			}
 		}
@@ -1790,6 +1965,11 @@ func (w *KMSClientWrapper) GetParametersForImport(ctx context.Context, request *
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetParametersForImport"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.GetParametersForImport")
@@ -1835,6 +2015,11 @@ func (w *KMSClientWrapper) GetPublicKey(ctx context.Context, request *kms.GetPub
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetPublicKey"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetPublicKey"); err != nil {
 				return err
 			}
 		}
@@ -1886,6 +2071,11 @@ func (w *KMSClientWrapper) GetRandomPassword(ctx context.Context, request *kms.G
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetRandomPassword"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.GetRandomPassword")
@@ -1931,6 +2121,11 @@ func (w *KMSClientWrapper) GetSecretValue(ctx context.Context, request *kms.GetS
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetSecretValue"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetSecretValue"); err != nil {
 				return err
 			}
 		}
@@ -1982,6 +2177,11 @@ func (w *KMSClientWrapper) ImportCertificate(ctx context.Context, request *kms.I
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ImportCertificate"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ImportCertificate")
@@ -2027,6 +2227,11 @@ func (w *KMSClientWrapper) ImportEncryptionCertificate(ctx context.Context, requ
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ImportEncryptionCertificate"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ImportEncryptionCertificate"); err != nil {
 				return err
 			}
 		}
@@ -2078,6 +2283,11 @@ func (w *KMSClientWrapper) ImportKeyMaterial(ctx context.Context, request *kms.I
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ImportKeyMaterial"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ImportKeyMaterial")
@@ -2126,6 +2336,11 @@ func (w *KMSClientWrapper) ListAliases(ctx context.Context, request *kms.ListAli
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ListAliases"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ListAliases")
@@ -2161,6 +2376,11 @@ func (w *KMSClientWrapper) ListAliasesByKeyId(ctx context.Context, request *kms.
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ListAliasesByKeyId"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ListAliasesByKeyId"); err != nil {
 				return err
 			}
 		}
@@ -2222,6 +2442,11 @@ func (w *KMSClientWrapper) ListCertificates(ctx context.Context, request *kms.Li
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ListCertificates"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ListCertificates")
@@ -2267,6 +2492,11 @@ func (w *KMSClientWrapper) ListKeyVersions(ctx context.Context, request *kms.Lis
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ListKeyVersions"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ListKeyVersions"); err != nil {
 				return err
 			}
 		}
@@ -2318,6 +2548,11 @@ func (w *KMSClientWrapper) ListKeys(ctx context.Context, request *kms.ListKeysRe
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ListKeys"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ListKeys")
@@ -2363,6 +2598,11 @@ func (w *KMSClientWrapper) ListResourceTags(ctx context.Context, request *kms.Li
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ListResourceTags"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ListResourceTags"); err != nil {
 				return err
 			}
 		}
@@ -2414,6 +2654,11 @@ func (w *KMSClientWrapper) ListSecretVersionIds(ctx context.Context, request *km
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ListSecretVersionIds"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ListSecretVersionIds")
@@ -2459,6 +2704,11 @@ func (w *KMSClientWrapper) ListSecrets(ctx context.Context, request *kms.ListSec
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ListSecrets"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ListSecrets"); err != nil {
 				return err
 			}
 		}
@@ -2510,6 +2760,11 @@ func (w *KMSClientWrapper) OpenKmsService(ctx context.Context, request *kms.Open
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.OpenKmsService"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.OpenKmsService")
@@ -2555,6 +2810,11 @@ func (w *KMSClientWrapper) PutSecretValue(ctx context.Context, request *kms.PutS
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.PutSecretValue"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.PutSecretValue"); err != nil {
 				return err
 			}
 		}
@@ -2606,6 +2866,11 @@ func (w *KMSClientWrapper) ReEncrypt(ctx context.Context, request *kms.ReEncrypt
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ReEncrypt"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.ReEncrypt")
@@ -2651,6 +2916,11 @@ func (w *KMSClientWrapper) RestoreSecret(ctx context.Context, request *kms.Resto
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.RestoreSecret"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.RestoreSecret"); err != nil {
 				return err
 			}
 		}
@@ -2702,6 +2972,11 @@ func (w *KMSClientWrapper) RotateSecret(ctx context.Context, request *kms.Rotate
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.RotateSecret"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.RotateSecret")
@@ -2747,6 +3022,11 @@ func (w *KMSClientWrapper) ScheduleKeyDeletion(ctx context.Context, request *kms
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ScheduleKeyDeletion"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ScheduleKeyDeletion"); err != nil {
 				return err
 			}
 		}
@@ -2798,6 +3078,11 @@ func (w *KMSClientWrapper) TagResource(ctx context.Context, request *kms.TagReso
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.TagResource"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.TagResource")
@@ -2843,6 +3128,11 @@ func (w *KMSClientWrapper) UntagResource(ctx context.Context, request *kms.Untag
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.UntagResource"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.UntagResource"); err != nil {
 				return err
 			}
 		}
@@ -2894,6 +3184,11 @@ func (w *KMSClientWrapper) UpdateAlias(ctx context.Context, request *kms.UpdateA
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.UpdateAlias"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateAlias")
@@ -2939,6 +3234,11 @@ func (w *KMSClientWrapper) UpdateCertificateStatus(ctx context.Context, request 
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.UpdateCertificateStatus"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.UpdateCertificateStatus"); err != nil {
 				return err
 			}
 		}
@@ -2990,6 +3290,11 @@ func (w *KMSClientWrapper) UpdateKeyDescription(ctx context.Context, request *km
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.UpdateKeyDescription"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateKeyDescription")
@@ -3035,6 +3340,11 @@ func (w *KMSClientWrapper) UpdateRotationPolicy(ctx context.Context, request *km
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.UpdateRotationPolicy"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.UpdateRotationPolicy"); err != nil {
 				return err
 			}
 		}
@@ -3086,6 +3396,11 @@ func (w *KMSClientWrapper) UpdateSecret(ctx context.Context, request *kms.Update
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.UpdateSecret"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "kms.Client.UpdateSecret")
@@ -3121,6 +3436,11 @@ func (w *KMSClientWrapper) UpdateSecretRotationPolicy(ctx context.Context, reque
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.UpdateSecretRotationPolicy"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.UpdateSecretRotationPolicy"); err != nil {
 				return err
 			}
 		}
@@ -3169,6 +3489,11 @@ func (w *KMSClientWrapper) UpdateSecretVersionStage(ctx context.Context, request
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.UpdateSecretVersionStage"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.UpdateSecretVersionStage"); err != nil {
 				return err
 			}
 		}
@@ -3227,6 +3552,11 @@ func (w *KMSClientWrapper) UploadCertificate(ctx context.Context, request *kms.U
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.UploadCertificate"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.UploadCertificate"); err != nil {
 				return err
 			}
 		}

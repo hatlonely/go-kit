@@ -124,6 +124,11 @@ func (w GORMAssociationWrapper) Append(ctx context.Context, values ...interface{
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Association.Append"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Append")
@@ -158,6 +163,11 @@ func (w GORMAssociationWrapper) Clear(ctx context.Context) GORMAssociationWrappe
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Association.Clear"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Association.Clear"); err != nil {
 				return err
 			}
 		}
@@ -203,6 +213,11 @@ func (w GORMAssociationWrapper) Delete(ctx context.Context, values ...interface{
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Association.Delete"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Delete")
@@ -240,6 +255,11 @@ func (w GORMAssociationWrapper) Find(ctx context.Context, value interface{}) GOR
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Association.Find"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Find")
@@ -274,6 +294,11 @@ func (w GORMAssociationWrapper) Replace(ctx context.Context, values ...interface
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Association.Replace"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Association.Replace"); err != nil {
 				return err
 			}
 		}
@@ -319,6 +344,11 @@ func (w GORMDBWrapper) AddForeignKey(ctx context.Context, field string, dest str
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.AddForeignKey"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AddForeignKey")
@@ -353,6 +383,11 @@ func (w GORMDBWrapper) AddIndex(ctx context.Context, indexName string, columns .
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.AddIndex"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.AddIndex"); err != nil {
 				return err
 			}
 		}
@@ -393,6 +428,11 @@ func (w GORMDBWrapper) AddUniqueIndex(ctx context.Context, indexName string, col
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.AddUniqueIndex"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AddUniqueIndex")
@@ -427,6 +467,11 @@ func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBW
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Assign"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Assign"); err != nil {
 				return err
 			}
 		}
@@ -467,6 +512,11 @@ func (w GORMDBWrapper) Association(ctx context.Context, column string) GORMAssoc
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Association"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Association")
@@ -501,6 +551,11 @@ func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWr
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Attrs"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Attrs"); err != nil {
 				return err
 			}
 		}
@@ -541,6 +596,11 @@ func (w GORMDBWrapper) AutoMigrate(ctx context.Context, values ...interface{}) G
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.AutoMigrate"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AutoMigrate")
@@ -575,6 +635,11 @@ func (w GORMDBWrapper) Begin(ctx context.Context) GORMDBWrapper {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Begin"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Begin"); err != nil {
 				return err
 			}
 		}
@@ -615,6 +680,11 @@ func (w GORMDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) GORMDBW
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.BeginTx"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.BeginTx")
@@ -649,6 +719,11 @@ func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMD
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.BlockGlobalUpdate"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.BlockGlobalUpdate"); err != nil {
 				return err
 			}
 		}
@@ -694,6 +769,11 @@ func (w GORMDBWrapper) Close(ctx context.Context) error {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Close"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Close")
@@ -728,6 +808,11 @@ func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Commit"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Commit"); err != nil {
 				return err
 			}
 		}
@@ -773,6 +858,11 @@ func (w GORMDBWrapper) Count(ctx context.Context, value interface{}) GORMDBWrapp
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Count"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Count")
@@ -810,6 +900,11 @@ func (w GORMDBWrapper) Create(ctx context.Context, value interface{}) GORMDBWrap
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Create"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Create")
@@ -844,6 +939,11 @@ func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) G
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.CreateTable"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.CreateTable"); err != nil {
 				return err
 			}
 		}
@@ -889,6 +989,11 @@ func (w GORMDBWrapper) Debug(ctx context.Context) GORMDBWrapper {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Debug"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Debug")
@@ -923,6 +1028,11 @@ func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...i
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Delete"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Delete"); err != nil {
 				return err
 			}
 		}
@@ -968,6 +1078,11 @@ func (w GORMDBWrapper) DropColumn(ctx context.Context, column string) GORMDBWrap
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.DropColumn"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.DropColumn")
@@ -1002,6 +1117,11 @@ func (w GORMDBWrapper) DropTable(ctx context.Context, values ...interface{}) GOR
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.DropTable"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.DropTable"); err != nil {
 				return err
 			}
 		}
@@ -1042,6 +1162,11 @@ func (w GORMDBWrapper) DropTableIfExists(ctx context.Context, values ...interfac
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.DropTableIfExists"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.DropTableIfExists")
@@ -1076,6 +1201,11 @@ func (w GORMDBWrapper) Exec(ctx context.Context, sql string, values ...interface
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Exec"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Exec"); err != nil {
 				return err
 			}
 		}
@@ -1116,6 +1246,11 @@ func (w GORMDBWrapper) Find(ctx context.Context, out interface{}, where ...inter
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Find"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Find")
@@ -1150,6 +1285,11 @@ func (w GORMDBWrapper) First(ctx context.Context, out interface{}, where ...inte
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.First"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.First"); err != nil {
 				return err
 			}
 		}
@@ -1190,6 +1330,11 @@ func (w GORMDBWrapper) FirstOrCreate(ctx context.Context, out interface{}, where
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.FirstOrCreate"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.FirstOrCreate")
@@ -1224,6 +1369,11 @@ func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where .
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.FirstOrInit"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.FirstOrInit"); err != nil {
 				return err
 			}
 		}
@@ -1274,6 +1424,11 @@ func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Group"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Group")
@@ -1321,6 +1476,11 @@ func (w GORMDBWrapper) Having(ctx context.Context, query interface{}, values ...
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Having"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Having")
@@ -1355,6 +1515,11 @@ func (w GORMDBWrapper) InstantSet(ctx context.Context, name string, value interf
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.InstantSet"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.InstantSet"); err != nil {
 				return err
 			}
 		}
@@ -1395,6 +1560,11 @@ func (w GORMDBWrapper) Joins(ctx context.Context, query string, args ...interfac
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Joins"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Joins")
@@ -1429,6 +1599,11 @@ func (w GORMDBWrapper) Last(ctx context.Context, out interface{}, where ...inter
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Last"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Last"); err != nil {
 				return err
 			}
 		}
@@ -1469,6 +1644,11 @@ func (w GORMDBWrapper) Limit(ctx context.Context, limit interface{}) GORMDBWrapp
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Limit"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Limit")
@@ -1503,6 +1683,11 @@ func (w GORMDBWrapper) LogMode(ctx context.Context, enable bool) GORMDBWrapper {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.LogMode"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.LogMode"); err != nil {
 				return err
 			}
 		}
@@ -1543,6 +1728,11 @@ func (w GORMDBWrapper) Model(ctx context.Context, value interface{}) GORMDBWrapp
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Model"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Model")
@@ -1580,6 +1770,11 @@ func (w GORMDBWrapper) ModifyColumn(ctx context.Context, column string, typ stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.ModifyColumn"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.ModifyColumn")
@@ -1614,6 +1809,11 @@ func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.New"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.New"); err != nil {
 				return err
 			}
 		}
@@ -1664,6 +1864,11 @@ func (w GORMDBWrapper) Not(ctx context.Context, query interface{}, args ...inter
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Not"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Not")
@@ -1698,6 +1903,11 @@ func (w GORMDBWrapper) Offset(ctx context.Context, offset interface{}) GORMDBWra
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Offset"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Offset"); err != nil {
 				return err
 			}
 		}
@@ -1738,6 +1948,11 @@ func (w GORMDBWrapper) Omit(ctx context.Context, columns ...string) GORMDBWrappe
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Omit"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Omit")
@@ -1772,6 +1987,11 @@ func (w GORMDBWrapper) Or(ctx context.Context, query interface{}, args ...interf
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Or"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Or"); err != nil {
 				return err
 			}
 		}
@@ -1812,6 +2032,11 @@ func (w GORMDBWrapper) Order(ctx context.Context, value interface{}, reorder ...
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Order"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Order")
@@ -1846,6 +2071,11 @@ func (w GORMDBWrapper) Pluck(ctx context.Context, column string, value interface
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Pluck"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Pluck"); err != nil {
 				return err
 			}
 		}
@@ -1886,6 +2116,11 @@ func (w GORMDBWrapper) Preload(ctx context.Context, column string, conditions ..
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Preload"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Preload")
@@ -1920,6 +2155,11 @@ func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrap
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Preloads"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Preloads"); err != nil {
 				return err
 			}
 		}
@@ -1965,6 +2205,11 @@ func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Raw"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Raw")
@@ -2007,6 +2252,11 @@ func (w GORMDBWrapper) Related(ctx context.Context, value interface{}, foreignKe
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Related"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Related")
@@ -2041,6 +2291,11 @@ func (w GORMDBWrapper) RemoveForeignKey(ctx context.Context, field string, dest 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.RemoveForeignKey"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.RemoveForeignKey"); err != nil {
 				return err
 			}
 		}
@@ -2081,6 +2336,11 @@ func (w GORMDBWrapper) RemoveIndex(ctx context.Context, indexName string) GORMDB
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.RemoveIndex"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.RemoveIndex")
@@ -2118,6 +2378,11 @@ func (w GORMDBWrapper) Rollback(ctx context.Context) GORMDBWrapper {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Rollback"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Rollback")
@@ -2152,6 +2417,11 @@ func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrappe
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.RollbackUnlessCommitted"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.RollbackUnlessCommitted"); err != nil {
 				return err
 			}
 		}
@@ -2198,6 +2468,11 @@ func (w GORMDBWrapper) Rows(ctx context.Context) (*sql.Rows, error) {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Rows"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Rows")
@@ -2232,6 +2507,11 @@ func (w GORMDBWrapper) Save(ctx context.Context, value interface{}) GORMDBWrappe
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Save"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Save"); err != nil {
 				return err
 			}
 		}
@@ -2272,6 +2552,11 @@ func (w GORMDBWrapper) Scan(ctx context.Context, dest interface{}) GORMDBWrapper
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Scan"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Scan")
@@ -2306,6 +2591,11 @@ func (w GORMDBWrapper) ScanRows(ctx context.Context, rows *sql.Rows, result inte
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.ScanRows"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.ScanRows"); err != nil {
 				return err
 			}
 		}
@@ -2346,6 +2636,11 @@ func (w GORMDBWrapper) Scopes(ctx context.Context, funcs ...func(*gorm.DB) *gorm
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Scopes"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Scopes")
@@ -2383,6 +2678,11 @@ func (w GORMDBWrapper) Select(ctx context.Context, query interface{}, args ...in
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Select"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Select")
@@ -2417,6 +2717,11 @@ func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Set"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Set"); err != nil {
 				return err
 			}
 		}
@@ -2458,6 +2763,11 @@ func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride f
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.SetNowFuncOverride"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.SetNowFuncOverride"); err != nil {
 				return err
 			}
 		}
@@ -2507,6 +2817,11 @@ func (w GORMDBWrapper) Table(ctx context.Context, name string) GORMDBWrapper {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Table"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Table")
@@ -2541,6 +2856,11 @@ func (w GORMDBWrapper) Take(ctx context.Context, out interface{}, where ...inter
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Take"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Take"); err != nil {
 				return err
 			}
 		}
@@ -2581,6 +2901,11 @@ func (w GORMDBWrapper) Transaction(ctx context.Context, fc func(tx *gorm.DB) err
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Transaction"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Transaction")
@@ -2615,6 +2940,11 @@ func (w GORMDBWrapper) Unscoped(ctx context.Context) GORMDBWrapper {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Unscoped"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Unscoped"); err != nil {
 				return err
 			}
 		}
@@ -2655,6 +2985,11 @@ func (w GORMDBWrapper) Update(ctx context.Context, attrs ...interface{}) GORMDBW
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Update"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Update")
@@ -2689,6 +3024,11 @@ func (w GORMDBWrapper) UpdateColumn(ctx context.Context, attrs ...interface{}) G
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.UpdateColumn"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.UpdateColumn"); err != nil {
 				return err
 			}
 		}
@@ -2729,6 +3069,11 @@ func (w GORMDBWrapper) UpdateColumns(ctx context.Context, values interface{}) GO
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.UpdateColumns"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.UpdateColumns")
@@ -2766,6 +3111,11 @@ func (w GORMDBWrapper) Updates(ctx context.Context, values interface{}, ignorePr
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Updates"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Updates")
@@ -2800,6 +3150,11 @@ func (w GORMDBWrapper) Where(ctx context.Context, query interface{}, args ...int
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DB.Where"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DB.Where"); err != nil {
 				return err
 			}
 		}

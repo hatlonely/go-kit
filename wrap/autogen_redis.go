@@ -214,6 +214,11 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Pipelined"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Pipelined")
@@ -272,6 +277,11 @@ func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipe
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.TxPipelined"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.TxPipelined")
@@ -306,6 +316,11 @@ func (w *RedisClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Watch"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Watch"); err != nil {
 				return err
 			}
 		}
@@ -351,6 +366,11 @@ func (w *RedisClientWrapper) Close(ctx context.Context) error {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Close"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Close")
@@ -388,6 +408,11 @@ func (w *RedisClientWrapper) Do(ctx context.Context, args ...interface{}) *redis
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Do")
@@ -422,6 +447,11 @@ func (w *RedisClientWrapper) Process(ctx context.Context, cmd redis.Cmder) error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Process"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Process"); err != nil {
 				return err
 			}
 		}
@@ -475,6 +505,11 @@ func (w *RedisClientWrapper) Append(ctx context.Context, key string, value strin
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Append"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Append")
@@ -509,6 +544,11 @@ func (w *RedisClientWrapper) BLPop(ctx context.Context, timeout time.Duration, k
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.BLPop"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.BLPop"); err != nil {
 				return err
 			}
 		}
@@ -549,6 +589,11 @@ func (w *RedisClientWrapper) BRPop(ctx context.Context, timeout time.Duration, k
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.BRPop"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BRPop")
@@ -583,6 +628,11 @@ func (w *RedisClientWrapper) BRPopLPush(ctx context.Context, source string, dest
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.BRPopLPush"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.BRPopLPush"); err != nil {
 				return err
 			}
 		}
@@ -623,6 +673,11 @@ func (w *RedisClientWrapper) BZPopMax(ctx context.Context, timeout time.Duration
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.BZPopMax"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BZPopMax")
@@ -657,6 +712,11 @@ func (w *RedisClientWrapper) BZPopMin(ctx context.Context, timeout time.Duration
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.BZPopMin"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.BZPopMin"); err != nil {
 				return err
 			}
 		}
@@ -697,6 +757,11 @@ func (w *RedisClientWrapper) BgRewriteAOF(ctx context.Context) *redis.StatusCmd 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.BgRewriteAOF"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BgRewriteAOF")
@@ -731,6 +796,11 @@ func (w *RedisClientWrapper) BgSave(ctx context.Context) *redis.StatusCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.BgSave"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.BgSave"); err != nil {
 				return err
 			}
 		}
@@ -771,6 +841,11 @@ func (w *RedisClientWrapper) BitCount(ctx context.Context, key string, bitCount 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.BitCount"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BitCount")
@@ -805,6 +880,11 @@ func (w *RedisClientWrapper) BitOpAnd(ctx context.Context, destKey string, keys 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.BitOpAnd"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.BitOpAnd"); err != nil {
 				return err
 			}
 		}
@@ -845,6 +925,11 @@ func (w *RedisClientWrapper) BitOpNot(ctx context.Context, destKey string, key s
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.BitOpNot"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BitOpNot")
@@ -879,6 +964,11 @@ func (w *RedisClientWrapper) BitOpOr(ctx context.Context, destKey string, keys .
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.BitOpOr"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.BitOpOr"); err != nil {
 				return err
 			}
 		}
@@ -919,6 +1009,11 @@ func (w *RedisClientWrapper) BitOpXor(ctx context.Context, destKey string, keys 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.BitOpXor"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.BitOpXor")
@@ -953,6 +1048,11 @@ func (w *RedisClientWrapper) BitPos(ctx context.Context, key string, bit int64, 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.BitPos"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.BitPos"); err != nil {
 				return err
 			}
 		}
@@ -993,6 +1093,11 @@ func (w *RedisClientWrapper) ClientGetName(ctx context.Context) *redis.StringCmd
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClientGetName"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClientGetName")
@@ -1027,6 +1132,11 @@ func (w *RedisClientWrapper) ClientID(ctx context.Context) *redis.IntCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ClientID"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClientID"); err != nil {
 				return err
 			}
 		}
@@ -1067,6 +1177,11 @@ func (w *RedisClientWrapper) ClientKill(ctx context.Context, ipPort string) *red
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClientKill"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClientKill")
@@ -1101,6 +1216,11 @@ func (w *RedisClientWrapper) ClientKillByFilter(ctx context.Context, keys ...str
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ClientKillByFilter"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClientKillByFilter"); err != nil {
 				return err
 			}
 		}
@@ -1141,6 +1261,11 @@ func (w *RedisClientWrapper) ClientList(ctx context.Context) *redis.StringCmd {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClientList"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClientList")
@@ -1175,6 +1300,11 @@ func (w *RedisClientWrapper) ClientPause(ctx context.Context, dur time.Duration)
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ClientPause"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClientPause"); err != nil {
 				return err
 			}
 		}
@@ -1215,6 +1345,11 @@ func (w *RedisClientWrapper) ClientUnblock(ctx context.Context, id int64) *redis
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClientUnblock"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClientUnblock")
@@ -1249,6 +1384,11 @@ func (w *RedisClientWrapper) ClientUnblockWithError(ctx context.Context, id int6
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ClientUnblockWithError"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClientUnblockWithError"); err != nil {
 				return err
 			}
 		}
@@ -1289,6 +1429,11 @@ func (w *RedisClientWrapper) ClusterAddSlots(ctx context.Context, slots ...int) 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterAddSlots"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterAddSlots")
@@ -1323,6 +1468,11 @@ func (w *RedisClientWrapper) ClusterAddSlotsRange(ctx context.Context, min int, 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ClusterAddSlotsRange"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterAddSlotsRange"); err != nil {
 				return err
 			}
 		}
@@ -1363,6 +1513,11 @@ func (w *RedisClientWrapper) ClusterCountFailureReports(ctx context.Context, nod
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterCountFailureReports"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterCountFailureReports")
@@ -1397,6 +1552,11 @@ func (w *RedisClientWrapper) ClusterCountKeysInSlot(ctx context.Context, slot in
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ClusterCountKeysInSlot"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterCountKeysInSlot"); err != nil {
 				return err
 			}
 		}
@@ -1437,6 +1597,11 @@ func (w *RedisClientWrapper) ClusterDelSlots(ctx context.Context, slots ...int) 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterDelSlots"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterDelSlots")
@@ -1471,6 +1636,11 @@ func (w *RedisClientWrapper) ClusterDelSlotsRange(ctx context.Context, min int, 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ClusterDelSlotsRange"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterDelSlotsRange"); err != nil {
 				return err
 			}
 		}
@@ -1511,6 +1681,11 @@ func (w *RedisClientWrapper) ClusterFailover(ctx context.Context) *redis.StatusC
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterFailover"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterFailover")
@@ -1545,6 +1720,11 @@ func (w *RedisClientWrapper) ClusterForget(ctx context.Context, nodeID string) *
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ClusterForget"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterForget"); err != nil {
 				return err
 			}
 		}
@@ -1585,6 +1765,11 @@ func (w *RedisClientWrapper) ClusterGetKeysInSlot(ctx context.Context, slot int,
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterGetKeysInSlot"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterGetKeysInSlot")
@@ -1619,6 +1804,11 @@ func (w *RedisClientWrapper) ClusterInfo(ctx context.Context) *redis.StringCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ClusterInfo"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterInfo"); err != nil {
 				return err
 			}
 		}
@@ -1659,6 +1849,11 @@ func (w *RedisClientWrapper) ClusterKeySlot(ctx context.Context, key string) *re
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterKeySlot"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterKeySlot")
@@ -1693,6 +1888,11 @@ func (w *RedisClientWrapper) ClusterMeet(ctx context.Context, host string, port 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ClusterMeet"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterMeet"); err != nil {
 				return err
 			}
 		}
@@ -1733,6 +1933,11 @@ func (w *RedisClientWrapper) ClusterNodes(ctx context.Context) *redis.StringCmd 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterNodes"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterNodes")
@@ -1767,6 +1972,11 @@ func (w *RedisClientWrapper) ClusterReplicate(ctx context.Context, nodeID string
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ClusterReplicate"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterReplicate"); err != nil {
 				return err
 			}
 		}
@@ -1807,6 +2017,11 @@ func (w *RedisClientWrapper) ClusterResetHard(ctx context.Context) *redis.Status
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterResetHard"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterResetHard")
@@ -1841,6 +2056,11 @@ func (w *RedisClientWrapper) ClusterResetSoft(ctx context.Context) *redis.Status
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ClusterResetSoft"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterResetSoft"); err != nil {
 				return err
 			}
 		}
@@ -1881,6 +2101,11 @@ func (w *RedisClientWrapper) ClusterSaveConfig(ctx context.Context) *redis.Statu
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterSaveConfig"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterSaveConfig")
@@ -1915,6 +2140,11 @@ func (w *RedisClientWrapper) ClusterSlaves(ctx context.Context, nodeID string) *
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ClusterSlaves"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterSlaves"); err != nil {
 				return err
 			}
 		}
@@ -1955,6 +2185,11 @@ func (w *RedisClientWrapper) ClusterSlots(ctx context.Context) *redis.ClusterSlo
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ClusterSlots"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ClusterSlots")
@@ -1989,6 +2224,11 @@ func (w *RedisClientWrapper) Command(ctx context.Context) *redis.CommandsInfoCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Command"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Command"); err != nil {
 				return err
 			}
 		}
@@ -2029,6 +2269,11 @@ func (w *RedisClientWrapper) ConfigGet(ctx context.Context, parameter string) *r
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ConfigGet"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ConfigGet")
@@ -2063,6 +2308,11 @@ func (w *RedisClientWrapper) ConfigResetStat(ctx context.Context) *redis.StatusC
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ConfigResetStat"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ConfigResetStat"); err != nil {
 				return err
 			}
 		}
@@ -2103,6 +2353,11 @@ func (w *RedisClientWrapper) ConfigRewrite(ctx context.Context) *redis.StatusCmd
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ConfigRewrite"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ConfigRewrite")
@@ -2137,6 +2392,11 @@ func (w *RedisClientWrapper) ConfigSet(ctx context.Context, parameter string, va
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ConfigSet"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ConfigSet"); err != nil {
 				return err
 			}
 		}
@@ -2177,6 +2437,11 @@ func (w *RedisClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DBSize"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.DBSize")
@@ -2211,6 +2476,11 @@ func (w *RedisClientWrapper) DbSize(ctx context.Context) *redis.IntCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.DbSize"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DbSize"); err != nil {
 				return err
 			}
 		}
@@ -2251,6 +2521,11 @@ func (w *RedisClientWrapper) DebugObject(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DebugObject"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.DebugObject")
@@ -2285,6 +2560,11 @@ func (w *RedisClientWrapper) Decr(ctx context.Context, key string) *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Decr"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Decr"); err != nil {
 				return err
 			}
 		}
@@ -2325,6 +2605,11 @@ func (w *RedisClientWrapper) DecrBy(ctx context.Context, key string, decrement i
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.DecrBy"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.DecrBy")
@@ -2359,6 +2644,11 @@ func (w *RedisClientWrapper) Del(ctx context.Context, keys ...string) *redis.Int
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Del"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Del"); err != nil {
 				return err
 			}
 		}
@@ -2399,6 +2689,11 @@ func (w *RedisClientWrapper) Dump(ctx context.Context, key string) *redis.String
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Dump"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Dump")
@@ -2433,6 +2728,11 @@ func (w *RedisClientWrapper) Echo(ctx context.Context, message interface{}) *red
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Echo"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Echo"); err != nil {
 				return err
 			}
 		}
@@ -2473,6 +2773,11 @@ func (w *RedisClientWrapper) Eval(ctx context.Context, script string, keys []str
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Eval"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Eval")
@@ -2507,6 +2812,11 @@ func (w *RedisClientWrapper) EvalSha(ctx context.Context, sha1 string, keys []st
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.EvalSha"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.EvalSha"); err != nil {
 				return err
 			}
 		}
@@ -2547,6 +2857,11 @@ func (w *RedisClientWrapper) Exists(ctx context.Context, keys ...string) *redis.
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Exists"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Exists")
@@ -2581,6 +2896,11 @@ func (w *RedisClientWrapper) Expire(ctx context.Context, key string, expiration 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Expire"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Expire"); err != nil {
 				return err
 			}
 		}
@@ -2621,6 +2941,11 @@ func (w *RedisClientWrapper) ExpireAt(ctx context.Context, key string, tm time.T
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ExpireAt"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ExpireAt")
@@ -2655,6 +2980,11 @@ func (w *RedisClientWrapper) FlushAll(ctx context.Context) *redis.StatusCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.FlushAll"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.FlushAll"); err != nil {
 				return err
 			}
 		}
@@ -2695,6 +3025,11 @@ func (w *RedisClientWrapper) FlushAllAsync(ctx context.Context) *redis.StatusCmd
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.FlushAllAsync"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.FlushAllAsync")
@@ -2729,6 +3064,11 @@ func (w *RedisClientWrapper) FlushDB(ctx context.Context) *redis.StatusCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.FlushDB"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.FlushDB"); err != nil {
 				return err
 			}
 		}
@@ -2769,6 +3109,11 @@ func (w *RedisClientWrapper) FlushDBAsync(ctx context.Context) *redis.StatusCmd 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.FlushDBAsync"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.FlushDBAsync")
@@ -2803,6 +3148,11 @@ func (w *RedisClientWrapper) FlushDb(ctx context.Context) *redis.StatusCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.FlushDb"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.FlushDb"); err != nil {
 				return err
 			}
 		}
@@ -2843,6 +3193,11 @@ func (w *RedisClientWrapper) GeoAdd(ctx context.Context, key string, geoLocation
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GeoAdd"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GeoAdd")
@@ -2877,6 +3232,11 @@ func (w *RedisClientWrapper) GeoDist(ctx context.Context, key string, member1 st
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GeoDist"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GeoDist"); err != nil {
 				return err
 			}
 		}
@@ -2917,6 +3277,11 @@ func (w *RedisClientWrapper) GeoHash(ctx context.Context, key string, members ..
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GeoHash"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GeoHash")
@@ -2951,6 +3316,11 @@ func (w *RedisClientWrapper) GeoPos(ctx context.Context, key string, members ...
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GeoPos"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GeoPos"); err != nil {
 				return err
 			}
 		}
@@ -2991,6 +3361,11 @@ func (w *RedisClientWrapper) GeoRadius(ctx context.Context, key string, longitud
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GeoRadius"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GeoRadius")
@@ -3025,6 +3400,11 @@ func (w *RedisClientWrapper) GeoRadiusByMember(ctx context.Context, key string, 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GeoRadiusByMember"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GeoRadiusByMember"); err != nil {
 				return err
 			}
 		}
@@ -3065,6 +3445,11 @@ func (w *RedisClientWrapper) GeoRadiusByMemberRO(ctx context.Context, key string
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GeoRadiusByMemberRO"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GeoRadiusByMemberRO")
@@ -3099,6 +3484,11 @@ func (w *RedisClientWrapper) GeoRadiusRO(ctx context.Context, key string, longit
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GeoRadiusRO"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GeoRadiusRO"); err != nil {
 				return err
 			}
 		}
@@ -3139,6 +3529,11 @@ func (w *RedisClientWrapper) Get(ctx context.Context, key string) *redis.StringC
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Get"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Get")
@@ -3173,6 +3568,11 @@ func (w *RedisClientWrapper) GetBit(ctx context.Context, key string, offset int6
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetBit"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetBit"); err != nil {
 				return err
 			}
 		}
@@ -3213,6 +3613,11 @@ func (w *RedisClientWrapper) GetRange(ctx context.Context, key string, start int
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetRange"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.GetRange")
@@ -3247,6 +3652,11 @@ func (w *RedisClientWrapper) GetSet(ctx context.Context, key string, value inter
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetSet"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetSet"); err != nil {
 				return err
 			}
 		}
@@ -3287,6 +3697,11 @@ func (w *RedisClientWrapper) HDel(ctx context.Context, key string, fields ...str
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.HDel"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HDel")
@@ -3321,6 +3736,11 @@ func (w *RedisClientWrapper) HExists(ctx context.Context, key string, field stri
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.HExists"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.HExists"); err != nil {
 				return err
 			}
 		}
@@ -3361,6 +3781,11 @@ func (w *RedisClientWrapper) HGet(ctx context.Context, key string, field string)
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.HGet"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HGet")
@@ -3395,6 +3820,11 @@ func (w *RedisClientWrapper) HGetAll(ctx context.Context, key string) *redis.Str
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.HGetAll"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.HGetAll"); err != nil {
 				return err
 			}
 		}
@@ -3435,6 +3865,11 @@ func (w *RedisClientWrapper) HIncrBy(ctx context.Context, key string, field stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.HIncrBy"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HIncrBy")
@@ -3469,6 +3904,11 @@ func (w *RedisClientWrapper) HIncrByFloat(ctx context.Context, key string, field
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.HIncrByFloat"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.HIncrByFloat"); err != nil {
 				return err
 			}
 		}
@@ -3509,6 +3949,11 @@ func (w *RedisClientWrapper) HKeys(ctx context.Context, key string) *redis.Strin
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.HKeys"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HKeys")
@@ -3543,6 +3988,11 @@ func (w *RedisClientWrapper) HLen(ctx context.Context, key string) *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.HLen"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.HLen"); err != nil {
 				return err
 			}
 		}
@@ -3583,6 +4033,11 @@ func (w *RedisClientWrapper) HMGet(ctx context.Context, key string, fields ...st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.HMGet"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HMGet")
@@ -3617,6 +4072,11 @@ func (w *RedisClientWrapper) HMSet(ctx context.Context, key string, fields map[s
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.HMSet"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.HMSet"); err != nil {
 				return err
 			}
 		}
@@ -3657,6 +4117,11 @@ func (w *RedisClientWrapper) HScan(ctx context.Context, key string, cursor uint6
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.HScan"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HScan")
@@ -3691,6 +4156,11 @@ func (w *RedisClientWrapper) HSet(ctx context.Context, key string, field string,
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.HSet"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.HSet"); err != nil {
 				return err
 			}
 		}
@@ -3731,6 +4201,11 @@ func (w *RedisClientWrapper) HSetNX(ctx context.Context, key string, field strin
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.HSetNX"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.HSetNX")
@@ -3765,6 +4240,11 @@ func (w *RedisClientWrapper) HVals(ctx context.Context, key string) *redis.Strin
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.HVals"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.HVals"); err != nil {
 				return err
 			}
 		}
@@ -3805,6 +4285,11 @@ func (w *RedisClientWrapper) Incr(ctx context.Context, key string) *redis.IntCmd
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Incr"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Incr")
@@ -3839,6 +4324,11 @@ func (w *RedisClientWrapper) IncrBy(ctx context.Context, key string, value int64
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.IncrBy"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.IncrBy"); err != nil {
 				return err
 			}
 		}
@@ -3879,6 +4369,11 @@ func (w *RedisClientWrapper) IncrByFloat(ctx context.Context, key string, value 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.IncrByFloat"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.IncrByFloat")
@@ -3913,6 +4408,11 @@ func (w *RedisClientWrapper) Info(ctx context.Context, section ...string) *redis
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Info"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Info"); err != nil {
 				return err
 			}
 		}
@@ -3953,6 +4453,11 @@ func (w *RedisClientWrapper) Keys(ctx context.Context, pattern string) *redis.St
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Keys"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Keys")
@@ -3987,6 +4492,11 @@ func (w *RedisClientWrapper) LIndex(ctx context.Context, key string, index int64
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.LIndex"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.LIndex"); err != nil {
 				return err
 			}
 		}
@@ -4027,6 +4537,11 @@ func (w *RedisClientWrapper) LInsert(ctx context.Context, key string, op string,
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.LInsert"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LInsert")
@@ -4061,6 +4576,11 @@ func (w *RedisClientWrapper) LInsertAfter(ctx context.Context, key string, pivot
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.LInsertAfter"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.LInsertAfter"); err != nil {
 				return err
 			}
 		}
@@ -4101,6 +4621,11 @@ func (w *RedisClientWrapper) LInsertBefore(ctx context.Context, key string, pivo
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.LInsertBefore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LInsertBefore")
@@ -4135,6 +4660,11 @@ func (w *RedisClientWrapper) LLen(ctx context.Context, key string) *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.LLen"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.LLen"); err != nil {
 				return err
 			}
 		}
@@ -4175,6 +4705,11 @@ func (w *RedisClientWrapper) LPop(ctx context.Context, key string) *redis.String
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.LPop"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LPop")
@@ -4209,6 +4744,11 @@ func (w *RedisClientWrapper) LPush(ctx context.Context, key string, values ...in
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.LPush"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.LPush"); err != nil {
 				return err
 			}
 		}
@@ -4249,6 +4789,11 @@ func (w *RedisClientWrapper) LPushX(ctx context.Context, key string, value inter
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.LPushX"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LPushX")
@@ -4283,6 +4828,11 @@ func (w *RedisClientWrapper) LRange(ctx context.Context, key string, start int64
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.LRange"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.LRange"); err != nil {
 				return err
 			}
 		}
@@ -4323,6 +4873,11 @@ func (w *RedisClientWrapper) LRem(ctx context.Context, key string, count int64, 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.LRem"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LRem")
@@ -4357,6 +4912,11 @@ func (w *RedisClientWrapper) LSet(ctx context.Context, key string, index int64, 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.LSet"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.LSet"); err != nil {
 				return err
 			}
 		}
@@ -4397,6 +4957,11 @@ func (w *RedisClientWrapper) LTrim(ctx context.Context, key string, start int64,
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.LTrim"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.LTrim")
@@ -4431,6 +4996,11 @@ func (w *RedisClientWrapper) LastSave(ctx context.Context) *redis.IntCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.LastSave"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.LastSave"); err != nil {
 				return err
 			}
 		}
@@ -4471,6 +5041,11 @@ func (w *RedisClientWrapper) MGet(ctx context.Context, keys ...string) *redis.Sl
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.MGet"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.MGet")
@@ -4505,6 +5080,11 @@ func (w *RedisClientWrapper) MSet(ctx context.Context, pairs ...interface{}) *re
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.MSet"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.MSet"); err != nil {
 				return err
 			}
 		}
@@ -4545,6 +5125,11 @@ func (w *RedisClientWrapper) MSetNX(ctx context.Context, pairs ...interface{}) *
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.MSetNX"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.MSetNX")
@@ -4579,6 +5164,11 @@ func (w *RedisClientWrapper) MemoryUsage(ctx context.Context, key string, sample
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.MemoryUsage"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.MemoryUsage"); err != nil {
 				return err
 			}
 		}
@@ -4619,6 +5209,11 @@ func (w *RedisClientWrapper) Migrate(ctx context.Context, host string, port stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Migrate"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Migrate")
@@ -4653,6 +5248,11 @@ func (w *RedisClientWrapper) Move(ctx context.Context, key string, db int64) *re
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Move"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Move"); err != nil {
 				return err
 			}
 		}
@@ -4693,6 +5293,11 @@ func (w *RedisClientWrapper) ObjectEncoding(ctx context.Context, key string) *re
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ObjectEncoding"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ObjectEncoding")
@@ -4727,6 +5332,11 @@ func (w *RedisClientWrapper) ObjectIdleTime(ctx context.Context, key string) *re
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ObjectIdleTime"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ObjectIdleTime"); err != nil {
 				return err
 			}
 		}
@@ -4767,6 +5377,11 @@ func (w *RedisClientWrapper) ObjectRefCount(ctx context.Context, key string) *re
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ObjectRefCount"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ObjectRefCount")
@@ -4801,6 +5416,11 @@ func (w *RedisClientWrapper) PExpire(ctx context.Context, key string, expiration
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.PExpire"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.PExpire"); err != nil {
 				return err
 			}
 		}
@@ -4841,6 +5461,11 @@ func (w *RedisClientWrapper) PExpireAt(ctx context.Context, key string, tm time.
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.PExpireAt"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.PExpireAt")
@@ -4875,6 +5500,11 @@ func (w *RedisClientWrapper) PFAdd(ctx context.Context, key string, els ...inter
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.PFAdd"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.PFAdd"); err != nil {
 				return err
 			}
 		}
@@ -4915,6 +5545,11 @@ func (w *RedisClientWrapper) PFCount(ctx context.Context, keys ...string) *redis
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.PFCount"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.PFCount")
@@ -4949,6 +5584,11 @@ func (w *RedisClientWrapper) PFMerge(ctx context.Context, dest string, keys ...s
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.PFMerge"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.PFMerge"); err != nil {
 				return err
 			}
 		}
@@ -4989,6 +5629,11 @@ func (w *RedisClientWrapper) PTTL(ctx context.Context, key string) *redis.Durati
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.PTTL"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.PTTL")
@@ -5023,6 +5668,11 @@ func (w *RedisClientWrapper) Persist(ctx context.Context, key string) *redis.Boo
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Persist"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Persist"); err != nil {
 				return err
 			}
 		}
@@ -5063,6 +5713,11 @@ func (w *RedisClientWrapper) Ping(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Ping"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Ping")
@@ -5097,6 +5752,11 @@ func (w *RedisClientWrapper) PubSubChannels(ctx context.Context, pattern string)
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.PubSubChannels"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.PubSubChannels"); err != nil {
 				return err
 			}
 		}
@@ -5137,6 +5797,11 @@ func (w *RedisClientWrapper) PubSubNumPat(ctx context.Context) *redis.IntCmd {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.PubSubNumPat"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.PubSubNumPat")
@@ -5171,6 +5836,11 @@ func (w *RedisClientWrapper) PubSubNumSub(ctx context.Context, channels ...strin
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.PubSubNumSub"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.PubSubNumSub"); err != nil {
 				return err
 			}
 		}
@@ -5211,6 +5881,11 @@ func (w *RedisClientWrapper) Publish(ctx context.Context, channel string, messag
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Publish"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Publish")
@@ -5245,6 +5920,11 @@ func (w *RedisClientWrapper) Quit(ctx context.Context) *redis.StatusCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Quit"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Quit"); err != nil {
 				return err
 			}
 		}
@@ -5285,6 +5965,11 @@ func (w *RedisClientWrapper) RPop(ctx context.Context, key string) *redis.String
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.RPop"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.RPop")
@@ -5319,6 +6004,11 @@ func (w *RedisClientWrapper) RPopLPush(ctx context.Context, source string, desti
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.RPopLPush"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.RPopLPush"); err != nil {
 				return err
 			}
 		}
@@ -5359,6 +6049,11 @@ func (w *RedisClientWrapper) RPush(ctx context.Context, key string, values ...in
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.RPush"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.RPush")
@@ -5393,6 +6088,11 @@ func (w *RedisClientWrapper) RPushX(ctx context.Context, key string, value inter
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.RPushX"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.RPushX"); err != nil {
 				return err
 			}
 		}
@@ -5433,6 +6133,11 @@ func (w *RedisClientWrapper) RandomKey(ctx context.Context) *redis.StringCmd {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.RandomKey"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.RandomKey")
@@ -5467,6 +6172,11 @@ func (w *RedisClientWrapper) ReadOnly(ctx context.Context) *redis.StatusCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ReadOnly"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ReadOnly"); err != nil {
 				return err
 			}
 		}
@@ -5507,6 +6217,11 @@ func (w *RedisClientWrapper) ReadWrite(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ReadWrite"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ReadWrite")
@@ -5541,6 +6256,11 @@ func (w *RedisClientWrapper) Rename(ctx context.Context, key string, newkey stri
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Rename"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Rename"); err != nil {
 				return err
 			}
 		}
@@ -5581,6 +6301,11 @@ func (w *RedisClientWrapper) RenameNX(ctx context.Context, key string, newkey st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.RenameNX"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.RenameNX")
@@ -5615,6 +6340,11 @@ func (w *RedisClientWrapper) Restore(ctx context.Context, key string, ttl time.D
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Restore"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Restore"); err != nil {
 				return err
 			}
 		}
@@ -5655,6 +6385,11 @@ func (w *RedisClientWrapper) RestoreReplace(ctx context.Context, key string, ttl
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.RestoreReplace"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.RestoreReplace")
@@ -5689,6 +6424,11 @@ func (w *RedisClientWrapper) SAdd(ctx context.Context, key string, members ...in
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SAdd"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SAdd"); err != nil {
 				return err
 			}
 		}
@@ -5729,6 +6469,11 @@ func (w *RedisClientWrapper) SCard(ctx context.Context, key string) *redis.IntCm
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SCard"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SCard")
@@ -5763,6 +6508,11 @@ func (w *RedisClientWrapper) SDiff(ctx context.Context, keys ...string) *redis.S
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SDiff"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SDiff"); err != nil {
 				return err
 			}
 		}
@@ -5803,6 +6553,11 @@ func (w *RedisClientWrapper) SDiffStore(ctx context.Context, destination string,
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SDiffStore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SDiffStore")
@@ -5837,6 +6592,11 @@ func (w *RedisClientWrapper) SInter(ctx context.Context, keys ...string) *redis.
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SInter"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SInter"); err != nil {
 				return err
 			}
 		}
@@ -5877,6 +6637,11 @@ func (w *RedisClientWrapper) SInterStore(ctx context.Context, destination string
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SInterStore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SInterStore")
@@ -5911,6 +6676,11 @@ func (w *RedisClientWrapper) SIsMember(ctx context.Context, key string, member i
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SIsMember"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SIsMember"); err != nil {
 				return err
 			}
 		}
@@ -5951,6 +6721,11 @@ func (w *RedisClientWrapper) SMembers(ctx context.Context, key string) *redis.St
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SMembers"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SMembers")
@@ -5985,6 +6760,11 @@ func (w *RedisClientWrapper) SMembersMap(ctx context.Context, key string) *redis
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SMembersMap"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SMembersMap"); err != nil {
 				return err
 			}
 		}
@@ -6025,6 +6805,11 @@ func (w *RedisClientWrapper) SMove(ctx context.Context, source string, destinati
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SMove"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SMove")
@@ -6059,6 +6844,11 @@ func (w *RedisClientWrapper) SPop(ctx context.Context, key string) *redis.String
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SPop"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SPop"); err != nil {
 				return err
 			}
 		}
@@ -6099,6 +6889,11 @@ func (w *RedisClientWrapper) SPopN(ctx context.Context, key string, count int64)
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SPopN"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SPopN")
@@ -6133,6 +6928,11 @@ func (w *RedisClientWrapper) SRandMember(ctx context.Context, key string) *redis
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SRandMember"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SRandMember"); err != nil {
 				return err
 			}
 		}
@@ -6173,6 +6973,11 @@ func (w *RedisClientWrapper) SRandMemberN(ctx context.Context, key string, count
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SRandMemberN"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SRandMemberN")
@@ -6207,6 +7012,11 @@ func (w *RedisClientWrapper) SRem(ctx context.Context, key string, members ...in
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SRem"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SRem"); err != nil {
 				return err
 			}
 		}
@@ -6247,6 +7057,11 @@ func (w *RedisClientWrapper) SScan(ctx context.Context, key string, cursor uint6
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SScan"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SScan")
@@ -6281,6 +7096,11 @@ func (w *RedisClientWrapper) SUnion(ctx context.Context, keys ...string) *redis.
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SUnion"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SUnion"); err != nil {
 				return err
 			}
 		}
@@ -6321,6 +7141,11 @@ func (w *RedisClientWrapper) SUnionStore(ctx context.Context, destination string
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SUnionStore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SUnionStore")
@@ -6355,6 +7180,11 @@ func (w *RedisClientWrapper) Save(ctx context.Context) *redis.StatusCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Save"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Save"); err != nil {
 				return err
 			}
 		}
@@ -6395,6 +7225,11 @@ func (w *RedisClientWrapper) Scan(ctx context.Context, cursor uint64, match stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Scan"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Scan")
@@ -6429,6 +7264,11 @@ func (w *RedisClientWrapper) ScriptExists(ctx context.Context, hashes ...string)
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ScriptExists"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ScriptExists"); err != nil {
 				return err
 			}
 		}
@@ -6469,6 +7309,11 @@ func (w *RedisClientWrapper) ScriptFlush(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ScriptFlush"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ScriptFlush")
@@ -6503,6 +7348,11 @@ func (w *RedisClientWrapper) ScriptKill(ctx context.Context) *redis.StatusCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ScriptKill"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ScriptKill"); err != nil {
 				return err
 			}
 		}
@@ -6543,6 +7393,11 @@ func (w *RedisClientWrapper) ScriptLoad(ctx context.Context, script string) *red
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ScriptLoad"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ScriptLoad")
@@ -6577,6 +7432,11 @@ func (w *RedisClientWrapper) Set(ctx context.Context, key string, value interfac
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Set"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Set"); err != nil {
 				return err
 			}
 		}
@@ -6617,6 +7477,11 @@ func (w *RedisClientWrapper) SetBit(ctx context.Context, key string, offset int6
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetBit"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SetBit")
@@ -6651,6 +7516,11 @@ func (w *RedisClientWrapper) SetNX(ctx context.Context, key string, value interf
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SetNX"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetNX"); err != nil {
 				return err
 			}
 		}
@@ -6691,6 +7561,11 @@ func (w *RedisClientWrapper) SetRange(ctx context.Context, key string, offset in
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetRange"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SetRange")
@@ -6725,6 +7600,11 @@ func (w *RedisClientWrapper) SetXX(ctx context.Context, key string, value interf
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SetXX"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SetXX"); err != nil {
 				return err
 			}
 		}
@@ -6765,6 +7645,11 @@ func (w *RedisClientWrapper) Shutdown(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Shutdown"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Shutdown")
@@ -6799,6 +7684,11 @@ func (w *RedisClientWrapper) ShutdownNoSave(ctx context.Context) *redis.StatusCm
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ShutdownNoSave"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ShutdownNoSave"); err != nil {
 				return err
 			}
 		}
@@ -6839,6 +7729,11 @@ func (w *RedisClientWrapper) ShutdownSave(ctx context.Context) *redis.StatusCmd 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ShutdownSave"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ShutdownSave")
@@ -6873,6 +7768,11 @@ func (w *RedisClientWrapper) SlaveOf(ctx context.Context, host string, port stri
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SlaveOf"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SlaveOf"); err != nil {
 				return err
 			}
 		}
@@ -6917,6 +7817,11 @@ func (w *RedisClientWrapper) Sort(ctx context.Context, key string, sort *redis.S
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Sort"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Sort")
@@ -6951,6 +7856,11 @@ func (w *RedisClientWrapper) SortInterfaces(ctx context.Context, key string, sor
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.SortInterfaces"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SortInterfaces"); err != nil {
 				return err
 			}
 		}
@@ -6991,6 +7901,11 @@ func (w *RedisClientWrapper) SortStore(ctx context.Context, key string, store st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.SortStore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.SortStore")
@@ -7025,6 +7940,11 @@ func (w *RedisClientWrapper) StrLen(ctx context.Context, key string) *redis.IntC
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.StrLen"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.StrLen"); err != nil {
 				return err
 			}
 		}
@@ -7069,6 +7989,11 @@ func (w *RedisClientWrapper) TTL(ctx context.Context, key string) *redis.Duratio
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.TTL"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.TTL")
@@ -7103,6 +8028,11 @@ func (w *RedisClientWrapper) Time(ctx context.Context) *redis.TimeCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Time"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Time"); err != nil {
 				return err
 			}
 		}
@@ -7143,6 +8073,11 @@ func (w *RedisClientWrapper) Touch(ctx context.Context, keys ...string) *redis.I
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Touch"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Touch")
@@ -7177,6 +8112,11 @@ func (w *RedisClientWrapper) Type(ctx context.Context, key string) *redis.Status
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Type"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Type"); err != nil {
 				return err
 			}
 		}
@@ -7217,6 +8157,11 @@ func (w *RedisClientWrapper) Unlink(ctx context.Context, keys ...string) *redis.
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Unlink"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.Unlink")
@@ -7251,6 +8196,11 @@ func (w *RedisClientWrapper) Wait(ctx context.Context, numSlaves int, timeout ti
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.Wait"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.Wait"); err != nil {
 				return err
 			}
 		}
@@ -7291,6 +8241,11 @@ func (w *RedisClientWrapper) XAck(ctx context.Context, stream string, group stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XAck"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XAck")
@@ -7325,6 +8280,11 @@ func (w *RedisClientWrapper) XAdd(ctx context.Context, a *redis.XAddArgs) *redis
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.XAdd"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XAdd"); err != nil {
 				return err
 			}
 		}
@@ -7365,6 +8325,11 @@ func (w *RedisClientWrapper) XClaim(ctx context.Context, a *redis.XClaimArgs) *r
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XClaim"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XClaim")
@@ -7399,6 +8364,11 @@ func (w *RedisClientWrapper) XClaimJustID(ctx context.Context, a *redis.XClaimAr
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.XClaimJustID"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XClaimJustID"); err != nil {
 				return err
 			}
 		}
@@ -7439,6 +8409,11 @@ func (w *RedisClientWrapper) XDel(ctx context.Context, stream string, ids ...str
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XDel"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XDel")
@@ -7473,6 +8448,11 @@ func (w *RedisClientWrapper) XGroupCreate(ctx context.Context, stream string, gr
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.XGroupCreate"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XGroupCreate"); err != nil {
 				return err
 			}
 		}
@@ -7513,6 +8493,11 @@ func (w *RedisClientWrapper) XGroupCreateMkStream(ctx context.Context, stream st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XGroupCreateMkStream"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XGroupCreateMkStream")
@@ -7547,6 +8532,11 @@ func (w *RedisClientWrapper) XGroupDelConsumer(ctx context.Context, stream strin
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.XGroupDelConsumer"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XGroupDelConsumer"); err != nil {
 				return err
 			}
 		}
@@ -7587,6 +8577,11 @@ func (w *RedisClientWrapper) XGroupDestroy(ctx context.Context, stream string, g
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XGroupDestroy"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XGroupDestroy")
@@ -7621,6 +8616,11 @@ func (w *RedisClientWrapper) XGroupSetID(ctx context.Context, stream string, gro
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.XGroupSetID"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XGroupSetID"); err != nil {
 				return err
 			}
 		}
@@ -7661,6 +8661,11 @@ func (w *RedisClientWrapper) XLen(ctx context.Context, stream string) *redis.Int
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XLen"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XLen")
@@ -7695,6 +8700,11 @@ func (w *RedisClientWrapper) XPending(ctx context.Context, stream string, group 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.XPending"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XPending"); err != nil {
 				return err
 			}
 		}
@@ -7735,6 +8745,11 @@ func (w *RedisClientWrapper) XPendingExt(ctx context.Context, a *redis.XPendingE
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XPendingExt"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XPendingExt")
@@ -7769,6 +8784,11 @@ func (w *RedisClientWrapper) XRange(ctx context.Context, stream string, start st
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.XRange"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XRange"); err != nil {
 				return err
 			}
 		}
@@ -7809,6 +8829,11 @@ func (w *RedisClientWrapper) XRangeN(ctx context.Context, stream string, start s
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XRangeN"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XRangeN")
@@ -7843,6 +8868,11 @@ func (w *RedisClientWrapper) XRead(ctx context.Context, a *redis.XReadArgs) *red
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.XRead"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XRead"); err != nil {
 				return err
 			}
 		}
@@ -7883,6 +8913,11 @@ func (w *RedisClientWrapper) XReadGroup(ctx context.Context, a *redis.XReadGroup
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XReadGroup"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XReadGroup")
@@ -7917,6 +8952,11 @@ func (w *RedisClientWrapper) XReadStreams(ctx context.Context, streams ...string
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.XReadStreams"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XReadStreams"); err != nil {
 				return err
 			}
 		}
@@ -7957,6 +8997,11 @@ func (w *RedisClientWrapper) XRevRange(ctx context.Context, stream string, start
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XRevRange"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XRevRange")
@@ -7991,6 +9036,11 @@ func (w *RedisClientWrapper) XRevRangeN(ctx context.Context, stream string, star
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.XRevRangeN"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XRevRangeN"); err != nil {
 				return err
 			}
 		}
@@ -8031,6 +9081,11 @@ func (w *RedisClientWrapper) XTrim(ctx context.Context, key string, maxLen int64
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XTrim"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.XTrim")
@@ -8065,6 +9120,11 @@ func (w *RedisClientWrapper) XTrimApprox(ctx context.Context, key string, maxLen
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.XTrimApprox"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.XTrimApprox"); err != nil {
 				return err
 			}
 		}
@@ -8105,6 +9165,11 @@ func (w *RedisClientWrapper) ZAdd(ctx context.Context, key string, members ...re
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZAdd"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZAdd")
@@ -8139,6 +9204,11 @@ func (w *RedisClientWrapper) ZAddCh(ctx context.Context, key string, members ...
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZAddCh"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZAddCh"); err != nil {
 				return err
 			}
 		}
@@ -8179,6 +9249,11 @@ func (w *RedisClientWrapper) ZAddNX(ctx context.Context, key string, members ...
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZAddNX"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZAddNX")
@@ -8213,6 +9288,11 @@ func (w *RedisClientWrapper) ZAddNXCh(ctx context.Context, key string, members .
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZAddNXCh"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZAddNXCh"); err != nil {
 				return err
 			}
 		}
@@ -8253,6 +9333,11 @@ func (w *RedisClientWrapper) ZAddXX(ctx context.Context, key string, members ...
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZAddXX"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZAddXX")
@@ -8287,6 +9372,11 @@ func (w *RedisClientWrapper) ZAddXXCh(ctx context.Context, key string, members .
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZAddXXCh"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZAddXXCh"); err != nil {
 				return err
 			}
 		}
@@ -8327,6 +9417,11 @@ func (w *RedisClientWrapper) ZCard(ctx context.Context, key string) *redis.IntCm
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZCard"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZCard")
@@ -8361,6 +9456,11 @@ func (w *RedisClientWrapper) ZCount(ctx context.Context, key string, min string,
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZCount"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZCount"); err != nil {
 				return err
 			}
 		}
@@ -8401,6 +9501,11 @@ func (w *RedisClientWrapper) ZIncr(ctx context.Context, key string, member redis
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZIncr"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZIncr")
@@ -8435,6 +9540,11 @@ func (w *RedisClientWrapper) ZIncrBy(ctx context.Context, key string, increment 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZIncrBy"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZIncrBy"); err != nil {
 				return err
 			}
 		}
@@ -8475,6 +9585,11 @@ func (w *RedisClientWrapper) ZIncrNX(ctx context.Context, key string, member red
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZIncrNX"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZIncrNX")
@@ -8509,6 +9624,11 @@ func (w *RedisClientWrapper) ZIncrXX(ctx context.Context, key string, member red
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZIncrXX"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZIncrXX"); err != nil {
 				return err
 			}
 		}
@@ -8549,6 +9669,11 @@ func (w *RedisClientWrapper) ZInterStore(ctx context.Context, destination string
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZInterStore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZInterStore")
@@ -8583,6 +9708,11 @@ func (w *RedisClientWrapper) ZLexCount(ctx context.Context, key string, min stri
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZLexCount"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZLexCount"); err != nil {
 				return err
 			}
 		}
@@ -8623,6 +9753,11 @@ func (w *RedisClientWrapper) ZPopMax(ctx context.Context, key string, count ...i
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZPopMax"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZPopMax")
@@ -8657,6 +9792,11 @@ func (w *RedisClientWrapper) ZPopMin(ctx context.Context, key string, count ...i
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZPopMin"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZPopMin"); err != nil {
 				return err
 			}
 		}
@@ -8697,6 +9837,11 @@ func (w *RedisClientWrapper) ZRange(ctx context.Context, key string, start int64
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRange"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRange")
@@ -8731,6 +9876,11 @@ func (w *RedisClientWrapper) ZRangeByLex(ctx context.Context, key string, opt re
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZRangeByLex"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRangeByLex"); err != nil {
 				return err
 			}
 		}
@@ -8771,6 +9921,11 @@ func (w *RedisClientWrapper) ZRangeByScore(ctx context.Context, key string, opt 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRangeByScore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRangeByScore")
@@ -8805,6 +9960,11 @@ func (w *RedisClientWrapper) ZRangeByScoreWithScores(ctx context.Context, key st
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZRangeByScoreWithScores"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRangeByScoreWithScores"); err != nil {
 				return err
 			}
 		}
@@ -8845,6 +10005,11 @@ func (w *RedisClientWrapper) ZRangeWithScores(ctx context.Context, key string, s
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRangeWithScores"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRangeWithScores")
@@ -8879,6 +10044,11 @@ func (w *RedisClientWrapper) ZRank(ctx context.Context, key string, member strin
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZRank"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRank"); err != nil {
 				return err
 			}
 		}
@@ -8919,6 +10089,11 @@ func (w *RedisClientWrapper) ZRem(ctx context.Context, key string, members ...in
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRem"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRem")
@@ -8953,6 +10128,11 @@ func (w *RedisClientWrapper) ZRemRangeByLex(ctx context.Context, key string, min
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZRemRangeByLex"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRemRangeByLex"); err != nil {
 				return err
 			}
 		}
@@ -8993,6 +10173,11 @@ func (w *RedisClientWrapper) ZRemRangeByRank(ctx context.Context, key string, st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRemRangeByRank"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRemRangeByRank")
@@ -9027,6 +10212,11 @@ func (w *RedisClientWrapper) ZRemRangeByScore(ctx context.Context, key string, m
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZRemRangeByScore"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRemRangeByScore"); err != nil {
 				return err
 			}
 		}
@@ -9067,6 +10257,11 @@ func (w *RedisClientWrapper) ZRevRange(ctx context.Context, key string, start in
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRevRange"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRange")
@@ -9101,6 +10296,11 @@ func (w *RedisClientWrapper) ZRevRangeByLex(ctx context.Context, key string, opt
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRangeByLex"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRevRangeByLex"); err != nil {
 				return err
 			}
 		}
@@ -9141,6 +10341,11 @@ func (w *RedisClientWrapper) ZRevRangeByScore(ctx context.Context, key string, o
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRevRangeByScore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRangeByScore")
@@ -9175,6 +10380,11 @@ func (w *RedisClientWrapper) ZRevRangeByScoreWithScores(ctx context.Context, key
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRangeByScoreWithScores"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRevRangeByScoreWithScores"); err != nil {
 				return err
 			}
 		}
@@ -9215,6 +10425,11 @@ func (w *RedisClientWrapper) ZRevRangeWithScores(ctx context.Context, key string
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRevRangeWithScores"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZRevRangeWithScores")
@@ -9249,6 +10464,11 @@ func (w *RedisClientWrapper) ZRevRank(ctx context.Context, key string, member st
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRank"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZRevRank"); err != nil {
 				return err
 			}
 		}
@@ -9289,6 +10509,11 @@ func (w *RedisClientWrapper) ZScan(ctx context.Context, key string, cursor uint6
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZScan"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZScan")
@@ -9323,6 +10548,11 @@ func (w *RedisClientWrapper) ZScore(ctx context.Context, key string, member stri
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.ZScore"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZScore"); err != nil {
 				return err
 			}
 		}
@@ -9363,6 +10593,11 @@ func (w *RedisClientWrapper) ZUnionStore(ctx context.Context, dest string, store
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.ZUnionStore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.Client.ZUnionStore")
@@ -9397,6 +10632,11 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Close"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Close"); err != nil {
 				return err
 			}
 		}
@@ -9442,6 +10682,11 @@ func (w *RedisClusterClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.DBSize"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.DBSize")
@@ -9476,6 +10721,11 @@ func (w *RedisClusterClientWrapper) Do(ctx context.Context, args ...interface{})
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Do"); err != nil {
 				return err
 			}
 		}
@@ -9516,6 +10766,11 @@ func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(c
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ForEachMaster"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ForEachMaster")
@@ -9553,6 +10808,11 @@ func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(cli
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ForEachNode"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ForEachNode")
@@ -9587,6 +10847,11 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ForEachSlave"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ForEachSlave"); err != nil {
 				return err
 			}
 		}
@@ -9643,6 +10908,11 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Pipelined"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Pipelined")
@@ -9685,6 +10955,11 @@ func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Process"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Process")
@@ -9719,6 +10994,11 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ReloadState"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ReloadState"); err != nil {
 				return err
 			}
 		}
@@ -9770,6 +11050,11 @@ func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(red
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.TxPipelined"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.TxPipelined")
@@ -9804,6 +11089,11 @@ func (w *RedisClusterClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Watch"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Watch"); err != nil {
 				return err
 			}
 		}
@@ -9857,6 +11147,11 @@ func (w *RedisClusterClientWrapper) Append(ctx context.Context, key string, valu
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Append"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Append")
@@ -9891,6 +11186,11 @@ func (w *RedisClusterClientWrapper) BLPop(ctx context.Context, timeout time.Dura
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BLPop"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.BLPop"); err != nil {
 				return err
 			}
 		}
@@ -9931,6 +11231,11 @@ func (w *RedisClusterClientWrapper) BRPop(ctx context.Context, timeout time.Dura
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.BRPop"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BRPop")
@@ -9965,6 +11270,11 @@ func (w *RedisClusterClientWrapper) BRPopLPush(ctx context.Context, source strin
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BRPopLPush"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.BRPopLPush"); err != nil {
 				return err
 			}
 		}
@@ -10005,6 +11315,11 @@ func (w *RedisClusterClientWrapper) BZPopMax(ctx context.Context, timeout time.D
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.BZPopMax"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BZPopMax")
@@ -10039,6 +11354,11 @@ func (w *RedisClusterClientWrapper) BZPopMin(ctx context.Context, timeout time.D
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BZPopMin"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.BZPopMin"); err != nil {
 				return err
 			}
 		}
@@ -10079,6 +11399,11 @@ func (w *RedisClusterClientWrapper) BgRewriteAOF(ctx context.Context) *redis.Sta
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.BgRewriteAOF"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BgRewriteAOF")
@@ -10113,6 +11438,11 @@ func (w *RedisClusterClientWrapper) BgSave(ctx context.Context) *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BgSave"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.BgSave"); err != nil {
 				return err
 			}
 		}
@@ -10153,6 +11483,11 @@ func (w *RedisClusterClientWrapper) BitCount(ctx context.Context, key string, bi
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.BitCount"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitCount")
@@ -10187,6 +11522,11 @@ func (w *RedisClusterClientWrapper) BitOpAnd(ctx context.Context, destKey string
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitOpAnd"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.BitOpAnd"); err != nil {
 				return err
 			}
 		}
@@ -10227,6 +11567,11 @@ func (w *RedisClusterClientWrapper) BitOpNot(ctx context.Context, destKey string
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.BitOpNot"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitOpNot")
@@ -10261,6 +11606,11 @@ func (w *RedisClusterClientWrapper) BitOpOr(ctx context.Context, destKey string,
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitOpOr"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.BitOpOr"); err != nil {
 				return err
 			}
 		}
@@ -10301,6 +11651,11 @@ func (w *RedisClusterClientWrapper) BitOpXor(ctx context.Context, destKey string
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.BitOpXor"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.BitOpXor")
@@ -10335,6 +11690,11 @@ func (w *RedisClusterClientWrapper) BitPos(ctx context.Context, key string, bit 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitPos"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.BitPos"); err != nil {
 				return err
 			}
 		}
@@ -10375,6 +11735,11 @@ func (w *RedisClusterClientWrapper) ClientGetName(ctx context.Context) *redis.St
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientGetName"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientGetName")
@@ -10409,6 +11774,11 @@ func (w *RedisClusterClientWrapper) ClientID(ctx context.Context) *redis.IntCmd 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientID"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientID"); err != nil {
 				return err
 			}
 		}
@@ -10449,6 +11819,11 @@ func (w *RedisClusterClientWrapper) ClientKill(ctx context.Context, ipPort strin
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientKill"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientKill")
@@ -10483,6 +11858,11 @@ func (w *RedisClusterClientWrapper) ClientKillByFilter(ctx context.Context, keys
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientKillByFilter"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientKillByFilter"); err != nil {
 				return err
 			}
 		}
@@ -10523,6 +11903,11 @@ func (w *RedisClusterClientWrapper) ClientList(ctx context.Context) *redis.Strin
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientList"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientList")
@@ -10557,6 +11942,11 @@ func (w *RedisClusterClientWrapper) ClientPause(ctx context.Context, dur time.Du
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientPause"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientPause"); err != nil {
 				return err
 			}
 		}
@@ -10597,6 +11987,11 @@ func (w *RedisClusterClientWrapper) ClientUnblock(ctx context.Context, id int64)
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientUnblock"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClientUnblock")
@@ -10631,6 +12026,11 @@ func (w *RedisClusterClientWrapper) ClientUnblockWithError(ctx context.Context, 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientUnblockWithError"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientUnblockWithError"); err != nil {
 				return err
 			}
 		}
@@ -10671,6 +12071,11 @@ func (w *RedisClusterClientWrapper) ClusterAddSlots(ctx context.Context, slots .
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterAddSlots"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterAddSlots")
@@ -10705,6 +12110,11 @@ func (w *RedisClusterClientWrapper) ClusterAddSlotsRange(ctx context.Context, mi
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterAddSlotsRange"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterAddSlotsRange"); err != nil {
 				return err
 			}
 		}
@@ -10745,6 +12155,11 @@ func (w *RedisClusterClientWrapper) ClusterCountFailureReports(ctx context.Conte
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterCountFailureReports"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterCountFailureReports")
@@ -10779,6 +12194,11 @@ func (w *RedisClusterClientWrapper) ClusterCountKeysInSlot(ctx context.Context, 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterCountKeysInSlot"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterCountKeysInSlot"); err != nil {
 				return err
 			}
 		}
@@ -10819,6 +12239,11 @@ func (w *RedisClusterClientWrapper) ClusterDelSlots(ctx context.Context, slots .
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterDelSlots"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterDelSlots")
@@ -10853,6 +12278,11 @@ func (w *RedisClusterClientWrapper) ClusterDelSlotsRange(ctx context.Context, mi
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterDelSlotsRange"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterDelSlotsRange"); err != nil {
 				return err
 			}
 		}
@@ -10893,6 +12323,11 @@ func (w *RedisClusterClientWrapper) ClusterFailover(ctx context.Context) *redis.
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterFailover"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterFailover")
@@ -10927,6 +12362,11 @@ func (w *RedisClusterClientWrapper) ClusterForget(ctx context.Context, nodeID st
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterForget"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterForget"); err != nil {
 				return err
 			}
 		}
@@ -10967,6 +12407,11 @@ func (w *RedisClusterClientWrapper) ClusterGetKeysInSlot(ctx context.Context, sl
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterGetKeysInSlot"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterGetKeysInSlot")
@@ -11001,6 +12446,11 @@ func (w *RedisClusterClientWrapper) ClusterInfo(ctx context.Context) *redis.Stri
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterInfo"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterInfo"); err != nil {
 				return err
 			}
 		}
@@ -11041,6 +12491,11 @@ func (w *RedisClusterClientWrapper) ClusterKeySlot(ctx context.Context, key stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterKeySlot"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterKeySlot")
@@ -11075,6 +12530,11 @@ func (w *RedisClusterClientWrapper) ClusterMeet(ctx context.Context, host string
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterMeet"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterMeet"); err != nil {
 				return err
 			}
 		}
@@ -11115,6 +12575,11 @@ func (w *RedisClusterClientWrapper) ClusterNodes(ctx context.Context) *redis.Str
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterNodes"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterNodes")
@@ -11149,6 +12614,11 @@ func (w *RedisClusterClientWrapper) ClusterReplicate(ctx context.Context, nodeID
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterReplicate"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterReplicate"); err != nil {
 				return err
 			}
 		}
@@ -11189,6 +12659,11 @@ func (w *RedisClusterClientWrapper) ClusterResetHard(ctx context.Context) *redis
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterResetHard"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterResetHard")
@@ -11223,6 +12698,11 @@ func (w *RedisClusterClientWrapper) ClusterResetSoft(ctx context.Context) *redis
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterResetSoft"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterResetSoft"); err != nil {
 				return err
 			}
 		}
@@ -11263,6 +12743,11 @@ func (w *RedisClusterClientWrapper) ClusterSaveConfig(ctx context.Context) *redi
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterSaveConfig"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterSaveConfig")
@@ -11297,6 +12782,11 @@ func (w *RedisClusterClientWrapper) ClusterSlaves(ctx context.Context, nodeID st
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterSlaves"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterSlaves"); err != nil {
 				return err
 			}
 		}
@@ -11337,6 +12827,11 @@ func (w *RedisClusterClientWrapper) ClusterSlots(ctx context.Context) *redis.Clu
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterSlots"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ClusterSlots")
@@ -11371,6 +12866,11 @@ func (w *RedisClusterClientWrapper) Command(ctx context.Context) *redis.Commands
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Command"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Command"); err != nil {
 				return err
 			}
 		}
@@ -11411,6 +12911,11 @@ func (w *RedisClusterClientWrapper) ConfigGet(ctx context.Context, parameter str
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ConfigGet"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ConfigGet")
@@ -11445,6 +12950,11 @@ func (w *RedisClusterClientWrapper) ConfigResetStat(ctx context.Context) *redis.
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ConfigResetStat"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ConfigResetStat"); err != nil {
 				return err
 			}
 		}
@@ -11485,6 +12995,11 @@ func (w *RedisClusterClientWrapper) ConfigRewrite(ctx context.Context) *redis.St
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ConfigRewrite"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ConfigRewrite")
@@ -11519,6 +13034,11 @@ func (w *RedisClusterClientWrapper) ConfigSet(ctx context.Context, parameter str
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ConfigSet"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ConfigSet"); err != nil {
 				return err
 			}
 		}
@@ -11559,6 +13079,11 @@ func (w *RedisClusterClientWrapper) DbSize(ctx context.Context) *redis.IntCmd {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.DbSize"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.DbSize")
@@ -11593,6 +13118,11 @@ func (w *RedisClusterClientWrapper) DebugObject(ctx context.Context, key string)
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.DebugObject"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.DebugObject"); err != nil {
 				return err
 			}
 		}
@@ -11633,6 +13163,11 @@ func (w *RedisClusterClientWrapper) Decr(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Decr"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Decr")
@@ -11667,6 +13202,11 @@ func (w *RedisClusterClientWrapper) DecrBy(ctx context.Context, key string, decr
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.DecrBy"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.DecrBy"); err != nil {
 				return err
 			}
 		}
@@ -11707,6 +13247,11 @@ func (w *RedisClusterClientWrapper) Del(ctx context.Context, keys ...string) *re
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Del"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Del")
@@ -11741,6 +13286,11 @@ func (w *RedisClusterClientWrapper) Dump(ctx context.Context, key string) *redis
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Dump"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Dump"); err != nil {
 				return err
 			}
 		}
@@ -11781,6 +13331,11 @@ func (w *RedisClusterClientWrapper) Echo(ctx context.Context, message interface{
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Echo"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Echo")
@@ -11815,6 +13370,11 @@ func (w *RedisClusterClientWrapper) Eval(ctx context.Context, script string, key
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Eval"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Eval"); err != nil {
 				return err
 			}
 		}
@@ -11855,6 +13415,11 @@ func (w *RedisClusterClientWrapper) EvalSha(ctx context.Context, sha1 string, ke
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.EvalSha"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.EvalSha")
@@ -11889,6 +13454,11 @@ func (w *RedisClusterClientWrapper) Exists(ctx context.Context, keys ...string) 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Exists"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Exists"); err != nil {
 				return err
 			}
 		}
@@ -11929,6 +13499,11 @@ func (w *RedisClusterClientWrapper) Expire(ctx context.Context, key string, expi
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Expire"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Expire")
@@ -11963,6 +13538,11 @@ func (w *RedisClusterClientWrapper) ExpireAt(ctx context.Context, key string, tm
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ExpireAt"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ExpireAt"); err != nil {
 				return err
 			}
 		}
@@ -12003,6 +13583,11 @@ func (w *RedisClusterClientWrapper) FlushAll(ctx context.Context) *redis.StatusC
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.FlushAll"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.FlushAll")
@@ -12037,6 +13622,11 @@ func (w *RedisClusterClientWrapper) FlushAllAsync(ctx context.Context) *redis.St
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.FlushAllAsync"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.FlushAllAsync"); err != nil {
 				return err
 			}
 		}
@@ -12077,6 +13667,11 @@ func (w *RedisClusterClientWrapper) FlushDB(ctx context.Context) *redis.StatusCm
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.FlushDB"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.FlushDB")
@@ -12111,6 +13706,11 @@ func (w *RedisClusterClientWrapper) FlushDBAsync(ctx context.Context) *redis.Sta
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.FlushDBAsync"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.FlushDBAsync"); err != nil {
 				return err
 			}
 		}
@@ -12151,6 +13751,11 @@ func (w *RedisClusterClientWrapper) FlushDb(ctx context.Context) *redis.StatusCm
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.FlushDb"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.FlushDb")
@@ -12185,6 +13790,11 @@ func (w *RedisClusterClientWrapper) GeoAdd(ctx context.Context, key string, geoL
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoAdd"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoAdd"); err != nil {
 				return err
 			}
 		}
@@ -12225,6 +13835,11 @@ func (w *RedisClusterClientWrapper) GeoDist(ctx context.Context, key string, mem
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoDist"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoDist")
@@ -12259,6 +13874,11 @@ func (w *RedisClusterClientWrapper) GeoHash(ctx context.Context, key string, mem
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoHash"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoHash"); err != nil {
 				return err
 			}
 		}
@@ -12299,6 +13919,11 @@ func (w *RedisClusterClientWrapper) GeoPos(ctx context.Context, key string, memb
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoPos"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoPos")
@@ -12333,6 +13958,11 @@ func (w *RedisClusterClientWrapper) GeoRadius(ctx context.Context, key string, l
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoRadius"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoRadius"); err != nil {
 				return err
 			}
 		}
@@ -12373,6 +14003,11 @@ func (w *RedisClusterClientWrapper) GeoRadiusByMember(ctx context.Context, key s
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoRadiusByMember"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoRadiusByMember")
@@ -12407,6 +14042,11 @@ func (w *RedisClusterClientWrapper) GeoRadiusByMemberRO(ctx context.Context, key
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoRadiusByMemberRO"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoRadiusByMemberRO"); err != nil {
 				return err
 			}
 		}
@@ -12447,6 +14087,11 @@ func (w *RedisClusterClientWrapper) GeoRadiusRO(ctx context.Context, key string,
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoRadiusRO"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GeoRadiusRO")
@@ -12481,6 +14126,11 @@ func (w *RedisClusterClientWrapper) Get(ctx context.Context, key string) *redis.
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Get"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Get"); err != nil {
 				return err
 			}
 		}
@@ -12521,6 +14171,11 @@ func (w *RedisClusterClientWrapper) GetBit(ctx context.Context, key string, offs
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.GetBit"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GetBit")
@@ -12555,6 +14210,11 @@ func (w *RedisClusterClientWrapper) GetRange(ctx context.Context, key string, st
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GetRange"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.GetRange"); err != nil {
 				return err
 			}
 		}
@@ -12595,6 +14255,11 @@ func (w *RedisClusterClientWrapper) GetSet(ctx context.Context, key string, valu
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.GetSet"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.GetSet")
@@ -12629,6 +14294,11 @@ func (w *RedisClusterClientWrapper) HDel(ctx context.Context, key string, fields
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HDel"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.HDel"); err != nil {
 				return err
 			}
 		}
@@ -12669,6 +14339,11 @@ func (w *RedisClusterClientWrapper) HExists(ctx context.Context, key string, fie
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.HExists"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HExists")
@@ -12703,6 +14378,11 @@ func (w *RedisClusterClientWrapper) HGet(ctx context.Context, key string, field 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HGet"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.HGet"); err != nil {
 				return err
 			}
 		}
@@ -12743,6 +14423,11 @@ func (w *RedisClusterClientWrapper) HGetAll(ctx context.Context, key string) *re
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.HGetAll"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HGetAll")
@@ -12777,6 +14462,11 @@ func (w *RedisClusterClientWrapper) HIncrBy(ctx context.Context, key string, fie
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HIncrBy"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.HIncrBy"); err != nil {
 				return err
 			}
 		}
@@ -12817,6 +14507,11 @@ func (w *RedisClusterClientWrapper) HIncrByFloat(ctx context.Context, key string
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.HIncrByFloat"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HIncrByFloat")
@@ -12851,6 +14546,11 @@ func (w *RedisClusterClientWrapper) HKeys(ctx context.Context, key string) *redi
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HKeys"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.HKeys"); err != nil {
 				return err
 			}
 		}
@@ -12891,6 +14591,11 @@ func (w *RedisClusterClientWrapper) HLen(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.HLen"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HLen")
@@ -12925,6 +14630,11 @@ func (w *RedisClusterClientWrapper) HMGet(ctx context.Context, key string, field
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HMGet"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.HMGet"); err != nil {
 				return err
 			}
 		}
@@ -12965,6 +14675,11 @@ func (w *RedisClusterClientWrapper) HMSet(ctx context.Context, key string, field
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.HMSet"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HMSet")
@@ -12999,6 +14714,11 @@ func (w *RedisClusterClientWrapper) HScan(ctx context.Context, key string, curso
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HScan"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.HScan"); err != nil {
 				return err
 			}
 		}
@@ -13039,6 +14759,11 @@ func (w *RedisClusterClientWrapper) HSet(ctx context.Context, key string, field 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.HSet"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HSet")
@@ -13073,6 +14798,11 @@ func (w *RedisClusterClientWrapper) HSetNX(ctx context.Context, key string, fiel
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HSetNX"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.HSetNX"); err != nil {
 				return err
 			}
 		}
@@ -13113,6 +14843,11 @@ func (w *RedisClusterClientWrapper) HVals(ctx context.Context, key string) *redi
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.HVals"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.HVals")
@@ -13147,6 +14882,11 @@ func (w *RedisClusterClientWrapper) Incr(ctx context.Context, key string) *redis
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Incr"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Incr"); err != nil {
 				return err
 			}
 		}
@@ -13187,6 +14927,11 @@ func (w *RedisClusterClientWrapper) IncrBy(ctx context.Context, key string, valu
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.IncrBy"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.IncrBy")
@@ -13221,6 +14966,11 @@ func (w *RedisClusterClientWrapper) IncrByFloat(ctx context.Context, key string,
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.IncrByFloat"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.IncrByFloat"); err != nil {
 				return err
 			}
 		}
@@ -13261,6 +15011,11 @@ func (w *RedisClusterClientWrapper) Info(ctx context.Context, section ...string)
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Info"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Info")
@@ -13295,6 +15050,11 @@ func (w *RedisClusterClientWrapper) Keys(ctx context.Context, pattern string) *r
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Keys"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Keys"); err != nil {
 				return err
 			}
 		}
@@ -13335,6 +15095,11 @@ func (w *RedisClusterClientWrapper) LIndex(ctx context.Context, key string, inde
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.LIndex"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LIndex")
@@ -13369,6 +15134,11 @@ func (w *RedisClusterClientWrapper) LInsert(ctx context.Context, key string, op 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LInsert"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.LInsert"); err != nil {
 				return err
 			}
 		}
@@ -13409,6 +15179,11 @@ func (w *RedisClusterClientWrapper) LInsertAfter(ctx context.Context, key string
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.LInsertAfter"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LInsertAfter")
@@ -13443,6 +15218,11 @@ func (w *RedisClusterClientWrapper) LInsertBefore(ctx context.Context, key strin
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LInsertBefore"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.LInsertBefore"); err != nil {
 				return err
 			}
 		}
@@ -13483,6 +15263,11 @@ func (w *RedisClusterClientWrapper) LLen(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.LLen"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LLen")
@@ -13517,6 +15302,11 @@ func (w *RedisClusterClientWrapper) LPop(ctx context.Context, key string) *redis
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LPop"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.LPop"); err != nil {
 				return err
 			}
 		}
@@ -13557,6 +15347,11 @@ func (w *RedisClusterClientWrapper) LPush(ctx context.Context, key string, value
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.LPush"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LPush")
@@ -13591,6 +15386,11 @@ func (w *RedisClusterClientWrapper) LPushX(ctx context.Context, key string, valu
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LPushX"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.LPushX"); err != nil {
 				return err
 			}
 		}
@@ -13631,6 +15431,11 @@ func (w *RedisClusterClientWrapper) LRange(ctx context.Context, key string, star
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.LRange"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LRange")
@@ -13665,6 +15470,11 @@ func (w *RedisClusterClientWrapper) LRem(ctx context.Context, key string, count 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LRem"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.LRem"); err != nil {
 				return err
 			}
 		}
@@ -13705,6 +15515,11 @@ func (w *RedisClusterClientWrapper) LSet(ctx context.Context, key string, index 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.LSet"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LSet")
@@ -13739,6 +15554,11 @@ func (w *RedisClusterClientWrapper) LTrim(ctx context.Context, key string, start
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LTrim"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.LTrim"); err != nil {
 				return err
 			}
 		}
@@ -13779,6 +15599,11 @@ func (w *RedisClusterClientWrapper) LastSave(ctx context.Context) *redis.IntCmd 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.LastSave"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.LastSave")
@@ -13813,6 +15638,11 @@ func (w *RedisClusterClientWrapper) MGet(ctx context.Context, keys ...string) *r
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.MGet"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.MGet"); err != nil {
 				return err
 			}
 		}
@@ -13853,6 +15683,11 @@ func (w *RedisClusterClientWrapper) MSet(ctx context.Context, pairs ...interface
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.MSet"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.MSet")
@@ -13887,6 +15722,11 @@ func (w *RedisClusterClientWrapper) MSetNX(ctx context.Context, pairs ...interfa
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.MSetNX"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.MSetNX"); err != nil {
 				return err
 			}
 		}
@@ -13927,6 +15767,11 @@ func (w *RedisClusterClientWrapper) MemoryUsage(ctx context.Context, key string,
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.MemoryUsage"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.MemoryUsage")
@@ -13961,6 +15806,11 @@ func (w *RedisClusterClientWrapper) Migrate(ctx context.Context, host string, po
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Migrate"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Migrate"); err != nil {
 				return err
 			}
 		}
@@ -14001,6 +15851,11 @@ func (w *RedisClusterClientWrapper) Move(ctx context.Context, key string, db int
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Move"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Move")
@@ -14035,6 +15890,11 @@ func (w *RedisClusterClientWrapper) ObjectEncoding(ctx context.Context, key stri
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ObjectEncoding"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ObjectEncoding"); err != nil {
 				return err
 			}
 		}
@@ -14075,6 +15935,11 @@ func (w *RedisClusterClientWrapper) ObjectIdleTime(ctx context.Context, key stri
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ObjectIdleTime"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ObjectIdleTime")
@@ -14109,6 +15974,11 @@ func (w *RedisClusterClientWrapper) ObjectRefCount(ctx context.Context, key stri
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ObjectRefCount"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ObjectRefCount"); err != nil {
 				return err
 			}
 		}
@@ -14149,6 +16019,11 @@ func (w *RedisClusterClientWrapper) PExpire(ctx context.Context, key string, exp
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.PExpire"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PExpire")
@@ -14183,6 +16058,11 @@ func (w *RedisClusterClientWrapper) PExpireAt(ctx context.Context, key string, t
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PExpireAt"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.PExpireAt"); err != nil {
 				return err
 			}
 		}
@@ -14223,6 +16103,11 @@ func (w *RedisClusterClientWrapper) PFAdd(ctx context.Context, key string, els .
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.PFAdd"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PFAdd")
@@ -14257,6 +16142,11 @@ func (w *RedisClusterClientWrapper) PFCount(ctx context.Context, keys ...string)
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PFCount"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.PFCount"); err != nil {
 				return err
 			}
 		}
@@ -14297,6 +16187,11 @@ func (w *RedisClusterClientWrapper) PFMerge(ctx context.Context, dest string, ke
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.PFMerge"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PFMerge")
@@ -14331,6 +16226,11 @@ func (w *RedisClusterClientWrapper) PTTL(ctx context.Context, key string) *redis
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PTTL"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.PTTL"); err != nil {
 				return err
 			}
 		}
@@ -14371,6 +16271,11 @@ func (w *RedisClusterClientWrapper) Persist(ctx context.Context, key string) *re
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Persist"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Persist")
@@ -14405,6 +16310,11 @@ func (w *RedisClusterClientWrapper) Ping(ctx context.Context) *redis.StatusCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Ping"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Ping"); err != nil {
 				return err
 			}
 		}
@@ -14445,6 +16355,11 @@ func (w *RedisClusterClientWrapper) PubSubChannels(ctx context.Context, pattern 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.PubSubChannels"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PubSubChannels")
@@ -14479,6 +16394,11 @@ func (w *RedisClusterClientWrapper) PubSubNumPat(ctx context.Context) *redis.Int
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PubSubNumPat"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.PubSubNumPat"); err != nil {
 				return err
 			}
 		}
@@ -14519,6 +16439,11 @@ func (w *RedisClusterClientWrapper) PubSubNumSub(ctx context.Context, channels .
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.PubSubNumSub"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.PubSubNumSub")
@@ -14553,6 +16478,11 @@ func (w *RedisClusterClientWrapper) Publish(ctx context.Context, channel string,
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Publish"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Publish"); err != nil {
 				return err
 			}
 		}
@@ -14593,6 +16523,11 @@ func (w *RedisClusterClientWrapper) Quit(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Quit"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Quit")
@@ -14627,6 +16562,11 @@ func (w *RedisClusterClientWrapper) RPop(ctx context.Context, key string) *redis
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RPop"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.RPop"); err != nil {
 				return err
 			}
 		}
@@ -14667,6 +16607,11 @@ func (w *RedisClusterClientWrapper) RPopLPush(ctx context.Context, source string
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.RPopLPush"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RPopLPush")
@@ -14701,6 +16646,11 @@ func (w *RedisClusterClientWrapper) RPush(ctx context.Context, key string, value
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RPush"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.RPush"); err != nil {
 				return err
 			}
 		}
@@ -14741,6 +16691,11 @@ func (w *RedisClusterClientWrapper) RPushX(ctx context.Context, key string, valu
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.RPushX"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.RPushX")
@@ -14775,6 +16730,11 @@ func (w *RedisClusterClientWrapper) RandomKey(ctx context.Context) *redis.String
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RandomKey"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.RandomKey"); err != nil {
 				return err
 			}
 		}
@@ -14815,6 +16775,11 @@ func (w *RedisClusterClientWrapper) ReadOnly(ctx context.Context) *redis.StatusC
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ReadOnly"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ReadOnly")
@@ -14849,6 +16814,11 @@ func (w *RedisClusterClientWrapper) ReadWrite(ctx context.Context) *redis.Status
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ReadWrite"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ReadWrite"); err != nil {
 				return err
 			}
 		}
@@ -14889,6 +16859,11 @@ func (w *RedisClusterClientWrapper) Rename(ctx context.Context, key string, newk
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Rename"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Rename")
@@ -14923,6 +16898,11 @@ func (w *RedisClusterClientWrapper) RenameNX(ctx context.Context, key string, ne
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RenameNX"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.RenameNX"); err != nil {
 				return err
 			}
 		}
@@ -14963,6 +16943,11 @@ func (w *RedisClusterClientWrapper) Restore(ctx context.Context, key string, ttl
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Restore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Restore")
@@ -14997,6 +16982,11 @@ func (w *RedisClusterClientWrapper) RestoreReplace(ctx context.Context, key stri
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RestoreReplace"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.RestoreReplace"); err != nil {
 				return err
 			}
 		}
@@ -15037,6 +17027,11 @@ func (w *RedisClusterClientWrapper) SAdd(ctx context.Context, key string, member
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SAdd"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SAdd")
@@ -15071,6 +17066,11 @@ func (w *RedisClusterClientWrapper) SCard(ctx context.Context, key string) *redi
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SCard"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SCard"); err != nil {
 				return err
 			}
 		}
@@ -15111,6 +17111,11 @@ func (w *RedisClusterClientWrapper) SDiff(ctx context.Context, keys ...string) *
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SDiff"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SDiff")
@@ -15145,6 +17150,11 @@ func (w *RedisClusterClientWrapper) SDiffStore(ctx context.Context, destination 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SDiffStore"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SDiffStore"); err != nil {
 				return err
 			}
 		}
@@ -15185,6 +17195,11 @@ func (w *RedisClusterClientWrapper) SInter(ctx context.Context, keys ...string) 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SInter"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SInter")
@@ -15219,6 +17234,11 @@ func (w *RedisClusterClientWrapper) SInterStore(ctx context.Context, destination
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SInterStore"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SInterStore"); err != nil {
 				return err
 			}
 		}
@@ -15259,6 +17279,11 @@ func (w *RedisClusterClientWrapper) SIsMember(ctx context.Context, key string, m
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SIsMember"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SIsMember")
@@ -15293,6 +17318,11 @@ func (w *RedisClusterClientWrapper) SMembers(ctx context.Context, key string) *r
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SMembers"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SMembers"); err != nil {
 				return err
 			}
 		}
@@ -15333,6 +17363,11 @@ func (w *RedisClusterClientWrapper) SMembersMap(ctx context.Context, key string)
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SMembersMap"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SMembersMap")
@@ -15367,6 +17402,11 @@ func (w *RedisClusterClientWrapper) SMove(ctx context.Context, source string, de
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SMove"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SMove"); err != nil {
 				return err
 			}
 		}
@@ -15407,6 +17447,11 @@ func (w *RedisClusterClientWrapper) SPop(ctx context.Context, key string) *redis
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SPop"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SPop")
@@ -15441,6 +17486,11 @@ func (w *RedisClusterClientWrapper) SPopN(ctx context.Context, key string, count
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SPopN"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SPopN"); err != nil {
 				return err
 			}
 		}
@@ -15481,6 +17531,11 @@ func (w *RedisClusterClientWrapper) SRandMember(ctx context.Context, key string)
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SRandMember"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SRandMember")
@@ -15515,6 +17570,11 @@ func (w *RedisClusterClientWrapper) SRandMemberN(ctx context.Context, key string
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SRandMemberN"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SRandMemberN"); err != nil {
 				return err
 			}
 		}
@@ -15555,6 +17615,11 @@ func (w *RedisClusterClientWrapper) SRem(ctx context.Context, key string, member
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SRem"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SRem")
@@ -15589,6 +17654,11 @@ func (w *RedisClusterClientWrapper) SScan(ctx context.Context, key string, curso
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SScan"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SScan"); err != nil {
 				return err
 			}
 		}
@@ -15629,6 +17699,11 @@ func (w *RedisClusterClientWrapper) SUnion(ctx context.Context, keys ...string) 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SUnion"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SUnion")
@@ -15663,6 +17738,11 @@ func (w *RedisClusterClientWrapper) SUnionStore(ctx context.Context, destination
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SUnionStore"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SUnionStore"); err != nil {
 				return err
 			}
 		}
@@ -15703,6 +17783,11 @@ func (w *RedisClusterClientWrapper) Save(ctx context.Context) *redis.StatusCmd {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Save"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Save")
@@ -15737,6 +17822,11 @@ func (w *RedisClusterClientWrapper) Scan(ctx context.Context, cursor uint64, mat
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Scan"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Scan"); err != nil {
 				return err
 			}
 		}
@@ -15777,6 +17867,11 @@ func (w *RedisClusterClientWrapper) ScriptExists(ctx context.Context, hashes ...
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ScriptExists"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ScriptExists")
@@ -15811,6 +17906,11 @@ func (w *RedisClusterClientWrapper) ScriptFlush(ctx context.Context) *redis.Stat
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ScriptFlush"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ScriptFlush"); err != nil {
 				return err
 			}
 		}
@@ -15851,6 +17951,11 @@ func (w *RedisClusterClientWrapper) ScriptKill(ctx context.Context) *redis.Statu
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ScriptKill"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ScriptKill")
@@ -15885,6 +17990,11 @@ func (w *RedisClusterClientWrapper) ScriptLoad(ctx context.Context, script strin
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ScriptLoad"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ScriptLoad"); err != nil {
 				return err
 			}
 		}
@@ -15925,6 +18035,11 @@ func (w *RedisClusterClientWrapper) Set(ctx context.Context, key string, value i
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Set"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Set")
@@ -15959,6 +18074,11 @@ func (w *RedisClusterClientWrapper) SetBit(ctx context.Context, key string, offs
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SetBit"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SetBit"); err != nil {
 				return err
 			}
 		}
@@ -15999,6 +18119,11 @@ func (w *RedisClusterClientWrapper) SetNX(ctx context.Context, key string, value
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SetNX"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SetNX")
@@ -16033,6 +18158,11 @@ func (w *RedisClusterClientWrapper) SetRange(ctx context.Context, key string, of
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SetRange"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SetRange"); err != nil {
 				return err
 			}
 		}
@@ -16073,6 +18203,11 @@ func (w *RedisClusterClientWrapper) SetXX(ctx context.Context, key string, value
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SetXX"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SetXX")
@@ -16107,6 +18242,11 @@ func (w *RedisClusterClientWrapper) Shutdown(ctx context.Context) *redis.StatusC
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Shutdown"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Shutdown"); err != nil {
 				return err
 			}
 		}
@@ -16147,6 +18287,11 @@ func (w *RedisClusterClientWrapper) ShutdownNoSave(ctx context.Context) *redis.S
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ShutdownNoSave"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ShutdownNoSave")
@@ -16184,6 +18329,11 @@ func (w *RedisClusterClientWrapper) ShutdownSave(ctx context.Context) *redis.Sta
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ShutdownSave"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ShutdownSave")
@@ -16218,6 +18368,11 @@ func (w *RedisClusterClientWrapper) SlaveOf(ctx context.Context, host string, po
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SlaveOf"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SlaveOf"); err != nil {
 				return err
 			}
 		}
@@ -16262,6 +18417,11 @@ func (w *RedisClusterClientWrapper) Sort(ctx context.Context, key string, sort *
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Sort"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Sort")
@@ -16296,6 +18456,11 @@ func (w *RedisClusterClientWrapper) SortInterfaces(ctx context.Context, key stri
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SortInterfaces"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SortInterfaces"); err != nil {
 				return err
 			}
 		}
@@ -16336,6 +18501,11 @@ func (w *RedisClusterClientWrapper) SortStore(ctx context.Context, key string, s
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.SortStore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.SortStore")
@@ -16370,6 +18540,11 @@ func (w *RedisClusterClientWrapper) StrLen(ctx context.Context, key string) *red
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.StrLen"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.StrLen"); err != nil {
 				return err
 			}
 		}
@@ -16414,6 +18589,11 @@ func (w *RedisClusterClientWrapper) TTL(ctx context.Context, key string) *redis.
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.TTL"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.TTL")
@@ -16448,6 +18628,11 @@ func (w *RedisClusterClientWrapper) Time(ctx context.Context) *redis.TimeCmd {
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Time"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Time"); err != nil {
 				return err
 			}
 		}
@@ -16488,6 +18673,11 @@ func (w *RedisClusterClientWrapper) Touch(ctx context.Context, keys ...string) *
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Touch"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Touch")
@@ -16522,6 +18712,11 @@ func (w *RedisClusterClientWrapper) Type(ctx context.Context, key string) *redis
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Type"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Type"); err != nil {
 				return err
 			}
 		}
@@ -16562,6 +18757,11 @@ func (w *RedisClusterClientWrapper) Unlink(ctx context.Context, keys ...string) 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Unlink"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.Unlink")
@@ -16596,6 +18796,11 @@ func (w *RedisClusterClientWrapper) Wait(ctx context.Context, numSlaves int, tim
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Wait"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.Wait"); err != nil {
 				return err
 			}
 		}
@@ -16636,6 +18841,11 @@ func (w *RedisClusterClientWrapper) XAck(ctx context.Context, stream string, gro
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XAck"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XAck")
@@ -16670,6 +18880,11 @@ func (w *RedisClusterClientWrapper) XAdd(ctx context.Context, a *redis.XAddArgs)
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XAdd"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XAdd"); err != nil {
 				return err
 			}
 		}
@@ -16710,6 +18925,11 @@ func (w *RedisClusterClientWrapper) XClaim(ctx context.Context, a *redis.XClaimA
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XClaim"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XClaim")
@@ -16744,6 +18964,11 @@ func (w *RedisClusterClientWrapper) XClaimJustID(ctx context.Context, a *redis.X
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XClaimJustID"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XClaimJustID"); err != nil {
 				return err
 			}
 		}
@@ -16784,6 +19009,11 @@ func (w *RedisClusterClientWrapper) XDel(ctx context.Context, stream string, ids
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XDel"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XDel")
@@ -16818,6 +19048,11 @@ func (w *RedisClusterClientWrapper) XGroupCreate(ctx context.Context, stream str
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XGroupCreate"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XGroupCreate"); err != nil {
 				return err
 			}
 		}
@@ -16858,6 +19093,11 @@ func (w *RedisClusterClientWrapper) XGroupCreateMkStream(ctx context.Context, st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XGroupCreateMkStream"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XGroupCreateMkStream")
@@ -16892,6 +19132,11 @@ func (w *RedisClusterClientWrapper) XGroupDelConsumer(ctx context.Context, strea
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XGroupDelConsumer"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XGroupDelConsumer"); err != nil {
 				return err
 			}
 		}
@@ -16932,6 +19177,11 @@ func (w *RedisClusterClientWrapper) XGroupDestroy(ctx context.Context, stream st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XGroupDestroy"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XGroupDestroy")
@@ -16966,6 +19216,11 @@ func (w *RedisClusterClientWrapper) XGroupSetID(ctx context.Context, stream stri
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XGroupSetID"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XGroupSetID"); err != nil {
 				return err
 			}
 		}
@@ -17006,6 +19261,11 @@ func (w *RedisClusterClientWrapper) XLen(ctx context.Context, stream string) *re
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XLen"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XLen")
@@ -17040,6 +19300,11 @@ func (w *RedisClusterClientWrapper) XPending(ctx context.Context, stream string,
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XPending"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XPending"); err != nil {
 				return err
 			}
 		}
@@ -17080,6 +19345,11 @@ func (w *RedisClusterClientWrapper) XPendingExt(ctx context.Context, a *redis.XP
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XPendingExt"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XPendingExt")
@@ -17114,6 +19384,11 @@ func (w *RedisClusterClientWrapper) XRange(ctx context.Context, stream string, s
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XRange"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XRange"); err != nil {
 				return err
 			}
 		}
@@ -17154,6 +19429,11 @@ func (w *RedisClusterClientWrapper) XRangeN(ctx context.Context, stream string, 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XRangeN"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XRangeN")
@@ -17188,6 +19468,11 @@ func (w *RedisClusterClientWrapper) XRead(ctx context.Context, a *redis.XReadArg
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XRead"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XRead"); err != nil {
 				return err
 			}
 		}
@@ -17228,6 +19513,11 @@ func (w *RedisClusterClientWrapper) XReadGroup(ctx context.Context, a *redis.XRe
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XReadGroup"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XReadGroup")
@@ -17262,6 +19552,11 @@ func (w *RedisClusterClientWrapper) XReadStreams(ctx context.Context, streams ..
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XReadStreams"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XReadStreams"); err != nil {
 				return err
 			}
 		}
@@ -17302,6 +19597,11 @@ func (w *RedisClusterClientWrapper) XRevRange(ctx context.Context, stream string
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XRevRange"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XRevRange")
@@ -17336,6 +19636,11 @@ func (w *RedisClusterClientWrapper) XRevRangeN(ctx context.Context, stream strin
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XRevRangeN"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XRevRangeN"); err != nil {
 				return err
 			}
 		}
@@ -17376,6 +19681,11 @@ func (w *RedisClusterClientWrapper) XTrim(ctx context.Context, key string, maxLe
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XTrim"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.XTrim")
@@ -17410,6 +19720,11 @@ func (w *RedisClusterClientWrapper) XTrimApprox(ctx context.Context, key string,
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XTrimApprox"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.XTrimApprox"); err != nil {
 				return err
 			}
 		}
@@ -17450,6 +19765,11 @@ func (w *RedisClusterClientWrapper) ZAdd(ctx context.Context, key string, member
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZAdd"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAdd")
@@ -17484,6 +19804,11 @@ func (w *RedisClusterClientWrapper) ZAddCh(ctx context.Context, key string, memb
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAddCh"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZAddCh"); err != nil {
 				return err
 			}
 		}
@@ -17524,6 +19849,11 @@ func (w *RedisClusterClientWrapper) ZAddNX(ctx context.Context, key string, memb
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZAddNX"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAddNX")
@@ -17558,6 +19888,11 @@ func (w *RedisClusterClientWrapper) ZAddNXCh(ctx context.Context, key string, me
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAddNXCh"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZAddNXCh"); err != nil {
 				return err
 			}
 		}
@@ -17598,6 +19933,11 @@ func (w *RedisClusterClientWrapper) ZAddXX(ctx context.Context, key string, memb
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZAddXX"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZAddXX")
@@ -17632,6 +19972,11 @@ func (w *RedisClusterClientWrapper) ZAddXXCh(ctx context.Context, key string, me
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAddXXCh"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZAddXXCh"); err != nil {
 				return err
 			}
 		}
@@ -17672,6 +20017,11 @@ func (w *RedisClusterClientWrapper) ZCard(ctx context.Context, key string) *redi
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZCard"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZCard")
@@ -17706,6 +20056,11 @@ func (w *RedisClusterClientWrapper) ZCount(ctx context.Context, key string, min 
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZCount"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZCount"); err != nil {
 				return err
 			}
 		}
@@ -17746,6 +20101,11 @@ func (w *RedisClusterClientWrapper) ZIncr(ctx context.Context, key string, membe
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZIncr"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZIncr")
@@ -17780,6 +20140,11 @@ func (w *RedisClusterClientWrapper) ZIncrBy(ctx context.Context, key string, inc
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZIncrBy"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZIncrBy"); err != nil {
 				return err
 			}
 		}
@@ -17820,6 +20185,11 @@ func (w *RedisClusterClientWrapper) ZIncrNX(ctx context.Context, key string, mem
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZIncrNX"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZIncrNX")
@@ -17854,6 +20224,11 @@ func (w *RedisClusterClientWrapper) ZIncrXX(ctx context.Context, key string, mem
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZIncrXX"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZIncrXX"); err != nil {
 				return err
 			}
 		}
@@ -17894,6 +20269,11 @@ func (w *RedisClusterClientWrapper) ZInterStore(ctx context.Context, destination
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZInterStore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZInterStore")
@@ -17928,6 +20308,11 @@ func (w *RedisClusterClientWrapper) ZLexCount(ctx context.Context, key string, m
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZLexCount"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZLexCount"); err != nil {
 				return err
 			}
 		}
@@ -17968,6 +20353,11 @@ func (w *RedisClusterClientWrapper) ZPopMax(ctx context.Context, key string, cou
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZPopMax"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZPopMax")
@@ -18002,6 +20392,11 @@ func (w *RedisClusterClientWrapper) ZPopMin(ctx context.Context, key string, cou
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZPopMin"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZPopMin"); err != nil {
 				return err
 			}
 		}
@@ -18042,6 +20437,11 @@ func (w *RedisClusterClientWrapper) ZRange(ctx context.Context, key string, star
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRange"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRange")
@@ -18076,6 +20476,11 @@ func (w *RedisClusterClientWrapper) ZRangeByLex(ctx context.Context, key string,
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRangeByLex"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRangeByLex"); err != nil {
 				return err
 			}
 		}
@@ -18116,6 +20521,11 @@ func (w *RedisClusterClientWrapper) ZRangeByScore(ctx context.Context, key strin
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRangeByScore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRangeByScore")
@@ -18150,6 +20560,11 @@ func (w *RedisClusterClientWrapper) ZRangeByScoreWithScores(ctx context.Context,
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRangeByScoreWithScores"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRangeByScoreWithScores"); err != nil {
 				return err
 			}
 		}
@@ -18190,6 +20605,11 @@ func (w *RedisClusterClientWrapper) ZRangeWithScores(ctx context.Context, key st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRangeWithScores"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRangeWithScores")
@@ -18224,6 +20644,11 @@ func (w *RedisClusterClientWrapper) ZRank(ctx context.Context, key string, membe
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRank"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRank"); err != nil {
 				return err
 			}
 		}
@@ -18264,6 +20689,11 @@ func (w *RedisClusterClientWrapper) ZRem(ctx context.Context, key string, member
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRem"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRem")
@@ -18298,6 +20728,11 @@ func (w *RedisClusterClientWrapper) ZRemRangeByLex(ctx context.Context, key stri
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRemRangeByLex"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRemRangeByLex"); err != nil {
 				return err
 			}
 		}
@@ -18338,6 +20773,11 @@ func (w *RedisClusterClientWrapper) ZRemRangeByRank(ctx context.Context, key str
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRemRangeByRank"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRemRangeByRank")
@@ -18372,6 +20812,11 @@ func (w *RedisClusterClientWrapper) ZRemRangeByScore(ctx context.Context, key st
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRemRangeByScore"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRemRangeByScore"); err != nil {
 				return err
 			}
 		}
@@ -18412,6 +20857,11 @@ func (w *RedisClusterClientWrapper) ZRevRange(ctx context.Context, key string, s
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRevRange"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRange")
@@ -18446,6 +20896,11 @@ func (w *RedisClusterClientWrapper) ZRevRangeByLex(ctx context.Context, key stri
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRangeByLex"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRevRangeByLex"); err != nil {
 				return err
 			}
 		}
@@ -18486,6 +20941,11 @@ func (w *RedisClusterClientWrapper) ZRevRangeByScore(ctx context.Context, key st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRevRangeByScore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRangeByScore")
@@ -18520,6 +20980,11 @@ func (w *RedisClusterClientWrapper) ZRevRangeByScoreWithScores(ctx context.Conte
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRangeByScoreWithScores"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRevRangeByScoreWithScores"); err != nil {
 				return err
 			}
 		}
@@ -18560,6 +21025,11 @@ func (w *RedisClusterClientWrapper) ZRevRangeWithScores(ctx context.Context, key
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRevRangeWithScores"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZRevRangeWithScores")
@@ -18594,6 +21064,11 @@ func (w *RedisClusterClientWrapper) ZRevRank(ctx context.Context, key string, me
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRank"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRevRank"); err != nil {
 				return err
 			}
 		}
@@ -18634,6 +21109,11 @@ func (w *RedisClusterClientWrapper) ZScan(ctx context.Context, key string, curso
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZScan"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZScan")
@@ -18671,6 +21151,11 @@ func (w *RedisClusterClientWrapper) ZScore(ctx context.Context, key string, memb
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZScore"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "redis.ClusterClient.ZScore")
@@ -18705,6 +21190,11 @@ func (w *RedisClusterClientWrapper) ZUnionStore(ctx context.Context, dest string
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZUnionStore"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZUnionStore"); err != nil {
 				return err
 			}
 		}

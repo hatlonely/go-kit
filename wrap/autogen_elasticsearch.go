@@ -1694,6 +1694,11 @@ func (w *ESAliasServiceWrapper) Do(ctx context.Context) (*elastic.AliasResult, e
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "AliasService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.AliasService.Do")
@@ -1769,6 +1774,11 @@ func (w *ESAliasesServiceWrapper) Do(ctx context.Context) (*elastic.AliasesResul
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "AliasesService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "AliasesService.Do"); err != nil {
 				return err
 			}
 		}
@@ -1870,6 +1880,11 @@ func (w *ESBulkProcessorServiceWrapper) Do(ctx context.Context) (*elastic.BulkPr
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "BulkProcessorService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.BulkProcessorService.Do")
@@ -1935,6 +1950,11 @@ func (w *ESBulkServiceWrapper) Do(ctx context.Context) (*elastic.BulkResponse, e
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "BulkService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "BulkService.Do"); err != nil {
 				return err
 			}
 		}
@@ -2070,6 +2090,11 @@ func (w *ESCatAliasesServiceWrapper) Do(ctx context.Context) (elastic.CatAliases
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "CatAliasesService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.CatAliasesService.Do")
@@ -2163,6 +2188,11 @@ func (w *ESCatAllocationServiceWrapper) Do(ctx context.Context) (elastic.CatAllo
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "CatAllocationService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.CatAllocationService.Do")
@@ -2253,6 +2283,11 @@ func (w *ESCatCountServiceWrapper) Do(ctx context.Context) (elastic.CatCountResp
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "CatCountService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "CatCountService.Do"); err != nil {
 				return err
 			}
 		}
@@ -2354,6 +2389,11 @@ func (w *ESCatHealthServiceWrapper) Do(ctx context.Context) (elastic.CatHealthRe
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "CatHealthService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.CatHealthService.Do")
@@ -2444,6 +2484,11 @@ func (w *ESCatIndicesServiceWrapper) Do(ctx context.Context) (elastic.CatIndices
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "CatIndicesService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "CatIndicesService.Do"); err != nil {
 				return err
 			}
 		}
@@ -2555,6 +2600,11 @@ func (w *ESCatShardsServiceWrapper) Do(ctx context.Context) (elastic.CatShardsRe
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "CatShardsService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.CatShardsService.Do")
@@ -2645,6 +2695,11 @@ func (w *ESClearScrollServiceWrapper) Do(ctx context.Context) (*elastic.ClearScr
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClearScrollService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClearScrollService.Do"); err != nil {
 				return err
 			}
 		}
@@ -3378,6 +3433,11 @@ func (w *ESClusterHealthServiceWrapper) Do(ctx context.Context) (*elastic.Cluste
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterHealthService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ClusterHealthService.Do")
@@ -3517,6 +3577,11 @@ func (w *ESClusterRerouteServiceWrapper) Do(ctx context.Context) (*elastic.Clust
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterRerouteService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ClusterRerouteService.Do")
@@ -3626,6 +3691,11 @@ func (w *ESClusterStateServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterStateService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ClusterStateService.Do")
@@ -3732,6 +3802,11 @@ func (w *ESClusterStatsServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ClusterStatsService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ClusterStatsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -3851,6 +3926,11 @@ func (w *ESCountServiceWrapper) Do(ctx context.Context) (int64, error) {
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "CountService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "CountService.Do"); err != nil {
 				return err
 			}
 		}
@@ -4038,6 +4118,11 @@ func (w *ESDeleteByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DeleteByQueryService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.DeleteByQueryService.Do")
@@ -4073,6 +4158,11 @@ func (w *ESDeleteByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DeleteByQueryService.DoAsync"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DeleteByQueryService.DoAsync"); err != nil {
 				return err
 			}
 		}
@@ -4360,6 +4450,11 @@ func (w *ESDeleteScriptServiceWrapper) Do(ctx context.Context) (*elastic.DeleteS
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DeleteScriptService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.DeleteScriptService.Do")
@@ -4446,6 +4541,11 @@ func (w *ESDeleteServiceWrapper) Do(ctx context.Context) (*elastic.DeleteRespons
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "DeleteService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "DeleteService.Do"); err != nil {
 				return err
 			}
 		}
@@ -4580,6 +4680,11 @@ func (w *ESExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ExistsService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ExistsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -4724,6 +4829,11 @@ func (w *ESExplainServiceWrapper) Do(ctx context.Context) (*elastic.ExplainRespo
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ExplainService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ExplainService.Do"); err != nil {
 				return err
 			}
 		}
@@ -4891,6 +5001,11 @@ func (w *ESFieldCapsServiceWrapper) Do(ctx context.Context) (*elastic.FieldCapsR
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "FieldCapsService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.FieldCapsService.Do")
@@ -4985,6 +5100,11 @@ func (w *ESGetScriptServiceWrapper) Do(ctx context.Context) (*elastic.GetScriptR
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "GetScriptService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.GetScriptService.Do")
@@ -5061,6 +5181,11 @@ func (w *ESGetServiceWrapper) Do(ctx context.Context) (*elastic.GetResult, error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "GetService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "GetService.Do"); err != nil {
 				return err
 			}
 		}
@@ -5215,6 +5340,11 @@ func (w *ESIndexServiceWrapper) Do(ctx context.Context) (*elastic.IndexResponse,
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IndexService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndexService.Do"); err != nil {
 				return err
 			}
 		}
@@ -5402,6 +5532,11 @@ func (w *ESIndicesAnalyzeServiceWrapper) Do(ctx context.Context) (*elastic.Indic
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesAnalyzeService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesAnalyzeService.Do")
@@ -5526,6 +5661,11 @@ func (w *ESIndicesClearCacheServiceWrapper) Do(ctx context.Context) (*elastic.In
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesClearCacheService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesClearCacheService.Do")
@@ -5637,6 +5777,11 @@ func (w *ESIndicesCloseServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IndicesCloseService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesCloseService.Do"); err != nil {
 				return err
 			}
 		}
@@ -5754,6 +5899,11 @@ func (w *ESIndicesCreateServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesCreateService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesCreateService.Do")
@@ -5834,6 +5984,11 @@ func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Do(ctx context.Context) (*e
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IndicesDeleteIndexTemplateService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesDeleteIndexTemplateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -5926,6 +6081,11 @@ func (w *ESIndicesDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesDeleteService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesDeleteService.Do")
@@ -6012,6 +6172,11 @@ func (w *ESIndicesDeleteTemplateServiceWrapper) Do(ctx context.Context) (*elasti
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IndicesDeleteTemplateService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesDeleteTemplateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -6109,6 +6274,11 @@ func (w *ESIndicesExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesExistsService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesExistsService.Do")
@@ -6203,6 +6373,11 @@ func (w *ESIndicesExistsTemplateServiceWrapper) Do(ctx context.Context) (bool, e
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesExistsTemplateService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesExistsTemplateService.Do")
@@ -6294,6 +6469,11 @@ func (w *ESIndicesFlushServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IndicesFlushService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesFlushService.Do"); err != nil {
 				return err
 			}
 		}
@@ -6398,6 +6578,11 @@ func (w *ESIndicesForcemergeServiceWrapper) Do(ctx context.Context) (*elastic.In
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IndicesForcemergeService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesForcemergeService.Do"); err != nil {
 				return err
 			}
 		}
@@ -6510,6 +6695,11 @@ func (w *ESIndicesFreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesFreezeService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesFreezeService.Do")
@@ -6619,6 +6809,11 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Do(ctx context.Context) (map[st
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesGetFieldMappingService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetFieldMappingService.Do")
@@ -6723,6 +6918,11 @@ func (w *ESIndicesGetIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesGetIndexTemplateService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetIndexTemplateService.Do")
@@ -6819,6 +7019,11 @@ func (w *ESIndicesGetMappingServiceWrapper) Do(ctx context.Context) (map[string]
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IndicesGetMappingService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesGetMappingService.Do"); err != nil {
 				return err
 			}
 		}
@@ -6926,6 +7131,11 @@ func (w *ESIndicesGetServiceWrapper) Do(ctx context.Context) (map[string]*elasti
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesGetService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetService.Do")
@@ -7027,6 +7237,11 @@ func (w *ESIndicesGetSettingsServiceWrapper) Do(ctx context.Context) (map[string
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IndicesGetSettingsService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesGetSettingsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -7134,6 +7349,11 @@ func (w *ESIndicesGetTemplateServiceWrapper) Do(ctx context.Context) (map[string
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesGetTemplateService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesGetTemplateService.Do")
@@ -7225,6 +7445,11 @@ func (w *ESIndicesOpenServiceWrapper) Do(ctx context.Context) (*elastic.IndicesO
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IndicesOpenService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesOpenService.Do"); err != nil {
 				return err
 			}
 		}
@@ -7352,6 +7577,11 @@ func (w *ESIndicesPutIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesPutIndexTemplateService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutIndexTemplateService.Do")
@@ -7448,6 +7678,11 @@ func (w *ESIndicesPutMappingServiceWrapper) Do(ctx context.Context) (*elastic.Pu
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IndicesPutMappingService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesPutMappingService.Do"); err != nil {
 				return err
 			}
 		}
@@ -7570,6 +7805,11 @@ func (w *ESIndicesPutSettingsServiceWrapper) Do(ctx context.Context) (*elastic.I
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesPutSettingsService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesPutSettingsService.Do")
@@ -7686,6 +7926,11 @@ func (w *ESIndicesPutTemplateServiceWrapper) Do(ctx context.Context) (*elastic.I
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IndicesPutTemplateService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesPutTemplateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -7838,6 +8083,11 @@ func (w *ESIndicesRolloverServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesRolloverService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesRolloverService.Do")
@@ -7952,6 +8202,11 @@ func (w *ESIndicesSegmentsServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesSegmentsService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesSegmentsService.Do")
@@ -8061,6 +8316,11 @@ func (w *ESIndicesShrinkServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesShrinkService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesShrinkService.Do")
@@ -8162,6 +8422,11 @@ func (w *ESIndicesStatsServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IndicesStatsService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesStatsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8279,6 +8544,11 @@ func (w *ESIndicesSyncedFlushServiceWrapper) Do(ctx context.Context) (*elastic.I
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesSyncedFlushService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IndicesSyncedFlushService.Do")
@@ -8370,6 +8640,11 @@ func (w *ESIndicesUnfreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IndicesUnfreezeService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IndicesUnfreezeService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8477,6 +8752,11 @@ func (w *ESIngestDeletePipelineServiceWrapper) Do(ctx context.Context) (*elastic
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IngestDeletePipelineService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IngestDeletePipelineService.Do")
@@ -8563,6 +8843,11 @@ func (w *ESIngestGetPipelineServiceWrapper) Do(ctx context.Context) (elastic.Ing
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IngestGetPipelineService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IngestGetPipelineService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8657,6 +8942,11 @@ func (w *ESIngestPutPipelineServiceWrapper) Do(ctx context.Context) (*elastic.In
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "IngestPutPipelineService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IngestPutPipelineService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8759,6 +9049,11 @@ func (w *ESIngestSimulatePipelineServiceWrapper) Do(ctx context.Context) (*elast
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "IngestSimulatePipelineService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.IngestSimulatePipelineService.Do")
@@ -8845,6 +9140,11 @@ func (w *ESMgetServiceWrapper) Do(ctx context.Context) (*elastic.MgetResponse, e
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "MgetService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "MgetService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8953,6 +9253,11 @@ func (w *ESMultiSearchServiceWrapper) Do(ctx context.Context) (*elastic.MultiSea
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "MultiSearchService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.MultiSearchService.Do")
@@ -9048,6 +9353,11 @@ func (w *ESMultiTermvectorServiceWrapper) Do(ctx context.Context) (*elastic.Mult
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "MultiTermvectorService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "MultiTermvectorService.Do"); err != nil {
 				return err
 			}
 		}
@@ -9205,6 +9515,11 @@ func (w *ESNodesInfoServiceWrapper) Do(ctx context.Context) (*elastic.NodesInfoR
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "NodesInfoService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.NodesInfoService.Do")
@@ -9296,6 +9611,11 @@ func (w *ESNodesStatsServiceWrapper) Do(ctx context.Context) (*elastic.NodesStat
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "NodesStatsService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "NodesStatsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -9419,6 +9739,11 @@ func (w *ESPingServiceWrapper) Do(ctx context.Context) (*elastic.PingResult, int
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "PingService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.PingService.Do")
@@ -9517,6 +9842,11 @@ func (w *ESPutScriptServiceWrapper) Do(ctx context.Context) (*elastic.PutScriptR
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "PutScriptService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.PutScriptService.Do")
@@ -9603,6 +9933,11 @@ func (w *ESRefreshServiceWrapper) Do(ctx context.Context) (*elastic.RefreshResul
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "RefreshService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "RefreshService.Do"); err != nil {
 				return err
 			}
 		}
@@ -9709,6 +10044,11 @@ func (w *ESReindexServiceWrapper) Do(ctx context.Context) (*elastic.BulkIndexByS
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ReindexService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ReindexService.Do")
@@ -9744,6 +10084,11 @@ func (w *ESReindexServiceWrapper) DoAsync(ctx context.Context) (*elastic.StartTa
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ReindexService.DoAsync"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ReindexService.DoAsync"); err != nil {
 				return err
 			}
 		}
@@ -9889,6 +10234,11 @@ func (w *ESScrollServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "ScrollService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ScrollService.Do"); err != nil {
 				return err
 			}
 		}
@@ -10157,6 +10507,11 @@ func (w *ESSearchServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "SearchService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "SearchService.Do"); err != nil {
 				return err
 			}
 		}
@@ -10479,6 +10834,11 @@ func (w *ESSearchShardsServiceWrapper) Do(ctx context.Context) (*elastic.SearchS
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "SearchShardsService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SearchShardsService.Do")
@@ -10590,6 +10950,11 @@ func (w *ESSnapshotCreateRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "SnapshotCreateRepositoryService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "SnapshotCreateRepositoryService.Do"); err != nil {
 				return err
 			}
 		}
@@ -10712,6 +11077,11 @@ func (w *ESSnapshotCreateServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "SnapshotCreateService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SnapshotCreateService.Do")
@@ -10806,6 +11176,11 @@ func (w *ESSnapshotDeleteRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "SnapshotDeleteRepositoryService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SnapshotDeleteRepositoryService.Do")
@@ -10895,6 +11270,11 @@ func (w *ESSnapshotDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "SnapshotDeleteService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SnapshotDeleteService.Do")
@@ -10976,6 +11356,11 @@ func (w *ESSnapshotGetRepositoryServiceWrapper) Do(ctx context.Context) (elastic
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "SnapshotGetRepositoryService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "SnapshotGetRepositoryService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11065,6 +11450,11 @@ func (w *ESSnapshotGetServiceWrapper) Do(ctx context.Context) (*elastic.Snapshot
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "SnapshotGetService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "SnapshotGetService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11169,6 +11559,11 @@ func (w *ESSnapshotRestoreServiceWrapper) Do(ctx context.Context) (*elastic.Snap
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "SnapshotRestoreService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "SnapshotRestoreService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11306,6 +11701,11 @@ func (w *ESSnapshotStatusServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "SnapshotStatusService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.SnapshotStatusService.Do")
@@ -11392,6 +11792,11 @@ func (w *ESSnapshotVerifyRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "SnapshotVerifyRepositoryService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "SnapshotVerifyRepositoryService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11486,6 +11891,11 @@ func (w *ESTasksCancelServiceWrapper) Do(ctx context.Context) (*elastic.TasksLis
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TasksCancelService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TasksCancelService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11588,6 +11998,11 @@ func (w *ESTasksGetTaskServiceWrapper) Do(ctx context.Context) (*elastic.TasksGe
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TasksGetTaskService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.TasksGetTaskService.Do")
@@ -11684,6 +12099,11 @@ func (w *ESTasksListServiceWrapper) Do(ctx context.Context) (*elastic.TasksListR
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TasksListService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TasksListService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11798,6 +12218,11 @@ func (w *ESTermvectorsServiceWrapper) Do(ctx context.Context) (*elastic.Termvect
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TermvectorsService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TermvectorsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -12005,6 +12430,11 @@ func (w *ESUpdateByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "UpdateByQueryService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.UpdateByQueryService.Do")
@@ -12040,6 +12470,11 @@ func (w *ESUpdateByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "UpdateByQueryService.DoAsync"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "UpdateByQueryService.DoAsync"); err != nil {
 				return err
 			}
 		}
@@ -12347,6 +12782,11 @@ func (w *ESUpdateServiceWrapper) Do(ctx context.Context) (*elastic.UpdateRespons
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "UpdateService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.UpdateService.Do")
@@ -12560,6 +13000,11 @@ func (w *ESValidateServiceWrapper) Do(ctx context.Context) (*elastic.ValidateRes
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "ValidateService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.ValidateService.Do")
@@ -12679,6 +13124,11 @@ func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Do(ctx context.Context) (*elas
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackIlmDeleteLifecycleService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackIlmDeleteLifecycleService.Do")
@@ -12770,6 +13220,11 @@ func (w *ESXPackIlmGetLifecycleServiceWrapper) Do(ctx context.Context) (map[stri
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "XPackIlmGetLifecycleService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackIlmGetLifecycleService.Do"); err != nil {
 				return err
 			}
 		}
@@ -12877,6 +13332,11 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) Do(ctx context.Context) (*elastic
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackIlmPutLifecycleService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackIlmPutLifecycleService.Do")
@@ -12971,6 +13431,11 @@ func (w *ESXPackInfoServiceWrapper) Do(ctx context.Context) (*elastic.XPackInfoS
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackInfoService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackInfoService.Do")
@@ -13047,6 +13512,11 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Do(ctx context.Context) (*
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "XPackSecurityChangePasswordService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackSecurityChangePasswordService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13139,6 +13609,11 @@ func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Do(ctx context.Context)
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackSecurityDeleteRoleMappingService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDeleteRoleMappingService.Do")
@@ -13218,6 +13693,11 @@ func (w *ESXPackSecurityDeleteRoleServiceWrapper) Do(ctx context.Context) (*elas
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackSecurityDeleteRoleService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDeleteRoleService.Do")
@@ -13294,6 +13774,11 @@ func (w *ESXPackSecurityDeleteUserServiceWrapper) Do(ctx context.Context) (*elas
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "XPackSecurityDeleteUserService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackSecurityDeleteUserService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13381,6 +13866,11 @@ func (w *ESXPackSecurityDisableUserServiceWrapper) Do(ctx context.Context) (*ela
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackSecurityDisableUserService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityDisableUserService.Do")
@@ -13462,6 +13952,11 @@ func (w *ESXPackSecurityEnableUserServiceWrapper) Do(ctx context.Context) (*elas
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "XPackSecurityEnableUserService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackSecurityEnableUserService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13549,6 +14044,11 @@ func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Do(ctx context.Context) (*
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackSecurityGetRoleMappingService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityGetRoleMappingService.Do")
@@ -13628,6 +14128,11 @@ func (w *ESXPackSecurityGetRoleServiceWrapper) Do(ctx context.Context) (*elastic
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackSecurityGetRoleService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityGetRoleService.Do")
@@ -13704,6 +14209,11 @@ func (w *ESXPackSecurityGetUserServiceWrapper) Do(ctx context.Context) (*elastic
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "XPackSecurityGetUserService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackSecurityGetUserService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13791,6 +14301,11 @@ func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Do(ctx context.Context) (*
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackSecurityPutRoleMappingService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityPutRoleMappingService.Do")
@@ -13875,6 +14390,11 @@ func (w *ESXPackSecurityPutRoleServiceWrapper) Do(ctx context.Context) (*elastic
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackSecurityPutRoleService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackSecurityPutRoleService.Do")
@@ -13956,6 +14476,11 @@ func (w *ESXPackSecurityPutUserServiceWrapper) Do(ctx context.Context) (*elastic
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "XPackSecurityPutUserService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackSecurityPutUserService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14053,6 +14578,11 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) Do(ctx context.Context) (*elastic
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackWatcherAckWatchService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherAckWatchService.Do")
@@ -14134,6 +14664,11 @@ func (w *ESXPackWatcherActivateWatchServiceWrapper) Do(ctx context.Context) (*el
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "XPackWatcherActivateWatchService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackWatcherActivateWatchService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14221,6 +14756,11 @@ func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Do(ctx context.Context) (*
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackWatcherDeactivateWatchService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherDeactivateWatchService.Do")
@@ -14302,6 +14842,11 @@ func (w *ESXPackWatcherDeleteWatchServiceWrapper) Do(ctx context.Context) (*elas
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "XPackWatcherDeleteWatchService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackWatcherDeleteWatchService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14404,6 +14949,11 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Do(ctx context.Context) (*ela
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackWatcherExecuteWatchService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherExecuteWatchService.Do")
@@ -14480,6 +15030,11 @@ func (w *ESXPackWatcherGetWatchServiceWrapper) Do(ctx context.Context) (*elastic
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "XPackWatcherGetWatchService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackWatcherGetWatchService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14569,6 +15124,11 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Do(ctx context.Context) (*elastic
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "XPackWatcherPutWatchService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackWatcherPutWatchService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14666,6 +15226,11 @@ func (w *ESXPackWatcherStartServiceWrapper) Do(ctx context.Context) (*elastic.XP
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackWatcherStartService.Do"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "elastic.XPackWatcherStartService.Do")
@@ -14737,6 +15302,11 @@ func (w *ESXPackWatcherStatsServiceWrapper) Do(ctx context.Context) (*elastic.XP
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "XPackWatcherStatsService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackWatcherStatsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14821,6 +15391,11 @@ func (w *ESXPackWatcherStopServiceWrapper) Do(ctx context.Context) (*elastic.XPa
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "XPackWatcherStopService.Do"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "XPackWatcherStopService.Do"); err != nil {
 				return err
 			}
 		}

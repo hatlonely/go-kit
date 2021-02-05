@@ -110,6 +110,11 @@ func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, reque
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.AbortTransaction"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.AbortTransaction")
@@ -145,6 +150,11 @@ func (w *OTSTableStoreClientWrapper) BatchGetRow(ctx context.Context, request *t
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.BatchGetRow"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.BatchGetRow"); err != nil {
 				return err
 			}
 		}
@@ -186,6 +196,11 @@ func (w *OTSTableStoreClientWrapper) BatchWriteRow(ctx context.Context, request 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.BatchWriteRow"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.BatchWriteRow")
@@ -221,6 +236,11 @@ func (w *OTSTableStoreClientWrapper) CommitTransaction(ctx context.Context, requ
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.CommitTransaction"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.CommitTransaction"); err != nil {
 				return err
 			}
 		}
@@ -262,6 +282,11 @@ func (w *OTSTableStoreClientWrapper) ComputeSplitPointsBySize(ctx context.Contex
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.ComputeSplitPointsBySize"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ComputeSplitPointsBySize")
@@ -297,6 +322,11 @@ func (w *OTSTableStoreClientWrapper) CreateIndex(ctx context.Context, request *t
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.CreateIndex"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.CreateIndex"); err != nil {
 				return err
 			}
 		}
@@ -338,6 +368,11 @@ func (w *OTSTableStoreClientWrapper) CreateSearchIndex(ctx context.Context, requ
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.CreateSearchIndex"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateSearchIndex")
@@ -373,6 +408,11 @@ func (w *OTSTableStoreClientWrapper) CreateTable(ctx context.Context, request *t
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.CreateTable"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.CreateTable"); err != nil {
 				return err
 			}
 		}
@@ -414,6 +454,11 @@ func (w *OTSTableStoreClientWrapper) DeleteIndex(ctx context.Context, request *t
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.DeleteIndex"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteIndex")
@@ -449,6 +494,11 @@ func (w *OTSTableStoreClientWrapper) DeleteRow(ctx context.Context, request *tab
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.DeleteRow"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.DeleteRow"); err != nil {
 				return err
 			}
 		}
@@ -490,6 +540,11 @@ func (w *OTSTableStoreClientWrapper) DeleteSearchIndex(ctx context.Context, requ
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.DeleteSearchIndex"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteSearchIndex")
@@ -525,6 +580,11 @@ func (w *OTSTableStoreClientWrapper) DeleteTable(ctx context.Context, request *t
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.DeleteTable"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.DeleteTable"); err != nil {
 				return err
 			}
 		}
@@ -566,6 +626,11 @@ func (w *OTSTableStoreClientWrapper) DescribeSearchIndex(ctx context.Context, re
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.DescribeSearchIndex"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeSearchIndex")
@@ -601,6 +666,11 @@ func (w *OTSTableStoreClientWrapper) DescribeStream(ctx context.Context, req *ta
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.DescribeStream"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.DescribeStream"); err != nil {
 				return err
 			}
 		}
@@ -642,6 +712,11 @@ func (w *OTSTableStoreClientWrapper) DescribeTable(ctx context.Context, request 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.DescribeTable"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeTable")
@@ -677,6 +752,11 @@ func (w *OTSTableStoreClientWrapper) GetRange(ctx context.Context, request *tabl
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.GetRange"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.GetRange"); err != nil {
 				return err
 			}
 		}
@@ -718,6 +798,11 @@ func (w *OTSTableStoreClientWrapper) GetRow(ctx context.Context, request *tables
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.GetRow"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetRow")
@@ -753,6 +838,11 @@ func (w *OTSTableStoreClientWrapper) GetShardIterator(ctx context.Context, req *
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.GetShardIterator"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.GetShardIterator"); err != nil {
 				return err
 			}
 		}
@@ -794,6 +884,11 @@ func (w *OTSTableStoreClientWrapper) GetStreamRecord(ctx context.Context, req *t
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.GetStreamRecord"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetStreamRecord")
@@ -829,6 +924,11 @@ func (w *OTSTableStoreClientWrapper) ListSearchIndex(ctx context.Context, reques
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.ListSearchIndex"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.ListSearchIndex"); err != nil {
 				return err
 			}
 		}
@@ -870,6 +970,11 @@ func (w *OTSTableStoreClientWrapper) ListStream(ctx context.Context, req *tables
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.ListStream"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListStream")
@@ -905,6 +1010,11 @@ func (w *OTSTableStoreClientWrapper) ListTable(ctx context.Context) (*tablestore
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.ListTable"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.ListTable"); err != nil {
 				return err
 			}
 		}
@@ -946,6 +1056,11 @@ func (w *OTSTableStoreClientWrapper) PutRow(ctx context.Context, request *tables
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.PutRow"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.PutRow")
@@ -981,6 +1096,11 @@ func (w *OTSTableStoreClientWrapper) Search(ctx context.Context, request *tables
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.Search"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.Search"); err != nil {
 				return err
 			}
 		}
@@ -1022,6 +1142,11 @@ func (w *OTSTableStoreClientWrapper) StartLocalTransaction(ctx context.Context, 
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.StartLocalTransaction"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.StartLocalTransaction")
@@ -1060,6 +1185,11 @@ func (w *OTSTableStoreClientWrapper) UpdateRow(ctx context.Context, request *tab
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.UpdateRow"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.UpdateRow")
@@ -1095,6 +1225,11 @@ func (w *OTSTableStoreClientWrapper) UpdateTable(ctx context.Context, request *t
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.UpdateTable"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "TableStoreClient.UpdateTable"); err != nil {
 				return err
 			}
 		}

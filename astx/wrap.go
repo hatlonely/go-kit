@@ -79,6 +79,7 @@ type WrapperGeneratorOptions struct {
 		Retry                      map[string]Rule
 		Metric                     map[string]Rule
 		RateLimiter                map[string]Rule
+		ParallelController         map[string]Rule
 		Hystrix                    map[string]Rule
 	}
 }
@@ -183,6 +184,7 @@ type RenderInfo struct {
 		Metric                     bool
 		Hystrix                    bool
 		RateLimiter                bool
+		ParallelController         bool
 		ErrorInResult              bool
 	}
 }
@@ -341,6 +343,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 			info.Rule.Metric = g.MatchFunctionRule(function.Name, cls, g.options.Rule.Metric)
 			info.Rule.Retry = g.MatchFunctionRule(function.Name, cls, g.options.Rule.Retry)
 			info.Rule.RateLimiter = g.MatchFunctionRule(function.Name, cls, g.options.Rule.RateLimiter)
+			info.Rule.ParallelController = g.MatchFunctionRule(function.Name, cls, g.options.Rule.ParallelController)
 			info.Rule.Hystrix = g.MatchFunctionRule(function.Name, cls, g.options.Rule.Hystrix)
 			if len(function.Results) == 1 {
 				info.Rule.ErrorInResult = g.MatchRule(function.Results[0].Type, g.options.Rule.ErrorInResult)
@@ -646,6 +649,11 @@ const WrapperFunctionBodyWithoutErrorTpl = `
 		_ = w.rateLimiter.Wait(ctx, "{{.Class}}.{{.Function.Name}}")
 	}
 {{- end}}
+{{- if .Rule.ParallelController}}
+	if w.parallelController != nil {
+		_ = w.parallelController.GetToken(ctx, "{{.Class}}.{{.Function.Name}}")
+	}
+{{- end}}
 {{- if .Rule.Trace}}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
 		span, _ := opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}")
@@ -692,6 +700,13 @@ const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 		}
 	}
 {{- end}}
+{{- if .Rule.ParallelController}}
+	if w.parallelController != nil {
+		if {{.Function.LastResult}} = w.parallelController.GetToken(ctx, "{{.Class}}.{{.Function.Name}}"); {{.Function.LastResult}} != nil {
+			return {{.Function.ReturnList}}
+		}
+	}
+{{- end}}
 {{- if .Rule.Trace}}
 	var span opentracing.Span
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
@@ -733,6 +748,13 @@ const WrapperFunctionBodyWithErrorWithRetryTpl = `
 {{- if .Rule.RateLimiter}}
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "{{.Class}}.{{.Function.Name}}"); err != nil {
+				return err
+			}
+		}
+{{- end}}
+{{- if .Rule.ParallelController}}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "{{.Class}}.{{.Function.Name}}"); err != nil {
 				return err
 			}
 		}

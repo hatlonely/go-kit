@@ -110,6 +110,11 @@ func (w *STSClientWrapper) AssumeRole(ctx context.Context, request *sts.AssumeRo
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.AssumeRole"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "sts.Client.AssumeRole")
@@ -158,6 +163,11 @@ func (w *STSClientWrapper) AssumeRoleWithSAML(ctx context.Context, request *sts.
 				return err
 			}
 		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.AssumeRoleWithSAML"); err != nil {
+				return err
+			}
+		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
 			span, _ = opentracing.StartSpanFromContext(ctx, "sts.Client.AssumeRoleWithSAML")
@@ -203,6 +213,11 @@ func (w *STSClientWrapper) GetCallerIdentity(ctx context.Context, request *sts.G
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
 			if err := w.rateLimiter.Wait(ctx, "Client.GetCallerIdentity"); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if err := w.parallelController.GetToken(ctx, "Client.GetCallerIdentity"); err != nil {
 				return err
 			}
 		}

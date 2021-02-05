@@ -119,6 +119,7 @@ wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.retry '{"Client": {"exclude": "^Bucket$$"}}' \
 		--rule.metric '{"Client": {"exclude": "^Bucket$$"}}' \
 		--rule.rateLimiter '{"Client": {"exclude": "^Bucket$$"}}' \
+		--rule.parallelController '{"Client": {"exclude": "^Bucket$$"}}' \
 		--output $@
 
 wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
@@ -152,6 +153,7 @@ wrap/autogen_elasticsearch.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.retry '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
 		--rule.metric '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
 		--rule.rateLimiter '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
+		--rule.parallelController '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
 		--output $@
 
 wrap/autogen_mongo.go: build/bin/gen vendor $(wildcard astx/*.go)
@@ -168,6 +170,7 @@ wrap/autogen_mongo.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.trace '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
 		--rule.metric '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
 		--rule.rateLimiter '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
+		--rule.parallelController '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
 		--output $@
 
 wrap/autogen_redis.go: build/bin/gen vendor $(wildcard astx/*.go)
