@@ -236,7 +236,7 @@ func BackUpCurrentConfig(cfg *config.Config, name string) {
 	cfg, err := cfg.Transform(&config.Options{
 		Provider: config.ProviderOptions{
 			Type: "Local",
-			LocalProvider: config.LocalProviderOptions{
+			Options: &config.LocalProviderOptions{
 				Filename: name,
 			},
 		},
