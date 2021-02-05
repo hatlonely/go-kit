@@ -28,7 +28,7 @@ type LocalParallelControllerCell struct {
 	curToken int
 }
 
-func (l *LocalParallelControllerCell) TryGetToken(ctx context.Context) bool {
+func (l *LocalParallelControllerCell) TryGetToken() bool {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
 
@@ -39,7 +39,7 @@ func (l *LocalParallelControllerCell) TryGetToken(ctx context.Context) bool {
 	return true
 }
 
-func (l *LocalParallelControllerCell) TryPutToken(ctx context.Context) bool {
+func (l *LocalParallelControllerCell) TryPutToken() bool {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
 

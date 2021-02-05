@@ -34,20 +34,26 @@ func NewLocalParallelControllerGroupWithOptions(options *LocalParallelController
 	return c, nil
 }
 
-func (l *LocalParallelController) TryGetToken(ctx context.Context, key string) bool {
+func (l *LocalParallelController) TryGetToken(ctx context.Context, key string) error {
 	c, ok := l.controllerMap[key]
 	if !ok {
-		return true
+		return nil
 	}
-	return c.TryGetToken(ctx)
+	if c.TryGetToken() {
+		return nil
+	}
+	return ErrParallelControl
 }
 
-func (l *LocalParallelController) TryPutToken(ctx context.Context, key string) bool {
+func (l *LocalParallelController) TryPutToken(ctx context.Context, key string) error {
 	c, ok := l.controllerMap[key]
 	if !ok {
-		return true
+		return nil
 	}
-	return c.TryPutToken(ctx)
+	if c.TryPutToken() {
+		return nil
+	}
+	return ErrParallelControl
 }
 
 func (l *LocalParallelController) PutToken(ctx context.Context, key string) error {

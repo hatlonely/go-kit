@@ -237,6 +237,8 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 				if err = g.rateLimiter.Allow(ctx, key); err != nil {
 					if err == micro.ErrFlowControl {
 						err = NewError(codes.ResourceExhausted, "ResourceExhausted", err.Error(), err)
+					} else {
+						g.appLog.Warnf("g.rateLimiter.Allow failed. err: [%+v]", err)
 					}
 				}
 			}
@@ -248,18 +250,19 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 				if g.options.ParallelControllerHeader != "" {
 					key = fmt.Sprintf("%s|%s", strings.Join(md.Get(g.options.ParallelControllerHeader), ","), info.FullMethod)
 				}
-				if err = g.parallelController.GetToken(ctx, key); err != nil {
-					if err == micro.ErrFlowControl {
+				if err = g.parallelController.TryGetToken(ctx, key); err != nil {
+					if err == micro.ErrParallelControl {
 						err = NewError(codes.ResourceExhausted, "ResourceExhausted", err.Error(), err)
 					} else {
 						g.appLog.Warnf("g.parallelController.GetToken failed. err: [%+v]", err)
 					}
+				} else {
+					defer func() {
+						if err := g.parallelController.PutToken(ctx, key); err != nil {
+							g.appLog.Warnf("g.parallelController.PutToken failed. err: [%+v]", err)
+						}
+					}()
 				}
-				defer func() {
-					if err := g.parallelController.PutToken(ctx, key); err != nil {
-						g.appLog.Warnf("g.parallelController.PutToken failed. err: [%+v]", err)
-					}
-				}()
 			}
 		}
 

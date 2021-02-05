@@ -10,11 +10,13 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
+var ErrParallelControl = errors.New("parallel control")
+
 type ParallelController interface {
 	PutToken(ctx context.Context, key string) error
 	GetToken(ctx context.Context, key string) error
-	TryGetToken(ctx context.Context, key string) bool
-	TryPutToken(ctx context.Context, key string) bool
+	TryGetToken(ctx context.Context, key string) error
+	TryPutToken(ctx context.Context, key string) error
 }
 
 func RegisterParallelController(key string, constructor interface{}) {
