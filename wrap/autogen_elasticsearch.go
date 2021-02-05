@@ -3,6 +3,7 @@ package wrap
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -1690,12 +1691,12 @@ func (w *ESAliasServiceWrapper) Do(ctx context.Context) (*elastic.AliasResult, e
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "AliasService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.AliasService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "AliasService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.AliasService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1773,12 +1774,12 @@ func (w *ESAliasesServiceWrapper) Do(ctx context.Context) (*elastic.AliasesResul
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "AliasesService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.AliasesService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "AliasesService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.AliasesService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1876,12 +1877,12 @@ func (w *ESBulkProcessorServiceWrapper) Do(ctx context.Context) (*elastic.BulkPr
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "BulkProcessorService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.BulkProcessorService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "BulkProcessorService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.BulkProcessorService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1949,12 +1950,12 @@ func (w *ESBulkServiceWrapper) Do(ctx context.Context) (*elastic.BulkResponse, e
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "BulkService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.BulkService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "BulkService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.BulkService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2086,12 +2087,12 @@ func (w *ESCatAliasesServiceWrapper) Do(ctx context.Context) (elastic.CatAliases
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "CatAliasesService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.CatAliasesService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "CatAliasesService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.CatAliasesService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2184,12 +2185,12 @@ func (w *ESCatAllocationServiceWrapper) Do(ctx context.Context) (elastic.CatAllo
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "CatAllocationService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.CatAllocationService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "CatAllocationService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.CatAllocationService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2282,12 +2283,12 @@ func (w *ESCatCountServiceWrapper) Do(ctx context.Context) (elastic.CatCountResp
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "CatCountService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.CatCountService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "CatCountService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.CatCountService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2385,12 +2386,12 @@ func (w *ESCatHealthServiceWrapper) Do(ctx context.Context) (elastic.CatHealthRe
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "CatHealthService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.CatHealthService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "CatHealthService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.CatHealthService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2483,12 +2484,12 @@ func (w *ESCatIndicesServiceWrapper) Do(ctx context.Context) (elastic.CatIndices
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "CatIndicesService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.CatIndicesService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "CatIndicesService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.CatIndicesService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2596,12 +2597,12 @@ func (w *ESCatShardsServiceWrapper) Do(ctx context.Context) (elastic.CatShardsRe
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "CatShardsService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.CatShardsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "CatShardsService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.CatShardsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2694,12 +2695,12 @@ func (w *ESClearScrollServiceWrapper) Do(ctx context.Context) (*elastic.ClearScr
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClearScrollService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClearScrollService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClearScrollService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClearScrollService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3429,12 +3430,12 @@ func (w *ESClusterHealthServiceWrapper) Do(ctx context.Context) (*elastic.Cluste
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterHealthService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterHealthService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterHealthService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterHealthService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3573,12 +3574,12 @@ func (w *ESClusterRerouteServiceWrapper) Do(ctx context.Context) (*elastic.Clust
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterRerouteService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterRerouteService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterRerouteService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterRerouteService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3687,12 +3688,12 @@ func (w *ESClusterStateServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterStateService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterStateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterStateService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterStateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3801,12 +3802,12 @@ func (w *ESClusterStatsServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterStatsService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterStatsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterStatsService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterStatsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3925,12 +3926,12 @@ func (w *ESCountServiceWrapper) Do(ctx context.Context) (int64, error) {
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "CountService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.CountService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "CountService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.CountService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4114,12 +4115,12 @@ func (w *ESDeleteByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DeleteByQueryService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DeleteByQueryService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DeleteByQueryService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DeleteByQueryService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4157,12 +4158,12 @@ func (w *ESDeleteByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DeleteByQueryService.DoAsync"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DeleteByQueryService.DoAsync", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DeleteByQueryService.DoAsync"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DeleteByQueryService.DoAsync", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4446,12 +4447,12 @@ func (w *ESDeleteScriptServiceWrapper) Do(ctx context.Context) (*elastic.DeleteS
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DeleteScriptService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DeleteScriptService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DeleteScriptService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DeleteScriptService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4540,12 +4541,12 @@ func (w *ESDeleteServiceWrapper) Do(ctx context.Context) (*elastic.DeleteRespons
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DeleteService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DeleteService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DeleteService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DeleteService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4679,12 +4680,12 @@ func (w *ESExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ExistsService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ExistsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ExistsService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ExistsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4828,12 +4829,12 @@ func (w *ESExplainServiceWrapper) Do(ctx context.Context) (*elastic.ExplainRespo
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ExplainService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ExplainService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ExplainService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ExplainService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4997,12 +4998,12 @@ func (w *ESFieldCapsServiceWrapper) Do(ctx context.Context) (*elastic.FieldCapsR
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "FieldCapsService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.FieldCapsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "FieldCapsService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.FieldCapsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5096,12 +5097,12 @@ func (w *ESGetScriptServiceWrapper) Do(ctx context.Context) (*elastic.GetScriptR
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "GetScriptService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.GetScriptService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "GetScriptService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.GetScriptService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5180,12 +5181,12 @@ func (w *ESGetServiceWrapper) Do(ctx context.Context) (*elastic.GetResult, error
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "GetService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.GetService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "GetService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.GetService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5339,12 +5340,12 @@ func (w *ESIndexServiceWrapper) Do(ctx context.Context) (*elastic.IndexResponse,
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndexService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndexService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndexService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndexService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5528,12 +5529,12 @@ func (w *ESIndicesAnalyzeServiceWrapper) Do(ctx context.Context) (*elastic.Indic
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesAnalyzeService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesAnalyzeService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesAnalyzeService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesAnalyzeService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5657,12 +5658,12 @@ func (w *ESIndicesClearCacheServiceWrapper) Do(ctx context.Context) (*elastic.In
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesClearCacheService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesClearCacheService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesClearCacheService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesClearCacheService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5776,12 +5777,12 @@ func (w *ESIndicesCloseServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesCloseService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesCloseService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesCloseService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesCloseService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5895,12 +5896,12 @@ func (w *ESIndicesCreateServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesCreateService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesCreateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesCreateService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesCreateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5983,12 +5984,12 @@ func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Do(ctx context.Context) (*e
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesDeleteIndexTemplateService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesDeleteIndexTemplateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesDeleteIndexTemplateService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesDeleteIndexTemplateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6077,12 +6078,12 @@ func (w *ESIndicesDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesDeleteService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesDeleteService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesDeleteService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesDeleteService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6171,12 +6172,12 @@ func (w *ESIndicesDeleteTemplateServiceWrapper) Do(ctx context.Context) (*elasti
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesDeleteTemplateService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesDeleteTemplateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesDeleteTemplateService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesDeleteTemplateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6270,12 +6271,12 @@ func (w *ESIndicesExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesExistsService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesExistsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesExistsService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesExistsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6369,12 +6370,12 @@ func (w *ESIndicesExistsTemplateServiceWrapper) Do(ctx context.Context) (bool, e
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesExistsTemplateService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesExistsTemplateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesExistsTemplateService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesExistsTemplateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6468,12 +6469,12 @@ func (w *ESIndicesFlushServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesFlushService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesFlushService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesFlushService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesFlushService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6577,12 +6578,12 @@ func (w *ESIndicesForcemergeServiceWrapper) Do(ctx context.Context) (*elastic.In
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesForcemergeService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesForcemergeService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesForcemergeService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesForcemergeService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6691,12 +6692,12 @@ func (w *ESIndicesFreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesFreezeService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesFreezeService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesFreezeService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesFreezeService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6805,12 +6806,12 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Do(ctx context.Context) (map[st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesGetFieldMappingService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesGetFieldMappingService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesGetFieldMappingService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesGetFieldMappingService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6914,12 +6915,12 @@ func (w *ESIndicesGetIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesGetIndexTemplateService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesGetIndexTemplateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesGetIndexTemplateService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesGetIndexTemplateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7018,12 +7019,12 @@ func (w *ESIndicesGetMappingServiceWrapper) Do(ctx context.Context) (map[string]
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesGetMappingService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesGetMappingService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesGetMappingService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesGetMappingService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7127,12 +7128,12 @@ func (w *ESIndicesGetServiceWrapper) Do(ctx context.Context) (map[string]*elasti
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesGetService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesGetService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesGetService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesGetService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7236,12 +7237,12 @@ func (w *ESIndicesGetSettingsServiceWrapper) Do(ctx context.Context) (map[string
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesGetSettingsService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesGetSettingsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesGetSettingsService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesGetSettingsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7345,12 +7346,12 @@ func (w *ESIndicesGetTemplateServiceWrapper) Do(ctx context.Context) (map[string
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesGetTemplateService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesGetTemplateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesGetTemplateService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesGetTemplateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7444,12 +7445,12 @@ func (w *ESIndicesOpenServiceWrapper) Do(ctx context.Context) (*elastic.IndicesO
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesOpenService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesOpenService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesOpenService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesOpenService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7573,12 +7574,12 @@ func (w *ESIndicesPutIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesPutIndexTemplateService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesPutIndexTemplateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesPutIndexTemplateService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesPutIndexTemplateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7677,12 +7678,12 @@ func (w *ESIndicesPutMappingServiceWrapper) Do(ctx context.Context) (*elastic.Pu
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesPutMappingService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesPutMappingService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesPutMappingService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesPutMappingService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7801,12 +7802,12 @@ func (w *ESIndicesPutSettingsServiceWrapper) Do(ctx context.Context) (*elastic.I
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesPutSettingsService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesPutSettingsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesPutSettingsService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesPutSettingsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7925,12 +7926,12 @@ func (w *ESIndicesPutTemplateServiceWrapper) Do(ctx context.Context) (*elastic.I
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesPutTemplateService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesPutTemplateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesPutTemplateService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesPutTemplateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8079,12 +8080,12 @@ func (w *ESIndicesRolloverServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesRolloverService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesRolloverService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesRolloverService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesRolloverService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8198,12 +8199,12 @@ func (w *ESIndicesSegmentsServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesSegmentsService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesSegmentsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesSegmentsService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesSegmentsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8312,12 +8313,12 @@ func (w *ESIndicesShrinkServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesShrinkService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesShrinkService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesShrinkService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesShrinkService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8421,12 +8422,12 @@ func (w *ESIndicesStatsServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesStatsService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesStatsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesStatsService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesStatsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8540,12 +8541,12 @@ func (w *ESIndicesSyncedFlushServiceWrapper) Do(ctx context.Context) (*elastic.I
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesSyncedFlushService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesSyncedFlushService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesSyncedFlushService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesSyncedFlushService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8639,12 +8640,12 @@ func (w *ESIndicesUnfreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IndicesUnfreezeService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IndicesUnfreezeService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IndicesUnfreezeService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesUnfreezeService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8748,12 +8749,12 @@ func (w *ESIngestDeletePipelineServiceWrapper) Do(ctx context.Context) (*elastic
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IngestDeletePipelineService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IngestDeletePipelineService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IngestDeletePipelineService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IngestDeletePipelineService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8842,12 +8843,12 @@ func (w *ESIngestGetPipelineServiceWrapper) Do(ctx context.Context) (elastic.Ing
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IngestGetPipelineService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IngestGetPipelineService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IngestGetPipelineService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IngestGetPipelineService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8941,12 +8942,12 @@ func (w *ESIngestPutPipelineServiceWrapper) Do(ctx context.Context) (*elastic.In
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IngestPutPipelineService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IngestPutPipelineService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IngestPutPipelineService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IngestPutPipelineService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9045,12 +9046,12 @@ func (w *ESIngestSimulatePipelineServiceWrapper) Do(ctx context.Context) (*elast
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "IngestSimulatePipelineService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.IngestSimulatePipelineService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "IngestSimulatePipelineService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IngestSimulatePipelineService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9139,12 +9140,12 @@ func (w *ESMgetServiceWrapper) Do(ctx context.Context) (*elastic.MgetResponse, e
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "MgetService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.MgetService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "MgetService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.MgetService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9249,12 +9250,12 @@ func (w *ESMultiSearchServiceWrapper) Do(ctx context.Context) (*elastic.MultiSea
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "MultiSearchService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.MultiSearchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "MultiSearchService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.MultiSearchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9352,12 +9353,12 @@ func (w *ESMultiTermvectorServiceWrapper) Do(ctx context.Context) (*elastic.Mult
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "MultiTermvectorService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.MultiTermvectorService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "MultiTermvectorService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.MultiTermvectorService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9511,12 +9512,12 @@ func (w *ESNodesInfoServiceWrapper) Do(ctx context.Context) (*elastic.NodesInfoR
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "NodesInfoService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.NodesInfoService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "NodesInfoService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.NodesInfoService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9610,12 +9611,12 @@ func (w *ESNodesStatsServiceWrapper) Do(ctx context.Context) (*elastic.NodesStat
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "NodesStatsService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.NodesStatsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "NodesStatsService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.NodesStatsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9735,12 +9736,12 @@ func (w *ESPingServiceWrapper) Do(ctx context.Context) (*elastic.PingResult, int
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "PingService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.PingService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "PingService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.PingService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9838,12 +9839,12 @@ func (w *ESPutScriptServiceWrapper) Do(ctx context.Context) (*elastic.PutScriptR
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "PutScriptService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.PutScriptService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "PutScriptService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.PutScriptService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9932,12 +9933,12 @@ func (w *ESRefreshServiceWrapper) Do(ctx context.Context) (*elastic.RefreshResul
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "RefreshService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.RefreshService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "RefreshService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.RefreshService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10040,12 +10041,12 @@ func (w *ESReindexServiceWrapper) Do(ctx context.Context) (*elastic.BulkIndexByS
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ReindexService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ReindexService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ReindexService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ReindexService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10083,12 +10084,12 @@ func (w *ESReindexServiceWrapper) DoAsync(ctx context.Context) (*elastic.StartTa
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ReindexService.DoAsync"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ReindexService.DoAsync", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ReindexService.DoAsync"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ReindexService.DoAsync", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10233,12 +10234,12 @@ func (w *ESScrollServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ScrollService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ScrollService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ScrollService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ScrollService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10506,12 +10507,12 @@ func (w *ESSearchServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "SearchService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.SearchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "SearchService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SearchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10830,12 +10831,12 @@ func (w *ESSearchShardsServiceWrapper) Do(ctx context.Context) (*elastic.SearchS
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "SearchShardsService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.SearchShardsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "SearchShardsService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SearchShardsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10949,12 +10950,12 @@ func (w *ESSnapshotCreateRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "SnapshotCreateRepositoryService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.SnapshotCreateRepositoryService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "SnapshotCreateRepositoryService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotCreateRepositoryService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11073,12 +11074,12 @@ func (w *ESSnapshotCreateServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "SnapshotCreateService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.SnapshotCreateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "SnapshotCreateService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotCreateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11172,12 +11173,12 @@ func (w *ESSnapshotDeleteRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "SnapshotDeleteRepositoryService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.SnapshotDeleteRepositoryService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "SnapshotDeleteRepositoryService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotDeleteRepositoryService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11266,12 +11267,12 @@ func (w *ESSnapshotDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "SnapshotDeleteService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.SnapshotDeleteService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "SnapshotDeleteService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotDeleteService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11355,12 +11356,12 @@ func (w *ESSnapshotGetRepositoryServiceWrapper) Do(ctx context.Context) (elastic
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "SnapshotGetRepositoryService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.SnapshotGetRepositoryService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "SnapshotGetRepositoryService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotGetRepositoryService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11449,12 +11450,12 @@ func (w *ESSnapshotGetServiceWrapper) Do(ctx context.Context) (*elastic.Snapshot
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "SnapshotGetService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.SnapshotGetService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "SnapshotGetService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotGetService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11558,12 +11559,12 @@ func (w *ESSnapshotRestoreServiceWrapper) Do(ctx context.Context) (*elastic.Snap
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "SnapshotRestoreService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.SnapshotRestoreService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "SnapshotRestoreService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotRestoreService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11697,12 +11698,12 @@ func (w *ESSnapshotStatusServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "SnapshotStatusService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.SnapshotStatusService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "SnapshotStatusService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotStatusService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11791,12 +11792,12 @@ func (w *ESSnapshotVerifyRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "SnapshotVerifyRepositoryService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.SnapshotVerifyRepositoryService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "SnapshotVerifyRepositoryService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotVerifyRepositoryService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11890,12 +11891,12 @@ func (w *ESTasksCancelServiceWrapper) Do(ctx context.Context) (*elastic.TasksLis
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TasksCancelService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TasksCancelService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TasksCancelService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TasksCancelService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11994,12 +11995,12 @@ func (w *ESTasksGetTaskServiceWrapper) Do(ctx context.Context) (*elastic.TasksGe
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TasksGetTaskService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TasksGetTaskService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TasksGetTaskService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TasksGetTaskService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12098,12 +12099,12 @@ func (w *ESTasksListServiceWrapper) Do(ctx context.Context) (*elastic.TasksListR
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TasksListService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TasksListService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TasksListService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TasksListService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12217,12 +12218,12 @@ func (w *ESTermvectorsServiceWrapper) Do(ctx context.Context) (*elastic.Termvect
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TermvectorsService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TermvectorsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TermvectorsService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TermvectorsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12426,12 +12427,12 @@ func (w *ESUpdateByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "UpdateByQueryService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.UpdateByQueryService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "UpdateByQueryService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.UpdateByQueryService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12469,12 +12470,12 @@ func (w *ESUpdateByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "UpdateByQueryService.DoAsync"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.UpdateByQueryService.DoAsync", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "UpdateByQueryService.DoAsync"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.UpdateByQueryService.DoAsync", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12778,12 +12779,12 @@ func (w *ESUpdateServiceWrapper) Do(ctx context.Context) (*elastic.UpdateRespons
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "UpdateService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.UpdateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "UpdateService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.UpdateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12996,12 +12997,12 @@ func (w *ESValidateServiceWrapper) Do(ctx context.Context) (*elastic.ValidateRes
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ValidateService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ValidateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ValidateService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ValidateService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13120,12 +13121,12 @@ func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Do(ctx context.Context) (*elas
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackIlmDeleteLifecycleService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackIlmDeleteLifecycleService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackIlmDeleteLifecycleService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackIlmDeleteLifecycleService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13219,12 +13220,12 @@ func (w *ESXPackIlmGetLifecycleServiceWrapper) Do(ctx context.Context) (map[stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackIlmGetLifecycleService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackIlmGetLifecycleService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackIlmGetLifecycleService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackIlmGetLifecycleService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13328,12 +13329,12 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) Do(ctx context.Context) (*elastic
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackIlmPutLifecycleService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackIlmPutLifecycleService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackIlmPutLifecycleService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackIlmPutLifecycleService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13427,12 +13428,12 @@ func (w *ESXPackInfoServiceWrapper) Do(ctx context.Context) (*elastic.XPackInfoS
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackInfoService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackInfoService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackInfoService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackInfoService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13511,12 +13512,12 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Do(ctx context.Context) (*
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackSecurityChangePasswordService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackSecurityChangePasswordService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackSecurityChangePasswordService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityChangePasswordService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13605,12 +13606,12 @@ func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Do(ctx context.Context)
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackSecurityDeleteRoleMappingService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackSecurityDeleteRoleMappingService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackSecurityDeleteRoleMappingService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityDeleteRoleMappingService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13689,12 +13690,12 @@ func (w *ESXPackSecurityDeleteRoleServiceWrapper) Do(ctx context.Context) (*elas
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackSecurityDeleteRoleService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackSecurityDeleteRoleService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackSecurityDeleteRoleService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityDeleteRoleService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13773,12 +13774,12 @@ func (w *ESXPackSecurityDeleteUserServiceWrapper) Do(ctx context.Context) (*elas
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackSecurityDeleteUserService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackSecurityDeleteUserService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackSecurityDeleteUserService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityDeleteUserService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13862,12 +13863,12 @@ func (w *ESXPackSecurityDisableUserServiceWrapper) Do(ctx context.Context) (*ela
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackSecurityDisableUserService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackSecurityDisableUserService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackSecurityDisableUserService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityDisableUserService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13951,12 +13952,12 @@ func (w *ESXPackSecurityEnableUserServiceWrapper) Do(ctx context.Context) (*elas
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackSecurityEnableUserService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackSecurityEnableUserService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackSecurityEnableUserService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityEnableUserService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14040,12 +14041,12 @@ func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Do(ctx context.Context) (*
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackSecurityGetRoleMappingService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackSecurityGetRoleMappingService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackSecurityGetRoleMappingService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityGetRoleMappingService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14124,12 +14125,12 @@ func (w *ESXPackSecurityGetRoleServiceWrapper) Do(ctx context.Context) (*elastic
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackSecurityGetRoleService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackSecurityGetRoleService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackSecurityGetRoleService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityGetRoleService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14208,12 +14209,12 @@ func (w *ESXPackSecurityGetUserServiceWrapper) Do(ctx context.Context) (*elastic
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackSecurityGetUserService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackSecurityGetUserService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackSecurityGetUserService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityGetUserService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14297,12 +14298,12 @@ func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Do(ctx context.Context) (*
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackSecurityPutRoleMappingService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackSecurityPutRoleMappingService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackSecurityPutRoleMappingService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityPutRoleMappingService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14386,12 +14387,12 @@ func (w *ESXPackSecurityPutRoleServiceWrapper) Do(ctx context.Context) (*elastic
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackSecurityPutRoleService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackSecurityPutRoleService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackSecurityPutRoleService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityPutRoleService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14475,12 +14476,12 @@ func (w *ESXPackSecurityPutUserServiceWrapper) Do(ctx context.Context) (*elastic
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackSecurityPutUserService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackSecurityPutUserService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackSecurityPutUserService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityPutUserService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14574,12 +14575,12 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) Do(ctx context.Context) (*elastic
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackWatcherAckWatchService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackWatcherAckWatchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackWatcherAckWatchService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherAckWatchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14663,12 +14664,12 @@ func (w *ESXPackWatcherActivateWatchServiceWrapper) Do(ctx context.Context) (*el
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackWatcherActivateWatchService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackWatcherActivateWatchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackWatcherActivateWatchService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherActivateWatchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14752,12 +14753,12 @@ func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Do(ctx context.Context) (*
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackWatcherDeactivateWatchService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackWatcherDeactivateWatchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackWatcherDeactivateWatchService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherDeactivateWatchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14841,12 +14842,12 @@ func (w *ESXPackWatcherDeleteWatchServiceWrapper) Do(ctx context.Context) (*elas
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackWatcherDeleteWatchService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackWatcherDeleteWatchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackWatcherDeleteWatchService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherDeleteWatchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14945,12 +14946,12 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Do(ctx context.Context) (*ela
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackWatcherExecuteWatchService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackWatcherExecuteWatchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackWatcherExecuteWatchService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherExecuteWatchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15029,12 +15030,12 @@ func (w *ESXPackWatcherGetWatchServiceWrapper) Do(ctx context.Context) (*elastic
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackWatcherGetWatchService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackWatcherGetWatchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackWatcherGetWatchService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherGetWatchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15123,12 +15124,12 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Do(ctx context.Context) (*elastic
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackWatcherPutWatchService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackWatcherPutWatchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackWatcherPutWatchService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherPutWatchService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15222,12 +15223,12 @@ func (w *ESXPackWatcherStartServiceWrapper) Do(ctx context.Context) (*elastic.XP
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackWatcherStartService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackWatcherStartService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackWatcherStartService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherStartService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15301,12 +15302,12 @@ func (w *ESXPackWatcherStatsServiceWrapper) Do(ctx context.Context) (*elastic.XP
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackWatcherStatsService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackWatcherStatsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackWatcherStatsService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherStatsService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15390,12 +15391,12 @@ func (w *ESXPackWatcherStopServiceWrapper) Do(ctx context.Context) (*elastic.XPa
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "XPackWatcherStopService.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.XPackWatcherStopService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "XPackWatcherStopService.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherStopService.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}

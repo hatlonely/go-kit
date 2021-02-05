@@ -3,6 +3,7 @@ package wrap
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/nacos-group/nacos-sdk-go/clients/config_client"
@@ -107,12 +108,12 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ConfigClient.CancelListenConfig"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ConfigClient.CancelListenConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ConfigClient.CancelListenConfig"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ConfigClient.CancelListenConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -150,12 +151,12 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ConfigClient.DeleteConfig"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ConfigClient.DeleteConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ConfigClient.DeleteConfig"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ConfigClient.DeleteConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -193,12 +194,12 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ConfigClient.GetConfig"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ConfigClient.GetConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ConfigClient.GetConfig"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ConfigClient.GetConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -235,12 +236,12 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ConfigClient.ListenConfig"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ConfigClient.ListenConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ConfigClient.ListenConfig"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ConfigClient.ListenConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -278,12 +279,12 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ConfigClient.PublishConfig"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ConfigClient.PublishConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ConfigClient.PublishConfig"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ConfigClient.PublishConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -321,12 +322,12 @@ func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.Sear
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ConfigClient.SearchConfig"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ConfigClient.SearchConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ConfigClient.SearchConfig"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ConfigClient.SearchConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}

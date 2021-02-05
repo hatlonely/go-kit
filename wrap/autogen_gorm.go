@@ -4,6 +4,7 @@ package wrap
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -120,12 +121,12 @@ func (w GORMAssociationWrapper) Append(ctx context.Context, values ...interface{
 	var res0 *gorm.Association
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Association.Append"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Association.Append", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Association.Append"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Association.Append", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -162,12 +163,12 @@ func (w GORMAssociationWrapper) Clear(ctx context.Context) GORMAssociationWrappe
 	var res0 *gorm.Association
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Association.Clear"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Association.Clear", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Association.Clear"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Association.Clear", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -209,12 +210,12 @@ func (w GORMAssociationWrapper) Delete(ctx context.Context, values ...interface{
 	var res0 *gorm.Association
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Association.Delete"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Association.Delete", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Association.Delete"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Association.Delete", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -251,12 +252,12 @@ func (w GORMAssociationWrapper) Find(ctx context.Context, value interface{}) GOR
 	var res0 *gorm.Association
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Association.Find"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Association.Find", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Association.Find"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Association.Find", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -293,12 +294,12 @@ func (w GORMAssociationWrapper) Replace(ctx context.Context, values ...interface
 	var res0 *gorm.Association
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Association.Replace"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Association.Replace", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Association.Replace"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Association.Replace", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -340,12 +341,12 @@ func (w GORMDBWrapper) AddForeignKey(ctx context.Context, field string, dest str
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.AddForeignKey"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.AddForeignKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.AddForeignKey"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.AddForeignKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -382,12 +383,12 @@ func (w GORMDBWrapper) AddIndex(ctx context.Context, indexName string, columns .
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.AddIndex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.AddIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.AddIndex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.AddIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -424,12 +425,12 @@ func (w GORMDBWrapper) AddUniqueIndex(ctx context.Context, indexName string, col
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.AddUniqueIndex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.AddUniqueIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.AddUniqueIndex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.AddUniqueIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -466,12 +467,12 @@ func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBW
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Assign"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Assign", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Assign"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Assign", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -508,12 +509,12 @@ func (w GORMDBWrapper) Association(ctx context.Context, column string) GORMAssoc
 	var res0 *gorm.Association
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Association"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Association", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Association"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Association", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -550,12 +551,12 @@ func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWr
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Attrs"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Attrs", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Attrs"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Attrs", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -592,12 +593,12 @@ func (w GORMDBWrapper) AutoMigrate(ctx context.Context, values ...interface{}) G
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.AutoMigrate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.AutoMigrate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.AutoMigrate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.AutoMigrate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -634,12 +635,12 @@ func (w GORMDBWrapper) Begin(ctx context.Context) GORMDBWrapper {
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Begin"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Begin", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Begin"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Begin", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -676,12 +677,12 @@ func (w GORMDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) GORMDBW
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.BeginTx"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.BeginTx", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.BeginTx"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.BeginTx", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -718,12 +719,12 @@ func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMD
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.BlockGlobalUpdate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.BlockGlobalUpdate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.BlockGlobalUpdate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.BlockGlobalUpdate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -765,12 +766,12 @@ func (w GORMDBWrapper) Close(ctx context.Context) error {
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Close"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Close", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Close"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Close", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -807,12 +808,12 @@ func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Commit"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Commit", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Commit"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Commit", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -854,12 +855,12 @@ func (w GORMDBWrapper) Count(ctx context.Context, value interface{}) GORMDBWrapp
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Count"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Count", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Count"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Count", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -896,12 +897,12 @@ func (w GORMDBWrapper) Create(ctx context.Context, value interface{}) GORMDBWrap
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Create"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Create", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Create"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Create", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -938,12 +939,12 @@ func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) G
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.CreateTable"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.CreateTable", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.CreateTable"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.CreateTable", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -985,12 +986,12 @@ func (w GORMDBWrapper) Debug(ctx context.Context) GORMDBWrapper {
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Debug"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Debug", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Debug"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Debug", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1027,12 +1028,12 @@ func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...i
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Delete"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Delete", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Delete"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Delete", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1074,12 +1075,12 @@ func (w GORMDBWrapper) DropColumn(ctx context.Context, column string) GORMDBWrap
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.DropColumn"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.DropColumn", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.DropColumn"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.DropColumn", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1116,12 +1117,12 @@ func (w GORMDBWrapper) DropTable(ctx context.Context, values ...interface{}) GOR
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.DropTable"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.DropTable", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.DropTable"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.DropTable", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1158,12 +1159,12 @@ func (w GORMDBWrapper) DropTableIfExists(ctx context.Context, values ...interfac
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.DropTableIfExists"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.DropTableIfExists", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.DropTableIfExists"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.DropTableIfExists", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1200,12 +1201,12 @@ func (w GORMDBWrapper) Exec(ctx context.Context, sql string, values ...interface
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Exec"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Exec", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Exec"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Exec", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1242,12 +1243,12 @@ func (w GORMDBWrapper) Find(ctx context.Context, out interface{}, where ...inter
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Find"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Find", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Find"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Find", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1284,12 +1285,12 @@ func (w GORMDBWrapper) First(ctx context.Context, out interface{}, where ...inte
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.First"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.First", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.First"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.First", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1326,12 +1327,12 @@ func (w GORMDBWrapper) FirstOrCreate(ctx context.Context, out interface{}, where
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.FirstOrCreate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.FirstOrCreate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.FirstOrCreate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.FirstOrCreate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1368,12 +1369,12 @@ func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where .
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.FirstOrInit"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.FirstOrInit", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.FirstOrInit"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.FirstOrInit", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1420,12 +1421,12 @@ func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Group"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Group", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Group"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Group", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1472,12 +1473,12 @@ func (w GORMDBWrapper) Having(ctx context.Context, query interface{}, values ...
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Having"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Having", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Having"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Having", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1514,12 +1515,12 @@ func (w GORMDBWrapper) InstantSet(ctx context.Context, name string, value interf
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.InstantSet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.InstantSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.InstantSet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.InstantSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1556,12 +1557,12 @@ func (w GORMDBWrapper) Joins(ctx context.Context, query string, args ...interfac
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Joins"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Joins", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Joins"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Joins", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1598,12 +1599,12 @@ func (w GORMDBWrapper) Last(ctx context.Context, out interface{}, where ...inter
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Last"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Last", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Last"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Last", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1640,12 +1641,12 @@ func (w GORMDBWrapper) Limit(ctx context.Context, limit interface{}) GORMDBWrapp
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Limit"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Limit", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Limit"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Limit", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1682,12 +1683,12 @@ func (w GORMDBWrapper) LogMode(ctx context.Context, enable bool) GORMDBWrapper {
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.LogMode"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.LogMode", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.LogMode"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.LogMode", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1724,12 +1725,12 @@ func (w GORMDBWrapper) Model(ctx context.Context, value interface{}) GORMDBWrapp
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Model"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Model", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Model"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Model", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1766,12 +1767,12 @@ func (w GORMDBWrapper) ModifyColumn(ctx context.Context, column string, typ stri
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.ModifyColumn"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.ModifyColumn", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.ModifyColumn"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.ModifyColumn", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1808,12 +1809,12 @@ func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.New"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.New", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.New"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.New", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1860,12 +1861,12 @@ func (w GORMDBWrapper) Not(ctx context.Context, query interface{}, args ...inter
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Not"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Not", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Not"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Not", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1902,12 +1903,12 @@ func (w GORMDBWrapper) Offset(ctx context.Context, offset interface{}) GORMDBWra
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Offset"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Offset", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Offset"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Offset", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1944,12 +1945,12 @@ func (w GORMDBWrapper) Omit(ctx context.Context, columns ...string) GORMDBWrappe
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Omit"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Omit", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Omit"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Omit", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1986,12 +1987,12 @@ func (w GORMDBWrapper) Or(ctx context.Context, query interface{}, args ...interf
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Or"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Or", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Or"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Or", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2028,12 +2029,12 @@ func (w GORMDBWrapper) Order(ctx context.Context, value interface{}, reorder ...
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Order"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Order", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Order"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Order", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2070,12 +2071,12 @@ func (w GORMDBWrapper) Pluck(ctx context.Context, column string, value interface
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Pluck"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Pluck", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Pluck"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Pluck", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2112,12 +2113,12 @@ func (w GORMDBWrapper) Preload(ctx context.Context, column string, conditions ..
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Preload"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Preload", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Preload"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Preload", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2154,12 +2155,12 @@ func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrap
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Preloads"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Preloads", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Preloads"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Preloads", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2201,12 +2202,12 @@ func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Raw"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Raw", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Raw"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Raw", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2248,12 +2249,12 @@ func (w GORMDBWrapper) Related(ctx context.Context, value interface{}, foreignKe
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Related"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Related", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Related"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Related", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2290,12 +2291,12 @@ func (w GORMDBWrapper) RemoveForeignKey(ctx context.Context, field string, dest 
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.RemoveForeignKey"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.RemoveForeignKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.RemoveForeignKey"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.RemoveForeignKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2332,12 +2333,12 @@ func (w GORMDBWrapper) RemoveIndex(ctx context.Context, indexName string) GORMDB
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.RemoveIndex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.RemoveIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.RemoveIndex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.RemoveIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2374,12 +2375,12 @@ func (w GORMDBWrapper) Rollback(ctx context.Context) GORMDBWrapper {
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Rollback"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Rollback", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Rollback"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Rollback", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2416,12 +2417,12 @@ func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrappe
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.RollbackUnlessCommitted"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.RollbackUnlessCommitted", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.RollbackUnlessCommitted"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.RollbackUnlessCommitted", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2464,12 +2465,12 @@ func (w GORMDBWrapper) Rows(ctx context.Context) (*sql.Rows, error) {
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Rows"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Rows", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Rows"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Rows", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2506,12 +2507,12 @@ func (w GORMDBWrapper) Save(ctx context.Context, value interface{}) GORMDBWrappe
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Save"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Save", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Save"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Save", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2548,12 +2549,12 @@ func (w GORMDBWrapper) Scan(ctx context.Context, dest interface{}) GORMDBWrapper
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Scan"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Scan", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Scan"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Scan", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2590,12 +2591,12 @@ func (w GORMDBWrapper) ScanRows(ctx context.Context, rows *sql.Rows, result inte
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.ScanRows"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.ScanRows", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.ScanRows"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.ScanRows", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2632,12 +2633,12 @@ func (w GORMDBWrapper) Scopes(ctx context.Context, funcs ...func(*gorm.DB) *gorm
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Scopes"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Scopes", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Scopes"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Scopes", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2674,12 +2675,12 @@ func (w GORMDBWrapper) Select(ctx context.Context, query interface{}, args ...in
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Select"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Select", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Select"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Select", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2716,12 +2717,12 @@ func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) 
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Set"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Set", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Set"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Set", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2762,12 +2763,12 @@ func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride f
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.SetNowFuncOverride"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.SetNowFuncOverride", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.SetNowFuncOverride"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.SetNowFuncOverride", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2813,12 +2814,12 @@ func (w GORMDBWrapper) Table(ctx context.Context, name string) GORMDBWrapper {
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Table"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Table", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Table"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Table", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2855,12 +2856,12 @@ func (w GORMDBWrapper) Take(ctx context.Context, out interface{}, where ...inter
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Take"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Take", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Take"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Take", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2897,12 +2898,12 @@ func (w GORMDBWrapper) Transaction(ctx context.Context, fc func(tx *gorm.DB) err
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Transaction"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Transaction", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Transaction"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Transaction", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2939,12 +2940,12 @@ func (w GORMDBWrapper) Unscoped(ctx context.Context) GORMDBWrapper {
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Unscoped"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Unscoped", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Unscoped"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Unscoped", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2981,12 +2982,12 @@ func (w GORMDBWrapper) Update(ctx context.Context, attrs ...interface{}) GORMDBW
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Update"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Update", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Update"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Update", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3023,12 +3024,12 @@ func (w GORMDBWrapper) UpdateColumn(ctx context.Context, attrs ...interface{}) G
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.UpdateColumn"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.UpdateColumn", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.UpdateColumn"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.UpdateColumn", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3065,12 +3066,12 @@ func (w GORMDBWrapper) UpdateColumns(ctx context.Context, values interface{}) GO
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.UpdateColumns"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.UpdateColumns", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.UpdateColumns"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.UpdateColumns", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3107,12 +3108,12 @@ func (w GORMDBWrapper) Updates(ctx context.Context, values interface{}, ignorePr
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Updates"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Updates", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Updates"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Updates", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3149,12 +3150,12 @@ func (w GORMDBWrapper) Where(ctx context.Context, query interface{}, args ...int
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "DB.Where"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.DB.Where", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "DB.Where"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Where", w.options.Name)); err != nil {
 				return err
 			}
 		}

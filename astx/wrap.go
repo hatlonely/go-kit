@@ -646,12 +646,12 @@ const WrapperFunctionBodyWithoutErrorTpl = `
 {{- end}}
 {{- if .Rule.RateLimiter}}
 	if w.rateLimiter != nil {
-		_ = w.rateLimiter.Wait(ctx, "{{.Class}}.{{.Function.Name}}")
+		_ = w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.{{.Class}}.{{.Function.Name}}", w.options.Name))
 	}
 {{- end}}
 {{- if .Rule.ParallelController}}
 	if w.parallelController != nil {
-		_ = w.parallelController.GetToken(ctx, "{{.Class}}.{{.Function.Name}}")
+		_ = w.parallelController.GetToken(ctx, fmt.Sprintf("%s.{{.Class}}.{{.Function.Name}}", w.options.Name))
 	}
 {{- end}}
 {{- if .Rule.Trace}}
@@ -695,14 +695,14 @@ const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 	{{.Function.DeclareVariables}}
 {{- if .Rule.RateLimiter}}
 	if w.rateLimiter != nil {
-		if {{.Function.LastResult}} = w.rateLimiter.Wait(ctx, "{{.Class}}.{{.Function.Name}}"); {{.Function.LastResult}} != nil {
+		if {{.Function.LastResult}} = w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.{{.Class}}.{{.Function.Name}}", w.options.Name)); {{.Function.LastResult}} != nil {
 			return {{.Function.ReturnList}}
 		}
 	}
 {{- end}}
 {{- if .Rule.ParallelController}}
 	if w.parallelController != nil {
-		if {{.Function.LastResult}} = w.parallelController.GetToken(ctx, "{{.Class}}.{{.Function.Name}}"); {{.Function.LastResult}} != nil {
+		if {{.Function.LastResult}} = w.parallelController.GetToken(ctx, fmt.Sprintf("%s.{{.Class}}.{{.Function.Name}}", w.options.Name)); {{.Function.LastResult}} != nil {
 			return {{.Function.ReturnList}}
 		}
 	}
@@ -747,14 +747,14 @@ const WrapperFunctionBodyWithErrorWithRetryTpl = `
 	{{- if or .Function.IsReturnError}}err{{else}}_{{- end}} = w.retry.Do(func() error {
 {{- if .Rule.RateLimiter}}
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "{{.Class}}.{{.Function.Name}}"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.{{.Class}}.{{.Function.Name}}", w.options.Name)); err != nil {
 				return err
 			}
 		}
 {{- end}}
 {{- if .Rule.ParallelController}}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "{{.Class}}.{{.Function.Name}}"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.{{.Class}}.{{.Function.Name}}", w.options.Name)); err != nil {
 				return err
 			}
 		}

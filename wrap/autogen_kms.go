@@ -3,6 +3,7 @@ package wrap
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/kms"
@@ -106,12 +107,12 @@ func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.A
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.AsymmetricDecrypt"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.AsymmetricDecrypt", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.AsymmetricDecrypt"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AsymmetricDecrypt", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -159,12 +160,12 @@ func (w *KMSClientWrapper) AsymmetricEncrypt(ctx context.Context, request *kms.A
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.AsymmetricEncrypt"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.AsymmetricEncrypt", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.AsymmetricEncrypt"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AsymmetricEncrypt", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -212,12 +213,12 @@ func (w *KMSClientWrapper) AsymmetricSign(ctx context.Context, request *kms.Asym
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.AsymmetricSign"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.AsymmetricSign", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.AsymmetricSign"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AsymmetricSign", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -265,12 +266,12 @@ func (w *KMSClientWrapper) AsymmetricVerify(ctx context.Context, request *kms.As
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.AsymmetricVerify"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.AsymmetricVerify", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.AsymmetricVerify"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AsymmetricVerify", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -318,12 +319,12 @@ func (w *KMSClientWrapper) CancelKeyDeletion(ctx context.Context, request *kms.C
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.CancelKeyDeletion"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CancelKeyDeletion", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.CancelKeyDeletion"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CancelKeyDeletion", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -371,12 +372,12 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecrypt(ctx context.Context, req
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.CertificatePrivateKeyDecrypt"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CertificatePrivateKeyDecrypt", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.CertificatePrivateKeyDecrypt"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CertificatePrivateKeyDecrypt", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -424,12 +425,12 @@ func (w *KMSClientWrapper) CertificatePrivateKeySign(ctx context.Context, reques
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.CertificatePrivateKeySign"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CertificatePrivateKeySign", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.CertificatePrivateKeySign"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CertificatePrivateKeySign", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -477,12 +478,12 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncrypt(ctx context.Context, requ
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.CertificatePublicKeyEncrypt"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CertificatePublicKeyEncrypt", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.CertificatePublicKeyEncrypt"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CertificatePublicKeyEncrypt", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -530,12 +531,12 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerify(ctx context.Context, reque
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.CertificatePublicKeyVerify"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CertificatePublicKeyVerify", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.CertificatePublicKeyVerify"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CertificatePublicKeyVerify", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -583,12 +584,12 @@ func (w *KMSClientWrapper) CreateAlias(ctx context.Context, request *kms.CreateA
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.CreateAlias"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CreateAlias", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.CreateAlias"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateAlias", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -636,12 +637,12 @@ func (w *KMSClientWrapper) CreateCertificate(ctx context.Context, request *kms.C
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.CreateCertificate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CreateCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.CreateCertificate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -689,12 +690,12 @@ func (w *KMSClientWrapper) CreateKey(ctx context.Context, request *kms.CreateKey
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.CreateKey"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CreateKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.CreateKey"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -732,12 +733,12 @@ func (w *KMSClientWrapper) CreateKeyVersion(ctx context.Context, request *kms.Cr
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.CreateKeyVersion"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CreateKeyVersion", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.CreateKeyVersion"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateKeyVersion", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -795,12 +796,12 @@ func (w *KMSClientWrapper) CreateSecret(ctx context.Context, request *kms.Create
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.CreateSecret"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CreateSecret", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.CreateSecret"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateSecret", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -848,12 +849,12 @@ func (w *KMSClientWrapper) Decrypt(ctx context.Context, request *kms.DecryptRequ
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Decrypt"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Decrypt", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Decrypt"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Decrypt", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -901,12 +902,12 @@ func (w *KMSClientWrapper) DeleteAlias(ctx context.Context, request *kms.DeleteA
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DeleteAlias"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteAlias", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DeleteAlias"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteAlias", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -954,12 +955,12 @@ func (w *KMSClientWrapper) DeleteCertificate(ctx context.Context, request *kms.D
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DeleteCertificate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DeleteCertificate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1007,12 +1008,12 @@ func (w *KMSClientWrapper) DeleteKeyMaterial(ctx context.Context, request *kms.D
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DeleteKeyMaterial"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteKeyMaterial", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DeleteKeyMaterial"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteKeyMaterial", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1060,12 +1061,12 @@ func (w *KMSClientWrapper) DeleteSecret(ctx context.Context, request *kms.Delete
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DeleteSecret"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteSecret", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DeleteSecret"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteSecret", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1113,12 +1114,12 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatus(ctx context.Context, request
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DescribeAccountKmsStatus"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DescribeAccountKmsStatus", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DescribeAccountKmsStatus"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DescribeAccountKmsStatus", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1166,12 +1167,12 @@ func (w *KMSClientWrapper) DescribeCertificate(ctx context.Context, request *kms
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DescribeCertificate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DescribeCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DescribeCertificate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DescribeCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1219,12 +1220,12 @@ func (w *KMSClientWrapper) DescribeKey(ctx context.Context, request *kms.Describ
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DescribeKey"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DescribeKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DescribeKey"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DescribeKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1262,12 +1263,12 @@ func (w *KMSClientWrapper) DescribeKeyVersion(ctx context.Context, request *kms.
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DescribeKeyVersion"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DescribeKeyVersion", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DescribeKeyVersion"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DescribeKeyVersion", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1325,12 +1326,12 @@ func (w *KMSClientWrapper) DescribeRegions(ctx context.Context, request *kms.Des
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DescribeRegions"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DescribeRegions", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DescribeRegions"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DescribeRegions", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1378,12 +1379,12 @@ func (w *KMSClientWrapper) DescribeSecret(ctx context.Context, request *kms.Desc
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DescribeSecret"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DescribeSecret", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DescribeSecret"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DescribeSecret", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1431,12 +1432,12 @@ func (w *KMSClientWrapper) DescribeService(ctx context.Context, request *kms.Des
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DescribeService"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DescribeService", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DescribeService"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DescribeService", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1484,12 +1485,12 @@ func (w *KMSClientWrapper) DisableKey(ctx context.Context, request *kms.DisableK
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DisableKey"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DisableKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DisableKey"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DisableKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1537,12 +1538,12 @@ func (w *KMSClientWrapper) EnableKey(ctx context.Context, request *kms.EnableKey
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.EnableKey"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.EnableKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.EnableKey"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.EnableKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1590,12 +1591,12 @@ func (w *KMSClientWrapper) Encrypt(ctx context.Context, request *kms.EncryptRequ
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Encrypt"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Encrypt", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Encrypt"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Encrypt", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1643,12 +1644,12 @@ func (w *KMSClientWrapper) ExportCertificate(ctx context.Context, request *kms.E
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ExportCertificate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ExportCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ExportCertificate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ExportCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1696,12 +1697,12 @@ func (w *KMSClientWrapper) ExportDataKey(ctx context.Context, request *kms.Expor
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ExportDataKey"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ExportDataKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ExportDataKey"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ExportDataKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1749,12 +1750,12 @@ func (w *KMSClientWrapper) GenerateAndExportDataKey(ctx context.Context, request
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GenerateAndExportDataKey"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GenerateAndExportDataKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GenerateAndExportDataKey"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GenerateAndExportDataKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1802,12 +1803,12 @@ func (w *KMSClientWrapper) GenerateDataKey(ctx context.Context, request *kms.Gen
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GenerateDataKey"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GenerateDataKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GenerateDataKey"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GenerateDataKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1855,12 +1856,12 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintext(ctx context.Context, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GenerateDataKeyWithoutPlaintext"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GenerateDataKeyWithoutPlaintext", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GenerateDataKeyWithoutPlaintext"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GenerateDataKeyWithoutPlaintext", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1908,12 +1909,12 @@ func (w *KMSClientWrapper) GetCertificate(ctx context.Context, request *kms.GetC
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetCertificate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetCertificate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1961,12 +1962,12 @@ func (w *KMSClientWrapper) GetParametersForImport(ctx context.Context, request *
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetParametersForImport"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetParametersForImport", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetParametersForImport"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetParametersForImport", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2014,12 +2015,12 @@ func (w *KMSClientWrapper) GetPublicKey(ctx context.Context, request *kms.GetPub
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetPublicKey"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetPublicKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetPublicKey"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetPublicKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2067,12 +2068,12 @@ func (w *KMSClientWrapper) GetRandomPassword(ctx context.Context, request *kms.G
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetRandomPassword"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetRandomPassword", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetRandomPassword"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetRandomPassword", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2120,12 +2121,12 @@ func (w *KMSClientWrapper) GetSecretValue(ctx context.Context, request *kms.GetS
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetSecretValue"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetSecretValue", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetSecretValue"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetSecretValue", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2173,12 +2174,12 @@ func (w *KMSClientWrapper) ImportCertificate(ctx context.Context, request *kms.I
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ImportCertificate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ImportCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ImportCertificate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ImportCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2226,12 +2227,12 @@ func (w *KMSClientWrapper) ImportEncryptionCertificate(ctx context.Context, requ
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ImportEncryptionCertificate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ImportEncryptionCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ImportEncryptionCertificate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ImportEncryptionCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2279,12 +2280,12 @@ func (w *KMSClientWrapper) ImportKeyMaterial(ctx context.Context, request *kms.I
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ImportKeyMaterial"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ImportKeyMaterial", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ImportKeyMaterial"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ImportKeyMaterial", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2332,12 +2333,12 @@ func (w *KMSClientWrapper) ListAliases(ctx context.Context, request *kms.ListAli
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ListAliases"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListAliases", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ListAliases"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListAliases", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2375,12 +2376,12 @@ func (w *KMSClientWrapper) ListAliasesByKeyId(ctx context.Context, request *kms.
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ListAliasesByKeyId"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListAliasesByKeyId", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ListAliasesByKeyId"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListAliasesByKeyId", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2438,12 +2439,12 @@ func (w *KMSClientWrapper) ListCertificates(ctx context.Context, request *kms.Li
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ListCertificates"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListCertificates", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ListCertificates"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListCertificates", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2491,12 +2492,12 @@ func (w *KMSClientWrapper) ListKeyVersions(ctx context.Context, request *kms.Lis
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ListKeyVersions"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListKeyVersions", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ListKeyVersions"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListKeyVersions", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2544,12 +2545,12 @@ func (w *KMSClientWrapper) ListKeys(ctx context.Context, request *kms.ListKeysRe
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ListKeys"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListKeys", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ListKeys"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListKeys", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2597,12 +2598,12 @@ func (w *KMSClientWrapper) ListResourceTags(ctx context.Context, request *kms.Li
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ListResourceTags"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListResourceTags", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ListResourceTags"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListResourceTags", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2650,12 +2651,12 @@ func (w *KMSClientWrapper) ListSecretVersionIds(ctx context.Context, request *km
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ListSecretVersionIds"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListSecretVersionIds", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ListSecretVersionIds"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListSecretVersionIds", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2703,12 +2704,12 @@ func (w *KMSClientWrapper) ListSecrets(ctx context.Context, request *kms.ListSec
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ListSecrets"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListSecrets", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ListSecrets"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListSecrets", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2756,12 +2757,12 @@ func (w *KMSClientWrapper) OpenKmsService(ctx context.Context, request *kms.Open
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.OpenKmsService"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.OpenKmsService", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.OpenKmsService"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.OpenKmsService", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2809,12 +2810,12 @@ func (w *KMSClientWrapper) PutSecretValue(ctx context.Context, request *kms.PutS
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.PutSecretValue"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.PutSecretValue", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.PutSecretValue"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PutSecretValue", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2862,12 +2863,12 @@ func (w *KMSClientWrapper) ReEncrypt(ctx context.Context, request *kms.ReEncrypt
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ReEncrypt"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ReEncrypt", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ReEncrypt"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ReEncrypt", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2915,12 +2916,12 @@ func (w *KMSClientWrapper) RestoreSecret(ctx context.Context, request *kms.Resto
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.RestoreSecret"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.RestoreSecret", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.RestoreSecret"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RestoreSecret", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2968,12 +2969,12 @@ func (w *KMSClientWrapper) RotateSecret(ctx context.Context, request *kms.Rotate
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.RotateSecret"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.RotateSecret", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.RotateSecret"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RotateSecret", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3021,12 +3022,12 @@ func (w *KMSClientWrapper) ScheduleKeyDeletion(ctx context.Context, request *kms
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ScheduleKeyDeletion"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ScheduleKeyDeletion", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ScheduleKeyDeletion"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ScheduleKeyDeletion", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3074,12 +3075,12 @@ func (w *KMSClientWrapper) TagResource(ctx context.Context, request *kms.TagReso
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.TagResource"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.TagResource", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.TagResource"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.TagResource", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3127,12 +3128,12 @@ func (w *KMSClientWrapper) UntagResource(ctx context.Context, request *kms.Untag
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.UntagResource"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UntagResource", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.UntagResource"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UntagResource", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3180,12 +3181,12 @@ func (w *KMSClientWrapper) UpdateAlias(ctx context.Context, request *kms.UpdateA
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.UpdateAlias"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateAlias", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.UpdateAlias"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateAlias", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3233,12 +3234,12 @@ func (w *KMSClientWrapper) UpdateCertificateStatus(ctx context.Context, request 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.UpdateCertificateStatus"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateCertificateStatus", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.UpdateCertificateStatus"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateCertificateStatus", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3286,12 +3287,12 @@ func (w *KMSClientWrapper) UpdateKeyDescription(ctx context.Context, request *km
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.UpdateKeyDescription"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateKeyDescription", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.UpdateKeyDescription"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateKeyDescription", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3339,12 +3340,12 @@ func (w *KMSClientWrapper) UpdateRotationPolicy(ctx context.Context, request *km
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.UpdateRotationPolicy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateRotationPolicy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.UpdateRotationPolicy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateRotationPolicy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3392,12 +3393,12 @@ func (w *KMSClientWrapper) UpdateSecret(ctx context.Context, request *kms.Update
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.UpdateSecret"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateSecret", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.UpdateSecret"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateSecret", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3435,12 +3436,12 @@ func (w *KMSClientWrapper) UpdateSecretRotationPolicy(ctx context.Context, reque
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.UpdateSecretRotationPolicy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateSecretRotationPolicy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.UpdateSecretRotationPolicy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateSecretRotationPolicy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3488,12 +3489,12 @@ func (w *KMSClientWrapper) UpdateSecretVersionStage(ctx context.Context, request
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.UpdateSecretVersionStage"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateSecretVersionStage", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.UpdateSecretVersionStage"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateSecretVersionStage", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3551,12 +3552,12 @@ func (w *KMSClientWrapper) UploadCertificate(ctx context.Context, request *kms.U
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.UploadCertificate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UploadCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.UploadCertificate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UploadCertificate", w.options.Name)); err != nil {
 				return err
 			}
 		}

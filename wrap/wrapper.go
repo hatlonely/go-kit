@@ -7,6 +7,7 @@ import (
 )
 
 type WrapperOptions struct {
+	Name          string
 	EnableTrace   bool
 	EnableMetric  bool
 	EnableHystrix bool

@@ -4,6 +4,7 @@ package wrap
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -122,12 +123,12 @@ func (w *OSSBucketWrapper) AbortMultipartUpload(ctx context.Context, imur oss.In
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.AbortMultipartUpload"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.AbortMultipartUpload", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.AbortMultipartUpload"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.AbortMultipartUpload", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -165,12 +166,12 @@ func (w *OSSBucketWrapper) AppendObject(ctx context.Context, objectKey string, r
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.AppendObject"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.AppendObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.AppendObject"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.AppendObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -208,12 +209,12 @@ func (w *OSSBucketWrapper) CompleteMultipartUpload(ctx context.Context, imur oss
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.CompleteMultipartUpload"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.CompleteMultipartUpload", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.CompleteMultipartUpload"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CompleteMultipartUpload", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -250,12 +251,12 @@ func (w *OSSBucketWrapper) CopyFile(ctx context.Context, srcBucketName string, s
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.CopyFile"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.CopyFile", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.CopyFile"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CopyFile", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -293,12 +294,12 @@ func (w *OSSBucketWrapper) CopyObject(ctx context.Context, srcObjectKey string, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.CopyObject"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.CopyObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.CopyObject"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CopyObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -336,12 +337,12 @@ func (w *OSSBucketWrapper) CopyObjectFrom(ctx context.Context, srcBucketName str
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.CopyObjectFrom"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.CopyObjectFrom", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.CopyObjectFrom"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CopyObjectFrom", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -379,12 +380,12 @@ func (w *OSSBucketWrapper) CopyObjectTo(ctx context.Context, destBucketName stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.CopyObjectTo"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.CopyObjectTo", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.CopyObjectTo"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CopyObjectTo", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -422,12 +423,12 @@ func (w *OSSBucketWrapper) CreateLiveChannel(ctx context.Context, channelName st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.CreateLiveChannel"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.CreateLiveChannel", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.CreateLiveChannel"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CreateLiveChannel", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -465,12 +466,12 @@ func (w *OSSBucketWrapper) CreateSelectCsvObjectMeta(ctx context.Context, key st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.CreateSelectCsvObjectMeta"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.CreateSelectCsvObjectMeta", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.CreateSelectCsvObjectMeta"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CreateSelectCsvObjectMeta", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -508,12 +509,12 @@ func (w *OSSBucketWrapper) CreateSelectJsonObjectMeta(ctx context.Context, key s
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.CreateSelectJsonObjectMeta"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.CreateSelectJsonObjectMeta", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.CreateSelectJsonObjectMeta"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CreateSelectJsonObjectMeta", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -550,12 +551,12 @@ func (w *OSSBucketWrapper) DeleteLiveChannel(ctx context.Context, channelName st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.DeleteLiveChannel"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.DeleteLiveChannel", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.DeleteLiveChannel"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DeleteLiveChannel", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -592,12 +593,12 @@ func (w *OSSBucketWrapper) DeleteObject(ctx context.Context, objectKey string, o
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.DeleteObject"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.DeleteObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.DeleteObject"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DeleteObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -634,12 +635,12 @@ func (w *OSSBucketWrapper) DeleteObjectTagging(ctx context.Context, objectKey st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.DeleteObjectTagging"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.DeleteObjectTagging", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.DeleteObjectTagging"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DeleteObjectTagging", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -677,12 +678,12 @@ func (w *OSSBucketWrapper) DeleteObjectVersions(ctx context.Context, objectVersi
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.DeleteObjectVersions"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.DeleteObjectVersions", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.DeleteObjectVersions"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DeleteObjectVersions", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -720,12 +721,12 @@ func (w *OSSBucketWrapper) DeleteObjects(ctx context.Context, objectKeys []strin
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.DeleteObjects"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.DeleteObjects", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.DeleteObjects"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DeleteObjects", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -763,12 +764,12 @@ func (w *OSSBucketWrapper) Do(ctx context.Context, method string, objectName str
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -806,12 +807,12 @@ func (w *OSSBucketWrapper) DoAppendObject(ctx context.Context, request *oss.Appe
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.DoAppendObject"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.DoAppendObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.DoAppendObject"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DoAppendObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -849,12 +850,12 @@ func (w *OSSBucketWrapper) DoGetObject(ctx context.Context, request *oss.GetObje
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.DoGetObject"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.DoGetObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.DoGetObject"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DoGetObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -892,12 +893,12 @@ func (w *OSSBucketWrapper) DoGetObjectWithURL(ctx context.Context, signedURL str
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.DoGetObjectWithURL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.DoGetObjectWithURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.DoGetObjectWithURL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DoGetObjectWithURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -935,12 +936,12 @@ func (w *OSSBucketWrapper) DoPostSelectObject(ctx context.Context, key string, p
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.DoPostSelectObject"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.DoPostSelectObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.DoPostSelectObject"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DoPostSelectObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -978,12 +979,12 @@ func (w *OSSBucketWrapper) DoPutObject(ctx context.Context, request *oss.PutObje
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.DoPutObject"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.DoPutObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.DoPutObject"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DoPutObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1021,12 +1022,12 @@ func (w *OSSBucketWrapper) DoPutObjectWithURL(ctx context.Context, signedURL str
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.DoPutObjectWithURL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.DoPutObjectWithURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.DoPutObjectWithURL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DoPutObjectWithURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1064,12 +1065,12 @@ func (w *OSSBucketWrapper) DoUploadPart(ctx context.Context, request *oss.Upload
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.DoUploadPart"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.DoUploadPart", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.DoUploadPart"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DoUploadPart", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1106,12 +1107,12 @@ func (w *OSSBucketWrapper) DownloadFile(ctx context.Context, objectKey string, f
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.DownloadFile"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.DownloadFile", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.DownloadFile"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DownloadFile", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1154,12 +1155,12 @@ func (w *OSSBucketWrapper) GetLiveChannelHistory(ctx context.Context, channelNam
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.GetLiveChannelHistory"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelHistory", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.GetLiveChannelHistory"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelHistory", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1197,12 +1198,12 @@ func (w *OSSBucketWrapper) GetLiveChannelInfo(ctx context.Context, channelName s
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.GetLiveChannelInfo"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.GetLiveChannelInfo"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1240,12 +1241,12 @@ func (w *OSSBucketWrapper) GetLiveChannelStat(ctx context.Context, channelName s
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.GetLiveChannelStat"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelStat", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.GetLiveChannelStat"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelStat", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1283,12 +1284,12 @@ func (w *OSSBucketWrapper) GetObject(ctx context.Context, objectKey string, opti
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.GetObject"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.GetObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.GetObject"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1326,12 +1327,12 @@ func (w *OSSBucketWrapper) GetObjectACL(ctx context.Context, objectKey string, o
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.GetObjectACL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.GetObjectACL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.GetObjectACL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObjectACL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1369,12 +1370,12 @@ func (w *OSSBucketWrapper) GetObjectDetailedMeta(ctx context.Context, objectKey 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.GetObjectDetailedMeta"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.GetObjectDetailedMeta", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.GetObjectDetailedMeta"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObjectDetailedMeta", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1412,12 +1413,12 @@ func (w *OSSBucketWrapper) GetObjectMeta(ctx context.Context, objectKey string, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.GetObjectMeta"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.GetObjectMeta", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.GetObjectMeta"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObjectMeta", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1455,12 +1456,12 @@ func (w *OSSBucketWrapper) GetObjectTagging(ctx context.Context, objectKey strin
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.GetObjectTagging"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.GetObjectTagging", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.GetObjectTagging"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObjectTagging", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1497,12 +1498,12 @@ func (w *OSSBucketWrapper) GetObjectToFile(ctx context.Context, objectKey string
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.GetObjectToFile"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.GetObjectToFile", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.GetObjectToFile"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObjectToFile", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1539,12 +1540,12 @@ func (w *OSSBucketWrapper) GetObjectToFileWithURL(ctx context.Context, signedURL
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.GetObjectToFileWithURL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.GetObjectToFileWithURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.GetObjectToFileWithURL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObjectToFileWithURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1582,12 +1583,12 @@ func (w *OSSBucketWrapper) GetObjectWithURL(ctx context.Context, signedURL strin
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.GetObjectWithURL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.GetObjectWithURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.GetObjectWithURL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObjectWithURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1625,12 +1626,12 @@ func (w *OSSBucketWrapper) GetSymlink(ctx context.Context, objectKey string, opt
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.GetSymlink"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.GetSymlink", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.GetSymlink"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetSymlink", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1668,12 +1669,12 @@ func (w *OSSBucketWrapper) GetVodPlaylist(ctx context.Context, channelName strin
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.GetVodPlaylist"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.GetVodPlaylist", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.GetVodPlaylist"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetVodPlaylist", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1711,12 +1712,12 @@ func (w *OSSBucketWrapper) InitiateMultipartUpload(ctx context.Context, objectKe
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.InitiateMultipartUpload"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.InitiateMultipartUpload", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.InitiateMultipartUpload"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.InitiateMultipartUpload", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1754,12 +1755,12 @@ func (w *OSSBucketWrapper) IsObjectExist(ctx context.Context, objectKey string, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.IsObjectExist"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.IsObjectExist", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.IsObjectExist"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.IsObjectExist", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1797,12 +1798,12 @@ func (w *OSSBucketWrapper) ListLiveChannel(ctx context.Context, options ...oss.O
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.ListLiveChannel"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.ListLiveChannel", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.ListLiveChannel"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.ListLiveChannel", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1840,12 +1841,12 @@ func (w *OSSBucketWrapper) ListMultipartUploads(ctx context.Context, options ...
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.ListMultipartUploads"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.ListMultipartUploads", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.ListMultipartUploads"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.ListMultipartUploads", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1883,12 +1884,12 @@ func (w *OSSBucketWrapper) ListObjectVersions(ctx context.Context, options ...os
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.ListObjectVersions"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.ListObjectVersions", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.ListObjectVersions"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.ListObjectVersions", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1926,12 +1927,12 @@ func (w *OSSBucketWrapper) ListObjects(ctx context.Context, options ...oss.Optio
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.ListObjects"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.ListObjects", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.ListObjects"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.ListObjects", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1969,12 +1970,12 @@ func (w *OSSBucketWrapper) ListObjectsV2(ctx context.Context, options ...oss.Opt
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.ListObjectsV2"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.ListObjectsV2", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.ListObjectsV2"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.ListObjectsV2", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2012,12 +2013,12 @@ func (w *OSSBucketWrapper) ListUploadedParts(ctx context.Context, imur oss.Initi
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.ListUploadedParts"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.ListUploadedParts", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.ListUploadedParts"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.ListUploadedParts", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2055,12 +2056,12 @@ func (w *OSSBucketWrapper) OptionsMethod(ctx context.Context, objectKey string, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.OptionsMethod"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.OptionsMethod", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.OptionsMethod"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.OptionsMethod", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2097,12 +2098,12 @@ func (w *OSSBucketWrapper) PostVodPlaylist(ctx context.Context, channelName stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.PostVodPlaylist"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.PostVodPlaylist", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.PostVodPlaylist"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PostVodPlaylist", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2140,12 +2141,12 @@ func (w *OSSBucketWrapper) ProcessObject(ctx context.Context, objectKey string, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.ProcessObject"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.ProcessObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.ProcessObject"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.ProcessObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2182,12 +2183,12 @@ func (w *OSSBucketWrapper) PutLiveChannelStatus(ctx context.Context, channelName
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.PutLiveChannelStatus"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.PutLiveChannelStatus", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.PutLiveChannelStatus"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PutLiveChannelStatus", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2224,12 +2225,12 @@ func (w *OSSBucketWrapper) PutObject(ctx context.Context, objectKey string, read
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.PutObject"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.PutObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.PutObject"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PutObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2266,12 +2267,12 @@ func (w *OSSBucketWrapper) PutObjectFromFile(ctx context.Context, objectKey stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.PutObjectFromFile"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.PutObjectFromFile", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.PutObjectFromFile"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PutObjectFromFile", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2308,12 +2309,12 @@ func (w *OSSBucketWrapper) PutObjectFromFileWithURL(ctx context.Context, signedU
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.PutObjectFromFileWithURL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.PutObjectFromFileWithURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.PutObjectFromFileWithURL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PutObjectFromFileWithURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2350,12 +2351,12 @@ func (w *OSSBucketWrapper) PutObjectTagging(ctx context.Context, objectKey strin
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.PutObjectTagging"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.PutObjectTagging", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.PutObjectTagging"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PutObjectTagging", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2392,12 +2393,12 @@ func (w *OSSBucketWrapper) PutObjectWithURL(ctx context.Context, signedURL strin
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.PutObjectWithURL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.PutObjectWithURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.PutObjectWithURL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PutObjectWithURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2434,12 +2435,12 @@ func (w *OSSBucketWrapper) PutSymlink(ctx context.Context, symObjectKey string, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.PutSymlink"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.PutSymlink", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.PutSymlink"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PutSymlink", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2476,12 +2477,12 @@ func (w *OSSBucketWrapper) RestoreObject(ctx context.Context, objectKey string, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.RestoreObject"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.RestoreObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.RestoreObject"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.RestoreObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2518,12 +2519,12 @@ func (w *OSSBucketWrapper) RestoreObjectDetail(ctx context.Context, objectKey st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.RestoreObjectDetail"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.RestoreObjectDetail", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.RestoreObjectDetail"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.RestoreObjectDetail", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2560,12 +2561,12 @@ func (w *OSSBucketWrapper) RestoreObjectXML(ctx context.Context, objectKey strin
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.RestoreObjectXML"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.RestoreObjectXML", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.RestoreObjectXML"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.RestoreObjectXML", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2603,12 +2604,12 @@ func (w *OSSBucketWrapper) SelectObject(ctx context.Context, key string, selectR
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.SelectObject"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.SelectObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.SelectObject"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.SelectObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2645,12 +2646,12 @@ func (w *OSSBucketWrapper) SelectObjectIntoFile(ctx context.Context, key string,
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.SelectObjectIntoFile"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.SelectObjectIntoFile", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.SelectObjectIntoFile"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.SelectObjectIntoFile", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2687,12 +2688,12 @@ func (w *OSSBucketWrapper) SetObjectACL(ctx context.Context, objectKey string, o
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.SetObjectACL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.SetObjectACL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.SetObjectACL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.SetObjectACL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2729,12 +2730,12 @@ func (w *OSSBucketWrapper) SetObjectMeta(ctx context.Context, objectKey string, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.SetObjectMeta"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.SetObjectMeta", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.SetObjectMeta"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.SetObjectMeta", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2772,12 +2773,12 @@ func (w *OSSBucketWrapper) SignRtmpURL(ctx context.Context, channelName string, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.SignRtmpURL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.SignRtmpURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.SignRtmpURL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.SignRtmpURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2815,12 +2816,12 @@ func (w *OSSBucketWrapper) SignURL(ctx context.Context, objectKey string, method
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.SignURL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.SignURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.SignURL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.SignURL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2857,12 +2858,12 @@ func (w *OSSBucketWrapper) UploadFile(ctx context.Context, objectKey string, fil
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.UploadFile"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.UploadFile", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.UploadFile"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.UploadFile", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2900,12 +2901,12 @@ func (w *OSSBucketWrapper) UploadPart(ctx context.Context, imur oss.InitiateMult
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.UploadPart"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.UploadPart", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.UploadPart"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.UploadPart", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2943,12 +2944,12 @@ func (w *OSSBucketWrapper) UploadPartCopy(ctx context.Context, imur oss.Initiate
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.UploadPartCopy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.UploadPartCopy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.UploadPartCopy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.UploadPartCopy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2986,12 +2987,12 @@ func (w *OSSBucketWrapper) UploadPartFromFile(ctx context.Context, imur oss.Init
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Bucket.UploadPartFromFile"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Bucket.UploadPartFromFile", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Bucket.UploadPartFromFile"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.UploadPartFromFile", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3028,12 +3029,12 @@ func (w *OSSClientWrapper) AbortBucketWorm(ctx context.Context, bucketName strin
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.AbortBucketWorm"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.AbortBucketWorm", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.AbortBucketWorm"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AbortBucketWorm", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3077,12 +3078,12 @@ func (w *OSSClientWrapper) CompleteBucketWorm(ctx context.Context, bucketName st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.CompleteBucketWorm"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CompleteBucketWorm", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.CompleteBucketWorm"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CompleteBucketWorm", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3119,12 +3120,12 @@ func (w *OSSClientWrapper) CreateBucket(ctx context.Context, bucketName string, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.CreateBucket"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CreateBucket", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.CreateBucket"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateBucket", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3161,12 +3162,12 @@ func (w *OSSClientWrapper) DeleteBucket(ctx context.Context, bucketName string, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DeleteBucket"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteBucket", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucket"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucket", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3203,12 +3204,12 @@ func (w *OSSClientWrapper) DeleteBucketCORS(ctx context.Context, bucketName stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DeleteBucketCORS"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteBucketCORS", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketCORS"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketCORS", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3245,12 +3246,12 @@ func (w *OSSClientWrapper) DeleteBucketEncryption(ctx context.Context, bucketNam
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DeleteBucketEncryption"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteBucketEncryption", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketEncryption"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketEncryption", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3287,12 +3288,12 @@ func (w *OSSClientWrapper) DeleteBucketInventory(ctx context.Context, bucketName
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DeleteBucketInventory"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteBucketInventory", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketInventory"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketInventory", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3329,12 +3330,12 @@ func (w *OSSClientWrapper) DeleteBucketLifecycle(ctx context.Context, bucketName
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DeleteBucketLifecycle"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteBucketLifecycle", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketLifecycle"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketLifecycle", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3371,12 +3372,12 @@ func (w *OSSClientWrapper) DeleteBucketLogging(ctx context.Context, bucketName s
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DeleteBucketLogging"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteBucketLogging", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketLogging"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketLogging", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3413,12 +3414,12 @@ func (w *OSSClientWrapper) DeleteBucketPolicy(ctx context.Context, bucketName st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DeleteBucketPolicy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteBucketPolicy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketPolicy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketPolicy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3455,12 +3456,12 @@ func (w *OSSClientWrapper) DeleteBucketQosInfo(ctx context.Context, bucketName s
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DeleteBucketQosInfo"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteBucketQosInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketQosInfo"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketQosInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3497,12 +3498,12 @@ func (w *OSSClientWrapper) DeleteBucketTagging(ctx context.Context, bucketName s
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DeleteBucketTagging"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteBucketTagging", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketTagging"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketTagging", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3539,12 +3540,12 @@ func (w *OSSClientWrapper) DeleteBucketWebsite(ctx context.Context, bucketName s
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DeleteBucketWebsite"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteBucketWebsite", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DeleteBucketWebsite"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketWebsite", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3581,12 +3582,12 @@ func (w *OSSClientWrapper) ExtendBucketWorm(ctx context.Context, bucketName stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ExtendBucketWorm"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ExtendBucketWorm", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ExtendBucketWorm"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ExtendBucketWorm", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3624,12 +3625,12 @@ func (w *OSSClientWrapper) GetBucketACL(ctx context.Context, bucketName string) 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketACL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketACL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketACL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketACL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3667,12 +3668,12 @@ func (w *OSSClientWrapper) GetBucketAsyncTask(ctx context.Context, bucketName st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketAsyncTask"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketAsyncTask", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketAsyncTask"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketAsyncTask", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3710,12 +3711,12 @@ func (w *OSSClientWrapper) GetBucketCORS(ctx context.Context, bucketName string)
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketCORS"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketCORS", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketCORS"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketCORS", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3753,12 +3754,12 @@ func (w *OSSClientWrapper) GetBucketEncryption(ctx context.Context, bucketName s
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketEncryption"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketEncryption", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketEncryption"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketEncryption", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3796,12 +3797,12 @@ func (w *OSSClientWrapper) GetBucketInfo(ctx context.Context, bucketName string,
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketInfo"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketInfo"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3839,12 +3840,12 @@ func (w *OSSClientWrapper) GetBucketInventory(ctx context.Context, bucketName st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketInventory"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketInventory", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketInventory"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketInventory", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3882,12 +3883,12 @@ func (w *OSSClientWrapper) GetBucketLifecycle(ctx context.Context, bucketName st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketLifecycle"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketLifecycle", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketLifecycle"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketLifecycle", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3925,12 +3926,12 @@ func (w *OSSClientWrapper) GetBucketLocation(ctx context.Context, bucketName str
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketLocation"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketLocation", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketLocation"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketLocation", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3968,12 +3969,12 @@ func (w *OSSClientWrapper) GetBucketLogging(ctx context.Context, bucketName stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketLogging"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketLogging", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketLogging"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketLogging", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4011,12 +4012,12 @@ func (w *OSSClientWrapper) GetBucketPolicy(ctx context.Context, bucketName strin
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketPolicy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketPolicy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketPolicy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketPolicy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4054,12 +4055,12 @@ func (w *OSSClientWrapper) GetBucketQosInfo(ctx context.Context, bucketName stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketQosInfo"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketQosInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketQosInfo"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketQosInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4097,12 +4098,12 @@ func (w *OSSClientWrapper) GetBucketReferer(ctx context.Context, bucketName stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketReferer"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketReferer", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketReferer"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketReferer", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4140,12 +4141,12 @@ func (w *OSSClientWrapper) GetBucketRequestPayment(ctx context.Context, bucketNa
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketRequestPayment"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketRequestPayment", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketRequestPayment"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketRequestPayment", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4183,12 +4184,12 @@ func (w *OSSClientWrapper) GetBucketStat(ctx context.Context, bucketName string)
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketStat"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketStat", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketStat"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketStat", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4226,12 +4227,12 @@ func (w *OSSClientWrapper) GetBucketTagging(ctx context.Context, bucketName stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketTagging"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketTagging", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketTagging"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketTagging", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4269,12 +4270,12 @@ func (w *OSSClientWrapper) GetBucketVersioning(ctx context.Context, bucketName s
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketVersioning"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketVersioning", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketVersioning"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketVersioning", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4312,12 +4313,12 @@ func (w *OSSClientWrapper) GetBucketWebsite(ctx context.Context, bucketName stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketWebsite"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketWebsite", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketWebsite"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketWebsite", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4355,12 +4356,12 @@ func (w *OSSClientWrapper) GetBucketWorm(ctx context.Context, bucketName string,
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBucketWorm"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBucketWorm", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBucketWorm"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketWorm", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4398,12 +4399,12 @@ func (w *OSSClientWrapper) GetUserQoSInfo(ctx context.Context, options ...oss.Op
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetUserQoSInfo"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetUserQoSInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetUserQoSInfo"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetUserQoSInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4441,12 +4442,12 @@ func (w *OSSClientWrapper) InitiateBucketWorm(ctx context.Context, bucketName st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.InitiateBucketWorm"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.InitiateBucketWorm", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.InitiateBucketWorm"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.InitiateBucketWorm", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4484,12 +4485,12 @@ func (w *OSSClientWrapper) IsBucketExist(ctx context.Context, bucketName string)
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.IsBucketExist"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.IsBucketExist", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.IsBucketExist"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.IsBucketExist", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4526,12 +4527,12 @@ func (w *OSSClientWrapper) LimitUploadSpeed(ctx context.Context, upSpeed int) er
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.LimitUploadSpeed"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.LimitUploadSpeed", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.LimitUploadSpeed"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LimitUploadSpeed", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4569,12 +4570,12 @@ func (w *OSSClientWrapper) ListBucketInventory(ctx context.Context, bucketName s
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ListBucketInventory"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListBucketInventory", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ListBucketInventory"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListBucketInventory", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4612,12 +4613,12 @@ func (w *OSSClientWrapper) ListBuckets(ctx context.Context, options ...oss.Optio
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ListBuckets"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListBuckets", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ListBuckets"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListBuckets", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4654,12 +4655,12 @@ func (w *OSSClientWrapper) SetBucketACL(ctx context.Context, bucketName string, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketACL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketACL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketACL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketACL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4697,12 +4698,12 @@ func (w *OSSClientWrapper) SetBucketAsyncTask(ctx context.Context, bucketName st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketAsyncTask"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketAsyncTask", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketAsyncTask"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketAsyncTask", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4739,12 +4740,12 @@ func (w *OSSClientWrapper) SetBucketCORS(ctx context.Context, bucketName string,
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketCORS"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketCORS", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketCORS"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketCORS", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4781,12 +4782,12 @@ func (w *OSSClientWrapper) SetBucketEncryption(ctx context.Context, bucketName s
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketEncryption"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketEncryption", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketEncryption"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketEncryption", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4823,12 +4824,12 @@ func (w *OSSClientWrapper) SetBucketInventory(ctx context.Context, bucketName st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketInventory"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketInventory", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketInventory"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketInventory", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4865,12 +4866,12 @@ func (w *OSSClientWrapper) SetBucketLifecycle(ctx context.Context, bucketName st
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketLifecycle"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketLifecycle", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketLifecycle"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketLifecycle", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4907,12 +4908,12 @@ func (w *OSSClientWrapper) SetBucketLogging(ctx context.Context, bucketName stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketLogging"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketLogging", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketLogging"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketLogging", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4949,12 +4950,12 @@ func (w *OSSClientWrapper) SetBucketPolicy(ctx context.Context, bucketName strin
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketPolicy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketPolicy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketPolicy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketPolicy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4991,12 +4992,12 @@ func (w *OSSClientWrapper) SetBucketQoSInfo(ctx context.Context, bucketName stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketQoSInfo"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketQoSInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketQoSInfo"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketQoSInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5033,12 +5034,12 @@ func (w *OSSClientWrapper) SetBucketReferer(ctx context.Context, bucketName stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketReferer"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketReferer", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketReferer"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketReferer", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5075,12 +5076,12 @@ func (w *OSSClientWrapper) SetBucketRequestPayment(ctx context.Context, bucketNa
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketRequestPayment"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketRequestPayment", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketRequestPayment"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketRequestPayment", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5117,12 +5118,12 @@ func (w *OSSClientWrapper) SetBucketTagging(ctx context.Context, bucketName stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketTagging"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketTagging", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketTagging"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketTagging", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5159,12 +5160,12 @@ func (w *OSSClientWrapper) SetBucketVersioning(ctx context.Context, bucketName s
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketVersioning"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketVersioning", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketVersioning"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketVersioning", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5201,12 +5202,12 @@ func (w *OSSClientWrapper) SetBucketWebsite(ctx context.Context, bucketName stri
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketWebsite"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketWebsite", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketWebsite"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketWebsite", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5243,12 +5244,12 @@ func (w *OSSClientWrapper) SetBucketWebsiteDetail(ctx context.Context, bucketNam
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketWebsiteDetail"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketWebsiteDetail", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketWebsiteDetail"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketWebsiteDetail", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5285,12 +5286,12 @@ func (w *OSSClientWrapper) SetBucketWebsiteXml(ctx context.Context, bucketName s
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBucketWebsiteXml"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBucketWebsiteXml", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBucketWebsiteXml"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketWebsiteXml", w.options.Name)); err != nil {
 				return err
 			}
 		}

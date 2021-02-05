@@ -3,6 +3,7 @@ package wrap
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/opentracing/opentracing-go"
@@ -137,12 +138,12 @@ func (w *MongoClientWrapper) Connect(ctx context.Context) error {
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Connect"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Connect", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Connect"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Connect", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -184,12 +185,12 @@ func (w *MongoClientWrapper) Disconnect(ctx context.Context) error {
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Disconnect"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Disconnect", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Disconnect"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Disconnect", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -227,12 +228,12 @@ func (w *MongoClientWrapper) ListDatabaseNames(ctx context.Context, filter inter
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ListDatabaseNames"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListDatabaseNames", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ListDatabaseNames"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListDatabaseNames", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -270,12 +271,12 @@ func (w *MongoClientWrapper) ListDatabases(ctx context.Context, filter interface
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ListDatabases"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListDatabases", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ListDatabases"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListDatabases", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -317,12 +318,12 @@ func (w *MongoClientWrapper) Ping(ctx context.Context, rp *readpref.ReadPref) er
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Ping"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Ping", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Ping"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Ping", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -360,12 +361,12 @@ func (w *MongoClientWrapper) StartSession(ctx context.Context, opts ...*options.
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.StartSession"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.StartSession", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.StartSession"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.StartSession", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -402,12 +403,12 @@ func (w *MongoClientWrapper) UseSession(ctx context.Context, fn func(mongo.Sessi
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.UseSession"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UseSession", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.UseSession"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UseSession", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -444,12 +445,12 @@ func (w *MongoClientWrapper) UseSessionWithOptions(ctx context.Context, opts *op
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.UseSessionWithOptions"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UseSessionWithOptions", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.UseSessionWithOptions"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UseSessionWithOptions", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -487,12 +488,12 @@ func (w *MongoClientWrapper) Watch(ctx context.Context, pipeline interface{}, op
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Watch"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Watch", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Watch"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Watch", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -530,12 +531,12 @@ func (w *MongoCollectionWrapper) Aggregate(ctx context.Context, pipeline interfa
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.Aggregate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.Aggregate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.Aggregate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.Aggregate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -573,12 +574,12 @@ func (w *MongoCollectionWrapper) BulkWrite(ctx context.Context, models []mongo.W
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.BulkWrite"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.BulkWrite", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.BulkWrite"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.BulkWrite", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -616,12 +617,12 @@ func (w *MongoCollectionWrapper) Clone(ctx context.Context, opts ...*options.Col
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.Clone"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.Clone", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.Clone"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.Clone", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -659,12 +660,12 @@ func (w *MongoCollectionWrapper) CountDocuments(ctx context.Context, filter inte
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.CountDocuments"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.CountDocuments", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.CountDocuments"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.CountDocuments", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -707,12 +708,12 @@ func (w *MongoCollectionWrapper) DeleteMany(ctx context.Context, filter interfac
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.DeleteMany"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.DeleteMany", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.DeleteMany"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.DeleteMany", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -750,12 +751,12 @@ func (w *MongoCollectionWrapper) DeleteOne(ctx context.Context, filter interface
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.DeleteOne"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.DeleteOne", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.DeleteOne"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.DeleteOne", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -793,12 +794,12 @@ func (w *MongoCollectionWrapper) Distinct(ctx context.Context, fieldName string,
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.Distinct"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.Distinct", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.Distinct"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.Distinct", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -835,12 +836,12 @@ func (w *MongoCollectionWrapper) Drop(ctx context.Context) error {
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.Drop"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.Drop", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.Drop"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.Drop", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -878,12 +879,12 @@ func (w *MongoCollectionWrapper) EstimatedDocumentCount(ctx context.Context, opt
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.EstimatedDocumentCount"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.EstimatedDocumentCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.EstimatedDocumentCount"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.EstimatedDocumentCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -921,12 +922,12 @@ func (w *MongoCollectionWrapper) Find(ctx context.Context, filter interface{}, o
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.Find"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.Find", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.Find"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.Find", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -989,12 +990,12 @@ func (w *MongoCollectionWrapper) InsertMany(ctx context.Context, documents []int
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.InsertMany"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.InsertMany", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.InsertMany"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.InsertMany", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1032,12 +1033,12 @@ func (w *MongoCollectionWrapper) InsertOne(ctx context.Context, document interfa
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.InsertOne"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.InsertOne", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.InsertOne"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.InsertOne", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1080,12 +1081,12 @@ func (w *MongoCollectionWrapper) ReplaceOne(ctx context.Context, filter interfac
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.ReplaceOne"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.ReplaceOne", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.ReplaceOne"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.ReplaceOne", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1123,12 +1124,12 @@ func (w *MongoCollectionWrapper) UpdateMany(ctx context.Context, filter interfac
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.UpdateMany"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.UpdateMany", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.UpdateMany"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.UpdateMany", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1166,12 +1167,12 @@ func (w *MongoCollectionWrapper) UpdateOne(ctx context.Context, filter interface
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.UpdateOne"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.UpdateOne", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.UpdateOne"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.UpdateOne", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1209,12 +1210,12 @@ func (w *MongoCollectionWrapper) Watch(ctx context.Context, pipeline interface{}
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Collection.Watch"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Collection.Watch", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Collection.Watch"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.Watch", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1252,12 +1253,12 @@ func (w *MongoDatabaseWrapper) Aggregate(ctx context.Context, pipeline interface
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Database.Aggregate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Database.Aggregate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Database.Aggregate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.Aggregate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1304,12 +1305,12 @@ func (w *MongoDatabaseWrapper) CreateCollection(ctx context.Context, name string
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Database.CreateCollection"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Database.CreateCollection", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Database.CreateCollection"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.CreateCollection", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1346,12 +1347,12 @@ func (w *MongoDatabaseWrapper) CreateView(ctx context.Context, viewName string, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Database.CreateView"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Database.CreateView", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Database.CreateView"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.CreateView", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1388,12 +1389,12 @@ func (w *MongoDatabaseWrapper) Drop(ctx context.Context) error {
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Database.Drop"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Database.Drop", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Database.Drop"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.Drop", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1431,12 +1432,12 @@ func (w *MongoDatabaseWrapper) ListCollectionNames(ctx context.Context, filter i
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Database.ListCollectionNames"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Database.ListCollectionNames", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Database.ListCollectionNames"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.ListCollectionNames", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1474,12 +1475,12 @@ func (w *MongoDatabaseWrapper) ListCollections(ctx context.Context, filter inter
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Database.ListCollections"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Database.ListCollections", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Database.ListCollections"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.ListCollections", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1537,12 +1538,12 @@ func (w *MongoDatabaseWrapper) RunCommandCursor(ctx context.Context, runCommand 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Database.RunCommandCursor"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Database.RunCommandCursor", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Database.RunCommandCursor"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.RunCommandCursor", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1580,12 +1581,12 @@ func (w *MongoDatabaseWrapper) Watch(ctx context.Context, pipeline interface{}, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Database.Watch"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Database.Watch", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Database.Watch"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.Watch", w.options.Name)); err != nil {
 				return err
 			}
 		}

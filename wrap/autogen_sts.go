@@ -3,6 +3,7 @@ package wrap
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/sts"
@@ -106,12 +107,12 @@ func (w *STSClientWrapper) AssumeRole(ctx context.Context, request *sts.AssumeRo
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.AssumeRole"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.AssumeRole", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.AssumeRole"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AssumeRole", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -159,12 +160,12 @@ func (w *STSClientWrapper) AssumeRoleWithSAML(ctx context.Context, request *sts.
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.AssumeRoleWithSAML"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.AssumeRoleWithSAML", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.AssumeRoleWithSAML"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AssumeRoleWithSAML", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -212,12 +213,12 @@ func (w *STSClientWrapper) GetCallerIdentity(ctx context.Context, request *sts.G
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetCallerIdentity"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetCallerIdentity", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetCallerIdentity"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetCallerIdentity", w.options.Name)); err != nil {
 				return err
 			}
 		}

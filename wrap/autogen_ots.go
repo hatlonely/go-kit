@@ -3,6 +3,7 @@ package wrap
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
@@ -106,12 +107,12 @@ func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, reque
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.AbortTransaction"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.AbortTransaction", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.AbortTransaction"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.AbortTransaction", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -149,12 +150,12 @@ func (w *OTSTableStoreClientWrapper) BatchGetRow(ctx context.Context, request *t
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.BatchGetRow"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.BatchGetRow", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.BatchGetRow"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.BatchGetRow", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -192,12 +193,12 @@ func (w *OTSTableStoreClientWrapper) BatchWriteRow(ctx context.Context, request 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.BatchWriteRow"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.BatchWriteRow", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.BatchWriteRow"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.BatchWriteRow", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -235,12 +236,12 @@ func (w *OTSTableStoreClientWrapper) CommitTransaction(ctx context.Context, requ
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.CommitTransaction"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.CommitTransaction", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.CommitTransaction"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.CommitTransaction", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -278,12 +279,12 @@ func (w *OTSTableStoreClientWrapper) ComputeSplitPointsBySize(ctx context.Contex
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.ComputeSplitPointsBySize"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.ComputeSplitPointsBySize", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.ComputeSplitPointsBySize"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.ComputeSplitPointsBySize", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -321,12 +322,12 @@ func (w *OTSTableStoreClientWrapper) CreateIndex(ctx context.Context, request *t
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.CreateIndex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.CreateIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.CreateIndex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.CreateIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -364,12 +365,12 @@ func (w *OTSTableStoreClientWrapper) CreateSearchIndex(ctx context.Context, requ
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.CreateSearchIndex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.CreateSearchIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.CreateSearchIndex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.CreateSearchIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -407,12 +408,12 @@ func (w *OTSTableStoreClientWrapper) CreateTable(ctx context.Context, request *t
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.CreateTable"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.CreateTable", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.CreateTable"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.CreateTable", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -450,12 +451,12 @@ func (w *OTSTableStoreClientWrapper) DeleteIndex(ctx context.Context, request *t
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.DeleteIndex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.DeleteIndex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -493,12 +494,12 @@ func (w *OTSTableStoreClientWrapper) DeleteRow(ctx context.Context, request *tab
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.DeleteRow"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteRow", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.DeleteRow"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteRow", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -536,12 +537,12 @@ func (w *OTSTableStoreClientWrapper) DeleteSearchIndex(ctx context.Context, requ
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.DeleteSearchIndex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteSearchIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.DeleteSearchIndex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteSearchIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -579,12 +580,12 @@ func (w *OTSTableStoreClientWrapper) DeleteTable(ctx context.Context, request *t
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.DeleteTable"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteTable", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.DeleteTable"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteTable", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -622,12 +623,12 @@ func (w *OTSTableStoreClientWrapper) DescribeSearchIndex(ctx context.Context, re
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.DescribeSearchIndex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeSearchIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.DescribeSearchIndex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeSearchIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -665,12 +666,12 @@ func (w *OTSTableStoreClientWrapper) DescribeStream(ctx context.Context, req *ta
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.DescribeStream"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeStream", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.DescribeStream"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeStream", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -708,12 +709,12 @@ func (w *OTSTableStoreClientWrapper) DescribeTable(ctx context.Context, request 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.DescribeTable"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeTable", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.DescribeTable"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeTable", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -751,12 +752,12 @@ func (w *OTSTableStoreClientWrapper) GetRange(ctx context.Context, request *tabl
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.GetRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.GetRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.GetRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.GetRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -794,12 +795,12 @@ func (w *OTSTableStoreClientWrapper) GetRow(ctx context.Context, request *tables
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.GetRow"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.GetRow", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.GetRow"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.GetRow", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -837,12 +838,12 @@ func (w *OTSTableStoreClientWrapper) GetShardIterator(ctx context.Context, req *
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.GetShardIterator"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.GetShardIterator", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.GetShardIterator"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.GetShardIterator", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -880,12 +881,12 @@ func (w *OTSTableStoreClientWrapper) GetStreamRecord(ctx context.Context, req *t
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.GetStreamRecord"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.GetStreamRecord", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.GetStreamRecord"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.GetStreamRecord", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -923,12 +924,12 @@ func (w *OTSTableStoreClientWrapper) ListSearchIndex(ctx context.Context, reques
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.ListSearchIndex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.ListSearchIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.ListSearchIndex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.ListSearchIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -966,12 +967,12 @@ func (w *OTSTableStoreClientWrapper) ListStream(ctx context.Context, req *tables
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.ListStream"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.ListStream", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.ListStream"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.ListStream", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1009,12 +1010,12 @@ func (w *OTSTableStoreClientWrapper) ListTable(ctx context.Context) (*tablestore
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.ListTable"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.ListTable", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.ListTable"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.ListTable", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1052,12 +1053,12 @@ func (w *OTSTableStoreClientWrapper) PutRow(ctx context.Context, request *tables
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.PutRow"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.PutRow", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.PutRow"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.PutRow", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1095,12 +1096,12 @@ func (w *OTSTableStoreClientWrapper) Search(ctx context.Context, request *tables
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.Search"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.Search", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.Search"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.Search", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1138,12 +1139,12 @@ func (w *OTSTableStoreClientWrapper) StartLocalTransaction(ctx context.Context, 
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.StartLocalTransaction"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.StartLocalTransaction", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.StartLocalTransaction"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.StartLocalTransaction", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1181,12 +1182,12 @@ func (w *OTSTableStoreClientWrapper) UpdateRow(ctx context.Context, request *tab
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.UpdateRow"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.UpdateRow", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.UpdateRow"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.UpdateRow", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1224,12 +1225,12 @@ func (w *OTSTableStoreClientWrapper) UpdateTable(ctx context.Context, request *t
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "TableStoreClient.UpdateTable"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.UpdateTable", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "TableStoreClient.UpdateTable"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.UpdateTable", w.options.Name)); err != nil {
 				return err
 			}
 		}

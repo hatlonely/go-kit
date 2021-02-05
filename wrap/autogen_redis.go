@@ -3,6 +3,7 @@ package wrap
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -210,12 +211,12 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Pipelined"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Pipelined", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Pipelined"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Pipelined", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -273,12 +274,12 @@ func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipe
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.TxPipelined"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.TxPipelined", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.TxPipelined"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.TxPipelined", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -315,12 +316,12 @@ func (w *RedisClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Watch"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Watch", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Watch"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Watch", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -362,12 +363,12 @@ func (w *RedisClientWrapper) Close(ctx context.Context) error {
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Close"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Close", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Close"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Close", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -404,12 +405,12 @@ func (w *RedisClientWrapper) Do(ctx context.Context, args ...interface{}) *redis
 	var res0 *redis.Cmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -446,12 +447,12 @@ func (w *RedisClientWrapper) Process(ctx context.Context, cmd redis.Cmder) error
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Process"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Process", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Process"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Process", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -501,12 +502,12 @@ func (w *RedisClientWrapper) Append(ctx context.Context, key string, value strin
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Append"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Append", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Append"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Append", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -543,12 +544,12 @@ func (w *RedisClientWrapper) BLPop(ctx context.Context, timeout time.Duration, k
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.BLPop"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.BLPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.BLPop"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BLPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -585,12 +586,12 @@ func (w *RedisClientWrapper) BRPop(ctx context.Context, timeout time.Duration, k
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.BRPop"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.BRPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.BRPop"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BRPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -627,12 +628,12 @@ func (w *RedisClientWrapper) BRPopLPush(ctx context.Context, source string, dest
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.BRPopLPush"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.BRPopLPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.BRPopLPush"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BRPopLPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -669,12 +670,12 @@ func (w *RedisClientWrapper) BZPopMax(ctx context.Context, timeout time.Duration
 	var res0 *redis.ZWithKeyCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.BZPopMax"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.BZPopMax", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.BZPopMax"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BZPopMax", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -711,12 +712,12 @@ func (w *RedisClientWrapper) BZPopMin(ctx context.Context, timeout time.Duration
 	var res0 *redis.ZWithKeyCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.BZPopMin"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.BZPopMin", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.BZPopMin"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BZPopMin", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -753,12 +754,12 @@ func (w *RedisClientWrapper) BgRewriteAOF(ctx context.Context) *redis.StatusCmd 
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.BgRewriteAOF"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.BgRewriteAOF", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.BgRewriteAOF"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BgRewriteAOF", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -795,12 +796,12 @@ func (w *RedisClientWrapper) BgSave(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.BgSave"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.BgSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.BgSave"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BgSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -837,12 +838,12 @@ func (w *RedisClientWrapper) BitCount(ctx context.Context, key string, bitCount 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.BitCount"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.BitCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.BitCount"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BitCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -879,12 +880,12 @@ func (w *RedisClientWrapper) BitOpAnd(ctx context.Context, destKey string, keys 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.BitOpAnd"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.BitOpAnd", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.BitOpAnd"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BitOpAnd", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -921,12 +922,12 @@ func (w *RedisClientWrapper) BitOpNot(ctx context.Context, destKey string, key s
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.BitOpNot"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.BitOpNot", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.BitOpNot"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BitOpNot", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -963,12 +964,12 @@ func (w *RedisClientWrapper) BitOpOr(ctx context.Context, destKey string, keys .
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.BitOpOr"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.BitOpOr", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.BitOpOr"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BitOpOr", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1005,12 +1006,12 @@ func (w *RedisClientWrapper) BitOpXor(ctx context.Context, destKey string, keys 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.BitOpXor"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.BitOpXor", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.BitOpXor"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BitOpXor", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1047,12 +1048,12 @@ func (w *RedisClientWrapper) BitPos(ctx context.Context, key string, bit int64, 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.BitPos"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.BitPos", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.BitPos"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BitPos", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1089,12 +1090,12 @@ func (w *RedisClientWrapper) ClientGetName(ctx context.Context) *redis.StringCmd
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClientGetName"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClientGetName", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClientGetName"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientGetName", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1131,12 +1132,12 @@ func (w *RedisClientWrapper) ClientID(ctx context.Context) *redis.IntCmd {
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClientID"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClientID", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClientID"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientID", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1173,12 +1174,12 @@ func (w *RedisClientWrapper) ClientKill(ctx context.Context, ipPort string) *red
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClientKill"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClientKill", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClientKill"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientKill", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1215,12 +1216,12 @@ func (w *RedisClientWrapper) ClientKillByFilter(ctx context.Context, keys ...str
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClientKillByFilter"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClientKillByFilter", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClientKillByFilter"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientKillByFilter", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1257,12 +1258,12 @@ func (w *RedisClientWrapper) ClientList(ctx context.Context) *redis.StringCmd {
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClientList"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClientList", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClientList"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientList", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1299,12 +1300,12 @@ func (w *RedisClientWrapper) ClientPause(ctx context.Context, dur time.Duration)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClientPause"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClientPause", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClientPause"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientPause", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1341,12 +1342,12 @@ func (w *RedisClientWrapper) ClientUnblock(ctx context.Context, id int64) *redis
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClientUnblock"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClientUnblock", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClientUnblock"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientUnblock", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1383,12 +1384,12 @@ func (w *RedisClientWrapper) ClientUnblockWithError(ctx context.Context, id int6
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClientUnblockWithError"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClientUnblockWithError", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClientUnblockWithError"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientUnblockWithError", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1425,12 +1426,12 @@ func (w *RedisClientWrapper) ClusterAddSlots(ctx context.Context, slots ...int) 
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterAddSlots"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterAddSlots", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterAddSlots"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterAddSlots", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1467,12 +1468,12 @@ func (w *RedisClientWrapper) ClusterAddSlotsRange(ctx context.Context, min int, 
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterAddSlotsRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterAddSlotsRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterAddSlotsRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterAddSlotsRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1509,12 +1510,12 @@ func (w *RedisClientWrapper) ClusterCountFailureReports(ctx context.Context, nod
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterCountFailureReports"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterCountFailureReports", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterCountFailureReports"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterCountFailureReports", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1551,12 +1552,12 @@ func (w *RedisClientWrapper) ClusterCountKeysInSlot(ctx context.Context, slot in
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterCountKeysInSlot"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterCountKeysInSlot", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterCountKeysInSlot"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterCountKeysInSlot", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1593,12 +1594,12 @@ func (w *RedisClientWrapper) ClusterDelSlots(ctx context.Context, slots ...int) 
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterDelSlots"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterDelSlots", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterDelSlots"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterDelSlots", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1635,12 +1636,12 @@ func (w *RedisClientWrapper) ClusterDelSlotsRange(ctx context.Context, min int, 
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterDelSlotsRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterDelSlotsRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterDelSlotsRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterDelSlotsRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1677,12 +1678,12 @@ func (w *RedisClientWrapper) ClusterFailover(ctx context.Context) *redis.StatusC
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterFailover"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterFailover", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterFailover"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterFailover", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1719,12 +1720,12 @@ func (w *RedisClientWrapper) ClusterForget(ctx context.Context, nodeID string) *
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterForget"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterForget", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterForget"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterForget", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1761,12 +1762,12 @@ func (w *RedisClientWrapper) ClusterGetKeysInSlot(ctx context.Context, slot int,
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterGetKeysInSlot"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterGetKeysInSlot", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterGetKeysInSlot"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterGetKeysInSlot", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1803,12 +1804,12 @@ func (w *RedisClientWrapper) ClusterInfo(ctx context.Context) *redis.StringCmd {
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterInfo"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterInfo"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1845,12 +1846,12 @@ func (w *RedisClientWrapper) ClusterKeySlot(ctx context.Context, key string) *re
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterKeySlot"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterKeySlot", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterKeySlot"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterKeySlot", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1887,12 +1888,12 @@ func (w *RedisClientWrapper) ClusterMeet(ctx context.Context, host string, port 
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterMeet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterMeet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterMeet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterMeet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1929,12 +1930,12 @@ func (w *RedisClientWrapper) ClusterNodes(ctx context.Context) *redis.StringCmd 
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterNodes"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterNodes", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterNodes"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterNodes", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -1971,12 +1972,12 @@ func (w *RedisClientWrapper) ClusterReplicate(ctx context.Context, nodeID string
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterReplicate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterReplicate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterReplicate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterReplicate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2013,12 +2014,12 @@ func (w *RedisClientWrapper) ClusterResetHard(ctx context.Context) *redis.Status
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterResetHard"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterResetHard", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterResetHard"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterResetHard", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2055,12 +2056,12 @@ func (w *RedisClientWrapper) ClusterResetSoft(ctx context.Context) *redis.Status
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterResetSoft"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterResetSoft", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterResetSoft"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterResetSoft", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2097,12 +2098,12 @@ func (w *RedisClientWrapper) ClusterSaveConfig(ctx context.Context) *redis.Statu
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterSaveConfig"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterSaveConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterSaveConfig"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterSaveConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2139,12 +2140,12 @@ func (w *RedisClientWrapper) ClusterSlaves(ctx context.Context, nodeID string) *
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterSlaves"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterSlaves", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterSlaves"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterSlaves", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2181,12 +2182,12 @@ func (w *RedisClientWrapper) ClusterSlots(ctx context.Context) *redis.ClusterSlo
 	var res0 *redis.ClusterSlotsCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ClusterSlots"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ClusterSlots", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ClusterSlots"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterSlots", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2223,12 +2224,12 @@ func (w *RedisClientWrapper) Command(ctx context.Context) *redis.CommandsInfoCmd
 	var res0 *redis.CommandsInfoCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Command"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Command", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Command"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Command", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2265,12 +2266,12 @@ func (w *RedisClientWrapper) ConfigGet(ctx context.Context, parameter string) *r
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ConfigGet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ConfigGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ConfigGet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ConfigGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2307,12 +2308,12 @@ func (w *RedisClientWrapper) ConfigResetStat(ctx context.Context) *redis.StatusC
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ConfigResetStat"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ConfigResetStat", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ConfigResetStat"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ConfigResetStat", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2349,12 +2350,12 @@ func (w *RedisClientWrapper) ConfigRewrite(ctx context.Context) *redis.StatusCmd
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ConfigRewrite"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ConfigRewrite", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ConfigRewrite"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ConfigRewrite", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2391,12 +2392,12 @@ func (w *RedisClientWrapper) ConfigSet(ctx context.Context, parameter string, va
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ConfigSet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ConfigSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ConfigSet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ConfigSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2433,12 +2434,12 @@ func (w *RedisClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DBSize"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DBSize", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DBSize"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DBSize", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2475,12 +2476,12 @@ func (w *RedisClientWrapper) DbSize(ctx context.Context) *redis.IntCmd {
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DbSize"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DbSize", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DbSize"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DbSize", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2517,12 +2518,12 @@ func (w *RedisClientWrapper) DebugObject(ctx context.Context, key string) *redis
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DebugObject"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DebugObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DebugObject"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DebugObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2559,12 +2560,12 @@ func (w *RedisClientWrapper) Decr(ctx context.Context, key string) *redis.IntCmd
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Decr"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Decr", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Decr"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Decr", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2601,12 +2602,12 @@ func (w *RedisClientWrapper) DecrBy(ctx context.Context, key string, decrement i
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.DecrBy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DecrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.DecrBy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DecrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2643,12 +2644,12 @@ func (w *RedisClientWrapper) Del(ctx context.Context, keys ...string) *redis.Int
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Del"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Del", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Del"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Del", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2685,12 +2686,12 @@ func (w *RedisClientWrapper) Dump(ctx context.Context, key string) *redis.String
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Dump"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Dump", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Dump"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Dump", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2727,12 +2728,12 @@ func (w *RedisClientWrapper) Echo(ctx context.Context, message interface{}) *red
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Echo"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Echo", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Echo"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Echo", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2769,12 +2770,12 @@ func (w *RedisClientWrapper) Eval(ctx context.Context, script string, keys []str
 	var res0 *redis.Cmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Eval"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Eval", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Eval"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Eval", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2811,12 +2812,12 @@ func (w *RedisClientWrapper) EvalSha(ctx context.Context, sha1 string, keys []st
 	var res0 *redis.Cmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.EvalSha"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.EvalSha", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.EvalSha"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.EvalSha", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2853,12 +2854,12 @@ func (w *RedisClientWrapper) Exists(ctx context.Context, keys ...string) *redis.
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Exists"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Exists", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Exists"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Exists", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2895,12 +2896,12 @@ func (w *RedisClientWrapper) Expire(ctx context.Context, key string, expiration 
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Expire"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Expire", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Expire"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Expire", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2937,12 +2938,12 @@ func (w *RedisClientWrapper) ExpireAt(ctx context.Context, key string, tm time.T
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ExpireAt"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ExpireAt", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ExpireAt"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ExpireAt", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -2979,12 +2980,12 @@ func (w *RedisClientWrapper) FlushAll(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.FlushAll"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.FlushAll", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.FlushAll"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.FlushAll", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3021,12 +3022,12 @@ func (w *RedisClientWrapper) FlushAllAsync(ctx context.Context) *redis.StatusCmd
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.FlushAllAsync"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.FlushAllAsync", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.FlushAllAsync"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.FlushAllAsync", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3063,12 +3064,12 @@ func (w *RedisClientWrapper) FlushDB(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.FlushDB"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.FlushDB", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.FlushDB"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.FlushDB", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3105,12 +3106,12 @@ func (w *RedisClientWrapper) FlushDBAsync(ctx context.Context) *redis.StatusCmd 
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.FlushDBAsync"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.FlushDBAsync", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.FlushDBAsync"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.FlushDBAsync", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3147,12 +3148,12 @@ func (w *RedisClientWrapper) FlushDb(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.FlushDb"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.FlushDb", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.FlushDb"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.FlushDb", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3189,12 +3190,12 @@ func (w *RedisClientWrapper) GeoAdd(ctx context.Context, key string, geoLocation
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GeoAdd"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GeoAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GeoAdd"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3231,12 +3232,12 @@ func (w *RedisClientWrapper) GeoDist(ctx context.Context, key string, member1 st
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GeoDist"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GeoDist", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GeoDist"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoDist", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3273,12 +3274,12 @@ func (w *RedisClientWrapper) GeoHash(ctx context.Context, key string, members ..
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GeoHash"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GeoHash", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GeoHash"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoHash", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3315,12 +3316,12 @@ func (w *RedisClientWrapper) GeoPos(ctx context.Context, key string, members ...
 	var res0 *redis.GeoPosCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GeoPos"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GeoPos", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GeoPos"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoPos", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3357,12 +3358,12 @@ func (w *RedisClientWrapper) GeoRadius(ctx context.Context, key string, longitud
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GeoRadius"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GeoRadius", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GeoRadius"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoRadius", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3399,12 +3400,12 @@ func (w *RedisClientWrapper) GeoRadiusByMember(ctx context.Context, key string, 
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GeoRadiusByMember"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GeoRadiusByMember", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GeoRadiusByMember"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoRadiusByMember", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3441,12 +3442,12 @@ func (w *RedisClientWrapper) GeoRadiusByMemberRO(ctx context.Context, key string
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GeoRadiusByMemberRO"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GeoRadiusByMemberRO", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GeoRadiusByMemberRO"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoRadiusByMemberRO", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3483,12 +3484,12 @@ func (w *RedisClientWrapper) GeoRadiusRO(ctx context.Context, key string, longit
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GeoRadiusRO"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GeoRadiusRO", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GeoRadiusRO"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoRadiusRO", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3525,12 +3526,12 @@ func (w *RedisClientWrapper) Get(ctx context.Context, key string) *redis.StringC
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Get"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Get", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Get"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Get", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3567,12 +3568,12 @@ func (w *RedisClientWrapper) GetBit(ctx context.Context, key string, offset int6
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetBit"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetBit", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetBit"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBit", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3609,12 +3610,12 @@ func (w *RedisClientWrapper) GetRange(ctx context.Context, key string, start int
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3651,12 +3652,12 @@ func (w *RedisClientWrapper) GetSet(ctx context.Context, key string, value inter
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.GetSet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.GetSet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3693,12 +3694,12 @@ func (w *RedisClientWrapper) HDel(ctx context.Context, key string, fields ...str
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.HDel"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HDel", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.HDel"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HDel", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3735,12 +3736,12 @@ func (w *RedisClientWrapper) HExists(ctx context.Context, key string, field stri
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.HExists"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HExists", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.HExists"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HExists", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3777,12 +3778,12 @@ func (w *RedisClientWrapper) HGet(ctx context.Context, key string, field string)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.HGet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.HGet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3819,12 +3820,12 @@ func (w *RedisClientWrapper) HGetAll(ctx context.Context, key string) *redis.Str
 	var res0 *redis.StringStringMapCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.HGetAll"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HGetAll", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.HGetAll"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HGetAll", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3861,12 +3862,12 @@ func (w *RedisClientWrapper) HIncrBy(ctx context.Context, key string, field stri
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.HIncrBy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HIncrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.HIncrBy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HIncrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3903,12 +3904,12 @@ func (w *RedisClientWrapper) HIncrByFloat(ctx context.Context, key string, field
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.HIncrByFloat"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HIncrByFloat", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.HIncrByFloat"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HIncrByFloat", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3945,12 +3946,12 @@ func (w *RedisClientWrapper) HKeys(ctx context.Context, key string) *redis.Strin
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.HKeys"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HKeys", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.HKeys"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HKeys", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -3987,12 +3988,12 @@ func (w *RedisClientWrapper) HLen(ctx context.Context, key string) *redis.IntCmd
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.HLen"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.HLen"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4029,12 +4030,12 @@ func (w *RedisClientWrapper) HMGet(ctx context.Context, key string, fields ...st
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.HMGet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HMGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.HMGet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HMGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4071,12 +4072,12 @@ func (w *RedisClientWrapper) HMSet(ctx context.Context, key string, fields map[s
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.HMSet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HMSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.HMSet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HMSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4113,12 +4114,12 @@ func (w *RedisClientWrapper) HScan(ctx context.Context, key string, cursor uint6
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.HScan"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HScan", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.HScan"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HScan", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4155,12 +4156,12 @@ func (w *RedisClientWrapper) HSet(ctx context.Context, key string, field string,
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.HSet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.HSet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4197,12 +4198,12 @@ func (w *RedisClientWrapper) HSetNX(ctx context.Context, key string, field strin
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.HSetNX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HSetNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.HSetNX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HSetNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4239,12 +4240,12 @@ func (w *RedisClientWrapper) HVals(ctx context.Context, key string) *redis.Strin
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.HVals"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HVals", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.HVals"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HVals", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4281,12 +4282,12 @@ func (w *RedisClientWrapper) Incr(ctx context.Context, key string) *redis.IntCmd
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Incr"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Incr", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Incr"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Incr", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4323,12 +4324,12 @@ func (w *RedisClientWrapper) IncrBy(ctx context.Context, key string, value int64
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.IncrBy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.IncrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.IncrBy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.IncrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4365,12 +4366,12 @@ func (w *RedisClientWrapper) IncrByFloat(ctx context.Context, key string, value 
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.IncrByFloat"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.IncrByFloat", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.IncrByFloat"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.IncrByFloat", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4407,12 +4408,12 @@ func (w *RedisClientWrapper) Info(ctx context.Context, section ...string) *redis
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Info"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Info", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Info"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Info", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4449,12 +4450,12 @@ func (w *RedisClientWrapper) Keys(ctx context.Context, pattern string) *redis.St
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Keys"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Keys", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Keys"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Keys", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4491,12 +4492,12 @@ func (w *RedisClientWrapper) LIndex(ctx context.Context, key string, index int64
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.LIndex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.LIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.LIndex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4533,12 +4534,12 @@ func (w *RedisClientWrapper) LInsert(ctx context.Context, key string, op string,
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.LInsert"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.LInsert", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.LInsert"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LInsert", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4575,12 +4576,12 @@ func (w *RedisClientWrapper) LInsertAfter(ctx context.Context, key string, pivot
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.LInsertAfter"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.LInsertAfter", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.LInsertAfter"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LInsertAfter", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4617,12 +4618,12 @@ func (w *RedisClientWrapper) LInsertBefore(ctx context.Context, key string, pivo
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.LInsertBefore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.LInsertBefore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.LInsertBefore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LInsertBefore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4659,12 +4660,12 @@ func (w *RedisClientWrapper) LLen(ctx context.Context, key string) *redis.IntCmd
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.LLen"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.LLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.LLen"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4701,12 +4702,12 @@ func (w *RedisClientWrapper) LPop(ctx context.Context, key string) *redis.String
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.LPop"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.LPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.LPop"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4743,12 +4744,12 @@ func (w *RedisClientWrapper) LPush(ctx context.Context, key string, values ...in
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.LPush"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.LPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.LPush"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4785,12 +4786,12 @@ func (w *RedisClientWrapper) LPushX(ctx context.Context, key string, value inter
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.LPushX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.LPushX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.LPushX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LPushX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4827,12 +4828,12 @@ func (w *RedisClientWrapper) LRange(ctx context.Context, key string, start int64
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.LRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.LRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.LRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4869,12 +4870,12 @@ func (w *RedisClientWrapper) LRem(ctx context.Context, key string, count int64, 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.LRem"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.LRem", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.LRem"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LRem", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4911,12 +4912,12 @@ func (w *RedisClientWrapper) LSet(ctx context.Context, key string, index int64, 
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.LSet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.LSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.LSet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4953,12 +4954,12 @@ func (w *RedisClientWrapper) LTrim(ctx context.Context, key string, start int64,
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.LTrim"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.LTrim", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.LTrim"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LTrim", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -4995,12 +4996,12 @@ func (w *RedisClientWrapper) LastSave(ctx context.Context) *redis.IntCmd {
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.LastSave"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.LastSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.LastSave"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LastSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5037,12 +5038,12 @@ func (w *RedisClientWrapper) MGet(ctx context.Context, keys ...string) *redis.Sl
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.MGet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.MGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.MGet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.MGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5079,12 +5080,12 @@ func (w *RedisClientWrapper) MSet(ctx context.Context, pairs ...interface{}) *re
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.MSet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.MSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.MSet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.MSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5121,12 +5122,12 @@ func (w *RedisClientWrapper) MSetNX(ctx context.Context, pairs ...interface{}) *
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.MSetNX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.MSetNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.MSetNX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.MSetNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5163,12 +5164,12 @@ func (w *RedisClientWrapper) MemoryUsage(ctx context.Context, key string, sample
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.MemoryUsage"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.MemoryUsage", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.MemoryUsage"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.MemoryUsage", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5205,12 +5206,12 @@ func (w *RedisClientWrapper) Migrate(ctx context.Context, host string, port stri
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Migrate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Migrate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Migrate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Migrate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5247,12 +5248,12 @@ func (w *RedisClientWrapper) Move(ctx context.Context, key string, db int64) *re
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Move"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Move", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Move"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Move", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5289,12 +5290,12 @@ func (w *RedisClientWrapper) ObjectEncoding(ctx context.Context, key string) *re
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ObjectEncoding"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ObjectEncoding", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ObjectEncoding"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ObjectEncoding", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5331,12 +5332,12 @@ func (w *RedisClientWrapper) ObjectIdleTime(ctx context.Context, key string) *re
 	var res0 *redis.DurationCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ObjectIdleTime"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ObjectIdleTime", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ObjectIdleTime"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ObjectIdleTime", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5373,12 +5374,12 @@ func (w *RedisClientWrapper) ObjectRefCount(ctx context.Context, key string) *re
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ObjectRefCount"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ObjectRefCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ObjectRefCount"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ObjectRefCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5415,12 +5416,12 @@ func (w *RedisClientWrapper) PExpire(ctx context.Context, key string, expiration
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.PExpire"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.PExpire", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.PExpire"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PExpire", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5457,12 +5458,12 @@ func (w *RedisClientWrapper) PExpireAt(ctx context.Context, key string, tm time.
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.PExpireAt"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.PExpireAt", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.PExpireAt"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PExpireAt", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5499,12 +5500,12 @@ func (w *RedisClientWrapper) PFAdd(ctx context.Context, key string, els ...inter
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.PFAdd"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.PFAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.PFAdd"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PFAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5541,12 +5542,12 @@ func (w *RedisClientWrapper) PFCount(ctx context.Context, keys ...string) *redis
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.PFCount"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.PFCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.PFCount"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PFCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5583,12 +5584,12 @@ func (w *RedisClientWrapper) PFMerge(ctx context.Context, dest string, keys ...s
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.PFMerge"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.PFMerge", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.PFMerge"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PFMerge", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5625,12 +5626,12 @@ func (w *RedisClientWrapper) PTTL(ctx context.Context, key string) *redis.Durati
 	var res0 *redis.DurationCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.PTTL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.PTTL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.PTTL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PTTL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5667,12 +5668,12 @@ func (w *RedisClientWrapper) Persist(ctx context.Context, key string) *redis.Boo
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Persist"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Persist", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Persist"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Persist", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5709,12 +5710,12 @@ func (w *RedisClientWrapper) Ping(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Ping"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Ping", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Ping"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Ping", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5751,12 +5752,12 @@ func (w *RedisClientWrapper) PubSubChannels(ctx context.Context, pattern string)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.PubSubChannels"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.PubSubChannels", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.PubSubChannels"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PubSubChannels", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5793,12 +5794,12 @@ func (w *RedisClientWrapper) PubSubNumPat(ctx context.Context) *redis.IntCmd {
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.PubSubNumPat"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.PubSubNumPat", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.PubSubNumPat"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PubSubNumPat", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5835,12 +5836,12 @@ func (w *RedisClientWrapper) PubSubNumSub(ctx context.Context, channels ...strin
 	var res0 *redis.StringIntMapCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.PubSubNumSub"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.PubSubNumSub", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.PubSubNumSub"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PubSubNumSub", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5877,12 +5878,12 @@ func (w *RedisClientWrapper) Publish(ctx context.Context, channel string, messag
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Publish"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Publish", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Publish"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Publish", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5919,12 +5920,12 @@ func (w *RedisClientWrapper) Quit(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Quit"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Quit", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Quit"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Quit", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -5961,12 +5962,12 @@ func (w *RedisClientWrapper) RPop(ctx context.Context, key string) *redis.String
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.RPop"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.RPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.RPop"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6003,12 +6004,12 @@ func (w *RedisClientWrapper) RPopLPush(ctx context.Context, source string, desti
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.RPopLPush"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.RPopLPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.RPopLPush"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RPopLPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6045,12 +6046,12 @@ func (w *RedisClientWrapper) RPush(ctx context.Context, key string, values ...in
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.RPush"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.RPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.RPush"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6087,12 +6088,12 @@ func (w *RedisClientWrapper) RPushX(ctx context.Context, key string, value inter
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.RPushX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.RPushX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.RPushX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RPushX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6129,12 +6130,12 @@ func (w *RedisClientWrapper) RandomKey(ctx context.Context) *redis.StringCmd {
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.RandomKey"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.RandomKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.RandomKey"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RandomKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6171,12 +6172,12 @@ func (w *RedisClientWrapper) ReadOnly(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ReadOnly"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ReadOnly", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ReadOnly"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ReadOnly", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6213,12 +6214,12 @@ func (w *RedisClientWrapper) ReadWrite(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ReadWrite"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ReadWrite", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ReadWrite"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ReadWrite", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6255,12 +6256,12 @@ func (w *RedisClientWrapper) Rename(ctx context.Context, key string, newkey stri
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Rename"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Rename", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Rename"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Rename", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6297,12 +6298,12 @@ func (w *RedisClientWrapper) RenameNX(ctx context.Context, key string, newkey st
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.RenameNX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.RenameNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.RenameNX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RenameNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6339,12 +6340,12 @@ func (w *RedisClientWrapper) Restore(ctx context.Context, key string, ttl time.D
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Restore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Restore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Restore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Restore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6381,12 +6382,12 @@ func (w *RedisClientWrapper) RestoreReplace(ctx context.Context, key string, ttl
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.RestoreReplace"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.RestoreReplace", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.RestoreReplace"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RestoreReplace", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6423,12 +6424,12 @@ func (w *RedisClientWrapper) SAdd(ctx context.Context, key string, members ...in
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SAdd"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SAdd"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6465,12 +6466,12 @@ func (w *RedisClientWrapper) SCard(ctx context.Context, key string) *redis.IntCm
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SCard"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SCard", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SCard"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SCard", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6507,12 +6508,12 @@ func (w *RedisClientWrapper) SDiff(ctx context.Context, keys ...string) *redis.S
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SDiff"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SDiff", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SDiff"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SDiff", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6549,12 +6550,12 @@ func (w *RedisClientWrapper) SDiffStore(ctx context.Context, destination string,
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SDiffStore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SDiffStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SDiffStore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SDiffStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6591,12 +6592,12 @@ func (w *RedisClientWrapper) SInter(ctx context.Context, keys ...string) *redis.
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SInter"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SInter", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SInter"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SInter", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6633,12 +6634,12 @@ func (w *RedisClientWrapper) SInterStore(ctx context.Context, destination string
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SInterStore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SInterStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SInterStore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SInterStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6675,12 +6676,12 @@ func (w *RedisClientWrapper) SIsMember(ctx context.Context, key string, member i
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SIsMember"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SIsMember", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SIsMember"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SIsMember", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6717,12 +6718,12 @@ func (w *RedisClientWrapper) SMembers(ctx context.Context, key string) *redis.St
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SMembers"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SMembers", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SMembers"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SMembers", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6759,12 +6760,12 @@ func (w *RedisClientWrapper) SMembersMap(ctx context.Context, key string) *redis
 	var res0 *redis.StringStructMapCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SMembersMap"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SMembersMap", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SMembersMap"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SMembersMap", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6801,12 +6802,12 @@ func (w *RedisClientWrapper) SMove(ctx context.Context, source string, destinati
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SMove"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SMove", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SMove"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SMove", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6843,12 +6844,12 @@ func (w *RedisClientWrapper) SPop(ctx context.Context, key string) *redis.String
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SPop"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SPop"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6885,12 +6886,12 @@ func (w *RedisClientWrapper) SPopN(ctx context.Context, key string, count int64)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SPopN"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SPopN", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SPopN"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SPopN", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6927,12 +6928,12 @@ func (w *RedisClientWrapper) SRandMember(ctx context.Context, key string) *redis
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SRandMember"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SRandMember", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SRandMember"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SRandMember", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -6969,12 +6970,12 @@ func (w *RedisClientWrapper) SRandMemberN(ctx context.Context, key string, count
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SRandMemberN"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SRandMemberN", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SRandMemberN"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SRandMemberN", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7011,12 +7012,12 @@ func (w *RedisClientWrapper) SRem(ctx context.Context, key string, members ...in
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SRem"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SRem", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SRem"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SRem", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7053,12 +7054,12 @@ func (w *RedisClientWrapper) SScan(ctx context.Context, key string, cursor uint6
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SScan"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SScan", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SScan"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SScan", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7095,12 +7096,12 @@ func (w *RedisClientWrapper) SUnion(ctx context.Context, keys ...string) *redis.
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SUnion"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SUnion", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SUnion"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SUnion", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7137,12 +7138,12 @@ func (w *RedisClientWrapper) SUnionStore(ctx context.Context, destination string
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SUnionStore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SUnionStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SUnionStore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SUnionStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7179,12 +7180,12 @@ func (w *RedisClientWrapper) Save(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Save"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Save", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Save"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Save", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7221,12 +7222,12 @@ func (w *RedisClientWrapper) Scan(ctx context.Context, cursor uint64, match stri
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Scan"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Scan", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Scan"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Scan", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7263,12 +7264,12 @@ func (w *RedisClientWrapper) ScriptExists(ctx context.Context, hashes ...string)
 	var res0 *redis.BoolSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ScriptExists"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ScriptExists", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ScriptExists"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ScriptExists", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7305,12 +7306,12 @@ func (w *RedisClientWrapper) ScriptFlush(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ScriptFlush"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ScriptFlush", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ScriptFlush"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ScriptFlush", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7347,12 +7348,12 @@ func (w *RedisClientWrapper) ScriptKill(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ScriptKill"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ScriptKill", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ScriptKill"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ScriptKill", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7389,12 +7390,12 @@ func (w *RedisClientWrapper) ScriptLoad(ctx context.Context, script string) *red
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ScriptLoad"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ScriptLoad", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ScriptLoad"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ScriptLoad", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7431,12 +7432,12 @@ func (w *RedisClientWrapper) Set(ctx context.Context, key string, value interfac
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Set"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Set", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Set"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Set", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7473,12 +7474,12 @@ func (w *RedisClientWrapper) SetBit(ctx context.Context, key string, offset int6
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetBit"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetBit", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetBit"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBit", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7515,12 +7516,12 @@ func (w *RedisClientWrapper) SetNX(ctx context.Context, key string, value interf
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetNX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetNX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7557,12 +7558,12 @@ func (w *RedisClientWrapper) SetRange(ctx context.Context, key string, offset in
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7599,12 +7600,12 @@ func (w *RedisClientWrapper) SetXX(ctx context.Context, key string, value interf
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SetXX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SetXX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SetXX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetXX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7641,12 +7642,12 @@ func (w *RedisClientWrapper) Shutdown(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Shutdown"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Shutdown", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Shutdown"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Shutdown", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7683,12 +7684,12 @@ func (w *RedisClientWrapper) ShutdownNoSave(ctx context.Context) *redis.StatusCm
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ShutdownNoSave"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ShutdownNoSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ShutdownNoSave"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ShutdownNoSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7725,12 +7726,12 @@ func (w *RedisClientWrapper) ShutdownSave(ctx context.Context) *redis.StatusCmd 
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ShutdownSave"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ShutdownSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ShutdownSave"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ShutdownSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7767,12 +7768,12 @@ func (w *RedisClientWrapper) SlaveOf(ctx context.Context, host string, port stri
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SlaveOf"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SlaveOf", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SlaveOf"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SlaveOf", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7813,12 +7814,12 @@ func (w *RedisClientWrapper) Sort(ctx context.Context, key string, sort *redis.S
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Sort"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Sort", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Sort"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Sort", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7855,12 +7856,12 @@ func (w *RedisClientWrapper) SortInterfaces(ctx context.Context, key string, sor
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SortInterfaces"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SortInterfaces", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SortInterfaces"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SortInterfaces", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7897,12 +7898,12 @@ func (w *RedisClientWrapper) SortStore(ctx context.Context, key string, store st
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.SortStore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SortStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.SortStore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SortStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7939,12 +7940,12 @@ func (w *RedisClientWrapper) StrLen(ctx context.Context, key string) *redis.IntC
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.StrLen"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.StrLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.StrLen"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.StrLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -7985,12 +7986,12 @@ func (w *RedisClientWrapper) TTL(ctx context.Context, key string) *redis.Duratio
 	var res0 *redis.DurationCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.TTL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.TTL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.TTL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.TTL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8027,12 +8028,12 @@ func (w *RedisClientWrapper) Time(ctx context.Context) *redis.TimeCmd {
 	var res0 *redis.TimeCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Time"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Time", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Time"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Time", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8069,12 +8070,12 @@ func (w *RedisClientWrapper) Touch(ctx context.Context, keys ...string) *redis.I
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Touch"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Touch", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Touch"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Touch", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8111,12 +8112,12 @@ func (w *RedisClientWrapper) Type(ctx context.Context, key string) *redis.Status
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Type"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Type", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Type"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Type", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8153,12 +8154,12 @@ func (w *RedisClientWrapper) Unlink(ctx context.Context, keys ...string) *redis.
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Unlink"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Unlink", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Unlink"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Unlink", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8195,12 +8196,12 @@ func (w *RedisClientWrapper) Wait(ctx context.Context, numSlaves int, timeout ti
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.Wait"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.Wait", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.Wait"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Wait", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8237,12 +8238,12 @@ func (w *RedisClientWrapper) XAck(ctx context.Context, stream string, group stri
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XAck"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XAck", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XAck"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XAck", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8279,12 +8280,12 @@ func (w *RedisClientWrapper) XAdd(ctx context.Context, a *redis.XAddArgs) *redis
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XAdd"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XAdd"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8321,12 +8322,12 @@ func (w *RedisClientWrapper) XClaim(ctx context.Context, a *redis.XClaimArgs) *r
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XClaim"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XClaim", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XClaim"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XClaim", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8363,12 +8364,12 @@ func (w *RedisClientWrapper) XClaimJustID(ctx context.Context, a *redis.XClaimAr
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XClaimJustID"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XClaimJustID", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XClaimJustID"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XClaimJustID", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8405,12 +8406,12 @@ func (w *RedisClientWrapper) XDel(ctx context.Context, stream string, ids ...str
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XDel"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XDel", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XDel"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XDel", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8447,12 +8448,12 @@ func (w *RedisClientWrapper) XGroupCreate(ctx context.Context, stream string, gr
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XGroupCreate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XGroupCreate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XGroupCreate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XGroupCreate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8489,12 +8490,12 @@ func (w *RedisClientWrapper) XGroupCreateMkStream(ctx context.Context, stream st
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XGroupCreateMkStream"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XGroupCreateMkStream", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XGroupCreateMkStream"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XGroupCreateMkStream", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8531,12 +8532,12 @@ func (w *RedisClientWrapper) XGroupDelConsumer(ctx context.Context, stream strin
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XGroupDelConsumer"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XGroupDelConsumer", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XGroupDelConsumer"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XGroupDelConsumer", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8573,12 +8574,12 @@ func (w *RedisClientWrapper) XGroupDestroy(ctx context.Context, stream string, g
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XGroupDestroy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XGroupDestroy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XGroupDestroy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XGroupDestroy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8615,12 +8616,12 @@ func (w *RedisClientWrapper) XGroupSetID(ctx context.Context, stream string, gro
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XGroupSetID"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XGroupSetID", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XGroupSetID"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XGroupSetID", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8657,12 +8658,12 @@ func (w *RedisClientWrapper) XLen(ctx context.Context, stream string) *redis.Int
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XLen"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XLen"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8699,12 +8700,12 @@ func (w *RedisClientWrapper) XPending(ctx context.Context, stream string, group 
 	var res0 *redis.XPendingCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XPending"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XPending", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XPending"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XPending", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8741,12 +8742,12 @@ func (w *RedisClientWrapper) XPendingExt(ctx context.Context, a *redis.XPendingE
 	var res0 *redis.XPendingExtCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XPendingExt"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XPendingExt", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XPendingExt"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XPendingExt", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8783,12 +8784,12 @@ func (w *RedisClientWrapper) XRange(ctx context.Context, stream string, start st
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8825,12 +8826,12 @@ func (w *RedisClientWrapper) XRangeN(ctx context.Context, stream string, start s
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XRangeN"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XRangeN", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XRangeN"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XRangeN", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8867,12 +8868,12 @@ func (w *RedisClientWrapper) XRead(ctx context.Context, a *redis.XReadArgs) *red
 	var res0 *redis.XStreamSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XRead"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XRead", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XRead"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XRead", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8909,12 +8910,12 @@ func (w *RedisClientWrapper) XReadGroup(ctx context.Context, a *redis.XReadGroup
 	var res0 *redis.XStreamSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XReadGroup"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XReadGroup", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XReadGroup"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XReadGroup", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8951,12 +8952,12 @@ func (w *RedisClientWrapper) XReadStreams(ctx context.Context, streams ...string
 	var res0 *redis.XStreamSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XReadStreams"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XReadStreams", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XReadStreams"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XReadStreams", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -8993,12 +8994,12 @@ func (w *RedisClientWrapper) XRevRange(ctx context.Context, stream string, start
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XRevRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XRevRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XRevRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XRevRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9035,12 +9036,12 @@ func (w *RedisClientWrapper) XRevRangeN(ctx context.Context, stream string, star
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XRevRangeN"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XRevRangeN", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XRevRangeN"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XRevRangeN", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9077,12 +9078,12 @@ func (w *RedisClientWrapper) XTrim(ctx context.Context, key string, maxLen int64
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XTrim"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XTrim", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XTrim"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XTrim", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9119,12 +9120,12 @@ func (w *RedisClientWrapper) XTrimApprox(ctx context.Context, key string, maxLen
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.XTrimApprox"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.XTrimApprox", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.XTrimApprox"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XTrimApprox", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9161,12 +9162,12 @@ func (w *RedisClientWrapper) ZAdd(ctx context.Context, key string, members ...re
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZAdd"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZAdd"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9203,12 +9204,12 @@ func (w *RedisClientWrapper) ZAddCh(ctx context.Context, key string, members ...
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZAddCh"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZAddCh", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZAddCh"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZAddCh", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9245,12 +9246,12 @@ func (w *RedisClientWrapper) ZAddNX(ctx context.Context, key string, members ...
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZAddNX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZAddNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZAddNX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZAddNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9287,12 +9288,12 @@ func (w *RedisClientWrapper) ZAddNXCh(ctx context.Context, key string, members .
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZAddNXCh"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZAddNXCh", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZAddNXCh"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZAddNXCh", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9329,12 +9330,12 @@ func (w *RedisClientWrapper) ZAddXX(ctx context.Context, key string, members ...
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZAddXX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZAddXX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZAddXX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZAddXX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9371,12 +9372,12 @@ func (w *RedisClientWrapper) ZAddXXCh(ctx context.Context, key string, members .
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZAddXXCh"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZAddXXCh", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZAddXXCh"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZAddXXCh", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9413,12 +9414,12 @@ func (w *RedisClientWrapper) ZCard(ctx context.Context, key string) *redis.IntCm
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZCard"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZCard", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZCard"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZCard", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9455,12 +9456,12 @@ func (w *RedisClientWrapper) ZCount(ctx context.Context, key string, min string,
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZCount"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZCount"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9497,12 +9498,12 @@ func (w *RedisClientWrapper) ZIncr(ctx context.Context, key string, member redis
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZIncr"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZIncr", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZIncr"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZIncr", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9539,12 +9540,12 @@ func (w *RedisClientWrapper) ZIncrBy(ctx context.Context, key string, increment 
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZIncrBy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZIncrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZIncrBy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZIncrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9581,12 +9582,12 @@ func (w *RedisClientWrapper) ZIncrNX(ctx context.Context, key string, member red
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZIncrNX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZIncrNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZIncrNX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZIncrNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9623,12 +9624,12 @@ func (w *RedisClientWrapper) ZIncrXX(ctx context.Context, key string, member red
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZIncrXX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZIncrXX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZIncrXX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZIncrXX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9665,12 +9666,12 @@ func (w *RedisClientWrapper) ZInterStore(ctx context.Context, destination string
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZInterStore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZInterStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZInterStore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZInterStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9707,12 +9708,12 @@ func (w *RedisClientWrapper) ZLexCount(ctx context.Context, key string, min stri
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZLexCount"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZLexCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZLexCount"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZLexCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9749,12 +9750,12 @@ func (w *RedisClientWrapper) ZPopMax(ctx context.Context, key string, count ...i
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZPopMax"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZPopMax", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZPopMax"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZPopMax", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9791,12 +9792,12 @@ func (w *RedisClientWrapper) ZPopMin(ctx context.Context, key string, count ...i
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZPopMin"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZPopMin", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZPopMin"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZPopMin", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9833,12 +9834,12 @@ func (w *RedisClientWrapper) ZRange(ctx context.Context, key string, start int64
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9875,12 +9876,12 @@ func (w *RedisClientWrapper) ZRangeByLex(ctx context.Context, key string, opt re
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRangeByLex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRangeByLex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRangeByLex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRangeByLex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9917,12 +9918,12 @@ func (w *RedisClientWrapper) ZRangeByScore(ctx context.Context, key string, opt 
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRangeByScore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRangeByScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRangeByScore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRangeByScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -9959,12 +9960,12 @@ func (w *RedisClientWrapper) ZRangeByScoreWithScores(ctx context.Context, key st
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRangeByScoreWithScores"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRangeByScoreWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRangeByScoreWithScores"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRangeByScoreWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10001,12 +10002,12 @@ func (w *RedisClientWrapper) ZRangeWithScores(ctx context.Context, key string, s
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRangeWithScores"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRangeWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRangeWithScores"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRangeWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10043,12 +10044,12 @@ func (w *RedisClientWrapper) ZRank(ctx context.Context, key string, member strin
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRank"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRank", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRank"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRank", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10085,12 +10086,12 @@ func (w *RedisClientWrapper) ZRem(ctx context.Context, key string, members ...in
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRem"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRem", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRem"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRem", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10127,12 +10128,12 @@ func (w *RedisClientWrapper) ZRemRangeByLex(ctx context.Context, key string, min
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRemRangeByLex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRemRangeByLex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRemRangeByLex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRemRangeByLex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10169,12 +10170,12 @@ func (w *RedisClientWrapper) ZRemRangeByRank(ctx context.Context, key string, st
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRemRangeByRank"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRemRangeByRank", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRemRangeByRank"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRemRangeByRank", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10211,12 +10212,12 @@ func (w *RedisClientWrapper) ZRemRangeByScore(ctx context.Context, key string, m
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRemRangeByScore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRemRangeByScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRemRangeByScore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRemRangeByScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10253,12 +10254,12 @@ func (w *RedisClientWrapper) ZRevRange(ctx context.Context, key string, start in
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRevRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRevRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRevRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10295,12 +10296,12 @@ func (w *RedisClientWrapper) ZRevRangeByLex(ctx context.Context, key string, opt
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRangeByLex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRevRangeByLex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRevRangeByLex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRevRangeByLex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10337,12 +10338,12 @@ func (w *RedisClientWrapper) ZRevRangeByScore(ctx context.Context, key string, o
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRangeByScore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRevRangeByScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRevRangeByScore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRevRangeByScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10379,12 +10380,12 @@ func (w *RedisClientWrapper) ZRevRangeByScoreWithScores(ctx context.Context, key
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRangeByScoreWithScores"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRevRangeByScoreWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRevRangeByScoreWithScores"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRevRangeByScoreWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10421,12 +10422,12 @@ func (w *RedisClientWrapper) ZRevRangeWithScores(ctx context.Context, key string
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRangeWithScores"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRevRangeWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRevRangeWithScores"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRevRangeWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10463,12 +10464,12 @@ func (w *RedisClientWrapper) ZRevRank(ctx context.Context, key string, member st
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRank"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZRevRank", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZRevRank"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRevRank", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10505,12 +10506,12 @@ func (w *RedisClientWrapper) ZScan(ctx context.Context, key string, cursor uint6
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZScan"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZScan", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZScan"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZScan", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10547,12 +10548,12 @@ func (w *RedisClientWrapper) ZScore(ctx context.Context, key string, member stri
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZScore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZScore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10589,12 +10590,12 @@ func (w *RedisClientWrapper) ZUnionStore(ctx context.Context, dest string, store
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "Client.ZUnionStore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ZUnionStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "Client.ZUnionStore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZUnionStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10631,12 +10632,12 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Close"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Close", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Close"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Close", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10678,12 +10679,12 @@ func (w *RedisClusterClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.DBSize"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.DBSize", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.DBSize"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.DBSize", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10720,12 +10721,12 @@ func (w *RedisClusterClientWrapper) Do(ctx context.Context, args ...interface{})
 	var res0 *redis.Cmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Do"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Do"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Do", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10762,12 +10763,12 @@ func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(c
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ForEachMaster"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ForEachMaster", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ForEachMaster"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ForEachMaster", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10804,12 +10805,12 @@ func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(cli
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ForEachNode"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ForEachNode", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ForEachNode"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ForEachNode", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10846,12 +10847,12 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ForEachSlave"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ForEachSlave", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ForEachSlave"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ForEachSlave", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10904,12 +10905,12 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Pipelined"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Pipelined", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Pipelined"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Pipelined", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10951,12 +10952,12 @@ func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Process"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Process", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Process"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Process", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -10993,12 +10994,12 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ReloadState"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ReloadState", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ReloadState"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ReloadState", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11046,12 +11047,12 @@ func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(red
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.TxPipelined"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.TxPipelined", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.TxPipelined"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.TxPipelined", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11088,12 +11089,12 @@ func (w *RedisClusterClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx
 	var err error
 	err = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Watch"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Watch", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Watch"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Watch", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11143,12 +11144,12 @@ func (w *RedisClusterClientWrapper) Append(ctx context.Context, key string, valu
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Append"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Append", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Append"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Append", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11185,12 +11186,12 @@ func (w *RedisClusterClientWrapper) BLPop(ctx context.Context, timeout time.Dura
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BLPop"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.BLPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.BLPop"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BLPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11227,12 +11228,12 @@ func (w *RedisClusterClientWrapper) BRPop(ctx context.Context, timeout time.Dura
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BRPop"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.BRPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.BRPop"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BRPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11269,12 +11270,12 @@ func (w *RedisClusterClientWrapper) BRPopLPush(ctx context.Context, source strin
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BRPopLPush"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.BRPopLPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.BRPopLPush"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BRPopLPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11311,12 +11312,12 @@ func (w *RedisClusterClientWrapper) BZPopMax(ctx context.Context, timeout time.D
 	var res0 *redis.ZWithKeyCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BZPopMax"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.BZPopMax", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.BZPopMax"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BZPopMax", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11353,12 +11354,12 @@ func (w *RedisClusterClientWrapper) BZPopMin(ctx context.Context, timeout time.D
 	var res0 *redis.ZWithKeyCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BZPopMin"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.BZPopMin", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.BZPopMin"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BZPopMin", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11395,12 +11396,12 @@ func (w *RedisClusterClientWrapper) BgRewriteAOF(ctx context.Context) *redis.Sta
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BgRewriteAOF"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.BgRewriteAOF", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.BgRewriteAOF"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BgRewriteAOF", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11437,12 +11438,12 @@ func (w *RedisClusterClientWrapper) BgSave(ctx context.Context) *redis.StatusCmd
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BgSave"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.BgSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.BgSave"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BgSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11479,12 +11480,12 @@ func (w *RedisClusterClientWrapper) BitCount(ctx context.Context, key string, bi
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitCount"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.BitCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.BitCount"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BitCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11521,12 +11522,12 @@ func (w *RedisClusterClientWrapper) BitOpAnd(ctx context.Context, destKey string
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitOpAnd"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.BitOpAnd", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.BitOpAnd"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BitOpAnd", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11563,12 +11564,12 @@ func (w *RedisClusterClientWrapper) BitOpNot(ctx context.Context, destKey string
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitOpNot"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.BitOpNot", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.BitOpNot"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BitOpNot", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11605,12 +11606,12 @@ func (w *RedisClusterClientWrapper) BitOpOr(ctx context.Context, destKey string,
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitOpOr"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.BitOpOr", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.BitOpOr"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BitOpOr", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11647,12 +11648,12 @@ func (w *RedisClusterClientWrapper) BitOpXor(ctx context.Context, destKey string
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitOpXor"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.BitOpXor", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.BitOpXor"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BitOpXor", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11689,12 +11690,12 @@ func (w *RedisClusterClientWrapper) BitPos(ctx context.Context, key string, bit 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitPos"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.BitPos", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.BitPos"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BitPos", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11731,12 +11732,12 @@ func (w *RedisClusterClientWrapper) ClientGetName(ctx context.Context) *redis.St
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientGetName"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClientGetName", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientGetName"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientGetName", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11773,12 +11774,12 @@ func (w *RedisClusterClientWrapper) ClientID(ctx context.Context) *redis.IntCmd 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientID"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClientID", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientID"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientID", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11815,12 +11816,12 @@ func (w *RedisClusterClientWrapper) ClientKill(ctx context.Context, ipPort strin
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientKill"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClientKill", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientKill"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientKill", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11857,12 +11858,12 @@ func (w *RedisClusterClientWrapper) ClientKillByFilter(ctx context.Context, keys
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientKillByFilter"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClientKillByFilter", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientKillByFilter"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientKillByFilter", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11899,12 +11900,12 @@ func (w *RedisClusterClientWrapper) ClientList(ctx context.Context) *redis.Strin
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientList"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClientList", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientList"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientList", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11941,12 +11942,12 @@ func (w *RedisClusterClientWrapper) ClientPause(ctx context.Context, dur time.Du
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientPause"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClientPause", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientPause"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientPause", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -11983,12 +11984,12 @@ func (w *RedisClusterClientWrapper) ClientUnblock(ctx context.Context, id int64)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientUnblock"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClientUnblock", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientUnblock"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientUnblock", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12025,12 +12026,12 @@ func (w *RedisClusterClientWrapper) ClientUnblockWithError(ctx context.Context, 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientUnblockWithError"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClientUnblockWithError", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClientUnblockWithError"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientUnblockWithError", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12067,12 +12068,12 @@ func (w *RedisClusterClientWrapper) ClusterAddSlots(ctx context.Context, slots .
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterAddSlots"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterAddSlots", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterAddSlots"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterAddSlots", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12109,12 +12110,12 @@ func (w *RedisClusterClientWrapper) ClusterAddSlotsRange(ctx context.Context, mi
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterAddSlotsRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterAddSlotsRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterAddSlotsRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterAddSlotsRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12151,12 +12152,12 @@ func (w *RedisClusterClientWrapper) ClusterCountFailureReports(ctx context.Conte
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterCountFailureReports"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterCountFailureReports", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterCountFailureReports"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterCountFailureReports", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12193,12 +12194,12 @@ func (w *RedisClusterClientWrapper) ClusterCountKeysInSlot(ctx context.Context, 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterCountKeysInSlot"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterCountKeysInSlot", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterCountKeysInSlot"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterCountKeysInSlot", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12235,12 +12236,12 @@ func (w *RedisClusterClientWrapper) ClusterDelSlots(ctx context.Context, slots .
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterDelSlots"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterDelSlots", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterDelSlots"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterDelSlots", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12277,12 +12278,12 @@ func (w *RedisClusterClientWrapper) ClusterDelSlotsRange(ctx context.Context, mi
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterDelSlotsRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterDelSlotsRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterDelSlotsRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterDelSlotsRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12319,12 +12320,12 @@ func (w *RedisClusterClientWrapper) ClusterFailover(ctx context.Context) *redis.
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterFailover"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterFailover", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterFailover"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterFailover", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12361,12 +12362,12 @@ func (w *RedisClusterClientWrapper) ClusterForget(ctx context.Context, nodeID st
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterForget"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterForget", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterForget"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterForget", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12403,12 +12404,12 @@ func (w *RedisClusterClientWrapper) ClusterGetKeysInSlot(ctx context.Context, sl
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterGetKeysInSlot"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterGetKeysInSlot", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterGetKeysInSlot"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterGetKeysInSlot", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12445,12 +12446,12 @@ func (w *RedisClusterClientWrapper) ClusterInfo(ctx context.Context) *redis.Stri
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterInfo"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterInfo"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterInfo", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12487,12 +12488,12 @@ func (w *RedisClusterClientWrapper) ClusterKeySlot(ctx context.Context, key stri
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterKeySlot"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterKeySlot", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterKeySlot"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterKeySlot", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12529,12 +12530,12 @@ func (w *RedisClusterClientWrapper) ClusterMeet(ctx context.Context, host string
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterMeet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterMeet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterMeet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterMeet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12571,12 +12572,12 @@ func (w *RedisClusterClientWrapper) ClusterNodes(ctx context.Context) *redis.Str
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterNodes"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterNodes", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterNodes"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterNodes", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12613,12 +12614,12 @@ func (w *RedisClusterClientWrapper) ClusterReplicate(ctx context.Context, nodeID
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterReplicate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterReplicate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterReplicate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterReplicate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12655,12 +12656,12 @@ func (w *RedisClusterClientWrapper) ClusterResetHard(ctx context.Context) *redis
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterResetHard"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterResetHard", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterResetHard"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterResetHard", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12697,12 +12698,12 @@ func (w *RedisClusterClientWrapper) ClusterResetSoft(ctx context.Context) *redis
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterResetSoft"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterResetSoft", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterResetSoft"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterResetSoft", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12739,12 +12740,12 @@ func (w *RedisClusterClientWrapper) ClusterSaveConfig(ctx context.Context) *redi
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterSaveConfig"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSaveConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterSaveConfig"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSaveConfig", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12781,12 +12782,12 @@ func (w *RedisClusterClientWrapper) ClusterSlaves(ctx context.Context, nodeID st
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterSlaves"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSlaves", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterSlaves"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSlaves", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12823,12 +12824,12 @@ func (w *RedisClusterClientWrapper) ClusterSlots(ctx context.Context) *redis.Clu
 	var res0 *redis.ClusterSlotsCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterSlots"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSlots", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ClusterSlots"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSlots", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12865,12 +12866,12 @@ func (w *RedisClusterClientWrapper) Command(ctx context.Context) *redis.Commands
 	var res0 *redis.CommandsInfoCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Command"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Command", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Command"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Command", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12907,12 +12908,12 @@ func (w *RedisClusterClientWrapper) ConfigGet(ctx context.Context, parameter str
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ConfigGet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ConfigGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ConfigGet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ConfigGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12949,12 +12950,12 @@ func (w *RedisClusterClientWrapper) ConfigResetStat(ctx context.Context) *redis.
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ConfigResetStat"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ConfigResetStat", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ConfigResetStat"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ConfigResetStat", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -12991,12 +12992,12 @@ func (w *RedisClusterClientWrapper) ConfigRewrite(ctx context.Context) *redis.St
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ConfigRewrite"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ConfigRewrite", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ConfigRewrite"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ConfigRewrite", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13033,12 +13034,12 @@ func (w *RedisClusterClientWrapper) ConfigSet(ctx context.Context, parameter str
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ConfigSet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ConfigSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ConfigSet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ConfigSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13075,12 +13076,12 @@ func (w *RedisClusterClientWrapper) DbSize(ctx context.Context) *redis.IntCmd {
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.DbSize"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.DbSize", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.DbSize"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.DbSize", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13117,12 +13118,12 @@ func (w *RedisClusterClientWrapper) DebugObject(ctx context.Context, key string)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.DebugObject"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.DebugObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.DebugObject"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.DebugObject", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13159,12 +13160,12 @@ func (w *RedisClusterClientWrapper) Decr(ctx context.Context, key string) *redis
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Decr"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Decr", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Decr"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Decr", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13201,12 +13202,12 @@ func (w *RedisClusterClientWrapper) DecrBy(ctx context.Context, key string, decr
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.DecrBy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.DecrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.DecrBy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.DecrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13243,12 +13244,12 @@ func (w *RedisClusterClientWrapper) Del(ctx context.Context, keys ...string) *re
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Del"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Del", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Del"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Del", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13285,12 +13286,12 @@ func (w *RedisClusterClientWrapper) Dump(ctx context.Context, key string) *redis
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Dump"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Dump", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Dump"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Dump", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13327,12 +13328,12 @@ func (w *RedisClusterClientWrapper) Echo(ctx context.Context, message interface{
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Echo"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Echo", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Echo"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Echo", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13369,12 +13370,12 @@ func (w *RedisClusterClientWrapper) Eval(ctx context.Context, script string, key
 	var res0 *redis.Cmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Eval"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Eval", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Eval"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Eval", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13411,12 +13412,12 @@ func (w *RedisClusterClientWrapper) EvalSha(ctx context.Context, sha1 string, ke
 	var res0 *redis.Cmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.EvalSha"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.EvalSha", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.EvalSha"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.EvalSha", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13453,12 +13454,12 @@ func (w *RedisClusterClientWrapper) Exists(ctx context.Context, keys ...string) 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Exists"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Exists", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Exists"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Exists", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13495,12 +13496,12 @@ func (w *RedisClusterClientWrapper) Expire(ctx context.Context, key string, expi
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Expire"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Expire", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Expire"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Expire", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13537,12 +13538,12 @@ func (w *RedisClusterClientWrapper) ExpireAt(ctx context.Context, key string, tm
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ExpireAt"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ExpireAt", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ExpireAt"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ExpireAt", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13579,12 +13580,12 @@ func (w *RedisClusterClientWrapper) FlushAll(ctx context.Context) *redis.StatusC
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.FlushAll"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.FlushAll", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.FlushAll"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.FlushAll", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13621,12 +13622,12 @@ func (w *RedisClusterClientWrapper) FlushAllAsync(ctx context.Context) *redis.St
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.FlushAllAsync"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.FlushAllAsync", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.FlushAllAsync"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.FlushAllAsync", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13663,12 +13664,12 @@ func (w *RedisClusterClientWrapper) FlushDB(ctx context.Context) *redis.StatusCm
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.FlushDB"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.FlushDB", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.FlushDB"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.FlushDB", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13705,12 +13706,12 @@ func (w *RedisClusterClientWrapper) FlushDBAsync(ctx context.Context) *redis.Sta
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.FlushDBAsync"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.FlushDBAsync", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.FlushDBAsync"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.FlushDBAsync", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13747,12 +13748,12 @@ func (w *RedisClusterClientWrapper) FlushDb(ctx context.Context) *redis.StatusCm
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.FlushDb"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.FlushDb", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.FlushDb"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.FlushDb", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13789,12 +13790,12 @@ func (w *RedisClusterClientWrapper) GeoAdd(ctx context.Context, key string, geoL
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoAdd"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.GeoAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoAdd"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13831,12 +13832,12 @@ func (w *RedisClusterClientWrapper) GeoDist(ctx context.Context, key string, mem
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoDist"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.GeoDist", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoDist"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoDist", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13873,12 +13874,12 @@ func (w *RedisClusterClientWrapper) GeoHash(ctx context.Context, key string, mem
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoHash"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.GeoHash", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoHash"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoHash", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13915,12 +13916,12 @@ func (w *RedisClusterClientWrapper) GeoPos(ctx context.Context, key string, memb
 	var res0 *redis.GeoPosCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoPos"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.GeoPos", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoPos"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoPos", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13957,12 +13958,12 @@ func (w *RedisClusterClientWrapper) GeoRadius(ctx context.Context, key string, l
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoRadius"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadius", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoRadius"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadius", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -13999,12 +14000,12 @@ func (w *RedisClusterClientWrapper) GeoRadiusByMember(ctx context.Context, key s
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoRadiusByMember"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusByMember", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoRadiusByMember"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusByMember", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14041,12 +14042,12 @@ func (w *RedisClusterClientWrapper) GeoRadiusByMemberRO(ctx context.Context, key
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoRadiusByMemberRO"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusByMemberRO", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoRadiusByMemberRO"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusByMemberRO", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14083,12 +14084,12 @@ func (w *RedisClusterClientWrapper) GeoRadiusRO(ctx context.Context, key string,
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoRadiusRO"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusRO", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.GeoRadiusRO"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusRO", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14125,12 +14126,12 @@ func (w *RedisClusterClientWrapper) Get(ctx context.Context, key string) *redis.
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Get"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Get", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Get"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Get", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14167,12 +14168,12 @@ func (w *RedisClusterClientWrapper) GetBit(ctx context.Context, key string, offs
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GetBit"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.GetBit", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.GetBit"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GetBit", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14209,12 +14210,12 @@ func (w *RedisClusterClientWrapper) GetRange(ctx context.Context, key string, st
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GetRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.GetRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.GetRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GetRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14251,12 +14252,12 @@ func (w *RedisClusterClientWrapper) GetSet(ctx context.Context, key string, valu
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GetSet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.GetSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.GetSet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GetSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14293,12 +14294,12 @@ func (w *RedisClusterClientWrapper) HDel(ctx context.Context, key string, fields
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HDel"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.HDel", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.HDel"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HDel", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14335,12 +14336,12 @@ func (w *RedisClusterClientWrapper) HExists(ctx context.Context, key string, fie
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HExists"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.HExists", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.HExists"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HExists", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14377,12 +14378,12 @@ func (w *RedisClusterClientWrapper) HGet(ctx context.Context, key string, field 
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HGet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.HGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.HGet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14419,12 +14420,12 @@ func (w *RedisClusterClientWrapper) HGetAll(ctx context.Context, key string) *re
 	var res0 *redis.StringStringMapCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HGetAll"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.HGetAll", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.HGetAll"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HGetAll", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14461,12 +14462,12 @@ func (w *RedisClusterClientWrapper) HIncrBy(ctx context.Context, key string, fie
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HIncrBy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.HIncrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.HIncrBy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HIncrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14503,12 +14504,12 @@ func (w *RedisClusterClientWrapper) HIncrByFloat(ctx context.Context, key string
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HIncrByFloat"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.HIncrByFloat", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.HIncrByFloat"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HIncrByFloat", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14545,12 +14546,12 @@ func (w *RedisClusterClientWrapper) HKeys(ctx context.Context, key string) *redi
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HKeys"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.HKeys", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.HKeys"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HKeys", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14587,12 +14588,12 @@ func (w *RedisClusterClientWrapper) HLen(ctx context.Context, key string) *redis
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HLen"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.HLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.HLen"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14629,12 +14630,12 @@ func (w *RedisClusterClientWrapper) HMGet(ctx context.Context, key string, field
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HMGet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.HMGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.HMGet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HMGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14671,12 +14672,12 @@ func (w *RedisClusterClientWrapper) HMSet(ctx context.Context, key string, field
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HMSet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.HMSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.HMSet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HMSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14713,12 +14714,12 @@ func (w *RedisClusterClientWrapper) HScan(ctx context.Context, key string, curso
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HScan"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.HScan", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.HScan"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HScan", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14755,12 +14756,12 @@ func (w *RedisClusterClientWrapper) HSet(ctx context.Context, key string, field 
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HSet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.HSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.HSet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14797,12 +14798,12 @@ func (w *RedisClusterClientWrapper) HSetNX(ctx context.Context, key string, fiel
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HSetNX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.HSetNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.HSetNX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HSetNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14839,12 +14840,12 @@ func (w *RedisClusterClientWrapper) HVals(ctx context.Context, key string) *redi
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HVals"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.HVals", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.HVals"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HVals", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14881,12 +14882,12 @@ func (w *RedisClusterClientWrapper) Incr(ctx context.Context, key string) *redis
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Incr"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Incr", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Incr"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Incr", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14923,12 +14924,12 @@ func (w *RedisClusterClientWrapper) IncrBy(ctx context.Context, key string, valu
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.IncrBy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.IncrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.IncrBy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.IncrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -14965,12 +14966,12 @@ func (w *RedisClusterClientWrapper) IncrByFloat(ctx context.Context, key string,
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.IncrByFloat"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.IncrByFloat", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.IncrByFloat"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.IncrByFloat", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15007,12 +15008,12 @@ func (w *RedisClusterClientWrapper) Info(ctx context.Context, section ...string)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Info"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Info", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Info"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Info", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15049,12 +15050,12 @@ func (w *RedisClusterClientWrapper) Keys(ctx context.Context, pattern string) *r
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Keys"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Keys", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Keys"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Keys", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15091,12 +15092,12 @@ func (w *RedisClusterClientWrapper) LIndex(ctx context.Context, key string, inde
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LIndex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.LIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.LIndex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LIndex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15133,12 +15134,12 @@ func (w *RedisClusterClientWrapper) LInsert(ctx context.Context, key string, op 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LInsert"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.LInsert", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.LInsert"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LInsert", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15175,12 +15176,12 @@ func (w *RedisClusterClientWrapper) LInsertAfter(ctx context.Context, key string
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LInsertAfter"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.LInsertAfter", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.LInsertAfter"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LInsertAfter", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15217,12 +15218,12 @@ func (w *RedisClusterClientWrapper) LInsertBefore(ctx context.Context, key strin
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LInsertBefore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.LInsertBefore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.LInsertBefore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LInsertBefore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15259,12 +15260,12 @@ func (w *RedisClusterClientWrapper) LLen(ctx context.Context, key string) *redis
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LLen"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.LLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.LLen"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15301,12 +15302,12 @@ func (w *RedisClusterClientWrapper) LPop(ctx context.Context, key string) *redis
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LPop"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.LPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.LPop"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15343,12 +15344,12 @@ func (w *RedisClusterClientWrapper) LPush(ctx context.Context, key string, value
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LPush"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.LPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.LPush"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15385,12 +15386,12 @@ func (w *RedisClusterClientWrapper) LPushX(ctx context.Context, key string, valu
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LPushX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.LPushX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.LPushX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LPushX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15427,12 +15428,12 @@ func (w *RedisClusterClientWrapper) LRange(ctx context.Context, key string, star
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.LRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.LRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15469,12 +15470,12 @@ func (w *RedisClusterClientWrapper) LRem(ctx context.Context, key string, count 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LRem"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.LRem", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.LRem"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LRem", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15511,12 +15512,12 @@ func (w *RedisClusterClientWrapper) LSet(ctx context.Context, key string, index 
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LSet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.LSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.LSet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15553,12 +15554,12 @@ func (w *RedisClusterClientWrapper) LTrim(ctx context.Context, key string, start
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LTrim"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.LTrim", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.LTrim"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LTrim", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15595,12 +15596,12 @@ func (w *RedisClusterClientWrapper) LastSave(ctx context.Context) *redis.IntCmd 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LastSave"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.LastSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.LastSave"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LastSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15637,12 +15638,12 @@ func (w *RedisClusterClientWrapper) MGet(ctx context.Context, keys ...string) *r
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.MGet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.MGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.MGet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.MGet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15679,12 +15680,12 @@ func (w *RedisClusterClientWrapper) MSet(ctx context.Context, pairs ...interface
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.MSet"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.MSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.MSet"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.MSet", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15721,12 +15722,12 @@ func (w *RedisClusterClientWrapper) MSetNX(ctx context.Context, pairs ...interfa
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.MSetNX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.MSetNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.MSetNX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.MSetNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15763,12 +15764,12 @@ func (w *RedisClusterClientWrapper) MemoryUsage(ctx context.Context, key string,
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.MemoryUsage"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.MemoryUsage", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.MemoryUsage"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.MemoryUsage", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15805,12 +15806,12 @@ func (w *RedisClusterClientWrapper) Migrate(ctx context.Context, host string, po
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Migrate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Migrate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Migrate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Migrate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15847,12 +15848,12 @@ func (w *RedisClusterClientWrapper) Move(ctx context.Context, key string, db int
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Move"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Move", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Move"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Move", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15889,12 +15890,12 @@ func (w *RedisClusterClientWrapper) ObjectEncoding(ctx context.Context, key stri
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ObjectEncoding"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ObjectEncoding", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ObjectEncoding"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ObjectEncoding", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15931,12 +15932,12 @@ func (w *RedisClusterClientWrapper) ObjectIdleTime(ctx context.Context, key stri
 	var res0 *redis.DurationCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ObjectIdleTime"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ObjectIdleTime", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ObjectIdleTime"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ObjectIdleTime", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -15973,12 +15974,12 @@ func (w *RedisClusterClientWrapper) ObjectRefCount(ctx context.Context, key stri
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ObjectRefCount"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ObjectRefCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ObjectRefCount"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ObjectRefCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16015,12 +16016,12 @@ func (w *RedisClusterClientWrapper) PExpire(ctx context.Context, key string, exp
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PExpire"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.PExpire", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.PExpire"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PExpire", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16057,12 +16058,12 @@ func (w *RedisClusterClientWrapper) PExpireAt(ctx context.Context, key string, t
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PExpireAt"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.PExpireAt", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.PExpireAt"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PExpireAt", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16099,12 +16100,12 @@ func (w *RedisClusterClientWrapper) PFAdd(ctx context.Context, key string, els .
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PFAdd"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.PFAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.PFAdd"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PFAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16141,12 +16142,12 @@ func (w *RedisClusterClientWrapper) PFCount(ctx context.Context, keys ...string)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PFCount"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.PFCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.PFCount"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PFCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16183,12 +16184,12 @@ func (w *RedisClusterClientWrapper) PFMerge(ctx context.Context, dest string, ke
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PFMerge"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.PFMerge", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.PFMerge"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PFMerge", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16225,12 +16226,12 @@ func (w *RedisClusterClientWrapper) PTTL(ctx context.Context, key string) *redis
 	var res0 *redis.DurationCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PTTL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.PTTL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.PTTL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PTTL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16267,12 +16268,12 @@ func (w *RedisClusterClientWrapper) Persist(ctx context.Context, key string) *re
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Persist"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Persist", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Persist"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Persist", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16309,12 +16310,12 @@ func (w *RedisClusterClientWrapper) Ping(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Ping"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Ping", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Ping"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Ping", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16351,12 +16352,12 @@ func (w *RedisClusterClientWrapper) PubSubChannels(ctx context.Context, pattern 
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PubSubChannels"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.PubSubChannels", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.PubSubChannels"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PubSubChannels", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16393,12 +16394,12 @@ func (w *RedisClusterClientWrapper) PubSubNumPat(ctx context.Context) *redis.Int
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PubSubNumPat"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.PubSubNumPat", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.PubSubNumPat"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PubSubNumPat", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16435,12 +16436,12 @@ func (w *RedisClusterClientWrapper) PubSubNumSub(ctx context.Context, channels .
 	var res0 *redis.StringIntMapCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PubSubNumSub"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.PubSubNumSub", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.PubSubNumSub"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PubSubNumSub", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16477,12 +16478,12 @@ func (w *RedisClusterClientWrapper) Publish(ctx context.Context, channel string,
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Publish"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Publish", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Publish"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Publish", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16519,12 +16520,12 @@ func (w *RedisClusterClientWrapper) Quit(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Quit"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Quit", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Quit"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Quit", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16561,12 +16562,12 @@ func (w *RedisClusterClientWrapper) RPop(ctx context.Context, key string) *redis
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RPop"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.RPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.RPop"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.RPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16603,12 +16604,12 @@ func (w *RedisClusterClientWrapper) RPopLPush(ctx context.Context, source string
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RPopLPush"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.RPopLPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.RPopLPush"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.RPopLPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16645,12 +16646,12 @@ func (w *RedisClusterClientWrapper) RPush(ctx context.Context, key string, value
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RPush"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.RPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.RPush"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.RPush", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16687,12 +16688,12 @@ func (w *RedisClusterClientWrapper) RPushX(ctx context.Context, key string, valu
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RPushX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.RPushX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.RPushX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.RPushX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16729,12 +16730,12 @@ func (w *RedisClusterClientWrapper) RandomKey(ctx context.Context) *redis.String
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RandomKey"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.RandomKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.RandomKey"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.RandomKey", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16771,12 +16772,12 @@ func (w *RedisClusterClientWrapper) ReadOnly(ctx context.Context) *redis.StatusC
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ReadOnly"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ReadOnly", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ReadOnly"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ReadOnly", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16813,12 +16814,12 @@ func (w *RedisClusterClientWrapper) ReadWrite(ctx context.Context) *redis.Status
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ReadWrite"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ReadWrite", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ReadWrite"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ReadWrite", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16855,12 +16856,12 @@ func (w *RedisClusterClientWrapper) Rename(ctx context.Context, key string, newk
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Rename"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Rename", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Rename"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Rename", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16897,12 +16898,12 @@ func (w *RedisClusterClientWrapper) RenameNX(ctx context.Context, key string, ne
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RenameNX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.RenameNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.RenameNX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.RenameNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16939,12 +16940,12 @@ func (w *RedisClusterClientWrapper) Restore(ctx context.Context, key string, ttl
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Restore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Restore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Restore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Restore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -16981,12 +16982,12 @@ func (w *RedisClusterClientWrapper) RestoreReplace(ctx context.Context, key stri
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RestoreReplace"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.RestoreReplace", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.RestoreReplace"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.RestoreReplace", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17023,12 +17024,12 @@ func (w *RedisClusterClientWrapper) SAdd(ctx context.Context, key string, member
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SAdd"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SAdd"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17065,12 +17066,12 @@ func (w *RedisClusterClientWrapper) SCard(ctx context.Context, key string) *redi
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SCard"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SCard", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SCard"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SCard", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17107,12 +17108,12 @@ func (w *RedisClusterClientWrapper) SDiff(ctx context.Context, keys ...string) *
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SDiff"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SDiff", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SDiff"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SDiff", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17149,12 +17150,12 @@ func (w *RedisClusterClientWrapper) SDiffStore(ctx context.Context, destination 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SDiffStore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SDiffStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SDiffStore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SDiffStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17191,12 +17192,12 @@ func (w *RedisClusterClientWrapper) SInter(ctx context.Context, keys ...string) 
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SInter"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SInter", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SInter"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SInter", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17233,12 +17234,12 @@ func (w *RedisClusterClientWrapper) SInterStore(ctx context.Context, destination
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SInterStore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SInterStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SInterStore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SInterStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17275,12 +17276,12 @@ func (w *RedisClusterClientWrapper) SIsMember(ctx context.Context, key string, m
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SIsMember"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SIsMember", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SIsMember"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SIsMember", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17317,12 +17318,12 @@ func (w *RedisClusterClientWrapper) SMembers(ctx context.Context, key string) *r
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SMembers"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SMembers", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SMembers"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SMembers", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17359,12 +17360,12 @@ func (w *RedisClusterClientWrapper) SMembersMap(ctx context.Context, key string)
 	var res0 *redis.StringStructMapCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SMembersMap"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SMembersMap", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SMembersMap"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SMembersMap", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17401,12 +17402,12 @@ func (w *RedisClusterClientWrapper) SMove(ctx context.Context, source string, de
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SMove"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SMove", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SMove"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SMove", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17443,12 +17444,12 @@ func (w *RedisClusterClientWrapper) SPop(ctx context.Context, key string) *redis
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SPop"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SPop"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SPop", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17485,12 +17486,12 @@ func (w *RedisClusterClientWrapper) SPopN(ctx context.Context, key string, count
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SPopN"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SPopN", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SPopN"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SPopN", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17527,12 +17528,12 @@ func (w *RedisClusterClientWrapper) SRandMember(ctx context.Context, key string)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SRandMember"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SRandMember", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SRandMember"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SRandMember", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17569,12 +17570,12 @@ func (w *RedisClusterClientWrapper) SRandMemberN(ctx context.Context, key string
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SRandMemberN"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SRandMemberN", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SRandMemberN"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SRandMemberN", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17611,12 +17612,12 @@ func (w *RedisClusterClientWrapper) SRem(ctx context.Context, key string, member
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SRem"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SRem", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SRem"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SRem", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17653,12 +17654,12 @@ func (w *RedisClusterClientWrapper) SScan(ctx context.Context, key string, curso
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SScan"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SScan", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SScan"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SScan", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17695,12 +17696,12 @@ func (w *RedisClusterClientWrapper) SUnion(ctx context.Context, keys ...string) 
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SUnion"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SUnion", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SUnion"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SUnion", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17737,12 +17738,12 @@ func (w *RedisClusterClientWrapper) SUnionStore(ctx context.Context, destination
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SUnionStore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SUnionStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SUnionStore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SUnionStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17779,12 +17780,12 @@ func (w *RedisClusterClientWrapper) Save(ctx context.Context) *redis.StatusCmd {
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Save"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Save", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Save"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Save", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17821,12 +17822,12 @@ func (w *RedisClusterClientWrapper) Scan(ctx context.Context, cursor uint64, mat
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Scan"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Scan", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Scan"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Scan", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17863,12 +17864,12 @@ func (w *RedisClusterClientWrapper) ScriptExists(ctx context.Context, hashes ...
 	var res0 *redis.BoolSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ScriptExists"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ScriptExists", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ScriptExists"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ScriptExists", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17905,12 +17906,12 @@ func (w *RedisClusterClientWrapper) ScriptFlush(ctx context.Context) *redis.Stat
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ScriptFlush"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ScriptFlush", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ScriptFlush"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ScriptFlush", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17947,12 +17948,12 @@ func (w *RedisClusterClientWrapper) ScriptKill(ctx context.Context) *redis.Statu
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ScriptKill"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ScriptKill", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ScriptKill"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ScriptKill", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -17989,12 +17990,12 @@ func (w *RedisClusterClientWrapper) ScriptLoad(ctx context.Context, script strin
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ScriptLoad"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ScriptLoad", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ScriptLoad"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ScriptLoad", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18031,12 +18032,12 @@ func (w *RedisClusterClientWrapper) Set(ctx context.Context, key string, value i
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Set"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Set", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Set"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Set", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18073,12 +18074,12 @@ func (w *RedisClusterClientWrapper) SetBit(ctx context.Context, key string, offs
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SetBit"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SetBit", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SetBit"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SetBit", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18115,12 +18116,12 @@ func (w *RedisClusterClientWrapper) SetNX(ctx context.Context, key string, value
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SetNX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SetNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SetNX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SetNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18157,12 +18158,12 @@ func (w *RedisClusterClientWrapper) SetRange(ctx context.Context, key string, of
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SetRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SetRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SetRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SetRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18199,12 +18200,12 @@ func (w *RedisClusterClientWrapper) SetXX(ctx context.Context, key string, value
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SetXX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SetXX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SetXX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SetXX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18241,12 +18242,12 @@ func (w *RedisClusterClientWrapper) Shutdown(ctx context.Context) *redis.StatusC
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Shutdown"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Shutdown", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Shutdown"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Shutdown", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18283,12 +18284,12 @@ func (w *RedisClusterClientWrapper) ShutdownNoSave(ctx context.Context) *redis.S
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ShutdownNoSave"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ShutdownNoSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ShutdownNoSave"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ShutdownNoSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18325,12 +18326,12 @@ func (w *RedisClusterClientWrapper) ShutdownSave(ctx context.Context) *redis.Sta
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ShutdownSave"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ShutdownSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ShutdownSave"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ShutdownSave", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18367,12 +18368,12 @@ func (w *RedisClusterClientWrapper) SlaveOf(ctx context.Context, host string, po
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SlaveOf"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SlaveOf", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SlaveOf"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SlaveOf", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18413,12 +18414,12 @@ func (w *RedisClusterClientWrapper) Sort(ctx context.Context, key string, sort *
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Sort"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Sort", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Sort"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Sort", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18455,12 +18456,12 @@ func (w *RedisClusterClientWrapper) SortInterfaces(ctx context.Context, key stri
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SortInterfaces"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SortInterfaces", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SortInterfaces"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SortInterfaces", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18497,12 +18498,12 @@ func (w *RedisClusterClientWrapper) SortStore(ctx context.Context, key string, s
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SortStore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.SortStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.SortStore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SortStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18539,12 +18540,12 @@ func (w *RedisClusterClientWrapper) StrLen(ctx context.Context, key string) *red
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.StrLen"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.StrLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.StrLen"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.StrLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18585,12 +18586,12 @@ func (w *RedisClusterClientWrapper) TTL(ctx context.Context, key string) *redis.
 	var res0 *redis.DurationCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.TTL"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.TTL", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.TTL"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.TTL", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18627,12 +18628,12 @@ func (w *RedisClusterClientWrapper) Time(ctx context.Context) *redis.TimeCmd {
 	var res0 *redis.TimeCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Time"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Time", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Time"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Time", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18669,12 +18670,12 @@ func (w *RedisClusterClientWrapper) Touch(ctx context.Context, keys ...string) *
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Touch"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Touch", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Touch"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Touch", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18711,12 +18712,12 @@ func (w *RedisClusterClientWrapper) Type(ctx context.Context, key string) *redis
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Type"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Type", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Type"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Type", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18753,12 +18754,12 @@ func (w *RedisClusterClientWrapper) Unlink(ctx context.Context, keys ...string) 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Unlink"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Unlink", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Unlink"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Unlink", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18795,12 +18796,12 @@ func (w *RedisClusterClientWrapper) Wait(ctx context.Context, numSlaves int, tim
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Wait"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.Wait", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.Wait"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Wait", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18837,12 +18838,12 @@ func (w *RedisClusterClientWrapper) XAck(ctx context.Context, stream string, gro
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XAck"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XAck", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XAck"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XAck", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18879,12 +18880,12 @@ func (w *RedisClusterClientWrapper) XAdd(ctx context.Context, a *redis.XAddArgs)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XAdd"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XAdd"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18921,12 +18922,12 @@ func (w *RedisClusterClientWrapper) XClaim(ctx context.Context, a *redis.XClaimA
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XClaim"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XClaim", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XClaim"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XClaim", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -18963,12 +18964,12 @@ func (w *RedisClusterClientWrapper) XClaimJustID(ctx context.Context, a *redis.X
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XClaimJustID"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XClaimJustID", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XClaimJustID"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XClaimJustID", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19005,12 +19006,12 @@ func (w *RedisClusterClientWrapper) XDel(ctx context.Context, stream string, ids
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XDel"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XDel", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XDel"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XDel", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19047,12 +19048,12 @@ func (w *RedisClusterClientWrapper) XGroupCreate(ctx context.Context, stream str
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XGroupCreate"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XGroupCreate", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XGroupCreate"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XGroupCreate", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19089,12 +19090,12 @@ func (w *RedisClusterClientWrapper) XGroupCreateMkStream(ctx context.Context, st
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XGroupCreateMkStream"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XGroupCreateMkStream", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XGroupCreateMkStream"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XGroupCreateMkStream", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19131,12 +19132,12 @@ func (w *RedisClusterClientWrapper) XGroupDelConsumer(ctx context.Context, strea
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XGroupDelConsumer"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XGroupDelConsumer", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XGroupDelConsumer"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XGroupDelConsumer", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19173,12 +19174,12 @@ func (w *RedisClusterClientWrapper) XGroupDestroy(ctx context.Context, stream st
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XGroupDestroy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XGroupDestroy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XGroupDestroy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XGroupDestroy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19215,12 +19216,12 @@ func (w *RedisClusterClientWrapper) XGroupSetID(ctx context.Context, stream stri
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XGroupSetID"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XGroupSetID", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XGroupSetID"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XGroupSetID", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19257,12 +19258,12 @@ func (w *RedisClusterClientWrapper) XLen(ctx context.Context, stream string) *re
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XLen"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XLen"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XLen", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19299,12 +19300,12 @@ func (w *RedisClusterClientWrapper) XPending(ctx context.Context, stream string,
 	var res0 *redis.XPendingCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XPending"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XPending", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XPending"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XPending", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19341,12 +19342,12 @@ func (w *RedisClusterClientWrapper) XPendingExt(ctx context.Context, a *redis.XP
 	var res0 *redis.XPendingExtCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XPendingExt"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XPendingExt", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XPendingExt"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XPendingExt", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19383,12 +19384,12 @@ func (w *RedisClusterClientWrapper) XRange(ctx context.Context, stream string, s
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19425,12 +19426,12 @@ func (w *RedisClusterClientWrapper) XRangeN(ctx context.Context, stream string, 
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XRangeN"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XRangeN", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XRangeN"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XRangeN", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19467,12 +19468,12 @@ func (w *RedisClusterClientWrapper) XRead(ctx context.Context, a *redis.XReadArg
 	var res0 *redis.XStreamSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XRead"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XRead", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XRead"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XRead", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19509,12 +19510,12 @@ func (w *RedisClusterClientWrapper) XReadGroup(ctx context.Context, a *redis.XRe
 	var res0 *redis.XStreamSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XReadGroup"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XReadGroup", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XReadGroup"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XReadGroup", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19551,12 +19552,12 @@ func (w *RedisClusterClientWrapper) XReadStreams(ctx context.Context, streams ..
 	var res0 *redis.XStreamSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XReadStreams"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XReadStreams", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XReadStreams"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XReadStreams", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19593,12 +19594,12 @@ func (w *RedisClusterClientWrapper) XRevRange(ctx context.Context, stream string
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XRevRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XRevRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XRevRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XRevRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19635,12 +19636,12 @@ func (w *RedisClusterClientWrapper) XRevRangeN(ctx context.Context, stream strin
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XRevRangeN"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XRevRangeN", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XRevRangeN"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XRevRangeN", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19677,12 +19678,12 @@ func (w *RedisClusterClientWrapper) XTrim(ctx context.Context, key string, maxLe
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XTrim"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XTrim", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XTrim"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XTrim", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19719,12 +19720,12 @@ func (w *RedisClusterClientWrapper) XTrimApprox(ctx context.Context, key string,
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XTrimApprox"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.XTrimApprox", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.XTrimApprox"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XTrimApprox", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19761,12 +19762,12 @@ func (w *RedisClusterClientWrapper) ZAdd(ctx context.Context, key string, member
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAdd"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZAdd"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZAdd", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19803,12 +19804,12 @@ func (w *RedisClusterClientWrapper) ZAddCh(ctx context.Context, key string, memb
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAddCh"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZAddCh", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZAddCh"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZAddCh", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19845,12 +19846,12 @@ func (w *RedisClusterClientWrapper) ZAddNX(ctx context.Context, key string, memb
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAddNX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZAddNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZAddNX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZAddNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19887,12 +19888,12 @@ func (w *RedisClusterClientWrapper) ZAddNXCh(ctx context.Context, key string, me
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAddNXCh"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZAddNXCh", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZAddNXCh"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZAddNXCh", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19929,12 +19930,12 @@ func (w *RedisClusterClientWrapper) ZAddXX(ctx context.Context, key string, memb
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAddXX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZAddXX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZAddXX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZAddXX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -19971,12 +19972,12 @@ func (w *RedisClusterClientWrapper) ZAddXXCh(ctx context.Context, key string, me
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAddXXCh"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZAddXXCh", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZAddXXCh"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZAddXXCh", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20013,12 +20014,12 @@ func (w *RedisClusterClientWrapper) ZCard(ctx context.Context, key string) *redi
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZCard"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZCard", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZCard"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZCard", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20055,12 +20056,12 @@ func (w *RedisClusterClientWrapper) ZCount(ctx context.Context, key string, min 
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZCount"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZCount"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20097,12 +20098,12 @@ func (w *RedisClusterClientWrapper) ZIncr(ctx context.Context, key string, membe
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZIncr"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZIncr", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZIncr"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZIncr", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20139,12 +20140,12 @@ func (w *RedisClusterClientWrapper) ZIncrBy(ctx context.Context, key string, inc
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZIncrBy"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZIncrBy"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrBy", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20181,12 +20182,12 @@ func (w *RedisClusterClientWrapper) ZIncrNX(ctx context.Context, key string, mem
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZIncrNX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZIncrNX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrNX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20223,12 +20224,12 @@ func (w *RedisClusterClientWrapper) ZIncrXX(ctx context.Context, key string, mem
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZIncrXX"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrXX", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZIncrXX"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrXX", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20265,12 +20266,12 @@ func (w *RedisClusterClientWrapper) ZInterStore(ctx context.Context, destination
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZInterStore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZInterStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZInterStore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZInterStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20307,12 +20308,12 @@ func (w *RedisClusterClientWrapper) ZLexCount(ctx context.Context, key string, m
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZLexCount"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZLexCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZLexCount"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZLexCount", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20349,12 +20350,12 @@ func (w *RedisClusterClientWrapper) ZPopMax(ctx context.Context, key string, cou
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZPopMax"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZPopMax", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZPopMax"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZPopMax", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20391,12 +20392,12 @@ func (w *RedisClusterClientWrapper) ZPopMin(ctx context.Context, key string, cou
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZPopMin"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZPopMin", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZPopMin"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZPopMin", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20433,12 +20434,12 @@ func (w *RedisClusterClientWrapper) ZRange(ctx context.Context, key string, star
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20475,12 +20476,12 @@ func (w *RedisClusterClientWrapper) ZRangeByLex(ctx context.Context, key string,
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRangeByLex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByLex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRangeByLex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByLex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20517,12 +20518,12 @@ func (w *RedisClusterClientWrapper) ZRangeByScore(ctx context.Context, key strin
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRangeByScore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRangeByScore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20559,12 +20560,12 @@ func (w *RedisClusterClientWrapper) ZRangeByScoreWithScores(ctx context.Context,
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRangeByScoreWithScores"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByScoreWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRangeByScoreWithScores"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByScoreWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20601,12 +20602,12 @@ func (w *RedisClusterClientWrapper) ZRangeWithScores(ctx context.Context, key st
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRangeWithScores"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRangeWithScores"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20643,12 +20644,12 @@ func (w *RedisClusterClientWrapper) ZRank(ctx context.Context, key string, membe
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRank"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRank", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRank"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRank", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20685,12 +20686,12 @@ func (w *RedisClusterClientWrapper) ZRem(ctx context.Context, key string, member
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRem"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRem", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRem"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRem", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20727,12 +20728,12 @@ func (w *RedisClusterClientWrapper) ZRemRangeByLex(ctx context.Context, key stri
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRemRangeByLex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByLex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRemRangeByLex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByLex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20769,12 +20770,12 @@ func (w *RedisClusterClientWrapper) ZRemRangeByRank(ctx context.Context, key str
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRemRangeByRank"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByRank", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRemRangeByRank"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByRank", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20811,12 +20812,12 @@ func (w *RedisClusterClientWrapper) ZRemRangeByScore(ctx context.Context, key st
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRemRangeByScore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRemRangeByScore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20853,12 +20854,12 @@ func (w *RedisClusterClientWrapper) ZRevRange(ctx context.Context, key string, s
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRange"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRevRange"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRange", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20895,12 +20896,12 @@ func (w *RedisClusterClientWrapper) ZRevRangeByLex(ctx context.Context, key stri
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRangeByLex"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByLex", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRevRangeByLex"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByLex", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20937,12 +20938,12 @@ func (w *RedisClusterClientWrapper) ZRevRangeByScore(ctx context.Context, key st
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRangeByScore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRevRangeByScore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -20979,12 +20980,12 @@ func (w *RedisClusterClientWrapper) ZRevRangeByScoreWithScores(ctx context.Conte
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRangeByScoreWithScores"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByScoreWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRevRangeByScoreWithScores"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByScoreWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -21021,12 +21022,12 @@ func (w *RedisClusterClientWrapper) ZRevRangeWithScores(ctx context.Context, key
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRangeWithScores"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRevRangeWithScores"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeWithScores", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -21063,12 +21064,12 @@ func (w *RedisClusterClientWrapper) ZRevRank(ctx context.Context, key string, me
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRank"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRank", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZRevRank"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRank", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -21105,12 +21106,12 @@ func (w *RedisClusterClientWrapper) ZScan(ctx context.Context, key string, curso
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZScan"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZScan", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZScan"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZScan", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -21147,12 +21148,12 @@ func (w *RedisClusterClientWrapper) ZScore(ctx context.Context, key string, memb
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZScore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZScore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZScore", w.options.Name)); err != nil {
 				return err
 			}
 		}
@@ -21189,12 +21190,12 @@ func (w *RedisClusterClientWrapper) ZUnionStore(ctx context.Context, dest string
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
 		if w.rateLimiter != nil {
-			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZUnionStore"); err != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ClusterClient.ZUnionStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, "ClusterClient.ZUnionStore"); err != nil {
+			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZUnionStore", w.options.Name)); err != nil {
 				return err
 			}
 		}
