@@ -15,8 +15,18 @@ import (
 var ErrFlowControl = errors.New("flow control")
 
 type RateLimiter interface {
+	// 立即返回是否限流
+	// 1. 成功返回 nil
+	// 2. 限流返回 ErrFlowControl
+	// 3. 未知错误返回 err
 	Allow(ctx context.Context, key string) error
+	// 阻塞等待限流结果返回，或者立即返回错误
+	// 1. 成功返回 nil
+	// 2. 未知错误返回 err，比如网络错误，不可能返回 ErrFlowControl
 	Wait(ctx context.Context, key string) error
+	// 阻塞等待 n 个限流结果，或者立即返回错误
+	// 1. 成功返回 nil
+	// 2. 未知错误返回 err，比如网络错误，不可能返回 ErrFlowControl
 	WaitN(ctx context.Context, key string, n int) (err error)
 }
 

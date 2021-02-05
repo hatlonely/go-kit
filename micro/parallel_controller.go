@@ -13,10 +13,19 @@ import (
 var ErrParallelControl = errors.New("parallel control")
 
 type ParallelController interface {
-	PutToken(ctx context.Context, key string) error
+	// 获取 token，如果已空，阻塞等待
+	// 1. 成功返回 nil
+	// 2. 未知错误返回 err
 	GetToken(ctx context.Context, key string) error
+	// 返还 token，如果已满，直接丢弃
+	// 1. 成功返回 nil
+	// 2. 未知错误返回 err
+	PutToken(ctx context.Context, key string) error
+	// 尝试获取 token，如果已空，返回 ErrParallelControl
+	// 1. 成功返回 nil
+	// 2. 已空，返回 ErrParallelControl
+	// 3. 其他未知错误返回 err
 	TryGetToken(ctx context.Context, key string) error
-	TryPutToken(ctx context.Context, key string) error
 }
 
 func RegisterParallelController(key string, constructor interface{}) {

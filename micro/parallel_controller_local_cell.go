@@ -10,19 +10,14 @@ import (
 func NewLocalParallelControllerCell(maxToken int) *LocalParallelControllerCell {
 	c := &LocalParallelControllerCell{
 		maxToken: maxToken,
-		curToken: maxToken,
 	}
-
-	c.notFull = sync.NewCond(&c.mutex)
 	c.notEmpty = sync.NewCond(&c.mutex)
-
 	return c
 }
 
 type LocalParallelControllerCell struct {
 	mutex    sync.Mutex
 	notEmpty *sync.Cond
-	notFull  *sync.Cond
 
 	maxToken int
 	curToken int
@@ -83,21 +78,19 @@ func (l *LocalParallelControllerCell) PutToken(ctx context.Context) error {
 func (l *LocalParallelControllerCell) getToken() {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
-	defer l.notFull.Signal()
 
-	for l.curToken <= 0 {
+	for l.curToken >= l.maxToken {
 		l.notEmpty.Wait()
 	}
-	l.curToken--
+	l.curToken++
 }
 
 func (l *LocalParallelControllerCell) putToken() {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
-	defer l.notEmpty.Signal()
 
-	for l.curToken >= l.maxToken {
-		l.notFull.Wait()
+	if l.curToken > 0 {
+		l.curToken--
+		l.notEmpty.Signal()
 	}
-	l.curToken++
 }

@@ -16,8 +16,13 @@ import (
 )
 
 type RedisRateLimiterOptions struct {
-	Redis      wrap.RedisClientWrapperOptions
-	QPS        map[string]int
+	Redis wrap.RedisClientWrapperOptions
+	// QPS 计算规则
+	// 1. key 在 map 中，直接返回 key 对应的 qps
+	// 2. key 按 '|' 分割，第 0 个字符串作为 key，如果在 map 中，返回 qps
+	// 3. 返回 DefaultQPS
+	QPS map[string]int
+	// QPS 中未匹配到，使用 DefaultQPS，默认为 0，不限流
 	DefaultQPS int
 }
 
