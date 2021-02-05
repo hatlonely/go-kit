@@ -13,7 +13,7 @@ type LocalParallelController struct {
 	controllerMap map[string]*LocalParallelControllerCell
 }
 
-func NewLocalParallelControllerGroupWithOptions(options *LocalParallelControllerOptions) (*LocalParallelController, error) {
+func NewLocalParallelControllerWithOptions(options *LocalParallelControllerOptions) (*LocalParallelController, error) {
 	if options == nil || len(*options) == 0 {
 		return nil, nil
 	}

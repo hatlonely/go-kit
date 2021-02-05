@@ -4,5 +4,5 @@ func init() {
 	RegisterRateLimiter("LocalGroup", NewLocalGroupRateLimiterWithOptions)
 	RegisterRateLimiter("LocalShare", NewLocalShareRateLimiterWithOptions)
 
-	RegisterParallelController("LocalGroup", NewLocalParallelControllerGroupWithOptions)
+	RegisterParallelController("Local", NewLocalParallelControllerWithOptions)
 }

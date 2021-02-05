@@ -12,7 +12,7 @@ import (
 
 func Test1(t *testing.T) {
 	Convey("test", t, func() {
-		pc, err := NewLocalParallelControllerGroupWithOptions(&LocalParallelControllerOptions{
+		pc, err := NewLocalParallelControllerWithOptions(&LocalParallelControllerOptions{
 			"key1": 1,
 			"key2": 2,
 		})
