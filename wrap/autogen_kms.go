@@ -17,12 +17,13 @@ import (
 )
 
 type KMSClientWrapper struct {
-	obj            *kms.Client
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *kms.Client
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *KMSClientWrapper) Unwrap() *kms.Client {
@@ -66,6 +67,21 @@ func (w *KMSClientWrapper) OnRateLimiterChange(opts ...refx.Option) config.OnCha
 			return errors.Wrap(err, "NewRateLimiterWithOptions failed")
 		}
 		w.rateLimiter = rateLimiter
+		return nil
+	}
+}
+
+func (w *KMSClientWrapper) OnParallelControllerChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options micro.ParallelControllerOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		parallelController, err := micro.NewParallelControllerWithOptions(&options, opts...)
+		if err != nil {
+			return errors.Wrap(err, "NewParallelControllerWithOptions failed")
+		}
+		w.parallelController = parallelController
 		return nil
 	}
 }

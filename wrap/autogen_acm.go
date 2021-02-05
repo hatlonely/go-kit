@@ -19,12 +19,13 @@ import (
 )
 
 type ACMConfigClientWrapper struct {
-	obj            *config_client.ConfigClient
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *config_client.ConfigClient
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ACMConfigClientWrapper) Unwrap() *config_client.ConfigClient {
@@ -68,6 +69,21 @@ func (w *ACMConfigClientWrapper) OnRateLimiterChange(opts ...refx.Option) config
 			return errors.Wrap(err, "NewRateLimiterWithOptions failed")
 		}
 		w.rateLimiter = rateLimiter
+		return nil
+	}
+}
+
+func (w *ACMConfigClientWrapper) OnParallelControllerChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options micro.ParallelControllerOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		parallelController, err := micro.NewParallelControllerWithOptions(&options, opts...)
+		if err != nil {
+			return errors.Wrap(err, "NewParallelControllerWithOptions failed")
+		}
+		w.parallelController = parallelController
 		return nil
 	}
 }

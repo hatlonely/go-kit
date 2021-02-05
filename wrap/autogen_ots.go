@@ -17,12 +17,13 @@ import (
 )
 
 type OTSTableStoreClientWrapper struct {
-	obj            *tablestore.TableStoreClient
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *tablestore.TableStoreClient
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *OTSTableStoreClientWrapper) Unwrap() *tablestore.TableStoreClient {
@@ -66,6 +67,21 @@ func (w *OTSTableStoreClientWrapper) OnRateLimiterChange(opts ...refx.Option) co
 			return errors.Wrap(err, "NewRateLimiterWithOptions failed")
 		}
 		w.rateLimiter = rateLimiter
+		return nil
+	}
+}
+
+func (w *OTSTableStoreClientWrapper) OnParallelControllerChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options micro.ParallelControllerOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		parallelController, err := micro.NewParallelControllerWithOptions(&options, opts...)
+		if err != nil {
+			return errors.Wrap(err, "NewParallelControllerWithOptions failed")
+		}
+		w.parallelController = parallelController
 		return nil
 	}
 }

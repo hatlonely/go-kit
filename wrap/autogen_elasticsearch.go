@@ -18,12 +18,13 @@ import (
 )
 
 type ESAliasServiceWrapper struct {
-	obj            *elastic.AliasService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.AliasService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESAliasServiceWrapper) Unwrap() *elastic.AliasService {
@@ -31,12 +32,13 @@ func (w *ESAliasServiceWrapper) Unwrap() *elastic.AliasService {
 }
 
 type ESAliasesServiceWrapper struct {
-	obj            *elastic.AliasesService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.AliasesService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESAliasesServiceWrapper) Unwrap() *elastic.AliasesService {
@@ -44,12 +46,13 @@ func (w *ESAliasesServiceWrapper) Unwrap() *elastic.AliasesService {
 }
 
 type ESBulkProcessorServiceWrapper struct {
-	obj            *elastic.BulkProcessorService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.BulkProcessorService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESBulkProcessorServiceWrapper) Unwrap() *elastic.BulkProcessorService {
@@ -57,12 +60,13 @@ func (w *ESBulkProcessorServiceWrapper) Unwrap() *elastic.BulkProcessorService {
 }
 
 type ESBulkServiceWrapper struct {
-	obj            *elastic.BulkService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.BulkService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESBulkServiceWrapper) Unwrap() *elastic.BulkService {
@@ -70,12 +74,13 @@ func (w *ESBulkServiceWrapper) Unwrap() *elastic.BulkService {
 }
 
 type ESCatAliasesServiceWrapper struct {
-	obj            *elastic.CatAliasesService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.CatAliasesService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESCatAliasesServiceWrapper) Unwrap() *elastic.CatAliasesService {
@@ -83,12 +88,13 @@ func (w *ESCatAliasesServiceWrapper) Unwrap() *elastic.CatAliasesService {
 }
 
 type ESCatAllocationServiceWrapper struct {
-	obj            *elastic.CatAllocationService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.CatAllocationService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESCatAllocationServiceWrapper) Unwrap() *elastic.CatAllocationService {
@@ -96,12 +102,13 @@ func (w *ESCatAllocationServiceWrapper) Unwrap() *elastic.CatAllocationService {
 }
 
 type ESCatCountServiceWrapper struct {
-	obj            *elastic.CatCountService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.CatCountService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESCatCountServiceWrapper) Unwrap() *elastic.CatCountService {
@@ -109,12 +116,13 @@ func (w *ESCatCountServiceWrapper) Unwrap() *elastic.CatCountService {
 }
 
 type ESCatHealthServiceWrapper struct {
-	obj            *elastic.CatHealthService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.CatHealthService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESCatHealthServiceWrapper) Unwrap() *elastic.CatHealthService {
@@ -122,12 +130,13 @@ func (w *ESCatHealthServiceWrapper) Unwrap() *elastic.CatHealthService {
 }
 
 type ESCatIndicesServiceWrapper struct {
-	obj            *elastic.CatIndicesService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.CatIndicesService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESCatIndicesServiceWrapper) Unwrap() *elastic.CatIndicesService {
@@ -135,12 +144,13 @@ func (w *ESCatIndicesServiceWrapper) Unwrap() *elastic.CatIndicesService {
 }
 
 type ESCatShardsServiceWrapper struct {
-	obj            *elastic.CatShardsService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.CatShardsService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESCatShardsServiceWrapper) Unwrap() *elastic.CatShardsService {
@@ -148,12 +158,13 @@ func (w *ESCatShardsServiceWrapper) Unwrap() *elastic.CatShardsService {
 }
 
 type ESClearScrollServiceWrapper struct {
-	obj            *elastic.ClearScrollService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.ClearScrollService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESClearScrollServiceWrapper) Unwrap() *elastic.ClearScrollService {
@@ -161,12 +172,13 @@ func (w *ESClearScrollServiceWrapper) Unwrap() *elastic.ClearScrollService {
 }
 
 type ESClientWrapper struct {
-	obj            *elastic.Client
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.Client
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESClientWrapper) Unwrap() *elastic.Client {
@@ -214,6 +226,21 @@ func (w *ESClientWrapper) OnRateLimiterChange(opts ...refx.Option) config.OnChan
 	}
 }
 
+func (w *ESClientWrapper) OnParallelControllerChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options micro.ParallelControllerOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		parallelController, err := micro.NewParallelControllerWithOptions(&options, opts...)
+		if err != nil {
+			return errors.Wrap(err, "NewParallelControllerWithOptions failed")
+		}
+		w.parallelController = parallelController
+		return nil
+	}
+}
+
 func (w *ESClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "elastic_Client_durationMs",
@@ -229,12 +256,13 @@ func (w *ESClientWrapper) CreateMetric(options *WrapperOptions) {
 }
 
 type ESClusterHealthServiceWrapper struct {
-	obj            *elastic.ClusterHealthService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.ClusterHealthService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESClusterHealthServiceWrapper) Unwrap() *elastic.ClusterHealthService {
@@ -242,12 +270,13 @@ func (w *ESClusterHealthServiceWrapper) Unwrap() *elastic.ClusterHealthService {
 }
 
 type ESClusterRerouteServiceWrapper struct {
-	obj            *elastic.ClusterRerouteService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.ClusterRerouteService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESClusterRerouteServiceWrapper) Unwrap() *elastic.ClusterRerouteService {
@@ -255,12 +284,13 @@ func (w *ESClusterRerouteServiceWrapper) Unwrap() *elastic.ClusterRerouteService
 }
 
 type ESClusterStateServiceWrapper struct {
-	obj            *elastic.ClusterStateService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.ClusterStateService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESClusterStateServiceWrapper) Unwrap() *elastic.ClusterStateService {
@@ -268,12 +298,13 @@ func (w *ESClusterStateServiceWrapper) Unwrap() *elastic.ClusterStateService {
 }
 
 type ESClusterStatsServiceWrapper struct {
-	obj            *elastic.ClusterStatsService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.ClusterStatsService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESClusterStatsServiceWrapper) Unwrap() *elastic.ClusterStatsService {
@@ -281,12 +312,13 @@ func (w *ESClusterStatsServiceWrapper) Unwrap() *elastic.ClusterStatsService {
 }
 
 type ESCountServiceWrapper struct {
-	obj            *elastic.CountService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.CountService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESCountServiceWrapper) Unwrap() *elastic.CountService {
@@ -294,12 +326,13 @@ func (w *ESCountServiceWrapper) Unwrap() *elastic.CountService {
 }
 
 type ESDeleteByQueryServiceWrapper struct {
-	obj            *elastic.DeleteByQueryService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.DeleteByQueryService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESDeleteByQueryServiceWrapper) Unwrap() *elastic.DeleteByQueryService {
@@ -307,12 +340,13 @@ func (w *ESDeleteByQueryServiceWrapper) Unwrap() *elastic.DeleteByQueryService {
 }
 
 type ESDeleteScriptServiceWrapper struct {
-	obj            *elastic.DeleteScriptService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.DeleteScriptService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESDeleteScriptServiceWrapper) Unwrap() *elastic.DeleteScriptService {
@@ -320,12 +354,13 @@ func (w *ESDeleteScriptServiceWrapper) Unwrap() *elastic.DeleteScriptService {
 }
 
 type ESDeleteServiceWrapper struct {
-	obj            *elastic.DeleteService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.DeleteService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESDeleteServiceWrapper) Unwrap() *elastic.DeleteService {
@@ -333,12 +368,13 @@ func (w *ESDeleteServiceWrapper) Unwrap() *elastic.DeleteService {
 }
 
 type ESExistsServiceWrapper struct {
-	obj            *elastic.ExistsService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.ExistsService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESExistsServiceWrapper) Unwrap() *elastic.ExistsService {
@@ -346,12 +382,13 @@ func (w *ESExistsServiceWrapper) Unwrap() *elastic.ExistsService {
 }
 
 type ESExplainServiceWrapper struct {
-	obj            *elastic.ExplainService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.ExplainService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESExplainServiceWrapper) Unwrap() *elastic.ExplainService {
@@ -359,12 +396,13 @@ func (w *ESExplainServiceWrapper) Unwrap() *elastic.ExplainService {
 }
 
 type ESFieldCapsServiceWrapper struct {
-	obj            *elastic.FieldCapsService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.FieldCapsService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESFieldCapsServiceWrapper) Unwrap() *elastic.FieldCapsService {
@@ -372,12 +410,13 @@ func (w *ESFieldCapsServiceWrapper) Unwrap() *elastic.FieldCapsService {
 }
 
 type ESGetScriptServiceWrapper struct {
-	obj            *elastic.GetScriptService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.GetScriptService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESGetScriptServiceWrapper) Unwrap() *elastic.GetScriptService {
@@ -385,12 +424,13 @@ func (w *ESGetScriptServiceWrapper) Unwrap() *elastic.GetScriptService {
 }
 
 type ESGetServiceWrapper struct {
-	obj            *elastic.GetService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.GetService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESGetServiceWrapper) Unwrap() *elastic.GetService {
@@ -398,12 +438,13 @@ func (w *ESGetServiceWrapper) Unwrap() *elastic.GetService {
 }
 
 type ESIndexServiceWrapper struct {
-	obj            *elastic.IndexService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndexService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndexServiceWrapper) Unwrap() *elastic.IndexService {
@@ -411,12 +452,13 @@ func (w *ESIndexServiceWrapper) Unwrap() *elastic.IndexService {
 }
 
 type ESIndicesAnalyzeServiceWrapper struct {
-	obj            *elastic.IndicesAnalyzeService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesAnalyzeService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesAnalyzeServiceWrapper) Unwrap() *elastic.IndicesAnalyzeService {
@@ -424,12 +466,13 @@ func (w *ESIndicesAnalyzeServiceWrapper) Unwrap() *elastic.IndicesAnalyzeService
 }
 
 type ESIndicesClearCacheServiceWrapper struct {
-	obj            *elastic.IndicesClearCacheService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesClearCacheService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesClearCacheServiceWrapper) Unwrap() *elastic.IndicesClearCacheService {
@@ -437,12 +480,13 @@ func (w *ESIndicesClearCacheServiceWrapper) Unwrap() *elastic.IndicesClearCacheS
 }
 
 type ESIndicesCloseServiceWrapper struct {
-	obj            *elastic.IndicesCloseService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesCloseService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesCloseServiceWrapper) Unwrap() *elastic.IndicesCloseService {
@@ -450,12 +494,13 @@ func (w *ESIndicesCloseServiceWrapper) Unwrap() *elastic.IndicesCloseService {
 }
 
 type ESIndicesCreateServiceWrapper struct {
-	obj            *elastic.IndicesCreateService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesCreateService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesCreateServiceWrapper) Unwrap() *elastic.IndicesCreateService {
@@ -463,12 +508,13 @@ func (w *ESIndicesCreateServiceWrapper) Unwrap() *elastic.IndicesCreateService {
 }
 
 type ESIndicesDeleteIndexTemplateServiceWrapper struct {
-	obj            *elastic.IndicesDeleteIndexTemplateService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesDeleteIndexTemplateService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesDeleteIndexTemplateService {
@@ -476,12 +522,13 @@ func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesDe
 }
 
 type ESIndicesDeleteServiceWrapper struct {
-	obj            *elastic.IndicesDeleteService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesDeleteService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesDeleteServiceWrapper) Unwrap() *elastic.IndicesDeleteService {
@@ -489,12 +536,13 @@ func (w *ESIndicesDeleteServiceWrapper) Unwrap() *elastic.IndicesDeleteService {
 }
 
 type ESIndicesDeleteTemplateServiceWrapper struct {
-	obj            *elastic.IndicesDeleteTemplateService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesDeleteTemplateService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesDeleteTemplateServiceWrapper) Unwrap() *elastic.IndicesDeleteTemplateService {
@@ -502,12 +550,13 @@ func (w *ESIndicesDeleteTemplateServiceWrapper) Unwrap() *elastic.IndicesDeleteT
 }
 
 type ESIndicesExistsServiceWrapper struct {
-	obj            *elastic.IndicesExistsService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesExistsService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesExistsServiceWrapper) Unwrap() *elastic.IndicesExistsService {
@@ -515,12 +564,13 @@ func (w *ESIndicesExistsServiceWrapper) Unwrap() *elastic.IndicesExistsService {
 }
 
 type ESIndicesExistsTemplateServiceWrapper struct {
-	obj            *elastic.IndicesExistsTemplateService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesExistsTemplateService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesExistsTemplateServiceWrapper) Unwrap() *elastic.IndicesExistsTemplateService {
@@ -528,12 +578,13 @@ func (w *ESIndicesExistsTemplateServiceWrapper) Unwrap() *elastic.IndicesExistsT
 }
 
 type ESIndicesFlushServiceWrapper struct {
-	obj            *elastic.IndicesFlushService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesFlushService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesFlushServiceWrapper) Unwrap() *elastic.IndicesFlushService {
@@ -541,12 +592,13 @@ func (w *ESIndicesFlushServiceWrapper) Unwrap() *elastic.IndicesFlushService {
 }
 
 type ESIndicesForcemergeServiceWrapper struct {
-	obj            *elastic.IndicesForcemergeService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesForcemergeService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesForcemergeServiceWrapper) Unwrap() *elastic.IndicesForcemergeService {
@@ -554,12 +606,13 @@ func (w *ESIndicesForcemergeServiceWrapper) Unwrap() *elastic.IndicesForcemergeS
 }
 
 type ESIndicesFreezeServiceWrapper struct {
-	obj            *elastic.IndicesFreezeService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesFreezeService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesFreezeServiceWrapper) Unwrap() *elastic.IndicesFreezeService {
@@ -567,12 +620,13 @@ func (w *ESIndicesFreezeServiceWrapper) Unwrap() *elastic.IndicesFreezeService {
 }
 
 type ESIndicesGetFieldMappingServiceWrapper struct {
-	obj            *elastic.IndicesGetFieldMappingService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesGetFieldMappingService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesGetFieldMappingServiceWrapper) Unwrap() *elastic.IndicesGetFieldMappingService {
@@ -580,12 +634,13 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Unwrap() *elastic.IndicesGetFie
 }
 
 type ESIndicesGetIndexTemplateServiceWrapper struct {
-	obj            *elastic.IndicesGetIndexTemplateService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesGetIndexTemplateService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesGetIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesGetIndexTemplateService {
@@ -593,12 +648,13 @@ func (w *ESIndicesGetIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesGetIn
 }
 
 type ESIndicesGetMappingServiceWrapper struct {
-	obj            *elastic.IndicesGetMappingService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesGetMappingService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesGetMappingServiceWrapper) Unwrap() *elastic.IndicesGetMappingService {
@@ -606,12 +662,13 @@ func (w *ESIndicesGetMappingServiceWrapper) Unwrap() *elastic.IndicesGetMappingS
 }
 
 type ESIndicesGetServiceWrapper struct {
-	obj            *elastic.IndicesGetService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesGetService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesGetServiceWrapper) Unwrap() *elastic.IndicesGetService {
@@ -619,12 +676,13 @@ func (w *ESIndicesGetServiceWrapper) Unwrap() *elastic.IndicesGetService {
 }
 
 type ESIndicesGetSettingsServiceWrapper struct {
-	obj            *elastic.IndicesGetSettingsService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesGetSettingsService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesGetSettingsServiceWrapper) Unwrap() *elastic.IndicesGetSettingsService {
@@ -632,12 +690,13 @@ func (w *ESIndicesGetSettingsServiceWrapper) Unwrap() *elastic.IndicesGetSetting
 }
 
 type ESIndicesGetTemplateServiceWrapper struct {
-	obj            *elastic.IndicesGetTemplateService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesGetTemplateService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesGetTemplateServiceWrapper) Unwrap() *elastic.IndicesGetTemplateService {
@@ -645,12 +704,13 @@ func (w *ESIndicesGetTemplateServiceWrapper) Unwrap() *elastic.IndicesGetTemplat
 }
 
 type ESIndicesOpenServiceWrapper struct {
-	obj            *elastic.IndicesOpenService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesOpenService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesOpenServiceWrapper) Unwrap() *elastic.IndicesOpenService {
@@ -658,12 +718,13 @@ func (w *ESIndicesOpenServiceWrapper) Unwrap() *elastic.IndicesOpenService {
 }
 
 type ESIndicesPutIndexTemplateServiceWrapper struct {
-	obj            *elastic.IndicesPutIndexTemplateService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesPutIndexTemplateService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesPutIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesPutIndexTemplateService {
@@ -671,12 +732,13 @@ func (w *ESIndicesPutIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesPutIn
 }
 
 type ESIndicesPutMappingServiceWrapper struct {
-	obj            *elastic.IndicesPutMappingService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesPutMappingService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesPutMappingServiceWrapper) Unwrap() *elastic.IndicesPutMappingService {
@@ -684,12 +746,13 @@ func (w *ESIndicesPutMappingServiceWrapper) Unwrap() *elastic.IndicesPutMappingS
 }
 
 type ESIndicesPutSettingsServiceWrapper struct {
-	obj            *elastic.IndicesPutSettingsService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesPutSettingsService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesPutSettingsServiceWrapper) Unwrap() *elastic.IndicesPutSettingsService {
@@ -697,12 +760,13 @@ func (w *ESIndicesPutSettingsServiceWrapper) Unwrap() *elastic.IndicesPutSetting
 }
 
 type ESIndicesPutTemplateServiceWrapper struct {
-	obj            *elastic.IndicesPutTemplateService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesPutTemplateService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesPutTemplateServiceWrapper) Unwrap() *elastic.IndicesPutTemplateService {
@@ -710,12 +774,13 @@ func (w *ESIndicesPutTemplateServiceWrapper) Unwrap() *elastic.IndicesPutTemplat
 }
 
 type ESIndicesRolloverServiceWrapper struct {
-	obj            *elastic.IndicesRolloverService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesRolloverService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesRolloverServiceWrapper) Unwrap() *elastic.IndicesRolloverService {
@@ -723,12 +788,13 @@ func (w *ESIndicesRolloverServiceWrapper) Unwrap() *elastic.IndicesRolloverServi
 }
 
 type ESIndicesSegmentsServiceWrapper struct {
-	obj            *elastic.IndicesSegmentsService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesSegmentsService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesSegmentsServiceWrapper) Unwrap() *elastic.IndicesSegmentsService {
@@ -736,12 +802,13 @@ func (w *ESIndicesSegmentsServiceWrapper) Unwrap() *elastic.IndicesSegmentsServi
 }
 
 type ESIndicesShrinkServiceWrapper struct {
-	obj            *elastic.IndicesShrinkService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesShrinkService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesShrinkServiceWrapper) Unwrap() *elastic.IndicesShrinkService {
@@ -749,12 +816,13 @@ func (w *ESIndicesShrinkServiceWrapper) Unwrap() *elastic.IndicesShrinkService {
 }
 
 type ESIndicesStatsServiceWrapper struct {
-	obj            *elastic.IndicesStatsService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesStatsService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesStatsServiceWrapper) Unwrap() *elastic.IndicesStatsService {
@@ -762,12 +830,13 @@ func (w *ESIndicesStatsServiceWrapper) Unwrap() *elastic.IndicesStatsService {
 }
 
 type ESIndicesSyncedFlushServiceWrapper struct {
-	obj            *elastic.IndicesSyncedFlushService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesSyncedFlushService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesSyncedFlushServiceWrapper) Unwrap() *elastic.IndicesSyncedFlushService {
@@ -775,12 +844,13 @@ func (w *ESIndicesSyncedFlushServiceWrapper) Unwrap() *elastic.IndicesSyncedFlus
 }
 
 type ESIndicesUnfreezeServiceWrapper struct {
-	obj            *elastic.IndicesUnfreezeService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IndicesUnfreezeService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIndicesUnfreezeServiceWrapper) Unwrap() *elastic.IndicesUnfreezeService {
@@ -788,12 +858,13 @@ func (w *ESIndicesUnfreezeServiceWrapper) Unwrap() *elastic.IndicesUnfreezeServi
 }
 
 type ESIngestDeletePipelineServiceWrapper struct {
-	obj            *elastic.IngestDeletePipelineService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IngestDeletePipelineService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIngestDeletePipelineServiceWrapper) Unwrap() *elastic.IngestDeletePipelineService {
@@ -801,12 +872,13 @@ func (w *ESIngestDeletePipelineServiceWrapper) Unwrap() *elastic.IngestDeletePip
 }
 
 type ESIngestGetPipelineServiceWrapper struct {
-	obj            *elastic.IngestGetPipelineService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IngestGetPipelineService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIngestGetPipelineServiceWrapper) Unwrap() *elastic.IngestGetPipelineService {
@@ -814,12 +886,13 @@ func (w *ESIngestGetPipelineServiceWrapper) Unwrap() *elastic.IngestGetPipelineS
 }
 
 type ESIngestPutPipelineServiceWrapper struct {
-	obj            *elastic.IngestPutPipelineService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IngestPutPipelineService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIngestPutPipelineServiceWrapper) Unwrap() *elastic.IngestPutPipelineService {
@@ -827,12 +900,13 @@ func (w *ESIngestPutPipelineServiceWrapper) Unwrap() *elastic.IngestPutPipelineS
 }
 
 type ESIngestSimulatePipelineServiceWrapper struct {
-	obj            *elastic.IngestSimulatePipelineService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.IngestSimulatePipelineService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESIngestSimulatePipelineServiceWrapper) Unwrap() *elastic.IngestSimulatePipelineService {
@@ -840,12 +914,13 @@ func (w *ESIngestSimulatePipelineServiceWrapper) Unwrap() *elastic.IngestSimulat
 }
 
 type ESMgetServiceWrapper struct {
-	obj            *elastic.MgetService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.MgetService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESMgetServiceWrapper) Unwrap() *elastic.MgetService {
@@ -853,12 +928,13 @@ func (w *ESMgetServiceWrapper) Unwrap() *elastic.MgetService {
 }
 
 type ESMultiSearchServiceWrapper struct {
-	obj            *elastic.MultiSearchService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.MultiSearchService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESMultiSearchServiceWrapper) Unwrap() *elastic.MultiSearchService {
@@ -866,12 +942,13 @@ func (w *ESMultiSearchServiceWrapper) Unwrap() *elastic.MultiSearchService {
 }
 
 type ESMultiTermvectorServiceWrapper struct {
-	obj            *elastic.MultiTermvectorService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.MultiTermvectorService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESMultiTermvectorServiceWrapper) Unwrap() *elastic.MultiTermvectorService {
@@ -879,12 +956,13 @@ func (w *ESMultiTermvectorServiceWrapper) Unwrap() *elastic.MultiTermvectorServi
 }
 
 type ESNodesInfoServiceWrapper struct {
-	obj            *elastic.NodesInfoService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.NodesInfoService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESNodesInfoServiceWrapper) Unwrap() *elastic.NodesInfoService {
@@ -892,12 +970,13 @@ func (w *ESNodesInfoServiceWrapper) Unwrap() *elastic.NodesInfoService {
 }
 
 type ESNodesStatsServiceWrapper struct {
-	obj            *elastic.NodesStatsService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.NodesStatsService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESNodesStatsServiceWrapper) Unwrap() *elastic.NodesStatsService {
@@ -905,12 +984,13 @@ func (w *ESNodesStatsServiceWrapper) Unwrap() *elastic.NodesStatsService {
 }
 
 type ESPingServiceWrapper struct {
-	obj            *elastic.PingService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.PingService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESPingServiceWrapper) Unwrap() *elastic.PingService {
@@ -918,12 +998,13 @@ func (w *ESPingServiceWrapper) Unwrap() *elastic.PingService {
 }
 
 type ESPutScriptServiceWrapper struct {
-	obj            *elastic.PutScriptService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.PutScriptService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESPutScriptServiceWrapper) Unwrap() *elastic.PutScriptService {
@@ -931,12 +1012,13 @@ func (w *ESPutScriptServiceWrapper) Unwrap() *elastic.PutScriptService {
 }
 
 type ESRefreshServiceWrapper struct {
-	obj            *elastic.RefreshService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.RefreshService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESRefreshServiceWrapper) Unwrap() *elastic.RefreshService {
@@ -944,12 +1026,13 @@ func (w *ESRefreshServiceWrapper) Unwrap() *elastic.RefreshService {
 }
 
 type ESReindexServiceWrapper struct {
-	obj            *elastic.ReindexService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.ReindexService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESReindexServiceWrapper) Unwrap() *elastic.ReindexService {
@@ -957,12 +1040,13 @@ func (w *ESReindexServiceWrapper) Unwrap() *elastic.ReindexService {
 }
 
 type ESScrollServiceWrapper struct {
-	obj            *elastic.ScrollService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.ScrollService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESScrollServiceWrapper) Unwrap() *elastic.ScrollService {
@@ -970,12 +1054,13 @@ func (w *ESScrollServiceWrapper) Unwrap() *elastic.ScrollService {
 }
 
 type ESSearchServiceWrapper struct {
-	obj            *elastic.SearchService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.SearchService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESSearchServiceWrapper) Unwrap() *elastic.SearchService {
@@ -983,12 +1068,13 @@ func (w *ESSearchServiceWrapper) Unwrap() *elastic.SearchService {
 }
 
 type ESSearchShardsServiceWrapper struct {
-	obj            *elastic.SearchShardsService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.SearchShardsService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESSearchShardsServiceWrapper) Unwrap() *elastic.SearchShardsService {
@@ -996,12 +1082,13 @@ func (w *ESSearchShardsServiceWrapper) Unwrap() *elastic.SearchShardsService {
 }
 
 type ESSnapshotCreateRepositoryServiceWrapper struct {
-	obj            *elastic.SnapshotCreateRepositoryService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.SnapshotCreateRepositoryService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESSnapshotCreateRepositoryServiceWrapper) Unwrap() *elastic.SnapshotCreateRepositoryService {
@@ -1009,12 +1096,13 @@ func (w *ESSnapshotCreateRepositoryServiceWrapper) Unwrap() *elastic.SnapshotCre
 }
 
 type ESSnapshotCreateServiceWrapper struct {
-	obj            *elastic.SnapshotCreateService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.SnapshotCreateService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESSnapshotCreateServiceWrapper) Unwrap() *elastic.SnapshotCreateService {
@@ -1022,12 +1110,13 @@ func (w *ESSnapshotCreateServiceWrapper) Unwrap() *elastic.SnapshotCreateService
 }
 
 type ESSnapshotDeleteRepositoryServiceWrapper struct {
-	obj            *elastic.SnapshotDeleteRepositoryService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.SnapshotDeleteRepositoryService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESSnapshotDeleteRepositoryServiceWrapper) Unwrap() *elastic.SnapshotDeleteRepositoryService {
@@ -1035,12 +1124,13 @@ func (w *ESSnapshotDeleteRepositoryServiceWrapper) Unwrap() *elastic.SnapshotDel
 }
 
 type ESSnapshotDeleteServiceWrapper struct {
-	obj            *elastic.SnapshotDeleteService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.SnapshotDeleteService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESSnapshotDeleteServiceWrapper) Unwrap() *elastic.SnapshotDeleteService {
@@ -1048,12 +1138,13 @@ func (w *ESSnapshotDeleteServiceWrapper) Unwrap() *elastic.SnapshotDeleteService
 }
 
 type ESSnapshotGetRepositoryServiceWrapper struct {
-	obj            *elastic.SnapshotGetRepositoryService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.SnapshotGetRepositoryService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESSnapshotGetRepositoryServiceWrapper) Unwrap() *elastic.SnapshotGetRepositoryService {
@@ -1061,12 +1152,13 @@ func (w *ESSnapshotGetRepositoryServiceWrapper) Unwrap() *elastic.SnapshotGetRep
 }
 
 type ESSnapshotGetServiceWrapper struct {
-	obj            *elastic.SnapshotGetService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.SnapshotGetService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESSnapshotGetServiceWrapper) Unwrap() *elastic.SnapshotGetService {
@@ -1074,12 +1166,13 @@ func (w *ESSnapshotGetServiceWrapper) Unwrap() *elastic.SnapshotGetService {
 }
 
 type ESSnapshotRestoreServiceWrapper struct {
-	obj            *elastic.SnapshotRestoreService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.SnapshotRestoreService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESSnapshotRestoreServiceWrapper) Unwrap() *elastic.SnapshotRestoreService {
@@ -1087,12 +1180,13 @@ func (w *ESSnapshotRestoreServiceWrapper) Unwrap() *elastic.SnapshotRestoreServi
 }
 
 type ESSnapshotStatusServiceWrapper struct {
-	obj            *elastic.SnapshotStatusService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.SnapshotStatusService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESSnapshotStatusServiceWrapper) Unwrap() *elastic.SnapshotStatusService {
@@ -1100,12 +1194,13 @@ func (w *ESSnapshotStatusServiceWrapper) Unwrap() *elastic.SnapshotStatusService
 }
 
 type ESSnapshotVerifyRepositoryServiceWrapper struct {
-	obj            *elastic.SnapshotVerifyRepositoryService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.SnapshotVerifyRepositoryService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESSnapshotVerifyRepositoryServiceWrapper) Unwrap() *elastic.SnapshotVerifyRepositoryService {
@@ -1113,12 +1208,13 @@ func (w *ESSnapshotVerifyRepositoryServiceWrapper) Unwrap() *elastic.SnapshotVer
 }
 
 type ESTasksCancelServiceWrapper struct {
-	obj            *elastic.TasksCancelService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.TasksCancelService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESTasksCancelServiceWrapper) Unwrap() *elastic.TasksCancelService {
@@ -1126,12 +1222,13 @@ func (w *ESTasksCancelServiceWrapper) Unwrap() *elastic.TasksCancelService {
 }
 
 type ESTasksGetTaskServiceWrapper struct {
-	obj            *elastic.TasksGetTaskService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.TasksGetTaskService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESTasksGetTaskServiceWrapper) Unwrap() *elastic.TasksGetTaskService {
@@ -1139,12 +1236,13 @@ func (w *ESTasksGetTaskServiceWrapper) Unwrap() *elastic.TasksGetTaskService {
 }
 
 type ESTasksListServiceWrapper struct {
-	obj            *elastic.TasksListService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.TasksListService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESTasksListServiceWrapper) Unwrap() *elastic.TasksListService {
@@ -1152,12 +1250,13 @@ func (w *ESTasksListServiceWrapper) Unwrap() *elastic.TasksListService {
 }
 
 type ESTermvectorsServiceWrapper struct {
-	obj            *elastic.TermvectorsService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.TermvectorsService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESTermvectorsServiceWrapper) Unwrap() *elastic.TermvectorsService {
@@ -1165,12 +1264,13 @@ func (w *ESTermvectorsServiceWrapper) Unwrap() *elastic.TermvectorsService {
 }
 
 type ESUpdateByQueryServiceWrapper struct {
-	obj            *elastic.UpdateByQueryService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.UpdateByQueryService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESUpdateByQueryServiceWrapper) Unwrap() *elastic.UpdateByQueryService {
@@ -1178,12 +1278,13 @@ func (w *ESUpdateByQueryServiceWrapper) Unwrap() *elastic.UpdateByQueryService {
 }
 
 type ESUpdateServiceWrapper struct {
-	obj            *elastic.UpdateService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.UpdateService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESUpdateServiceWrapper) Unwrap() *elastic.UpdateService {
@@ -1191,12 +1292,13 @@ func (w *ESUpdateServiceWrapper) Unwrap() *elastic.UpdateService {
 }
 
 type ESValidateServiceWrapper struct {
-	obj            *elastic.ValidateService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.ValidateService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESValidateServiceWrapper) Unwrap() *elastic.ValidateService {
@@ -1204,12 +1306,13 @@ func (w *ESValidateServiceWrapper) Unwrap() *elastic.ValidateService {
 }
 
 type ESXPackIlmDeleteLifecycleServiceWrapper struct {
-	obj            *elastic.XPackIlmDeleteLifecycleService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackIlmDeleteLifecycleService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmDeleteLifecycleService {
@@ -1217,12 +1320,13 @@ func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmDele
 }
 
 type ESXPackIlmGetLifecycleServiceWrapper struct {
-	obj            *elastic.XPackIlmGetLifecycleService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackIlmGetLifecycleService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackIlmGetLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmGetLifecycleService {
@@ -1230,12 +1334,13 @@ func (w *ESXPackIlmGetLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmGetLife
 }
 
 type ESXPackIlmPutLifecycleServiceWrapper struct {
-	obj            *elastic.XPackIlmPutLifecycleService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackIlmPutLifecycleService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackIlmPutLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmPutLifecycleService {
@@ -1243,12 +1348,13 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmPutLife
 }
 
 type ESXPackInfoServiceWrapper struct {
-	obj            *elastic.XPackInfoService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackInfoService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackInfoServiceWrapper) Unwrap() *elastic.XPackInfoService {
@@ -1256,12 +1362,13 @@ func (w *ESXPackInfoServiceWrapper) Unwrap() *elastic.XPackInfoService {
 }
 
 type ESXPackSecurityChangePasswordServiceWrapper struct {
-	obj            *elastic.XPackSecurityChangePasswordService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackSecurityChangePasswordService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackSecurityChangePasswordServiceWrapper) Unwrap() *elastic.XPackSecurityChangePasswordService {
@@ -1269,12 +1376,13 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Unwrap() *elastic.XPackSec
 }
 
 type ESXPackSecurityDeleteRoleMappingServiceWrapper struct {
-	obj            *elastic.XPackSecurityDeleteRoleMappingService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackSecurityDeleteRoleMappingService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteRoleMappingService {
@@ -1282,12 +1390,13 @@ func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Unwrap() *elastic.XPack
 }
 
 type ESXPackSecurityDeleteRoleServiceWrapper struct {
-	obj            *elastic.XPackSecurityDeleteRoleService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackSecurityDeleteRoleService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackSecurityDeleteRoleServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteRoleService {
@@ -1295,12 +1404,13 @@ func (w *ESXPackSecurityDeleteRoleServiceWrapper) Unwrap() *elastic.XPackSecurit
 }
 
 type ESXPackSecurityDeleteUserServiceWrapper struct {
-	obj            *elastic.XPackSecurityDeleteUserService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackSecurityDeleteUserService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackSecurityDeleteUserServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteUserService {
@@ -1308,12 +1418,13 @@ func (w *ESXPackSecurityDeleteUserServiceWrapper) Unwrap() *elastic.XPackSecurit
 }
 
 type ESXPackSecurityDisableUserServiceWrapper struct {
-	obj            *elastic.XPackSecurityDisableUserService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackSecurityDisableUserService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackSecurityDisableUserServiceWrapper) Unwrap() *elastic.XPackSecurityDisableUserService {
@@ -1321,12 +1432,13 @@ func (w *ESXPackSecurityDisableUserServiceWrapper) Unwrap() *elastic.XPackSecuri
 }
 
 type ESXPackSecurityEnableUserServiceWrapper struct {
-	obj            *elastic.XPackSecurityEnableUserService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackSecurityEnableUserService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackSecurityEnableUserServiceWrapper) Unwrap() *elastic.XPackSecurityEnableUserService {
@@ -1334,12 +1446,13 @@ func (w *ESXPackSecurityEnableUserServiceWrapper) Unwrap() *elastic.XPackSecurit
 }
 
 type ESXPackSecurityGetRoleMappingServiceWrapper struct {
-	obj            *elastic.XPackSecurityGetRoleMappingService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackSecurityGetRoleMappingService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityGetRoleMappingService {
@@ -1347,12 +1460,13 @@ func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Unwrap() *elastic.XPackSec
 }
 
 type ESXPackSecurityGetRoleServiceWrapper struct {
-	obj            *elastic.XPackSecurityGetRoleService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackSecurityGetRoleService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackSecurityGetRoleServiceWrapper) Unwrap() *elastic.XPackSecurityGetRoleService {
@@ -1360,12 +1474,13 @@ func (w *ESXPackSecurityGetRoleServiceWrapper) Unwrap() *elastic.XPackSecurityGe
 }
 
 type ESXPackSecurityGetUserServiceWrapper struct {
-	obj            *elastic.XPackSecurityGetUserService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackSecurityGetUserService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackSecurityGetUserServiceWrapper) Unwrap() *elastic.XPackSecurityGetUserService {
@@ -1373,12 +1488,13 @@ func (w *ESXPackSecurityGetUserServiceWrapper) Unwrap() *elastic.XPackSecurityGe
 }
 
 type ESXPackSecurityPutRoleMappingServiceWrapper struct {
-	obj            *elastic.XPackSecurityPutRoleMappingService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackSecurityPutRoleMappingService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityPutRoleMappingService {
@@ -1386,12 +1502,13 @@ func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Unwrap() *elastic.XPackSec
 }
 
 type ESXPackSecurityPutRoleServiceWrapper struct {
-	obj            *elastic.XPackSecurityPutRoleService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackSecurityPutRoleService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackSecurityPutRoleServiceWrapper) Unwrap() *elastic.XPackSecurityPutRoleService {
@@ -1399,12 +1516,13 @@ func (w *ESXPackSecurityPutRoleServiceWrapper) Unwrap() *elastic.XPackSecurityPu
 }
 
 type ESXPackSecurityPutUserServiceWrapper struct {
-	obj            *elastic.XPackSecurityPutUserService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackSecurityPutUserService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackSecurityPutUserServiceWrapper) Unwrap() *elastic.XPackSecurityPutUserService {
@@ -1412,12 +1530,13 @@ func (w *ESXPackSecurityPutUserServiceWrapper) Unwrap() *elastic.XPackSecurityPu
 }
 
 type ESXPackWatcherAckWatchServiceWrapper struct {
-	obj            *elastic.XPackWatcherAckWatchService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackWatcherAckWatchService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackWatcherAckWatchServiceWrapper) Unwrap() *elastic.XPackWatcherAckWatchService {
@@ -1425,12 +1544,13 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) Unwrap() *elastic.XPackWatcherAck
 }
 
 type ESXPackWatcherActivateWatchServiceWrapper struct {
-	obj            *elastic.XPackWatcherActivateWatchService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackWatcherActivateWatchService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackWatcherActivateWatchServiceWrapper) Unwrap() *elastic.XPackWatcherActivateWatchService {
@@ -1438,12 +1558,13 @@ func (w *ESXPackWatcherActivateWatchServiceWrapper) Unwrap() *elastic.XPackWatch
 }
 
 type ESXPackWatcherDeactivateWatchServiceWrapper struct {
-	obj            *elastic.XPackWatcherDeactivateWatchService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackWatcherDeactivateWatchService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Unwrap() *elastic.XPackWatcherDeactivateWatchService {
@@ -1451,12 +1572,13 @@ func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Unwrap() *elastic.XPackWat
 }
 
 type ESXPackWatcherDeleteWatchServiceWrapper struct {
-	obj            *elastic.XPackWatcherDeleteWatchService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackWatcherDeleteWatchService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackWatcherDeleteWatchServiceWrapper) Unwrap() *elastic.XPackWatcherDeleteWatchService {
@@ -1464,12 +1586,13 @@ func (w *ESXPackWatcherDeleteWatchServiceWrapper) Unwrap() *elastic.XPackWatcher
 }
 
 type ESXPackWatcherExecuteWatchServiceWrapper struct {
-	obj            *elastic.XPackWatcherExecuteWatchService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackWatcherExecuteWatchService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackWatcherExecuteWatchServiceWrapper) Unwrap() *elastic.XPackWatcherExecuteWatchService {
@@ -1477,12 +1600,13 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Unwrap() *elastic.XPackWatche
 }
 
 type ESXPackWatcherGetWatchServiceWrapper struct {
-	obj            *elastic.XPackWatcherGetWatchService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackWatcherGetWatchService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackWatcherGetWatchServiceWrapper) Unwrap() *elastic.XPackWatcherGetWatchService {
@@ -1490,12 +1614,13 @@ func (w *ESXPackWatcherGetWatchServiceWrapper) Unwrap() *elastic.XPackWatcherGet
 }
 
 type ESXPackWatcherPutWatchServiceWrapper struct {
-	obj            *elastic.XPackWatcherPutWatchService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackWatcherPutWatchService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackWatcherPutWatchServiceWrapper) Unwrap() *elastic.XPackWatcherPutWatchService {
@@ -1503,12 +1628,13 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Unwrap() *elastic.XPackWatcherPut
 }
 
 type ESXPackWatcherStartServiceWrapper struct {
-	obj            *elastic.XPackWatcherStartService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackWatcherStartService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackWatcherStartServiceWrapper) Unwrap() *elastic.XPackWatcherStartService {
@@ -1516,12 +1642,13 @@ func (w *ESXPackWatcherStartServiceWrapper) Unwrap() *elastic.XPackWatcherStartS
 }
 
 type ESXPackWatcherStatsServiceWrapper struct {
-	obj            *elastic.XPackWatcherStatsService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackWatcherStatsService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackWatcherStatsServiceWrapper) Unwrap() *elastic.XPackWatcherStatsService {
@@ -1529,12 +1656,13 @@ func (w *ESXPackWatcherStatsServiceWrapper) Unwrap() *elastic.XPackWatcherStatsS
 }
 
 type ESXPackWatcherStopServiceWrapper struct {
-	obj            *elastic.XPackWatcherStopService
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *elastic.XPackWatcherStopService
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *ESXPackWatcherStopServiceWrapper) Unwrap() *elastic.XPackWatcherStopService {

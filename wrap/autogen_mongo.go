@@ -21,12 +21,13 @@ import (
 )
 
 type MongoClientWrapper struct {
-	obj            *mongo.Client
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *mongo.Client
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *MongoClientWrapper) Unwrap() *mongo.Client {
@@ -74,6 +75,21 @@ func (w *MongoClientWrapper) OnRateLimiterChange(opts ...refx.Option) config.OnC
 	}
 }
 
+func (w *MongoClientWrapper) OnParallelControllerChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options micro.ParallelControllerOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		parallelController, err := micro.NewParallelControllerWithOptions(&options, opts...)
+		if err != nil {
+			return errors.Wrap(err, "NewParallelControllerWithOptions failed")
+		}
+		w.parallelController = parallelController
+		return nil
+	}
+}
+
 func (w *MongoClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:        "mongo_Client_durationMs",
@@ -89,12 +105,13 @@ func (w *MongoClientWrapper) CreateMetric(options *WrapperOptions) {
 }
 
 type MongoCollectionWrapper struct {
-	obj            *mongo.Collection
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *mongo.Collection
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *MongoCollectionWrapper) Unwrap() *mongo.Collection {
@@ -102,12 +119,13 @@ func (w *MongoCollectionWrapper) Unwrap() *mongo.Collection {
 }
 
 type MongoDatabaseWrapper struct {
-	obj            *mongo.Database
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *mongo.Database
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *MongoDatabaseWrapper) Unwrap() *mongo.Database {

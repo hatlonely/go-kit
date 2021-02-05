@@ -20,12 +20,13 @@ import (
 )
 
 type OSSBucketWrapper struct {
-	obj            *oss.Bucket
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *oss.Bucket
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *OSSBucketWrapper) Unwrap() *oss.Bucket {
@@ -33,12 +34,13 @@ func (w *OSSBucketWrapper) Unwrap() *oss.Bucket {
 }
 
 type OSSClientWrapper struct {
-	obj            *oss.Client
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *oss.Client
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w *OSSClientWrapper) Unwrap() *oss.Client {
@@ -82,6 +84,21 @@ func (w *OSSClientWrapper) OnRateLimiterChange(opts ...refx.Option) config.OnCha
 			return errors.Wrap(err, "NewRateLimiterWithOptions failed")
 		}
 		w.rateLimiter = rateLimiter
+		return nil
+	}
+}
+
+func (w *OSSClientWrapper) OnParallelControllerChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options micro.ParallelControllerOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		parallelController, err := micro.NewParallelControllerWithOptions(&options, opts...)
+		if err != nil {
+			return errors.Wrap(err, "NewParallelControllerWithOptions failed")
+		}
+		w.parallelController = parallelController
 		return nil
 	}
 }

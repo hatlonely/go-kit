@@ -28,7 +28,7 @@ func RegisterParallelController(key string, constructor interface{}) {
 
 var parallelControllerGroupConstructorMap = map[string]*refx.Constructor{}
 
-func NewParallelControllerWithOptions(options *ParallelControllerGroupOptions, opts ...refx.Option) (ParallelController, error) {
+func NewParallelControllerWithOptions(options *ParallelControllerOptions, opts ...refx.Option) (ParallelController, error) {
 	if options.Type == "" {
 		return nil, nil
 	}
@@ -53,7 +53,7 @@ func NewParallelControllerWithOptions(options *ParallelControllerGroupOptions, o
 	return result[0].Interface().(ParallelController), nil
 }
 
-type ParallelControllerGroupOptions struct {
+type ParallelControllerOptions struct {
 	Type    string
 	Options interface{}
 }

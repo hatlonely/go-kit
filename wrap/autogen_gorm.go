@@ -18,12 +18,13 @@ import (
 )
 
 type GORMAssociationWrapper struct {
-	obj            *gorm.Association
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *gorm.Association
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w GORMAssociationWrapper) Unwrap() *gorm.Association {
@@ -31,12 +32,13 @@ func (w GORMAssociationWrapper) Unwrap() *gorm.Association {
 }
 
 type GORMDBWrapper struct {
-	obj            *gorm.DB
-	retry          *micro.Retry
-	options        *WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	obj                *gorm.DB
+	retry              *micro.Retry
+	options            *WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 func (w GORMDBWrapper) Unwrap() *gorm.DB {
@@ -80,6 +82,21 @@ func (w *GORMDBWrapper) OnRateLimiterChange(opts ...refx.Option) config.OnChange
 			return errors.Wrap(err, "NewRateLimiterWithOptions failed")
 		}
 		w.rateLimiter = rateLimiter
+		return nil
+	}
+}
+
+func (w *GORMDBWrapper) OnParallelControllerChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options micro.ParallelControllerOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		parallelController, err := micro.NewParallelControllerWithOptions(&options, opts...)
+		if err != nil {
+			return errors.Wrap(err, "NewParallelControllerWithOptions failed")
+		}
+		w.parallelController = parallelController
 		return nil
 	}
 }

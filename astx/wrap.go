@@ -66,19 +66,20 @@ type WrapperGeneratorOptions struct {
 	EnableHystrix            bool                `flag:"usage: enable hystrix code"`
 
 	Rule struct {
-		Class               Rule
-		StarClass           Rule
-		OnWrapperChange     Rule
-		OnRetryChange       Rule
-		OnRateLimiterChange Rule
-		CreateMetric        Rule
-		ErrorInResult       Rule
-		Function            map[string]Rule
-		Trace               map[string]Rule
-		Retry               map[string]Rule
-		Metric              map[string]Rule
-		RateLimiter         map[string]Rule
-		Hystrix             map[string]Rule
+		Class                      Rule
+		StarClass                  Rule
+		OnWrapperChange            Rule
+		OnRetryChange              Rule
+		OnRateLimiterChange        Rule
+		OnParallelControllerChange Rule
+		CreateMetric               Rule
+		ErrorInResult              Rule
+		Function                   map[string]Rule
+		Trace                      map[string]Rule
+		Retry                      map[string]Rule
+		Metric                     map[string]Rule
+		RateLimiter                map[string]Rule
+		Hystrix                    map[string]Rule
 	}
 }
 
@@ -102,6 +103,9 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 	}
 	if options.Rule.OnRateLimiterChange.Exclude == nil {
 		options.Rule.OnRateLimiterChange.Exclude = excludeAllRegex
+	}
+	if options.Rule.OnParallelControllerChange.Exclude == nil {
+		options.Rule.OnParallelControllerChange.Exclude = excludeAllRegex
 	}
 	if options.Rule.CreateMetric.Exclude == nil {
 		options.Rule.CreateMetric.Exclude = excludeAllRegex
@@ -169,16 +173,17 @@ type RenderInfo struct {
 
 	EnableRuleForNoErrorFunc bool
 	Rule                     struct {
-		OnWrapperChange     bool
-		OnRetryChange       bool
-		OnRateLimiterChange bool
-		CreateMetric        bool
-		Trace               bool
-		Retry               bool
-		Metric              bool
-		Hystrix             bool
-		RateLimiter         bool
-		ErrorInResult       bool
+		OnWrapperChange            bool
+		OnRetryChange              bool
+		OnRateLimiterChange        bool
+		OnParallelControllerChange bool
+		CreateMetric               bool
+		Trace                      bool
+		Retry                      bool
+		Metric                     bool
+		Hystrix                    bool
+		RateLimiter                bool
+		ErrorInResult              bool
 	}
 }
 
@@ -242,6 +247,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		info.Rule.OnWrapperChange = g.MatchRule(cls, g.options.Rule.OnWrapperChange)
 		info.Rule.OnRetryChange = g.MatchRule(cls, g.options.Rule.OnRetryChange)
 		info.Rule.OnRateLimiterChange = g.MatchRule(cls, g.options.Rule.OnRateLimiterChange)
+		info.Rule.OnParallelControllerChange = g.MatchRule(cls, g.options.Rule.OnParallelControllerChange)
 		info.Rule.CreateMetric = g.MatchRule(cls, g.options.Rule.CreateMetric)
 		info.IsStarClass = g.starClassSet[cls]
 		info.Interface = fmt.Sprintf("I%s%s", g.options.ClassPrefix, cls)
@@ -330,6 +336,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 			info.Rule.OnRetryChange = g.MatchRule(cls, g.options.Rule.OnRetryChange)
 			info.Rule.CreateMetric = g.MatchRule(cls, g.options.Rule.CreateMetric)
 			info.Rule.OnRateLimiterChange = g.MatchRule(cls, g.options.Rule.OnRateLimiterChange)
+			info.Rule.OnParallelControllerChange = g.MatchRule(cls, g.options.Rule.OnParallelControllerChange)
 			info.Rule.Trace = g.MatchFunctionRule(function.Name, cls, g.options.Rule.Trace)
 			info.Rule.Metric = g.MatchFunctionRule(function.Name, cls, g.options.Rule.Metric)
 			info.Rule.Retry = g.MatchFunctionRule(function.Name, cls, g.options.Rule.Retry)
@@ -419,15 +426,16 @@ func renderTemplate(tplStr string, vals interface{}, tplName string) string {
 
 const WrapperClassTpl = `
 type {{.WrapClass}} struct {
-	obj            *{{.Package}}.{{.Class}}
+	obj                *{{.Package}}.{{.Class}}
 {{- if .EnableHystrix}}
-	backupObj      {{.Interface}}
+	backupObj          {{.Interface}}
 {{- end}}
-	retry          *micro.Retry
-	options        *{{.WrapPackagePrefix}}WrapperOptions
-	durationMetric *prometheus.HistogramVec
-	inflightMetric *prometheus.GaugeVec
-	rateLimiter    micro.RateLimiter
+	retry              *micro.Retry
+	options            *{{.WrapPackagePrefix}}WrapperOptions
+	durationMetric     *prometheus.HistogramVec
+	inflightMetric     *prometheus.GaugeVec
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 }
 
 {{- if .IsStarClass}}
@@ -487,6 +495,24 @@ func (w *{{.WrapClass}}) OnRateLimiterChange(opts ...refx.Option) config.OnChang
 			return errors.Wrap(err, "NewRateLimiterWithOptions failed")
 		}
 		w.rateLimiter = rateLimiter
+		return nil
+	}
+}
+{{- end}}
+
+{{- if .Rule.OnParallelControllerChange}}
+
+func (w *{{.WrapClass}}) OnParallelControllerChange(opts ...refx.Option) config.OnChangeHandler {
+	return func(cfg *config.Config) error {
+		var options micro.ParallelControllerOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.Wrap(err, "cfg.Unmarshal failed")
+		}
+		parallelController, err := micro.NewParallelControllerWithOptions(&options, opts...)
+		if err != nil {
+			return errors.Wrap(err, "NewParallelControllerWithOptions failed")
+		}
+		w.parallelController = parallelController
 		return nil
 	}
 }
