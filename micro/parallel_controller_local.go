@@ -2,80 +2,50 @@ package micro
 
 import (
 	"context"
-	"sync"
 
 	"github.com/pkg/errors"
 )
 
-func NewLocalParallelControllerCell(maxToken int) *LocalParallelControllerCell {
-	c := &LocalParallelControllerCell{
-		maxToken: maxToken,
-		curToken: maxToken,
+type LocalParallelControllerOptions map[string]int
+
+type LocalParallelController struct {
+	options         *LocalParallelControllerOptions
+	controllerGroup map[string]*LocalParallelControllerCell
+}
+
+func NewLocalParallelControllerGroupWithOptions(options *LocalParallelControllerOptions) (*LocalParallelController, error) {
+	if options == nil || len(*options) == 0 {
+		return nil, nil
 	}
 
-	c.notFull = sync.NewCond(&c.mutex)
-	c.notEmpty = sync.NewCond(&c.mutex)
+	controllerGroup := map[string]*LocalParallelControllerCell{}
+	for key, val := range *options {
+		if val <= 0 {
+			return nil, errors.New("max parallel should be positive")
+		}
+		controllerGroup[key] = NewLocalParallelControllerCell(val)
+	}
 
-	return c
+	c := &LocalParallelController{
+		options:         options,
+		controllerGroup: controllerGroup,
+	}
+
+	return c, nil
 }
 
-type LocalParallelControllerCell struct {
-	mutex    sync.Mutex
-	notEmpty *sync.Cond
-	notFull  *sync.Cond
-
-	maxToken int
-	curToken int
-}
-
-func (l *LocalParallelControllerCell) PutToken(ctx context.Context) error {
-	ch := make(chan struct{}, 1)
-	go func() {
-		l.putToken()
-		ch <- struct{}{}
-	}()
-
-	select {
-	case <-ctx.Done():
-		return errors.New("context cancel")
-	case <-ch:
+func (l *LocalParallelController) PutToken(ctx context.Context, key string) error {
+	c, ok := l.controllerGroup[key]
+	if !ok {
 		return nil
 	}
+	return c.PutToken(ctx)
 }
 
-func (l *LocalParallelControllerCell) GetToken(ctx context.Context) error {
-	ch := make(chan struct{}, 1)
-	go func() {
-		l.getToken()
-		ch <- struct{}{}
-	}()
-
-	select {
-	case <-ctx.Done():
-		return errors.New("context cancel")
-	case <-ch:
+func (l *LocalParallelController) GetToken(ctx context.Context, key string) error {
+	c, ok := l.controllerGroup[key]
+	if !ok {
 		return nil
 	}
-}
-
-func (l *LocalParallelControllerCell) putToken() {
-	l.mutex.Lock()
-	defer l.mutex.Unlock()
-	defer l.notEmpty.Signal()
-
-	for l.curToken >= l.maxToken {
-		l.notFull.Wait()
-	}
-	l.curToken++
-}
-
-func (l *LocalParallelControllerCell) getToken() {
-	l.mutex.Lock()
-	defer l.mutex.Unlock()
-	defer l.notFull.Signal()
-
-	for l.curToken <= 0 {
-		l.notEmpty.Wait()
-	}
-	l.curToken--
+	return c.GetToken(ctx)
 }
