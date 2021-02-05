@@ -27,18 +27,7 @@ func (l *LocalParallelControllerCell) TryGetToken() bool {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
 
-	if l.curToken <= 0 {
-		return false
-	}
-	l.curToken--
-	return true
-}
-
-func (l *LocalParallelControllerCell) TryPutToken() bool {
-	l.mutex.Lock()
-	defer l.mutex.Unlock()
-
-	for l.curToken >= l.maxToken {
+	if l.curToken >= l.maxToken {
 		return false
 	}
 	l.curToken++
@@ -89,8 +78,9 @@ func (l *LocalParallelControllerCell) putToken() {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
 
-	if l.curToken > 0 {
-		l.curToken--
-		l.notEmpty.Signal()
+	if l.curToken <= 0 {
+		return
 	}
+	l.curToken--
+	l.notEmpty.Signal()
 }

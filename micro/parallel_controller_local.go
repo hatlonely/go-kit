@@ -45,17 +45,6 @@ func (l *LocalParallelController) TryGetToken(ctx context.Context, key string) e
 	return ErrParallelControl
 }
 
-func (l *LocalParallelController) TryPutToken(ctx context.Context, key string) error {
-	c, ok := l.controllerMap[key]
-	if !ok {
-		return nil
-	}
-	if c.TryPutToken() {
-		return nil
-	}
-	return ErrParallelControl
-}
-
 func (l *LocalParallelController) PutToken(ctx context.Context, key string) error {
 	c, ok := l.controllerMap[key]
 	if !ok {
