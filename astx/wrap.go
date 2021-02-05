@@ -626,9 +626,9 @@ func (g *WrapperGenerator) generateWrapperReturnList(function *Function) string 
 		cls = strings.TrimPrefix(cls, g.options.PackageName+".")
 		if wrapCls, ok := g.wrapClassMap[cls]; ok {
 			if g.starClassSet[cls] {
-				results = append(results, fmt.Sprintf(`&%s{obj: %s, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}`, wrapCls, i.Name))
+				results = append(results, fmt.Sprintf(`&%s{obj: %s, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter, parallelController: w.parallelController}`, wrapCls, i.Name))
 			} else {
-				results = append(results, fmt.Sprintf(`%s{obj: %s, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}`, wrapCls, i.Name))
+				results = append(results, fmt.Sprintf(`%s{obj: %s, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter, parallelController: w.parallelController}`, wrapCls, i.Name))
 			}
 			continue
 		}
