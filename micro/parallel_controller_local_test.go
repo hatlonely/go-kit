@@ -12,7 +12,7 @@ import (
 
 func TestLocalParallelController_Parallel(t *testing.T) {
 	Convey("test", t, func() {
-		pc := NewLocalParallelController(2)
+		pc := NewLocalParallelControllerCell(2)
 
 		var wg sync.WaitGroup
 		for i := 0; i < 10; i++ {

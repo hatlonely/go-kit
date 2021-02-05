@@ -6,27 +6,27 @@ import (
 	"github.com/pkg/errors"
 )
 
-type LocalParallelControllerGroupOptions map[string]int
+type LocalParallelControllerOptions map[string]int
 
-type LocalParallelControllerGroup struct {
-	options         *LocalParallelControllerGroupOptions
-	controllerGroup map[string]*LocalParallelController
+type LocalParallelController struct {
+	options         *LocalParallelControllerOptions
+	controllerGroup map[string]*LocalParallelControllerCell
 }
 
-func NewLocalParallelControllerGroupWithOptions(options *LocalParallelControllerGroupOptions) (*LocalParallelControllerGroup, error) {
+func NewLocalParallelControllerGroupWithOptions(options *LocalParallelControllerOptions) (*LocalParallelController, error) {
 	if options == nil || len(*options) == 0 {
 		return nil, nil
 	}
 
-	controllerGroup := map[string]*LocalParallelController{}
+	controllerGroup := map[string]*LocalParallelControllerCell{}
 	for key, val := range *options {
 		if val <= 0 {
 			return nil, errors.New("max parallel should be positive")
 		}
-		controllerGroup[key] = NewLocalParallelController(val)
+		controllerGroup[key] = NewLocalParallelControllerCell(val)
 	}
 
-	c := &LocalParallelControllerGroup{
+	c := &LocalParallelController{
 		options:         options,
 		controllerGroup: controllerGroup,
 	}
@@ -34,7 +34,7 @@ func NewLocalParallelControllerGroupWithOptions(options *LocalParallelController
 	return c, nil
 }
 
-func (l *LocalParallelControllerGroup) PutToken(ctx context.Context, key string) error {
+func (l *LocalParallelController) PutToken(ctx context.Context, key string) error {
 	c, ok := l.controllerGroup[key]
 	if !ok {
 		return nil
@@ -42,7 +42,7 @@ func (l *LocalParallelControllerGroup) PutToken(ctx context.Context, key string)
 	return c.PutToken(ctx)
 }
 
-func (l *LocalParallelControllerGroup) GetToken(ctx context.Context, key string) error {
+func (l *LocalParallelController) GetToken(ctx context.Context, key string) error {
 	c, ok := l.controllerGroup[key]
 	if !ok {
 		return nil

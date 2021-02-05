@@ -11,14 +11,14 @@ import (
 func TestNewParallelControllerGroupWithOptions(t *testing.T) {
 	Convey("TestNewParallelControllerGroupWithOptions", t, func() {
 		Convey("empty options case", func() {
-			r, err := NewParallelControllerGroupWithOptions(&ParallelControllerGroupOptions{})
+			r, err := NewParallelControllerWithOptions(&ParallelControllerGroupOptions{})
 			So(err, ShouldBeNil)
 			So(r, ShouldBeNil)
 		})
 
-		r, err := NewParallelControllerGroupWithOptions(&ParallelControllerGroupOptions{
+		r, err := NewParallelControllerWithOptions(&ParallelControllerGroupOptions{
 			Type: "LocalGroup",
-			Options: &LocalParallelControllerGroupOptions{
+			Options: &LocalParallelControllerOptions{
 				"key1": 2,
 			},
 		})

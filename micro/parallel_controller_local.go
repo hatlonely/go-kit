@@ -7,8 +7,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-func NewLocalParallelController(maxToken int) *LocalParallelController {
-	c := &LocalParallelController{
+func NewLocalParallelControllerCell(maxToken int) *LocalParallelControllerCell {
+	c := &LocalParallelControllerCell{
 		maxToken: maxToken,
 		curToken: maxToken,
 	}
@@ -19,7 +19,7 @@ func NewLocalParallelController(maxToken int) *LocalParallelController {
 	return c
 }
 
-type LocalParallelController struct {
+type LocalParallelControllerCell struct {
 	mutex    sync.Mutex
 	notEmpty *sync.Cond
 	notFull  *sync.Cond
@@ -28,7 +28,7 @@ type LocalParallelController struct {
 	curToken int
 }
 
-func (l *LocalParallelController) PutToken(ctx context.Context) error {
+func (l *LocalParallelControllerCell) PutToken(ctx context.Context) error {
 	ch := make(chan struct{}, 1)
 	go func() {
 		l.putToken()
@@ -43,7 +43,7 @@ func (l *LocalParallelController) PutToken(ctx context.Context) error {
 	}
 }
 
-func (l *LocalParallelController) GetToken(ctx context.Context) error {
+func (l *LocalParallelControllerCell) GetToken(ctx context.Context) error {
 	ch := make(chan struct{}, 1)
 	go func() {
 		l.getToken()
@@ -58,7 +58,7 @@ func (l *LocalParallelController) GetToken(ctx context.Context) error {
 	}
 }
 
-func (l *LocalParallelController) putToken() {
+func (l *LocalParallelControllerCell) putToken() {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
 	defer l.notEmpty.Signal()
@@ -69,7 +69,7 @@ func (l *LocalParallelController) putToken() {
 	l.curToken++
 }
 
-func (l *LocalParallelController) getToken() {
+func (l *LocalParallelControllerCell) getToken() {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
 	defer l.notFull.Signal()

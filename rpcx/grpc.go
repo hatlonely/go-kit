@@ -84,9 +84,9 @@ func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions, opts ...refx
 		return nil, errors.Wrap(err, "micro.NewRateLimiterWithOptions failed")
 	}
 	g.rateLimiter = rateLimiter
-	parallelCtl, err := micro.NewParallelControllerGroupWithOptions(&options.ParallelController, opts...)
+	parallelCtl, err := micro.NewParallelControllerWithOptions(&options.ParallelController, opts...)
 	if err != nil {
-		return nil, errors.Wrap(err, "micro.NewParallelControllerGroupWithOptions failed")
+		return nil, errors.Wrap(err, "micro.NewParallelControllerWithOptions failed")
 	}
 	g.parallelCtl = parallelCtl
 
@@ -97,7 +97,7 @@ type GrpcInterceptor struct {
 	options *GrpcInterceptorOptions
 
 	rateLimiter micro.RateLimiter
-	parallelCtl micro.ParallelControllerGroup
+	parallelCtl micro.ParallelController
 
 	validators  []func(interface{}) error
 	preHandlers []func(ctx context.Context, req interface{}) error
