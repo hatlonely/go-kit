@@ -11,7 +11,7 @@ func TestContext(t *testing.T) {
 	Convey("TestContext", t, func() {
 		ctx := NewContext(context.Background(),
 			WithCtxDisableMetric(),
-			WithCtxDisableMetric(),
+			WithCtxDisableTrace(),
 			WithCtxMetricCustomLabelValue("hello"),
 			WithCtxTraceTag("key1", "val1"),
 			WithCtxTraceTag("key2", "val2"),

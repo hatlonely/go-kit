@@ -25,10 +25,10 @@ type GormOptions struct {
 }
 
 type GORMDBWrapperOptions struct {
-	Retry            micro.RetryOptions
-	Wrapper          WrapperOptions
-	Gorm             GormOptions
-	RateLimiterGroup micro.RateLimiterOptions
+	Retry       micro.RetryOptions
+	Wrapper     WrapperOptions
+	Gorm        GormOptions
+	RateLimiter micro.RateLimiterOptions
 }
 
 func NewGORMDBWithOptions(options *GormOptions) (*gorm.DB, error) {
@@ -57,13 +57,13 @@ func NewGORMDBWrapperWithOptions(options *GORMDBWrapperOptions, opts ...refx.Opt
 	var err error
 
 	w.options = &options.Wrapper
-	w.retry, err = NewRetryWithOptions(&options.Retry)
+	w.retry, err = micro.NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup, opts...)
+	w.rateLimiter, err = micro.NewRateLimiterWithOptions(&options.RateLimiter, opts...)
 	if err != nil {
-		return nil, errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
+		return nil, errors.Wrap(err, "NewRateLimiterWithOptions failed")
 	}
 	if w.options.EnableMetric {
 		w.CreateMetric(w.options)
@@ -90,7 +90,7 @@ func NewGORMDBWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*GORMD
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
-	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiterGroup"), w.OnRateLimiterGroupChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiter"), w.OnRateLimiterChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Gorm"), func(cfg *config.Config) error {
 		var options GormOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
