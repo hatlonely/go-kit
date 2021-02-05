@@ -1,4 +1,4 @@
-package micro
+package microx
 
 import (
 	"context"
@@ -10,6 +10,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/wrap"
 )
@@ -18,7 +19,7 @@ func TestRedisRateLimiter(t *testing.T) {
 	Convey("TestRedisRateLimiter", t, func() {
 		r, err := NewRedisRateLimiterWithOptions(&RedisRateLimiterOptions{
 			Redis: wrap.RedisClientWrapperOptions{
-				Retry: wrap.RetryOptions{
+				Retry: micro.RetryOptions{
 					Attempts: 3,
 					Delay:    time.Millisecond * 500,
 				},
@@ -43,7 +44,7 @@ func TestRedisRateLimiter(t *testing.T) {
 func TestRedisRateLimiter_WaitN_Parallel(t *testing.T) {
 	r, _ := NewRedisRateLimiterWithOptions(&RedisRateLimiterOptions{
 		Redis: wrap.RedisClientWrapperOptions{
-			Retry: wrap.RetryOptions{
+			Retry: micro.RetryOptions{
 				Attempts: 3,
 				Delay:    time.Millisecond * 500,
 			},

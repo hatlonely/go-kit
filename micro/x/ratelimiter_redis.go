@@ -1,4 +1,4 @@
-package micro
+package microx
 
 import (
 	"context"
@@ -10,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/wrap"
 )
@@ -81,7 +82,7 @@ func (r *RedisRateLimiter) Allow(ctx context.Context, key string) error {
 	}
 
 	if int(res.Val()) > qps {
-		return ErrFlowControl
+		return micro.ErrFlowControl
 	}
 
 	return nil
