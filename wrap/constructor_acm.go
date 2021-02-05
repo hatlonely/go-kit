@@ -7,14 +7,15 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
 )
 
 type ACMConfigClientWrapperOptions struct {
-	Retry            RetryOptions
-	Wrapper          WrapperOptions
-	ACM              constant.ClientConfig
-	RateLimiterGroup RateLimiterGroupOptions
+	Retry       micro.RetryOptions
+	Wrapper     WrapperOptions
+	ACM         constant.ClientConfig
+	RateLimiter micro.RateLimiterOptions
 }
 
 func NewACMConfigClientWrapperWithOptions(options *ACMConfigClientWrapperOptions, opts ...refx.Option) (*ACMConfigClientWrapper, error) {
@@ -22,13 +23,13 @@ func NewACMConfigClientWrapperWithOptions(options *ACMConfigClientWrapperOptions
 	var err error
 
 	w.options = &options.Wrapper
-	w.retry, err = NewRetryWithOptions(&options.Retry)
+	w.retry, err = micro.NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup, opts...)
+	w.rateLimiter, err = micro.NewRateLimiterWithOptions(&options.RateLimiter, opts...)
 	if err != nil {
-		return nil, errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
+		return nil, errors.Wrap(err, "NewRateLimiterWithOptions failed")
 	}
 	if w.options.EnableMetric {
 		w.CreateMetric(w.options)
@@ -62,7 +63,7 @@ func NewACMConfigClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
-	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiterGroup"), w.OnRateLimiterGroupChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiter"), w.OnRateLimiterChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("ACM"), func(cfg *config.Config) error {
 		var options constant.ClientConfig
 		if err := cfg.Unmarshal(&options, opts...); err != nil {

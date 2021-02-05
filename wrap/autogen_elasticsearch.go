@@ -13,16 +13,17 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promauto"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
 )
 
 type ESAliasServiceWrapper struct {
-	obj              *elastic.AliasService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.AliasService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESAliasServiceWrapper) Unwrap() *elastic.AliasService {
@@ -30,12 +31,12 @@ func (w *ESAliasServiceWrapper) Unwrap() *elastic.AliasService {
 }
 
 type ESAliasesServiceWrapper struct {
-	obj              *elastic.AliasesService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.AliasesService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESAliasesServiceWrapper) Unwrap() *elastic.AliasesService {
@@ -43,12 +44,12 @@ func (w *ESAliasesServiceWrapper) Unwrap() *elastic.AliasesService {
 }
 
 type ESBulkProcessorServiceWrapper struct {
-	obj              *elastic.BulkProcessorService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.BulkProcessorService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESBulkProcessorServiceWrapper) Unwrap() *elastic.BulkProcessorService {
@@ -56,12 +57,12 @@ func (w *ESBulkProcessorServiceWrapper) Unwrap() *elastic.BulkProcessorService {
 }
 
 type ESBulkServiceWrapper struct {
-	obj              *elastic.BulkService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.BulkService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESBulkServiceWrapper) Unwrap() *elastic.BulkService {
@@ -69,12 +70,12 @@ func (w *ESBulkServiceWrapper) Unwrap() *elastic.BulkService {
 }
 
 type ESCatAliasesServiceWrapper struct {
-	obj              *elastic.CatAliasesService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.CatAliasesService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESCatAliasesServiceWrapper) Unwrap() *elastic.CatAliasesService {
@@ -82,12 +83,12 @@ func (w *ESCatAliasesServiceWrapper) Unwrap() *elastic.CatAliasesService {
 }
 
 type ESCatAllocationServiceWrapper struct {
-	obj              *elastic.CatAllocationService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.CatAllocationService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESCatAllocationServiceWrapper) Unwrap() *elastic.CatAllocationService {
@@ -95,12 +96,12 @@ func (w *ESCatAllocationServiceWrapper) Unwrap() *elastic.CatAllocationService {
 }
 
 type ESCatCountServiceWrapper struct {
-	obj              *elastic.CatCountService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.CatCountService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESCatCountServiceWrapper) Unwrap() *elastic.CatCountService {
@@ -108,12 +109,12 @@ func (w *ESCatCountServiceWrapper) Unwrap() *elastic.CatCountService {
 }
 
 type ESCatHealthServiceWrapper struct {
-	obj              *elastic.CatHealthService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.CatHealthService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESCatHealthServiceWrapper) Unwrap() *elastic.CatHealthService {
@@ -121,12 +122,12 @@ func (w *ESCatHealthServiceWrapper) Unwrap() *elastic.CatHealthService {
 }
 
 type ESCatIndicesServiceWrapper struct {
-	obj              *elastic.CatIndicesService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.CatIndicesService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESCatIndicesServiceWrapper) Unwrap() *elastic.CatIndicesService {
@@ -134,12 +135,12 @@ func (w *ESCatIndicesServiceWrapper) Unwrap() *elastic.CatIndicesService {
 }
 
 type ESCatShardsServiceWrapper struct {
-	obj              *elastic.CatShardsService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.CatShardsService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESCatShardsServiceWrapper) Unwrap() *elastic.CatShardsService {
@@ -147,12 +148,12 @@ func (w *ESCatShardsServiceWrapper) Unwrap() *elastic.CatShardsService {
 }
 
 type ESClearScrollServiceWrapper struct {
-	obj              *elastic.ClearScrollService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.ClearScrollService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESClearScrollServiceWrapper) Unwrap() *elastic.ClearScrollService {
@@ -160,12 +161,12 @@ func (w *ESClearScrollServiceWrapper) Unwrap() *elastic.ClearScrollService {
 }
 
 type ESClientWrapper struct {
-	obj              *elastic.Client
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.Client
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESClientWrapper) Unwrap() *elastic.Client {
@@ -185,11 +186,11 @@ func (w *ESClientWrapper) OnWrapperChange(opts ...refx.Option) config.OnChangeHa
 
 func (w *ESClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options RetryOptions
+		var options micro.RetryOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		retry, err := NewRetryWithOptions(&options)
+		retry, err := micro.NewRetryWithOptions(&options)
 		if err != nil {
 			return errors.Wrap(err, "NewRetryWithOptions failed")
 		}
@@ -198,17 +199,17 @@ func (w *ESClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHand
 	}
 }
 
-func (w *ESClientWrapper) OnRateLimiterGroupChange(opts ...refx.Option) config.OnChangeHandler {
+func (w *ESClientWrapper) OnRateLimiterChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options RateLimiterGroupOptions
+		var options micro.RateLimiterOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		rateLimiterGroup, err := NewRateLimiterGroupWithOptions(&options, opts...)
+		rateLimiter, err := micro.NewRateLimiterWithOptions(&options, opts...)
 		if err != nil {
-			return errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
+			return errors.Wrap(err, "NewRateLimiterWithOptions failed")
 		}
-		w.rateLimiterGroup = rateLimiterGroup
+		w.rateLimiter = rateLimiter
 		return nil
 	}
 }
@@ -228,12 +229,12 @@ func (w *ESClientWrapper) CreateMetric(options *WrapperOptions) {
 }
 
 type ESClusterHealthServiceWrapper struct {
-	obj              *elastic.ClusterHealthService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.ClusterHealthService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESClusterHealthServiceWrapper) Unwrap() *elastic.ClusterHealthService {
@@ -241,12 +242,12 @@ func (w *ESClusterHealthServiceWrapper) Unwrap() *elastic.ClusterHealthService {
 }
 
 type ESClusterRerouteServiceWrapper struct {
-	obj              *elastic.ClusterRerouteService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.ClusterRerouteService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESClusterRerouteServiceWrapper) Unwrap() *elastic.ClusterRerouteService {
@@ -254,12 +255,12 @@ func (w *ESClusterRerouteServiceWrapper) Unwrap() *elastic.ClusterRerouteService
 }
 
 type ESClusterStateServiceWrapper struct {
-	obj              *elastic.ClusterStateService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.ClusterStateService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESClusterStateServiceWrapper) Unwrap() *elastic.ClusterStateService {
@@ -267,12 +268,12 @@ func (w *ESClusterStateServiceWrapper) Unwrap() *elastic.ClusterStateService {
 }
 
 type ESClusterStatsServiceWrapper struct {
-	obj              *elastic.ClusterStatsService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.ClusterStatsService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESClusterStatsServiceWrapper) Unwrap() *elastic.ClusterStatsService {
@@ -280,12 +281,12 @@ func (w *ESClusterStatsServiceWrapper) Unwrap() *elastic.ClusterStatsService {
 }
 
 type ESCountServiceWrapper struct {
-	obj              *elastic.CountService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.CountService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESCountServiceWrapper) Unwrap() *elastic.CountService {
@@ -293,12 +294,12 @@ func (w *ESCountServiceWrapper) Unwrap() *elastic.CountService {
 }
 
 type ESDeleteByQueryServiceWrapper struct {
-	obj              *elastic.DeleteByQueryService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.DeleteByQueryService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESDeleteByQueryServiceWrapper) Unwrap() *elastic.DeleteByQueryService {
@@ -306,12 +307,12 @@ func (w *ESDeleteByQueryServiceWrapper) Unwrap() *elastic.DeleteByQueryService {
 }
 
 type ESDeleteScriptServiceWrapper struct {
-	obj              *elastic.DeleteScriptService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.DeleteScriptService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESDeleteScriptServiceWrapper) Unwrap() *elastic.DeleteScriptService {
@@ -319,12 +320,12 @@ func (w *ESDeleteScriptServiceWrapper) Unwrap() *elastic.DeleteScriptService {
 }
 
 type ESDeleteServiceWrapper struct {
-	obj              *elastic.DeleteService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.DeleteService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESDeleteServiceWrapper) Unwrap() *elastic.DeleteService {
@@ -332,12 +333,12 @@ func (w *ESDeleteServiceWrapper) Unwrap() *elastic.DeleteService {
 }
 
 type ESExistsServiceWrapper struct {
-	obj              *elastic.ExistsService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.ExistsService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESExistsServiceWrapper) Unwrap() *elastic.ExistsService {
@@ -345,12 +346,12 @@ func (w *ESExistsServiceWrapper) Unwrap() *elastic.ExistsService {
 }
 
 type ESExplainServiceWrapper struct {
-	obj              *elastic.ExplainService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.ExplainService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESExplainServiceWrapper) Unwrap() *elastic.ExplainService {
@@ -358,12 +359,12 @@ func (w *ESExplainServiceWrapper) Unwrap() *elastic.ExplainService {
 }
 
 type ESFieldCapsServiceWrapper struct {
-	obj              *elastic.FieldCapsService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.FieldCapsService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESFieldCapsServiceWrapper) Unwrap() *elastic.FieldCapsService {
@@ -371,12 +372,12 @@ func (w *ESFieldCapsServiceWrapper) Unwrap() *elastic.FieldCapsService {
 }
 
 type ESGetScriptServiceWrapper struct {
-	obj              *elastic.GetScriptService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.GetScriptService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESGetScriptServiceWrapper) Unwrap() *elastic.GetScriptService {
@@ -384,12 +385,12 @@ func (w *ESGetScriptServiceWrapper) Unwrap() *elastic.GetScriptService {
 }
 
 type ESGetServiceWrapper struct {
-	obj              *elastic.GetService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.GetService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESGetServiceWrapper) Unwrap() *elastic.GetService {
@@ -397,12 +398,12 @@ func (w *ESGetServiceWrapper) Unwrap() *elastic.GetService {
 }
 
 type ESIndexServiceWrapper struct {
-	obj              *elastic.IndexService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndexService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndexServiceWrapper) Unwrap() *elastic.IndexService {
@@ -410,12 +411,12 @@ func (w *ESIndexServiceWrapper) Unwrap() *elastic.IndexService {
 }
 
 type ESIndicesAnalyzeServiceWrapper struct {
-	obj              *elastic.IndicesAnalyzeService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesAnalyzeService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesAnalyzeServiceWrapper) Unwrap() *elastic.IndicesAnalyzeService {
@@ -423,12 +424,12 @@ func (w *ESIndicesAnalyzeServiceWrapper) Unwrap() *elastic.IndicesAnalyzeService
 }
 
 type ESIndicesClearCacheServiceWrapper struct {
-	obj              *elastic.IndicesClearCacheService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesClearCacheService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesClearCacheServiceWrapper) Unwrap() *elastic.IndicesClearCacheService {
@@ -436,12 +437,12 @@ func (w *ESIndicesClearCacheServiceWrapper) Unwrap() *elastic.IndicesClearCacheS
 }
 
 type ESIndicesCloseServiceWrapper struct {
-	obj              *elastic.IndicesCloseService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesCloseService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesCloseServiceWrapper) Unwrap() *elastic.IndicesCloseService {
@@ -449,12 +450,12 @@ func (w *ESIndicesCloseServiceWrapper) Unwrap() *elastic.IndicesCloseService {
 }
 
 type ESIndicesCreateServiceWrapper struct {
-	obj              *elastic.IndicesCreateService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesCreateService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesCreateServiceWrapper) Unwrap() *elastic.IndicesCreateService {
@@ -462,12 +463,12 @@ func (w *ESIndicesCreateServiceWrapper) Unwrap() *elastic.IndicesCreateService {
 }
 
 type ESIndicesDeleteIndexTemplateServiceWrapper struct {
-	obj              *elastic.IndicesDeleteIndexTemplateService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesDeleteIndexTemplateService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesDeleteIndexTemplateService {
@@ -475,12 +476,12 @@ func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesDe
 }
 
 type ESIndicesDeleteServiceWrapper struct {
-	obj              *elastic.IndicesDeleteService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesDeleteService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesDeleteServiceWrapper) Unwrap() *elastic.IndicesDeleteService {
@@ -488,12 +489,12 @@ func (w *ESIndicesDeleteServiceWrapper) Unwrap() *elastic.IndicesDeleteService {
 }
 
 type ESIndicesDeleteTemplateServiceWrapper struct {
-	obj              *elastic.IndicesDeleteTemplateService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesDeleteTemplateService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesDeleteTemplateServiceWrapper) Unwrap() *elastic.IndicesDeleteTemplateService {
@@ -501,12 +502,12 @@ func (w *ESIndicesDeleteTemplateServiceWrapper) Unwrap() *elastic.IndicesDeleteT
 }
 
 type ESIndicesExistsServiceWrapper struct {
-	obj              *elastic.IndicesExistsService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesExistsService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesExistsServiceWrapper) Unwrap() *elastic.IndicesExistsService {
@@ -514,12 +515,12 @@ func (w *ESIndicesExistsServiceWrapper) Unwrap() *elastic.IndicesExistsService {
 }
 
 type ESIndicesExistsTemplateServiceWrapper struct {
-	obj              *elastic.IndicesExistsTemplateService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesExistsTemplateService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesExistsTemplateServiceWrapper) Unwrap() *elastic.IndicesExistsTemplateService {
@@ -527,12 +528,12 @@ func (w *ESIndicesExistsTemplateServiceWrapper) Unwrap() *elastic.IndicesExistsT
 }
 
 type ESIndicesFlushServiceWrapper struct {
-	obj              *elastic.IndicesFlushService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesFlushService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesFlushServiceWrapper) Unwrap() *elastic.IndicesFlushService {
@@ -540,12 +541,12 @@ func (w *ESIndicesFlushServiceWrapper) Unwrap() *elastic.IndicesFlushService {
 }
 
 type ESIndicesForcemergeServiceWrapper struct {
-	obj              *elastic.IndicesForcemergeService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesForcemergeService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesForcemergeServiceWrapper) Unwrap() *elastic.IndicesForcemergeService {
@@ -553,12 +554,12 @@ func (w *ESIndicesForcemergeServiceWrapper) Unwrap() *elastic.IndicesForcemergeS
 }
 
 type ESIndicesFreezeServiceWrapper struct {
-	obj              *elastic.IndicesFreezeService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesFreezeService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesFreezeServiceWrapper) Unwrap() *elastic.IndicesFreezeService {
@@ -566,12 +567,12 @@ func (w *ESIndicesFreezeServiceWrapper) Unwrap() *elastic.IndicesFreezeService {
 }
 
 type ESIndicesGetFieldMappingServiceWrapper struct {
-	obj              *elastic.IndicesGetFieldMappingService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesGetFieldMappingService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesGetFieldMappingServiceWrapper) Unwrap() *elastic.IndicesGetFieldMappingService {
@@ -579,12 +580,12 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Unwrap() *elastic.IndicesGetFie
 }
 
 type ESIndicesGetIndexTemplateServiceWrapper struct {
-	obj              *elastic.IndicesGetIndexTemplateService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesGetIndexTemplateService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesGetIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesGetIndexTemplateService {
@@ -592,12 +593,12 @@ func (w *ESIndicesGetIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesGetIn
 }
 
 type ESIndicesGetMappingServiceWrapper struct {
-	obj              *elastic.IndicesGetMappingService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesGetMappingService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesGetMappingServiceWrapper) Unwrap() *elastic.IndicesGetMappingService {
@@ -605,12 +606,12 @@ func (w *ESIndicesGetMappingServiceWrapper) Unwrap() *elastic.IndicesGetMappingS
 }
 
 type ESIndicesGetServiceWrapper struct {
-	obj              *elastic.IndicesGetService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesGetService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesGetServiceWrapper) Unwrap() *elastic.IndicesGetService {
@@ -618,12 +619,12 @@ func (w *ESIndicesGetServiceWrapper) Unwrap() *elastic.IndicesGetService {
 }
 
 type ESIndicesGetSettingsServiceWrapper struct {
-	obj              *elastic.IndicesGetSettingsService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesGetSettingsService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesGetSettingsServiceWrapper) Unwrap() *elastic.IndicesGetSettingsService {
@@ -631,12 +632,12 @@ func (w *ESIndicesGetSettingsServiceWrapper) Unwrap() *elastic.IndicesGetSetting
 }
 
 type ESIndicesGetTemplateServiceWrapper struct {
-	obj              *elastic.IndicesGetTemplateService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesGetTemplateService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesGetTemplateServiceWrapper) Unwrap() *elastic.IndicesGetTemplateService {
@@ -644,12 +645,12 @@ func (w *ESIndicesGetTemplateServiceWrapper) Unwrap() *elastic.IndicesGetTemplat
 }
 
 type ESIndicesOpenServiceWrapper struct {
-	obj              *elastic.IndicesOpenService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesOpenService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesOpenServiceWrapper) Unwrap() *elastic.IndicesOpenService {
@@ -657,12 +658,12 @@ func (w *ESIndicesOpenServiceWrapper) Unwrap() *elastic.IndicesOpenService {
 }
 
 type ESIndicesPutIndexTemplateServiceWrapper struct {
-	obj              *elastic.IndicesPutIndexTemplateService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesPutIndexTemplateService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesPutIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesPutIndexTemplateService {
@@ -670,12 +671,12 @@ func (w *ESIndicesPutIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesPutIn
 }
 
 type ESIndicesPutMappingServiceWrapper struct {
-	obj              *elastic.IndicesPutMappingService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesPutMappingService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesPutMappingServiceWrapper) Unwrap() *elastic.IndicesPutMappingService {
@@ -683,12 +684,12 @@ func (w *ESIndicesPutMappingServiceWrapper) Unwrap() *elastic.IndicesPutMappingS
 }
 
 type ESIndicesPutSettingsServiceWrapper struct {
-	obj              *elastic.IndicesPutSettingsService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesPutSettingsService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesPutSettingsServiceWrapper) Unwrap() *elastic.IndicesPutSettingsService {
@@ -696,12 +697,12 @@ func (w *ESIndicesPutSettingsServiceWrapper) Unwrap() *elastic.IndicesPutSetting
 }
 
 type ESIndicesPutTemplateServiceWrapper struct {
-	obj              *elastic.IndicesPutTemplateService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesPutTemplateService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesPutTemplateServiceWrapper) Unwrap() *elastic.IndicesPutTemplateService {
@@ -709,12 +710,12 @@ func (w *ESIndicesPutTemplateServiceWrapper) Unwrap() *elastic.IndicesPutTemplat
 }
 
 type ESIndicesRolloverServiceWrapper struct {
-	obj              *elastic.IndicesRolloverService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesRolloverService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesRolloverServiceWrapper) Unwrap() *elastic.IndicesRolloverService {
@@ -722,12 +723,12 @@ func (w *ESIndicesRolloverServiceWrapper) Unwrap() *elastic.IndicesRolloverServi
 }
 
 type ESIndicesSegmentsServiceWrapper struct {
-	obj              *elastic.IndicesSegmentsService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesSegmentsService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesSegmentsServiceWrapper) Unwrap() *elastic.IndicesSegmentsService {
@@ -735,12 +736,12 @@ func (w *ESIndicesSegmentsServiceWrapper) Unwrap() *elastic.IndicesSegmentsServi
 }
 
 type ESIndicesShrinkServiceWrapper struct {
-	obj              *elastic.IndicesShrinkService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesShrinkService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesShrinkServiceWrapper) Unwrap() *elastic.IndicesShrinkService {
@@ -748,12 +749,12 @@ func (w *ESIndicesShrinkServiceWrapper) Unwrap() *elastic.IndicesShrinkService {
 }
 
 type ESIndicesStatsServiceWrapper struct {
-	obj              *elastic.IndicesStatsService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesStatsService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesStatsServiceWrapper) Unwrap() *elastic.IndicesStatsService {
@@ -761,12 +762,12 @@ func (w *ESIndicesStatsServiceWrapper) Unwrap() *elastic.IndicesStatsService {
 }
 
 type ESIndicesSyncedFlushServiceWrapper struct {
-	obj              *elastic.IndicesSyncedFlushService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesSyncedFlushService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesSyncedFlushServiceWrapper) Unwrap() *elastic.IndicesSyncedFlushService {
@@ -774,12 +775,12 @@ func (w *ESIndicesSyncedFlushServiceWrapper) Unwrap() *elastic.IndicesSyncedFlus
 }
 
 type ESIndicesUnfreezeServiceWrapper struct {
-	obj              *elastic.IndicesUnfreezeService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IndicesUnfreezeService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIndicesUnfreezeServiceWrapper) Unwrap() *elastic.IndicesUnfreezeService {
@@ -787,12 +788,12 @@ func (w *ESIndicesUnfreezeServiceWrapper) Unwrap() *elastic.IndicesUnfreezeServi
 }
 
 type ESIngestDeletePipelineServiceWrapper struct {
-	obj              *elastic.IngestDeletePipelineService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IngestDeletePipelineService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIngestDeletePipelineServiceWrapper) Unwrap() *elastic.IngestDeletePipelineService {
@@ -800,12 +801,12 @@ func (w *ESIngestDeletePipelineServiceWrapper) Unwrap() *elastic.IngestDeletePip
 }
 
 type ESIngestGetPipelineServiceWrapper struct {
-	obj              *elastic.IngestGetPipelineService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IngestGetPipelineService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIngestGetPipelineServiceWrapper) Unwrap() *elastic.IngestGetPipelineService {
@@ -813,12 +814,12 @@ func (w *ESIngestGetPipelineServiceWrapper) Unwrap() *elastic.IngestGetPipelineS
 }
 
 type ESIngestPutPipelineServiceWrapper struct {
-	obj              *elastic.IngestPutPipelineService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IngestPutPipelineService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIngestPutPipelineServiceWrapper) Unwrap() *elastic.IngestPutPipelineService {
@@ -826,12 +827,12 @@ func (w *ESIngestPutPipelineServiceWrapper) Unwrap() *elastic.IngestPutPipelineS
 }
 
 type ESIngestSimulatePipelineServiceWrapper struct {
-	obj              *elastic.IngestSimulatePipelineService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.IngestSimulatePipelineService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESIngestSimulatePipelineServiceWrapper) Unwrap() *elastic.IngestSimulatePipelineService {
@@ -839,12 +840,12 @@ func (w *ESIngestSimulatePipelineServiceWrapper) Unwrap() *elastic.IngestSimulat
 }
 
 type ESMgetServiceWrapper struct {
-	obj              *elastic.MgetService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.MgetService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESMgetServiceWrapper) Unwrap() *elastic.MgetService {
@@ -852,12 +853,12 @@ func (w *ESMgetServiceWrapper) Unwrap() *elastic.MgetService {
 }
 
 type ESMultiSearchServiceWrapper struct {
-	obj              *elastic.MultiSearchService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.MultiSearchService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESMultiSearchServiceWrapper) Unwrap() *elastic.MultiSearchService {
@@ -865,12 +866,12 @@ func (w *ESMultiSearchServiceWrapper) Unwrap() *elastic.MultiSearchService {
 }
 
 type ESMultiTermvectorServiceWrapper struct {
-	obj              *elastic.MultiTermvectorService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.MultiTermvectorService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESMultiTermvectorServiceWrapper) Unwrap() *elastic.MultiTermvectorService {
@@ -878,12 +879,12 @@ func (w *ESMultiTermvectorServiceWrapper) Unwrap() *elastic.MultiTermvectorServi
 }
 
 type ESNodesInfoServiceWrapper struct {
-	obj              *elastic.NodesInfoService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.NodesInfoService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESNodesInfoServiceWrapper) Unwrap() *elastic.NodesInfoService {
@@ -891,12 +892,12 @@ func (w *ESNodesInfoServiceWrapper) Unwrap() *elastic.NodesInfoService {
 }
 
 type ESNodesStatsServiceWrapper struct {
-	obj              *elastic.NodesStatsService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.NodesStatsService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESNodesStatsServiceWrapper) Unwrap() *elastic.NodesStatsService {
@@ -904,12 +905,12 @@ func (w *ESNodesStatsServiceWrapper) Unwrap() *elastic.NodesStatsService {
 }
 
 type ESPingServiceWrapper struct {
-	obj              *elastic.PingService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.PingService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESPingServiceWrapper) Unwrap() *elastic.PingService {
@@ -917,12 +918,12 @@ func (w *ESPingServiceWrapper) Unwrap() *elastic.PingService {
 }
 
 type ESPutScriptServiceWrapper struct {
-	obj              *elastic.PutScriptService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.PutScriptService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESPutScriptServiceWrapper) Unwrap() *elastic.PutScriptService {
@@ -930,12 +931,12 @@ func (w *ESPutScriptServiceWrapper) Unwrap() *elastic.PutScriptService {
 }
 
 type ESRefreshServiceWrapper struct {
-	obj              *elastic.RefreshService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.RefreshService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESRefreshServiceWrapper) Unwrap() *elastic.RefreshService {
@@ -943,12 +944,12 @@ func (w *ESRefreshServiceWrapper) Unwrap() *elastic.RefreshService {
 }
 
 type ESReindexServiceWrapper struct {
-	obj              *elastic.ReindexService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.ReindexService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESReindexServiceWrapper) Unwrap() *elastic.ReindexService {
@@ -956,12 +957,12 @@ func (w *ESReindexServiceWrapper) Unwrap() *elastic.ReindexService {
 }
 
 type ESScrollServiceWrapper struct {
-	obj              *elastic.ScrollService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.ScrollService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESScrollServiceWrapper) Unwrap() *elastic.ScrollService {
@@ -969,12 +970,12 @@ func (w *ESScrollServiceWrapper) Unwrap() *elastic.ScrollService {
 }
 
 type ESSearchServiceWrapper struct {
-	obj              *elastic.SearchService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.SearchService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESSearchServiceWrapper) Unwrap() *elastic.SearchService {
@@ -982,12 +983,12 @@ func (w *ESSearchServiceWrapper) Unwrap() *elastic.SearchService {
 }
 
 type ESSearchShardsServiceWrapper struct {
-	obj              *elastic.SearchShardsService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.SearchShardsService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESSearchShardsServiceWrapper) Unwrap() *elastic.SearchShardsService {
@@ -995,12 +996,12 @@ func (w *ESSearchShardsServiceWrapper) Unwrap() *elastic.SearchShardsService {
 }
 
 type ESSnapshotCreateRepositoryServiceWrapper struct {
-	obj              *elastic.SnapshotCreateRepositoryService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.SnapshotCreateRepositoryService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESSnapshotCreateRepositoryServiceWrapper) Unwrap() *elastic.SnapshotCreateRepositoryService {
@@ -1008,12 +1009,12 @@ func (w *ESSnapshotCreateRepositoryServiceWrapper) Unwrap() *elastic.SnapshotCre
 }
 
 type ESSnapshotCreateServiceWrapper struct {
-	obj              *elastic.SnapshotCreateService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.SnapshotCreateService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESSnapshotCreateServiceWrapper) Unwrap() *elastic.SnapshotCreateService {
@@ -1021,12 +1022,12 @@ func (w *ESSnapshotCreateServiceWrapper) Unwrap() *elastic.SnapshotCreateService
 }
 
 type ESSnapshotDeleteRepositoryServiceWrapper struct {
-	obj              *elastic.SnapshotDeleteRepositoryService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.SnapshotDeleteRepositoryService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESSnapshotDeleteRepositoryServiceWrapper) Unwrap() *elastic.SnapshotDeleteRepositoryService {
@@ -1034,12 +1035,12 @@ func (w *ESSnapshotDeleteRepositoryServiceWrapper) Unwrap() *elastic.SnapshotDel
 }
 
 type ESSnapshotDeleteServiceWrapper struct {
-	obj              *elastic.SnapshotDeleteService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.SnapshotDeleteService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESSnapshotDeleteServiceWrapper) Unwrap() *elastic.SnapshotDeleteService {
@@ -1047,12 +1048,12 @@ func (w *ESSnapshotDeleteServiceWrapper) Unwrap() *elastic.SnapshotDeleteService
 }
 
 type ESSnapshotGetRepositoryServiceWrapper struct {
-	obj              *elastic.SnapshotGetRepositoryService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.SnapshotGetRepositoryService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESSnapshotGetRepositoryServiceWrapper) Unwrap() *elastic.SnapshotGetRepositoryService {
@@ -1060,12 +1061,12 @@ func (w *ESSnapshotGetRepositoryServiceWrapper) Unwrap() *elastic.SnapshotGetRep
 }
 
 type ESSnapshotGetServiceWrapper struct {
-	obj              *elastic.SnapshotGetService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.SnapshotGetService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESSnapshotGetServiceWrapper) Unwrap() *elastic.SnapshotGetService {
@@ -1073,12 +1074,12 @@ func (w *ESSnapshotGetServiceWrapper) Unwrap() *elastic.SnapshotGetService {
 }
 
 type ESSnapshotRestoreServiceWrapper struct {
-	obj              *elastic.SnapshotRestoreService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.SnapshotRestoreService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESSnapshotRestoreServiceWrapper) Unwrap() *elastic.SnapshotRestoreService {
@@ -1086,12 +1087,12 @@ func (w *ESSnapshotRestoreServiceWrapper) Unwrap() *elastic.SnapshotRestoreServi
 }
 
 type ESSnapshotStatusServiceWrapper struct {
-	obj              *elastic.SnapshotStatusService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.SnapshotStatusService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESSnapshotStatusServiceWrapper) Unwrap() *elastic.SnapshotStatusService {
@@ -1099,12 +1100,12 @@ func (w *ESSnapshotStatusServiceWrapper) Unwrap() *elastic.SnapshotStatusService
 }
 
 type ESSnapshotVerifyRepositoryServiceWrapper struct {
-	obj              *elastic.SnapshotVerifyRepositoryService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.SnapshotVerifyRepositoryService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESSnapshotVerifyRepositoryServiceWrapper) Unwrap() *elastic.SnapshotVerifyRepositoryService {
@@ -1112,12 +1113,12 @@ func (w *ESSnapshotVerifyRepositoryServiceWrapper) Unwrap() *elastic.SnapshotVer
 }
 
 type ESTasksCancelServiceWrapper struct {
-	obj              *elastic.TasksCancelService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.TasksCancelService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESTasksCancelServiceWrapper) Unwrap() *elastic.TasksCancelService {
@@ -1125,12 +1126,12 @@ func (w *ESTasksCancelServiceWrapper) Unwrap() *elastic.TasksCancelService {
 }
 
 type ESTasksGetTaskServiceWrapper struct {
-	obj              *elastic.TasksGetTaskService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.TasksGetTaskService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESTasksGetTaskServiceWrapper) Unwrap() *elastic.TasksGetTaskService {
@@ -1138,12 +1139,12 @@ func (w *ESTasksGetTaskServiceWrapper) Unwrap() *elastic.TasksGetTaskService {
 }
 
 type ESTasksListServiceWrapper struct {
-	obj              *elastic.TasksListService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.TasksListService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESTasksListServiceWrapper) Unwrap() *elastic.TasksListService {
@@ -1151,12 +1152,12 @@ func (w *ESTasksListServiceWrapper) Unwrap() *elastic.TasksListService {
 }
 
 type ESTermvectorsServiceWrapper struct {
-	obj              *elastic.TermvectorsService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.TermvectorsService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESTermvectorsServiceWrapper) Unwrap() *elastic.TermvectorsService {
@@ -1164,12 +1165,12 @@ func (w *ESTermvectorsServiceWrapper) Unwrap() *elastic.TermvectorsService {
 }
 
 type ESUpdateByQueryServiceWrapper struct {
-	obj              *elastic.UpdateByQueryService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.UpdateByQueryService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESUpdateByQueryServiceWrapper) Unwrap() *elastic.UpdateByQueryService {
@@ -1177,12 +1178,12 @@ func (w *ESUpdateByQueryServiceWrapper) Unwrap() *elastic.UpdateByQueryService {
 }
 
 type ESUpdateServiceWrapper struct {
-	obj              *elastic.UpdateService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.UpdateService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESUpdateServiceWrapper) Unwrap() *elastic.UpdateService {
@@ -1190,12 +1191,12 @@ func (w *ESUpdateServiceWrapper) Unwrap() *elastic.UpdateService {
 }
 
 type ESValidateServiceWrapper struct {
-	obj              *elastic.ValidateService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.ValidateService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESValidateServiceWrapper) Unwrap() *elastic.ValidateService {
@@ -1203,12 +1204,12 @@ func (w *ESValidateServiceWrapper) Unwrap() *elastic.ValidateService {
 }
 
 type ESXPackIlmDeleteLifecycleServiceWrapper struct {
-	obj              *elastic.XPackIlmDeleteLifecycleService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackIlmDeleteLifecycleService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmDeleteLifecycleService {
@@ -1216,12 +1217,12 @@ func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmDele
 }
 
 type ESXPackIlmGetLifecycleServiceWrapper struct {
-	obj              *elastic.XPackIlmGetLifecycleService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackIlmGetLifecycleService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackIlmGetLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmGetLifecycleService {
@@ -1229,12 +1230,12 @@ func (w *ESXPackIlmGetLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmGetLife
 }
 
 type ESXPackIlmPutLifecycleServiceWrapper struct {
-	obj              *elastic.XPackIlmPutLifecycleService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackIlmPutLifecycleService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackIlmPutLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmPutLifecycleService {
@@ -1242,12 +1243,12 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmPutLife
 }
 
 type ESXPackInfoServiceWrapper struct {
-	obj              *elastic.XPackInfoService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackInfoService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackInfoServiceWrapper) Unwrap() *elastic.XPackInfoService {
@@ -1255,12 +1256,12 @@ func (w *ESXPackInfoServiceWrapper) Unwrap() *elastic.XPackInfoService {
 }
 
 type ESXPackSecurityChangePasswordServiceWrapper struct {
-	obj              *elastic.XPackSecurityChangePasswordService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackSecurityChangePasswordService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackSecurityChangePasswordServiceWrapper) Unwrap() *elastic.XPackSecurityChangePasswordService {
@@ -1268,12 +1269,12 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Unwrap() *elastic.XPackSec
 }
 
 type ESXPackSecurityDeleteRoleMappingServiceWrapper struct {
-	obj              *elastic.XPackSecurityDeleteRoleMappingService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackSecurityDeleteRoleMappingService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteRoleMappingService {
@@ -1281,12 +1282,12 @@ func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Unwrap() *elastic.XPack
 }
 
 type ESXPackSecurityDeleteRoleServiceWrapper struct {
-	obj              *elastic.XPackSecurityDeleteRoleService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackSecurityDeleteRoleService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackSecurityDeleteRoleServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteRoleService {
@@ -1294,12 +1295,12 @@ func (w *ESXPackSecurityDeleteRoleServiceWrapper) Unwrap() *elastic.XPackSecurit
 }
 
 type ESXPackSecurityDeleteUserServiceWrapper struct {
-	obj              *elastic.XPackSecurityDeleteUserService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackSecurityDeleteUserService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackSecurityDeleteUserServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteUserService {
@@ -1307,12 +1308,12 @@ func (w *ESXPackSecurityDeleteUserServiceWrapper) Unwrap() *elastic.XPackSecurit
 }
 
 type ESXPackSecurityDisableUserServiceWrapper struct {
-	obj              *elastic.XPackSecurityDisableUserService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackSecurityDisableUserService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackSecurityDisableUserServiceWrapper) Unwrap() *elastic.XPackSecurityDisableUserService {
@@ -1320,12 +1321,12 @@ func (w *ESXPackSecurityDisableUserServiceWrapper) Unwrap() *elastic.XPackSecuri
 }
 
 type ESXPackSecurityEnableUserServiceWrapper struct {
-	obj              *elastic.XPackSecurityEnableUserService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackSecurityEnableUserService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackSecurityEnableUserServiceWrapper) Unwrap() *elastic.XPackSecurityEnableUserService {
@@ -1333,12 +1334,12 @@ func (w *ESXPackSecurityEnableUserServiceWrapper) Unwrap() *elastic.XPackSecurit
 }
 
 type ESXPackSecurityGetRoleMappingServiceWrapper struct {
-	obj              *elastic.XPackSecurityGetRoleMappingService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackSecurityGetRoleMappingService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityGetRoleMappingService {
@@ -1346,12 +1347,12 @@ func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Unwrap() *elastic.XPackSec
 }
 
 type ESXPackSecurityGetRoleServiceWrapper struct {
-	obj              *elastic.XPackSecurityGetRoleService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackSecurityGetRoleService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackSecurityGetRoleServiceWrapper) Unwrap() *elastic.XPackSecurityGetRoleService {
@@ -1359,12 +1360,12 @@ func (w *ESXPackSecurityGetRoleServiceWrapper) Unwrap() *elastic.XPackSecurityGe
 }
 
 type ESXPackSecurityGetUserServiceWrapper struct {
-	obj              *elastic.XPackSecurityGetUserService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackSecurityGetUserService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackSecurityGetUserServiceWrapper) Unwrap() *elastic.XPackSecurityGetUserService {
@@ -1372,12 +1373,12 @@ func (w *ESXPackSecurityGetUserServiceWrapper) Unwrap() *elastic.XPackSecurityGe
 }
 
 type ESXPackSecurityPutRoleMappingServiceWrapper struct {
-	obj              *elastic.XPackSecurityPutRoleMappingService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackSecurityPutRoleMappingService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityPutRoleMappingService {
@@ -1385,12 +1386,12 @@ func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Unwrap() *elastic.XPackSec
 }
 
 type ESXPackSecurityPutRoleServiceWrapper struct {
-	obj              *elastic.XPackSecurityPutRoleService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackSecurityPutRoleService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackSecurityPutRoleServiceWrapper) Unwrap() *elastic.XPackSecurityPutRoleService {
@@ -1398,12 +1399,12 @@ func (w *ESXPackSecurityPutRoleServiceWrapper) Unwrap() *elastic.XPackSecurityPu
 }
 
 type ESXPackSecurityPutUserServiceWrapper struct {
-	obj              *elastic.XPackSecurityPutUserService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackSecurityPutUserService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackSecurityPutUserServiceWrapper) Unwrap() *elastic.XPackSecurityPutUserService {
@@ -1411,12 +1412,12 @@ func (w *ESXPackSecurityPutUserServiceWrapper) Unwrap() *elastic.XPackSecurityPu
 }
 
 type ESXPackWatcherAckWatchServiceWrapper struct {
-	obj              *elastic.XPackWatcherAckWatchService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackWatcherAckWatchService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackWatcherAckWatchServiceWrapper) Unwrap() *elastic.XPackWatcherAckWatchService {
@@ -1424,12 +1425,12 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) Unwrap() *elastic.XPackWatcherAck
 }
 
 type ESXPackWatcherActivateWatchServiceWrapper struct {
-	obj              *elastic.XPackWatcherActivateWatchService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackWatcherActivateWatchService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackWatcherActivateWatchServiceWrapper) Unwrap() *elastic.XPackWatcherActivateWatchService {
@@ -1437,12 +1438,12 @@ func (w *ESXPackWatcherActivateWatchServiceWrapper) Unwrap() *elastic.XPackWatch
 }
 
 type ESXPackWatcherDeactivateWatchServiceWrapper struct {
-	obj              *elastic.XPackWatcherDeactivateWatchService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackWatcherDeactivateWatchService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Unwrap() *elastic.XPackWatcherDeactivateWatchService {
@@ -1450,12 +1451,12 @@ func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Unwrap() *elastic.XPackWat
 }
 
 type ESXPackWatcherDeleteWatchServiceWrapper struct {
-	obj              *elastic.XPackWatcherDeleteWatchService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackWatcherDeleteWatchService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackWatcherDeleteWatchServiceWrapper) Unwrap() *elastic.XPackWatcherDeleteWatchService {
@@ -1463,12 +1464,12 @@ func (w *ESXPackWatcherDeleteWatchServiceWrapper) Unwrap() *elastic.XPackWatcher
 }
 
 type ESXPackWatcherExecuteWatchServiceWrapper struct {
-	obj              *elastic.XPackWatcherExecuteWatchService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackWatcherExecuteWatchService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackWatcherExecuteWatchServiceWrapper) Unwrap() *elastic.XPackWatcherExecuteWatchService {
@@ -1476,12 +1477,12 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Unwrap() *elastic.XPackWatche
 }
 
 type ESXPackWatcherGetWatchServiceWrapper struct {
-	obj              *elastic.XPackWatcherGetWatchService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackWatcherGetWatchService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackWatcherGetWatchServiceWrapper) Unwrap() *elastic.XPackWatcherGetWatchService {
@@ -1489,12 +1490,12 @@ func (w *ESXPackWatcherGetWatchServiceWrapper) Unwrap() *elastic.XPackWatcherGet
 }
 
 type ESXPackWatcherPutWatchServiceWrapper struct {
-	obj              *elastic.XPackWatcherPutWatchService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackWatcherPutWatchService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackWatcherPutWatchServiceWrapper) Unwrap() *elastic.XPackWatcherPutWatchService {
@@ -1502,12 +1503,12 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Unwrap() *elastic.XPackWatcherPut
 }
 
 type ESXPackWatcherStartServiceWrapper struct {
-	obj              *elastic.XPackWatcherStartService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackWatcherStartService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackWatcherStartServiceWrapper) Unwrap() *elastic.XPackWatcherStartService {
@@ -1515,12 +1516,12 @@ func (w *ESXPackWatcherStartServiceWrapper) Unwrap() *elastic.XPackWatcherStartS
 }
 
 type ESXPackWatcherStatsServiceWrapper struct {
-	obj              *elastic.XPackWatcherStatsService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackWatcherStatsService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackWatcherStatsServiceWrapper) Unwrap() *elastic.XPackWatcherStatsService {
@@ -1528,12 +1529,12 @@ func (w *ESXPackWatcherStatsServiceWrapper) Unwrap() *elastic.XPackWatcherStatsS
 }
 
 type ESXPackWatcherStopServiceWrapper struct {
-	obj              *elastic.XPackWatcherStopService
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *elastic.XPackWatcherStopService
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *ESXPackWatcherStopServiceWrapper) Unwrap() *elastic.XPackWatcherStopService {
@@ -1560,8 +1561,8 @@ func (w *ESAliasServiceWrapper) Do(ctx context.Context) (*elastic.AliasResult, e
 	var res0 *elastic.AliasResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "AliasService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "AliasService.Do"); err != nil {
 				return err
 			}
 		}
@@ -1638,8 +1639,8 @@ func (w *ESAliasesServiceWrapper) Do(ctx context.Context) (*elastic.AliasesResul
 	var res0 *elastic.AliasesResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "AliasesService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "AliasesService.Do"); err != nil {
 				return err
 			}
 		}
@@ -1736,8 +1737,8 @@ func (w *ESBulkProcessorServiceWrapper) Do(ctx context.Context) (*elastic.BulkPr
 	var res0 *elastic.BulkProcessor
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "BulkProcessorService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "BulkProcessorService.Do"); err != nil {
 				return err
 			}
 		}
@@ -1804,8 +1805,8 @@ func (w *ESBulkServiceWrapper) Do(ctx context.Context) (*elastic.BulkResponse, e
 	var res0 *elastic.BulkResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "BulkService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "BulkService.Do"); err != nil {
 				return err
 			}
 		}
@@ -1936,8 +1937,8 @@ func (w *ESCatAliasesServiceWrapper) Do(ctx context.Context) (elastic.CatAliases
 	var res0 elastic.CatAliasesResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "CatAliasesService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "CatAliasesService.Do"); err != nil {
 				return err
 			}
 		}
@@ -2029,8 +2030,8 @@ func (w *ESCatAllocationServiceWrapper) Do(ctx context.Context) (elastic.CatAllo
 	var res0 elastic.CatAllocationResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "CatAllocationService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "CatAllocationService.Do"); err != nil {
 				return err
 			}
 		}
@@ -2122,8 +2123,8 @@ func (w *ESCatCountServiceWrapper) Do(ctx context.Context) (elastic.CatCountResp
 	var res0 elastic.CatCountResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "CatCountService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "CatCountService.Do"); err != nil {
 				return err
 			}
 		}
@@ -2220,8 +2221,8 @@ func (w *ESCatHealthServiceWrapper) Do(ctx context.Context) (elastic.CatHealthRe
 	var res0 elastic.CatHealthResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "CatHealthService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "CatHealthService.Do"); err != nil {
 				return err
 			}
 		}
@@ -2313,8 +2314,8 @@ func (w *ESCatIndicesServiceWrapper) Do(ctx context.Context) (elastic.CatIndices
 	var res0 elastic.CatIndicesResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "CatIndicesService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "CatIndicesService.Do"); err != nil {
 				return err
 			}
 		}
@@ -2421,8 +2422,8 @@ func (w *ESCatShardsServiceWrapper) Do(ctx context.Context) (elastic.CatShardsRe
 	var res0 elastic.CatShardsResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "CatShardsService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "CatShardsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -2514,8 +2515,8 @@ func (w *ESClearScrollServiceWrapper) Do(ctx context.Context) (*elastic.ClearScr
 	var res0 *elastic.ClearScrollResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClearScrollService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClearScrollService.Do"); err != nil {
 				return err
 			}
 		}
@@ -2590,117 +2591,117 @@ func (w *ESClearScrollServiceWrapper) Validate() error {
 
 func (w *ESClientWrapper) Alias() *ESAliasServiceWrapper {
 	res0 := w.obj.Alias()
-	return &ESAliasServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESAliasServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Aliases() *ESAliasesServiceWrapper {
 	res0 := w.obj.Aliases()
-	return &ESAliasesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESAliasesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Bulk() *ESBulkServiceWrapper {
 	res0 := w.obj.Bulk()
-	return &ESBulkServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESBulkServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) BulkProcessor() *ESBulkProcessorServiceWrapper {
 	res0 := w.obj.BulkProcessor()
-	return &ESBulkProcessorServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESBulkProcessorServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) CatAliases() *ESCatAliasesServiceWrapper {
 	res0 := w.obj.CatAliases()
-	return &ESCatAliasesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESCatAliasesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) CatAllocation() *ESCatAllocationServiceWrapper {
 	res0 := w.obj.CatAllocation()
-	return &ESCatAllocationServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESCatAllocationServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) CatCount() *ESCatCountServiceWrapper {
 	res0 := w.obj.CatCount()
-	return &ESCatCountServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESCatCountServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) CatHealth() *ESCatHealthServiceWrapper {
 	res0 := w.obj.CatHealth()
-	return &ESCatHealthServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESCatHealthServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) CatIndices() *ESCatIndicesServiceWrapper {
 	res0 := w.obj.CatIndices()
-	return &ESCatIndicesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESCatIndicesServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) CatShards() *ESCatShardsServiceWrapper {
 	res0 := w.obj.CatShards()
-	return &ESCatShardsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESCatShardsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) ClearCache(indices ...string) *ESIndicesClearCacheServiceWrapper {
 	res0 := w.obj.ClearCache(indices...)
-	return &ESIndicesClearCacheServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesClearCacheServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) ClearScroll(scrollIds ...string) *ESClearScrollServiceWrapper {
 	res0 := w.obj.ClearScroll(scrollIds...)
-	return &ESClearScrollServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESClearScrollServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) CloseIndex(name string) *ESIndicesCloseServiceWrapper {
 	res0 := w.obj.CloseIndex(name)
-	return &ESIndicesCloseServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesCloseServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) ClusterHealth() *ESClusterHealthServiceWrapper {
 	res0 := w.obj.ClusterHealth()
-	return &ESClusterHealthServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESClusterHealthServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) ClusterReroute() *ESClusterRerouteServiceWrapper {
 	res0 := w.obj.ClusterReroute()
-	return &ESClusterRerouteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESClusterRerouteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) ClusterState() *ESClusterStateServiceWrapper {
 	res0 := w.obj.ClusterState()
-	return &ESClusterStateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESClusterStateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) ClusterStats() *ESClusterStatsServiceWrapper {
 	res0 := w.obj.ClusterStats()
-	return &ESClusterStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESClusterStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Count(indices ...string) *ESCountServiceWrapper {
 	res0 := w.obj.Count(indices...)
-	return &ESCountServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESCountServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) CreateIndex(name string) *ESIndicesCreateServiceWrapper {
 	res0 := w.obj.CreateIndex(name)
-	return &ESIndicesCreateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesCreateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Delete() *ESDeleteServiceWrapper {
 	res0 := w.obj.Delete()
-	return &ESDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) DeleteByQuery(indices ...string) *ESDeleteByQueryServiceWrapper {
 	res0 := w.obj.DeleteByQuery(indices...)
-	return &ESDeleteByQueryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESDeleteByQueryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) DeleteIndex(indices ...string) *ESIndicesDeleteServiceWrapper {
 	res0 := w.obj.DeleteIndex(indices...)
-	return &ESIndicesDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) DeleteScript() *ESDeleteScriptServiceWrapper {
 	res0 := w.obj.DeleteScript()
-	return &ESDeleteScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESDeleteScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) ElasticsearchVersion(url string) (string, error) {
@@ -2712,52 +2713,52 @@ func (w *ESClientWrapper) ElasticsearchVersion(url string) (string, error) {
 
 func (w *ESClientWrapper) Exists() *ESExistsServiceWrapper {
 	res0 := w.obj.Exists()
-	return &ESExistsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESExistsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Explain(index string, typ string, id string) *ESExplainServiceWrapper {
 	res0 := w.obj.Explain(index, typ, id)
-	return &ESExplainServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESExplainServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) FieldCaps(indices ...string) *ESFieldCapsServiceWrapper {
 	res0 := w.obj.FieldCaps(indices...)
-	return &ESFieldCapsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESFieldCapsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Flush(indices ...string) *ESIndicesFlushServiceWrapper {
 	res0 := w.obj.Flush(indices...)
-	return &ESIndicesFlushServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesFlushServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Forcemerge(indices ...string) *ESIndicesForcemergeServiceWrapper {
 	res0 := w.obj.Forcemerge(indices...)
-	return &ESIndicesForcemergeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesForcemergeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) FreezeIndex(name string) *ESIndicesFreezeServiceWrapper {
 	res0 := w.obj.FreezeIndex(name)
-	return &ESIndicesFreezeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesFreezeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Get() *ESGetServiceWrapper {
 	res0 := w.obj.Get()
-	return &ESGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) GetFieldMapping() *ESIndicesGetFieldMappingServiceWrapper {
 	res0 := w.obj.GetFieldMapping()
-	return &ESIndicesGetFieldMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesGetFieldMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) GetMapping() *ESIndicesGetMappingServiceWrapper {
 	res0 := w.obj.GetMapping()
-	return &ESIndicesGetMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesGetMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) GetScript() *ESGetScriptServiceWrapper {
 	res0 := w.obj.GetScript()
-	return &ESGetScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESGetScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) HasPlugin(name string) (bool, error) {
@@ -2769,47 +2770,47 @@ func (w *ESClientWrapper) HasPlugin(name string) (bool, error) {
 
 func (w *ESClientWrapper) Index() *ESIndexServiceWrapper {
 	res0 := w.obj.Index()
-	return &ESIndexServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndexServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IndexAnalyze() *ESIndicesAnalyzeServiceWrapper {
 	res0 := w.obj.IndexAnalyze()
-	return &ESIndicesAnalyzeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesAnalyzeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IndexDeleteIndexTemplate(name string) *ESIndicesDeleteIndexTemplateServiceWrapper {
 	res0 := w.obj.IndexDeleteIndexTemplate(name)
-	return &ESIndicesDeleteIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesDeleteIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IndexDeleteTemplate(name string) *ESIndicesDeleteTemplateServiceWrapper {
 	res0 := w.obj.IndexDeleteTemplate(name)
-	return &ESIndicesDeleteTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesDeleteTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IndexExists(indices ...string) *ESIndicesExistsServiceWrapper {
 	res0 := w.obj.IndexExists(indices...)
-	return &ESIndicesExistsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesExistsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IndexGet(indices ...string) *ESIndicesGetServiceWrapper {
 	res0 := w.obj.IndexGet(indices...)
-	return &ESIndicesGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IndexGetIndexTemplate(name string) *ESIndicesGetIndexTemplateServiceWrapper {
 	res0 := w.obj.IndexGetIndexTemplate(name)
-	return &ESIndicesGetIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesGetIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IndexGetSettings(indices ...string) *ESIndicesGetSettingsServiceWrapper {
 	res0 := w.obj.IndexGetSettings(indices...)
-	return &ESIndicesGetSettingsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesGetSettingsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IndexGetTemplate(names ...string) *ESIndicesGetTemplateServiceWrapper {
 	res0 := w.obj.IndexGetTemplate(names...)
-	return &ESIndicesGetTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesGetTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IndexNames() ([]string, error) {
@@ -2821,52 +2822,52 @@ func (w *ESClientWrapper) IndexNames() ([]string, error) {
 
 func (w *ESClientWrapper) IndexPutIndexTemplate(name string) *ESIndicesPutIndexTemplateServiceWrapper {
 	res0 := w.obj.IndexPutIndexTemplate(name)
-	return &ESIndicesPutIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesPutIndexTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IndexPutSettings(indices ...string) *ESIndicesPutSettingsServiceWrapper {
 	res0 := w.obj.IndexPutSettings(indices...)
-	return &ESIndicesPutSettingsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesPutSettingsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IndexPutTemplate(name string) *ESIndicesPutTemplateServiceWrapper {
 	res0 := w.obj.IndexPutTemplate(name)
-	return &ESIndicesPutTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesPutTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IndexSegments(indices ...string) *ESIndicesSegmentsServiceWrapper {
 	res0 := w.obj.IndexSegments(indices...)
-	return &ESIndicesSegmentsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesSegmentsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IndexStats(indices ...string) *ESIndicesStatsServiceWrapper {
 	res0 := w.obj.IndexStats(indices...)
-	return &ESIndicesStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IndexTemplateExists(name string) *ESIndicesExistsTemplateServiceWrapper {
 	res0 := w.obj.IndexTemplateExists(name)
-	return &ESIndicesExistsTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesExistsTemplateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IngestDeletePipeline(id string) *ESIngestDeletePipelineServiceWrapper {
 	res0 := w.obj.IngestDeletePipeline(id)
-	return &ESIngestDeletePipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIngestDeletePipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IngestGetPipeline(ids ...string) *ESIngestGetPipelineServiceWrapper {
 	res0 := w.obj.IngestGetPipeline(ids...)
-	return &ESIngestGetPipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIngestGetPipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IngestPutPipeline(id string) *ESIngestPutPipelineServiceWrapper {
 	res0 := w.obj.IngestPutPipeline(id)
-	return &ESIngestPutPipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIngestPutPipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IngestSimulatePipeline() *ESIngestSimulatePipelineServiceWrapper {
 	res0 := w.obj.IngestSimulatePipeline()
-	return &ESIngestSimulatePipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIngestSimulatePipelineServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) IsRunning() bool {
@@ -2876,37 +2877,37 @@ func (w *ESClientWrapper) IsRunning() bool {
 
 func (w *ESClientWrapper) Mget() *ESMgetServiceWrapper {
 	res0 := w.obj.Mget()
-	return &ESMgetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESMgetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) MultiGet() *ESMgetServiceWrapper {
 	res0 := w.obj.MultiGet()
-	return &ESMgetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESMgetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) MultiSearch() *ESMultiSearchServiceWrapper {
 	res0 := w.obj.MultiSearch()
-	return &ESMultiSearchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESMultiSearchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) MultiTermVectors() *ESMultiTermvectorServiceWrapper {
 	res0 := w.obj.MultiTermVectors()
-	return &ESMultiTermvectorServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESMultiTermvectorServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) NodesInfo() *ESNodesInfoServiceWrapper {
 	res0 := w.obj.NodesInfo()
-	return &ESNodesInfoServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESNodesInfoServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) NodesStats() *ESNodesStatsServiceWrapper {
 	res0 := w.obj.NodesStats()
-	return &ESNodesStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESNodesStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) OpenIndex(name string) *ESIndicesOpenServiceWrapper {
 	res0 := w.obj.OpenIndex(name)
-	return &ESIndicesOpenServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesOpenServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) PerformRequest(ctx context.Context, opt elastic.PerformRequestOptions) (*elastic.Response, error) {
@@ -2918,7 +2919,7 @@ func (w *ESClientWrapper) PerformRequest(ctx context.Context, opt elastic.Perfor
 
 func (w *ESClientWrapper) Ping(url string) *ESPingServiceWrapper {
 	res0 := w.obj.Ping(url)
-	return &ESPingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESPingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Plugins() ([]string, error) {
@@ -2930,92 +2931,92 @@ func (w *ESClientWrapper) Plugins() ([]string, error) {
 
 func (w *ESClientWrapper) PutMapping() *ESIndicesPutMappingServiceWrapper {
 	res0 := w.obj.PutMapping()
-	return &ESIndicesPutMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesPutMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) PutScript() *ESPutScriptServiceWrapper {
 	res0 := w.obj.PutScript()
-	return &ESPutScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESPutScriptServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Refresh(indices ...string) *ESRefreshServiceWrapper {
 	res0 := w.obj.Refresh(indices...)
-	return &ESRefreshServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESRefreshServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Reindex() *ESReindexServiceWrapper {
 	res0 := w.obj.Reindex()
-	return &ESReindexServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESReindexServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) RolloverIndex(alias string) *ESIndicesRolloverServiceWrapper {
 	res0 := w.obj.RolloverIndex(alias)
-	return &ESIndicesRolloverServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesRolloverServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Scroll(indices ...string) *ESScrollServiceWrapper {
 	res0 := w.obj.Scroll(indices...)
-	return &ESScrollServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESScrollServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Search(indices ...string) *ESSearchServiceWrapper {
 	res0 := w.obj.Search(indices...)
-	return &ESSearchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSearchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) SearchShards(indices ...string) *ESSearchShardsServiceWrapper {
 	res0 := w.obj.SearchShards(indices...)
-	return &ESSearchShardsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSearchShardsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) ShrinkIndex(source string, target string) *ESIndicesShrinkServiceWrapper {
 	res0 := w.obj.ShrinkIndex(source, target)
-	return &ESIndicesShrinkServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesShrinkServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) SnapshotCreate(repository string, snapshot string) *ESSnapshotCreateServiceWrapper {
 	res0 := w.obj.SnapshotCreate(repository, snapshot)
-	return &ESSnapshotCreateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotCreateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) SnapshotCreateRepository(repository string) *ESSnapshotCreateRepositoryServiceWrapper {
 	res0 := w.obj.SnapshotCreateRepository(repository)
-	return &ESSnapshotCreateRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotCreateRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) SnapshotDelete(repository string, snapshot string) *ESSnapshotDeleteServiceWrapper {
 	res0 := w.obj.SnapshotDelete(repository, snapshot)
-	return &ESSnapshotDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotDeleteServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) SnapshotDeleteRepository(repositories ...string) *ESSnapshotDeleteRepositoryServiceWrapper {
 	res0 := w.obj.SnapshotDeleteRepository(repositories...)
-	return &ESSnapshotDeleteRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotDeleteRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) SnapshotGet(repository string) *ESSnapshotGetServiceWrapper {
 	res0 := w.obj.SnapshotGet(repository)
-	return &ESSnapshotGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotGetServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) SnapshotGetRepository(repositories ...string) *ESSnapshotGetRepositoryServiceWrapper {
 	res0 := w.obj.SnapshotGetRepository(repositories...)
-	return &ESSnapshotGetRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotGetRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) SnapshotRestore(repository string, snapshot string) *ESSnapshotRestoreServiceWrapper {
 	res0 := w.obj.SnapshotRestore(repository, snapshot)
-	return &ESSnapshotRestoreServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotRestoreServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) SnapshotStatus() *ESSnapshotStatusServiceWrapper {
 	res0 := w.obj.SnapshotStatus()
-	return &ESSnapshotStatusServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotStatusServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) SnapshotVerifyRepository(repository string) *ESSnapshotVerifyRepositoryServiceWrapper {
 	res0 := w.obj.SnapshotVerifyRepository(repository)
-	return &ESSnapshotVerifyRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESSnapshotVerifyRepositoryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Start() {
@@ -3033,47 +3034,47 @@ func (w *ESClientWrapper) String() string {
 
 func (w *ESClientWrapper) SyncedFlush(indices ...string) *ESIndicesSyncedFlushServiceWrapper {
 	res0 := w.obj.SyncedFlush(indices...)
-	return &ESIndicesSyncedFlushServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesSyncedFlushServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) TasksCancel() *ESTasksCancelServiceWrapper {
 	res0 := w.obj.TasksCancel()
-	return &ESTasksCancelServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESTasksCancelServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) TasksGetTask() *ESTasksGetTaskServiceWrapper {
 	res0 := w.obj.TasksGetTask()
-	return &ESTasksGetTaskServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESTasksGetTaskServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) TasksList() *ESTasksListServiceWrapper {
 	res0 := w.obj.TasksList()
-	return &ESTasksListServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESTasksListServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) TermVectors(index string) *ESTermvectorsServiceWrapper {
 	res0 := w.obj.TermVectors(index)
-	return &ESTermvectorsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESTermvectorsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) UnfreezeIndex(name string) *ESIndicesUnfreezeServiceWrapper {
 	res0 := w.obj.UnfreezeIndex(name)
-	return &ESIndicesUnfreezeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESIndicesUnfreezeServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Update() *ESUpdateServiceWrapper {
 	res0 := w.obj.Update()
-	return &ESUpdateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESUpdateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) UpdateByQuery(indices ...string) *ESUpdateByQueryServiceWrapper {
 	res0 := w.obj.UpdateByQuery(indices...)
-	return &ESUpdateByQueryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESUpdateByQueryServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) Validate(indices ...string) *ESValidateServiceWrapper {
 	res0 := w.obj.Validate(indices...)
-	return &ESValidateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESValidateServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) WaitForGreenStatus(timeout string) error {
@@ -3111,132 +3112,132 @@ func (w *ESClientWrapper) XPackAsyncSearchSubmit() *elastic.XPackAsyncSearchSubm
 
 func (w *ESClientWrapper) XPackIlmDeleteLifecycle() *ESXPackIlmDeleteLifecycleServiceWrapper {
 	res0 := w.obj.XPackIlmDeleteLifecycle()
-	return &ESXPackIlmDeleteLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackIlmDeleteLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackIlmGetLifecycle() *ESXPackIlmGetLifecycleServiceWrapper {
 	res0 := w.obj.XPackIlmGetLifecycle()
-	return &ESXPackIlmGetLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackIlmGetLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackIlmPutLifecycle() *ESXPackIlmPutLifecycleServiceWrapper {
 	res0 := w.obj.XPackIlmPutLifecycle()
-	return &ESXPackIlmPutLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackIlmPutLifecycleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackInfo() *ESXPackInfoServiceWrapper {
 	res0 := w.obj.XPackInfo()
-	return &ESXPackInfoServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackInfoServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackSecurityChangePassword(username string) *ESXPackSecurityChangePasswordServiceWrapper {
 	res0 := w.obj.XPackSecurityChangePassword(username)
-	return &ESXPackSecurityChangePasswordServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityChangePasswordServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackSecurityDeleteRole(roleName string) *ESXPackSecurityDeleteRoleServiceWrapper {
 	res0 := w.obj.XPackSecurityDeleteRole(roleName)
-	return &ESXPackSecurityDeleteRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityDeleteRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackSecurityDeleteRoleMapping(roleMappingName string) *ESXPackSecurityDeleteRoleMappingServiceWrapper {
 	res0 := w.obj.XPackSecurityDeleteRoleMapping(roleMappingName)
-	return &ESXPackSecurityDeleteRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityDeleteRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackSecurityDeleteUser(username string) *ESXPackSecurityDeleteUserServiceWrapper {
 	res0 := w.obj.XPackSecurityDeleteUser(username)
-	return &ESXPackSecurityDeleteUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityDeleteUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackSecurityDisableUser(username string) *ESXPackSecurityDisableUserServiceWrapper {
 	res0 := w.obj.XPackSecurityDisableUser(username)
-	return &ESXPackSecurityDisableUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityDisableUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackSecurityEnableUser(username string) *ESXPackSecurityEnableUserServiceWrapper {
 	res0 := w.obj.XPackSecurityEnableUser(username)
-	return &ESXPackSecurityEnableUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityEnableUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackSecurityGetRole(roleName string) *ESXPackSecurityGetRoleServiceWrapper {
 	res0 := w.obj.XPackSecurityGetRole(roleName)
-	return &ESXPackSecurityGetRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityGetRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackSecurityGetRoleMapping(roleMappingName string) *ESXPackSecurityGetRoleMappingServiceWrapper {
 	res0 := w.obj.XPackSecurityGetRoleMapping(roleMappingName)
-	return &ESXPackSecurityGetRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityGetRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackSecurityGetUser(usernames ...string) *ESXPackSecurityGetUserServiceWrapper {
 	res0 := w.obj.XPackSecurityGetUser(usernames...)
-	return &ESXPackSecurityGetUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityGetUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackSecurityPutRole(roleName string) *ESXPackSecurityPutRoleServiceWrapper {
 	res0 := w.obj.XPackSecurityPutRole(roleName)
-	return &ESXPackSecurityPutRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityPutRoleServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackSecurityPutRoleMapping(roleMappingName string) *ESXPackSecurityPutRoleMappingServiceWrapper {
 	res0 := w.obj.XPackSecurityPutRoleMapping(roleMappingName)
-	return &ESXPackSecurityPutRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityPutRoleMappingServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackSecurityPutUser(username string) *ESXPackSecurityPutUserServiceWrapper {
 	res0 := w.obj.XPackSecurityPutUser(username)
-	return &ESXPackSecurityPutUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackSecurityPutUserServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackWatchAck(watchId string) *ESXPackWatcherAckWatchServiceWrapper {
 	res0 := w.obj.XPackWatchAck(watchId)
-	return &ESXPackWatcherAckWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherAckWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackWatchActivate(watchId string) *ESXPackWatcherActivateWatchServiceWrapper {
 	res0 := w.obj.XPackWatchActivate(watchId)
-	return &ESXPackWatcherActivateWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherActivateWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackWatchDeactivate(watchId string) *ESXPackWatcherDeactivateWatchServiceWrapper {
 	res0 := w.obj.XPackWatchDeactivate(watchId)
-	return &ESXPackWatcherDeactivateWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherDeactivateWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackWatchDelete(watchId string) *ESXPackWatcherDeleteWatchServiceWrapper {
 	res0 := w.obj.XPackWatchDelete(watchId)
-	return &ESXPackWatcherDeleteWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherDeleteWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackWatchExecute() *ESXPackWatcherExecuteWatchServiceWrapper {
 	res0 := w.obj.XPackWatchExecute()
-	return &ESXPackWatcherExecuteWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherExecuteWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackWatchGet(watchId string) *ESXPackWatcherGetWatchServiceWrapper {
 	res0 := w.obj.XPackWatchGet(watchId)
-	return &ESXPackWatcherGetWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherGetWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackWatchPut(watchId string) *ESXPackWatcherPutWatchServiceWrapper {
 	res0 := w.obj.XPackWatchPut(watchId)
-	return &ESXPackWatcherPutWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherPutWatchServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackWatchStart() *ESXPackWatcherStartServiceWrapper {
 	res0 := w.obj.XPackWatchStart()
-	return &ESXPackWatcherStartServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherStartServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackWatchStats() *ESXPackWatcherStatsServiceWrapper {
 	res0 := w.obj.XPackWatchStats()
-	return &ESXPackWatcherStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherStatsServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClientWrapper) XPackWatchStop() *ESXPackWatcherStopServiceWrapper {
 	res0 := w.obj.XPackWatchStop()
-	return &ESXPackWatcherStopServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &ESXPackWatcherStopServiceWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *ESClusterHealthServiceWrapper) Do(ctx context.Context) (*elastic.ClusterHealthResponse, error) {
@@ -3244,8 +3245,8 @@ func (w *ESClusterHealthServiceWrapper) Do(ctx context.Context) (*elastic.Cluste
 	var res0 *elastic.ClusterHealthResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterHealthService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterHealthService.Do"); err != nil {
 				return err
 			}
 		}
@@ -3383,8 +3384,8 @@ func (w *ESClusterRerouteServiceWrapper) Do(ctx context.Context) (*elastic.Clust
 	var res0 *elastic.ClusterRerouteResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterRerouteService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterRerouteService.Do"); err != nil {
 				return err
 			}
 		}
@@ -3492,8 +3493,8 @@ func (w *ESClusterStateServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 	var res0 *elastic.ClusterStateResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterStateService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterStateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -3601,8 +3602,8 @@ func (w *ESClusterStatsServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 	var res0 *elastic.ClusterStatsResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterStatsService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterStatsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -3720,8 +3721,8 @@ func (w *ESCountServiceWrapper) Do(ctx context.Context) (int64, error) {
 	var res0 int64
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "CountService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "CountService.Do"); err != nil {
 				return err
 			}
 		}
@@ -3904,8 +3905,8 @@ func (w *ESDeleteByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 	var res0 *elastic.BulkIndexByScrollResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DeleteByQueryService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DeleteByQueryService.Do"); err != nil {
 				return err
 			}
 		}
@@ -3942,8 +3943,8 @@ func (w *ESDeleteByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 	var res0 *elastic.StartTaskResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DeleteByQueryService.DoAsync"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DeleteByQueryService.DoAsync"); err != nil {
 				return err
 			}
 		}
@@ -4226,8 +4227,8 @@ func (w *ESDeleteScriptServiceWrapper) Do(ctx context.Context) (*elastic.DeleteS
 	var res0 *elastic.DeleteScriptResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DeleteScriptService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DeleteScriptService.Do"); err != nil {
 				return err
 			}
 		}
@@ -4315,8 +4316,8 @@ func (w *ESDeleteServiceWrapper) Do(ctx context.Context) (*elastic.DeleteRespons
 	var res0 *elastic.DeleteResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DeleteService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DeleteService.Do"); err != nil {
 				return err
 			}
 		}
@@ -4449,8 +4450,8 @@ func (w *ESExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 	var res0 bool
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ExistsService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ExistsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -4593,8 +4594,8 @@ func (w *ESExplainServiceWrapper) Do(ctx context.Context) (*elastic.ExplainRespo
 	var res0 *elastic.ExplainResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ExplainService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ExplainService.Do"); err != nil {
 				return err
 			}
 		}
@@ -4757,8 +4758,8 @@ func (w *ESFieldCapsServiceWrapper) Do(ctx context.Context) (*elastic.FieldCapsR
 	var res0 *elastic.FieldCapsResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "FieldCapsService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "FieldCapsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -4851,8 +4852,8 @@ func (w *ESGetScriptServiceWrapper) Do(ctx context.Context) (*elastic.GetScriptR
 	var res0 *elastic.GetScriptResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "GetScriptService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "GetScriptService.Do"); err != nil {
 				return err
 			}
 		}
@@ -4930,8 +4931,8 @@ func (w *ESGetServiceWrapper) Do(ctx context.Context) (*elastic.GetResult, error
 	var res0 *elastic.GetResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "GetService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "GetService.Do"); err != nil {
 				return err
 			}
 		}
@@ -5084,8 +5085,8 @@ func (w *ESIndexServiceWrapper) Do(ctx context.Context) (*elastic.IndexResponse,
 	var res0 *elastic.IndexResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndexService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndexService.Do"); err != nil {
 				return err
 			}
 		}
@@ -5268,8 +5269,8 @@ func (w *ESIndicesAnalyzeServiceWrapper) Do(ctx context.Context) (*elastic.Indic
 	var res0 *elastic.IndicesAnalyzeResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesAnalyzeService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesAnalyzeService.Do"); err != nil {
 				return err
 			}
 		}
@@ -5392,8 +5393,8 @@ func (w *ESIndicesClearCacheServiceWrapper) Do(ctx context.Context) (*elastic.In
 	var res0 *elastic.IndicesClearCacheResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesClearCacheService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesClearCacheService.Do"); err != nil {
 				return err
 			}
 		}
@@ -5506,8 +5507,8 @@ func (w *ESIndicesCloseServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 	var res0 *elastic.IndicesCloseResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesCloseService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesCloseService.Do"); err != nil {
 				return err
 			}
 		}
@@ -5620,8 +5621,8 @@ func (w *ESIndicesCreateServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 	var res0 *elastic.IndicesCreateResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesCreateService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesCreateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -5703,8 +5704,8 @@ func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Do(ctx context.Context) (*e
 	var res0 *elastic.IndicesDeleteIndexTemplateResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesDeleteIndexTemplateService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesDeleteIndexTemplateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -5792,8 +5793,8 @@ func (w *ESIndicesDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 	var res0 *elastic.IndicesDeleteResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesDeleteService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesDeleteService.Do"); err != nil {
 				return err
 			}
 		}
@@ -5881,8 +5882,8 @@ func (w *ESIndicesDeleteTemplateServiceWrapper) Do(ctx context.Context) (*elasti
 	var res0 *elastic.IndicesDeleteTemplateResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesDeleteTemplateService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesDeleteTemplateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -5975,8 +5976,8 @@ func (w *ESIndicesExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 	var res0 bool
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesExistsService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesExistsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -6069,8 +6070,8 @@ func (w *ESIndicesExistsTemplateServiceWrapper) Do(ctx context.Context) (bool, e
 	var res0 bool
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesExistsTemplateService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesExistsTemplateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -6163,8 +6164,8 @@ func (w *ESIndicesFlushServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 	var res0 *elastic.IndicesFlushResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesFlushService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesFlushService.Do"); err != nil {
 				return err
 			}
 		}
@@ -6267,8 +6268,8 @@ func (w *ESIndicesForcemergeServiceWrapper) Do(ctx context.Context) (*elastic.In
 	var res0 *elastic.IndicesForcemergeResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesForcemergeService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesForcemergeService.Do"); err != nil {
 				return err
 			}
 		}
@@ -6376,8 +6377,8 @@ func (w *ESIndicesFreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 	var res0 *elastic.IndicesFreezeResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesFreezeService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesFreezeService.Do"); err != nil {
 				return err
 			}
 		}
@@ -6485,8 +6486,8 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Do(ctx context.Context) (map[st
 	var res0 map[string]interface{}
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesGetFieldMappingService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesGetFieldMappingService.Do"); err != nil {
 				return err
 			}
 		}
@@ -6589,8 +6590,8 @@ func (w *ESIndicesGetIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 	var res0 *elastic.IndicesGetIndexTemplateResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesGetIndexTemplateService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesGetIndexTemplateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -6688,8 +6689,8 @@ func (w *ESIndicesGetMappingServiceWrapper) Do(ctx context.Context) (map[string]
 	var res0 map[string]interface{}
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesGetMappingService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesGetMappingService.Do"); err != nil {
 				return err
 			}
 		}
@@ -6792,8 +6793,8 @@ func (w *ESIndicesGetServiceWrapper) Do(ctx context.Context) (map[string]*elasti
 	var res0 map[string]*elastic.IndicesGetResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesGetService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesGetService.Do"); err != nil {
 				return err
 			}
 		}
@@ -6896,8 +6897,8 @@ func (w *ESIndicesGetSettingsServiceWrapper) Do(ctx context.Context) (map[string
 	var res0 map[string]*elastic.IndicesGetSettingsResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesGetSettingsService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesGetSettingsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -7000,8 +7001,8 @@ func (w *ESIndicesGetTemplateServiceWrapper) Do(ctx context.Context) (map[string
 	var res0 map[string]*elastic.IndicesGetTemplateResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesGetTemplateService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesGetTemplateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -7094,8 +7095,8 @@ func (w *ESIndicesOpenServiceWrapper) Do(ctx context.Context) (*elastic.IndicesO
 	var res0 *elastic.IndicesOpenResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesOpenService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesOpenService.Do"); err != nil {
 				return err
 			}
 		}
@@ -7218,8 +7219,8 @@ func (w *ESIndicesPutIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 	var res0 *elastic.IndicesPutIndexTemplateResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesPutIndexTemplateService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesPutIndexTemplateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -7317,8 +7318,8 @@ func (w *ESIndicesPutMappingServiceWrapper) Do(ctx context.Context) (*elastic.Pu
 	var res0 *elastic.PutMappingResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesPutMappingService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesPutMappingService.Do"); err != nil {
 				return err
 			}
 		}
@@ -7436,8 +7437,8 @@ func (w *ESIndicesPutSettingsServiceWrapper) Do(ctx context.Context) (*elastic.I
 	var res0 *elastic.IndicesPutSettingsResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesPutSettingsService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesPutSettingsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -7555,8 +7556,8 @@ func (w *ESIndicesPutTemplateServiceWrapper) Do(ctx context.Context) (*elastic.I
 	var res0 *elastic.IndicesPutTemplateResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesPutTemplateService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesPutTemplateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -7704,8 +7705,8 @@ func (w *ESIndicesRolloverServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 	var res0 *elastic.IndicesRolloverResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesRolloverService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesRolloverService.Do"); err != nil {
 				return err
 			}
 		}
@@ -7818,8 +7819,8 @@ func (w *ESIndicesSegmentsServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 	var res0 *elastic.IndicesSegmentsResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesSegmentsService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesSegmentsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -7927,8 +7928,8 @@ func (w *ESIndicesShrinkServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 	var res0 *elastic.IndicesShrinkResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesShrinkService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesShrinkService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8031,8 +8032,8 @@ func (w *ESIndicesStatsServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 	var res0 *elastic.IndicesStatsResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesStatsService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesStatsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8145,8 +8146,8 @@ func (w *ESIndicesSyncedFlushServiceWrapper) Do(ctx context.Context) (*elastic.I
 	var res0 *elastic.IndicesSyncedFlushResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesSyncedFlushService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesSyncedFlushService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8239,8 +8240,8 @@ func (w *ESIndicesUnfreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 	var res0 *elastic.IndicesUnfreezeResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IndicesUnfreezeService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IndicesUnfreezeService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8343,8 +8344,8 @@ func (w *ESIngestDeletePipelineServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.IngestDeletePipelineResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IngestDeletePipelineService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IngestDeletePipelineService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8432,8 +8433,8 @@ func (w *ESIngestGetPipelineServiceWrapper) Do(ctx context.Context) (elastic.Ing
 	var res0 elastic.IngestGetPipelineResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IngestGetPipelineService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IngestGetPipelineService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8526,8 +8527,8 @@ func (w *ESIngestPutPipelineServiceWrapper) Do(ctx context.Context) (*elastic.In
 	var res0 *elastic.IngestPutPipelineResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IngestPutPipelineService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IngestPutPipelineService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8625,8 +8626,8 @@ func (w *ESIngestSimulatePipelineServiceWrapper) Do(ctx context.Context) (*elast
 	var res0 *elastic.IngestSimulatePipelineResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "IngestSimulatePipelineService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "IngestSimulatePipelineService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8714,8 +8715,8 @@ func (w *ESMgetServiceWrapper) Do(ctx context.Context) (*elastic.MgetResponse, e
 	var res0 *elastic.MgetResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "MgetService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "MgetService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8819,8 +8820,8 @@ func (w *ESMultiSearchServiceWrapper) Do(ctx context.Context) (*elastic.MultiSea
 	var res0 *elastic.MultiSearchResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "MultiSearchService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "MultiSearchService.Do"); err != nil {
 				return err
 			}
 		}
@@ -8917,8 +8918,8 @@ func (w *ESMultiTermvectorServiceWrapper) Do(ctx context.Context) (*elastic.Mult
 	var res0 *elastic.MultiTermvectorResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "MultiTermvectorService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "MultiTermvectorService.Do"); err != nil {
 				return err
 			}
 		}
@@ -9071,8 +9072,8 @@ func (w *ESNodesInfoServiceWrapper) Do(ctx context.Context) (*elastic.NodesInfoR
 	var res0 *elastic.NodesInfoResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "NodesInfoService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "NodesInfoService.Do"); err != nil {
 				return err
 			}
 		}
@@ -9165,8 +9166,8 @@ func (w *ESNodesStatsServiceWrapper) Do(ctx context.Context) (*elastic.NodesStat
 	var res0 *elastic.NodesStatsResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "NodesStatsService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "NodesStatsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -9285,8 +9286,8 @@ func (w *ESPingServiceWrapper) Do(ctx context.Context) (*elastic.PingResult, int
 	var res1 int
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "PingService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "PingService.Do"); err != nil {
 				return err
 			}
 		}
@@ -9383,8 +9384,8 @@ func (w *ESPutScriptServiceWrapper) Do(ctx context.Context) (*elastic.PutScriptR
 	var res0 *elastic.PutScriptResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "PutScriptService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "PutScriptService.Do"); err != nil {
 				return err
 			}
 		}
@@ -9472,8 +9473,8 @@ func (w *ESRefreshServiceWrapper) Do(ctx context.Context) (*elastic.RefreshResul
 	var res0 *elastic.RefreshResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "RefreshService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "RefreshService.Do"); err != nil {
 				return err
 			}
 		}
@@ -9575,8 +9576,8 @@ func (w *ESReindexServiceWrapper) Do(ctx context.Context) (*elastic.BulkIndexByS
 	var res0 *elastic.BulkIndexByScrollResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ReindexService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ReindexService.Do"); err != nil {
 				return err
 			}
 		}
@@ -9613,8 +9614,8 @@ func (w *ESReindexServiceWrapper) DoAsync(ctx context.Context) (*elastic.StartTa
 	var res0 *elastic.StartTaskResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ReindexService.DoAsync"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ReindexService.DoAsync"); err != nil {
 				return err
 			}
 		}
@@ -9758,8 +9759,8 @@ func (w *ESScrollServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 	var res0 *elastic.SearchResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ScrollService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ScrollService.Do"); err != nil {
 				return err
 			}
 		}
@@ -10026,8 +10027,8 @@ func (w *ESSearchServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 	var res0 *elastic.SearchResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "SearchService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "SearchService.Do"); err != nil {
 				return err
 			}
 		}
@@ -10345,8 +10346,8 @@ func (w *ESSearchShardsServiceWrapper) Do(ctx context.Context) (*elastic.SearchS
 	var res0 *elastic.SearchShardsResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "SearchShardsService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "SearchShardsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -10459,8 +10460,8 @@ func (w *ESSnapshotCreateRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 	var res0 *elastic.SnapshotCreateRepositoryResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "SnapshotCreateRepositoryService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "SnapshotCreateRepositoryService.Do"); err != nil {
 				return err
 			}
 		}
@@ -10578,8 +10579,8 @@ func (w *ESSnapshotCreateServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 	var res0 *elastic.SnapshotCreateResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "SnapshotCreateService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "SnapshotCreateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -10672,8 +10673,8 @@ func (w *ESSnapshotDeleteRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 	var res0 *elastic.SnapshotDeleteRepositoryResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "SnapshotDeleteRepositoryService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "SnapshotDeleteRepositoryService.Do"); err != nil {
 				return err
 			}
 		}
@@ -10761,8 +10762,8 @@ func (w *ESSnapshotDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 	var res0 *elastic.SnapshotDeleteResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "SnapshotDeleteService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "SnapshotDeleteService.Do"); err != nil {
 				return err
 			}
 		}
@@ -10845,8 +10846,8 @@ func (w *ESSnapshotGetRepositoryServiceWrapper) Do(ctx context.Context) (elastic
 	var res0 elastic.SnapshotGetRepositoryResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "SnapshotGetRepositoryService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "SnapshotGetRepositoryService.Do"); err != nil {
 				return err
 			}
 		}
@@ -10934,8 +10935,8 @@ func (w *ESSnapshotGetServiceWrapper) Do(ctx context.Context) (*elastic.Snapshot
 	var res0 *elastic.SnapshotGetResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "SnapshotGetService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "SnapshotGetService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11038,8 +11039,8 @@ func (w *ESSnapshotRestoreServiceWrapper) Do(ctx context.Context) (*elastic.Snap
 	var res0 *elastic.SnapshotRestoreResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "SnapshotRestoreService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "SnapshotRestoreService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11172,8 +11173,8 @@ func (w *ESSnapshotStatusServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 	var res0 *elastic.SnapshotStatusResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "SnapshotStatusService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "SnapshotStatusService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11261,8 +11262,8 @@ func (w *ESSnapshotVerifyRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 	var res0 *elastic.SnapshotVerifyRepositoryResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "SnapshotVerifyRepositoryService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "SnapshotVerifyRepositoryService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11355,8 +11356,8 @@ func (w *ESTasksCancelServiceWrapper) Do(ctx context.Context) (*elastic.TasksLis
 	var res0 *elastic.TasksListResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "TasksCancelService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "TasksCancelService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11454,8 +11455,8 @@ func (w *ESTasksGetTaskServiceWrapper) Do(ctx context.Context) (*elastic.TasksGe
 	var res0 *elastic.TasksGetTaskResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "TasksGetTaskService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "TasksGetTaskService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11553,8 +11554,8 @@ func (w *ESTasksListServiceWrapper) Do(ctx context.Context) (*elastic.TasksListR
 	var res0 *elastic.TasksListResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "TasksListService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "TasksListService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11667,8 +11668,8 @@ func (w *ESTermvectorsServiceWrapper) Do(ctx context.Context) (*elastic.Termvect
 	var res0 *elastic.TermvectorsResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "TermvectorsService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "TermvectorsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11871,8 +11872,8 @@ func (w *ESUpdateByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 	var res0 *elastic.BulkIndexByScrollResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "UpdateByQueryService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "UpdateByQueryService.Do"); err != nil {
 				return err
 			}
 		}
@@ -11909,8 +11910,8 @@ func (w *ESUpdateByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 	var res0 *elastic.StartTaskResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "UpdateByQueryService.DoAsync"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "UpdateByQueryService.DoAsync"); err != nil {
 				return err
 			}
 		}
@@ -12213,8 +12214,8 @@ func (w *ESUpdateServiceWrapper) Do(ctx context.Context) (*elastic.UpdateRespons
 	var res0 *elastic.UpdateResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "UpdateService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "UpdateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -12426,8 +12427,8 @@ func (w *ESValidateServiceWrapper) Do(ctx context.Context) (*elastic.ValidateRes
 	var res0 *elastic.ValidateResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ValidateService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ValidateService.Do"); err != nil {
 				return err
 			}
 		}
@@ -12545,8 +12546,8 @@ func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Do(ctx context.Context) (*elas
 	var res0 *elastic.XPackIlmDeleteLifecycleResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackIlmDeleteLifecycleService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackIlmDeleteLifecycleService.Do"); err != nil {
 				return err
 			}
 		}
@@ -12639,8 +12640,8 @@ func (w *ESXPackIlmGetLifecycleServiceWrapper) Do(ctx context.Context) (map[stri
 	var res0 map[string]*elastic.XPackIlmGetLifecycleResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackIlmGetLifecycleService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackIlmGetLifecycleService.Do"); err != nil {
 				return err
 			}
 		}
@@ -12743,8 +12744,8 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackIlmPutLifecycleResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackIlmPutLifecycleService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackIlmPutLifecycleService.Do"); err != nil {
 				return err
 			}
 		}
@@ -12837,8 +12838,8 @@ func (w *ESXPackInfoServiceWrapper) Do(ctx context.Context) (*elastic.XPackInfoS
 	var res0 *elastic.XPackInfoServiceResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackInfoService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackInfoService.Do"); err != nil {
 				return err
 			}
 		}
@@ -12916,8 +12917,8 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Do(ctx context.Context) (*
 	var res0 *elastic.XPackSecurityChangeUserPasswordResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackSecurityChangePasswordService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackSecurityChangePasswordService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13005,8 +13006,8 @@ func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Do(ctx context.Context)
 	var res0 *elastic.XPackSecurityDeleteRoleMappingResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackSecurityDeleteRoleMappingService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackSecurityDeleteRoleMappingService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13084,8 +13085,8 @@ func (w *ESXPackSecurityDeleteRoleServiceWrapper) Do(ctx context.Context) (*elas
 	var res0 *elastic.XPackSecurityDeleteRoleResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackSecurityDeleteRoleService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackSecurityDeleteRoleService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13163,8 +13164,8 @@ func (w *ESXPackSecurityDeleteUserServiceWrapper) Do(ctx context.Context) (*elas
 	var res0 *elastic.XPackSecurityDeleteUserResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackSecurityDeleteUserService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackSecurityDeleteUserService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13247,8 +13248,8 @@ func (w *ESXPackSecurityDisableUserServiceWrapper) Do(ctx context.Context) (*ela
 	var res0 *elastic.XPackSecurityDisableUserResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackSecurityDisableUserService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackSecurityDisableUserService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13331,8 +13332,8 @@ func (w *ESXPackSecurityEnableUserServiceWrapper) Do(ctx context.Context) (*elas
 	var res0 *elastic.XPackSecurityEnableUserResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackSecurityEnableUserService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackSecurityEnableUserService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13415,8 +13416,8 @@ func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Do(ctx context.Context) (*
 	var res0 *elastic.XPackSecurityGetRoleMappingResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackSecurityGetRoleMappingService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackSecurityGetRoleMappingService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13494,8 +13495,8 @@ func (w *ESXPackSecurityGetRoleServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackSecurityGetRoleResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackSecurityGetRoleService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackSecurityGetRoleService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13573,8 +13574,8 @@ func (w *ESXPackSecurityGetUserServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackSecurityGetUserResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackSecurityGetUserService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackSecurityGetUserService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13657,8 +13658,8 @@ func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Do(ctx context.Context) (*
 	var res0 *elastic.XPackSecurityPutRoleMappingResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackSecurityPutRoleMappingService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackSecurityPutRoleMappingService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13741,8 +13742,8 @@ func (w *ESXPackSecurityPutRoleServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackSecurityPutRoleResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackSecurityPutRoleService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackSecurityPutRoleService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13825,8 +13826,8 @@ func (w *ESXPackSecurityPutUserServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackSecurityPutUserResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackSecurityPutUserService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackSecurityPutUserService.Do"); err != nil {
 				return err
 			}
 		}
@@ -13919,8 +13920,8 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackWatcherAckWatchResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackWatcherAckWatchService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackWatcherAckWatchService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14003,8 +14004,8 @@ func (w *ESXPackWatcherActivateWatchServiceWrapper) Do(ctx context.Context) (*el
 	var res0 *elastic.XPackWatcherActivateWatchResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackWatcherActivateWatchService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackWatcherActivateWatchService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14087,8 +14088,8 @@ func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Do(ctx context.Context) (*
 	var res0 *elastic.XPackWatcherDeactivateWatchResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackWatcherDeactivateWatchService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackWatcherDeactivateWatchService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14171,8 +14172,8 @@ func (w *ESXPackWatcherDeleteWatchServiceWrapper) Do(ctx context.Context) (*elas
 	var res0 *elastic.XPackWatcherDeleteWatchResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackWatcherDeleteWatchService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackWatcherDeleteWatchService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14270,8 +14271,8 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Do(ctx context.Context) (*ela
 	var res0 *elastic.XPackWatcherExecuteWatchResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackWatcherExecuteWatchService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackWatcherExecuteWatchService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14349,8 +14350,8 @@ func (w *ESXPackWatcherGetWatchServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackWatcherGetWatchResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackWatcherGetWatchService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackWatcherGetWatchService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14438,8 +14439,8 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Do(ctx context.Context) (*elastic
 	var res0 *elastic.XPackWatcherPutWatchResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackWatcherPutWatchService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackWatcherPutWatchService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14532,8 +14533,8 @@ func (w *ESXPackWatcherStartServiceWrapper) Do(ctx context.Context) (*elastic.XP
 	var res0 *elastic.XPackWatcherStartResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackWatcherStartService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackWatcherStartService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14606,8 +14607,8 @@ func (w *ESXPackWatcherStatsServiceWrapper) Do(ctx context.Context) (*elastic.XP
 	var res0 *elastic.XPackWatcherStatsResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackWatcherStatsService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackWatcherStatsService.Do"); err != nil {
 				return err
 			}
 		}
@@ -14690,8 +14691,8 @@ func (w *ESXPackWatcherStopServiceWrapper) Do(ctx context.Context) (*elastic.XPa
 	var res0 *elastic.XPackWatcherStopResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "XPackWatcherStopService.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "XPackWatcherStopService.Do"); err != nil {
 				return err
 			}
 		}

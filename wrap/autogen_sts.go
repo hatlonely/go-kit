@@ -12,16 +12,17 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promauto"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
 )
 
 type STSClientWrapper struct {
-	obj              *sts.Client
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *sts.Client
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *STSClientWrapper) Unwrap() *sts.Client {
@@ -41,11 +42,11 @@ func (w *STSClientWrapper) OnWrapperChange(opts ...refx.Option) config.OnChangeH
 
 func (w *STSClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options RetryOptions
+		var options micro.RetryOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		retry, err := NewRetryWithOptions(&options)
+		retry, err := micro.NewRetryWithOptions(&options)
 		if err != nil {
 			return errors.Wrap(err, "NewRetryWithOptions failed")
 		}
@@ -54,17 +55,17 @@ func (w *STSClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHan
 	}
 }
 
-func (w *STSClientWrapper) OnRateLimiterGroupChange(opts ...refx.Option) config.OnChangeHandler {
+func (w *STSClientWrapper) OnRateLimiterChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options RateLimiterGroupOptions
+		var options micro.RateLimiterOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		rateLimiterGroup, err := NewRateLimiterGroupWithOptions(&options, opts...)
+		rateLimiter, err := micro.NewRateLimiterWithOptions(&options, opts...)
 		if err != nil {
-			return errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
+			return errors.Wrap(err, "NewRateLimiterWithOptions failed")
 		}
-		w.rateLimiterGroup = rateLimiterGroup
+		w.rateLimiter = rateLimiter
 		return nil
 	}
 }
@@ -88,8 +89,8 @@ func (w *STSClientWrapper) AssumeRole(ctx context.Context, request *sts.AssumeRo
 	var response *sts.AssumeRoleResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.AssumeRole"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.AssumeRole"); err != nil {
 				return err
 			}
 		}
@@ -136,8 +137,8 @@ func (w *STSClientWrapper) AssumeRoleWithSAML(ctx context.Context, request *sts.
 	var response *sts.AssumeRoleWithSAMLResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.AssumeRoleWithSAML"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.AssumeRoleWithSAML"); err != nil {
 				return err
 			}
 		}
@@ -184,8 +185,8 @@ func (w *STSClientWrapper) GetCallerIdentity(ctx context.Context, request *sts.G
 	var response *sts.GetCallerIdentityResponse
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetCallerIdentity"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.GetCallerIdentity"); err != nil {
 				return err
 			}
 		}

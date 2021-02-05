@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
 )
 
@@ -24,10 +25,10 @@ type GormOptions struct {
 }
 
 type GORMDBWrapperOptions struct {
-	Retry            RetryOptions
+	Retry            micro.RetryOptions
 	Wrapper          WrapperOptions
 	Gorm             GormOptions
-	RateLimiterGroup RateLimiterGroupOptions
+	RateLimiterGroup micro.RateLimiterOptions
 }
 
 func NewGORMDBWithOptions(options *GormOptions) (*gorm.DB, error) {

@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
 )
 
@@ -22,10 +23,10 @@ type RedisOptions struct {
 }
 
 type RedisClientWrapperOptions struct {
-	Retry            RetryOptions
-	Wrapper          WrapperOptions
-	Redis            RedisOptions
-	RateLimiterGroup RateLimiterGroupOptions
+	Retry       micro.RetryOptions
+	Wrapper     WrapperOptions
+	Redis       RedisOptions
+	RateLimiter micro.RateLimiterOptions
 }
 
 func NewRedisClientWrapperWithOptions(options *RedisClientWrapperOptions, opts ...refx.Option) (*RedisClientWrapper, error) {
@@ -33,13 +34,13 @@ func NewRedisClientWrapperWithOptions(options *RedisClientWrapperOptions, opts .
 	var err error
 
 	w.options = &options.Wrapper
-	w.retry, err = NewRetryWithOptions(&options.Retry)
+	w.retry, err = micro.NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup, opts...)
+	w.rateLimiter, err = micro.NewRateLimiterWithOptions(&options.RateLimiter, opts...)
 	if err != nil {
-		return nil, errors.Wrap(err, "NewRateLimiterGroup failed")
+		return nil, errors.Wrap(err, "NewRateLimiter failed")
 	}
 	if w.options.EnableMetric {
 		w.CreateMetric(w.options)
@@ -76,7 +77,7 @@ func NewRedisClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
-	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiterGroup"), w.OnRateLimiterGroupChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiter"), w.OnRateLimiterChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Redis"), func(cfg *config.Config) error {
 		var options RedisOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
@@ -113,10 +114,10 @@ type RedisClusterOptions struct {
 }
 
 type RedisClusterClientWrapperOptions struct {
-	Retry            RetryOptions
-	Wrapper          WrapperOptions
-	RedisCluster     RedisClusterOptions
-	RateLimiterGroup RateLimiterGroupOptions
+	Retry        micro.RetryOptions
+	Wrapper      WrapperOptions
+	RedisCluster RedisClusterOptions
+	RateLimiter  micro.RateLimiterOptions
 }
 
 func NewRedisClusterClientWrapperWithOptions(options *RedisClusterClientWrapperOptions) (*RedisClusterClientWrapper, error) {
@@ -124,13 +125,13 @@ func NewRedisClusterClientWrapperWithOptions(options *RedisClusterClientWrapperO
 	var err error
 
 	w.options = &options.Wrapper
-	w.retry, err = NewRetryWithOptions(&options.Retry)
+	w.retry, err = micro.NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup)
+	w.rateLimiter, err = micro.NewRateLimiterWithOptions(&options.RateLimiter)
 	if err != nil {
-		return nil, errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
+		return nil, errors.Wrap(err, "NewRateLimiterWithOptions failed")
 	}
 	if w.options.EnableMetric {
 		w.CreateMetric(w.options)
@@ -166,7 +167,7 @@ func NewRedisClusterClientWrapperWithConfig(cfg *config.Config, opts ...refx.Opt
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
-	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiterGroup"), w.OnRateLimiterGroupChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiter"), w.OnRateLimiterChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RedisCluster"), func(cfg *config.Config) error {
 		var options RedisClusterOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {

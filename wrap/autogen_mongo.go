@@ -16,16 +16,17 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/writeconcern"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
 )
 
 type MongoClientWrapper struct {
-	obj              *mongo.Client
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *mongo.Client
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *MongoClientWrapper) Unwrap() *mongo.Client {
@@ -45,11 +46,11 @@ func (w *MongoClientWrapper) OnWrapperChange(opts ...refx.Option) config.OnChang
 
 func (w *MongoClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options RetryOptions
+		var options micro.RetryOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		retry, err := NewRetryWithOptions(&options)
+		retry, err := micro.NewRetryWithOptions(&options)
 		if err != nil {
 			return errors.Wrap(err, "NewRetryWithOptions failed")
 		}
@@ -58,17 +59,17 @@ func (w *MongoClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeH
 	}
 }
 
-func (w *MongoClientWrapper) OnRateLimiterGroupChange(opts ...refx.Option) config.OnChangeHandler {
+func (w *MongoClientWrapper) OnRateLimiterChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options RateLimiterGroupOptions
+		var options micro.RateLimiterOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		rateLimiterGroup, err := NewRateLimiterGroupWithOptions(&options, opts...)
+		rateLimiter, err := micro.NewRateLimiterWithOptions(&options, opts...)
 		if err != nil {
-			return errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
+			return errors.Wrap(err, "NewRateLimiterWithOptions failed")
 		}
-		w.rateLimiterGroup = rateLimiterGroup
+		w.rateLimiter = rateLimiter
 		return nil
 	}
 }
@@ -88,12 +89,12 @@ func (w *MongoClientWrapper) CreateMetric(options *WrapperOptions) {
 }
 
 type MongoCollectionWrapper struct {
-	obj              *mongo.Collection
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *mongo.Collection
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *MongoCollectionWrapper) Unwrap() *mongo.Collection {
@@ -101,12 +102,12 @@ func (w *MongoCollectionWrapper) Unwrap() *mongo.Collection {
 }
 
 type MongoDatabaseWrapper struct {
-	obj              *mongo.Database
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *mongo.Database
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *MongoDatabaseWrapper) Unwrap() *mongo.Database {
@@ -117,8 +118,8 @@ func (w *MongoClientWrapper) Connect(ctx context.Context) error {
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Connect"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Connect"); err != nil {
 				return err
 			}
 		}
@@ -152,15 +153,15 @@ func (w *MongoClientWrapper) Connect(ctx context.Context) error {
 
 func (w *MongoClientWrapper) Database(name string, opts ...*options.DatabaseOptions) *MongoDatabaseWrapper {
 	res0 := w.obj.Database(name, opts...)
-	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *MongoClientWrapper) Disconnect(ctx context.Context) error {
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Disconnect"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Disconnect"); err != nil {
 				return err
 			}
 		}
@@ -197,8 +198,8 @@ func (w *MongoClientWrapper) ListDatabaseNames(ctx context.Context, filter inter
 	var res0 []string
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ListDatabaseNames"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ListDatabaseNames"); err != nil {
 				return err
 			}
 		}
@@ -235,8 +236,8 @@ func (w *MongoClientWrapper) ListDatabases(ctx context.Context, filter interface
 	var res0 mongo.ListDatabasesResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ListDatabases"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ListDatabases"); err != nil {
 				return err
 			}
 		}
@@ -277,8 +278,8 @@ func (w *MongoClientWrapper) Ping(ctx context.Context, rp *readpref.ReadPref) er
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Ping"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Ping"); err != nil {
 				return err
 			}
 		}
@@ -315,8 +316,8 @@ func (w *MongoClientWrapper) StartSession(ctx context.Context, opts ...*options.
 	var res0 mongo.Session
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.StartSession"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.StartSession"); err != nil {
 				return err
 			}
 		}
@@ -352,8 +353,8 @@ func (w *MongoClientWrapper) UseSession(ctx context.Context, fn func(mongo.Sessi
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.UseSession"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.UseSession"); err != nil {
 				return err
 			}
 		}
@@ -389,8 +390,8 @@ func (w *MongoClientWrapper) UseSessionWithOptions(ctx context.Context, opts *op
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.UseSessionWithOptions"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.UseSessionWithOptions"); err != nil {
 				return err
 			}
 		}
@@ -427,8 +428,8 @@ func (w *MongoClientWrapper) Watch(ctx context.Context, pipeline interface{}, op
 	var res0 *mongo.ChangeStream
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Watch"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Watch"); err != nil {
 				return err
 			}
 		}
@@ -465,8 +466,8 @@ func (w *MongoCollectionWrapper) Aggregate(ctx context.Context, pipeline interfa
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.Aggregate"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.Aggregate"); err != nil {
 				return err
 			}
 		}
@@ -503,8 +504,8 @@ func (w *MongoCollectionWrapper) BulkWrite(ctx context.Context, models []mongo.W
 	var res0 *mongo.BulkWriteResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.BulkWrite"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.BulkWrite"); err != nil {
 				return err
 			}
 		}
@@ -541,8 +542,8 @@ func (w *MongoCollectionWrapper) Clone(ctx context.Context, opts ...*options.Col
 	var res0 *mongo.Collection
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.Clone"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.Clone"); err != nil {
 				return err
 			}
 		}
@@ -571,7 +572,7 @@ func (w *MongoCollectionWrapper) Clone(ctx context.Context, opts ...*options.Col
 		}
 		return err
 	})
-	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}, err
+	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}, err
 }
 
 func (w *MongoCollectionWrapper) CountDocuments(ctx context.Context, filter interface{}, opts ...*options.CountOptions) (int64, error) {
@@ -579,8 +580,8 @@ func (w *MongoCollectionWrapper) CountDocuments(ctx context.Context, filter inte
 	var res0 int64
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.CountDocuments"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.CountDocuments"); err != nil {
 				return err
 			}
 		}
@@ -614,7 +615,7 @@ func (w *MongoCollectionWrapper) CountDocuments(ctx context.Context, filter inte
 
 func (w *MongoCollectionWrapper) Database() *MongoDatabaseWrapper {
 	res0 := w.obj.Database()
-	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &MongoDatabaseWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *MongoCollectionWrapper) DeleteMany(ctx context.Context, filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
@@ -622,8 +623,8 @@ func (w *MongoCollectionWrapper) DeleteMany(ctx context.Context, filter interfac
 	var res0 *mongo.DeleteResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.DeleteMany"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.DeleteMany"); err != nil {
 				return err
 			}
 		}
@@ -660,8 +661,8 @@ func (w *MongoCollectionWrapper) DeleteOne(ctx context.Context, filter interface
 	var res0 *mongo.DeleteResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.DeleteOne"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.DeleteOne"); err != nil {
 				return err
 			}
 		}
@@ -698,8 +699,8 @@ func (w *MongoCollectionWrapper) Distinct(ctx context.Context, fieldName string,
 	var res0 []interface{}
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.Distinct"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.Distinct"); err != nil {
 				return err
 			}
 		}
@@ -735,8 +736,8 @@ func (w *MongoCollectionWrapper) Drop(ctx context.Context) error {
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.Drop"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.Drop"); err != nil {
 				return err
 			}
 		}
@@ -773,8 +774,8 @@ func (w *MongoCollectionWrapper) EstimatedDocumentCount(ctx context.Context, opt
 	var res0 int64
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.EstimatedDocumentCount"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.EstimatedDocumentCount"); err != nil {
 				return err
 			}
 		}
@@ -811,8 +812,8 @@ func (w *MongoCollectionWrapper) Find(ctx context.Context, filter interface{}, o
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.Find"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.Find"); err != nil {
 				return err
 			}
 		}
@@ -874,8 +875,8 @@ func (w *MongoCollectionWrapper) InsertMany(ctx context.Context, documents []int
 	var res0 *mongo.InsertManyResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.InsertMany"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.InsertMany"); err != nil {
 				return err
 			}
 		}
@@ -912,8 +913,8 @@ func (w *MongoCollectionWrapper) InsertOne(ctx context.Context, document interfa
 	var res0 *mongo.InsertOneResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.InsertOne"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.InsertOne"); err != nil {
 				return err
 			}
 		}
@@ -955,8 +956,8 @@ func (w *MongoCollectionWrapper) ReplaceOne(ctx context.Context, filter interfac
 	var res0 *mongo.UpdateResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.ReplaceOne"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.ReplaceOne"); err != nil {
 				return err
 			}
 		}
@@ -993,8 +994,8 @@ func (w *MongoCollectionWrapper) UpdateMany(ctx context.Context, filter interfac
 	var res0 *mongo.UpdateResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.UpdateMany"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.UpdateMany"); err != nil {
 				return err
 			}
 		}
@@ -1031,8 +1032,8 @@ func (w *MongoCollectionWrapper) UpdateOne(ctx context.Context, filter interface
 	var res0 *mongo.UpdateResult
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.UpdateOne"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.UpdateOne"); err != nil {
 				return err
 			}
 		}
@@ -1069,8 +1070,8 @@ func (w *MongoCollectionWrapper) Watch(ctx context.Context, pipeline interface{}
 	var res0 *mongo.ChangeStream
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Collection.Watch"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Collection.Watch"); err != nil {
 				return err
 			}
 		}
@@ -1107,8 +1108,8 @@ func (w *MongoDatabaseWrapper) Aggregate(ctx context.Context, pipeline interface
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Database.Aggregate"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Database.Aggregate"); err != nil {
 				return err
 			}
 		}
@@ -1142,20 +1143,20 @@ func (w *MongoDatabaseWrapper) Aggregate(ctx context.Context, pipeline interface
 
 func (w *MongoDatabaseWrapper) Client() *MongoClientWrapper {
 	res0 := w.obj.Client()
-	return &MongoClientWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &MongoClientWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *MongoDatabaseWrapper) Collection(name string, opts ...*options.CollectionOptions) *MongoCollectionWrapper {
 	res0 := w.obj.Collection(name, opts...)
-	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return &MongoCollectionWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w *MongoDatabaseWrapper) CreateCollection(ctx context.Context, name string, opts ...*options.CreateCollectionOptions) error {
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Database.CreateCollection"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Database.CreateCollection"); err != nil {
 				return err
 			}
 		}
@@ -1191,8 +1192,8 @@ func (w *MongoDatabaseWrapper) CreateView(ctx context.Context, viewName string, 
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Database.CreateView"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Database.CreateView"); err != nil {
 				return err
 			}
 		}
@@ -1228,8 +1229,8 @@ func (w *MongoDatabaseWrapper) Drop(ctx context.Context) error {
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Database.Drop"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Database.Drop"); err != nil {
 				return err
 			}
 		}
@@ -1266,8 +1267,8 @@ func (w *MongoDatabaseWrapper) ListCollectionNames(ctx context.Context, filter i
 	var res0 []string
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Database.ListCollectionNames"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Database.ListCollectionNames"); err != nil {
 				return err
 			}
 		}
@@ -1304,8 +1305,8 @@ func (w *MongoDatabaseWrapper) ListCollections(ctx context.Context, filter inter
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Database.ListCollections"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Database.ListCollections"); err != nil {
 				return err
 			}
 		}
@@ -1362,8 +1363,8 @@ func (w *MongoDatabaseWrapper) RunCommandCursor(ctx context.Context, runCommand 
 	var res0 *mongo.Cursor
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Database.RunCommandCursor"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Database.RunCommandCursor"); err != nil {
 				return err
 			}
 		}
@@ -1400,8 +1401,8 @@ func (w *MongoDatabaseWrapper) Watch(ctx context.Context, pipeline interface{}, 
 	var res0 *mongo.ChangeStream
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Database.Watch"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Database.Watch"); err != nil {
 				return err
 			}
 		}

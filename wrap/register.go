@@ -8,12 +8,11 @@ import (
 	alierr "github.com/aliyun/alibaba-cloud-sdk-go/sdk/errors"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
+
+	"github.com/hatlonely/go-kit/micro"
 )
 
 func init() {
-	RegisterRateLimiterGroup("LocalGroup", NewLocalGroupRateLimiterWithOptions)
-	RegisterRateLimiterGroup("LocalShare", NewLocalShareRateLimiterWithOptions)
-
 	RegisterErrCode(&alierr.ServerError{}, func(err error) string {
 		e := err.(*alierr.ServerError)
 		return fmt.Sprintf("pop_%v_%v", e.HttpStatus(), e.ErrorCode())
@@ -27,7 +26,7 @@ func init() {
 		return fmt.Sprintf("ots_%v_%v", e.HttpStatusCode, e.Code)
 	})
 
-	RegisterRetryRetryIf("POP", func(err error) bool {
+	micro.RegisterRetryRetryIf("POP", func(err error) bool {
 		switch e := err.(type) {
 		case *alierr.ServerError:
 			if e.HttpStatus() >= http.StatusInternalServerError {
@@ -39,7 +38,7 @@ func init() {
 		}
 		return false
 	})
-	RegisterRetryRetryIf("OSS", func(err error) bool {
+	micro.RegisterRetryRetryIf("OSS", func(err error) bool {
 		switch e := err.(type) {
 		case oss.ServiceError:
 			if e.StatusCode >= http.StatusInternalServerError {
@@ -51,7 +50,7 @@ func init() {
 		}
 		return false
 	})
-	RegisterRetryRetryIf("OTS", func(err error) bool {
+	micro.RegisterRetryRetryIf("OTS", func(err error) bool {
 		switch e := err.(type) {
 		case *tablestore.OtsError:
 			if e.HttpStatusCode >= http.StatusInternalServerError {

@@ -13,16 +13,17 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promauto"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
 )
 
 type GORMAssociationWrapper struct {
-	obj              *gorm.Association
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *gorm.Association
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w GORMAssociationWrapper) Unwrap() *gorm.Association {
@@ -30,12 +31,12 @@ func (w GORMAssociationWrapper) Unwrap() *gorm.Association {
 }
 
 type GORMDBWrapper struct {
-	obj              *gorm.DB
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *gorm.DB
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w GORMDBWrapper) Unwrap() *gorm.DB {
@@ -55,11 +56,11 @@ func (w *GORMDBWrapper) OnWrapperChange(opts ...refx.Option) config.OnChangeHand
 
 func (w *GORMDBWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options RetryOptions
+		var options micro.RetryOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		retry, err := NewRetryWithOptions(&options)
+		retry, err := micro.NewRetryWithOptions(&options)
 		if err != nil {
 			return errors.Wrap(err, "NewRetryWithOptions failed")
 		}
@@ -68,17 +69,17 @@ func (w *GORMDBWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHandle
 	}
 }
 
-func (w *GORMDBWrapper) OnRateLimiterGroupChange(opts ...refx.Option) config.OnChangeHandler {
+func (w *GORMDBWrapper) OnRateLimiterChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options RateLimiterGroupOptions
+		var options micro.RateLimiterOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		rateLimiterGroup, err := NewRateLimiterGroupWithOptions(&options, opts...)
+		rateLimiter, err := micro.NewRateLimiterWithOptions(&options, opts...)
 		if err != nil {
-			return errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
+			return errors.Wrap(err, "NewRateLimiterWithOptions failed")
 		}
-		w.rateLimiterGroup = rateLimiterGroup
+		w.rateLimiter = rateLimiter
 		return nil
 	}
 }
@@ -101,8 +102,8 @@ func (w GORMAssociationWrapper) Append(ctx context.Context, values ...interface{
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.Association
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Association.Append"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Association.Append"); err != nil {
 				return err
 			}
 		}
@@ -131,15 +132,15 @@ func (w GORMAssociationWrapper) Append(ctx context.Context, values ...interface{
 		}
 		return res0.Error
 	})
-	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMAssociationWrapper) Clear(ctx context.Context) GORMAssociationWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.Association
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Association.Clear"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Association.Clear"); err != nil {
 				return err
 			}
 		}
@@ -168,7 +169,7 @@ func (w GORMAssociationWrapper) Clear(ctx context.Context) GORMAssociationWrappe
 		}
 		return res0.Error
 	})
-	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMAssociationWrapper) Count() int {
@@ -180,8 +181,8 @@ func (w GORMAssociationWrapper) Delete(ctx context.Context, values ...interface{
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.Association
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Association.Delete"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Association.Delete"); err != nil {
 				return err
 			}
 		}
@@ -210,15 +211,15 @@ func (w GORMAssociationWrapper) Delete(ctx context.Context, values ...interface{
 		}
 		return res0.Error
 	})
-	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMAssociationWrapper) Find(ctx context.Context, value interface{}) GORMAssociationWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.Association
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Association.Find"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Association.Find"); err != nil {
 				return err
 			}
 		}
@@ -247,15 +248,15 @@ func (w GORMAssociationWrapper) Find(ctx context.Context, value interface{}) GOR
 		}
 		return res0.Error
 	})
-	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMAssociationWrapper) Replace(ctx context.Context, values ...interface{}) GORMAssociationWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.Association
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Association.Replace"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Association.Replace"); err != nil {
 				return err
 			}
 		}
@@ -284,7 +285,7 @@ func (w GORMAssociationWrapper) Replace(ctx context.Context, values ...interface
 		}
 		return res0.Error
 	})
-	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) AddError(err error) error {
@@ -296,8 +297,8 @@ func (w GORMDBWrapper) AddForeignKey(ctx context.Context, field string, dest str
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.AddForeignKey"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.AddForeignKey"); err != nil {
 				return err
 			}
 		}
@@ -326,15 +327,15 @@ func (w GORMDBWrapper) AddForeignKey(ctx context.Context, field string, dest str
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) AddIndex(ctx context.Context, indexName string, columns ...string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.AddIndex"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.AddIndex"); err != nil {
 				return err
 			}
 		}
@@ -363,15 +364,15 @@ func (w GORMDBWrapper) AddIndex(ctx context.Context, indexName string, columns .
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) AddUniqueIndex(ctx context.Context, indexName string, columns ...string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.AddUniqueIndex"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.AddUniqueIndex"); err != nil {
 				return err
 			}
 		}
@@ -400,15 +401,15 @@ func (w GORMDBWrapper) AddUniqueIndex(ctx context.Context, indexName string, col
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Assign"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Assign"); err != nil {
 				return err
 			}
 		}
@@ -437,15 +438,15 @@ func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBW
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Association(ctx context.Context, column string) GORMAssociationWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.Association
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Association"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Association"); err != nil {
 				return err
 			}
 		}
@@ -474,15 +475,15 @@ func (w GORMDBWrapper) Association(ctx context.Context, column string) GORMAssoc
 		}
 		return res0.Error
 	})
-	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMAssociationWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Attrs"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Attrs"); err != nil {
 				return err
 			}
 		}
@@ -511,15 +512,15 @@ func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWr
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) AutoMigrate(ctx context.Context, values ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.AutoMigrate"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.AutoMigrate"); err != nil {
 				return err
 			}
 		}
@@ -548,15 +549,15 @@ func (w GORMDBWrapper) AutoMigrate(ctx context.Context, values ...interface{}) G
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Begin(ctx context.Context) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Begin"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Begin"); err != nil {
 				return err
 			}
 		}
@@ -585,15 +586,15 @@ func (w GORMDBWrapper) Begin(ctx context.Context) GORMDBWrapper {
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.BeginTx"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.BeginTx"); err != nil {
 				return err
 			}
 		}
@@ -622,15 +623,15 @@ func (w GORMDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) GORMDBW
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.BlockGlobalUpdate"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.BlockGlobalUpdate"); err != nil {
 				return err
 			}
 		}
@@ -659,7 +660,7 @@ func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMD
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Callback() *gorm.Callback {
@@ -671,8 +672,8 @@ func (w GORMDBWrapper) Close(ctx context.Context) error {
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Close"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Close"); err != nil {
 				return err
 			}
 		}
@@ -708,8 +709,8 @@ func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Commit"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Commit"); err != nil {
 				return err
 			}
 		}
@@ -738,7 +739,7 @@ func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) CommonDB() gorm.SQLCommon {
@@ -750,8 +751,8 @@ func (w GORMDBWrapper) Count(ctx context.Context, value interface{}) GORMDBWrapp
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Count"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Count"); err != nil {
 				return err
 			}
 		}
@@ -780,15 +781,15 @@ func (w GORMDBWrapper) Count(ctx context.Context, value interface{}) GORMDBWrapp
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Create(ctx context.Context, value interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Create"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Create"); err != nil {
 				return err
 			}
 		}
@@ -817,15 +818,15 @@ func (w GORMDBWrapper) Create(ctx context.Context, value interface{}) GORMDBWrap
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.CreateTable"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.CreateTable"); err != nil {
 				return err
 			}
 		}
@@ -854,7 +855,7 @@ func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) G
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) DB() *sql.DB {
@@ -866,8 +867,8 @@ func (w GORMDBWrapper) Debug(ctx context.Context) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Debug"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Debug"); err != nil {
 				return err
 			}
 		}
@@ -896,15 +897,15 @@ func (w GORMDBWrapper) Debug(ctx context.Context) GORMDBWrapper {
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Delete"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Delete"); err != nil {
 				return err
 			}
 		}
@@ -933,7 +934,7 @@ func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...i
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Dialect() gorm.Dialect {
@@ -945,8 +946,8 @@ func (w GORMDBWrapper) DropColumn(ctx context.Context, column string) GORMDBWrap
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.DropColumn"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.DropColumn"); err != nil {
 				return err
 			}
 		}
@@ -975,15 +976,15 @@ func (w GORMDBWrapper) DropColumn(ctx context.Context, column string) GORMDBWrap
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) DropTable(ctx context.Context, values ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.DropTable"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.DropTable"); err != nil {
 				return err
 			}
 		}
@@ -1012,15 +1013,15 @@ func (w GORMDBWrapper) DropTable(ctx context.Context, values ...interface{}) GOR
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) DropTableIfExists(ctx context.Context, values ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.DropTableIfExists"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.DropTableIfExists"); err != nil {
 				return err
 			}
 		}
@@ -1049,15 +1050,15 @@ func (w GORMDBWrapper) DropTableIfExists(ctx context.Context, values ...interfac
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Exec(ctx context.Context, sql string, values ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Exec"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Exec"); err != nil {
 				return err
 			}
 		}
@@ -1086,15 +1087,15 @@ func (w GORMDBWrapper) Exec(ctx context.Context, sql string, values ...interface
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Find(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Find"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Find"); err != nil {
 				return err
 			}
 		}
@@ -1123,15 +1124,15 @@ func (w GORMDBWrapper) Find(ctx context.Context, out interface{}, where ...inter
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) First(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.First"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.First"); err != nil {
 				return err
 			}
 		}
@@ -1160,15 +1161,15 @@ func (w GORMDBWrapper) First(ctx context.Context, out interface{}, where ...inte
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) FirstOrCreate(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.FirstOrCreate"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.FirstOrCreate"); err != nil {
 				return err
 			}
 		}
@@ -1197,15 +1198,15 @@ func (w GORMDBWrapper) FirstOrCreate(ctx context.Context, out interface{}, where
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.FirstOrInit"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.FirstOrInit"); err != nil {
 				return err
 			}
 		}
@@ -1234,7 +1235,7 @@ func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where .
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Get(name string) (interface{}, bool) {
@@ -1251,8 +1252,8 @@ func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Group"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Group"); err != nil {
 				return err
 			}
 		}
@@ -1281,7 +1282,7 @@ func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) HasBlockGlobalUpdate() bool {
@@ -1298,8 +1299,8 @@ func (w GORMDBWrapper) Having(ctx context.Context, query interface{}, values ...
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Having"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Having"); err != nil {
 				return err
 			}
 		}
@@ -1328,15 +1329,15 @@ func (w GORMDBWrapper) Having(ctx context.Context, query interface{}, values ...
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) InstantSet(ctx context.Context, name string, value interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.InstantSet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.InstantSet"); err != nil {
 				return err
 			}
 		}
@@ -1365,15 +1366,15 @@ func (w GORMDBWrapper) InstantSet(ctx context.Context, name string, value interf
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Joins(ctx context.Context, query string, args ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Joins"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Joins"); err != nil {
 				return err
 			}
 		}
@@ -1402,15 +1403,15 @@ func (w GORMDBWrapper) Joins(ctx context.Context, query string, args ...interfac
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Last(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Last"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Last"); err != nil {
 				return err
 			}
 		}
@@ -1439,15 +1440,15 @@ func (w GORMDBWrapper) Last(ctx context.Context, out interface{}, where ...inter
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Limit(ctx context.Context, limit interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Limit"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Limit"); err != nil {
 				return err
 			}
 		}
@@ -1476,15 +1477,15 @@ func (w GORMDBWrapper) Limit(ctx context.Context, limit interface{}) GORMDBWrapp
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) LogMode(ctx context.Context, enable bool) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.LogMode"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.LogMode"); err != nil {
 				return err
 			}
 		}
@@ -1513,15 +1514,15 @@ func (w GORMDBWrapper) LogMode(ctx context.Context, enable bool) GORMDBWrapper {
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Model(ctx context.Context, value interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Model"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Model"); err != nil {
 				return err
 			}
 		}
@@ -1550,15 +1551,15 @@ func (w GORMDBWrapper) Model(ctx context.Context, value interface{}) GORMDBWrapp
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) ModifyColumn(ctx context.Context, column string, typ string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.ModifyColumn"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.ModifyColumn"); err != nil {
 				return err
 			}
 		}
@@ -1587,15 +1588,15 @@ func (w GORMDBWrapper) ModifyColumn(ctx context.Context, column string, typ stri
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.New"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.New"); err != nil {
 				return err
 			}
 		}
@@ -1624,7 +1625,7 @@ func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) NewRecord(value interface{}) bool {
@@ -1641,8 +1642,8 @@ func (w GORMDBWrapper) Not(ctx context.Context, query interface{}, args ...inter
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Not"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Not"); err != nil {
 				return err
 			}
 		}
@@ -1671,15 +1672,15 @@ func (w GORMDBWrapper) Not(ctx context.Context, query interface{}, args ...inter
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Offset(ctx context.Context, offset interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Offset"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Offset"); err != nil {
 				return err
 			}
 		}
@@ -1708,15 +1709,15 @@ func (w GORMDBWrapper) Offset(ctx context.Context, offset interface{}) GORMDBWra
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Omit(ctx context.Context, columns ...string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Omit"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Omit"); err != nil {
 				return err
 			}
 		}
@@ -1745,15 +1746,15 @@ func (w GORMDBWrapper) Omit(ctx context.Context, columns ...string) GORMDBWrappe
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Or(ctx context.Context, query interface{}, args ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Or"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Or"); err != nil {
 				return err
 			}
 		}
@@ -1782,15 +1783,15 @@ func (w GORMDBWrapper) Or(ctx context.Context, query interface{}, args ...interf
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Order(ctx context.Context, value interface{}, reorder ...bool) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Order"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Order"); err != nil {
 				return err
 			}
 		}
@@ -1819,15 +1820,15 @@ func (w GORMDBWrapper) Order(ctx context.Context, value interface{}, reorder ...
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Pluck(ctx context.Context, column string, value interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Pluck"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Pluck"); err != nil {
 				return err
 			}
 		}
@@ -1856,15 +1857,15 @@ func (w GORMDBWrapper) Pluck(ctx context.Context, column string, value interface
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Preload(ctx context.Context, column string, conditions ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Preload"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Preload"); err != nil {
 				return err
 			}
 		}
@@ -1893,15 +1894,15 @@ func (w GORMDBWrapper) Preload(ctx context.Context, column string, conditions ..
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Preloads"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Preloads"); err != nil {
 				return err
 			}
 		}
@@ -1930,7 +1931,7 @@ func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrap
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) QueryExpr() *gorm.SqlExpr {
@@ -1942,8 +1943,8 @@ func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Raw"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Raw"); err != nil {
 				return err
 			}
 		}
@@ -1972,7 +1973,7 @@ func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) RecordNotFound() bool {
@@ -1984,8 +1985,8 @@ func (w GORMDBWrapper) Related(ctx context.Context, value interface{}, foreignKe
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Related"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Related"); err != nil {
 				return err
 			}
 		}
@@ -2014,15 +2015,15 @@ func (w GORMDBWrapper) Related(ctx context.Context, value interface{}, foreignKe
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) RemoveForeignKey(ctx context.Context, field string, dest string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.RemoveForeignKey"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.RemoveForeignKey"); err != nil {
 				return err
 			}
 		}
@@ -2051,15 +2052,15 @@ func (w GORMDBWrapper) RemoveForeignKey(ctx context.Context, field string, dest 
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) RemoveIndex(ctx context.Context, indexName string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.RemoveIndex"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.RemoveIndex"); err != nil {
 				return err
 			}
 		}
@@ -2088,15 +2089,15 @@ func (w GORMDBWrapper) RemoveIndex(ctx context.Context, indexName string) GORMDB
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Rollback(ctx context.Context) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Rollback"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Rollback"); err != nil {
 				return err
 			}
 		}
@@ -2125,15 +2126,15 @@ func (w GORMDBWrapper) Rollback(ctx context.Context) GORMDBWrapper {
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.RollbackUnlessCommitted"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.RollbackUnlessCommitted"); err != nil {
 				return err
 			}
 		}
@@ -2162,7 +2163,7 @@ func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrappe
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Row() *sql.Row {
@@ -2175,8 +2176,8 @@ func (w GORMDBWrapper) Rows(ctx context.Context) (*sql.Rows, error) {
 	var res0 *sql.Rows
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Rows"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Rows"); err != nil {
 				return err
 			}
 		}
@@ -2212,8 +2213,8 @@ func (w GORMDBWrapper) Save(ctx context.Context, value interface{}) GORMDBWrappe
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Save"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Save"); err != nil {
 				return err
 			}
 		}
@@ -2242,15 +2243,15 @@ func (w GORMDBWrapper) Save(ctx context.Context, value interface{}) GORMDBWrappe
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Scan(ctx context.Context, dest interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Scan"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Scan"); err != nil {
 				return err
 			}
 		}
@@ -2279,15 +2280,15 @@ func (w GORMDBWrapper) Scan(ctx context.Context, dest interface{}) GORMDBWrapper
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) ScanRows(ctx context.Context, rows *sql.Rows, result interface{}) error {
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.ScanRows"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.ScanRows"); err != nil {
 				return err
 			}
 		}
@@ -2323,8 +2324,8 @@ func (w GORMDBWrapper) Scopes(ctx context.Context, funcs ...func(*gorm.DB) *gorm
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Scopes"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Scopes"); err != nil {
 				return err
 			}
 		}
@@ -2353,15 +2354,15 @@ func (w GORMDBWrapper) Scopes(ctx context.Context, funcs ...func(*gorm.DB) *gorm
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Select(ctx context.Context, query interface{}, args ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Select"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Select"); err != nil {
 				return err
 			}
 		}
@@ -2390,15 +2391,15 @@ func (w GORMDBWrapper) Select(ctx context.Context, query interface{}, args ...in
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Set"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Set"); err != nil {
 				return err
 			}
 		}
@@ -2427,7 +2428,7 @@ func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) 
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) SetJoinTableHandler(source interface{}, column string, handler gorm.JoinTableHandlerInterface) {
@@ -2438,8 +2439,8 @@ func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride f
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.SetNowFuncOverride"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.SetNowFuncOverride"); err != nil {
 				return err
 			}
 		}
@@ -2468,7 +2469,7 @@ func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride f
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) SingularTable(enable bool) {
@@ -2484,8 +2485,8 @@ func (w GORMDBWrapper) Table(ctx context.Context, name string) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Table"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Table"); err != nil {
 				return err
 			}
 		}
@@ -2514,15 +2515,15 @@ func (w GORMDBWrapper) Table(ctx context.Context, name string) GORMDBWrapper {
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Take(ctx context.Context, out interface{}, where ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Take"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Take"); err != nil {
 				return err
 			}
 		}
@@ -2551,15 +2552,15 @@ func (w GORMDBWrapper) Take(ctx context.Context, out interface{}, where ...inter
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Transaction(ctx context.Context, fc func(tx *gorm.DB) error) error {
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Transaction"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Transaction"); err != nil {
 				return err
 			}
 		}
@@ -2595,8 +2596,8 @@ func (w GORMDBWrapper) Unscoped(ctx context.Context) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Unscoped"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Unscoped"); err != nil {
 				return err
 			}
 		}
@@ -2625,15 +2626,15 @@ func (w GORMDBWrapper) Unscoped(ctx context.Context) GORMDBWrapper {
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Update(ctx context.Context, attrs ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Update"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Update"); err != nil {
 				return err
 			}
 		}
@@ -2662,15 +2663,15 @@ func (w GORMDBWrapper) Update(ctx context.Context, attrs ...interface{}) GORMDBW
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) UpdateColumn(ctx context.Context, attrs ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.UpdateColumn"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.UpdateColumn"); err != nil {
 				return err
 			}
 		}
@@ -2699,15 +2700,15 @@ func (w GORMDBWrapper) UpdateColumn(ctx context.Context, attrs ...interface{}) G
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) UpdateColumns(ctx context.Context, values interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.UpdateColumns"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.UpdateColumns"); err != nil {
 				return err
 			}
 		}
@@ -2736,15 +2737,15 @@ func (w GORMDBWrapper) UpdateColumns(ctx context.Context, values interface{}) GO
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Updates(ctx context.Context, values interface{}, ignoreProtectedAttrs ...bool) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Updates"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Updates"); err != nil {
 				return err
 			}
 		}
@@ -2773,15 +2774,15 @@ func (w GORMDBWrapper) Updates(ctx context.Context, values interface{}, ignorePr
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }
 
 func (w GORMDBWrapper) Where(ctx context.Context, query interface{}, args ...interface{}) GORMDBWrapper {
 	ctxOptions := FromContext(ctx)
 	var res0 *gorm.DB
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "DB.Where"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "DB.Where"); err != nil {
 				return err
 			}
 		}
@@ -2810,5 +2811,5 @@ func (w GORMDBWrapper) Where(ctx context.Context, query interface{}, args ...int
 		}
 		return res0.Error
 	})
-	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiterGroup: w.rateLimiterGroup}
+	return GORMDBWrapper{obj: res0, retry: w.retry, options: w.options, durationMetric: w.durationMetric, inflightMetric: w.inflightMetric, rateLimiter: w.rateLimiter}
 }

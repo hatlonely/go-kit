@@ -12,16 +12,17 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promauto"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
 )
 
 type RedisClientWrapper struct {
-	obj              *redis.Client
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *redis.Client
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *RedisClientWrapper) Unwrap() *redis.Client {
@@ -41,11 +42,11 @@ func (w *RedisClientWrapper) OnWrapperChange(opts ...refx.Option) config.OnChang
 
 func (w *RedisClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options RetryOptions
+		var options micro.RetryOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		retry, err := NewRetryWithOptions(&options)
+		retry, err := micro.NewRetryWithOptions(&options)
 		if err != nil {
 			return errors.Wrap(err, "NewRetryWithOptions failed")
 		}
@@ -54,17 +55,17 @@ func (w *RedisClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeH
 	}
 }
 
-func (w *RedisClientWrapper) OnRateLimiterGroupChange(opts ...refx.Option) config.OnChangeHandler {
+func (w *RedisClientWrapper) OnRateLimiterChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options RateLimiterGroupOptions
+		var options micro.RateLimiterOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		rateLimiterGroup, err := NewRateLimiterGroupWithOptions(&options, opts...)
+		rateLimiter, err := micro.NewRateLimiterWithOptions(&options, opts...)
 		if err != nil {
-			return errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
+			return errors.Wrap(err, "NewRateLimiterWithOptions failed")
 		}
-		w.rateLimiterGroup = rateLimiterGroup
+		w.rateLimiter = rateLimiter
 		return nil
 	}
 }
@@ -84,12 +85,12 @@ func (w *RedisClientWrapper) CreateMetric(options *WrapperOptions) {
 }
 
 type RedisClusterClientWrapper struct {
-	obj              *redis.ClusterClient
-	retry            *Retry
-	options          *WrapperOptions
-	durationMetric   *prometheus.HistogramVec
-	inflightMetric   *prometheus.GaugeVec
-	rateLimiterGroup RateLimiterGroup
+	obj            *redis.ClusterClient
+	retry          *micro.Retry
+	options        *WrapperOptions
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+	rateLimiter    micro.RateLimiter
 }
 
 func (w *RedisClusterClientWrapper) Unwrap() *redis.ClusterClient {
@@ -109,11 +110,11 @@ func (w *RedisClusterClientWrapper) OnWrapperChange(opts ...refx.Option) config.
 
 func (w *RedisClusterClientWrapper) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options RetryOptions
+		var options micro.RetryOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		retry, err := NewRetryWithOptions(&options)
+		retry, err := micro.NewRetryWithOptions(&options)
 		if err != nil {
 			return errors.Wrap(err, "NewRetryWithOptions failed")
 		}
@@ -122,17 +123,17 @@ func (w *RedisClusterClientWrapper) OnRetryChange(opts ...refx.Option) config.On
 	}
 }
 
-func (w *RedisClusterClientWrapper) OnRateLimiterGroupChange(opts ...refx.Option) config.OnChangeHandler {
+func (w *RedisClusterClientWrapper) OnRateLimiterChange(opts ...refx.Option) config.OnChangeHandler {
 	return func(cfg *config.Config) error {
-		var options RateLimiterGroupOptions
+		var options micro.RateLimiterOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		rateLimiterGroup, err := NewRateLimiterGroupWithOptions(&options, opts...)
+		rateLimiter, err := micro.NewRateLimiterWithOptions(&options, opts...)
 		if err != nil {
-			return errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
+			return errors.Wrap(err, "NewRateLimiterWithOptions failed")
 		}
-		w.rateLimiterGroup = rateLimiterGroup
+		w.rateLimiter = rateLimiter
 		return nil
 	}
 }
@@ -176,8 +177,8 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Pipelined"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Pipelined"); err != nil {
 				return err
 			}
 		}
@@ -234,8 +235,8 @@ func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipe
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.TxPipelined"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.TxPipelined"); err != nil {
 				return err
 			}
 		}
@@ -271,8 +272,8 @@ func (w *RedisClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Watch"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Watch"); err != nil {
 				return err
 			}
 		}
@@ -313,8 +314,8 @@ func (w *RedisClientWrapper) Close(ctx context.Context) error {
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Close"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Close"); err != nil {
 				return err
 			}
 		}
@@ -350,8 +351,8 @@ func (w *RedisClientWrapper) Do(ctx context.Context, args ...interface{}) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.Cmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Do"); err != nil {
 				return err
 			}
 		}
@@ -387,8 +388,8 @@ func (w *RedisClientWrapper) Process(ctx context.Context, cmd redis.Cmder) error
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Process"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Process"); err != nil {
 				return err
 			}
 		}
@@ -437,8 +438,8 @@ func (w *RedisClientWrapper) Append(ctx context.Context, key string, value strin
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Append"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Append"); err != nil {
 				return err
 			}
 		}
@@ -474,8 +475,8 @@ func (w *RedisClientWrapper) BLPop(ctx context.Context, timeout time.Duration, k
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.BLPop"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.BLPop"); err != nil {
 				return err
 			}
 		}
@@ -511,8 +512,8 @@ func (w *RedisClientWrapper) BRPop(ctx context.Context, timeout time.Duration, k
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.BRPop"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.BRPop"); err != nil {
 				return err
 			}
 		}
@@ -548,8 +549,8 @@ func (w *RedisClientWrapper) BRPopLPush(ctx context.Context, source string, dest
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.BRPopLPush"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.BRPopLPush"); err != nil {
 				return err
 			}
 		}
@@ -585,8 +586,8 @@ func (w *RedisClientWrapper) BZPopMax(ctx context.Context, timeout time.Duration
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZWithKeyCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.BZPopMax"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.BZPopMax"); err != nil {
 				return err
 			}
 		}
@@ -622,8 +623,8 @@ func (w *RedisClientWrapper) BZPopMin(ctx context.Context, timeout time.Duration
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZWithKeyCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.BZPopMin"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.BZPopMin"); err != nil {
 				return err
 			}
 		}
@@ -659,8 +660,8 @@ func (w *RedisClientWrapper) BgRewriteAOF(ctx context.Context) *redis.StatusCmd 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.BgRewriteAOF"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.BgRewriteAOF"); err != nil {
 				return err
 			}
 		}
@@ -696,8 +697,8 @@ func (w *RedisClientWrapper) BgSave(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.BgSave"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.BgSave"); err != nil {
 				return err
 			}
 		}
@@ -733,8 +734,8 @@ func (w *RedisClientWrapper) BitCount(ctx context.Context, key string, bitCount 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.BitCount"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.BitCount"); err != nil {
 				return err
 			}
 		}
@@ -770,8 +771,8 @@ func (w *RedisClientWrapper) BitOpAnd(ctx context.Context, destKey string, keys 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.BitOpAnd"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.BitOpAnd"); err != nil {
 				return err
 			}
 		}
@@ -807,8 +808,8 @@ func (w *RedisClientWrapper) BitOpNot(ctx context.Context, destKey string, key s
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.BitOpNot"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.BitOpNot"); err != nil {
 				return err
 			}
 		}
@@ -844,8 +845,8 @@ func (w *RedisClientWrapper) BitOpOr(ctx context.Context, destKey string, keys .
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.BitOpOr"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.BitOpOr"); err != nil {
 				return err
 			}
 		}
@@ -881,8 +882,8 @@ func (w *RedisClientWrapper) BitOpXor(ctx context.Context, destKey string, keys 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.BitOpXor"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.BitOpXor"); err != nil {
 				return err
 			}
 		}
@@ -918,8 +919,8 @@ func (w *RedisClientWrapper) BitPos(ctx context.Context, key string, bit int64, 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.BitPos"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.BitPos"); err != nil {
 				return err
 			}
 		}
@@ -955,8 +956,8 @@ func (w *RedisClientWrapper) ClientGetName(ctx context.Context) *redis.StringCmd
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClientGetName"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClientGetName"); err != nil {
 				return err
 			}
 		}
@@ -992,8 +993,8 @@ func (w *RedisClientWrapper) ClientID(ctx context.Context) *redis.IntCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClientID"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClientID"); err != nil {
 				return err
 			}
 		}
@@ -1029,8 +1030,8 @@ func (w *RedisClientWrapper) ClientKill(ctx context.Context, ipPort string) *red
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClientKill"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClientKill"); err != nil {
 				return err
 			}
 		}
@@ -1066,8 +1067,8 @@ func (w *RedisClientWrapper) ClientKillByFilter(ctx context.Context, keys ...str
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClientKillByFilter"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClientKillByFilter"); err != nil {
 				return err
 			}
 		}
@@ -1103,8 +1104,8 @@ func (w *RedisClientWrapper) ClientList(ctx context.Context) *redis.StringCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClientList"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClientList"); err != nil {
 				return err
 			}
 		}
@@ -1140,8 +1141,8 @@ func (w *RedisClientWrapper) ClientPause(ctx context.Context, dur time.Duration)
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClientPause"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClientPause"); err != nil {
 				return err
 			}
 		}
@@ -1177,8 +1178,8 @@ func (w *RedisClientWrapper) ClientUnblock(ctx context.Context, id int64) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClientUnblock"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClientUnblock"); err != nil {
 				return err
 			}
 		}
@@ -1214,8 +1215,8 @@ func (w *RedisClientWrapper) ClientUnblockWithError(ctx context.Context, id int6
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClientUnblockWithError"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClientUnblockWithError"); err != nil {
 				return err
 			}
 		}
@@ -1251,8 +1252,8 @@ func (w *RedisClientWrapper) ClusterAddSlots(ctx context.Context, slots ...int) 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterAddSlots"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterAddSlots"); err != nil {
 				return err
 			}
 		}
@@ -1288,8 +1289,8 @@ func (w *RedisClientWrapper) ClusterAddSlotsRange(ctx context.Context, min int, 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterAddSlotsRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterAddSlotsRange"); err != nil {
 				return err
 			}
 		}
@@ -1325,8 +1326,8 @@ func (w *RedisClientWrapper) ClusterCountFailureReports(ctx context.Context, nod
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterCountFailureReports"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterCountFailureReports"); err != nil {
 				return err
 			}
 		}
@@ -1362,8 +1363,8 @@ func (w *RedisClientWrapper) ClusterCountKeysInSlot(ctx context.Context, slot in
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterCountKeysInSlot"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterCountKeysInSlot"); err != nil {
 				return err
 			}
 		}
@@ -1399,8 +1400,8 @@ func (w *RedisClientWrapper) ClusterDelSlots(ctx context.Context, slots ...int) 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterDelSlots"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterDelSlots"); err != nil {
 				return err
 			}
 		}
@@ -1436,8 +1437,8 @@ func (w *RedisClientWrapper) ClusterDelSlotsRange(ctx context.Context, min int, 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterDelSlotsRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterDelSlotsRange"); err != nil {
 				return err
 			}
 		}
@@ -1473,8 +1474,8 @@ func (w *RedisClientWrapper) ClusterFailover(ctx context.Context) *redis.StatusC
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterFailover"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterFailover"); err != nil {
 				return err
 			}
 		}
@@ -1510,8 +1511,8 @@ func (w *RedisClientWrapper) ClusterForget(ctx context.Context, nodeID string) *
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterForget"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterForget"); err != nil {
 				return err
 			}
 		}
@@ -1547,8 +1548,8 @@ func (w *RedisClientWrapper) ClusterGetKeysInSlot(ctx context.Context, slot int,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterGetKeysInSlot"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterGetKeysInSlot"); err != nil {
 				return err
 			}
 		}
@@ -1584,8 +1585,8 @@ func (w *RedisClientWrapper) ClusterInfo(ctx context.Context) *redis.StringCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterInfo"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterInfo"); err != nil {
 				return err
 			}
 		}
@@ -1621,8 +1622,8 @@ func (w *RedisClientWrapper) ClusterKeySlot(ctx context.Context, key string) *re
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterKeySlot"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterKeySlot"); err != nil {
 				return err
 			}
 		}
@@ -1658,8 +1659,8 @@ func (w *RedisClientWrapper) ClusterMeet(ctx context.Context, host string, port 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterMeet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterMeet"); err != nil {
 				return err
 			}
 		}
@@ -1695,8 +1696,8 @@ func (w *RedisClientWrapper) ClusterNodes(ctx context.Context) *redis.StringCmd 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterNodes"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterNodes"); err != nil {
 				return err
 			}
 		}
@@ -1732,8 +1733,8 @@ func (w *RedisClientWrapper) ClusterReplicate(ctx context.Context, nodeID string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterReplicate"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterReplicate"); err != nil {
 				return err
 			}
 		}
@@ -1769,8 +1770,8 @@ func (w *RedisClientWrapper) ClusterResetHard(ctx context.Context) *redis.Status
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterResetHard"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterResetHard"); err != nil {
 				return err
 			}
 		}
@@ -1806,8 +1807,8 @@ func (w *RedisClientWrapper) ClusterResetSoft(ctx context.Context) *redis.Status
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterResetSoft"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterResetSoft"); err != nil {
 				return err
 			}
 		}
@@ -1843,8 +1844,8 @@ func (w *RedisClientWrapper) ClusterSaveConfig(ctx context.Context) *redis.Statu
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterSaveConfig"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterSaveConfig"); err != nil {
 				return err
 			}
 		}
@@ -1880,8 +1881,8 @@ func (w *RedisClientWrapper) ClusterSlaves(ctx context.Context, nodeID string) *
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterSlaves"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterSlaves"); err != nil {
 				return err
 			}
 		}
@@ -1917,8 +1918,8 @@ func (w *RedisClientWrapper) ClusterSlots(ctx context.Context) *redis.ClusterSlo
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ClusterSlotsCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ClusterSlots"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ClusterSlots"); err != nil {
 				return err
 			}
 		}
@@ -1954,8 +1955,8 @@ func (w *RedisClientWrapper) Command(ctx context.Context) *redis.CommandsInfoCmd
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.CommandsInfoCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Command"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Command"); err != nil {
 				return err
 			}
 		}
@@ -1991,8 +1992,8 @@ func (w *RedisClientWrapper) ConfigGet(ctx context.Context, parameter string) *r
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ConfigGet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ConfigGet"); err != nil {
 				return err
 			}
 		}
@@ -2028,8 +2029,8 @@ func (w *RedisClientWrapper) ConfigResetStat(ctx context.Context) *redis.StatusC
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ConfigResetStat"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ConfigResetStat"); err != nil {
 				return err
 			}
 		}
@@ -2065,8 +2066,8 @@ func (w *RedisClientWrapper) ConfigRewrite(ctx context.Context) *redis.StatusCmd
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ConfigRewrite"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ConfigRewrite"); err != nil {
 				return err
 			}
 		}
@@ -2102,8 +2103,8 @@ func (w *RedisClientWrapper) ConfigSet(ctx context.Context, parameter string, va
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ConfigSet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ConfigSet"); err != nil {
 				return err
 			}
 		}
@@ -2139,8 +2140,8 @@ func (w *RedisClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.DBSize"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.DBSize"); err != nil {
 				return err
 			}
 		}
@@ -2176,8 +2177,8 @@ func (w *RedisClientWrapper) DbSize(ctx context.Context) *redis.IntCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.DbSize"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.DbSize"); err != nil {
 				return err
 			}
 		}
@@ -2213,8 +2214,8 @@ func (w *RedisClientWrapper) DebugObject(ctx context.Context, key string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.DebugObject"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.DebugObject"); err != nil {
 				return err
 			}
 		}
@@ -2250,8 +2251,8 @@ func (w *RedisClientWrapper) Decr(ctx context.Context, key string) *redis.IntCmd
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Decr"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Decr"); err != nil {
 				return err
 			}
 		}
@@ -2287,8 +2288,8 @@ func (w *RedisClientWrapper) DecrBy(ctx context.Context, key string, decrement i
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.DecrBy"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.DecrBy"); err != nil {
 				return err
 			}
 		}
@@ -2324,8 +2325,8 @@ func (w *RedisClientWrapper) Del(ctx context.Context, keys ...string) *redis.Int
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Del"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Del"); err != nil {
 				return err
 			}
 		}
@@ -2361,8 +2362,8 @@ func (w *RedisClientWrapper) Dump(ctx context.Context, key string) *redis.String
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Dump"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Dump"); err != nil {
 				return err
 			}
 		}
@@ -2398,8 +2399,8 @@ func (w *RedisClientWrapper) Echo(ctx context.Context, message interface{}) *red
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Echo"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Echo"); err != nil {
 				return err
 			}
 		}
@@ -2435,8 +2436,8 @@ func (w *RedisClientWrapper) Eval(ctx context.Context, script string, keys []str
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.Cmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Eval"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Eval"); err != nil {
 				return err
 			}
 		}
@@ -2472,8 +2473,8 @@ func (w *RedisClientWrapper) EvalSha(ctx context.Context, sha1 string, keys []st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.Cmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.EvalSha"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.EvalSha"); err != nil {
 				return err
 			}
 		}
@@ -2509,8 +2510,8 @@ func (w *RedisClientWrapper) Exists(ctx context.Context, keys ...string) *redis.
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Exists"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Exists"); err != nil {
 				return err
 			}
 		}
@@ -2546,8 +2547,8 @@ func (w *RedisClientWrapper) Expire(ctx context.Context, key string, expiration 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Expire"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Expire"); err != nil {
 				return err
 			}
 		}
@@ -2583,8 +2584,8 @@ func (w *RedisClientWrapper) ExpireAt(ctx context.Context, key string, tm time.T
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ExpireAt"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ExpireAt"); err != nil {
 				return err
 			}
 		}
@@ -2620,8 +2621,8 @@ func (w *RedisClientWrapper) FlushAll(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.FlushAll"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.FlushAll"); err != nil {
 				return err
 			}
 		}
@@ -2657,8 +2658,8 @@ func (w *RedisClientWrapper) FlushAllAsync(ctx context.Context) *redis.StatusCmd
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.FlushAllAsync"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.FlushAllAsync"); err != nil {
 				return err
 			}
 		}
@@ -2694,8 +2695,8 @@ func (w *RedisClientWrapper) FlushDB(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.FlushDB"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.FlushDB"); err != nil {
 				return err
 			}
 		}
@@ -2731,8 +2732,8 @@ func (w *RedisClientWrapper) FlushDBAsync(ctx context.Context) *redis.StatusCmd 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.FlushDBAsync"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.FlushDBAsync"); err != nil {
 				return err
 			}
 		}
@@ -2768,8 +2769,8 @@ func (w *RedisClientWrapper) FlushDb(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.FlushDb"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.FlushDb"); err != nil {
 				return err
 			}
 		}
@@ -2805,8 +2806,8 @@ func (w *RedisClientWrapper) GeoAdd(ctx context.Context, key string, geoLocation
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.GeoAdd"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.GeoAdd"); err != nil {
 				return err
 			}
 		}
@@ -2842,8 +2843,8 @@ func (w *RedisClientWrapper) GeoDist(ctx context.Context, key string, member1 st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.GeoDist"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.GeoDist"); err != nil {
 				return err
 			}
 		}
@@ -2879,8 +2880,8 @@ func (w *RedisClientWrapper) GeoHash(ctx context.Context, key string, members ..
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.GeoHash"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.GeoHash"); err != nil {
 				return err
 			}
 		}
@@ -2916,8 +2917,8 @@ func (w *RedisClientWrapper) GeoPos(ctx context.Context, key string, members ...
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.GeoPosCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.GeoPos"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.GeoPos"); err != nil {
 				return err
 			}
 		}
@@ -2953,8 +2954,8 @@ func (w *RedisClientWrapper) GeoRadius(ctx context.Context, key string, longitud
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.GeoRadius"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.GeoRadius"); err != nil {
 				return err
 			}
 		}
@@ -2990,8 +2991,8 @@ func (w *RedisClientWrapper) GeoRadiusByMember(ctx context.Context, key string, 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.GeoRadiusByMember"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.GeoRadiusByMember"); err != nil {
 				return err
 			}
 		}
@@ -3027,8 +3028,8 @@ func (w *RedisClientWrapper) GeoRadiusByMemberRO(ctx context.Context, key string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.GeoRadiusByMemberRO"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.GeoRadiusByMemberRO"); err != nil {
 				return err
 			}
 		}
@@ -3064,8 +3065,8 @@ func (w *RedisClientWrapper) GeoRadiusRO(ctx context.Context, key string, longit
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.GeoRadiusRO"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.GeoRadiusRO"); err != nil {
 				return err
 			}
 		}
@@ -3101,8 +3102,8 @@ func (w *RedisClientWrapper) Get(ctx context.Context, key string) *redis.StringC
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Get"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Get"); err != nil {
 				return err
 			}
 		}
@@ -3138,8 +3139,8 @@ func (w *RedisClientWrapper) GetBit(ctx context.Context, key string, offset int6
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetBit"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.GetBit"); err != nil {
 				return err
 			}
 		}
@@ -3175,8 +3176,8 @@ func (w *RedisClientWrapper) GetRange(ctx context.Context, key string, start int
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.GetRange"); err != nil {
 				return err
 			}
 		}
@@ -3212,8 +3213,8 @@ func (w *RedisClientWrapper) GetSet(ctx context.Context, key string, value inter
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.GetSet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.GetSet"); err != nil {
 				return err
 			}
 		}
@@ -3249,8 +3250,8 @@ func (w *RedisClientWrapper) HDel(ctx context.Context, key string, fields ...str
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.HDel"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.HDel"); err != nil {
 				return err
 			}
 		}
@@ -3286,8 +3287,8 @@ func (w *RedisClientWrapper) HExists(ctx context.Context, key string, field stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.HExists"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.HExists"); err != nil {
 				return err
 			}
 		}
@@ -3323,8 +3324,8 @@ func (w *RedisClientWrapper) HGet(ctx context.Context, key string, field string)
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.HGet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.HGet"); err != nil {
 				return err
 			}
 		}
@@ -3360,8 +3361,8 @@ func (w *RedisClientWrapper) HGetAll(ctx context.Context, key string) *redis.Str
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringStringMapCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.HGetAll"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.HGetAll"); err != nil {
 				return err
 			}
 		}
@@ -3397,8 +3398,8 @@ func (w *RedisClientWrapper) HIncrBy(ctx context.Context, key string, field stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.HIncrBy"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.HIncrBy"); err != nil {
 				return err
 			}
 		}
@@ -3434,8 +3435,8 @@ func (w *RedisClientWrapper) HIncrByFloat(ctx context.Context, key string, field
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.HIncrByFloat"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.HIncrByFloat"); err != nil {
 				return err
 			}
 		}
@@ -3471,8 +3472,8 @@ func (w *RedisClientWrapper) HKeys(ctx context.Context, key string) *redis.Strin
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.HKeys"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.HKeys"); err != nil {
 				return err
 			}
 		}
@@ -3508,8 +3509,8 @@ func (w *RedisClientWrapper) HLen(ctx context.Context, key string) *redis.IntCmd
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.HLen"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.HLen"); err != nil {
 				return err
 			}
 		}
@@ -3545,8 +3546,8 @@ func (w *RedisClientWrapper) HMGet(ctx context.Context, key string, fields ...st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.HMGet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.HMGet"); err != nil {
 				return err
 			}
 		}
@@ -3582,8 +3583,8 @@ func (w *RedisClientWrapper) HMSet(ctx context.Context, key string, fields map[s
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.HMSet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.HMSet"); err != nil {
 				return err
 			}
 		}
@@ -3619,8 +3620,8 @@ func (w *RedisClientWrapper) HScan(ctx context.Context, key string, cursor uint6
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.HScan"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.HScan"); err != nil {
 				return err
 			}
 		}
@@ -3656,8 +3657,8 @@ func (w *RedisClientWrapper) HSet(ctx context.Context, key string, field string,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.HSet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.HSet"); err != nil {
 				return err
 			}
 		}
@@ -3693,8 +3694,8 @@ func (w *RedisClientWrapper) HSetNX(ctx context.Context, key string, field strin
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.HSetNX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.HSetNX"); err != nil {
 				return err
 			}
 		}
@@ -3730,8 +3731,8 @@ func (w *RedisClientWrapper) HVals(ctx context.Context, key string) *redis.Strin
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.HVals"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.HVals"); err != nil {
 				return err
 			}
 		}
@@ -3767,8 +3768,8 @@ func (w *RedisClientWrapper) Incr(ctx context.Context, key string) *redis.IntCmd
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Incr"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Incr"); err != nil {
 				return err
 			}
 		}
@@ -3804,8 +3805,8 @@ func (w *RedisClientWrapper) IncrBy(ctx context.Context, key string, value int64
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.IncrBy"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.IncrBy"); err != nil {
 				return err
 			}
 		}
@@ -3841,8 +3842,8 @@ func (w *RedisClientWrapper) IncrByFloat(ctx context.Context, key string, value 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.IncrByFloat"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.IncrByFloat"); err != nil {
 				return err
 			}
 		}
@@ -3878,8 +3879,8 @@ func (w *RedisClientWrapper) Info(ctx context.Context, section ...string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Info"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Info"); err != nil {
 				return err
 			}
 		}
@@ -3915,8 +3916,8 @@ func (w *RedisClientWrapper) Keys(ctx context.Context, pattern string) *redis.St
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Keys"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Keys"); err != nil {
 				return err
 			}
 		}
@@ -3952,8 +3953,8 @@ func (w *RedisClientWrapper) LIndex(ctx context.Context, key string, index int64
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.LIndex"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.LIndex"); err != nil {
 				return err
 			}
 		}
@@ -3989,8 +3990,8 @@ func (w *RedisClientWrapper) LInsert(ctx context.Context, key string, op string,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.LInsert"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.LInsert"); err != nil {
 				return err
 			}
 		}
@@ -4026,8 +4027,8 @@ func (w *RedisClientWrapper) LInsertAfter(ctx context.Context, key string, pivot
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.LInsertAfter"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.LInsertAfter"); err != nil {
 				return err
 			}
 		}
@@ -4063,8 +4064,8 @@ func (w *RedisClientWrapper) LInsertBefore(ctx context.Context, key string, pivo
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.LInsertBefore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.LInsertBefore"); err != nil {
 				return err
 			}
 		}
@@ -4100,8 +4101,8 @@ func (w *RedisClientWrapper) LLen(ctx context.Context, key string) *redis.IntCmd
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.LLen"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.LLen"); err != nil {
 				return err
 			}
 		}
@@ -4137,8 +4138,8 @@ func (w *RedisClientWrapper) LPop(ctx context.Context, key string) *redis.String
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.LPop"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.LPop"); err != nil {
 				return err
 			}
 		}
@@ -4174,8 +4175,8 @@ func (w *RedisClientWrapper) LPush(ctx context.Context, key string, values ...in
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.LPush"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.LPush"); err != nil {
 				return err
 			}
 		}
@@ -4211,8 +4212,8 @@ func (w *RedisClientWrapper) LPushX(ctx context.Context, key string, value inter
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.LPushX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.LPushX"); err != nil {
 				return err
 			}
 		}
@@ -4248,8 +4249,8 @@ func (w *RedisClientWrapper) LRange(ctx context.Context, key string, start int64
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.LRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.LRange"); err != nil {
 				return err
 			}
 		}
@@ -4285,8 +4286,8 @@ func (w *RedisClientWrapper) LRem(ctx context.Context, key string, count int64, 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.LRem"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.LRem"); err != nil {
 				return err
 			}
 		}
@@ -4322,8 +4323,8 @@ func (w *RedisClientWrapper) LSet(ctx context.Context, key string, index int64, 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.LSet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.LSet"); err != nil {
 				return err
 			}
 		}
@@ -4359,8 +4360,8 @@ func (w *RedisClientWrapper) LTrim(ctx context.Context, key string, start int64,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.LTrim"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.LTrim"); err != nil {
 				return err
 			}
 		}
@@ -4396,8 +4397,8 @@ func (w *RedisClientWrapper) LastSave(ctx context.Context) *redis.IntCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.LastSave"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.LastSave"); err != nil {
 				return err
 			}
 		}
@@ -4433,8 +4434,8 @@ func (w *RedisClientWrapper) MGet(ctx context.Context, keys ...string) *redis.Sl
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.MGet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.MGet"); err != nil {
 				return err
 			}
 		}
@@ -4470,8 +4471,8 @@ func (w *RedisClientWrapper) MSet(ctx context.Context, pairs ...interface{}) *re
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.MSet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.MSet"); err != nil {
 				return err
 			}
 		}
@@ -4507,8 +4508,8 @@ func (w *RedisClientWrapper) MSetNX(ctx context.Context, pairs ...interface{}) *
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.MSetNX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.MSetNX"); err != nil {
 				return err
 			}
 		}
@@ -4544,8 +4545,8 @@ func (w *RedisClientWrapper) MemoryUsage(ctx context.Context, key string, sample
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.MemoryUsage"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.MemoryUsage"); err != nil {
 				return err
 			}
 		}
@@ -4581,8 +4582,8 @@ func (w *RedisClientWrapper) Migrate(ctx context.Context, host string, port stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Migrate"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Migrate"); err != nil {
 				return err
 			}
 		}
@@ -4618,8 +4619,8 @@ func (w *RedisClientWrapper) Move(ctx context.Context, key string, db int64) *re
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Move"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Move"); err != nil {
 				return err
 			}
 		}
@@ -4655,8 +4656,8 @@ func (w *RedisClientWrapper) ObjectEncoding(ctx context.Context, key string) *re
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ObjectEncoding"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ObjectEncoding"); err != nil {
 				return err
 			}
 		}
@@ -4692,8 +4693,8 @@ func (w *RedisClientWrapper) ObjectIdleTime(ctx context.Context, key string) *re
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.DurationCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ObjectIdleTime"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ObjectIdleTime"); err != nil {
 				return err
 			}
 		}
@@ -4729,8 +4730,8 @@ func (w *RedisClientWrapper) ObjectRefCount(ctx context.Context, key string) *re
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ObjectRefCount"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ObjectRefCount"); err != nil {
 				return err
 			}
 		}
@@ -4766,8 +4767,8 @@ func (w *RedisClientWrapper) PExpire(ctx context.Context, key string, expiration
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.PExpire"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.PExpire"); err != nil {
 				return err
 			}
 		}
@@ -4803,8 +4804,8 @@ func (w *RedisClientWrapper) PExpireAt(ctx context.Context, key string, tm time.
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.PExpireAt"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.PExpireAt"); err != nil {
 				return err
 			}
 		}
@@ -4840,8 +4841,8 @@ func (w *RedisClientWrapper) PFAdd(ctx context.Context, key string, els ...inter
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.PFAdd"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.PFAdd"); err != nil {
 				return err
 			}
 		}
@@ -4877,8 +4878,8 @@ func (w *RedisClientWrapper) PFCount(ctx context.Context, keys ...string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.PFCount"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.PFCount"); err != nil {
 				return err
 			}
 		}
@@ -4914,8 +4915,8 @@ func (w *RedisClientWrapper) PFMerge(ctx context.Context, dest string, keys ...s
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.PFMerge"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.PFMerge"); err != nil {
 				return err
 			}
 		}
@@ -4951,8 +4952,8 @@ func (w *RedisClientWrapper) PTTL(ctx context.Context, key string) *redis.Durati
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.DurationCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.PTTL"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.PTTL"); err != nil {
 				return err
 			}
 		}
@@ -4988,8 +4989,8 @@ func (w *RedisClientWrapper) Persist(ctx context.Context, key string) *redis.Boo
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Persist"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Persist"); err != nil {
 				return err
 			}
 		}
@@ -5025,8 +5026,8 @@ func (w *RedisClientWrapper) Ping(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Ping"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Ping"); err != nil {
 				return err
 			}
 		}
@@ -5062,8 +5063,8 @@ func (w *RedisClientWrapper) PubSubChannels(ctx context.Context, pattern string)
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.PubSubChannels"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.PubSubChannels"); err != nil {
 				return err
 			}
 		}
@@ -5099,8 +5100,8 @@ func (w *RedisClientWrapper) PubSubNumPat(ctx context.Context) *redis.IntCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.PubSubNumPat"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.PubSubNumPat"); err != nil {
 				return err
 			}
 		}
@@ -5136,8 +5137,8 @@ func (w *RedisClientWrapper) PubSubNumSub(ctx context.Context, channels ...strin
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringIntMapCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.PubSubNumSub"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.PubSubNumSub"); err != nil {
 				return err
 			}
 		}
@@ -5173,8 +5174,8 @@ func (w *RedisClientWrapper) Publish(ctx context.Context, channel string, messag
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Publish"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Publish"); err != nil {
 				return err
 			}
 		}
@@ -5210,8 +5211,8 @@ func (w *RedisClientWrapper) Quit(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Quit"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Quit"); err != nil {
 				return err
 			}
 		}
@@ -5247,8 +5248,8 @@ func (w *RedisClientWrapper) RPop(ctx context.Context, key string) *redis.String
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.RPop"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.RPop"); err != nil {
 				return err
 			}
 		}
@@ -5284,8 +5285,8 @@ func (w *RedisClientWrapper) RPopLPush(ctx context.Context, source string, desti
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.RPopLPush"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.RPopLPush"); err != nil {
 				return err
 			}
 		}
@@ -5321,8 +5322,8 @@ func (w *RedisClientWrapper) RPush(ctx context.Context, key string, values ...in
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.RPush"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.RPush"); err != nil {
 				return err
 			}
 		}
@@ -5358,8 +5359,8 @@ func (w *RedisClientWrapper) RPushX(ctx context.Context, key string, value inter
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.RPushX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.RPushX"); err != nil {
 				return err
 			}
 		}
@@ -5395,8 +5396,8 @@ func (w *RedisClientWrapper) RandomKey(ctx context.Context) *redis.StringCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.RandomKey"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.RandomKey"); err != nil {
 				return err
 			}
 		}
@@ -5432,8 +5433,8 @@ func (w *RedisClientWrapper) ReadOnly(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ReadOnly"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ReadOnly"); err != nil {
 				return err
 			}
 		}
@@ -5469,8 +5470,8 @@ func (w *RedisClientWrapper) ReadWrite(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ReadWrite"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ReadWrite"); err != nil {
 				return err
 			}
 		}
@@ -5506,8 +5507,8 @@ func (w *RedisClientWrapper) Rename(ctx context.Context, key string, newkey stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Rename"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Rename"); err != nil {
 				return err
 			}
 		}
@@ -5543,8 +5544,8 @@ func (w *RedisClientWrapper) RenameNX(ctx context.Context, key string, newkey st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.RenameNX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.RenameNX"); err != nil {
 				return err
 			}
 		}
@@ -5580,8 +5581,8 @@ func (w *RedisClientWrapper) Restore(ctx context.Context, key string, ttl time.D
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Restore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Restore"); err != nil {
 				return err
 			}
 		}
@@ -5617,8 +5618,8 @@ func (w *RedisClientWrapper) RestoreReplace(ctx context.Context, key string, ttl
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.RestoreReplace"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.RestoreReplace"); err != nil {
 				return err
 			}
 		}
@@ -5654,8 +5655,8 @@ func (w *RedisClientWrapper) SAdd(ctx context.Context, key string, members ...in
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SAdd"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SAdd"); err != nil {
 				return err
 			}
 		}
@@ -5691,8 +5692,8 @@ func (w *RedisClientWrapper) SCard(ctx context.Context, key string) *redis.IntCm
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SCard"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SCard"); err != nil {
 				return err
 			}
 		}
@@ -5728,8 +5729,8 @@ func (w *RedisClientWrapper) SDiff(ctx context.Context, keys ...string) *redis.S
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SDiff"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SDiff"); err != nil {
 				return err
 			}
 		}
@@ -5765,8 +5766,8 @@ func (w *RedisClientWrapper) SDiffStore(ctx context.Context, destination string,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SDiffStore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SDiffStore"); err != nil {
 				return err
 			}
 		}
@@ -5802,8 +5803,8 @@ func (w *RedisClientWrapper) SInter(ctx context.Context, keys ...string) *redis.
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SInter"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SInter"); err != nil {
 				return err
 			}
 		}
@@ -5839,8 +5840,8 @@ func (w *RedisClientWrapper) SInterStore(ctx context.Context, destination string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SInterStore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SInterStore"); err != nil {
 				return err
 			}
 		}
@@ -5876,8 +5877,8 @@ func (w *RedisClientWrapper) SIsMember(ctx context.Context, key string, member i
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SIsMember"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SIsMember"); err != nil {
 				return err
 			}
 		}
@@ -5913,8 +5914,8 @@ func (w *RedisClientWrapper) SMembers(ctx context.Context, key string) *redis.St
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SMembers"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SMembers"); err != nil {
 				return err
 			}
 		}
@@ -5950,8 +5951,8 @@ func (w *RedisClientWrapper) SMembersMap(ctx context.Context, key string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringStructMapCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SMembersMap"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SMembersMap"); err != nil {
 				return err
 			}
 		}
@@ -5987,8 +5988,8 @@ func (w *RedisClientWrapper) SMove(ctx context.Context, source string, destinati
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SMove"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SMove"); err != nil {
 				return err
 			}
 		}
@@ -6024,8 +6025,8 @@ func (w *RedisClientWrapper) SPop(ctx context.Context, key string) *redis.String
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SPop"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SPop"); err != nil {
 				return err
 			}
 		}
@@ -6061,8 +6062,8 @@ func (w *RedisClientWrapper) SPopN(ctx context.Context, key string, count int64)
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SPopN"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SPopN"); err != nil {
 				return err
 			}
 		}
@@ -6098,8 +6099,8 @@ func (w *RedisClientWrapper) SRandMember(ctx context.Context, key string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SRandMember"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SRandMember"); err != nil {
 				return err
 			}
 		}
@@ -6135,8 +6136,8 @@ func (w *RedisClientWrapper) SRandMemberN(ctx context.Context, key string, count
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SRandMemberN"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SRandMemberN"); err != nil {
 				return err
 			}
 		}
@@ -6172,8 +6173,8 @@ func (w *RedisClientWrapper) SRem(ctx context.Context, key string, members ...in
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SRem"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SRem"); err != nil {
 				return err
 			}
 		}
@@ -6209,8 +6210,8 @@ func (w *RedisClientWrapper) SScan(ctx context.Context, key string, cursor uint6
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SScan"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SScan"); err != nil {
 				return err
 			}
 		}
@@ -6246,8 +6247,8 @@ func (w *RedisClientWrapper) SUnion(ctx context.Context, keys ...string) *redis.
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SUnion"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SUnion"); err != nil {
 				return err
 			}
 		}
@@ -6283,8 +6284,8 @@ func (w *RedisClientWrapper) SUnionStore(ctx context.Context, destination string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SUnionStore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SUnionStore"); err != nil {
 				return err
 			}
 		}
@@ -6320,8 +6321,8 @@ func (w *RedisClientWrapper) Save(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Save"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Save"); err != nil {
 				return err
 			}
 		}
@@ -6357,8 +6358,8 @@ func (w *RedisClientWrapper) Scan(ctx context.Context, cursor uint64, match stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Scan"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Scan"); err != nil {
 				return err
 			}
 		}
@@ -6394,8 +6395,8 @@ func (w *RedisClientWrapper) ScriptExists(ctx context.Context, hashes ...string)
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ScriptExists"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ScriptExists"); err != nil {
 				return err
 			}
 		}
@@ -6431,8 +6432,8 @@ func (w *RedisClientWrapper) ScriptFlush(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ScriptFlush"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ScriptFlush"); err != nil {
 				return err
 			}
 		}
@@ -6468,8 +6469,8 @@ func (w *RedisClientWrapper) ScriptKill(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ScriptKill"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ScriptKill"); err != nil {
 				return err
 			}
 		}
@@ -6505,8 +6506,8 @@ func (w *RedisClientWrapper) ScriptLoad(ctx context.Context, script string) *red
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ScriptLoad"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ScriptLoad"); err != nil {
 				return err
 			}
 		}
@@ -6542,8 +6543,8 @@ func (w *RedisClientWrapper) Set(ctx context.Context, key string, value interfac
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Set"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Set"); err != nil {
 				return err
 			}
 		}
@@ -6579,8 +6580,8 @@ func (w *RedisClientWrapper) SetBit(ctx context.Context, key string, offset int6
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetBit"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SetBit"); err != nil {
 				return err
 			}
 		}
@@ -6616,8 +6617,8 @@ func (w *RedisClientWrapper) SetNX(ctx context.Context, key string, value interf
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetNX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SetNX"); err != nil {
 				return err
 			}
 		}
@@ -6653,8 +6654,8 @@ func (w *RedisClientWrapper) SetRange(ctx context.Context, key string, offset in
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SetRange"); err != nil {
 				return err
 			}
 		}
@@ -6690,8 +6691,8 @@ func (w *RedisClientWrapper) SetXX(ctx context.Context, key string, value interf
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SetXX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SetXX"); err != nil {
 				return err
 			}
 		}
@@ -6727,8 +6728,8 @@ func (w *RedisClientWrapper) Shutdown(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Shutdown"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Shutdown"); err != nil {
 				return err
 			}
 		}
@@ -6764,8 +6765,8 @@ func (w *RedisClientWrapper) ShutdownNoSave(ctx context.Context) *redis.StatusCm
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ShutdownNoSave"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ShutdownNoSave"); err != nil {
 				return err
 			}
 		}
@@ -6801,8 +6802,8 @@ func (w *RedisClientWrapper) ShutdownSave(ctx context.Context) *redis.StatusCmd 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ShutdownSave"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ShutdownSave"); err != nil {
 				return err
 			}
 		}
@@ -6838,8 +6839,8 @@ func (w *RedisClientWrapper) SlaveOf(ctx context.Context, host string, port stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SlaveOf"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SlaveOf"); err != nil {
 				return err
 			}
 		}
@@ -6879,8 +6880,8 @@ func (w *RedisClientWrapper) Sort(ctx context.Context, key string, sort *redis.S
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Sort"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Sort"); err != nil {
 				return err
 			}
 		}
@@ -6916,8 +6917,8 @@ func (w *RedisClientWrapper) SortInterfaces(ctx context.Context, key string, sor
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SortInterfaces"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SortInterfaces"); err != nil {
 				return err
 			}
 		}
@@ -6953,8 +6954,8 @@ func (w *RedisClientWrapper) SortStore(ctx context.Context, key string, store st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.SortStore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.SortStore"); err != nil {
 				return err
 			}
 		}
@@ -6990,8 +6991,8 @@ func (w *RedisClientWrapper) StrLen(ctx context.Context, key string) *redis.IntC
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.StrLen"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.StrLen"); err != nil {
 				return err
 			}
 		}
@@ -7031,8 +7032,8 @@ func (w *RedisClientWrapper) TTL(ctx context.Context, key string) *redis.Duratio
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.DurationCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.TTL"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.TTL"); err != nil {
 				return err
 			}
 		}
@@ -7068,8 +7069,8 @@ func (w *RedisClientWrapper) Time(ctx context.Context) *redis.TimeCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.TimeCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Time"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Time"); err != nil {
 				return err
 			}
 		}
@@ -7105,8 +7106,8 @@ func (w *RedisClientWrapper) Touch(ctx context.Context, keys ...string) *redis.I
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Touch"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Touch"); err != nil {
 				return err
 			}
 		}
@@ -7142,8 +7143,8 @@ func (w *RedisClientWrapper) Type(ctx context.Context, key string) *redis.Status
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Type"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Type"); err != nil {
 				return err
 			}
 		}
@@ -7179,8 +7180,8 @@ func (w *RedisClientWrapper) Unlink(ctx context.Context, keys ...string) *redis.
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Unlink"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Unlink"); err != nil {
 				return err
 			}
 		}
@@ -7216,8 +7217,8 @@ func (w *RedisClientWrapper) Wait(ctx context.Context, numSlaves int, timeout ti
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.Wait"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.Wait"); err != nil {
 				return err
 			}
 		}
@@ -7253,8 +7254,8 @@ func (w *RedisClientWrapper) XAck(ctx context.Context, stream string, group stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XAck"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XAck"); err != nil {
 				return err
 			}
 		}
@@ -7290,8 +7291,8 @@ func (w *RedisClientWrapper) XAdd(ctx context.Context, a *redis.XAddArgs) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XAdd"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XAdd"); err != nil {
 				return err
 			}
 		}
@@ -7327,8 +7328,8 @@ func (w *RedisClientWrapper) XClaim(ctx context.Context, a *redis.XClaimArgs) *r
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XClaim"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XClaim"); err != nil {
 				return err
 			}
 		}
@@ -7364,8 +7365,8 @@ func (w *RedisClientWrapper) XClaimJustID(ctx context.Context, a *redis.XClaimAr
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XClaimJustID"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XClaimJustID"); err != nil {
 				return err
 			}
 		}
@@ -7401,8 +7402,8 @@ func (w *RedisClientWrapper) XDel(ctx context.Context, stream string, ids ...str
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XDel"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XDel"); err != nil {
 				return err
 			}
 		}
@@ -7438,8 +7439,8 @@ func (w *RedisClientWrapper) XGroupCreate(ctx context.Context, stream string, gr
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XGroupCreate"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XGroupCreate"); err != nil {
 				return err
 			}
 		}
@@ -7475,8 +7476,8 @@ func (w *RedisClientWrapper) XGroupCreateMkStream(ctx context.Context, stream st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XGroupCreateMkStream"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XGroupCreateMkStream"); err != nil {
 				return err
 			}
 		}
@@ -7512,8 +7513,8 @@ func (w *RedisClientWrapper) XGroupDelConsumer(ctx context.Context, stream strin
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XGroupDelConsumer"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XGroupDelConsumer"); err != nil {
 				return err
 			}
 		}
@@ -7549,8 +7550,8 @@ func (w *RedisClientWrapper) XGroupDestroy(ctx context.Context, stream string, g
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XGroupDestroy"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XGroupDestroy"); err != nil {
 				return err
 			}
 		}
@@ -7586,8 +7587,8 @@ func (w *RedisClientWrapper) XGroupSetID(ctx context.Context, stream string, gro
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XGroupSetID"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XGroupSetID"); err != nil {
 				return err
 			}
 		}
@@ -7623,8 +7624,8 @@ func (w *RedisClientWrapper) XLen(ctx context.Context, stream string) *redis.Int
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XLen"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XLen"); err != nil {
 				return err
 			}
 		}
@@ -7660,8 +7661,8 @@ func (w *RedisClientWrapper) XPending(ctx context.Context, stream string, group 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XPendingCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XPending"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XPending"); err != nil {
 				return err
 			}
 		}
@@ -7697,8 +7698,8 @@ func (w *RedisClientWrapper) XPendingExt(ctx context.Context, a *redis.XPendingE
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XPendingExtCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XPendingExt"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XPendingExt"); err != nil {
 				return err
 			}
 		}
@@ -7734,8 +7735,8 @@ func (w *RedisClientWrapper) XRange(ctx context.Context, stream string, start st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XRange"); err != nil {
 				return err
 			}
 		}
@@ -7771,8 +7772,8 @@ func (w *RedisClientWrapper) XRangeN(ctx context.Context, stream string, start s
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XRangeN"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XRangeN"); err != nil {
 				return err
 			}
 		}
@@ -7808,8 +7809,8 @@ func (w *RedisClientWrapper) XRead(ctx context.Context, a *redis.XReadArgs) *red
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XStreamSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XRead"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XRead"); err != nil {
 				return err
 			}
 		}
@@ -7845,8 +7846,8 @@ func (w *RedisClientWrapper) XReadGroup(ctx context.Context, a *redis.XReadGroup
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XStreamSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XReadGroup"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XReadGroup"); err != nil {
 				return err
 			}
 		}
@@ -7882,8 +7883,8 @@ func (w *RedisClientWrapper) XReadStreams(ctx context.Context, streams ...string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XStreamSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XReadStreams"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XReadStreams"); err != nil {
 				return err
 			}
 		}
@@ -7919,8 +7920,8 @@ func (w *RedisClientWrapper) XRevRange(ctx context.Context, stream string, start
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XRevRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XRevRange"); err != nil {
 				return err
 			}
 		}
@@ -7956,8 +7957,8 @@ func (w *RedisClientWrapper) XRevRangeN(ctx context.Context, stream string, star
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XRevRangeN"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XRevRangeN"); err != nil {
 				return err
 			}
 		}
@@ -7993,8 +7994,8 @@ func (w *RedisClientWrapper) XTrim(ctx context.Context, key string, maxLen int64
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XTrim"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XTrim"); err != nil {
 				return err
 			}
 		}
@@ -8030,8 +8031,8 @@ func (w *RedisClientWrapper) XTrimApprox(ctx context.Context, key string, maxLen
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.XTrimApprox"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.XTrimApprox"); err != nil {
 				return err
 			}
 		}
@@ -8067,8 +8068,8 @@ func (w *RedisClientWrapper) ZAdd(ctx context.Context, key string, members ...re
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZAdd"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZAdd"); err != nil {
 				return err
 			}
 		}
@@ -8104,8 +8105,8 @@ func (w *RedisClientWrapper) ZAddCh(ctx context.Context, key string, members ...
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZAddCh"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZAddCh"); err != nil {
 				return err
 			}
 		}
@@ -8141,8 +8142,8 @@ func (w *RedisClientWrapper) ZAddNX(ctx context.Context, key string, members ...
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZAddNX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZAddNX"); err != nil {
 				return err
 			}
 		}
@@ -8178,8 +8179,8 @@ func (w *RedisClientWrapper) ZAddNXCh(ctx context.Context, key string, members .
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZAddNXCh"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZAddNXCh"); err != nil {
 				return err
 			}
 		}
@@ -8215,8 +8216,8 @@ func (w *RedisClientWrapper) ZAddXX(ctx context.Context, key string, members ...
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZAddXX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZAddXX"); err != nil {
 				return err
 			}
 		}
@@ -8252,8 +8253,8 @@ func (w *RedisClientWrapper) ZAddXXCh(ctx context.Context, key string, members .
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZAddXXCh"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZAddXXCh"); err != nil {
 				return err
 			}
 		}
@@ -8289,8 +8290,8 @@ func (w *RedisClientWrapper) ZCard(ctx context.Context, key string) *redis.IntCm
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZCard"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZCard"); err != nil {
 				return err
 			}
 		}
@@ -8326,8 +8327,8 @@ func (w *RedisClientWrapper) ZCount(ctx context.Context, key string, min string,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZCount"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZCount"); err != nil {
 				return err
 			}
 		}
@@ -8363,8 +8364,8 @@ func (w *RedisClientWrapper) ZIncr(ctx context.Context, key string, member redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZIncr"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZIncr"); err != nil {
 				return err
 			}
 		}
@@ -8400,8 +8401,8 @@ func (w *RedisClientWrapper) ZIncrBy(ctx context.Context, key string, increment 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZIncrBy"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZIncrBy"); err != nil {
 				return err
 			}
 		}
@@ -8437,8 +8438,8 @@ func (w *RedisClientWrapper) ZIncrNX(ctx context.Context, key string, member red
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZIncrNX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZIncrNX"); err != nil {
 				return err
 			}
 		}
@@ -8474,8 +8475,8 @@ func (w *RedisClientWrapper) ZIncrXX(ctx context.Context, key string, member red
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZIncrXX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZIncrXX"); err != nil {
 				return err
 			}
 		}
@@ -8511,8 +8512,8 @@ func (w *RedisClientWrapper) ZInterStore(ctx context.Context, destination string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZInterStore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZInterStore"); err != nil {
 				return err
 			}
 		}
@@ -8548,8 +8549,8 @@ func (w *RedisClientWrapper) ZLexCount(ctx context.Context, key string, min stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZLexCount"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZLexCount"); err != nil {
 				return err
 			}
 		}
@@ -8585,8 +8586,8 @@ func (w *RedisClientWrapper) ZPopMax(ctx context.Context, key string, count ...i
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZPopMax"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZPopMax"); err != nil {
 				return err
 			}
 		}
@@ -8622,8 +8623,8 @@ func (w *RedisClientWrapper) ZPopMin(ctx context.Context, key string, count ...i
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZPopMin"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZPopMin"); err != nil {
 				return err
 			}
 		}
@@ -8659,8 +8660,8 @@ func (w *RedisClientWrapper) ZRange(ctx context.Context, key string, start int64
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRange"); err != nil {
 				return err
 			}
 		}
@@ -8696,8 +8697,8 @@ func (w *RedisClientWrapper) ZRangeByLex(ctx context.Context, key string, opt re
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRangeByLex"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRangeByLex"); err != nil {
 				return err
 			}
 		}
@@ -8733,8 +8734,8 @@ func (w *RedisClientWrapper) ZRangeByScore(ctx context.Context, key string, opt 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRangeByScore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRangeByScore"); err != nil {
 				return err
 			}
 		}
@@ -8770,8 +8771,8 @@ func (w *RedisClientWrapper) ZRangeByScoreWithScores(ctx context.Context, key st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRangeByScoreWithScores"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRangeByScoreWithScores"); err != nil {
 				return err
 			}
 		}
@@ -8807,8 +8808,8 @@ func (w *RedisClientWrapper) ZRangeWithScores(ctx context.Context, key string, s
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRangeWithScores"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRangeWithScores"); err != nil {
 				return err
 			}
 		}
@@ -8844,8 +8845,8 @@ func (w *RedisClientWrapper) ZRank(ctx context.Context, key string, member strin
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRank"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRank"); err != nil {
 				return err
 			}
 		}
@@ -8881,8 +8882,8 @@ func (w *RedisClientWrapper) ZRem(ctx context.Context, key string, members ...in
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRem"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRem"); err != nil {
 				return err
 			}
 		}
@@ -8918,8 +8919,8 @@ func (w *RedisClientWrapper) ZRemRangeByLex(ctx context.Context, key string, min
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRemRangeByLex"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRemRangeByLex"); err != nil {
 				return err
 			}
 		}
@@ -8955,8 +8956,8 @@ func (w *RedisClientWrapper) ZRemRangeByRank(ctx context.Context, key string, st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRemRangeByRank"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRemRangeByRank"); err != nil {
 				return err
 			}
 		}
@@ -8992,8 +8993,8 @@ func (w *RedisClientWrapper) ZRemRangeByScore(ctx context.Context, key string, m
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRemRangeByScore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRemRangeByScore"); err != nil {
 				return err
 			}
 		}
@@ -9029,8 +9030,8 @@ func (w *RedisClientWrapper) ZRevRange(ctx context.Context, key string, start in
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRevRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRange"); err != nil {
 				return err
 			}
 		}
@@ -9066,8 +9067,8 @@ func (w *RedisClientWrapper) ZRevRangeByLex(ctx context.Context, key string, opt
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRevRangeByLex"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRangeByLex"); err != nil {
 				return err
 			}
 		}
@@ -9103,8 +9104,8 @@ func (w *RedisClientWrapper) ZRevRangeByScore(ctx context.Context, key string, o
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRevRangeByScore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRangeByScore"); err != nil {
 				return err
 			}
 		}
@@ -9140,8 +9141,8 @@ func (w *RedisClientWrapper) ZRevRangeByScoreWithScores(ctx context.Context, key
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRevRangeByScoreWithScores"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRangeByScoreWithScores"); err != nil {
 				return err
 			}
 		}
@@ -9177,8 +9178,8 @@ func (w *RedisClientWrapper) ZRevRangeWithScores(ctx context.Context, key string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRevRangeWithScores"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRangeWithScores"); err != nil {
 				return err
 			}
 		}
@@ -9214,8 +9215,8 @@ func (w *RedisClientWrapper) ZRevRank(ctx context.Context, key string, member st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZRevRank"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZRevRank"); err != nil {
 				return err
 			}
 		}
@@ -9251,8 +9252,8 @@ func (w *RedisClientWrapper) ZScan(ctx context.Context, key string, cursor uint6
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZScan"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZScan"); err != nil {
 				return err
 			}
 		}
@@ -9288,8 +9289,8 @@ func (w *RedisClientWrapper) ZScore(ctx context.Context, key string, member stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZScore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZScore"); err != nil {
 				return err
 			}
 		}
@@ -9325,8 +9326,8 @@ func (w *RedisClientWrapper) ZUnionStore(ctx context.Context, dest string, store
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "Client.ZUnionStore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "Client.ZUnionStore"); err != nil {
 				return err
 			}
 		}
@@ -9362,8 +9363,8 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Close"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Close"); err != nil {
 				return err
 			}
 		}
@@ -9404,8 +9405,8 @@ func (w *RedisClusterClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.DBSize"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.DBSize"); err != nil {
 				return err
 			}
 		}
@@ -9441,8 +9442,8 @@ func (w *RedisClusterClientWrapper) Do(ctx context.Context, args ...interface{})
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.Cmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Do"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Do"); err != nil {
 				return err
 			}
 		}
@@ -9478,8 +9479,8 @@ func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(c
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ForEachMaster"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ForEachMaster"); err != nil {
 				return err
 			}
 		}
@@ -9515,8 +9516,8 @@ func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(cli
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ForEachNode"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ForEachNode"); err != nil {
 				return err
 			}
 		}
@@ -9552,8 +9553,8 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ForEachSlave"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ForEachSlave"); err != nil {
 				return err
 			}
 		}
@@ -9605,8 +9606,8 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Pipelined"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Pipelined"); err != nil {
 				return err
 			}
 		}
@@ -9647,8 +9648,8 @@ func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Process"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Process"); err != nil {
 				return err
 			}
 		}
@@ -9684,8 +9685,8 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ReloadState"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ReloadState"); err != nil {
 				return err
 			}
 		}
@@ -9732,8 +9733,8 @@ func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(red
 	var res0 []redis.Cmder
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.TxPipelined"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.TxPipelined"); err != nil {
 				return err
 			}
 		}
@@ -9769,8 +9770,8 @@ func (w *RedisClusterClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx
 	ctxOptions := FromContext(ctx)
 	var err error
 	err = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Watch"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Watch"); err != nil {
 				return err
 			}
 		}
@@ -9819,8 +9820,8 @@ func (w *RedisClusterClientWrapper) Append(ctx context.Context, key string, valu
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Append"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Append"); err != nil {
 				return err
 			}
 		}
@@ -9856,8 +9857,8 @@ func (w *RedisClusterClientWrapper) BLPop(ctx context.Context, timeout time.Dura
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.BLPop"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BLPop"); err != nil {
 				return err
 			}
 		}
@@ -9893,8 +9894,8 @@ func (w *RedisClusterClientWrapper) BRPop(ctx context.Context, timeout time.Dura
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.BRPop"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BRPop"); err != nil {
 				return err
 			}
 		}
@@ -9930,8 +9931,8 @@ func (w *RedisClusterClientWrapper) BRPopLPush(ctx context.Context, source strin
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.BRPopLPush"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BRPopLPush"); err != nil {
 				return err
 			}
 		}
@@ -9967,8 +9968,8 @@ func (w *RedisClusterClientWrapper) BZPopMax(ctx context.Context, timeout time.D
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZWithKeyCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.BZPopMax"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BZPopMax"); err != nil {
 				return err
 			}
 		}
@@ -10004,8 +10005,8 @@ func (w *RedisClusterClientWrapper) BZPopMin(ctx context.Context, timeout time.D
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZWithKeyCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.BZPopMin"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BZPopMin"); err != nil {
 				return err
 			}
 		}
@@ -10041,8 +10042,8 @@ func (w *RedisClusterClientWrapper) BgRewriteAOF(ctx context.Context) *redis.Sta
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.BgRewriteAOF"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BgRewriteAOF"); err != nil {
 				return err
 			}
 		}
@@ -10078,8 +10079,8 @@ func (w *RedisClusterClientWrapper) BgSave(ctx context.Context) *redis.StatusCmd
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.BgSave"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BgSave"); err != nil {
 				return err
 			}
 		}
@@ -10115,8 +10116,8 @@ func (w *RedisClusterClientWrapper) BitCount(ctx context.Context, key string, bi
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.BitCount"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitCount"); err != nil {
 				return err
 			}
 		}
@@ -10152,8 +10153,8 @@ func (w *RedisClusterClientWrapper) BitOpAnd(ctx context.Context, destKey string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.BitOpAnd"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitOpAnd"); err != nil {
 				return err
 			}
 		}
@@ -10189,8 +10190,8 @@ func (w *RedisClusterClientWrapper) BitOpNot(ctx context.Context, destKey string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.BitOpNot"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitOpNot"); err != nil {
 				return err
 			}
 		}
@@ -10226,8 +10227,8 @@ func (w *RedisClusterClientWrapper) BitOpOr(ctx context.Context, destKey string,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.BitOpOr"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitOpOr"); err != nil {
 				return err
 			}
 		}
@@ -10263,8 +10264,8 @@ func (w *RedisClusterClientWrapper) BitOpXor(ctx context.Context, destKey string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.BitOpXor"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitOpXor"); err != nil {
 				return err
 			}
 		}
@@ -10300,8 +10301,8 @@ func (w *RedisClusterClientWrapper) BitPos(ctx context.Context, key string, bit 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.BitPos"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.BitPos"); err != nil {
 				return err
 			}
 		}
@@ -10337,8 +10338,8 @@ func (w *RedisClusterClientWrapper) ClientGetName(ctx context.Context) *redis.St
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClientGetName"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientGetName"); err != nil {
 				return err
 			}
 		}
@@ -10374,8 +10375,8 @@ func (w *RedisClusterClientWrapper) ClientID(ctx context.Context) *redis.IntCmd 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClientID"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientID"); err != nil {
 				return err
 			}
 		}
@@ -10411,8 +10412,8 @@ func (w *RedisClusterClientWrapper) ClientKill(ctx context.Context, ipPort strin
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClientKill"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientKill"); err != nil {
 				return err
 			}
 		}
@@ -10448,8 +10449,8 @@ func (w *RedisClusterClientWrapper) ClientKillByFilter(ctx context.Context, keys
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClientKillByFilter"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientKillByFilter"); err != nil {
 				return err
 			}
 		}
@@ -10485,8 +10486,8 @@ func (w *RedisClusterClientWrapper) ClientList(ctx context.Context) *redis.Strin
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClientList"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientList"); err != nil {
 				return err
 			}
 		}
@@ -10522,8 +10523,8 @@ func (w *RedisClusterClientWrapper) ClientPause(ctx context.Context, dur time.Du
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClientPause"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientPause"); err != nil {
 				return err
 			}
 		}
@@ -10559,8 +10560,8 @@ func (w *RedisClusterClientWrapper) ClientUnblock(ctx context.Context, id int64)
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClientUnblock"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientUnblock"); err != nil {
 				return err
 			}
 		}
@@ -10596,8 +10597,8 @@ func (w *RedisClusterClientWrapper) ClientUnblockWithError(ctx context.Context, 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClientUnblockWithError"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClientUnblockWithError"); err != nil {
 				return err
 			}
 		}
@@ -10633,8 +10634,8 @@ func (w *RedisClusterClientWrapper) ClusterAddSlots(ctx context.Context, slots .
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterAddSlots"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterAddSlots"); err != nil {
 				return err
 			}
 		}
@@ -10670,8 +10671,8 @@ func (w *RedisClusterClientWrapper) ClusterAddSlotsRange(ctx context.Context, mi
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterAddSlotsRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterAddSlotsRange"); err != nil {
 				return err
 			}
 		}
@@ -10707,8 +10708,8 @@ func (w *RedisClusterClientWrapper) ClusterCountFailureReports(ctx context.Conte
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterCountFailureReports"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterCountFailureReports"); err != nil {
 				return err
 			}
 		}
@@ -10744,8 +10745,8 @@ func (w *RedisClusterClientWrapper) ClusterCountKeysInSlot(ctx context.Context, 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterCountKeysInSlot"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterCountKeysInSlot"); err != nil {
 				return err
 			}
 		}
@@ -10781,8 +10782,8 @@ func (w *RedisClusterClientWrapper) ClusterDelSlots(ctx context.Context, slots .
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterDelSlots"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterDelSlots"); err != nil {
 				return err
 			}
 		}
@@ -10818,8 +10819,8 @@ func (w *RedisClusterClientWrapper) ClusterDelSlotsRange(ctx context.Context, mi
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterDelSlotsRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterDelSlotsRange"); err != nil {
 				return err
 			}
 		}
@@ -10855,8 +10856,8 @@ func (w *RedisClusterClientWrapper) ClusterFailover(ctx context.Context) *redis.
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterFailover"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterFailover"); err != nil {
 				return err
 			}
 		}
@@ -10892,8 +10893,8 @@ func (w *RedisClusterClientWrapper) ClusterForget(ctx context.Context, nodeID st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterForget"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterForget"); err != nil {
 				return err
 			}
 		}
@@ -10929,8 +10930,8 @@ func (w *RedisClusterClientWrapper) ClusterGetKeysInSlot(ctx context.Context, sl
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterGetKeysInSlot"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterGetKeysInSlot"); err != nil {
 				return err
 			}
 		}
@@ -10966,8 +10967,8 @@ func (w *RedisClusterClientWrapper) ClusterInfo(ctx context.Context) *redis.Stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterInfo"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterInfo"); err != nil {
 				return err
 			}
 		}
@@ -11003,8 +11004,8 @@ func (w *RedisClusterClientWrapper) ClusterKeySlot(ctx context.Context, key stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterKeySlot"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterKeySlot"); err != nil {
 				return err
 			}
 		}
@@ -11040,8 +11041,8 @@ func (w *RedisClusterClientWrapper) ClusterMeet(ctx context.Context, host string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterMeet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterMeet"); err != nil {
 				return err
 			}
 		}
@@ -11077,8 +11078,8 @@ func (w *RedisClusterClientWrapper) ClusterNodes(ctx context.Context) *redis.Str
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterNodes"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterNodes"); err != nil {
 				return err
 			}
 		}
@@ -11114,8 +11115,8 @@ func (w *RedisClusterClientWrapper) ClusterReplicate(ctx context.Context, nodeID
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterReplicate"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterReplicate"); err != nil {
 				return err
 			}
 		}
@@ -11151,8 +11152,8 @@ func (w *RedisClusterClientWrapper) ClusterResetHard(ctx context.Context) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterResetHard"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterResetHard"); err != nil {
 				return err
 			}
 		}
@@ -11188,8 +11189,8 @@ func (w *RedisClusterClientWrapper) ClusterResetSoft(ctx context.Context) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterResetSoft"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterResetSoft"); err != nil {
 				return err
 			}
 		}
@@ -11225,8 +11226,8 @@ func (w *RedisClusterClientWrapper) ClusterSaveConfig(ctx context.Context) *redi
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterSaveConfig"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterSaveConfig"); err != nil {
 				return err
 			}
 		}
@@ -11262,8 +11263,8 @@ func (w *RedisClusterClientWrapper) ClusterSlaves(ctx context.Context, nodeID st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterSlaves"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterSlaves"); err != nil {
 				return err
 			}
 		}
@@ -11299,8 +11300,8 @@ func (w *RedisClusterClientWrapper) ClusterSlots(ctx context.Context) *redis.Clu
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ClusterSlotsCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ClusterSlots"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ClusterSlots"); err != nil {
 				return err
 			}
 		}
@@ -11336,8 +11337,8 @@ func (w *RedisClusterClientWrapper) Command(ctx context.Context) *redis.Commands
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.CommandsInfoCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Command"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Command"); err != nil {
 				return err
 			}
 		}
@@ -11373,8 +11374,8 @@ func (w *RedisClusterClientWrapper) ConfigGet(ctx context.Context, parameter str
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ConfigGet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ConfigGet"); err != nil {
 				return err
 			}
 		}
@@ -11410,8 +11411,8 @@ func (w *RedisClusterClientWrapper) ConfigResetStat(ctx context.Context) *redis.
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ConfigResetStat"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ConfigResetStat"); err != nil {
 				return err
 			}
 		}
@@ -11447,8 +11448,8 @@ func (w *RedisClusterClientWrapper) ConfigRewrite(ctx context.Context) *redis.St
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ConfigRewrite"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ConfigRewrite"); err != nil {
 				return err
 			}
 		}
@@ -11484,8 +11485,8 @@ func (w *RedisClusterClientWrapper) ConfigSet(ctx context.Context, parameter str
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ConfigSet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ConfigSet"); err != nil {
 				return err
 			}
 		}
@@ -11521,8 +11522,8 @@ func (w *RedisClusterClientWrapper) DbSize(ctx context.Context) *redis.IntCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.DbSize"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.DbSize"); err != nil {
 				return err
 			}
 		}
@@ -11558,8 +11559,8 @@ func (w *RedisClusterClientWrapper) DebugObject(ctx context.Context, key string)
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.DebugObject"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.DebugObject"); err != nil {
 				return err
 			}
 		}
@@ -11595,8 +11596,8 @@ func (w *RedisClusterClientWrapper) Decr(ctx context.Context, key string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Decr"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Decr"); err != nil {
 				return err
 			}
 		}
@@ -11632,8 +11633,8 @@ func (w *RedisClusterClientWrapper) DecrBy(ctx context.Context, key string, decr
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.DecrBy"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.DecrBy"); err != nil {
 				return err
 			}
 		}
@@ -11669,8 +11670,8 @@ func (w *RedisClusterClientWrapper) Del(ctx context.Context, keys ...string) *re
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Del"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Del"); err != nil {
 				return err
 			}
 		}
@@ -11706,8 +11707,8 @@ func (w *RedisClusterClientWrapper) Dump(ctx context.Context, key string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Dump"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Dump"); err != nil {
 				return err
 			}
 		}
@@ -11743,8 +11744,8 @@ func (w *RedisClusterClientWrapper) Echo(ctx context.Context, message interface{
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Echo"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Echo"); err != nil {
 				return err
 			}
 		}
@@ -11780,8 +11781,8 @@ func (w *RedisClusterClientWrapper) Eval(ctx context.Context, script string, key
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.Cmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Eval"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Eval"); err != nil {
 				return err
 			}
 		}
@@ -11817,8 +11818,8 @@ func (w *RedisClusterClientWrapper) EvalSha(ctx context.Context, sha1 string, ke
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.Cmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.EvalSha"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.EvalSha"); err != nil {
 				return err
 			}
 		}
@@ -11854,8 +11855,8 @@ func (w *RedisClusterClientWrapper) Exists(ctx context.Context, keys ...string) 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Exists"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Exists"); err != nil {
 				return err
 			}
 		}
@@ -11891,8 +11892,8 @@ func (w *RedisClusterClientWrapper) Expire(ctx context.Context, key string, expi
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Expire"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Expire"); err != nil {
 				return err
 			}
 		}
@@ -11928,8 +11929,8 @@ func (w *RedisClusterClientWrapper) ExpireAt(ctx context.Context, key string, tm
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ExpireAt"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ExpireAt"); err != nil {
 				return err
 			}
 		}
@@ -11965,8 +11966,8 @@ func (w *RedisClusterClientWrapper) FlushAll(ctx context.Context) *redis.StatusC
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.FlushAll"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.FlushAll"); err != nil {
 				return err
 			}
 		}
@@ -12002,8 +12003,8 @@ func (w *RedisClusterClientWrapper) FlushAllAsync(ctx context.Context) *redis.St
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.FlushAllAsync"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.FlushAllAsync"); err != nil {
 				return err
 			}
 		}
@@ -12039,8 +12040,8 @@ func (w *RedisClusterClientWrapper) FlushDB(ctx context.Context) *redis.StatusCm
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.FlushDB"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.FlushDB"); err != nil {
 				return err
 			}
 		}
@@ -12076,8 +12077,8 @@ func (w *RedisClusterClientWrapper) FlushDBAsync(ctx context.Context) *redis.Sta
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.FlushDBAsync"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.FlushDBAsync"); err != nil {
 				return err
 			}
 		}
@@ -12113,8 +12114,8 @@ func (w *RedisClusterClientWrapper) FlushDb(ctx context.Context) *redis.StatusCm
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.FlushDb"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.FlushDb"); err != nil {
 				return err
 			}
 		}
@@ -12150,8 +12151,8 @@ func (w *RedisClusterClientWrapper) GeoAdd(ctx context.Context, key string, geoL
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.GeoAdd"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoAdd"); err != nil {
 				return err
 			}
 		}
@@ -12187,8 +12188,8 @@ func (w *RedisClusterClientWrapper) GeoDist(ctx context.Context, key string, mem
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.GeoDist"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoDist"); err != nil {
 				return err
 			}
 		}
@@ -12224,8 +12225,8 @@ func (w *RedisClusterClientWrapper) GeoHash(ctx context.Context, key string, mem
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.GeoHash"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoHash"); err != nil {
 				return err
 			}
 		}
@@ -12261,8 +12262,8 @@ func (w *RedisClusterClientWrapper) GeoPos(ctx context.Context, key string, memb
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.GeoPosCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.GeoPos"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoPos"); err != nil {
 				return err
 			}
 		}
@@ -12298,8 +12299,8 @@ func (w *RedisClusterClientWrapper) GeoRadius(ctx context.Context, key string, l
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.GeoRadius"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoRadius"); err != nil {
 				return err
 			}
 		}
@@ -12335,8 +12336,8 @@ func (w *RedisClusterClientWrapper) GeoRadiusByMember(ctx context.Context, key s
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.GeoRadiusByMember"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoRadiusByMember"); err != nil {
 				return err
 			}
 		}
@@ -12372,8 +12373,8 @@ func (w *RedisClusterClientWrapper) GeoRadiusByMemberRO(ctx context.Context, key
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.GeoRadiusByMemberRO"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoRadiusByMemberRO"); err != nil {
 				return err
 			}
 		}
@@ -12409,8 +12410,8 @@ func (w *RedisClusterClientWrapper) GeoRadiusRO(ctx context.Context, key string,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.GeoLocationCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.GeoRadiusRO"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GeoRadiusRO"); err != nil {
 				return err
 			}
 		}
@@ -12446,8 +12447,8 @@ func (w *RedisClusterClientWrapper) Get(ctx context.Context, key string) *redis.
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Get"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Get"); err != nil {
 				return err
 			}
 		}
@@ -12483,8 +12484,8 @@ func (w *RedisClusterClientWrapper) GetBit(ctx context.Context, key string, offs
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.GetBit"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GetBit"); err != nil {
 				return err
 			}
 		}
@@ -12520,8 +12521,8 @@ func (w *RedisClusterClientWrapper) GetRange(ctx context.Context, key string, st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.GetRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GetRange"); err != nil {
 				return err
 			}
 		}
@@ -12557,8 +12558,8 @@ func (w *RedisClusterClientWrapper) GetSet(ctx context.Context, key string, valu
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.GetSet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.GetSet"); err != nil {
 				return err
 			}
 		}
@@ -12594,8 +12595,8 @@ func (w *RedisClusterClientWrapper) HDel(ctx context.Context, key string, fields
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.HDel"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HDel"); err != nil {
 				return err
 			}
 		}
@@ -12631,8 +12632,8 @@ func (w *RedisClusterClientWrapper) HExists(ctx context.Context, key string, fie
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.HExists"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HExists"); err != nil {
 				return err
 			}
 		}
@@ -12668,8 +12669,8 @@ func (w *RedisClusterClientWrapper) HGet(ctx context.Context, key string, field 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.HGet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HGet"); err != nil {
 				return err
 			}
 		}
@@ -12705,8 +12706,8 @@ func (w *RedisClusterClientWrapper) HGetAll(ctx context.Context, key string) *re
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringStringMapCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.HGetAll"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HGetAll"); err != nil {
 				return err
 			}
 		}
@@ -12742,8 +12743,8 @@ func (w *RedisClusterClientWrapper) HIncrBy(ctx context.Context, key string, fie
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.HIncrBy"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HIncrBy"); err != nil {
 				return err
 			}
 		}
@@ -12779,8 +12780,8 @@ func (w *RedisClusterClientWrapper) HIncrByFloat(ctx context.Context, key string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.HIncrByFloat"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HIncrByFloat"); err != nil {
 				return err
 			}
 		}
@@ -12816,8 +12817,8 @@ func (w *RedisClusterClientWrapper) HKeys(ctx context.Context, key string) *redi
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.HKeys"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HKeys"); err != nil {
 				return err
 			}
 		}
@@ -12853,8 +12854,8 @@ func (w *RedisClusterClientWrapper) HLen(ctx context.Context, key string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.HLen"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HLen"); err != nil {
 				return err
 			}
 		}
@@ -12890,8 +12891,8 @@ func (w *RedisClusterClientWrapper) HMGet(ctx context.Context, key string, field
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.HMGet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HMGet"); err != nil {
 				return err
 			}
 		}
@@ -12927,8 +12928,8 @@ func (w *RedisClusterClientWrapper) HMSet(ctx context.Context, key string, field
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.HMSet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HMSet"); err != nil {
 				return err
 			}
 		}
@@ -12964,8 +12965,8 @@ func (w *RedisClusterClientWrapper) HScan(ctx context.Context, key string, curso
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.HScan"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HScan"); err != nil {
 				return err
 			}
 		}
@@ -13001,8 +13002,8 @@ func (w *RedisClusterClientWrapper) HSet(ctx context.Context, key string, field 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.HSet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HSet"); err != nil {
 				return err
 			}
 		}
@@ -13038,8 +13039,8 @@ func (w *RedisClusterClientWrapper) HSetNX(ctx context.Context, key string, fiel
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.HSetNX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HSetNX"); err != nil {
 				return err
 			}
 		}
@@ -13075,8 +13076,8 @@ func (w *RedisClusterClientWrapper) HVals(ctx context.Context, key string) *redi
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.HVals"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.HVals"); err != nil {
 				return err
 			}
 		}
@@ -13112,8 +13113,8 @@ func (w *RedisClusterClientWrapper) Incr(ctx context.Context, key string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Incr"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Incr"); err != nil {
 				return err
 			}
 		}
@@ -13149,8 +13150,8 @@ func (w *RedisClusterClientWrapper) IncrBy(ctx context.Context, key string, valu
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.IncrBy"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.IncrBy"); err != nil {
 				return err
 			}
 		}
@@ -13186,8 +13187,8 @@ func (w *RedisClusterClientWrapper) IncrByFloat(ctx context.Context, key string,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.IncrByFloat"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.IncrByFloat"); err != nil {
 				return err
 			}
 		}
@@ -13223,8 +13224,8 @@ func (w *RedisClusterClientWrapper) Info(ctx context.Context, section ...string)
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Info"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Info"); err != nil {
 				return err
 			}
 		}
@@ -13260,8 +13261,8 @@ func (w *RedisClusterClientWrapper) Keys(ctx context.Context, pattern string) *r
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Keys"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Keys"); err != nil {
 				return err
 			}
 		}
@@ -13297,8 +13298,8 @@ func (w *RedisClusterClientWrapper) LIndex(ctx context.Context, key string, inde
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.LIndex"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LIndex"); err != nil {
 				return err
 			}
 		}
@@ -13334,8 +13335,8 @@ func (w *RedisClusterClientWrapper) LInsert(ctx context.Context, key string, op 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.LInsert"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LInsert"); err != nil {
 				return err
 			}
 		}
@@ -13371,8 +13372,8 @@ func (w *RedisClusterClientWrapper) LInsertAfter(ctx context.Context, key string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.LInsertAfter"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LInsertAfter"); err != nil {
 				return err
 			}
 		}
@@ -13408,8 +13409,8 @@ func (w *RedisClusterClientWrapper) LInsertBefore(ctx context.Context, key strin
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.LInsertBefore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LInsertBefore"); err != nil {
 				return err
 			}
 		}
@@ -13445,8 +13446,8 @@ func (w *RedisClusterClientWrapper) LLen(ctx context.Context, key string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.LLen"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LLen"); err != nil {
 				return err
 			}
 		}
@@ -13482,8 +13483,8 @@ func (w *RedisClusterClientWrapper) LPop(ctx context.Context, key string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.LPop"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LPop"); err != nil {
 				return err
 			}
 		}
@@ -13519,8 +13520,8 @@ func (w *RedisClusterClientWrapper) LPush(ctx context.Context, key string, value
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.LPush"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LPush"); err != nil {
 				return err
 			}
 		}
@@ -13556,8 +13557,8 @@ func (w *RedisClusterClientWrapper) LPushX(ctx context.Context, key string, valu
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.LPushX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LPushX"); err != nil {
 				return err
 			}
 		}
@@ -13593,8 +13594,8 @@ func (w *RedisClusterClientWrapper) LRange(ctx context.Context, key string, star
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.LRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LRange"); err != nil {
 				return err
 			}
 		}
@@ -13630,8 +13631,8 @@ func (w *RedisClusterClientWrapper) LRem(ctx context.Context, key string, count 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.LRem"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LRem"); err != nil {
 				return err
 			}
 		}
@@ -13667,8 +13668,8 @@ func (w *RedisClusterClientWrapper) LSet(ctx context.Context, key string, index 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.LSet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LSet"); err != nil {
 				return err
 			}
 		}
@@ -13704,8 +13705,8 @@ func (w *RedisClusterClientWrapper) LTrim(ctx context.Context, key string, start
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.LTrim"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LTrim"); err != nil {
 				return err
 			}
 		}
@@ -13741,8 +13742,8 @@ func (w *RedisClusterClientWrapper) LastSave(ctx context.Context) *redis.IntCmd 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.LastSave"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.LastSave"); err != nil {
 				return err
 			}
 		}
@@ -13778,8 +13779,8 @@ func (w *RedisClusterClientWrapper) MGet(ctx context.Context, keys ...string) *r
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.MGet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.MGet"); err != nil {
 				return err
 			}
 		}
@@ -13815,8 +13816,8 @@ func (w *RedisClusterClientWrapper) MSet(ctx context.Context, pairs ...interface
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.MSet"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.MSet"); err != nil {
 				return err
 			}
 		}
@@ -13852,8 +13853,8 @@ func (w *RedisClusterClientWrapper) MSetNX(ctx context.Context, pairs ...interfa
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.MSetNX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.MSetNX"); err != nil {
 				return err
 			}
 		}
@@ -13889,8 +13890,8 @@ func (w *RedisClusterClientWrapper) MemoryUsage(ctx context.Context, key string,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.MemoryUsage"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.MemoryUsage"); err != nil {
 				return err
 			}
 		}
@@ -13926,8 +13927,8 @@ func (w *RedisClusterClientWrapper) Migrate(ctx context.Context, host string, po
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Migrate"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Migrate"); err != nil {
 				return err
 			}
 		}
@@ -13963,8 +13964,8 @@ func (w *RedisClusterClientWrapper) Move(ctx context.Context, key string, db int
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Move"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Move"); err != nil {
 				return err
 			}
 		}
@@ -14000,8 +14001,8 @@ func (w *RedisClusterClientWrapper) ObjectEncoding(ctx context.Context, key stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ObjectEncoding"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ObjectEncoding"); err != nil {
 				return err
 			}
 		}
@@ -14037,8 +14038,8 @@ func (w *RedisClusterClientWrapper) ObjectIdleTime(ctx context.Context, key stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.DurationCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ObjectIdleTime"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ObjectIdleTime"); err != nil {
 				return err
 			}
 		}
@@ -14074,8 +14075,8 @@ func (w *RedisClusterClientWrapper) ObjectRefCount(ctx context.Context, key stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ObjectRefCount"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ObjectRefCount"); err != nil {
 				return err
 			}
 		}
@@ -14111,8 +14112,8 @@ func (w *RedisClusterClientWrapper) PExpire(ctx context.Context, key string, exp
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.PExpire"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PExpire"); err != nil {
 				return err
 			}
 		}
@@ -14148,8 +14149,8 @@ func (w *RedisClusterClientWrapper) PExpireAt(ctx context.Context, key string, t
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.PExpireAt"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PExpireAt"); err != nil {
 				return err
 			}
 		}
@@ -14185,8 +14186,8 @@ func (w *RedisClusterClientWrapper) PFAdd(ctx context.Context, key string, els .
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.PFAdd"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PFAdd"); err != nil {
 				return err
 			}
 		}
@@ -14222,8 +14223,8 @@ func (w *RedisClusterClientWrapper) PFCount(ctx context.Context, keys ...string)
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.PFCount"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PFCount"); err != nil {
 				return err
 			}
 		}
@@ -14259,8 +14260,8 @@ func (w *RedisClusterClientWrapper) PFMerge(ctx context.Context, dest string, ke
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.PFMerge"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PFMerge"); err != nil {
 				return err
 			}
 		}
@@ -14296,8 +14297,8 @@ func (w *RedisClusterClientWrapper) PTTL(ctx context.Context, key string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.DurationCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.PTTL"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PTTL"); err != nil {
 				return err
 			}
 		}
@@ -14333,8 +14334,8 @@ func (w *RedisClusterClientWrapper) Persist(ctx context.Context, key string) *re
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Persist"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Persist"); err != nil {
 				return err
 			}
 		}
@@ -14370,8 +14371,8 @@ func (w *RedisClusterClientWrapper) Ping(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Ping"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Ping"); err != nil {
 				return err
 			}
 		}
@@ -14407,8 +14408,8 @@ func (w *RedisClusterClientWrapper) PubSubChannels(ctx context.Context, pattern 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.PubSubChannels"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PubSubChannels"); err != nil {
 				return err
 			}
 		}
@@ -14444,8 +14445,8 @@ func (w *RedisClusterClientWrapper) PubSubNumPat(ctx context.Context) *redis.Int
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.PubSubNumPat"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PubSubNumPat"); err != nil {
 				return err
 			}
 		}
@@ -14481,8 +14482,8 @@ func (w *RedisClusterClientWrapper) PubSubNumSub(ctx context.Context, channels .
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringIntMapCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.PubSubNumSub"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.PubSubNumSub"); err != nil {
 				return err
 			}
 		}
@@ -14518,8 +14519,8 @@ func (w *RedisClusterClientWrapper) Publish(ctx context.Context, channel string,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Publish"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Publish"); err != nil {
 				return err
 			}
 		}
@@ -14555,8 +14556,8 @@ func (w *RedisClusterClientWrapper) Quit(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Quit"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Quit"); err != nil {
 				return err
 			}
 		}
@@ -14592,8 +14593,8 @@ func (w *RedisClusterClientWrapper) RPop(ctx context.Context, key string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.RPop"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RPop"); err != nil {
 				return err
 			}
 		}
@@ -14629,8 +14630,8 @@ func (w *RedisClusterClientWrapper) RPopLPush(ctx context.Context, source string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.RPopLPush"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RPopLPush"); err != nil {
 				return err
 			}
 		}
@@ -14666,8 +14667,8 @@ func (w *RedisClusterClientWrapper) RPush(ctx context.Context, key string, value
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.RPush"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RPush"); err != nil {
 				return err
 			}
 		}
@@ -14703,8 +14704,8 @@ func (w *RedisClusterClientWrapper) RPushX(ctx context.Context, key string, valu
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.RPushX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RPushX"); err != nil {
 				return err
 			}
 		}
@@ -14740,8 +14741,8 @@ func (w *RedisClusterClientWrapper) RandomKey(ctx context.Context) *redis.String
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.RandomKey"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RandomKey"); err != nil {
 				return err
 			}
 		}
@@ -14777,8 +14778,8 @@ func (w *RedisClusterClientWrapper) ReadOnly(ctx context.Context) *redis.StatusC
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ReadOnly"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ReadOnly"); err != nil {
 				return err
 			}
 		}
@@ -14814,8 +14815,8 @@ func (w *RedisClusterClientWrapper) ReadWrite(ctx context.Context) *redis.Status
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ReadWrite"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ReadWrite"); err != nil {
 				return err
 			}
 		}
@@ -14851,8 +14852,8 @@ func (w *RedisClusterClientWrapper) Rename(ctx context.Context, key string, newk
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Rename"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Rename"); err != nil {
 				return err
 			}
 		}
@@ -14888,8 +14889,8 @@ func (w *RedisClusterClientWrapper) RenameNX(ctx context.Context, key string, ne
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.RenameNX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RenameNX"); err != nil {
 				return err
 			}
 		}
@@ -14925,8 +14926,8 @@ func (w *RedisClusterClientWrapper) Restore(ctx context.Context, key string, ttl
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Restore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Restore"); err != nil {
 				return err
 			}
 		}
@@ -14962,8 +14963,8 @@ func (w *RedisClusterClientWrapper) RestoreReplace(ctx context.Context, key stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.RestoreReplace"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.RestoreReplace"); err != nil {
 				return err
 			}
 		}
@@ -14999,8 +15000,8 @@ func (w *RedisClusterClientWrapper) SAdd(ctx context.Context, key string, member
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SAdd"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SAdd"); err != nil {
 				return err
 			}
 		}
@@ -15036,8 +15037,8 @@ func (w *RedisClusterClientWrapper) SCard(ctx context.Context, key string) *redi
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SCard"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SCard"); err != nil {
 				return err
 			}
 		}
@@ -15073,8 +15074,8 @@ func (w *RedisClusterClientWrapper) SDiff(ctx context.Context, keys ...string) *
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SDiff"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SDiff"); err != nil {
 				return err
 			}
 		}
@@ -15110,8 +15111,8 @@ func (w *RedisClusterClientWrapper) SDiffStore(ctx context.Context, destination 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SDiffStore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SDiffStore"); err != nil {
 				return err
 			}
 		}
@@ -15147,8 +15148,8 @@ func (w *RedisClusterClientWrapper) SInter(ctx context.Context, keys ...string) 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SInter"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SInter"); err != nil {
 				return err
 			}
 		}
@@ -15184,8 +15185,8 @@ func (w *RedisClusterClientWrapper) SInterStore(ctx context.Context, destination
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SInterStore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SInterStore"); err != nil {
 				return err
 			}
 		}
@@ -15221,8 +15222,8 @@ func (w *RedisClusterClientWrapper) SIsMember(ctx context.Context, key string, m
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SIsMember"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SIsMember"); err != nil {
 				return err
 			}
 		}
@@ -15258,8 +15259,8 @@ func (w *RedisClusterClientWrapper) SMembers(ctx context.Context, key string) *r
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SMembers"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SMembers"); err != nil {
 				return err
 			}
 		}
@@ -15295,8 +15296,8 @@ func (w *RedisClusterClientWrapper) SMembersMap(ctx context.Context, key string)
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringStructMapCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SMembersMap"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SMembersMap"); err != nil {
 				return err
 			}
 		}
@@ -15332,8 +15333,8 @@ func (w *RedisClusterClientWrapper) SMove(ctx context.Context, source string, de
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SMove"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SMove"); err != nil {
 				return err
 			}
 		}
@@ -15369,8 +15370,8 @@ func (w *RedisClusterClientWrapper) SPop(ctx context.Context, key string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SPop"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SPop"); err != nil {
 				return err
 			}
 		}
@@ -15406,8 +15407,8 @@ func (w *RedisClusterClientWrapper) SPopN(ctx context.Context, key string, count
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SPopN"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SPopN"); err != nil {
 				return err
 			}
 		}
@@ -15443,8 +15444,8 @@ func (w *RedisClusterClientWrapper) SRandMember(ctx context.Context, key string)
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SRandMember"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SRandMember"); err != nil {
 				return err
 			}
 		}
@@ -15480,8 +15481,8 @@ func (w *RedisClusterClientWrapper) SRandMemberN(ctx context.Context, key string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SRandMemberN"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SRandMemberN"); err != nil {
 				return err
 			}
 		}
@@ -15517,8 +15518,8 @@ func (w *RedisClusterClientWrapper) SRem(ctx context.Context, key string, member
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SRem"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SRem"); err != nil {
 				return err
 			}
 		}
@@ -15554,8 +15555,8 @@ func (w *RedisClusterClientWrapper) SScan(ctx context.Context, key string, curso
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SScan"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SScan"); err != nil {
 				return err
 			}
 		}
@@ -15591,8 +15592,8 @@ func (w *RedisClusterClientWrapper) SUnion(ctx context.Context, keys ...string) 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SUnion"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SUnion"); err != nil {
 				return err
 			}
 		}
@@ -15628,8 +15629,8 @@ func (w *RedisClusterClientWrapper) SUnionStore(ctx context.Context, destination
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SUnionStore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SUnionStore"); err != nil {
 				return err
 			}
 		}
@@ -15665,8 +15666,8 @@ func (w *RedisClusterClientWrapper) Save(ctx context.Context) *redis.StatusCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Save"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Save"); err != nil {
 				return err
 			}
 		}
@@ -15702,8 +15703,8 @@ func (w *RedisClusterClientWrapper) Scan(ctx context.Context, cursor uint64, mat
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Scan"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Scan"); err != nil {
 				return err
 			}
 		}
@@ -15739,8 +15740,8 @@ func (w *RedisClusterClientWrapper) ScriptExists(ctx context.Context, hashes ...
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ScriptExists"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ScriptExists"); err != nil {
 				return err
 			}
 		}
@@ -15776,8 +15777,8 @@ func (w *RedisClusterClientWrapper) ScriptFlush(ctx context.Context) *redis.Stat
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ScriptFlush"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ScriptFlush"); err != nil {
 				return err
 			}
 		}
@@ -15813,8 +15814,8 @@ func (w *RedisClusterClientWrapper) ScriptKill(ctx context.Context) *redis.Statu
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ScriptKill"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ScriptKill"); err != nil {
 				return err
 			}
 		}
@@ -15850,8 +15851,8 @@ func (w *RedisClusterClientWrapper) ScriptLoad(ctx context.Context, script strin
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ScriptLoad"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ScriptLoad"); err != nil {
 				return err
 			}
 		}
@@ -15887,8 +15888,8 @@ func (w *RedisClusterClientWrapper) Set(ctx context.Context, key string, value i
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Set"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Set"); err != nil {
 				return err
 			}
 		}
@@ -15924,8 +15925,8 @@ func (w *RedisClusterClientWrapper) SetBit(ctx context.Context, key string, offs
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SetBit"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SetBit"); err != nil {
 				return err
 			}
 		}
@@ -15961,8 +15962,8 @@ func (w *RedisClusterClientWrapper) SetNX(ctx context.Context, key string, value
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SetNX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SetNX"); err != nil {
 				return err
 			}
 		}
@@ -15998,8 +15999,8 @@ func (w *RedisClusterClientWrapper) SetRange(ctx context.Context, key string, of
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SetRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SetRange"); err != nil {
 				return err
 			}
 		}
@@ -16035,8 +16036,8 @@ func (w *RedisClusterClientWrapper) SetXX(ctx context.Context, key string, value
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.BoolCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SetXX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SetXX"); err != nil {
 				return err
 			}
 		}
@@ -16072,8 +16073,8 @@ func (w *RedisClusterClientWrapper) Shutdown(ctx context.Context) *redis.StatusC
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Shutdown"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Shutdown"); err != nil {
 				return err
 			}
 		}
@@ -16109,8 +16110,8 @@ func (w *RedisClusterClientWrapper) ShutdownNoSave(ctx context.Context) *redis.S
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ShutdownNoSave"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ShutdownNoSave"); err != nil {
 				return err
 			}
 		}
@@ -16146,8 +16147,8 @@ func (w *RedisClusterClientWrapper) ShutdownSave(ctx context.Context) *redis.Sta
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ShutdownSave"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ShutdownSave"); err != nil {
 				return err
 			}
 		}
@@ -16183,8 +16184,8 @@ func (w *RedisClusterClientWrapper) SlaveOf(ctx context.Context, host string, po
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SlaveOf"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SlaveOf"); err != nil {
 				return err
 			}
 		}
@@ -16224,8 +16225,8 @@ func (w *RedisClusterClientWrapper) Sort(ctx context.Context, key string, sort *
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Sort"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Sort"); err != nil {
 				return err
 			}
 		}
@@ -16261,8 +16262,8 @@ func (w *RedisClusterClientWrapper) SortInterfaces(ctx context.Context, key stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.SliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SortInterfaces"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SortInterfaces"); err != nil {
 				return err
 			}
 		}
@@ -16298,8 +16299,8 @@ func (w *RedisClusterClientWrapper) SortStore(ctx context.Context, key string, s
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.SortStore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.SortStore"); err != nil {
 				return err
 			}
 		}
@@ -16335,8 +16336,8 @@ func (w *RedisClusterClientWrapper) StrLen(ctx context.Context, key string) *red
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.StrLen"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.StrLen"); err != nil {
 				return err
 			}
 		}
@@ -16376,8 +16377,8 @@ func (w *RedisClusterClientWrapper) TTL(ctx context.Context, key string) *redis.
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.DurationCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.TTL"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.TTL"); err != nil {
 				return err
 			}
 		}
@@ -16413,8 +16414,8 @@ func (w *RedisClusterClientWrapper) Time(ctx context.Context) *redis.TimeCmd {
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.TimeCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Time"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Time"); err != nil {
 				return err
 			}
 		}
@@ -16450,8 +16451,8 @@ func (w *RedisClusterClientWrapper) Touch(ctx context.Context, keys ...string) *
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Touch"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Touch"); err != nil {
 				return err
 			}
 		}
@@ -16487,8 +16488,8 @@ func (w *RedisClusterClientWrapper) Type(ctx context.Context, key string) *redis
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Type"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Type"); err != nil {
 				return err
 			}
 		}
@@ -16524,8 +16525,8 @@ func (w *RedisClusterClientWrapper) Unlink(ctx context.Context, keys ...string) 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Unlink"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Unlink"); err != nil {
 				return err
 			}
 		}
@@ -16561,8 +16562,8 @@ func (w *RedisClusterClientWrapper) Wait(ctx context.Context, numSlaves int, tim
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.Wait"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.Wait"); err != nil {
 				return err
 			}
 		}
@@ -16598,8 +16599,8 @@ func (w *RedisClusterClientWrapper) XAck(ctx context.Context, stream string, gro
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XAck"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XAck"); err != nil {
 				return err
 			}
 		}
@@ -16635,8 +16636,8 @@ func (w *RedisClusterClientWrapper) XAdd(ctx context.Context, a *redis.XAddArgs)
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XAdd"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XAdd"); err != nil {
 				return err
 			}
 		}
@@ -16672,8 +16673,8 @@ func (w *RedisClusterClientWrapper) XClaim(ctx context.Context, a *redis.XClaimA
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XClaim"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XClaim"); err != nil {
 				return err
 			}
 		}
@@ -16709,8 +16710,8 @@ func (w *RedisClusterClientWrapper) XClaimJustID(ctx context.Context, a *redis.X
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XClaimJustID"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XClaimJustID"); err != nil {
 				return err
 			}
 		}
@@ -16746,8 +16747,8 @@ func (w *RedisClusterClientWrapper) XDel(ctx context.Context, stream string, ids
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XDel"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XDel"); err != nil {
 				return err
 			}
 		}
@@ -16783,8 +16784,8 @@ func (w *RedisClusterClientWrapper) XGroupCreate(ctx context.Context, stream str
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XGroupCreate"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XGroupCreate"); err != nil {
 				return err
 			}
 		}
@@ -16820,8 +16821,8 @@ func (w *RedisClusterClientWrapper) XGroupCreateMkStream(ctx context.Context, st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XGroupCreateMkStream"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XGroupCreateMkStream"); err != nil {
 				return err
 			}
 		}
@@ -16857,8 +16858,8 @@ func (w *RedisClusterClientWrapper) XGroupDelConsumer(ctx context.Context, strea
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XGroupDelConsumer"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XGroupDelConsumer"); err != nil {
 				return err
 			}
 		}
@@ -16894,8 +16895,8 @@ func (w *RedisClusterClientWrapper) XGroupDestroy(ctx context.Context, stream st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XGroupDestroy"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XGroupDestroy"); err != nil {
 				return err
 			}
 		}
@@ -16931,8 +16932,8 @@ func (w *RedisClusterClientWrapper) XGroupSetID(ctx context.Context, stream stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StatusCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XGroupSetID"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XGroupSetID"); err != nil {
 				return err
 			}
 		}
@@ -16968,8 +16969,8 @@ func (w *RedisClusterClientWrapper) XLen(ctx context.Context, stream string) *re
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XLen"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XLen"); err != nil {
 				return err
 			}
 		}
@@ -17005,8 +17006,8 @@ func (w *RedisClusterClientWrapper) XPending(ctx context.Context, stream string,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XPendingCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XPending"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XPending"); err != nil {
 				return err
 			}
 		}
@@ -17042,8 +17043,8 @@ func (w *RedisClusterClientWrapper) XPendingExt(ctx context.Context, a *redis.XP
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XPendingExtCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XPendingExt"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XPendingExt"); err != nil {
 				return err
 			}
 		}
@@ -17079,8 +17080,8 @@ func (w *RedisClusterClientWrapper) XRange(ctx context.Context, stream string, s
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XRange"); err != nil {
 				return err
 			}
 		}
@@ -17116,8 +17117,8 @@ func (w *RedisClusterClientWrapper) XRangeN(ctx context.Context, stream string, 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XRangeN"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XRangeN"); err != nil {
 				return err
 			}
 		}
@@ -17153,8 +17154,8 @@ func (w *RedisClusterClientWrapper) XRead(ctx context.Context, a *redis.XReadArg
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XStreamSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XRead"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XRead"); err != nil {
 				return err
 			}
 		}
@@ -17190,8 +17191,8 @@ func (w *RedisClusterClientWrapper) XReadGroup(ctx context.Context, a *redis.XRe
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XStreamSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XReadGroup"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XReadGroup"); err != nil {
 				return err
 			}
 		}
@@ -17227,8 +17228,8 @@ func (w *RedisClusterClientWrapper) XReadStreams(ctx context.Context, streams ..
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XStreamSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XReadStreams"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XReadStreams"); err != nil {
 				return err
 			}
 		}
@@ -17264,8 +17265,8 @@ func (w *RedisClusterClientWrapper) XRevRange(ctx context.Context, stream string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XRevRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XRevRange"); err != nil {
 				return err
 			}
 		}
@@ -17301,8 +17302,8 @@ func (w *RedisClusterClientWrapper) XRevRangeN(ctx context.Context, stream strin
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.XMessageSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XRevRangeN"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XRevRangeN"); err != nil {
 				return err
 			}
 		}
@@ -17338,8 +17339,8 @@ func (w *RedisClusterClientWrapper) XTrim(ctx context.Context, key string, maxLe
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XTrim"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XTrim"); err != nil {
 				return err
 			}
 		}
@@ -17375,8 +17376,8 @@ func (w *RedisClusterClientWrapper) XTrimApprox(ctx context.Context, key string,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.XTrimApprox"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.XTrimApprox"); err != nil {
 				return err
 			}
 		}
@@ -17412,8 +17413,8 @@ func (w *RedisClusterClientWrapper) ZAdd(ctx context.Context, key string, member
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZAdd"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAdd"); err != nil {
 				return err
 			}
 		}
@@ -17449,8 +17450,8 @@ func (w *RedisClusterClientWrapper) ZAddCh(ctx context.Context, key string, memb
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZAddCh"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAddCh"); err != nil {
 				return err
 			}
 		}
@@ -17486,8 +17487,8 @@ func (w *RedisClusterClientWrapper) ZAddNX(ctx context.Context, key string, memb
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZAddNX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAddNX"); err != nil {
 				return err
 			}
 		}
@@ -17523,8 +17524,8 @@ func (w *RedisClusterClientWrapper) ZAddNXCh(ctx context.Context, key string, me
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZAddNXCh"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAddNXCh"); err != nil {
 				return err
 			}
 		}
@@ -17560,8 +17561,8 @@ func (w *RedisClusterClientWrapper) ZAddXX(ctx context.Context, key string, memb
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZAddXX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAddXX"); err != nil {
 				return err
 			}
 		}
@@ -17597,8 +17598,8 @@ func (w *RedisClusterClientWrapper) ZAddXXCh(ctx context.Context, key string, me
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZAddXXCh"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZAddXXCh"); err != nil {
 				return err
 			}
 		}
@@ -17634,8 +17635,8 @@ func (w *RedisClusterClientWrapper) ZCard(ctx context.Context, key string) *redi
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZCard"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZCard"); err != nil {
 				return err
 			}
 		}
@@ -17671,8 +17672,8 @@ func (w *RedisClusterClientWrapper) ZCount(ctx context.Context, key string, min 
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZCount"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZCount"); err != nil {
 				return err
 			}
 		}
@@ -17708,8 +17709,8 @@ func (w *RedisClusterClientWrapper) ZIncr(ctx context.Context, key string, membe
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZIncr"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZIncr"); err != nil {
 				return err
 			}
 		}
@@ -17745,8 +17746,8 @@ func (w *RedisClusterClientWrapper) ZIncrBy(ctx context.Context, key string, inc
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZIncrBy"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZIncrBy"); err != nil {
 				return err
 			}
 		}
@@ -17782,8 +17783,8 @@ func (w *RedisClusterClientWrapper) ZIncrNX(ctx context.Context, key string, mem
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZIncrNX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZIncrNX"); err != nil {
 				return err
 			}
 		}
@@ -17819,8 +17820,8 @@ func (w *RedisClusterClientWrapper) ZIncrXX(ctx context.Context, key string, mem
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZIncrXX"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZIncrXX"); err != nil {
 				return err
 			}
 		}
@@ -17856,8 +17857,8 @@ func (w *RedisClusterClientWrapper) ZInterStore(ctx context.Context, destination
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZInterStore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZInterStore"); err != nil {
 				return err
 			}
 		}
@@ -17893,8 +17894,8 @@ func (w *RedisClusterClientWrapper) ZLexCount(ctx context.Context, key string, m
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZLexCount"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZLexCount"); err != nil {
 				return err
 			}
 		}
@@ -17930,8 +17931,8 @@ func (w *RedisClusterClientWrapper) ZPopMax(ctx context.Context, key string, cou
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZPopMax"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZPopMax"); err != nil {
 				return err
 			}
 		}
@@ -17967,8 +17968,8 @@ func (w *RedisClusterClientWrapper) ZPopMin(ctx context.Context, key string, cou
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZPopMin"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZPopMin"); err != nil {
 				return err
 			}
 		}
@@ -18004,8 +18005,8 @@ func (w *RedisClusterClientWrapper) ZRange(ctx context.Context, key string, star
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRange"); err != nil {
 				return err
 			}
 		}
@@ -18041,8 +18042,8 @@ func (w *RedisClusterClientWrapper) ZRangeByLex(ctx context.Context, key string,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRangeByLex"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRangeByLex"); err != nil {
 				return err
 			}
 		}
@@ -18078,8 +18079,8 @@ func (w *RedisClusterClientWrapper) ZRangeByScore(ctx context.Context, key strin
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRangeByScore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRangeByScore"); err != nil {
 				return err
 			}
 		}
@@ -18115,8 +18116,8 @@ func (w *RedisClusterClientWrapper) ZRangeByScoreWithScores(ctx context.Context,
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRangeByScoreWithScores"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRangeByScoreWithScores"); err != nil {
 				return err
 			}
 		}
@@ -18152,8 +18153,8 @@ func (w *RedisClusterClientWrapper) ZRangeWithScores(ctx context.Context, key st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRangeWithScores"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRangeWithScores"); err != nil {
 				return err
 			}
 		}
@@ -18189,8 +18190,8 @@ func (w *RedisClusterClientWrapper) ZRank(ctx context.Context, key string, membe
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRank"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRank"); err != nil {
 				return err
 			}
 		}
@@ -18226,8 +18227,8 @@ func (w *RedisClusterClientWrapper) ZRem(ctx context.Context, key string, member
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRem"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRem"); err != nil {
 				return err
 			}
 		}
@@ -18263,8 +18264,8 @@ func (w *RedisClusterClientWrapper) ZRemRangeByLex(ctx context.Context, key stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRemRangeByLex"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRemRangeByLex"); err != nil {
 				return err
 			}
 		}
@@ -18300,8 +18301,8 @@ func (w *RedisClusterClientWrapper) ZRemRangeByRank(ctx context.Context, key str
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRemRangeByRank"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRemRangeByRank"); err != nil {
 				return err
 			}
 		}
@@ -18337,8 +18338,8 @@ func (w *RedisClusterClientWrapper) ZRemRangeByScore(ctx context.Context, key st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRemRangeByScore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRemRangeByScore"); err != nil {
 				return err
 			}
 		}
@@ -18374,8 +18375,8 @@ func (w *RedisClusterClientWrapper) ZRevRange(ctx context.Context, key string, s
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRevRange"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRange"); err != nil {
 				return err
 			}
 		}
@@ -18411,8 +18412,8 @@ func (w *RedisClusterClientWrapper) ZRevRangeByLex(ctx context.Context, key stri
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRevRangeByLex"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRangeByLex"); err != nil {
 				return err
 			}
 		}
@@ -18448,8 +18449,8 @@ func (w *RedisClusterClientWrapper) ZRevRangeByScore(ctx context.Context, key st
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.StringSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRevRangeByScore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRangeByScore"); err != nil {
 				return err
 			}
 		}
@@ -18485,8 +18486,8 @@ func (w *RedisClusterClientWrapper) ZRevRangeByScoreWithScores(ctx context.Conte
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRevRangeByScoreWithScores"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRangeByScoreWithScores"); err != nil {
 				return err
 			}
 		}
@@ -18522,8 +18523,8 @@ func (w *RedisClusterClientWrapper) ZRevRangeWithScores(ctx context.Context, key
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ZSliceCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRevRangeWithScores"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRangeWithScores"); err != nil {
 				return err
 			}
 		}
@@ -18559,8 +18560,8 @@ func (w *RedisClusterClientWrapper) ZRevRank(ctx context.Context, key string, me
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZRevRank"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZRevRank"); err != nil {
 				return err
 			}
 		}
@@ -18596,8 +18597,8 @@ func (w *RedisClusterClientWrapper) ZScan(ctx context.Context, key string, curso
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.ScanCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZScan"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZScan"); err != nil {
 				return err
 			}
 		}
@@ -18633,8 +18634,8 @@ func (w *RedisClusterClientWrapper) ZScore(ctx context.Context, key string, memb
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.FloatCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZScore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZScore"); err != nil {
 				return err
 			}
 		}
@@ -18670,8 +18671,8 @@ func (w *RedisClusterClientWrapper) ZUnionStore(ctx context.Context, dest string
 	ctxOptions := FromContext(ctx)
 	var res0 *redis.IntCmd
 	_ = w.retry.Do(func() error {
-		if w.rateLimiterGroup != nil {
-			if err := w.rateLimiterGroup.Wait(ctx, "ClusterClient.ZUnionStore"); err != nil {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, "ClusterClient.ZUnionStore"); err != nil {
 				return err
 			}
 		}

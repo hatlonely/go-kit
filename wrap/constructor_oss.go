@@ -8,6 +8,7 @@ import (
 
 	"github.com/hatlonely/go-kit/alics"
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
 )
 
@@ -18,10 +19,10 @@ type OSSOptions struct {
 }
 
 type OSSClientWrapperOptions struct {
-	Retry            RetryOptions
-	Wrapper          WrapperOptions
-	OSS              OSSOptions
-	RateLimiterGroup RateLimiterGroupOptions
+	Retry       micro.RetryOptions
+	Wrapper     WrapperOptions
+	OSS         OSSOptions
+	RateLimiter micro.RateLimiterOptions
 }
 
 func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions, opts ...refx.Option) (*OSSClientWrapper, error) {
@@ -29,13 +30,13 @@ func NewOSSClientWrapperWithOptions(options *OSSClientWrapperOptions, opts ...re
 	var err error
 
 	w.options = &options.Wrapper
-	w.retry, err = NewRetryWithOptions(&options.Retry)
+	w.retry, err = micro.NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup, opts...)
+	w.rateLimiter, err = micro.NewRateLimiterWithOptions(&options.RateLimiter, opts...)
 	if err != nil {
-		return nil, errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
+		return nil, errors.Wrap(err, "NewRateLimiterWithOptions failed")
 	}
 	if w.options.EnableMetric {
 		w.CreateMetric(w.options)
@@ -82,7 +83,7 @@ func NewOSSClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*OS
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
-	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiterGroup"), w.OnRateLimiterGroupChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiter"), w.OnRateLimiterChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("OSS"), func(cfg *config.Config) error {
 		var options OSSOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {

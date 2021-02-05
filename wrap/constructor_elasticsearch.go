@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/config"
+	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
 )
 
@@ -23,10 +24,10 @@ type ESOptions struct {
 }
 
 type ESClientWrapperOptions struct {
-	Retry            RetryOptions
-	Wrapper          WrapperOptions
-	ES               ESOptions
-	RateLimiterGroup RateLimiterGroupOptions
+	Retry       micro.RetryOptions
+	Wrapper     WrapperOptions
+	ES          ESOptions
+	RateLimiter micro.RateLimiterOptions
 }
 
 func NewESClientWithOptions(options *ESOptions) (*elastic.Client, error) {
@@ -56,13 +57,13 @@ func NewESClientWrapperWithOptions(options *ESClientWrapperOptions, opts ...refx
 	var err error
 
 	w.options = &options.Wrapper
-	w.retry, err = NewRetryWithOptions(&options.Retry)
+	w.retry, err = micro.NewRetryWithOptions(&options.Retry)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewRetryWithOptions failed")
 	}
-	w.rateLimiterGroup, err = NewRateLimiterGroupWithOptions(&options.RateLimiterGroup, opts...)
+	w.rateLimiter, err = micro.NewRateLimiterWithOptions(&options.RateLimiter, opts...)
 	if err != nil {
-		return nil, errors.Wrap(err, "NewRateLimiterGroupWithOptions failed")
+		return nil, errors.Wrap(err, "NewRateLimiterWithOptions failed")
 	}
 	if w.options.EnableMetric {
 		w.CreateMetric(w.options)
@@ -88,7 +89,7 @@ func NewESClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*ESC
 	refxOptions := refx.NewOptions(opts...)
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
-	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiterGroup"), w.OnRateLimiterGroupChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiter"), w.OnRateLimiterChange(opts...))
 	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("ES"), func(cfg *config.Config) error {
 		var options ESOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
