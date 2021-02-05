@@ -13,6 +13,8 @@ import (
 type ParallelController interface {
 	PutToken(ctx context.Context, key string) error
 	GetToken(ctx context.Context, key string) error
+	TryGetToken(ctx context.Context, key string) bool
+	TryPutToken(ctx context.Context, key string) bool
 }
 
 func RegisterParallelController(key string, constructor interface{}) {

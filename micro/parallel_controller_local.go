@@ -9,8 +9,8 @@ import (
 type LocalParallelControllerOptions map[string]int
 
 type LocalParallelController struct {
-	options         *LocalParallelControllerOptions
-	controllerGroup map[string]*LocalParallelControllerCell
+	options       *LocalParallelControllerOptions
+	controllerMap map[string]*LocalParallelControllerCell
 }
 
 func NewLocalParallelControllerGroupWithOptions(options *LocalParallelControllerOptions) (*LocalParallelController, error) {
@@ -27,15 +27,31 @@ func NewLocalParallelControllerGroupWithOptions(options *LocalParallelController
 	}
 
 	c := &LocalParallelController{
-		options:         options,
-		controllerGroup: controllerGroup,
+		options:       options,
+		controllerMap: controllerGroup,
 	}
 
 	return c, nil
 }
 
+func (l *LocalParallelController) TryGetToken(ctx context.Context, key string) bool {
+	c, ok := l.controllerMap[key]
+	if !ok {
+		return true
+	}
+	return c.TryGetToken(ctx)
+}
+
+func (l *LocalParallelController) TryPutToken(ctx context.Context, key string) bool {
+	c, ok := l.controllerMap[key]
+	if !ok {
+		return true
+	}
+	return c.TryPutToken(ctx)
+}
+
 func (l *LocalParallelController) PutToken(ctx context.Context, key string) error {
-	c, ok := l.controllerGroup[key]
+	c, ok := l.controllerMap[key]
 	if !ok {
 		return nil
 	}
@@ -43,7 +59,7 @@ func (l *LocalParallelController) PutToken(ctx context.Context, key string) erro
 }
 
 func (l *LocalParallelController) GetToken(ctx context.Context, key string) error {
-	c, ok := l.controllerGroup[key]
+	c, ok := l.controllerMap[key]
 	if !ok {
 		return nil
 	}
