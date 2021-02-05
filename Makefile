@@ -44,13 +44,14 @@ build/bin/gen: cmd/gen/main.go $(wildcard astx/*.go) Makefile vendor
 
 wrap: wrap/autogen_ots.go \
 	wrap/autogen_kms.go \
+	wrap/autogen_ram.go \
+	wrap/autogen_sts.go \
 	wrap/autogen_acm.go \
 	wrap/autogen_oss.go \
 	wrap/autogen_gorm.go \
 	wrap/autogen_elasticsearch.go \
 	wrap/autogen_mongo.go \
-	wrap/autogen_redis.go \
-	wrap/autogen_sts.go
+	wrap/autogen_redis.go
 
 wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 	build/bin/gen wrap --sourcePath vendor \
@@ -70,6 +71,19 @@ wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packagePath "github.com/aliyun/alibaba-cloud-sdk-go/services/kms" \
 		--packageName kms \
 		--classPrefix KMS \
+		--starClasses Client \
+		--rule.createMetric.include "^Client$$" \
+		--rule.onWrapperChange.include "^Client$$" \
+		--rule.onRetryChange.include "^Client$$" \
+		--rule.onRateLimiterChange.include "^Client$$" \
+		--rule.onParallelControllerChange.include "^Client$$" \
+		--output $@
+
+wrap/autogen_ram.go: build/bin/gen vendor $(wildcard astx/*.go)
+	build/bin/gen wrap --sourcePath vendor \
+		--packagePath "github.com/aliyun/alibaba-cloud-sdk-go/services/ram" \
+		--packageName ram \
+		--classPrefix RAM \
 		--starClasses Client \
 		--rule.createMetric.include "^Client$$" \
 		--rule.onWrapperChange.include "^Client$$" \
