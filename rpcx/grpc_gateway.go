@@ -43,7 +43,7 @@ type GrpcGatewayOptions struct {
 	RateLimiterHeader        string
 	ParallelControllerHeader string
 	RateLimiter              micro.RateLimiterOptions
-	ParallelController       micro.ParallelControllerGroupOptions
+	ParallelController       micro.ParallelControllerOptions
 	Jaeger                   jaegercfg.Configuration
 }
 

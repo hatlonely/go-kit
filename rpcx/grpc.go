@@ -313,7 +313,7 @@ type GrpcInterceptorOptions struct {
 	RateLimiterHeader        string
 	ParallelControllerHeader string
 	RateLimiter              micro.RateLimiterOptions
-	ParallelController       micro.ParallelControllerGroupOptions
+	ParallelController       micro.ParallelControllerOptions
 }
 
 func PrivateIP() string {
