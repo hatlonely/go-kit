@@ -17,6 +17,8 @@ import (
 
 type RedisRateLimiterOptions struct {
 	Redis wrap.RedisClientWrapperOptions
+	// key 前缀，可当成命名空间使用
+	Prefix string
 	// QPS 计算规则
 	// 1. key 在 map 中，直接返回 key 对应的 qps
 	// 2. key 按 '|' 分割，第 0 个字符串作为 key，如果在 map 中，返回 qps
@@ -75,7 +77,7 @@ func (r *RedisRateLimiter) Allow(ctx context.Context, key string) error {
 	}
 
 	now := time.Now()
-	tsKey := fmt.Sprintf("%s_%d", key, now.Unix())
+	tsKey := fmt.Sprintf("%s_%d", r.generateKey(key), now.Unix())
 	var res *redis.IntCmd
 	_, err := r.client.TxPipelined(ctx, func(pipe redis.Pipeliner) error {
 		res = pipe.Incr(tsKey)
@@ -105,7 +107,7 @@ func (r *RedisRateLimiter) WaitN(ctx context.Context, key string, n int) error {
 
 	for {
 		now := time.Now()
-		tsKey := fmt.Sprintf("%s_%d", key, now.Unix())
+		tsKey := fmt.Sprintf("%s_%d", r.generateKey(key), now.Unix())
 		var res *redis.IntCmd
 		_, err := r.client.TxPipelined(ctx, func(pipe redis.Pipeliner) error {
 			res = pipe.IncrBy(tsKey, int64(n))
@@ -133,6 +135,13 @@ func (r *RedisRateLimiter) WaitN(ctx context.Context, key string, n int) error {
 		}
 	}
 	return nil
+}
+
+func (r *RedisRateLimiter) generateKey(key string) string {
+	if r.options.Prefix == "" {
+		return key
+	}
+	return fmt.Sprintf("%s_%s", r.options.Prefix, key)
 }
 
 func (r *RedisRateLimiter) calculateQPS(key string) int {
