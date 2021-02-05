@@ -17,6 +17,7 @@ import (
 	jaegercfg "github.com/uber/jaeger-client-go/config"
 	"google.golang.org/grpc"
 
+	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/logger"
 	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
@@ -62,6 +63,45 @@ type GrpcGateway struct {
 
 	appLog Logger
 	appRpc Logger
+}
+
+func NewGrpcGatewayWithConfig(cfg *config.Config, opts ...refx.Option) (*GrpcGateway, error) {
+	var options GrpcGatewayOptions
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
+		return nil, errors.WithMessage(err, "cfg.Unmarshal failed")
+	}
+	g, err := NewGrpcGatewayWithOptions(&options)
+	if err != nil {
+		return nil, errors.WithMessage(err, "NewGrpcGatewayWithOptions failed")
+	}
+
+	refxOptions := refx.NewOptions(opts...)
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiter"), func(cfg *config.Config) error {
+		var options micro.RateLimiterOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.WithMessage(err, "cfg.Unmarshal failed")
+		}
+		rateLimiter, err := micro.NewRateLimiterWithOptions(&options, opts...)
+		if err != nil {
+			return errors.WithMessage(err, "micro.NewRateLimiterWithOptions failed")
+		}
+		g.grpcInterceptor.rateLimiter = rateLimiter
+		return nil
+	})
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("ParallelController"), func(cfg *config.Config) error {
+		var options micro.ParallelControllerOptions
+		if err := cfg.Unmarshal(&options, opts...); err != nil {
+			return errors.WithMessage(err, "cfg.Unmarshal failed")
+		}
+		parallelController, err := micro.NewParallelControllerWithOptions(&options, opts...)
+		if err != nil {
+			return errors.WithMessage(err, "micro.NewParallelControllerWithOptions failed")
+		}
+		g.grpcInterceptor.parallelController = parallelController
+		return nil
+	})
+
+	return g, nil
 }
 
 func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions, opts ...refx.Option) (*GrpcGateway, error) {

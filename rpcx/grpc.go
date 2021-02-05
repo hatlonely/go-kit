@@ -84,11 +84,11 @@ func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions, opts ...refx
 		return nil, errors.Wrap(err, "micro.NewRateLimiterWithOptions failed")
 	}
 	g.rateLimiter = rateLimiter
-	parallelCtl, err := micro.NewParallelControllerWithOptions(&options.ParallelController, opts...)
+	parallelController, err := micro.NewParallelControllerWithOptions(&options.ParallelController, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "micro.NewParallelControllerWithOptions failed")
 	}
-	g.parallelCtl = parallelCtl
+	g.parallelController = parallelController
 
 	return g, nil
 }
@@ -96,8 +96,8 @@ func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions, opts ...refx
 type GrpcInterceptor struct {
 	options *GrpcInterceptorOptions
 
-	rateLimiter micro.RateLimiter
-	parallelCtl micro.ParallelController
+	rateLimiter        micro.RateLimiter
+	parallelController micro.ParallelController
 
 	validators  []func(interface{}) error
 	preHandlers []func(ctx context.Context, req interface{}) error
@@ -243,21 +243,21 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 		}
 
 		if err == nil {
-			if g.parallelCtl != nil {
+			if g.parallelController != nil {
 				key := info.FullMethod
 				if g.options.ParallelControllerHeader != "" {
 					key = fmt.Sprintf("%s|%s", strings.Join(md.Get(g.options.ParallelControllerHeader), ","), info.FullMethod)
 				}
-				if err = g.parallelCtl.GetToken(ctx, key); err != nil {
+				if err = g.parallelController.GetToken(ctx, key); err != nil {
 					if err == micro.ErrFlowControl {
 						err = NewError(codes.ResourceExhausted, "ResourceExhausted", err.Error(), err)
 					} else {
-						g.appLog.Warnf("g.parallelCtl.GetToken failed. err: [%+v]", err)
+						g.appLog.Warnf("g.parallelController.GetToken failed. err: [%+v]", err)
 					}
 				}
 				defer func() {
-					if err := g.parallelCtl.PutToken(ctx, key); err != nil {
-						g.appLog.Warnf("g.parallelCtl.PutToken failed. err: [%+v]", err)
+					if err := g.parallelController.PutToken(ctx, key); err != nil {
+						g.appLog.Warnf("g.parallelController.PutToken failed. err: [%+v]", err)
 					}
 				}()
 			}
