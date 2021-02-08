@@ -651,7 +651,7 @@ const WrapperFunctionBodyWithoutErrorTpl = `
 {{- end}}
 {{- if .Rule.ParallelController}}
 	if w.parallelController != nil {
-		_ = w.parallelController.GetToken(ctx, fmt.Sprintf("%s.{{.Class}}.{{.Function.Name}}", w.options.Name))
+		_ = w.parallelController.Acquire(ctx, fmt.Sprintf("%s.{{.Class}}.{{.Function.Name}}", w.options.Name))
 	}
 {{- end}}
 {{- if .Rule.Trace}}
@@ -702,7 +702,7 @@ const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 {{- end}}
 {{- if .Rule.ParallelController}}
 	if w.parallelController != nil {
-		if {{.Function.LastResult}} = w.parallelController.GetToken(ctx, fmt.Sprintf("%s.{{.Class}}.{{.Function.Name}}", w.options.Name)); {{.Function.LastResult}} != nil {
+		if {{.Function.LastResult}} = w.parallelController.Acquire(ctx, fmt.Sprintf("%s.{{.Class}}.{{.Function.Name}}", w.options.Name)); {{.Function.LastResult}} != nil {
 			return {{.Function.ReturnList}}
 		}
 	}
@@ -754,7 +754,7 @@ const WrapperFunctionBodyWithErrorWithRetryTpl = `
 {{- end}}
 {{- if .Rule.ParallelController}}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.{{.Class}}.{{.Function.Name}}", w.options.Name)); err != nil {
+			if err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.{{.Class}}.{{.Function.Name}}", w.options.Name)); err != nil {
 				return err
 			}
 		}

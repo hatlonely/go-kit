@@ -250,16 +250,17 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 				if g.options.ParallelControllerHeader != "" {
 					key = fmt.Sprintf("%s|%s", strings.Join(md.Get(g.options.ParallelControllerHeader), ","), info.FullMethod)
 				}
-				if err = g.parallelController.TryGetToken(ctx, key); err != nil {
+				var token int
+				if token, err = g.parallelController.TryAcquire(ctx, key); err != nil {
 					if err == micro.ErrParallelControl {
 						err = NewError(codes.ResourceExhausted, "ResourceExhausted", err.Error(), err)
 					} else {
-						g.appLog.Warnf("g.parallelController.GetToken failed. err: [%+v]", err)
+						g.appLog.Warnf("g.parallelController.Acquire failed. err: [%+v]", err)
 					}
 				} else {
 					defer func() {
-						if err := g.parallelController.PutToken(ctx, key); err != nil {
-							g.appLog.Warnf("g.parallelController.PutToken failed. err: [%+v]", err)
+						if err := g.parallelController.Release(ctx, key, token); err != nil {
+							g.appLog.Warnf("g.parallelController.Release failed. err: [%+v]", err)
 						}
 					}()
 				}

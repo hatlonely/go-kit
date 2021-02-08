@@ -13,6 +13,7 @@ require (
 	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/coocood/freecache v1.1.1
+	github.com/emirpasic/gods v1.12.0
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/generikvault/gvalstrings v0.0.0-20180926130504-471f38f0112a
 	github.com/ghodss/yaml v1.0.0

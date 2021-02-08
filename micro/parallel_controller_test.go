@@ -2,13 +2,13 @@ package micro
 
 import (
 	"context"
+	"fmt"
 	"testing"
-	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestNewParallelControllerGroupWithOptions(t *testing.T) {
+func TestNewParallelControllerWithOptions(t *testing.T) {
 	Convey("TestNewParallelControllerGroupWithOptions", t, func() {
 		Convey("empty options case", func() {
 			r, err := NewParallelControllerWithOptions(&ParallelControllerOptions{})
@@ -17,19 +17,18 @@ func TestNewParallelControllerGroupWithOptions(t *testing.T) {
 		})
 
 		r, err := NewParallelControllerWithOptions(&ParallelControllerOptions{
-			Type: "LocalGroup",
-			Options: &LocalParallelControllerOptions{
+			Type: "LocalSemaphore",
+			Options: &LocalSemaphoreParallelControllerOptions{
 				"key1": 2,
 			},
 		})
 		So(err, ShouldBeNil)
 		So(r, ShouldNotBeNil)
 
-		So(r.GetToken(context.Background(), "key1"), ShouldBeNil)
-		So(r.GetToken(context.Background(), "key1"), ShouldBeNil)
-
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-		So(r.GetToken(ctx, "key1"), ShouldNotBeNil)
+		token1, err := r.Acquire(context.Background(), "key1")
+		So(err, ShouldBeNil)
+		token2, err := r.Acquire(context.Background(), "key1")
+		So(err, ShouldBeNil)
+		fmt.Println(token1, token2)
 	})
 }
