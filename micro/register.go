@@ -5,4 +5,5 @@ func init() {
 	RegisterRateLimiter("LocalShare", NewLocalShareRateLimiterWithOptions)
 
 	RegisterParallelController("LocalSemaphore", NewLocalSemaphoreParallelControllerWithOptions)
+	RegisterParallelController("LocalTimedSemaphore", NewLocalTimedSemaphoreParallelControllerWithOptions)
 }
