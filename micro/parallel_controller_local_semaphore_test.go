@@ -10,8 +10,8 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestLocalParallelController_Acquire_Release(t *testing.T) {
-	Convey("TestLocalParallelController_Acquire_Release", t, func(c C) {
+func TestLocalSemaphoreParallelController_Acquire_Release(t *testing.T) {
+	Convey("TestLocalSemaphoreParallelController_Acquire_Release", t, func(c C) {
 		for i := 1; i < 10; i++ {
 			ctl, err := NewLocalSemaphoreParallelControllerWithOptions(&LocalSemaphoreParallelControllerOptions{
 				"key1": i,
@@ -43,8 +43,8 @@ func TestLocalParallelController_Acquire_Release(t *testing.T) {
 	})
 }
 
-func TestLocalParallelController_TryAcquire(t *testing.T) {
-	Convey("TestLocalParallelController_TryAcquire", t, func() {
+func TestLocalSemaphoreParallelController_TryAcquire(t *testing.T) {
+	Convey("TestLocalSemaphoreParallelController_TryAcquire", t, func() {
 		ctl, err := NewLocalSemaphoreParallelControllerWithOptions(&LocalSemaphoreParallelControllerOptions{
 			"key1": 2,
 		})
@@ -68,8 +68,8 @@ func TestLocalParallelController_TryAcquire(t *testing.T) {
 	})
 }
 
-func TestLocalParallelController_Context_Cancel(t *testing.T) {
-	Convey("TestLocalParallelController_Context_Cancel", t, func() {
+func TestLocalSemaphoreParallelController_Context_Cancel(t *testing.T) {
+	Convey("TestLocalSemaphoreParallelController_Context_Cancel", t, func() {
 		ctl, err := NewLocalSemaphoreParallelControllerWithOptions(&LocalSemaphoreParallelControllerOptions{
 			"key1": 2,
 		})
