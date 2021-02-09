@@ -6,4 +6,6 @@ func init() {
 
 	RegisterParallelController("LocalSemaphore", NewLocalSemaphoreParallelControllerWithOptions)
 	RegisterParallelController("LocalTimedSemaphore", NewLocalTimedSemaphoreParallelControllerWithOptions)
+
+	RegisterLocker("Local", NewLocalLocker)
 }

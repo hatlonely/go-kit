@@ -30,24 +30,24 @@ type ParallelController interface {
 }
 
 func RegisterParallelController(key string, constructor interface{}) {
-	if _, ok := parallelControllerGroupConstructorMap[key]; ok {
-		panic(fmt.Sprintf("ratelimiter type [%v] is already registered", key))
+	if _, ok := parallelControllerConstructorMap[key]; ok {
+		panic(fmt.Sprintf("ParallelController type [%v] is already registered", key))
 	}
 
 	info, err := refx.NewConstructor(constructor, reflect.TypeOf((*ParallelController)(nil)).Elem())
 	refx.Must(err)
 
-	parallelControllerGroupConstructorMap[key] = info
+	parallelControllerConstructorMap[key] = info
 }
 
-var parallelControllerGroupConstructorMap = map[string]*refx.Constructor{}
+var parallelControllerConstructorMap = map[string]*refx.Constructor{}
 
 func NewParallelControllerWithOptions(options *ParallelControllerOptions, opts ...refx.Option) (ParallelController, error) {
 	if options.Type == "" {
 		return nil, nil
 	}
 
-	constructor, ok := parallelControllerGroupConstructorMap[options.Type]
+	constructor, ok := parallelControllerConstructorMap[options.Type]
 	if !ok {
 		return nil, errors.Errorf("unregistered ParallelController type: [%v]", options.Type)
 	}

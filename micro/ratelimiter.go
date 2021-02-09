@@ -32,7 +32,7 @@ type RateLimiter interface {
 
 func RegisterRateLimiter(key string, constructor interface{}) {
 	if _, ok := rateLimiterConstructorMap[key]; ok {
-		panic(fmt.Sprintf("ratelimiter type [%v] is already registered", key))
+		panic(fmt.Sprintf("Ratelimiter type [%v] is already registered", key))
 	}
 
 	info, err := refx.NewConstructor(constructor, reflect.TypeOf((*RateLimiter)(nil)).Elem())
