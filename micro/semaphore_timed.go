@@ -35,26 +35,28 @@ func NewTimedSemaphore(maxToken int, timeout time.Duration) (*TimedSemaphore, er
 	c.notFull = sync.NewCond(&c.mutex)
 	c.notEmpty = sync.NewCond(&c.mutex)
 
-	go func() {
-		for {
-			c.mutex.Lock()
-			for c.tokenSet.Size() == 0 {
-				c.notEmpty.Wait()
+	if timeout != 0 {
+		go func() {
+			for {
+				c.mutex.Lock()
+				for c.tokenSet.Size() == 0 {
+					c.notEmpty.Wait()
+				}
+				it := c.tokenSet.Iterator()
+				it.Next()
+				val := it.Value().(int)
+				sleepTimeNs := int64(val) - time.Now().Add(-c.timeout).UnixNano()
+				if sleepTimeNs > 0 {
+					c.mutex.Unlock()
+					time.Sleep(time.Duration(sleepTimeNs) * time.Nanosecond)
+				} else {
+					c.tokenSet.Remove(val)
+					c.mutex.Unlock()
+					c.notFull.Signal()
+				}
 			}
-			it := c.tokenSet.Iterator()
-			it.Next()
-			val := it.Value().(int)
-			sleepTimeNs := int64(val) - time.Now().Add(-c.timeout).UnixNano()
-			if sleepTimeNs > 0 {
-				c.mutex.Unlock()
-				time.Sleep(time.Duration(sleepTimeNs) * time.Nanosecond)
-			} else {
-				c.tokenSet.Remove(val)
-				c.mutex.Unlock()
-				c.notFull.Signal()
-			}
-		}
-	}()
+		}()
+	}
 
 	return c, nil
 }

@@ -12,6 +12,19 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func TestNewTimedSemaphore(t *testing.T) {
+	Convey("TestNewTimedSemaphore", t, func() {
+		Convey("maxToken should be positive", func() {
+			_, err := NewTimedSemaphore(0, time.Second)
+			So(err, ShouldNotBeNil)
+		})
+		Convey("timeout should greater than or equal to 0", func() {
+			_, err := NewTimedSemaphore(1, -time.Second)
+			So(err, ShouldNotBeNil)
+		})
+	})
+}
+
 func TestTimedSemaphore_Acquire_Release(t *testing.T) {
 	Convey("TestTimedSemaphore_Acquire_Release", t, func(c C) {
 		for i := 1; i < 10; i++ {
@@ -90,6 +103,19 @@ func TestTimedSemaphore_AcquireTimed(t *testing.T) {
 		fmt.Println(TokenSetToString(sem.tokenSet))
 
 		fmt.Println(token1, token2, token3, token4)
+	})
+}
+
+func TestTimedSemaphore_Release(t *testing.T) {
+	Convey("TestTimedSemaphore_Release", t, func() {
+		sem, err := NewTimedSemaphore(2, time.Millisecond*100)
+		So(err, ShouldBeNil)
+
+		So(sem.Release(123), ShouldBeFalse)
+		token1 := sem.Acquire()
+		So(sem.Release(token1-1), ShouldBeFalse)
+		So(sem.Release(token1), ShouldBeTrue)
+		So(sem.Release(123), ShouldBeFalse)
 	})
 }
 

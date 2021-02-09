@@ -8,6 +8,13 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func TestNewSemaphore(t *testing.T) {
+	Convey("TestNewSemaphore", t, func() {
+		_, err := NewSemaphore(0)
+		So(err, ShouldNotBeNil)
+	})
+}
+
 func TestSemaphore_Acquire_Release(t *testing.T) {
 	Convey("TestSemaphore_Acquire_Release", t, func(c C) {
 		for i := 1; i < 10; i++ {
