@@ -126,8 +126,10 @@ func (w GORMAssociationWrapper) Append(ctx context.Context, values ...interface{
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Association.Append", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Association.Append", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Association.Append", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -168,8 +170,10 @@ func (w GORMAssociationWrapper) Clear(ctx context.Context) GORMAssociationWrappe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Association.Clear", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Association.Clear", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Association.Clear", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -215,8 +219,10 @@ func (w GORMAssociationWrapper) Delete(ctx context.Context, values ...interface{
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Association.Delete", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Association.Delete", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Association.Delete", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -257,8 +263,10 @@ func (w GORMAssociationWrapper) Find(ctx context.Context, value interface{}) GOR
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Association.Find", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Association.Find", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Association.Find", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -299,8 +307,10 @@ func (w GORMAssociationWrapper) Replace(ctx context.Context, values ...interface
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Association.Replace", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Association.Replace", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Association.Replace", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -346,8 +356,10 @@ func (w GORMDBWrapper) AddForeignKey(ctx context.Context, field string, dest str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.AddForeignKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.AddForeignKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.AddForeignKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -388,8 +400,10 @@ func (w GORMDBWrapper) AddIndex(ctx context.Context, indexName string, columns .
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.AddIndex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.AddIndex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.AddIndex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -430,8 +444,10 @@ func (w GORMDBWrapper) AddUniqueIndex(ctx context.Context, indexName string, col
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.AddUniqueIndex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.AddUniqueIndex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.AddUniqueIndex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -472,8 +488,10 @@ func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBW
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Assign", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Assign", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Assign", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -514,8 +532,10 @@ func (w GORMDBWrapper) Association(ctx context.Context, column string) GORMAssoc
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Association", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Association", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Association", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -556,8 +576,10 @@ func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWr
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Attrs", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Attrs", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Attrs", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -598,8 +620,10 @@ func (w GORMDBWrapper) AutoMigrate(ctx context.Context, values ...interface{}) G
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.AutoMigrate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.AutoMigrate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.AutoMigrate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -640,8 +664,10 @@ func (w GORMDBWrapper) Begin(ctx context.Context) GORMDBWrapper {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Begin", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Begin", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Begin", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -682,8 +708,10 @@ func (w GORMDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) GORMDBW
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.BeginTx", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.BeginTx", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.BeginTx", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -724,8 +752,10 @@ func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMD
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.BlockGlobalUpdate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.BlockGlobalUpdate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.BlockGlobalUpdate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -771,8 +801,10 @@ func (w GORMDBWrapper) Close(ctx context.Context) error {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Close", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Close", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Close", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -813,8 +845,10 @@ func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Commit", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Commit", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Commit", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -860,8 +894,10 @@ func (w GORMDBWrapper) Count(ctx context.Context, value interface{}) GORMDBWrapp
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Count", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Count", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Count", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -902,8 +938,10 @@ func (w GORMDBWrapper) Create(ctx context.Context, value interface{}) GORMDBWrap
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Create", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Create", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Create", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -944,8 +982,10 @@ func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) G
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.CreateTable", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.CreateTable", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.CreateTable", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -991,8 +1031,10 @@ func (w GORMDBWrapper) Debug(ctx context.Context) GORMDBWrapper {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Debug", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Debug", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Debug", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1033,8 +1075,10 @@ func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...i
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Delete", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Delete", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Delete", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1080,8 +1124,10 @@ func (w GORMDBWrapper) DropColumn(ctx context.Context, column string) GORMDBWrap
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.DropColumn", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.DropColumn", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.DropColumn", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1122,8 +1168,10 @@ func (w GORMDBWrapper) DropTable(ctx context.Context, values ...interface{}) GOR
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.DropTable", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.DropTable", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.DropTable", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1164,8 +1212,10 @@ func (w GORMDBWrapper) DropTableIfExists(ctx context.Context, values ...interfac
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.DropTableIfExists", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.DropTableIfExists", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.DropTableIfExists", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1206,8 +1256,10 @@ func (w GORMDBWrapper) Exec(ctx context.Context, sql string, values ...interface
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Exec", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Exec", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Exec", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1248,8 +1300,10 @@ func (w GORMDBWrapper) Find(ctx context.Context, out interface{}, where ...inter
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Find", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Find", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Find", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1290,8 +1344,10 @@ func (w GORMDBWrapper) First(ctx context.Context, out interface{}, where ...inte
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.First", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.First", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.First", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1332,8 +1388,10 @@ func (w GORMDBWrapper) FirstOrCreate(ctx context.Context, out interface{}, where
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.FirstOrCreate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.FirstOrCreate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.FirstOrCreate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1374,8 +1432,10 @@ func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where .
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.FirstOrInit", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.FirstOrInit", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.FirstOrInit", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1426,8 +1486,10 @@ func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Group", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Group", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Group", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1478,8 +1540,10 @@ func (w GORMDBWrapper) Having(ctx context.Context, query interface{}, values ...
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Having", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Having", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Having", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1520,8 +1584,10 @@ func (w GORMDBWrapper) InstantSet(ctx context.Context, name string, value interf
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.InstantSet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.InstantSet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.InstantSet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1562,8 +1628,10 @@ func (w GORMDBWrapper) Joins(ctx context.Context, query string, args ...interfac
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Joins", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Joins", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Joins", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1604,8 +1672,10 @@ func (w GORMDBWrapper) Last(ctx context.Context, out interface{}, where ...inter
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Last", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Last", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Last", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1646,8 +1716,10 @@ func (w GORMDBWrapper) Limit(ctx context.Context, limit interface{}) GORMDBWrapp
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Limit", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Limit", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Limit", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1688,8 +1760,10 @@ func (w GORMDBWrapper) LogMode(ctx context.Context, enable bool) GORMDBWrapper {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.LogMode", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.LogMode", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.LogMode", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1730,8 +1804,10 @@ func (w GORMDBWrapper) Model(ctx context.Context, value interface{}) GORMDBWrapp
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Model", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Model", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Model", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1772,8 +1848,10 @@ func (w GORMDBWrapper) ModifyColumn(ctx context.Context, column string, typ stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.ModifyColumn", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.ModifyColumn", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.ModifyColumn", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1814,8 +1892,10 @@ func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.New", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.New", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.New", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1866,8 +1946,10 @@ func (w GORMDBWrapper) Not(ctx context.Context, query interface{}, args ...inter
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Not", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Not", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Not", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1908,8 +1990,10 @@ func (w GORMDBWrapper) Offset(ctx context.Context, offset interface{}) GORMDBWra
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Offset", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Offset", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Offset", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1950,8 +2034,10 @@ func (w GORMDBWrapper) Omit(ctx context.Context, columns ...string) GORMDBWrappe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Omit", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Omit", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Omit", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1992,8 +2078,10 @@ func (w GORMDBWrapper) Or(ctx context.Context, query interface{}, args ...interf
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Or", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Or", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Or", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2034,8 +2122,10 @@ func (w GORMDBWrapper) Order(ctx context.Context, value interface{}, reorder ...
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Order", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Order", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Order", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2076,8 +2166,10 @@ func (w GORMDBWrapper) Pluck(ctx context.Context, column string, value interface
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Pluck", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Pluck", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Pluck", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2118,8 +2210,10 @@ func (w GORMDBWrapper) Preload(ctx context.Context, column string, conditions ..
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Preload", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Preload", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Preload", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2160,8 +2254,10 @@ func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrap
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Preloads", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Preloads", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Preloads", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2207,8 +2303,10 @@ func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Raw", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Raw", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Raw", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2254,8 +2352,10 @@ func (w GORMDBWrapper) Related(ctx context.Context, value interface{}, foreignKe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Related", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Related", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Related", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2296,8 +2396,10 @@ func (w GORMDBWrapper) RemoveForeignKey(ctx context.Context, field string, dest 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.RemoveForeignKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.RemoveForeignKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.RemoveForeignKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2338,8 +2440,10 @@ func (w GORMDBWrapper) RemoveIndex(ctx context.Context, indexName string) GORMDB
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.RemoveIndex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.RemoveIndex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.RemoveIndex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2380,8 +2484,10 @@ func (w GORMDBWrapper) Rollback(ctx context.Context) GORMDBWrapper {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Rollback", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Rollback", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Rollback", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2422,8 +2528,10 @@ func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrappe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.RollbackUnlessCommitted", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.RollbackUnlessCommitted", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.RollbackUnlessCommitted", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2470,8 +2578,10 @@ func (w GORMDBWrapper) Rows(ctx context.Context) (*sql.Rows, error) {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Rows", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Rows", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Rows", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2512,8 +2622,10 @@ func (w GORMDBWrapper) Save(ctx context.Context, value interface{}) GORMDBWrappe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Save", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Save", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Save", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2554,8 +2666,10 @@ func (w GORMDBWrapper) Scan(ctx context.Context, dest interface{}) GORMDBWrapper
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Scan", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Scan", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Scan", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2596,8 +2710,10 @@ func (w GORMDBWrapper) ScanRows(ctx context.Context, rows *sql.Rows, result inte
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.ScanRows", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.ScanRows", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.ScanRows", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2638,8 +2754,10 @@ func (w GORMDBWrapper) Scopes(ctx context.Context, funcs ...func(*gorm.DB) *gorm
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Scopes", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Scopes", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Scopes", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2680,8 +2798,10 @@ func (w GORMDBWrapper) Select(ctx context.Context, query interface{}, args ...in
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Select", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Select", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Select", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2722,8 +2842,10 @@ func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Set", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Set", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Set", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2768,8 +2890,10 @@ func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride f
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.SetNowFuncOverride", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.SetNowFuncOverride", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.SetNowFuncOverride", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2819,8 +2943,10 @@ func (w GORMDBWrapper) Table(ctx context.Context, name string) GORMDBWrapper {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Table", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Table", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Table", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2861,8 +2987,10 @@ func (w GORMDBWrapper) Take(ctx context.Context, out interface{}, where ...inter
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Take", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Take", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Take", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2903,8 +3031,10 @@ func (w GORMDBWrapper) Transaction(ctx context.Context, fc func(tx *gorm.DB) err
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Transaction", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Transaction", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Transaction", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2945,8 +3075,10 @@ func (w GORMDBWrapper) Unscoped(ctx context.Context) GORMDBWrapper {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Unscoped", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Unscoped", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Unscoped", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2987,8 +3119,10 @@ func (w GORMDBWrapper) Update(ctx context.Context, attrs ...interface{}) GORMDBW
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Update", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Update", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Update", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3029,8 +3163,10 @@ func (w GORMDBWrapper) UpdateColumn(ctx context.Context, attrs ...interface{}) G
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.UpdateColumn", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.UpdateColumn", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.UpdateColumn", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3071,8 +3207,10 @@ func (w GORMDBWrapper) UpdateColumns(ctx context.Context, values interface{}) GO
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.UpdateColumns", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.UpdateColumns", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.UpdateColumns", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3113,8 +3251,10 @@ func (w GORMDBWrapper) Updates(ctx context.Context, values interface{}, ignorePr
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Updates", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Updates", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Updates", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3155,8 +3295,10 @@ func (w GORMDBWrapper) Where(ctx context.Context, query interface{}, args ...int
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DB.Where", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DB.Where", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DB.Where", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span

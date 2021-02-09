@@ -112,8 +112,10 @@ func (w *STSClientWrapper) AssumeRole(ctx context.Context, request *sts.AssumeRo
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AssumeRole", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.AssumeRole", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.AssumeRole", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -165,8 +167,10 @@ func (w *STSClientWrapper) AssumeRoleWithSAML(ctx context.Context, request *sts.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AssumeRoleWithSAML", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.AssumeRoleWithSAML", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.AssumeRoleWithSAML", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -218,8 +222,10 @@ func (w *STSClientWrapper) GetCallerIdentity(ctx context.Context, request *sts.G
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetCallerIdentity", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetCallerIdentity", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetCallerIdentity", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span

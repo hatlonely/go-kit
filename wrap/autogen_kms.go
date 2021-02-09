@@ -112,8 +112,10 @@ func (w *KMSClientWrapper) AsymmetricDecrypt(ctx context.Context, request *kms.A
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AsymmetricDecrypt", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.AsymmetricDecrypt", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.AsymmetricDecrypt", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -165,8 +167,10 @@ func (w *KMSClientWrapper) AsymmetricEncrypt(ctx context.Context, request *kms.A
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AsymmetricEncrypt", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.AsymmetricEncrypt", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.AsymmetricEncrypt", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -218,8 +222,10 @@ func (w *KMSClientWrapper) AsymmetricSign(ctx context.Context, request *kms.Asym
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AsymmetricSign", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.AsymmetricSign", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.AsymmetricSign", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -271,8 +277,10 @@ func (w *KMSClientWrapper) AsymmetricVerify(ctx context.Context, request *kms.As
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AsymmetricVerify", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.AsymmetricVerify", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.AsymmetricVerify", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -324,8 +332,10 @@ func (w *KMSClientWrapper) CancelKeyDeletion(ctx context.Context, request *kms.C
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CancelKeyDeletion", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CancelKeyDeletion", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CancelKeyDeletion", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -377,8 +387,10 @@ func (w *KMSClientWrapper) CertificatePrivateKeyDecrypt(ctx context.Context, req
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CertificatePrivateKeyDecrypt", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CertificatePrivateKeyDecrypt", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CertificatePrivateKeyDecrypt", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -430,8 +442,10 @@ func (w *KMSClientWrapper) CertificatePrivateKeySign(ctx context.Context, reques
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CertificatePrivateKeySign", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CertificatePrivateKeySign", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CertificatePrivateKeySign", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -483,8 +497,10 @@ func (w *KMSClientWrapper) CertificatePublicKeyEncrypt(ctx context.Context, requ
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CertificatePublicKeyEncrypt", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CertificatePublicKeyEncrypt", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CertificatePublicKeyEncrypt", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -536,8 +552,10 @@ func (w *KMSClientWrapper) CertificatePublicKeyVerify(ctx context.Context, reque
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CertificatePublicKeyVerify", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CertificatePublicKeyVerify", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CertificatePublicKeyVerify", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -589,8 +607,10 @@ func (w *KMSClientWrapper) CreateAlias(ctx context.Context, request *kms.CreateA
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateAlias", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateAlias", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateAlias", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -642,8 +662,10 @@ func (w *KMSClientWrapper) CreateCertificate(ctx context.Context, request *kms.C
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateCertificate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateCertificate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateCertificate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -695,8 +717,10 @@ func (w *KMSClientWrapper) CreateKey(ctx context.Context, request *kms.CreateKey
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -738,8 +762,10 @@ func (w *KMSClientWrapper) CreateKeyVersion(ctx context.Context, request *kms.Cr
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateKeyVersion", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateKeyVersion", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateKeyVersion", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -801,8 +827,10 @@ func (w *KMSClientWrapper) CreateSecret(ctx context.Context, request *kms.Create
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateSecret", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateSecret", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateSecret", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -854,8 +882,10 @@ func (w *KMSClientWrapper) Decrypt(ctx context.Context, request *kms.DecryptRequ
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Decrypt", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Decrypt", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Decrypt", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -907,8 +937,10 @@ func (w *KMSClientWrapper) DeleteAlias(ctx context.Context, request *kms.DeleteA
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteAlias", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteAlias", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteAlias", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -960,8 +992,10 @@ func (w *KMSClientWrapper) DeleteCertificate(ctx context.Context, request *kms.D
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteCertificate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteCertificate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteCertificate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1013,8 +1047,10 @@ func (w *KMSClientWrapper) DeleteKeyMaterial(ctx context.Context, request *kms.D
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteKeyMaterial", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteKeyMaterial", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteKeyMaterial", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1066,8 +1102,10 @@ func (w *KMSClientWrapper) DeleteSecret(ctx context.Context, request *kms.Delete
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteSecret", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteSecret", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteSecret", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1119,8 +1157,10 @@ func (w *KMSClientWrapper) DescribeAccountKmsStatus(ctx context.Context, request
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DescribeAccountKmsStatus", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DescribeAccountKmsStatus", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DescribeAccountKmsStatus", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1172,8 +1212,10 @@ func (w *KMSClientWrapper) DescribeCertificate(ctx context.Context, request *kms
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DescribeCertificate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DescribeCertificate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DescribeCertificate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1225,8 +1267,10 @@ func (w *KMSClientWrapper) DescribeKey(ctx context.Context, request *kms.Describ
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DescribeKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DescribeKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DescribeKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1268,8 +1312,10 @@ func (w *KMSClientWrapper) DescribeKeyVersion(ctx context.Context, request *kms.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DescribeKeyVersion", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DescribeKeyVersion", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DescribeKeyVersion", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1331,8 +1377,10 @@ func (w *KMSClientWrapper) DescribeRegions(ctx context.Context, request *kms.Des
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DescribeRegions", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DescribeRegions", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DescribeRegions", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1384,8 +1432,10 @@ func (w *KMSClientWrapper) DescribeSecret(ctx context.Context, request *kms.Desc
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DescribeSecret", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DescribeSecret", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DescribeSecret", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1437,8 +1487,10 @@ func (w *KMSClientWrapper) DescribeService(ctx context.Context, request *kms.Des
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DescribeService", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DescribeService", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DescribeService", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1490,8 +1542,10 @@ func (w *KMSClientWrapper) DisableKey(ctx context.Context, request *kms.DisableK
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DisableKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DisableKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DisableKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1543,8 +1597,10 @@ func (w *KMSClientWrapper) EnableKey(ctx context.Context, request *kms.EnableKey
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.EnableKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.EnableKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.EnableKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1596,8 +1652,10 @@ func (w *KMSClientWrapper) Encrypt(ctx context.Context, request *kms.EncryptRequ
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Encrypt", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Encrypt", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Encrypt", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1649,8 +1707,10 @@ func (w *KMSClientWrapper) ExportCertificate(ctx context.Context, request *kms.E
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ExportCertificate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ExportCertificate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ExportCertificate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1702,8 +1762,10 @@ func (w *KMSClientWrapper) ExportDataKey(ctx context.Context, request *kms.Expor
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ExportDataKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ExportDataKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ExportDataKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1755,8 +1817,10 @@ func (w *KMSClientWrapper) GenerateAndExportDataKey(ctx context.Context, request
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GenerateAndExportDataKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GenerateAndExportDataKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GenerateAndExportDataKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1808,8 +1872,10 @@ func (w *KMSClientWrapper) GenerateDataKey(ctx context.Context, request *kms.Gen
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GenerateDataKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GenerateDataKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GenerateDataKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1861,8 +1927,10 @@ func (w *KMSClientWrapper) GenerateDataKeyWithoutPlaintext(ctx context.Context, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GenerateDataKeyWithoutPlaintext", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GenerateDataKeyWithoutPlaintext", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GenerateDataKeyWithoutPlaintext", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1914,8 +1982,10 @@ func (w *KMSClientWrapper) GetCertificate(ctx context.Context, request *kms.GetC
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetCertificate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetCertificate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetCertificate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1967,8 +2037,10 @@ func (w *KMSClientWrapper) GetParametersForImport(ctx context.Context, request *
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetParametersForImport", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetParametersForImport", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetParametersForImport", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2020,8 +2092,10 @@ func (w *KMSClientWrapper) GetPublicKey(ctx context.Context, request *kms.GetPub
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetPublicKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetPublicKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetPublicKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2073,8 +2147,10 @@ func (w *KMSClientWrapper) GetRandomPassword(ctx context.Context, request *kms.G
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetRandomPassword", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetRandomPassword", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetRandomPassword", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2126,8 +2202,10 @@ func (w *KMSClientWrapper) GetSecretValue(ctx context.Context, request *kms.GetS
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetSecretValue", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetSecretValue", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetSecretValue", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2179,8 +2257,10 @@ func (w *KMSClientWrapper) ImportCertificate(ctx context.Context, request *kms.I
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ImportCertificate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ImportCertificate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ImportCertificate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2232,8 +2312,10 @@ func (w *KMSClientWrapper) ImportEncryptionCertificate(ctx context.Context, requ
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ImportEncryptionCertificate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ImportEncryptionCertificate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ImportEncryptionCertificate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2285,8 +2367,10 @@ func (w *KMSClientWrapper) ImportKeyMaterial(ctx context.Context, request *kms.I
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ImportKeyMaterial", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ImportKeyMaterial", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ImportKeyMaterial", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2338,8 +2422,10 @@ func (w *KMSClientWrapper) ListAliases(ctx context.Context, request *kms.ListAli
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListAliases", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListAliases", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListAliases", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2381,8 +2467,10 @@ func (w *KMSClientWrapper) ListAliasesByKeyId(ctx context.Context, request *kms.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListAliasesByKeyId", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListAliasesByKeyId", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListAliasesByKeyId", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2444,8 +2532,10 @@ func (w *KMSClientWrapper) ListCertificates(ctx context.Context, request *kms.Li
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListCertificates", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListCertificates", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListCertificates", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2497,8 +2587,10 @@ func (w *KMSClientWrapper) ListKeyVersions(ctx context.Context, request *kms.Lis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListKeyVersions", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListKeyVersions", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListKeyVersions", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2550,8 +2642,10 @@ func (w *KMSClientWrapper) ListKeys(ctx context.Context, request *kms.ListKeysRe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListKeys", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListKeys", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListKeys", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2603,8 +2697,10 @@ func (w *KMSClientWrapper) ListResourceTags(ctx context.Context, request *kms.Li
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListResourceTags", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListResourceTags", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListResourceTags", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2656,8 +2752,10 @@ func (w *KMSClientWrapper) ListSecretVersionIds(ctx context.Context, request *km
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListSecretVersionIds", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListSecretVersionIds", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListSecretVersionIds", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2709,8 +2807,10 @@ func (w *KMSClientWrapper) ListSecrets(ctx context.Context, request *kms.ListSec
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListSecrets", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListSecrets", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListSecrets", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2762,8 +2862,10 @@ func (w *KMSClientWrapper) OpenKmsService(ctx context.Context, request *kms.Open
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.OpenKmsService", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.OpenKmsService", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.OpenKmsService", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2815,8 +2917,10 @@ func (w *KMSClientWrapper) PutSecretValue(ctx context.Context, request *kms.PutS
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PutSecretValue", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.PutSecretValue", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.PutSecretValue", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2868,8 +2972,10 @@ func (w *KMSClientWrapper) ReEncrypt(ctx context.Context, request *kms.ReEncrypt
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ReEncrypt", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ReEncrypt", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ReEncrypt", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2921,8 +3027,10 @@ func (w *KMSClientWrapper) RestoreSecret(ctx context.Context, request *kms.Resto
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RestoreSecret", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.RestoreSecret", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.RestoreSecret", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2974,8 +3082,10 @@ func (w *KMSClientWrapper) RotateSecret(ctx context.Context, request *kms.Rotate
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RotateSecret", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.RotateSecret", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.RotateSecret", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3027,8 +3137,10 @@ func (w *KMSClientWrapper) ScheduleKeyDeletion(ctx context.Context, request *kms
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ScheduleKeyDeletion", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ScheduleKeyDeletion", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ScheduleKeyDeletion", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3080,8 +3192,10 @@ func (w *KMSClientWrapper) TagResource(ctx context.Context, request *kms.TagReso
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.TagResource", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.TagResource", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.TagResource", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3133,8 +3247,10 @@ func (w *KMSClientWrapper) UntagResource(ctx context.Context, request *kms.Untag
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UntagResource", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UntagResource", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UntagResource", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3186,8 +3302,10 @@ func (w *KMSClientWrapper) UpdateAlias(ctx context.Context, request *kms.UpdateA
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateAlias", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateAlias", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateAlias", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3239,8 +3357,10 @@ func (w *KMSClientWrapper) UpdateCertificateStatus(ctx context.Context, request 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateCertificateStatus", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateCertificateStatus", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateCertificateStatus", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3292,8 +3412,10 @@ func (w *KMSClientWrapper) UpdateKeyDescription(ctx context.Context, request *km
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateKeyDescription", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateKeyDescription", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateKeyDescription", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3345,8 +3467,10 @@ func (w *KMSClientWrapper) UpdateRotationPolicy(ctx context.Context, request *km
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateRotationPolicy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateRotationPolicy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateRotationPolicy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3398,8 +3522,10 @@ func (w *KMSClientWrapper) UpdateSecret(ctx context.Context, request *kms.Update
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateSecret", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateSecret", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateSecret", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3441,8 +3567,10 @@ func (w *KMSClientWrapper) UpdateSecretRotationPolicy(ctx context.Context, reque
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateSecretRotationPolicy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateSecretRotationPolicy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateSecretRotationPolicy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3494,8 +3622,10 @@ func (w *KMSClientWrapper) UpdateSecretVersionStage(ctx context.Context, request
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateSecretVersionStage", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateSecretVersionStage", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateSecretVersionStage", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3557,8 +3687,10 @@ func (w *KMSClientWrapper) UploadCertificate(ctx context.Context, request *kms.U
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UploadCertificate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UploadCertificate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UploadCertificate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span

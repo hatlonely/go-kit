@@ -113,8 +113,10 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ConfigClient.CancelListenConfig", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ConfigClient.CancelListenConfig", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ConfigClient.CancelListenConfig", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -156,8 +158,10 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ConfigClient.DeleteConfig", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ConfigClient.DeleteConfig", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ConfigClient.DeleteConfig", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -199,8 +203,10 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ConfigClient.GetConfig", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ConfigClient.GetConfig", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ConfigClient.GetConfig", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -241,8 +247,10 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ConfigClient.ListenConfig", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ConfigClient.ListenConfig", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ConfigClient.ListenConfig", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -284,8 +292,10 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ConfigClient.PublishConfig", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ConfigClient.PublishConfig", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ConfigClient.PublishConfig", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -327,8 +337,10 @@ func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.Sear
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ConfigClient.SearchConfig", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ConfigClient.SearchConfig", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ConfigClient.SearchConfig", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span

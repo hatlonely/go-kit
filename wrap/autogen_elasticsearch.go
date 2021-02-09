@@ -1696,8 +1696,10 @@ func (w *ESAliasServiceWrapper) Do(ctx context.Context) (*elastic.AliasResult, e
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.AliasService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.AliasService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.AliasService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1779,8 +1781,10 @@ func (w *ESAliasesServiceWrapper) Do(ctx context.Context) (*elastic.AliasesResul
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.AliasesService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.AliasesService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.AliasesService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1882,8 +1886,10 @@ func (w *ESBulkProcessorServiceWrapper) Do(ctx context.Context) (*elastic.BulkPr
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.BulkProcessorService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.BulkProcessorService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.BulkProcessorService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1955,8 +1961,10 @@ func (w *ESBulkServiceWrapper) Do(ctx context.Context) (*elastic.BulkResponse, e
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.BulkService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.BulkService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.BulkService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2092,8 +2100,10 @@ func (w *ESCatAliasesServiceWrapper) Do(ctx context.Context) (elastic.CatAliases
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.CatAliasesService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.CatAliasesService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.CatAliasesService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2190,8 +2200,10 @@ func (w *ESCatAllocationServiceWrapper) Do(ctx context.Context) (elastic.CatAllo
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.CatAllocationService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.CatAllocationService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.CatAllocationService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2288,8 +2300,10 @@ func (w *ESCatCountServiceWrapper) Do(ctx context.Context) (elastic.CatCountResp
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.CatCountService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.CatCountService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.CatCountService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2391,8 +2405,10 @@ func (w *ESCatHealthServiceWrapper) Do(ctx context.Context) (elastic.CatHealthRe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.CatHealthService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.CatHealthService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.CatHealthService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2489,8 +2505,10 @@ func (w *ESCatIndicesServiceWrapper) Do(ctx context.Context) (elastic.CatIndices
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.CatIndicesService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.CatIndicesService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.CatIndicesService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2602,8 +2620,10 @@ func (w *ESCatShardsServiceWrapper) Do(ctx context.Context) (elastic.CatShardsRe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.CatShardsService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.CatShardsService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.CatShardsService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2700,8 +2720,10 @@ func (w *ESClearScrollServiceWrapper) Do(ctx context.Context) (*elastic.ClearScr
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClearScrollService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClearScrollService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClearScrollService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3435,8 +3457,10 @@ func (w *ESClusterHealthServiceWrapper) Do(ctx context.Context) (*elastic.Cluste
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterHealthService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterHealthService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterHealthService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3579,8 +3603,10 @@ func (w *ESClusterRerouteServiceWrapper) Do(ctx context.Context) (*elastic.Clust
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterRerouteService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterRerouteService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterRerouteService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3693,8 +3719,10 @@ func (w *ESClusterStateServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterStateService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterStateService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterStateService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3807,8 +3835,10 @@ func (w *ESClusterStatsServiceWrapper) Do(ctx context.Context) (*elastic.Cluster
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterStatsService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterStatsService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterStatsService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3931,8 +3961,10 @@ func (w *ESCountServiceWrapper) Do(ctx context.Context) (int64, error) {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.CountService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.CountService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.CountService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4120,8 +4152,10 @@ func (w *ESDeleteByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DeleteByQueryService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DeleteByQueryService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DeleteByQueryService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4163,8 +4197,10 @@ func (w *ESDeleteByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DeleteByQueryService.DoAsync", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DeleteByQueryService.DoAsync", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DeleteByQueryService.DoAsync", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4452,8 +4488,10 @@ func (w *ESDeleteScriptServiceWrapper) Do(ctx context.Context) (*elastic.DeleteS
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DeleteScriptService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DeleteScriptService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DeleteScriptService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4546,8 +4584,10 @@ func (w *ESDeleteServiceWrapper) Do(ctx context.Context) (*elastic.DeleteRespons
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.DeleteService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.DeleteService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.DeleteService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4685,8 +4725,10 @@ func (w *ESExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ExistsService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ExistsService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ExistsService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4834,8 +4876,10 @@ func (w *ESExplainServiceWrapper) Do(ctx context.Context) (*elastic.ExplainRespo
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ExplainService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ExplainService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ExplainService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5003,8 +5047,10 @@ func (w *ESFieldCapsServiceWrapper) Do(ctx context.Context) (*elastic.FieldCapsR
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.FieldCapsService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.FieldCapsService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.FieldCapsService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5102,8 +5148,10 @@ func (w *ESGetScriptServiceWrapper) Do(ctx context.Context) (*elastic.GetScriptR
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.GetScriptService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.GetScriptService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.GetScriptService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5186,8 +5234,10 @@ func (w *ESGetServiceWrapper) Do(ctx context.Context) (*elastic.GetResult, error
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.GetService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.GetService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.GetService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5345,8 +5395,10 @@ func (w *ESIndexServiceWrapper) Do(ctx context.Context) (*elastic.IndexResponse,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndexService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndexService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndexService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5534,8 +5586,10 @@ func (w *ESIndicesAnalyzeServiceWrapper) Do(ctx context.Context) (*elastic.Indic
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesAnalyzeService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesAnalyzeService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesAnalyzeService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5663,8 +5717,10 @@ func (w *ESIndicesClearCacheServiceWrapper) Do(ctx context.Context) (*elastic.In
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesClearCacheService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesClearCacheService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesClearCacheService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5782,8 +5838,10 @@ func (w *ESIndicesCloseServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesCloseService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesCloseService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesCloseService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5901,8 +5959,10 @@ func (w *ESIndicesCreateServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesCreateService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesCreateService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesCreateService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5989,8 +6049,10 @@ func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Do(ctx context.Context) (*e
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesDeleteIndexTemplateService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesDeleteIndexTemplateService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesDeleteIndexTemplateService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6083,8 +6145,10 @@ func (w *ESIndicesDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesDeleteService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesDeleteService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesDeleteService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6177,8 +6241,10 @@ func (w *ESIndicesDeleteTemplateServiceWrapper) Do(ctx context.Context) (*elasti
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesDeleteTemplateService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesDeleteTemplateService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesDeleteTemplateService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6276,8 +6342,10 @@ func (w *ESIndicesExistsServiceWrapper) Do(ctx context.Context) (bool, error) {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesExistsService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesExistsService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesExistsService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6375,8 +6443,10 @@ func (w *ESIndicesExistsTemplateServiceWrapper) Do(ctx context.Context) (bool, e
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesExistsTemplateService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesExistsTemplateService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesExistsTemplateService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6474,8 +6544,10 @@ func (w *ESIndicesFlushServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesFlushService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesFlushService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesFlushService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6583,8 +6655,10 @@ func (w *ESIndicesForcemergeServiceWrapper) Do(ctx context.Context) (*elastic.In
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesForcemergeService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesForcemergeService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesForcemergeService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6697,8 +6771,10 @@ func (w *ESIndicesFreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesFreezeService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesFreezeService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesFreezeService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6811,8 +6887,10 @@ func (w *ESIndicesGetFieldMappingServiceWrapper) Do(ctx context.Context) (map[st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesGetFieldMappingService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesGetFieldMappingService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesGetFieldMappingService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6920,8 +6998,10 @@ func (w *ESIndicesGetIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesGetIndexTemplateService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesGetIndexTemplateService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesGetIndexTemplateService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7024,8 +7104,10 @@ func (w *ESIndicesGetMappingServiceWrapper) Do(ctx context.Context) (map[string]
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesGetMappingService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesGetMappingService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesGetMappingService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7133,8 +7215,10 @@ func (w *ESIndicesGetServiceWrapper) Do(ctx context.Context) (map[string]*elasti
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesGetService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesGetService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesGetService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7242,8 +7326,10 @@ func (w *ESIndicesGetSettingsServiceWrapper) Do(ctx context.Context) (map[string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesGetSettingsService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesGetSettingsService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesGetSettingsService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7351,8 +7437,10 @@ func (w *ESIndicesGetTemplateServiceWrapper) Do(ctx context.Context) (map[string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesGetTemplateService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesGetTemplateService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesGetTemplateService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7450,8 +7538,10 @@ func (w *ESIndicesOpenServiceWrapper) Do(ctx context.Context) (*elastic.IndicesO
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesOpenService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesOpenService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesOpenService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7579,8 +7669,10 @@ func (w *ESIndicesPutIndexTemplateServiceWrapper) Do(ctx context.Context) (*elas
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesPutIndexTemplateService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesPutIndexTemplateService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesPutIndexTemplateService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7683,8 +7775,10 @@ func (w *ESIndicesPutMappingServiceWrapper) Do(ctx context.Context) (*elastic.Pu
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesPutMappingService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesPutMappingService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesPutMappingService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7807,8 +7901,10 @@ func (w *ESIndicesPutSettingsServiceWrapper) Do(ctx context.Context) (*elastic.I
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesPutSettingsService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesPutSettingsService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesPutSettingsService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7931,8 +8027,10 @@ func (w *ESIndicesPutTemplateServiceWrapper) Do(ctx context.Context) (*elastic.I
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesPutTemplateService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesPutTemplateService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesPutTemplateService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8085,8 +8183,10 @@ func (w *ESIndicesRolloverServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesRolloverService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesRolloverService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesRolloverService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8204,8 +8304,10 @@ func (w *ESIndicesSegmentsServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesSegmentsService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesSegmentsService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesSegmentsService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8318,8 +8420,10 @@ func (w *ESIndicesShrinkServiceWrapper) Do(ctx context.Context) (*elastic.Indice
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesShrinkService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesShrinkService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesShrinkService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8427,8 +8531,10 @@ func (w *ESIndicesStatsServiceWrapper) Do(ctx context.Context) (*elastic.Indices
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesStatsService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesStatsService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesStatsService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8546,8 +8652,10 @@ func (w *ESIndicesSyncedFlushServiceWrapper) Do(ctx context.Context) (*elastic.I
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesSyncedFlushService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesSyncedFlushService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesSyncedFlushService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8645,8 +8753,10 @@ func (w *ESIndicesUnfreezeServiceWrapper) Do(ctx context.Context) (*elastic.Indi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IndicesUnfreezeService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IndicesUnfreezeService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IndicesUnfreezeService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8754,8 +8864,10 @@ func (w *ESIngestDeletePipelineServiceWrapper) Do(ctx context.Context) (*elastic
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IngestDeletePipelineService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IngestDeletePipelineService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IngestDeletePipelineService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8848,8 +8960,10 @@ func (w *ESIngestGetPipelineServiceWrapper) Do(ctx context.Context) (elastic.Ing
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IngestGetPipelineService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IngestGetPipelineService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IngestGetPipelineService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8947,8 +9061,10 @@ func (w *ESIngestPutPipelineServiceWrapper) Do(ctx context.Context) (*elastic.In
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IngestPutPipelineService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IngestPutPipelineService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IngestPutPipelineService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9051,8 +9167,10 @@ func (w *ESIngestSimulatePipelineServiceWrapper) Do(ctx context.Context) (*elast
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.IngestSimulatePipelineService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.IngestSimulatePipelineService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.IngestSimulatePipelineService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9145,8 +9263,10 @@ func (w *ESMgetServiceWrapper) Do(ctx context.Context) (*elastic.MgetResponse, e
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.MgetService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.MgetService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.MgetService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9255,8 +9375,10 @@ func (w *ESMultiSearchServiceWrapper) Do(ctx context.Context) (*elastic.MultiSea
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.MultiSearchService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.MultiSearchService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.MultiSearchService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9358,8 +9480,10 @@ func (w *ESMultiTermvectorServiceWrapper) Do(ctx context.Context) (*elastic.Mult
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.MultiTermvectorService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.MultiTermvectorService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.MultiTermvectorService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9517,8 +9641,10 @@ func (w *ESNodesInfoServiceWrapper) Do(ctx context.Context) (*elastic.NodesInfoR
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.NodesInfoService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.NodesInfoService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.NodesInfoService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9616,8 +9742,10 @@ func (w *ESNodesStatsServiceWrapper) Do(ctx context.Context) (*elastic.NodesStat
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.NodesStatsService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.NodesStatsService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.NodesStatsService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9741,8 +9869,10 @@ func (w *ESPingServiceWrapper) Do(ctx context.Context) (*elastic.PingResult, int
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.PingService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.PingService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.PingService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9844,8 +9974,10 @@ func (w *ESPutScriptServiceWrapper) Do(ctx context.Context) (*elastic.PutScriptR
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.PutScriptService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.PutScriptService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.PutScriptService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9938,8 +10070,10 @@ func (w *ESRefreshServiceWrapper) Do(ctx context.Context) (*elastic.RefreshResul
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.RefreshService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.RefreshService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.RefreshService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10046,8 +10180,10 @@ func (w *ESReindexServiceWrapper) Do(ctx context.Context) (*elastic.BulkIndexByS
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ReindexService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ReindexService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ReindexService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10089,8 +10225,10 @@ func (w *ESReindexServiceWrapper) DoAsync(ctx context.Context) (*elastic.StartTa
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ReindexService.DoAsync", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ReindexService.DoAsync", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ReindexService.DoAsync", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10239,8 +10377,10 @@ func (w *ESScrollServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ScrollService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ScrollService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ScrollService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10512,8 +10652,10 @@ func (w *ESSearchServiceWrapper) Do(ctx context.Context) (*elastic.SearchResult,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SearchService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.SearchService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.SearchService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10836,8 +10978,10 @@ func (w *ESSearchShardsServiceWrapper) Do(ctx context.Context) (*elastic.SearchS
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SearchShardsService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.SearchShardsService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.SearchShardsService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10955,8 +11099,10 @@ func (w *ESSnapshotCreateRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotCreateRepositoryService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.SnapshotCreateRepositoryService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.SnapshotCreateRepositoryService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11079,8 +11225,10 @@ func (w *ESSnapshotCreateServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotCreateService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.SnapshotCreateService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.SnapshotCreateService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11178,8 +11326,10 @@ func (w *ESSnapshotDeleteRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotDeleteRepositoryService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.SnapshotDeleteRepositoryService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.SnapshotDeleteRepositoryService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11272,8 +11422,10 @@ func (w *ESSnapshotDeleteServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotDeleteService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.SnapshotDeleteService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.SnapshotDeleteService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11361,8 +11513,10 @@ func (w *ESSnapshotGetRepositoryServiceWrapper) Do(ctx context.Context) (elastic
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotGetRepositoryService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.SnapshotGetRepositoryService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.SnapshotGetRepositoryService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11455,8 +11609,10 @@ func (w *ESSnapshotGetServiceWrapper) Do(ctx context.Context) (*elastic.Snapshot
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotGetService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.SnapshotGetService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.SnapshotGetService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11564,8 +11720,10 @@ func (w *ESSnapshotRestoreServiceWrapper) Do(ctx context.Context) (*elastic.Snap
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotRestoreService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.SnapshotRestoreService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.SnapshotRestoreService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11703,8 +11861,10 @@ func (w *ESSnapshotStatusServiceWrapper) Do(ctx context.Context) (*elastic.Snaps
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotStatusService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.SnapshotStatusService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.SnapshotStatusService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11797,8 +11957,10 @@ func (w *ESSnapshotVerifyRepositoryServiceWrapper) Do(ctx context.Context) (*ela
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.SnapshotVerifyRepositoryService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.SnapshotVerifyRepositoryService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.SnapshotVerifyRepositoryService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11896,8 +12058,10 @@ func (w *ESTasksCancelServiceWrapper) Do(ctx context.Context) (*elastic.TasksLis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TasksCancelService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TasksCancelService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TasksCancelService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12000,8 +12164,10 @@ func (w *ESTasksGetTaskServiceWrapper) Do(ctx context.Context) (*elastic.TasksGe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TasksGetTaskService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TasksGetTaskService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TasksGetTaskService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12104,8 +12270,10 @@ func (w *ESTasksListServiceWrapper) Do(ctx context.Context) (*elastic.TasksListR
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TasksListService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TasksListService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TasksListService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12223,8 +12391,10 @@ func (w *ESTermvectorsServiceWrapper) Do(ctx context.Context) (*elastic.Termvect
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TermvectorsService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TermvectorsService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TermvectorsService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12432,8 +12602,10 @@ func (w *ESUpdateByQueryServiceWrapper) Do(ctx context.Context) (*elastic.BulkIn
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.UpdateByQueryService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.UpdateByQueryService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.UpdateByQueryService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12475,8 +12647,10 @@ func (w *ESUpdateByQueryServiceWrapper) DoAsync(ctx context.Context) (*elastic.S
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.UpdateByQueryService.DoAsync", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.UpdateByQueryService.DoAsync", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.UpdateByQueryService.DoAsync", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12784,8 +12958,10 @@ func (w *ESUpdateServiceWrapper) Do(ctx context.Context) (*elastic.UpdateRespons
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.UpdateService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.UpdateService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.UpdateService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13002,8 +13178,10 @@ func (w *ESValidateServiceWrapper) Do(ctx context.Context) (*elastic.ValidateRes
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ValidateService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ValidateService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ValidateService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13126,8 +13304,10 @@ func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Do(ctx context.Context) (*elas
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackIlmDeleteLifecycleService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackIlmDeleteLifecycleService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackIlmDeleteLifecycleService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13225,8 +13405,10 @@ func (w *ESXPackIlmGetLifecycleServiceWrapper) Do(ctx context.Context) (map[stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackIlmGetLifecycleService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackIlmGetLifecycleService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackIlmGetLifecycleService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13334,8 +13516,10 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) Do(ctx context.Context) (*elastic
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackIlmPutLifecycleService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackIlmPutLifecycleService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackIlmPutLifecycleService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13433,8 +13617,10 @@ func (w *ESXPackInfoServiceWrapper) Do(ctx context.Context) (*elastic.XPackInfoS
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackInfoService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackInfoService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackInfoService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13517,8 +13703,10 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Do(ctx context.Context) (*
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityChangePasswordService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackSecurityChangePasswordService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackSecurityChangePasswordService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13611,8 +13799,10 @@ func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Do(ctx context.Context)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityDeleteRoleMappingService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackSecurityDeleteRoleMappingService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackSecurityDeleteRoleMappingService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13695,8 +13885,10 @@ func (w *ESXPackSecurityDeleteRoleServiceWrapper) Do(ctx context.Context) (*elas
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityDeleteRoleService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackSecurityDeleteRoleService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackSecurityDeleteRoleService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13779,8 +13971,10 @@ func (w *ESXPackSecurityDeleteUserServiceWrapper) Do(ctx context.Context) (*elas
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityDeleteUserService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackSecurityDeleteUserService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackSecurityDeleteUserService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13868,8 +14062,10 @@ func (w *ESXPackSecurityDisableUserServiceWrapper) Do(ctx context.Context) (*ela
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityDisableUserService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackSecurityDisableUserService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackSecurityDisableUserService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13957,8 +14153,10 @@ func (w *ESXPackSecurityEnableUserServiceWrapper) Do(ctx context.Context) (*elas
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityEnableUserService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackSecurityEnableUserService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackSecurityEnableUserService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14046,8 +14244,10 @@ func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Do(ctx context.Context) (*
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityGetRoleMappingService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackSecurityGetRoleMappingService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackSecurityGetRoleMappingService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14130,8 +14330,10 @@ func (w *ESXPackSecurityGetRoleServiceWrapper) Do(ctx context.Context) (*elastic
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityGetRoleService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackSecurityGetRoleService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackSecurityGetRoleService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14214,8 +14416,10 @@ func (w *ESXPackSecurityGetUserServiceWrapper) Do(ctx context.Context) (*elastic
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityGetUserService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackSecurityGetUserService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackSecurityGetUserService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14303,8 +14507,10 @@ func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Do(ctx context.Context) (*
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityPutRoleMappingService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackSecurityPutRoleMappingService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackSecurityPutRoleMappingService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14392,8 +14598,10 @@ func (w *ESXPackSecurityPutRoleServiceWrapper) Do(ctx context.Context) (*elastic
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityPutRoleService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackSecurityPutRoleService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackSecurityPutRoleService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14481,8 +14689,10 @@ func (w *ESXPackSecurityPutUserServiceWrapper) Do(ctx context.Context) (*elastic
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackSecurityPutUserService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackSecurityPutUserService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackSecurityPutUserService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14580,8 +14790,10 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) Do(ctx context.Context) (*elastic
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherAckWatchService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackWatcherAckWatchService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackWatcherAckWatchService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14669,8 +14881,10 @@ func (w *ESXPackWatcherActivateWatchServiceWrapper) Do(ctx context.Context) (*el
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherActivateWatchService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackWatcherActivateWatchService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackWatcherActivateWatchService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14758,8 +14972,10 @@ func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Do(ctx context.Context) (*
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherDeactivateWatchService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackWatcherDeactivateWatchService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackWatcherDeactivateWatchService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14847,8 +15063,10 @@ func (w *ESXPackWatcherDeleteWatchServiceWrapper) Do(ctx context.Context) (*elas
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherDeleteWatchService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackWatcherDeleteWatchService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackWatcherDeleteWatchService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14951,8 +15169,10 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Do(ctx context.Context) (*ela
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherExecuteWatchService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackWatcherExecuteWatchService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackWatcherExecuteWatchService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15035,8 +15255,10 @@ func (w *ESXPackWatcherGetWatchServiceWrapper) Do(ctx context.Context) (*elastic
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherGetWatchService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackWatcherGetWatchService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackWatcherGetWatchService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15129,8 +15351,10 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Do(ctx context.Context) (*elastic
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherPutWatchService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackWatcherPutWatchService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackWatcherPutWatchService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15228,8 +15452,10 @@ func (w *ESXPackWatcherStartServiceWrapper) Do(ctx context.Context) (*elastic.XP
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherStartService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackWatcherStartService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackWatcherStartService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15307,8 +15533,10 @@ func (w *ESXPackWatcherStatsServiceWrapper) Do(ctx context.Context) (*elastic.XP
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherStatsService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackWatcherStatsService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackWatcherStatsService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15396,8 +15624,10 @@ func (w *ESXPackWatcherStopServiceWrapper) Do(ctx context.Context) (*elastic.XPa
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.XPackWatcherStopService.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.XPackWatcherStopService.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.XPackWatcherStopService.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span

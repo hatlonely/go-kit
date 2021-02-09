@@ -143,8 +143,10 @@ func (w *MongoClientWrapper) Connect(ctx context.Context) error {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Connect", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Connect", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Connect", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -190,8 +192,10 @@ func (w *MongoClientWrapper) Disconnect(ctx context.Context) error {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Disconnect", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Disconnect", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Disconnect", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -233,8 +237,10 @@ func (w *MongoClientWrapper) ListDatabaseNames(ctx context.Context, filter inter
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListDatabaseNames", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListDatabaseNames", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListDatabaseNames", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -276,8 +282,10 @@ func (w *MongoClientWrapper) ListDatabases(ctx context.Context, filter interface
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListDatabases", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListDatabases", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListDatabases", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -323,8 +331,10 @@ func (w *MongoClientWrapper) Ping(ctx context.Context, rp *readpref.ReadPref) er
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Ping", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Ping", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Ping", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -366,8 +376,10 @@ func (w *MongoClientWrapper) StartSession(ctx context.Context, opts ...*options.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.StartSession", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.StartSession", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.StartSession", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -408,8 +420,10 @@ func (w *MongoClientWrapper) UseSession(ctx context.Context, fn func(mongo.Sessi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UseSession", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UseSession", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UseSession", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -450,8 +464,10 @@ func (w *MongoClientWrapper) UseSessionWithOptions(ctx context.Context, opts *op
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UseSessionWithOptions", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UseSessionWithOptions", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UseSessionWithOptions", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -493,8 +509,10 @@ func (w *MongoClientWrapper) Watch(ctx context.Context, pipeline interface{}, op
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Watch", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Watch", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Watch", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -536,8 +554,10 @@ func (w *MongoCollectionWrapper) Aggregate(ctx context.Context, pipeline interfa
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.Aggregate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.Aggregate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.Aggregate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -579,8 +599,10 @@ func (w *MongoCollectionWrapper) BulkWrite(ctx context.Context, models []mongo.W
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.BulkWrite", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.BulkWrite", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.BulkWrite", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -622,8 +644,10 @@ func (w *MongoCollectionWrapper) Clone(ctx context.Context, opts ...*options.Col
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.Clone", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.Clone", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.Clone", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -665,8 +689,10 @@ func (w *MongoCollectionWrapper) CountDocuments(ctx context.Context, filter inte
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.CountDocuments", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.CountDocuments", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.CountDocuments", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -713,8 +739,10 @@ func (w *MongoCollectionWrapper) DeleteMany(ctx context.Context, filter interfac
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.DeleteMany", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.DeleteMany", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.DeleteMany", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -756,8 +784,10 @@ func (w *MongoCollectionWrapper) DeleteOne(ctx context.Context, filter interface
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.DeleteOne", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.DeleteOne", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.DeleteOne", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -799,8 +829,10 @@ func (w *MongoCollectionWrapper) Distinct(ctx context.Context, fieldName string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.Distinct", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.Distinct", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.Distinct", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -841,8 +873,10 @@ func (w *MongoCollectionWrapper) Drop(ctx context.Context) error {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.Drop", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.Drop", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.Drop", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -884,8 +918,10 @@ func (w *MongoCollectionWrapper) EstimatedDocumentCount(ctx context.Context, opt
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.EstimatedDocumentCount", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.EstimatedDocumentCount", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.EstimatedDocumentCount", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -927,8 +963,10 @@ func (w *MongoCollectionWrapper) Find(ctx context.Context, filter interface{}, o
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.Find", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.Find", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.Find", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -995,8 +1033,10 @@ func (w *MongoCollectionWrapper) InsertMany(ctx context.Context, documents []int
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.InsertMany", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.InsertMany", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.InsertMany", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1038,8 +1078,10 @@ func (w *MongoCollectionWrapper) InsertOne(ctx context.Context, document interfa
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.InsertOne", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.InsertOne", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.InsertOne", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1086,8 +1128,10 @@ func (w *MongoCollectionWrapper) ReplaceOne(ctx context.Context, filter interfac
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.ReplaceOne", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.ReplaceOne", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.ReplaceOne", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1129,8 +1173,10 @@ func (w *MongoCollectionWrapper) UpdateMany(ctx context.Context, filter interfac
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.UpdateMany", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.UpdateMany", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.UpdateMany", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1172,8 +1218,10 @@ func (w *MongoCollectionWrapper) UpdateOne(ctx context.Context, filter interface
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.UpdateOne", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.UpdateOne", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.UpdateOne", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1215,8 +1263,10 @@ func (w *MongoCollectionWrapper) Watch(ctx context.Context, pipeline interface{}
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Collection.Watch", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Collection.Watch", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Collection.Watch", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1258,8 +1308,10 @@ func (w *MongoDatabaseWrapper) Aggregate(ctx context.Context, pipeline interface
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.Aggregate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Database.Aggregate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Database.Aggregate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1310,8 +1362,10 @@ func (w *MongoDatabaseWrapper) CreateCollection(ctx context.Context, name string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.CreateCollection", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Database.CreateCollection", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Database.CreateCollection", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1352,8 +1406,10 @@ func (w *MongoDatabaseWrapper) CreateView(ctx context.Context, viewName string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.CreateView", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Database.CreateView", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Database.CreateView", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1394,8 +1450,10 @@ func (w *MongoDatabaseWrapper) Drop(ctx context.Context) error {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.Drop", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Database.Drop", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Database.Drop", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1437,8 +1495,10 @@ func (w *MongoDatabaseWrapper) ListCollectionNames(ctx context.Context, filter i
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.ListCollectionNames", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Database.ListCollectionNames", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Database.ListCollectionNames", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1480,8 +1540,10 @@ func (w *MongoDatabaseWrapper) ListCollections(ctx context.Context, filter inter
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.ListCollections", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Database.ListCollections", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Database.ListCollections", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1543,8 +1605,10 @@ func (w *MongoDatabaseWrapper) RunCommandCursor(ctx context.Context, runCommand 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.RunCommandCursor", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Database.RunCommandCursor", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Database.RunCommandCursor", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1586,8 +1650,10 @@ func (w *MongoDatabaseWrapper) Watch(ctx context.Context, pipeline interface{}, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Database.Watch", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Database.Watch", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Database.Watch", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span

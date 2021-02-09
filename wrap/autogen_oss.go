@@ -128,8 +128,10 @@ func (w *OSSBucketWrapper) AbortMultipartUpload(ctx context.Context, imur oss.In
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.AbortMultipartUpload", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.AbortMultipartUpload", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.AbortMultipartUpload", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -171,8 +173,10 @@ func (w *OSSBucketWrapper) AppendObject(ctx context.Context, objectKey string, r
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.AppendObject", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.AppendObject", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.AppendObject", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -214,8 +218,10 @@ func (w *OSSBucketWrapper) CompleteMultipartUpload(ctx context.Context, imur oss
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CompleteMultipartUpload", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.CompleteMultipartUpload", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.CompleteMultipartUpload", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -256,8 +262,10 @@ func (w *OSSBucketWrapper) CopyFile(ctx context.Context, srcBucketName string, s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CopyFile", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.CopyFile", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.CopyFile", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -299,8 +307,10 @@ func (w *OSSBucketWrapper) CopyObject(ctx context.Context, srcObjectKey string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CopyObject", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.CopyObject", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.CopyObject", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -342,8 +352,10 @@ func (w *OSSBucketWrapper) CopyObjectFrom(ctx context.Context, srcBucketName str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CopyObjectFrom", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.CopyObjectFrom", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.CopyObjectFrom", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -385,8 +397,10 @@ func (w *OSSBucketWrapper) CopyObjectTo(ctx context.Context, destBucketName stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CopyObjectTo", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.CopyObjectTo", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.CopyObjectTo", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -428,8 +442,10 @@ func (w *OSSBucketWrapper) CreateLiveChannel(ctx context.Context, channelName st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CreateLiveChannel", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.CreateLiveChannel", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.CreateLiveChannel", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -471,8 +487,10 @@ func (w *OSSBucketWrapper) CreateSelectCsvObjectMeta(ctx context.Context, key st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CreateSelectCsvObjectMeta", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.CreateSelectCsvObjectMeta", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.CreateSelectCsvObjectMeta", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -514,8 +532,10 @@ func (w *OSSBucketWrapper) CreateSelectJsonObjectMeta(ctx context.Context, key s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.CreateSelectJsonObjectMeta", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.CreateSelectJsonObjectMeta", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.CreateSelectJsonObjectMeta", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -556,8 +576,10 @@ func (w *OSSBucketWrapper) DeleteLiveChannel(ctx context.Context, channelName st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DeleteLiveChannel", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.DeleteLiveChannel", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.DeleteLiveChannel", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -598,8 +620,10 @@ func (w *OSSBucketWrapper) DeleteObject(ctx context.Context, objectKey string, o
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DeleteObject", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.DeleteObject", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.DeleteObject", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -640,8 +664,10 @@ func (w *OSSBucketWrapper) DeleteObjectTagging(ctx context.Context, objectKey st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DeleteObjectTagging", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.DeleteObjectTagging", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.DeleteObjectTagging", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -683,8 +709,10 @@ func (w *OSSBucketWrapper) DeleteObjectVersions(ctx context.Context, objectVersi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DeleteObjectVersions", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.DeleteObjectVersions", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.DeleteObjectVersions", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -726,8 +754,10 @@ func (w *OSSBucketWrapper) DeleteObjects(ctx context.Context, objectKeys []strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DeleteObjects", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.DeleteObjects", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.DeleteObjects", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -769,8 +799,10 @@ func (w *OSSBucketWrapper) Do(ctx context.Context, method string, objectName str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -812,8 +844,10 @@ func (w *OSSBucketWrapper) DoAppendObject(ctx context.Context, request *oss.Appe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DoAppendObject", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.DoAppendObject", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.DoAppendObject", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -855,8 +889,10 @@ func (w *OSSBucketWrapper) DoGetObject(ctx context.Context, request *oss.GetObje
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DoGetObject", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.DoGetObject", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.DoGetObject", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -898,8 +934,10 @@ func (w *OSSBucketWrapper) DoGetObjectWithURL(ctx context.Context, signedURL str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DoGetObjectWithURL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.DoGetObjectWithURL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.DoGetObjectWithURL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -941,8 +979,10 @@ func (w *OSSBucketWrapper) DoPostSelectObject(ctx context.Context, key string, p
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DoPostSelectObject", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.DoPostSelectObject", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.DoPostSelectObject", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -984,8 +1024,10 @@ func (w *OSSBucketWrapper) DoPutObject(ctx context.Context, request *oss.PutObje
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DoPutObject", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.DoPutObject", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.DoPutObject", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1027,8 +1069,10 @@ func (w *OSSBucketWrapper) DoPutObjectWithURL(ctx context.Context, signedURL str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DoPutObjectWithURL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.DoPutObjectWithURL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.DoPutObjectWithURL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1070,8 +1114,10 @@ func (w *OSSBucketWrapper) DoUploadPart(ctx context.Context, request *oss.Upload
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DoUploadPart", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.DoUploadPart", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.DoUploadPart", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1112,8 +1158,10 @@ func (w *OSSBucketWrapper) DownloadFile(ctx context.Context, objectKey string, f
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.DownloadFile", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.DownloadFile", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.DownloadFile", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1160,8 +1208,10 @@ func (w *OSSBucketWrapper) GetLiveChannelHistory(ctx context.Context, channelNam
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelHistory", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelHistory", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelHistory", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1203,8 +1253,10 @@ func (w *OSSBucketWrapper) GetLiveChannelInfo(ctx context.Context, channelName s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelInfo", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelInfo", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelInfo", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1246,8 +1298,10 @@ func (w *OSSBucketWrapper) GetLiveChannelStat(ctx context.Context, channelName s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelStat", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelStat", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.GetLiveChannelStat", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1289,8 +1343,10 @@ func (w *OSSBucketWrapper) GetObject(ctx context.Context, objectKey string, opti
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObject", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.GetObject", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.GetObject", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1332,8 +1388,10 @@ func (w *OSSBucketWrapper) GetObjectACL(ctx context.Context, objectKey string, o
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObjectACL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.GetObjectACL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.GetObjectACL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1375,8 +1433,10 @@ func (w *OSSBucketWrapper) GetObjectDetailedMeta(ctx context.Context, objectKey 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObjectDetailedMeta", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.GetObjectDetailedMeta", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.GetObjectDetailedMeta", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1418,8 +1478,10 @@ func (w *OSSBucketWrapper) GetObjectMeta(ctx context.Context, objectKey string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObjectMeta", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.GetObjectMeta", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.GetObjectMeta", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1461,8 +1523,10 @@ func (w *OSSBucketWrapper) GetObjectTagging(ctx context.Context, objectKey strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObjectTagging", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.GetObjectTagging", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.GetObjectTagging", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1503,8 +1567,10 @@ func (w *OSSBucketWrapper) GetObjectToFile(ctx context.Context, objectKey string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObjectToFile", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.GetObjectToFile", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.GetObjectToFile", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1545,8 +1611,10 @@ func (w *OSSBucketWrapper) GetObjectToFileWithURL(ctx context.Context, signedURL
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObjectToFileWithURL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.GetObjectToFileWithURL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.GetObjectToFileWithURL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1588,8 +1656,10 @@ func (w *OSSBucketWrapper) GetObjectWithURL(ctx context.Context, signedURL strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetObjectWithURL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.GetObjectWithURL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.GetObjectWithURL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1631,8 +1701,10 @@ func (w *OSSBucketWrapper) GetSymlink(ctx context.Context, objectKey string, opt
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetSymlink", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.GetSymlink", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.GetSymlink", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1674,8 +1746,10 @@ func (w *OSSBucketWrapper) GetVodPlaylist(ctx context.Context, channelName strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.GetVodPlaylist", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.GetVodPlaylist", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.GetVodPlaylist", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1717,8 +1791,10 @@ func (w *OSSBucketWrapper) InitiateMultipartUpload(ctx context.Context, objectKe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.InitiateMultipartUpload", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.InitiateMultipartUpload", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.InitiateMultipartUpload", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1760,8 +1836,10 @@ func (w *OSSBucketWrapper) IsObjectExist(ctx context.Context, objectKey string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.IsObjectExist", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.IsObjectExist", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.IsObjectExist", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1803,8 +1881,10 @@ func (w *OSSBucketWrapper) ListLiveChannel(ctx context.Context, options ...oss.O
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.ListLiveChannel", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.ListLiveChannel", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.ListLiveChannel", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1846,8 +1926,10 @@ func (w *OSSBucketWrapper) ListMultipartUploads(ctx context.Context, options ...
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.ListMultipartUploads", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.ListMultipartUploads", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.ListMultipartUploads", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1889,8 +1971,10 @@ func (w *OSSBucketWrapper) ListObjectVersions(ctx context.Context, options ...os
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.ListObjectVersions", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.ListObjectVersions", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.ListObjectVersions", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1932,8 +2016,10 @@ func (w *OSSBucketWrapper) ListObjects(ctx context.Context, options ...oss.Optio
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.ListObjects", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.ListObjects", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.ListObjects", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1975,8 +2061,10 @@ func (w *OSSBucketWrapper) ListObjectsV2(ctx context.Context, options ...oss.Opt
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.ListObjectsV2", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.ListObjectsV2", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.ListObjectsV2", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2018,8 +2106,10 @@ func (w *OSSBucketWrapper) ListUploadedParts(ctx context.Context, imur oss.Initi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.ListUploadedParts", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.ListUploadedParts", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.ListUploadedParts", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2061,8 +2151,10 @@ func (w *OSSBucketWrapper) OptionsMethod(ctx context.Context, objectKey string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.OptionsMethod", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.OptionsMethod", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.OptionsMethod", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2103,8 +2195,10 @@ func (w *OSSBucketWrapper) PostVodPlaylist(ctx context.Context, channelName stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PostVodPlaylist", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.PostVodPlaylist", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.PostVodPlaylist", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2146,8 +2240,10 @@ func (w *OSSBucketWrapper) ProcessObject(ctx context.Context, objectKey string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.ProcessObject", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.ProcessObject", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.ProcessObject", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2188,8 +2284,10 @@ func (w *OSSBucketWrapper) PutLiveChannelStatus(ctx context.Context, channelName
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PutLiveChannelStatus", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.PutLiveChannelStatus", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.PutLiveChannelStatus", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2230,8 +2328,10 @@ func (w *OSSBucketWrapper) PutObject(ctx context.Context, objectKey string, read
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PutObject", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.PutObject", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.PutObject", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2272,8 +2372,10 @@ func (w *OSSBucketWrapper) PutObjectFromFile(ctx context.Context, objectKey stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PutObjectFromFile", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.PutObjectFromFile", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.PutObjectFromFile", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2314,8 +2416,10 @@ func (w *OSSBucketWrapper) PutObjectFromFileWithURL(ctx context.Context, signedU
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PutObjectFromFileWithURL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.PutObjectFromFileWithURL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.PutObjectFromFileWithURL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2356,8 +2460,10 @@ func (w *OSSBucketWrapper) PutObjectTagging(ctx context.Context, objectKey strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PutObjectTagging", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.PutObjectTagging", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.PutObjectTagging", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2398,8 +2504,10 @@ func (w *OSSBucketWrapper) PutObjectWithURL(ctx context.Context, signedURL strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PutObjectWithURL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.PutObjectWithURL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.PutObjectWithURL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2440,8 +2548,10 @@ func (w *OSSBucketWrapper) PutSymlink(ctx context.Context, symObjectKey string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.PutSymlink", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.PutSymlink", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.PutSymlink", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2482,8 +2592,10 @@ func (w *OSSBucketWrapper) RestoreObject(ctx context.Context, objectKey string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.RestoreObject", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.RestoreObject", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.RestoreObject", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2524,8 +2636,10 @@ func (w *OSSBucketWrapper) RestoreObjectDetail(ctx context.Context, objectKey st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.RestoreObjectDetail", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.RestoreObjectDetail", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.RestoreObjectDetail", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2566,8 +2680,10 @@ func (w *OSSBucketWrapper) RestoreObjectXML(ctx context.Context, objectKey strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.RestoreObjectXML", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.RestoreObjectXML", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.RestoreObjectXML", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2609,8 +2725,10 @@ func (w *OSSBucketWrapper) SelectObject(ctx context.Context, key string, selectR
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.SelectObject", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.SelectObject", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.SelectObject", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2651,8 +2769,10 @@ func (w *OSSBucketWrapper) SelectObjectIntoFile(ctx context.Context, key string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.SelectObjectIntoFile", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.SelectObjectIntoFile", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.SelectObjectIntoFile", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2693,8 +2813,10 @@ func (w *OSSBucketWrapper) SetObjectACL(ctx context.Context, objectKey string, o
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.SetObjectACL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.SetObjectACL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.SetObjectACL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2735,8 +2857,10 @@ func (w *OSSBucketWrapper) SetObjectMeta(ctx context.Context, objectKey string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.SetObjectMeta", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.SetObjectMeta", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.SetObjectMeta", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2778,8 +2902,10 @@ func (w *OSSBucketWrapper) SignRtmpURL(ctx context.Context, channelName string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.SignRtmpURL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.SignRtmpURL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.SignRtmpURL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2821,8 +2947,10 @@ func (w *OSSBucketWrapper) SignURL(ctx context.Context, objectKey string, method
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.SignURL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.SignURL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.SignURL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2863,8 +2991,10 @@ func (w *OSSBucketWrapper) UploadFile(ctx context.Context, objectKey string, fil
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.UploadFile", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.UploadFile", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.UploadFile", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2906,8 +3036,10 @@ func (w *OSSBucketWrapper) UploadPart(ctx context.Context, imur oss.InitiateMult
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.UploadPart", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.UploadPart", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.UploadPart", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2949,8 +3081,10 @@ func (w *OSSBucketWrapper) UploadPartCopy(ctx context.Context, imur oss.Initiate
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.UploadPartCopy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.UploadPartCopy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.UploadPartCopy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2992,8 +3126,10 @@ func (w *OSSBucketWrapper) UploadPartFromFile(ctx context.Context, imur oss.Init
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Bucket.UploadPartFromFile", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Bucket.UploadPartFromFile", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Bucket.UploadPartFromFile", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3034,8 +3170,10 @@ func (w *OSSClientWrapper) AbortBucketWorm(ctx context.Context, bucketName strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AbortBucketWorm", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.AbortBucketWorm", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.AbortBucketWorm", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3083,8 +3221,10 @@ func (w *OSSClientWrapper) CompleteBucketWorm(ctx context.Context, bucketName st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CompleteBucketWorm", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CompleteBucketWorm", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CompleteBucketWorm", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3125,8 +3265,10 @@ func (w *OSSClientWrapper) CreateBucket(ctx context.Context, bucketName string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateBucket", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateBucket", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateBucket", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3167,8 +3309,10 @@ func (w *OSSClientWrapper) DeleteBucket(ctx context.Context, bucketName string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucket", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteBucket", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteBucket", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3209,8 +3353,10 @@ func (w *OSSClientWrapper) DeleteBucketCORS(ctx context.Context, bucketName stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketCORS", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteBucketCORS", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteBucketCORS", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3251,8 +3397,10 @@ func (w *OSSClientWrapper) DeleteBucketEncryption(ctx context.Context, bucketNam
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketEncryption", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteBucketEncryption", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteBucketEncryption", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3293,8 +3441,10 @@ func (w *OSSClientWrapper) DeleteBucketInventory(ctx context.Context, bucketName
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketInventory", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteBucketInventory", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteBucketInventory", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3335,8 +3485,10 @@ func (w *OSSClientWrapper) DeleteBucketLifecycle(ctx context.Context, bucketName
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketLifecycle", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteBucketLifecycle", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteBucketLifecycle", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3377,8 +3529,10 @@ func (w *OSSClientWrapper) DeleteBucketLogging(ctx context.Context, bucketName s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketLogging", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteBucketLogging", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteBucketLogging", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3419,8 +3573,10 @@ func (w *OSSClientWrapper) DeleteBucketPolicy(ctx context.Context, bucketName st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketPolicy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteBucketPolicy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteBucketPolicy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3461,8 +3617,10 @@ func (w *OSSClientWrapper) DeleteBucketQosInfo(ctx context.Context, bucketName s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketQosInfo", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteBucketQosInfo", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteBucketQosInfo", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3503,8 +3661,10 @@ func (w *OSSClientWrapper) DeleteBucketTagging(ctx context.Context, bucketName s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketTagging", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteBucketTagging", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteBucketTagging", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3545,8 +3705,10 @@ func (w *OSSClientWrapper) DeleteBucketWebsite(ctx context.Context, bucketName s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteBucketWebsite", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteBucketWebsite", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteBucketWebsite", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3587,8 +3749,10 @@ func (w *OSSClientWrapper) ExtendBucketWorm(ctx context.Context, bucketName stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ExtendBucketWorm", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ExtendBucketWorm", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ExtendBucketWorm", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3630,8 +3794,10 @@ func (w *OSSClientWrapper) GetBucketACL(ctx context.Context, bucketName string) 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketACL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketACL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketACL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3673,8 +3839,10 @@ func (w *OSSClientWrapper) GetBucketAsyncTask(ctx context.Context, bucketName st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketAsyncTask", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketAsyncTask", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketAsyncTask", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3716,8 +3884,10 @@ func (w *OSSClientWrapper) GetBucketCORS(ctx context.Context, bucketName string)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketCORS", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketCORS", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketCORS", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3759,8 +3929,10 @@ func (w *OSSClientWrapper) GetBucketEncryption(ctx context.Context, bucketName s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketEncryption", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketEncryption", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketEncryption", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3802,8 +3974,10 @@ func (w *OSSClientWrapper) GetBucketInfo(ctx context.Context, bucketName string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketInfo", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketInfo", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketInfo", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3845,8 +4019,10 @@ func (w *OSSClientWrapper) GetBucketInventory(ctx context.Context, bucketName st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketInventory", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketInventory", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketInventory", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3888,8 +4064,10 @@ func (w *OSSClientWrapper) GetBucketLifecycle(ctx context.Context, bucketName st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketLifecycle", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketLifecycle", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketLifecycle", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3931,8 +4109,10 @@ func (w *OSSClientWrapper) GetBucketLocation(ctx context.Context, bucketName str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketLocation", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketLocation", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketLocation", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3974,8 +4154,10 @@ func (w *OSSClientWrapper) GetBucketLogging(ctx context.Context, bucketName stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketLogging", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketLogging", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketLogging", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4017,8 +4199,10 @@ func (w *OSSClientWrapper) GetBucketPolicy(ctx context.Context, bucketName strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketPolicy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketPolicy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketPolicy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4060,8 +4244,10 @@ func (w *OSSClientWrapper) GetBucketQosInfo(ctx context.Context, bucketName stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketQosInfo", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketQosInfo", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketQosInfo", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4103,8 +4289,10 @@ func (w *OSSClientWrapper) GetBucketReferer(ctx context.Context, bucketName stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketReferer", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketReferer", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketReferer", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4146,8 +4334,10 @@ func (w *OSSClientWrapper) GetBucketRequestPayment(ctx context.Context, bucketNa
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketRequestPayment", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketRequestPayment", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketRequestPayment", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4189,8 +4379,10 @@ func (w *OSSClientWrapper) GetBucketStat(ctx context.Context, bucketName string)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketStat", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketStat", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketStat", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4232,8 +4424,10 @@ func (w *OSSClientWrapper) GetBucketTagging(ctx context.Context, bucketName stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketTagging", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketTagging", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketTagging", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4275,8 +4469,10 @@ func (w *OSSClientWrapper) GetBucketVersioning(ctx context.Context, bucketName s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketVersioning", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketVersioning", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketVersioning", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4318,8 +4514,10 @@ func (w *OSSClientWrapper) GetBucketWebsite(ctx context.Context, bucketName stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketWebsite", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketWebsite", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketWebsite", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4361,8 +4559,10 @@ func (w *OSSClientWrapper) GetBucketWorm(ctx context.Context, bucketName string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBucketWorm", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBucketWorm", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBucketWorm", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4404,8 +4604,10 @@ func (w *OSSClientWrapper) GetUserQoSInfo(ctx context.Context, options ...oss.Op
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetUserQoSInfo", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetUserQoSInfo", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetUserQoSInfo", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4447,8 +4649,10 @@ func (w *OSSClientWrapper) InitiateBucketWorm(ctx context.Context, bucketName st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.InitiateBucketWorm", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.InitiateBucketWorm", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.InitiateBucketWorm", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4490,8 +4694,10 @@ func (w *OSSClientWrapper) IsBucketExist(ctx context.Context, bucketName string)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.IsBucketExist", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.IsBucketExist", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.IsBucketExist", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4532,8 +4738,10 @@ func (w *OSSClientWrapper) LimitUploadSpeed(ctx context.Context, upSpeed int) er
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LimitUploadSpeed", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.LimitUploadSpeed", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.LimitUploadSpeed", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4575,8 +4783,10 @@ func (w *OSSClientWrapper) ListBucketInventory(ctx context.Context, bucketName s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListBucketInventory", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListBucketInventory", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListBucketInventory", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4618,8 +4828,10 @@ func (w *OSSClientWrapper) ListBuckets(ctx context.Context, options ...oss.Optio
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListBuckets", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListBuckets", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListBuckets", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4660,8 +4872,10 @@ func (w *OSSClientWrapper) SetBucketACL(ctx context.Context, bucketName string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketACL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketACL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketACL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4703,8 +4917,10 @@ func (w *OSSClientWrapper) SetBucketAsyncTask(ctx context.Context, bucketName st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketAsyncTask", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketAsyncTask", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketAsyncTask", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4745,8 +4961,10 @@ func (w *OSSClientWrapper) SetBucketCORS(ctx context.Context, bucketName string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketCORS", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketCORS", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketCORS", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4787,8 +5005,10 @@ func (w *OSSClientWrapper) SetBucketEncryption(ctx context.Context, bucketName s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketEncryption", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketEncryption", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketEncryption", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4829,8 +5049,10 @@ func (w *OSSClientWrapper) SetBucketInventory(ctx context.Context, bucketName st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketInventory", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketInventory", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketInventory", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4871,8 +5093,10 @@ func (w *OSSClientWrapper) SetBucketLifecycle(ctx context.Context, bucketName st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketLifecycle", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketLifecycle", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketLifecycle", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4913,8 +5137,10 @@ func (w *OSSClientWrapper) SetBucketLogging(ctx context.Context, bucketName stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketLogging", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketLogging", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketLogging", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4955,8 +5181,10 @@ func (w *OSSClientWrapper) SetBucketPolicy(ctx context.Context, bucketName strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketPolicy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketPolicy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketPolicy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4997,8 +5225,10 @@ func (w *OSSClientWrapper) SetBucketQoSInfo(ctx context.Context, bucketName stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketQoSInfo", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketQoSInfo", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketQoSInfo", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5039,8 +5269,10 @@ func (w *OSSClientWrapper) SetBucketReferer(ctx context.Context, bucketName stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketReferer", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketReferer", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketReferer", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5081,8 +5313,10 @@ func (w *OSSClientWrapper) SetBucketRequestPayment(ctx context.Context, bucketNa
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketRequestPayment", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketRequestPayment", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketRequestPayment", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5123,8 +5357,10 @@ func (w *OSSClientWrapper) SetBucketTagging(ctx context.Context, bucketName stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketTagging", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketTagging", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketTagging", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5165,8 +5401,10 @@ func (w *OSSClientWrapper) SetBucketVersioning(ctx context.Context, bucketName s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketVersioning", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketVersioning", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketVersioning", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5207,8 +5445,10 @@ func (w *OSSClientWrapper) SetBucketWebsite(ctx context.Context, bucketName stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketWebsite", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketWebsite", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketWebsite", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5249,8 +5489,10 @@ func (w *OSSClientWrapper) SetBucketWebsiteDetail(ctx context.Context, bucketNam
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketWebsiteDetail", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketWebsiteDetail", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketWebsiteDetail", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5291,8 +5533,10 @@ func (w *OSSClientWrapper) SetBucketWebsiteXml(ctx context.Context, bucketName s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBucketWebsiteXml", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBucketWebsiteXml", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBucketWebsiteXml", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span

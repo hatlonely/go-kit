@@ -216,8 +216,10 @@ func (w *RedisClientWrapper) Pipelined(ctx context.Context, fn func(redis.Pipeli
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Pipelined", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Pipelined", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Pipelined", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -279,8 +281,10 @@ func (w *RedisClientWrapper) TxPipelined(ctx context.Context, fn func(redis.Pipe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.TxPipelined", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.TxPipelined", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.TxPipelined", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -321,8 +325,10 @@ func (w *RedisClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx) error
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Watch", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Watch", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Watch", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -368,8 +374,10 @@ func (w *RedisClientWrapper) Close(ctx context.Context) error {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Close", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Close", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Close", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -410,8 +418,10 @@ func (w *RedisClientWrapper) Do(ctx context.Context, args ...interface{}) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -452,8 +462,10 @@ func (w *RedisClientWrapper) Process(ctx context.Context, cmd redis.Cmder) error
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Process", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Process", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Process", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -507,8 +519,10 @@ func (w *RedisClientWrapper) Append(ctx context.Context, key string, value strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Append", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Append", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Append", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -549,8 +563,10 @@ func (w *RedisClientWrapper) BLPop(ctx context.Context, timeout time.Duration, k
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BLPop", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.BLPop", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.BLPop", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -591,8 +607,10 @@ func (w *RedisClientWrapper) BRPop(ctx context.Context, timeout time.Duration, k
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BRPop", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.BRPop", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.BRPop", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -633,8 +651,10 @@ func (w *RedisClientWrapper) BRPopLPush(ctx context.Context, source string, dest
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BRPopLPush", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.BRPopLPush", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.BRPopLPush", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -675,8 +695,10 @@ func (w *RedisClientWrapper) BZPopMax(ctx context.Context, timeout time.Duration
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BZPopMax", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.BZPopMax", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.BZPopMax", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -717,8 +739,10 @@ func (w *RedisClientWrapper) BZPopMin(ctx context.Context, timeout time.Duration
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BZPopMin", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.BZPopMin", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.BZPopMin", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -759,8 +783,10 @@ func (w *RedisClientWrapper) BgRewriteAOF(ctx context.Context) *redis.StatusCmd 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BgRewriteAOF", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.BgRewriteAOF", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.BgRewriteAOF", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -801,8 +827,10 @@ func (w *RedisClientWrapper) BgSave(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BgSave", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.BgSave", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.BgSave", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -843,8 +871,10 @@ func (w *RedisClientWrapper) BitCount(ctx context.Context, key string, bitCount 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BitCount", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.BitCount", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.BitCount", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -885,8 +915,10 @@ func (w *RedisClientWrapper) BitOpAnd(ctx context.Context, destKey string, keys 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BitOpAnd", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.BitOpAnd", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.BitOpAnd", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -927,8 +959,10 @@ func (w *RedisClientWrapper) BitOpNot(ctx context.Context, destKey string, key s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BitOpNot", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.BitOpNot", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.BitOpNot", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -969,8 +1003,10 @@ func (w *RedisClientWrapper) BitOpOr(ctx context.Context, destKey string, keys .
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BitOpOr", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.BitOpOr", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.BitOpOr", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1011,8 +1047,10 @@ func (w *RedisClientWrapper) BitOpXor(ctx context.Context, destKey string, keys 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BitOpXor", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.BitOpXor", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.BitOpXor", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1053,8 +1091,10 @@ func (w *RedisClientWrapper) BitPos(ctx context.Context, key string, bit int64, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BitPos", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.BitPos", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.BitPos", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1095,8 +1135,10 @@ func (w *RedisClientWrapper) ClientGetName(ctx context.Context) *redis.StringCmd
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientGetName", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClientGetName", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClientGetName", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1137,8 +1179,10 @@ func (w *RedisClientWrapper) ClientID(ctx context.Context) *redis.IntCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientID", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClientID", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClientID", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1179,8 +1223,10 @@ func (w *RedisClientWrapper) ClientKill(ctx context.Context, ipPort string) *red
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientKill", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClientKill", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClientKill", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1221,8 +1267,10 @@ func (w *RedisClientWrapper) ClientKillByFilter(ctx context.Context, keys ...str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientKillByFilter", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClientKillByFilter", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClientKillByFilter", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1263,8 +1311,10 @@ func (w *RedisClientWrapper) ClientList(ctx context.Context) *redis.StringCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientList", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClientList", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClientList", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1305,8 +1355,10 @@ func (w *RedisClientWrapper) ClientPause(ctx context.Context, dur time.Duration)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientPause", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClientPause", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClientPause", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1347,8 +1399,10 @@ func (w *RedisClientWrapper) ClientUnblock(ctx context.Context, id int64) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientUnblock", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClientUnblock", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClientUnblock", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1389,8 +1443,10 @@ func (w *RedisClientWrapper) ClientUnblockWithError(ctx context.Context, id int6
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClientUnblockWithError", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClientUnblockWithError", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClientUnblockWithError", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1431,8 +1487,10 @@ func (w *RedisClientWrapper) ClusterAddSlots(ctx context.Context, slots ...int) 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterAddSlots", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterAddSlots", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterAddSlots", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1473,8 +1531,10 @@ func (w *RedisClientWrapper) ClusterAddSlotsRange(ctx context.Context, min int, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterAddSlotsRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterAddSlotsRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterAddSlotsRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1515,8 +1575,10 @@ func (w *RedisClientWrapper) ClusterCountFailureReports(ctx context.Context, nod
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterCountFailureReports", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterCountFailureReports", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterCountFailureReports", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1557,8 +1619,10 @@ func (w *RedisClientWrapper) ClusterCountKeysInSlot(ctx context.Context, slot in
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterCountKeysInSlot", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterCountKeysInSlot", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterCountKeysInSlot", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1599,8 +1663,10 @@ func (w *RedisClientWrapper) ClusterDelSlots(ctx context.Context, slots ...int) 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterDelSlots", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterDelSlots", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterDelSlots", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1641,8 +1707,10 @@ func (w *RedisClientWrapper) ClusterDelSlotsRange(ctx context.Context, min int, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterDelSlotsRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterDelSlotsRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterDelSlotsRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1683,8 +1751,10 @@ func (w *RedisClientWrapper) ClusterFailover(ctx context.Context) *redis.StatusC
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterFailover", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterFailover", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterFailover", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1725,8 +1795,10 @@ func (w *RedisClientWrapper) ClusterForget(ctx context.Context, nodeID string) *
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterForget", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterForget", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterForget", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1767,8 +1839,10 @@ func (w *RedisClientWrapper) ClusterGetKeysInSlot(ctx context.Context, slot int,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterGetKeysInSlot", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterGetKeysInSlot", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterGetKeysInSlot", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1809,8 +1883,10 @@ func (w *RedisClientWrapper) ClusterInfo(ctx context.Context) *redis.StringCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterInfo", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterInfo", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterInfo", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1851,8 +1927,10 @@ func (w *RedisClientWrapper) ClusterKeySlot(ctx context.Context, key string) *re
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterKeySlot", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterKeySlot", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterKeySlot", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1893,8 +1971,10 @@ func (w *RedisClientWrapper) ClusterMeet(ctx context.Context, host string, port 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterMeet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterMeet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterMeet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1935,8 +2015,10 @@ func (w *RedisClientWrapper) ClusterNodes(ctx context.Context) *redis.StringCmd 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterNodes", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterNodes", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterNodes", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1977,8 +2059,10 @@ func (w *RedisClientWrapper) ClusterReplicate(ctx context.Context, nodeID string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterReplicate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterReplicate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterReplicate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2019,8 +2103,10 @@ func (w *RedisClientWrapper) ClusterResetHard(ctx context.Context) *redis.Status
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterResetHard", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterResetHard", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterResetHard", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2061,8 +2147,10 @@ func (w *RedisClientWrapper) ClusterResetSoft(ctx context.Context) *redis.Status
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterResetSoft", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterResetSoft", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterResetSoft", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2103,8 +2191,10 @@ func (w *RedisClientWrapper) ClusterSaveConfig(ctx context.Context) *redis.Statu
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterSaveConfig", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterSaveConfig", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterSaveConfig", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2145,8 +2235,10 @@ func (w *RedisClientWrapper) ClusterSlaves(ctx context.Context, nodeID string) *
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterSlaves", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterSlaves", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterSlaves", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2187,8 +2279,10 @@ func (w *RedisClientWrapper) ClusterSlots(ctx context.Context) *redis.ClusterSlo
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClusterSlots", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClusterSlots", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClusterSlots", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2229,8 +2323,10 @@ func (w *RedisClientWrapper) Command(ctx context.Context) *redis.CommandsInfoCmd
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Command", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Command", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Command", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2271,8 +2367,10 @@ func (w *RedisClientWrapper) ConfigGet(ctx context.Context, parameter string) *r
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ConfigGet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ConfigGet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ConfigGet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2313,8 +2411,10 @@ func (w *RedisClientWrapper) ConfigResetStat(ctx context.Context) *redis.StatusC
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ConfigResetStat", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ConfigResetStat", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ConfigResetStat", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2355,8 +2455,10 @@ func (w *RedisClientWrapper) ConfigRewrite(ctx context.Context) *redis.StatusCmd
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ConfigRewrite", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ConfigRewrite", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ConfigRewrite", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2397,8 +2499,10 @@ func (w *RedisClientWrapper) ConfigSet(ctx context.Context, parameter string, va
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ConfigSet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ConfigSet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ConfigSet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2439,8 +2543,10 @@ func (w *RedisClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DBSize", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DBSize", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DBSize", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2481,8 +2587,10 @@ func (w *RedisClientWrapper) DbSize(ctx context.Context) *redis.IntCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DbSize", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DbSize", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DbSize", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2523,8 +2631,10 @@ func (w *RedisClientWrapper) DebugObject(ctx context.Context, key string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DebugObject", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DebugObject", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DebugObject", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2565,8 +2675,10 @@ func (w *RedisClientWrapper) Decr(ctx context.Context, key string) *redis.IntCmd
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Decr", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Decr", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Decr", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2607,8 +2719,10 @@ func (w *RedisClientWrapper) DecrBy(ctx context.Context, key string, decrement i
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DecrBy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DecrBy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DecrBy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2649,8 +2763,10 @@ func (w *RedisClientWrapper) Del(ctx context.Context, keys ...string) *redis.Int
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Del", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Del", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Del", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2691,8 +2807,10 @@ func (w *RedisClientWrapper) Dump(ctx context.Context, key string) *redis.String
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Dump", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Dump", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Dump", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2733,8 +2851,10 @@ func (w *RedisClientWrapper) Echo(ctx context.Context, message interface{}) *red
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Echo", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Echo", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Echo", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2775,8 +2895,10 @@ func (w *RedisClientWrapper) Eval(ctx context.Context, script string, keys []str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Eval", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Eval", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Eval", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2817,8 +2939,10 @@ func (w *RedisClientWrapper) EvalSha(ctx context.Context, sha1 string, keys []st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.EvalSha", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.EvalSha", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.EvalSha", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2859,8 +2983,10 @@ func (w *RedisClientWrapper) Exists(ctx context.Context, keys ...string) *redis.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Exists", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Exists", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Exists", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2901,8 +3027,10 @@ func (w *RedisClientWrapper) Expire(ctx context.Context, key string, expiration 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Expire", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Expire", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Expire", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2943,8 +3071,10 @@ func (w *RedisClientWrapper) ExpireAt(ctx context.Context, key string, tm time.T
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ExpireAt", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ExpireAt", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ExpireAt", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2985,8 +3115,10 @@ func (w *RedisClientWrapper) FlushAll(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.FlushAll", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.FlushAll", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.FlushAll", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3027,8 +3159,10 @@ func (w *RedisClientWrapper) FlushAllAsync(ctx context.Context) *redis.StatusCmd
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.FlushAllAsync", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.FlushAllAsync", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.FlushAllAsync", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3069,8 +3203,10 @@ func (w *RedisClientWrapper) FlushDB(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.FlushDB", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.FlushDB", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.FlushDB", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3111,8 +3247,10 @@ func (w *RedisClientWrapper) FlushDBAsync(ctx context.Context) *redis.StatusCmd 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.FlushDBAsync", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.FlushDBAsync", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.FlushDBAsync", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3153,8 +3291,10 @@ func (w *RedisClientWrapper) FlushDb(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.FlushDb", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.FlushDb", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.FlushDb", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3195,8 +3335,10 @@ func (w *RedisClientWrapper) GeoAdd(ctx context.Context, key string, geoLocation
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoAdd", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GeoAdd", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GeoAdd", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3237,8 +3379,10 @@ func (w *RedisClientWrapper) GeoDist(ctx context.Context, key string, member1 st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoDist", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GeoDist", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GeoDist", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3279,8 +3423,10 @@ func (w *RedisClientWrapper) GeoHash(ctx context.Context, key string, members ..
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoHash", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GeoHash", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GeoHash", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3321,8 +3467,10 @@ func (w *RedisClientWrapper) GeoPos(ctx context.Context, key string, members ...
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoPos", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GeoPos", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GeoPos", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3363,8 +3511,10 @@ func (w *RedisClientWrapper) GeoRadius(ctx context.Context, key string, longitud
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoRadius", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GeoRadius", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GeoRadius", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3405,8 +3555,10 @@ func (w *RedisClientWrapper) GeoRadiusByMember(ctx context.Context, key string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoRadiusByMember", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GeoRadiusByMember", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GeoRadiusByMember", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3447,8 +3599,10 @@ func (w *RedisClientWrapper) GeoRadiusByMemberRO(ctx context.Context, key string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoRadiusByMemberRO", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GeoRadiusByMemberRO", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GeoRadiusByMemberRO", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3489,8 +3643,10 @@ func (w *RedisClientWrapper) GeoRadiusRO(ctx context.Context, key string, longit
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GeoRadiusRO", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GeoRadiusRO", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GeoRadiusRO", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3531,8 +3687,10 @@ func (w *RedisClientWrapper) Get(ctx context.Context, key string) *redis.StringC
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Get", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Get", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Get", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3573,8 +3731,10 @@ func (w *RedisClientWrapper) GetBit(ctx context.Context, key string, offset int6
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetBit", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetBit", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetBit", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3615,8 +3775,10 @@ func (w *RedisClientWrapper) GetRange(ctx context.Context, key string, start int
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3657,8 +3819,10 @@ func (w *RedisClientWrapper) GetSet(ctx context.Context, key string, value inter
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetSet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetSet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetSet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3699,8 +3863,10 @@ func (w *RedisClientWrapper) HDel(ctx context.Context, key string, fields ...str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HDel", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HDel", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HDel", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3741,8 +3907,10 @@ func (w *RedisClientWrapper) HExists(ctx context.Context, key string, field stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HExists", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HExists", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HExists", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3783,8 +3951,10 @@ func (w *RedisClientWrapper) HGet(ctx context.Context, key string, field string)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HGet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HGet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HGet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3825,8 +3995,10 @@ func (w *RedisClientWrapper) HGetAll(ctx context.Context, key string) *redis.Str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HGetAll", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HGetAll", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HGetAll", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3867,8 +4039,10 @@ func (w *RedisClientWrapper) HIncrBy(ctx context.Context, key string, field stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HIncrBy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HIncrBy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HIncrBy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3909,8 +4083,10 @@ func (w *RedisClientWrapper) HIncrByFloat(ctx context.Context, key string, field
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HIncrByFloat", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HIncrByFloat", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HIncrByFloat", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3951,8 +4127,10 @@ func (w *RedisClientWrapper) HKeys(ctx context.Context, key string) *redis.Strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HKeys", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HKeys", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HKeys", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3993,8 +4171,10 @@ func (w *RedisClientWrapper) HLen(ctx context.Context, key string) *redis.IntCmd
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HLen", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HLen", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HLen", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4035,8 +4215,10 @@ func (w *RedisClientWrapper) HMGet(ctx context.Context, key string, fields ...st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HMGet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HMGet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HMGet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4077,8 +4259,10 @@ func (w *RedisClientWrapper) HMSet(ctx context.Context, key string, fields map[s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HMSet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HMSet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HMSet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4119,8 +4303,10 @@ func (w *RedisClientWrapper) HScan(ctx context.Context, key string, cursor uint6
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HScan", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HScan", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HScan", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4161,8 +4347,10 @@ func (w *RedisClientWrapper) HSet(ctx context.Context, key string, field string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HSet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HSet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HSet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4203,8 +4391,10 @@ func (w *RedisClientWrapper) HSetNX(ctx context.Context, key string, field strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HSetNX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HSetNX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HSetNX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4245,8 +4435,10 @@ func (w *RedisClientWrapper) HVals(ctx context.Context, key string) *redis.Strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.HVals", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HVals", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HVals", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4287,8 +4479,10 @@ func (w *RedisClientWrapper) Incr(ctx context.Context, key string) *redis.IntCmd
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Incr", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Incr", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Incr", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4329,8 +4523,10 @@ func (w *RedisClientWrapper) IncrBy(ctx context.Context, key string, value int64
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.IncrBy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.IncrBy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.IncrBy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4371,8 +4567,10 @@ func (w *RedisClientWrapper) IncrByFloat(ctx context.Context, key string, value 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.IncrByFloat", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.IncrByFloat", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.IncrByFloat", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4413,8 +4611,10 @@ func (w *RedisClientWrapper) Info(ctx context.Context, section ...string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Info", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Info", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Info", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4455,8 +4655,10 @@ func (w *RedisClientWrapper) Keys(ctx context.Context, pattern string) *redis.St
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Keys", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Keys", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Keys", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4497,8 +4699,10 @@ func (w *RedisClientWrapper) LIndex(ctx context.Context, key string, index int64
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LIndex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.LIndex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.LIndex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4539,8 +4743,10 @@ func (w *RedisClientWrapper) LInsert(ctx context.Context, key string, op string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LInsert", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.LInsert", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.LInsert", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4581,8 +4787,10 @@ func (w *RedisClientWrapper) LInsertAfter(ctx context.Context, key string, pivot
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LInsertAfter", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.LInsertAfter", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.LInsertAfter", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4623,8 +4831,10 @@ func (w *RedisClientWrapper) LInsertBefore(ctx context.Context, key string, pivo
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LInsertBefore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.LInsertBefore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.LInsertBefore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4665,8 +4875,10 @@ func (w *RedisClientWrapper) LLen(ctx context.Context, key string) *redis.IntCmd
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LLen", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.LLen", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.LLen", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4707,8 +4919,10 @@ func (w *RedisClientWrapper) LPop(ctx context.Context, key string) *redis.String
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LPop", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.LPop", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.LPop", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4749,8 +4963,10 @@ func (w *RedisClientWrapper) LPush(ctx context.Context, key string, values ...in
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LPush", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.LPush", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.LPush", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4791,8 +5007,10 @@ func (w *RedisClientWrapper) LPushX(ctx context.Context, key string, value inter
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LPushX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.LPushX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.LPushX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4833,8 +5051,10 @@ func (w *RedisClientWrapper) LRange(ctx context.Context, key string, start int64
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.LRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.LRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4875,8 +5095,10 @@ func (w *RedisClientWrapper) LRem(ctx context.Context, key string, count int64, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LRem", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.LRem", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.LRem", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4917,8 +5139,10 @@ func (w *RedisClientWrapper) LSet(ctx context.Context, key string, index int64, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LSet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.LSet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.LSet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -4959,8 +5183,10 @@ func (w *RedisClientWrapper) LTrim(ctx context.Context, key string, start int64,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LTrim", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.LTrim", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.LTrim", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5001,8 +5227,10 @@ func (w *RedisClientWrapper) LastSave(ctx context.Context) *redis.IntCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.LastSave", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.LastSave", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.LastSave", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5043,8 +5271,10 @@ func (w *RedisClientWrapper) MGet(ctx context.Context, keys ...string) *redis.Sl
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.MGet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.MGet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.MGet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5085,8 +5315,10 @@ func (w *RedisClientWrapper) MSet(ctx context.Context, pairs ...interface{}) *re
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.MSet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.MSet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.MSet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5127,8 +5359,10 @@ func (w *RedisClientWrapper) MSetNX(ctx context.Context, pairs ...interface{}) *
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.MSetNX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.MSetNX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.MSetNX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5169,8 +5403,10 @@ func (w *RedisClientWrapper) MemoryUsage(ctx context.Context, key string, sample
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.MemoryUsage", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.MemoryUsage", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.MemoryUsage", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5211,8 +5447,10 @@ func (w *RedisClientWrapper) Migrate(ctx context.Context, host string, port stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Migrate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Migrate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Migrate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5253,8 +5491,10 @@ func (w *RedisClientWrapper) Move(ctx context.Context, key string, db int64) *re
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Move", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Move", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Move", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5295,8 +5535,10 @@ func (w *RedisClientWrapper) ObjectEncoding(ctx context.Context, key string) *re
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ObjectEncoding", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ObjectEncoding", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ObjectEncoding", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5337,8 +5579,10 @@ func (w *RedisClientWrapper) ObjectIdleTime(ctx context.Context, key string) *re
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ObjectIdleTime", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ObjectIdleTime", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ObjectIdleTime", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5379,8 +5623,10 @@ func (w *RedisClientWrapper) ObjectRefCount(ctx context.Context, key string) *re
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ObjectRefCount", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ObjectRefCount", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ObjectRefCount", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5421,8 +5667,10 @@ func (w *RedisClientWrapper) PExpire(ctx context.Context, key string, expiration
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PExpire", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.PExpire", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.PExpire", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5463,8 +5711,10 @@ func (w *RedisClientWrapper) PExpireAt(ctx context.Context, key string, tm time.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PExpireAt", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.PExpireAt", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.PExpireAt", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5505,8 +5755,10 @@ func (w *RedisClientWrapper) PFAdd(ctx context.Context, key string, els ...inter
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PFAdd", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.PFAdd", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.PFAdd", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5547,8 +5799,10 @@ func (w *RedisClientWrapper) PFCount(ctx context.Context, keys ...string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PFCount", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.PFCount", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.PFCount", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5589,8 +5843,10 @@ func (w *RedisClientWrapper) PFMerge(ctx context.Context, dest string, keys ...s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PFMerge", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.PFMerge", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.PFMerge", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5631,8 +5887,10 @@ func (w *RedisClientWrapper) PTTL(ctx context.Context, key string) *redis.Durati
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PTTL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.PTTL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.PTTL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5673,8 +5931,10 @@ func (w *RedisClientWrapper) Persist(ctx context.Context, key string) *redis.Boo
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Persist", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Persist", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Persist", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5715,8 +5975,10 @@ func (w *RedisClientWrapper) Ping(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Ping", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Ping", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Ping", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5757,8 +6019,10 @@ func (w *RedisClientWrapper) PubSubChannels(ctx context.Context, pattern string)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PubSubChannels", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.PubSubChannels", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.PubSubChannels", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5799,8 +6063,10 @@ func (w *RedisClientWrapper) PubSubNumPat(ctx context.Context) *redis.IntCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PubSubNumPat", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.PubSubNumPat", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.PubSubNumPat", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5841,8 +6107,10 @@ func (w *RedisClientWrapper) PubSubNumSub(ctx context.Context, channels ...strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.PubSubNumSub", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.PubSubNumSub", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.PubSubNumSub", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5883,8 +6151,10 @@ func (w *RedisClientWrapper) Publish(ctx context.Context, channel string, messag
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Publish", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Publish", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Publish", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5925,8 +6195,10 @@ func (w *RedisClientWrapper) Quit(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Quit", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Quit", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Quit", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -5967,8 +6239,10 @@ func (w *RedisClientWrapper) RPop(ctx context.Context, key string) *redis.String
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RPop", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.RPop", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.RPop", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6009,8 +6283,10 @@ func (w *RedisClientWrapper) RPopLPush(ctx context.Context, source string, desti
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RPopLPush", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.RPopLPush", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.RPopLPush", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6051,8 +6327,10 @@ func (w *RedisClientWrapper) RPush(ctx context.Context, key string, values ...in
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RPush", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.RPush", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.RPush", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6093,8 +6371,10 @@ func (w *RedisClientWrapper) RPushX(ctx context.Context, key string, value inter
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RPushX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.RPushX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.RPushX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6135,8 +6415,10 @@ func (w *RedisClientWrapper) RandomKey(ctx context.Context) *redis.StringCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RandomKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.RandomKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.RandomKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6177,8 +6459,10 @@ func (w *RedisClientWrapper) ReadOnly(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ReadOnly", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ReadOnly", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ReadOnly", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6219,8 +6503,10 @@ func (w *RedisClientWrapper) ReadWrite(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ReadWrite", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ReadWrite", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ReadWrite", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6261,8 +6547,10 @@ func (w *RedisClientWrapper) Rename(ctx context.Context, key string, newkey stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Rename", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Rename", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Rename", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6303,8 +6591,10 @@ func (w *RedisClientWrapper) RenameNX(ctx context.Context, key string, newkey st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RenameNX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.RenameNX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.RenameNX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6345,8 +6635,10 @@ func (w *RedisClientWrapper) Restore(ctx context.Context, key string, ttl time.D
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Restore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Restore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Restore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6387,8 +6679,10 @@ func (w *RedisClientWrapper) RestoreReplace(ctx context.Context, key string, ttl
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RestoreReplace", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.RestoreReplace", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.RestoreReplace", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6429,8 +6723,10 @@ func (w *RedisClientWrapper) SAdd(ctx context.Context, key string, members ...in
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SAdd", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SAdd", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SAdd", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6471,8 +6767,10 @@ func (w *RedisClientWrapper) SCard(ctx context.Context, key string) *redis.IntCm
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SCard", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SCard", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SCard", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6513,8 +6811,10 @@ func (w *RedisClientWrapper) SDiff(ctx context.Context, keys ...string) *redis.S
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SDiff", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SDiff", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SDiff", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6555,8 +6855,10 @@ func (w *RedisClientWrapper) SDiffStore(ctx context.Context, destination string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SDiffStore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SDiffStore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SDiffStore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6597,8 +6899,10 @@ func (w *RedisClientWrapper) SInter(ctx context.Context, keys ...string) *redis.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SInter", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SInter", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SInter", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6639,8 +6943,10 @@ func (w *RedisClientWrapper) SInterStore(ctx context.Context, destination string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SInterStore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SInterStore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SInterStore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6681,8 +6987,10 @@ func (w *RedisClientWrapper) SIsMember(ctx context.Context, key string, member i
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SIsMember", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SIsMember", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SIsMember", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6723,8 +7031,10 @@ func (w *RedisClientWrapper) SMembers(ctx context.Context, key string) *redis.St
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SMembers", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SMembers", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SMembers", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6765,8 +7075,10 @@ func (w *RedisClientWrapper) SMembersMap(ctx context.Context, key string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SMembersMap", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SMembersMap", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SMembersMap", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6807,8 +7119,10 @@ func (w *RedisClientWrapper) SMove(ctx context.Context, source string, destinati
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SMove", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SMove", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SMove", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6849,8 +7163,10 @@ func (w *RedisClientWrapper) SPop(ctx context.Context, key string) *redis.String
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SPop", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SPop", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SPop", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6891,8 +7207,10 @@ func (w *RedisClientWrapper) SPopN(ctx context.Context, key string, count int64)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SPopN", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SPopN", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SPopN", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6933,8 +7251,10 @@ func (w *RedisClientWrapper) SRandMember(ctx context.Context, key string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SRandMember", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SRandMember", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SRandMember", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -6975,8 +7295,10 @@ func (w *RedisClientWrapper) SRandMemberN(ctx context.Context, key string, count
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SRandMemberN", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SRandMemberN", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SRandMemberN", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7017,8 +7339,10 @@ func (w *RedisClientWrapper) SRem(ctx context.Context, key string, members ...in
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SRem", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SRem", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SRem", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7059,8 +7383,10 @@ func (w *RedisClientWrapper) SScan(ctx context.Context, key string, cursor uint6
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SScan", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SScan", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SScan", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7101,8 +7427,10 @@ func (w *RedisClientWrapper) SUnion(ctx context.Context, keys ...string) *redis.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SUnion", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SUnion", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SUnion", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7143,8 +7471,10 @@ func (w *RedisClientWrapper) SUnionStore(ctx context.Context, destination string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SUnionStore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SUnionStore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SUnionStore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7185,8 +7515,10 @@ func (w *RedisClientWrapper) Save(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Save", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Save", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Save", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7227,8 +7559,10 @@ func (w *RedisClientWrapper) Scan(ctx context.Context, cursor uint64, match stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Scan", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Scan", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Scan", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7269,8 +7603,10 @@ func (w *RedisClientWrapper) ScriptExists(ctx context.Context, hashes ...string)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ScriptExists", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ScriptExists", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ScriptExists", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7311,8 +7647,10 @@ func (w *RedisClientWrapper) ScriptFlush(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ScriptFlush", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ScriptFlush", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ScriptFlush", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7353,8 +7691,10 @@ func (w *RedisClientWrapper) ScriptKill(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ScriptKill", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ScriptKill", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ScriptKill", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7395,8 +7735,10 @@ func (w *RedisClientWrapper) ScriptLoad(ctx context.Context, script string) *red
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ScriptLoad", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ScriptLoad", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ScriptLoad", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7437,8 +7779,10 @@ func (w *RedisClientWrapper) Set(ctx context.Context, key string, value interfac
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Set", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Set", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Set", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7479,8 +7823,10 @@ func (w *RedisClientWrapper) SetBit(ctx context.Context, key string, offset int6
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetBit", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetBit", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetBit", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7521,8 +7867,10 @@ func (w *RedisClientWrapper) SetNX(ctx context.Context, key string, value interf
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetNX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetNX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetNX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7563,8 +7911,10 @@ func (w *RedisClientWrapper) SetRange(ctx context.Context, key string, offset in
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7605,8 +7955,10 @@ func (w *RedisClientWrapper) SetXX(ctx context.Context, key string, value interf
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetXX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetXX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetXX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7647,8 +7999,10 @@ func (w *RedisClientWrapper) Shutdown(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Shutdown", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Shutdown", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Shutdown", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7689,8 +8043,10 @@ func (w *RedisClientWrapper) ShutdownNoSave(ctx context.Context) *redis.StatusCm
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ShutdownNoSave", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ShutdownNoSave", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ShutdownNoSave", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7731,8 +8087,10 @@ func (w *RedisClientWrapper) ShutdownSave(ctx context.Context) *redis.StatusCmd 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ShutdownSave", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ShutdownSave", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ShutdownSave", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7773,8 +8131,10 @@ func (w *RedisClientWrapper) SlaveOf(ctx context.Context, host string, port stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SlaveOf", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SlaveOf", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SlaveOf", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7819,8 +8179,10 @@ func (w *RedisClientWrapper) Sort(ctx context.Context, key string, sort *redis.S
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Sort", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Sort", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Sort", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7861,8 +8223,10 @@ func (w *RedisClientWrapper) SortInterfaces(ctx context.Context, key string, sor
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SortInterfaces", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SortInterfaces", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SortInterfaces", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7903,8 +8267,10 @@ func (w *RedisClientWrapper) SortStore(ctx context.Context, key string, store st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SortStore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SortStore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SortStore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7945,8 +8311,10 @@ func (w *RedisClientWrapper) StrLen(ctx context.Context, key string) *redis.IntC
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.StrLen", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.StrLen", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.StrLen", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -7991,8 +8359,10 @@ func (w *RedisClientWrapper) TTL(ctx context.Context, key string) *redis.Duratio
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.TTL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.TTL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.TTL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8033,8 +8403,10 @@ func (w *RedisClientWrapper) Time(ctx context.Context) *redis.TimeCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Time", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Time", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Time", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8075,8 +8447,10 @@ func (w *RedisClientWrapper) Touch(ctx context.Context, keys ...string) *redis.I
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Touch", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Touch", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Touch", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8117,8 +8491,10 @@ func (w *RedisClientWrapper) Type(ctx context.Context, key string) *redis.Status
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Type", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Type", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Type", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8159,8 +8535,10 @@ func (w *RedisClientWrapper) Unlink(ctx context.Context, keys ...string) *redis.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Unlink", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Unlink", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Unlink", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8201,8 +8579,10 @@ func (w *RedisClientWrapper) Wait(ctx context.Context, numSlaves int, timeout ti
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.Wait", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.Wait", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.Wait", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8243,8 +8623,10 @@ func (w *RedisClientWrapper) XAck(ctx context.Context, stream string, group stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XAck", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XAck", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XAck", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8285,8 +8667,10 @@ func (w *RedisClientWrapper) XAdd(ctx context.Context, a *redis.XAddArgs) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XAdd", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XAdd", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XAdd", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8327,8 +8711,10 @@ func (w *RedisClientWrapper) XClaim(ctx context.Context, a *redis.XClaimArgs) *r
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XClaim", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XClaim", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XClaim", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8369,8 +8755,10 @@ func (w *RedisClientWrapper) XClaimJustID(ctx context.Context, a *redis.XClaimAr
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XClaimJustID", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XClaimJustID", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XClaimJustID", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8411,8 +8799,10 @@ func (w *RedisClientWrapper) XDel(ctx context.Context, stream string, ids ...str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XDel", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XDel", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XDel", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8453,8 +8843,10 @@ func (w *RedisClientWrapper) XGroupCreate(ctx context.Context, stream string, gr
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XGroupCreate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XGroupCreate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XGroupCreate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8495,8 +8887,10 @@ func (w *RedisClientWrapper) XGroupCreateMkStream(ctx context.Context, stream st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XGroupCreateMkStream", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XGroupCreateMkStream", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XGroupCreateMkStream", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8537,8 +8931,10 @@ func (w *RedisClientWrapper) XGroupDelConsumer(ctx context.Context, stream strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XGroupDelConsumer", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XGroupDelConsumer", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XGroupDelConsumer", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8579,8 +8975,10 @@ func (w *RedisClientWrapper) XGroupDestroy(ctx context.Context, stream string, g
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XGroupDestroy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XGroupDestroy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XGroupDestroy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8621,8 +9019,10 @@ func (w *RedisClientWrapper) XGroupSetID(ctx context.Context, stream string, gro
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XGroupSetID", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XGroupSetID", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XGroupSetID", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8663,8 +9063,10 @@ func (w *RedisClientWrapper) XLen(ctx context.Context, stream string) *redis.Int
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XLen", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XLen", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XLen", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8705,8 +9107,10 @@ func (w *RedisClientWrapper) XPending(ctx context.Context, stream string, group 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XPending", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XPending", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XPending", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8747,8 +9151,10 @@ func (w *RedisClientWrapper) XPendingExt(ctx context.Context, a *redis.XPendingE
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XPendingExt", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XPendingExt", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XPendingExt", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8789,8 +9195,10 @@ func (w *RedisClientWrapper) XRange(ctx context.Context, stream string, start st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8831,8 +9239,10 @@ func (w *RedisClientWrapper) XRangeN(ctx context.Context, stream string, start s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XRangeN", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XRangeN", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XRangeN", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8873,8 +9283,10 @@ func (w *RedisClientWrapper) XRead(ctx context.Context, a *redis.XReadArgs) *red
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XRead", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XRead", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XRead", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8915,8 +9327,10 @@ func (w *RedisClientWrapper) XReadGroup(ctx context.Context, a *redis.XReadGroup
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XReadGroup", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XReadGroup", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XReadGroup", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8957,8 +9371,10 @@ func (w *RedisClientWrapper) XReadStreams(ctx context.Context, streams ...string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XReadStreams", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XReadStreams", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XReadStreams", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -8999,8 +9415,10 @@ func (w *RedisClientWrapper) XRevRange(ctx context.Context, stream string, start
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XRevRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XRevRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XRevRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9041,8 +9459,10 @@ func (w *RedisClientWrapper) XRevRangeN(ctx context.Context, stream string, star
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XRevRangeN", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XRevRangeN", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XRevRangeN", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9083,8 +9503,10 @@ func (w *RedisClientWrapper) XTrim(ctx context.Context, key string, maxLen int64
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XTrim", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XTrim", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XTrim", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9125,8 +9547,10 @@ func (w *RedisClientWrapper) XTrimApprox(ctx context.Context, key string, maxLen
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.XTrimApprox", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.XTrimApprox", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.XTrimApprox", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9167,8 +9591,10 @@ func (w *RedisClientWrapper) ZAdd(ctx context.Context, key string, members ...re
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZAdd", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZAdd", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZAdd", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9209,8 +9635,10 @@ func (w *RedisClientWrapper) ZAddCh(ctx context.Context, key string, members ...
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZAddCh", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZAddCh", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZAddCh", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9251,8 +9679,10 @@ func (w *RedisClientWrapper) ZAddNX(ctx context.Context, key string, members ...
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZAddNX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZAddNX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZAddNX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9293,8 +9723,10 @@ func (w *RedisClientWrapper) ZAddNXCh(ctx context.Context, key string, members .
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZAddNXCh", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZAddNXCh", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZAddNXCh", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9335,8 +9767,10 @@ func (w *RedisClientWrapper) ZAddXX(ctx context.Context, key string, members ...
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZAddXX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZAddXX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZAddXX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9377,8 +9811,10 @@ func (w *RedisClientWrapper) ZAddXXCh(ctx context.Context, key string, members .
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZAddXXCh", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZAddXXCh", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZAddXXCh", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9419,8 +9855,10 @@ func (w *RedisClientWrapper) ZCard(ctx context.Context, key string) *redis.IntCm
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZCard", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZCard", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZCard", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9461,8 +9899,10 @@ func (w *RedisClientWrapper) ZCount(ctx context.Context, key string, min string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZCount", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZCount", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZCount", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9503,8 +9943,10 @@ func (w *RedisClientWrapper) ZIncr(ctx context.Context, key string, member redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZIncr", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZIncr", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZIncr", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9545,8 +9987,10 @@ func (w *RedisClientWrapper) ZIncrBy(ctx context.Context, key string, increment 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZIncrBy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZIncrBy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZIncrBy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9587,8 +10031,10 @@ func (w *RedisClientWrapper) ZIncrNX(ctx context.Context, key string, member red
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZIncrNX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZIncrNX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZIncrNX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9629,8 +10075,10 @@ func (w *RedisClientWrapper) ZIncrXX(ctx context.Context, key string, member red
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZIncrXX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZIncrXX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZIncrXX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9671,8 +10119,10 @@ func (w *RedisClientWrapper) ZInterStore(ctx context.Context, destination string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZInterStore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZInterStore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZInterStore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9713,8 +10163,10 @@ func (w *RedisClientWrapper) ZLexCount(ctx context.Context, key string, min stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZLexCount", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZLexCount", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZLexCount", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9755,8 +10207,10 @@ func (w *RedisClientWrapper) ZPopMax(ctx context.Context, key string, count ...i
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZPopMax", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZPopMax", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZPopMax", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9797,8 +10251,10 @@ func (w *RedisClientWrapper) ZPopMin(ctx context.Context, key string, count ...i
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZPopMin", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZPopMin", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZPopMin", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9839,8 +10295,10 @@ func (w *RedisClientWrapper) ZRange(ctx context.Context, key string, start int64
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9881,8 +10339,10 @@ func (w *RedisClientWrapper) ZRangeByLex(ctx context.Context, key string, opt re
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRangeByLex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRangeByLex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRangeByLex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9923,8 +10383,10 @@ func (w *RedisClientWrapper) ZRangeByScore(ctx context.Context, key string, opt 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRangeByScore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRangeByScore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRangeByScore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -9965,8 +10427,10 @@ func (w *RedisClientWrapper) ZRangeByScoreWithScores(ctx context.Context, key st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRangeByScoreWithScores", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRangeByScoreWithScores", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRangeByScoreWithScores", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10007,8 +10471,10 @@ func (w *RedisClientWrapper) ZRangeWithScores(ctx context.Context, key string, s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRangeWithScores", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRangeWithScores", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRangeWithScores", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10049,8 +10515,10 @@ func (w *RedisClientWrapper) ZRank(ctx context.Context, key string, member strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRank", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRank", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRank", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10091,8 +10559,10 @@ func (w *RedisClientWrapper) ZRem(ctx context.Context, key string, members ...in
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRem", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRem", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRem", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10133,8 +10603,10 @@ func (w *RedisClientWrapper) ZRemRangeByLex(ctx context.Context, key string, min
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRemRangeByLex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRemRangeByLex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRemRangeByLex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10175,8 +10647,10 @@ func (w *RedisClientWrapper) ZRemRangeByRank(ctx context.Context, key string, st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRemRangeByRank", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRemRangeByRank", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRemRangeByRank", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10217,8 +10691,10 @@ func (w *RedisClientWrapper) ZRemRangeByScore(ctx context.Context, key string, m
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRemRangeByScore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRemRangeByScore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRemRangeByScore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10259,8 +10735,10 @@ func (w *RedisClientWrapper) ZRevRange(ctx context.Context, key string, start in
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRevRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRevRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRevRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10301,8 +10779,10 @@ func (w *RedisClientWrapper) ZRevRangeByLex(ctx context.Context, key string, opt
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRevRangeByLex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRevRangeByLex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRevRangeByLex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10343,8 +10823,10 @@ func (w *RedisClientWrapper) ZRevRangeByScore(ctx context.Context, key string, o
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRevRangeByScore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRevRangeByScore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRevRangeByScore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10385,8 +10867,10 @@ func (w *RedisClientWrapper) ZRevRangeByScoreWithScores(ctx context.Context, key
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRevRangeByScoreWithScores", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRevRangeByScoreWithScores", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRevRangeByScoreWithScores", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10427,8 +10911,10 @@ func (w *RedisClientWrapper) ZRevRangeWithScores(ctx context.Context, key string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRevRangeWithScores", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRevRangeWithScores", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRevRangeWithScores", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10469,8 +10955,10 @@ func (w *RedisClientWrapper) ZRevRank(ctx context.Context, key string, member st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZRevRank", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZRevRank", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZRevRank", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10511,8 +10999,10 @@ func (w *RedisClientWrapper) ZScan(ctx context.Context, key string, cursor uint6
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZScan", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZScan", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZScan", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10553,8 +11043,10 @@ func (w *RedisClientWrapper) ZScore(ctx context.Context, key string, member stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZScore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZScore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZScore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10595,8 +11087,10 @@ func (w *RedisClientWrapper) ZUnionStore(ctx context.Context, dest string, store
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ZUnionStore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ZUnionStore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ZUnionStore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10637,8 +11131,10 @@ func (w *RedisClusterClientWrapper) Close(ctx context.Context) error {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Close", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Close", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Close", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10684,8 +11180,10 @@ func (w *RedisClusterClientWrapper) DBSize(ctx context.Context) *redis.IntCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.DBSize", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.DBSize", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.DBSize", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10726,8 +11224,10 @@ func (w *RedisClusterClientWrapper) Do(ctx context.Context, args ...interface{})
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Do", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Do", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Do", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10768,8 +11268,10 @@ func (w *RedisClusterClientWrapper) ForEachMaster(ctx context.Context, fn func(c
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ForEachMaster", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ForEachMaster", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ForEachMaster", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10810,8 +11312,10 @@ func (w *RedisClusterClientWrapper) ForEachNode(ctx context.Context, fn func(cli
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ForEachNode", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ForEachNode", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ForEachNode", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10852,8 +11356,10 @@ func (w *RedisClusterClientWrapper) ForEachSlave(ctx context.Context, fn func(cl
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ForEachSlave", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ForEachSlave", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ForEachSlave", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10910,8 +11416,10 @@ func (w *RedisClusterClientWrapper) Pipelined(ctx context.Context, fn func(redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Pipelined", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Pipelined", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Pipelined", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10957,8 +11465,10 @@ func (w *RedisClusterClientWrapper) Process(ctx context.Context, cmd redis.Cmder
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Process", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Process", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Process", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -10999,8 +11509,10 @@ func (w *RedisClusterClientWrapper) ReloadState(ctx context.Context) error {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ReloadState", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ReloadState", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ReloadState", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11052,8 +11564,10 @@ func (w *RedisClusterClientWrapper) TxPipelined(ctx context.Context, fn func(red
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.TxPipelined", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.TxPipelined", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.TxPipelined", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11094,8 +11608,10 @@ func (w *RedisClusterClientWrapper) Watch(ctx context.Context, fn func(*redis.Tx
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Watch", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Watch", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Watch", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11149,8 +11665,10 @@ func (w *RedisClusterClientWrapper) Append(ctx context.Context, key string, valu
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Append", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Append", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Append", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11191,8 +11709,10 @@ func (w *RedisClusterClientWrapper) BLPop(ctx context.Context, timeout time.Dura
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BLPop", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.BLPop", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.BLPop", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11233,8 +11753,10 @@ func (w *RedisClusterClientWrapper) BRPop(ctx context.Context, timeout time.Dura
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BRPop", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.BRPop", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.BRPop", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11275,8 +11797,10 @@ func (w *RedisClusterClientWrapper) BRPopLPush(ctx context.Context, source strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BRPopLPush", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.BRPopLPush", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.BRPopLPush", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11317,8 +11841,10 @@ func (w *RedisClusterClientWrapper) BZPopMax(ctx context.Context, timeout time.D
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BZPopMax", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.BZPopMax", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.BZPopMax", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11359,8 +11885,10 @@ func (w *RedisClusterClientWrapper) BZPopMin(ctx context.Context, timeout time.D
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BZPopMin", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.BZPopMin", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.BZPopMin", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11401,8 +11929,10 @@ func (w *RedisClusterClientWrapper) BgRewriteAOF(ctx context.Context) *redis.Sta
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BgRewriteAOF", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.BgRewriteAOF", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.BgRewriteAOF", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11443,8 +11973,10 @@ func (w *RedisClusterClientWrapper) BgSave(ctx context.Context) *redis.StatusCmd
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BgSave", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.BgSave", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.BgSave", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11485,8 +12017,10 @@ func (w *RedisClusterClientWrapper) BitCount(ctx context.Context, key string, bi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BitCount", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.BitCount", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.BitCount", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11527,8 +12061,10 @@ func (w *RedisClusterClientWrapper) BitOpAnd(ctx context.Context, destKey string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BitOpAnd", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.BitOpAnd", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.BitOpAnd", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11569,8 +12105,10 @@ func (w *RedisClusterClientWrapper) BitOpNot(ctx context.Context, destKey string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BitOpNot", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.BitOpNot", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.BitOpNot", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11611,8 +12149,10 @@ func (w *RedisClusterClientWrapper) BitOpOr(ctx context.Context, destKey string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BitOpOr", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.BitOpOr", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.BitOpOr", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11653,8 +12193,10 @@ func (w *RedisClusterClientWrapper) BitOpXor(ctx context.Context, destKey string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BitOpXor", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.BitOpXor", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.BitOpXor", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11695,8 +12237,10 @@ func (w *RedisClusterClientWrapper) BitPos(ctx context.Context, key string, bit 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.BitPos", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.BitPos", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.BitPos", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11737,8 +12281,10 @@ func (w *RedisClusterClientWrapper) ClientGetName(ctx context.Context) *redis.St
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientGetName", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClientGetName", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClientGetName", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11779,8 +12325,10 @@ func (w *RedisClusterClientWrapper) ClientID(ctx context.Context) *redis.IntCmd 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientID", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClientID", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClientID", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11821,8 +12369,10 @@ func (w *RedisClusterClientWrapper) ClientKill(ctx context.Context, ipPort strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientKill", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClientKill", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClientKill", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11863,8 +12413,10 @@ func (w *RedisClusterClientWrapper) ClientKillByFilter(ctx context.Context, keys
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientKillByFilter", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClientKillByFilter", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClientKillByFilter", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11905,8 +12457,10 @@ func (w *RedisClusterClientWrapper) ClientList(ctx context.Context) *redis.Strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientList", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClientList", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClientList", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11947,8 +12501,10 @@ func (w *RedisClusterClientWrapper) ClientPause(ctx context.Context, dur time.Du
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientPause", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClientPause", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClientPause", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -11989,8 +12545,10 @@ func (w *RedisClusterClientWrapper) ClientUnblock(ctx context.Context, id int64)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientUnblock", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClientUnblock", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClientUnblock", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12031,8 +12589,10 @@ func (w *RedisClusterClientWrapper) ClientUnblockWithError(ctx context.Context, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClientUnblockWithError", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClientUnblockWithError", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClientUnblockWithError", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12073,8 +12633,10 @@ func (w *RedisClusterClientWrapper) ClusterAddSlots(ctx context.Context, slots .
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterAddSlots", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterAddSlots", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterAddSlots", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12115,8 +12677,10 @@ func (w *RedisClusterClientWrapper) ClusterAddSlotsRange(ctx context.Context, mi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterAddSlotsRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterAddSlotsRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterAddSlotsRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12157,8 +12721,10 @@ func (w *RedisClusterClientWrapper) ClusterCountFailureReports(ctx context.Conte
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterCountFailureReports", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterCountFailureReports", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterCountFailureReports", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12199,8 +12765,10 @@ func (w *RedisClusterClientWrapper) ClusterCountKeysInSlot(ctx context.Context, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterCountKeysInSlot", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterCountKeysInSlot", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterCountKeysInSlot", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12241,8 +12809,10 @@ func (w *RedisClusterClientWrapper) ClusterDelSlots(ctx context.Context, slots .
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterDelSlots", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterDelSlots", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterDelSlots", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12283,8 +12853,10 @@ func (w *RedisClusterClientWrapper) ClusterDelSlotsRange(ctx context.Context, mi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterDelSlotsRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterDelSlotsRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterDelSlotsRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12325,8 +12897,10 @@ func (w *RedisClusterClientWrapper) ClusterFailover(ctx context.Context) *redis.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterFailover", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterFailover", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterFailover", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12367,8 +12941,10 @@ func (w *RedisClusterClientWrapper) ClusterForget(ctx context.Context, nodeID st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterForget", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterForget", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterForget", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12409,8 +12985,10 @@ func (w *RedisClusterClientWrapper) ClusterGetKeysInSlot(ctx context.Context, sl
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterGetKeysInSlot", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterGetKeysInSlot", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterGetKeysInSlot", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12451,8 +13029,10 @@ func (w *RedisClusterClientWrapper) ClusterInfo(ctx context.Context) *redis.Stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterInfo", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterInfo", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterInfo", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12493,8 +13073,10 @@ func (w *RedisClusterClientWrapper) ClusterKeySlot(ctx context.Context, key stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterKeySlot", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterKeySlot", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterKeySlot", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12535,8 +13117,10 @@ func (w *RedisClusterClientWrapper) ClusterMeet(ctx context.Context, host string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterMeet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterMeet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterMeet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12577,8 +13161,10 @@ func (w *RedisClusterClientWrapper) ClusterNodes(ctx context.Context) *redis.Str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterNodes", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterNodes", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterNodes", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12619,8 +13205,10 @@ func (w *RedisClusterClientWrapper) ClusterReplicate(ctx context.Context, nodeID
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterReplicate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterReplicate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterReplicate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12661,8 +13249,10 @@ func (w *RedisClusterClientWrapper) ClusterResetHard(ctx context.Context) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterResetHard", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterResetHard", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterResetHard", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12703,8 +13293,10 @@ func (w *RedisClusterClientWrapper) ClusterResetSoft(ctx context.Context) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterResetSoft", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterResetSoft", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterResetSoft", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12745,8 +13337,10 @@ func (w *RedisClusterClientWrapper) ClusterSaveConfig(ctx context.Context) *redi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSaveConfig", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSaveConfig", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSaveConfig", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12787,8 +13381,10 @@ func (w *RedisClusterClientWrapper) ClusterSlaves(ctx context.Context, nodeID st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSlaves", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSlaves", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSlaves", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12829,8 +13425,10 @@ func (w *RedisClusterClientWrapper) ClusterSlots(ctx context.Context) *redis.Clu
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSlots", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSlots", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ClusterSlots", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12871,8 +13469,10 @@ func (w *RedisClusterClientWrapper) Command(ctx context.Context) *redis.Commands
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Command", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Command", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Command", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12913,8 +13513,10 @@ func (w *RedisClusterClientWrapper) ConfigGet(ctx context.Context, parameter str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ConfigGet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ConfigGet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ConfigGet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12955,8 +13557,10 @@ func (w *RedisClusterClientWrapper) ConfigResetStat(ctx context.Context) *redis.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ConfigResetStat", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ConfigResetStat", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ConfigResetStat", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -12997,8 +13601,10 @@ func (w *RedisClusterClientWrapper) ConfigRewrite(ctx context.Context) *redis.St
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ConfigRewrite", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ConfigRewrite", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ConfigRewrite", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13039,8 +13645,10 @@ func (w *RedisClusterClientWrapper) ConfigSet(ctx context.Context, parameter str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ConfigSet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ConfigSet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ConfigSet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13081,8 +13689,10 @@ func (w *RedisClusterClientWrapper) DbSize(ctx context.Context) *redis.IntCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.DbSize", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.DbSize", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.DbSize", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13123,8 +13733,10 @@ func (w *RedisClusterClientWrapper) DebugObject(ctx context.Context, key string)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.DebugObject", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.DebugObject", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.DebugObject", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13165,8 +13777,10 @@ func (w *RedisClusterClientWrapper) Decr(ctx context.Context, key string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Decr", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Decr", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Decr", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13207,8 +13821,10 @@ func (w *RedisClusterClientWrapper) DecrBy(ctx context.Context, key string, decr
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.DecrBy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.DecrBy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.DecrBy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13249,8 +13865,10 @@ func (w *RedisClusterClientWrapper) Del(ctx context.Context, keys ...string) *re
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Del", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Del", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Del", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13291,8 +13909,10 @@ func (w *RedisClusterClientWrapper) Dump(ctx context.Context, key string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Dump", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Dump", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Dump", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13333,8 +13953,10 @@ func (w *RedisClusterClientWrapper) Echo(ctx context.Context, message interface{
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Echo", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Echo", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Echo", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13375,8 +13997,10 @@ func (w *RedisClusterClientWrapper) Eval(ctx context.Context, script string, key
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Eval", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Eval", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Eval", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13417,8 +14041,10 @@ func (w *RedisClusterClientWrapper) EvalSha(ctx context.Context, sha1 string, ke
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.EvalSha", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.EvalSha", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.EvalSha", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13459,8 +14085,10 @@ func (w *RedisClusterClientWrapper) Exists(ctx context.Context, keys ...string) 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Exists", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Exists", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Exists", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13501,8 +14129,10 @@ func (w *RedisClusterClientWrapper) Expire(ctx context.Context, key string, expi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Expire", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Expire", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Expire", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13543,8 +14173,10 @@ func (w *RedisClusterClientWrapper) ExpireAt(ctx context.Context, key string, tm
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ExpireAt", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ExpireAt", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ExpireAt", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13585,8 +14217,10 @@ func (w *RedisClusterClientWrapper) FlushAll(ctx context.Context) *redis.StatusC
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.FlushAll", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.FlushAll", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.FlushAll", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13627,8 +14261,10 @@ func (w *RedisClusterClientWrapper) FlushAllAsync(ctx context.Context) *redis.St
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.FlushAllAsync", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.FlushAllAsync", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.FlushAllAsync", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13669,8 +14305,10 @@ func (w *RedisClusterClientWrapper) FlushDB(ctx context.Context) *redis.StatusCm
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.FlushDB", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.FlushDB", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.FlushDB", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13711,8 +14349,10 @@ func (w *RedisClusterClientWrapper) FlushDBAsync(ctx context.Context) *redis.Sta
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.FlushDBAsync", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.FlushDBAsync", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.FlushDBAsync", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13753,8 +14393,10 @@ func (w *RedisClusterClientWrapper) FlushDb(ctx context.Context) *redis.StatusCm
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.FlushDb", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.FlushDb", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.FlushDb", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13795,8 +14437,10 @@ func (w *RedisClusterClientWrapper) GeoAdd(ctx context.Context, key string, geoL
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoAdd", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.GeoAdd", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.GeoAdd", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13837,8 +14481,10 @@ func (w *RedisClusterClientWrapper) GeoDist(ctx context.Context, key string, mem
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoDist", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.GeoDist", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.GeoDist", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13879,8 +14525,10 @@ func (w *RedisClusterClientWrapper) GeoHash(ctx context.Context, key string, mem
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoHash", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.GeoHash", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.GeoHash", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13921,8 +14569,10 @@ func (w *RedisClusterClientWrapper) GeoPos(ctx context.Context, key string, memb
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoPos", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.GeoPos", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.GeoPos", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -13963,8 +14613,10 @@ func (w *RedisClusterClientWrapper) GeoRadius(ctx context.Context, key string, l
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadius", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadius", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadius", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14005,8 +14657,10 @@ func (w *RedisClusterClientWrapper) GeoRadiusByMember(ctx context.Context, key s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusByMember", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusByMember", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusByMember", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14047,8 +14701,10 @@ func (w *RedisClusterClientWrapper) GeoRadiusByMemberRO(ctx context.Context, key
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusByMemberRO", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusByMemberRO", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusByMemberRO", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14089,8 +14745,10 @@ func (w *RedisClusterClientWrapper) GeoRadiusRO(ctx context.Context, key string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusRO", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusRO", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.GeoRadiusRO", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14131,8 +14789,10 @@ func (w *RedisClusterClientWrapper) Get(ctx context.Context, key string) *redis.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Get", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Get", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Get", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14173,8 +14833,10 @@ func (w *RedisClusterClientWrapper) GetBit(ctx context.Context, key string, offs
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GetBit", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.GetBit", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.GetBit", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14215,8 +14877,10 @@ func (w *RedisClusterClientWrapper) GetRange(ctx context.Context, key string, st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GetRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.GetRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.GetRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14257,8 +14921,10 @@ func (w *RedisClusterClientWrapper) GetSet(ctx context.Context, key string, valu
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.GetSet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.GetSet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.GetSet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14299,8 +14965,10 @@ func (w *RedisClusterClientWrapper) HDel(ctx context.Context, key string, fields
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HDel", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.HDel", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.HDel", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14341,8 +15009,10 @@ func (w *RedisClusterClientWrapper) HExists(ctx context.Context, key string, fie
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HExists", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.HExists", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.HExists", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14383,8 +15053,10 @@ func (w *RedisClusterClientWrapper) HGet(ctx context.Context, key string, field 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HGet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.HGet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.HGet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14425,8 +15097,10 @@ func (w *RedisClusterClientWrapper) HGetAll(ctx context.Context, key string) *re
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HGetAll", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.HGetAll", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.HGetAll", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14467,8 +15141,10 @@ func (w *RedisClusterClientWrapper) HIncrBy(ctx context.Context, key string, fie
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HIncrBy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.HIncrBy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.HIncrBy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14509,8 +15185,10 @@ func (w *RedisClusterClientWrapper) HIncrByFloat(ctx context.Context, key string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HIncrByFloat", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.HIncrByFloat", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.HIncrByFloat", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14551,8 +15229,10 @@ func (w *RedisClusterClientWrapper) HKeys(ctx context.Context, key string) *redi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HKeys", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.HKeys", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.HKeys", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14593,8 +15273,10 @@ func (w *RedisClusterClientWrapper) HLen(ctx context.Context, key string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HLen", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.HLen", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.HLen", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14635,8 +15317,10 @@ func (w *RedisClusterClientWrapper) HMGet(ctx context.Context, key string, field
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HMGet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.HMGet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.HMGet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14677,8 +15361,10 @@ func (w *RedisClusterClientWrapper) HMSet(ctx context.Context, key string, field
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HMSet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.HMSet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.HMSet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14719,8 +15405,10 @@ func (w *RedisClusterClientWrapper) HScan(ctx context.Context, key string, curso
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HScan", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.HScan", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.HScan", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14761,8 +15449,10 @@ func (w *RedisClusterClientWrapper) HSet(ctx context.Context, key string, field 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HSet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.HSet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.HSet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14803,8 +15493,10 @@ func (w *RedisClusterClientWrapper) HSetNX(ctx context.Context, key string, fiel
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HSetNX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.HSetNX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.HSetNX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14845,8 +15537,10 @@ func (w *RedisClusterClientWrapper) HVals(ctx context.Context, key string) *redi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.HVals", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.HVals", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.HVals", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14887,8 +15581,10 @@ func (w *RedisClusterClientWrapper) Incr(ctx context.Context, key string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Incr", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Incr", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Incr", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14929,8 +15625,10 @@ func (w *RedisClusterClientWrapper) IncrBy(ctx context.Context, key string, valu
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.IncrBy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.IncrBy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.IncrBy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -14971,8 +15669,10 @@ func (w *RedisClusterClientWrapper) IncrByFloat(ctx context.Context, key string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.IncrByFloat", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.IncrByFloat", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.IncrByFloat", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15013,8 +15713,10 @@ func (w *RedisClusterClientWrapper) Info(ctx context.Context, section ...string)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Info", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Info", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Info", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15055,8 +15757,10 @@ func (w *RedisClusterClientWrapper) Keys(ctx context.Context, pattern string) *r
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Keys", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Keys", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Keys", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15097,8 +15801,10 @@ func (w *RedisClusterClientWrapper) LIndex(ctx context.Context, key string, inde
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LIndex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.LIndex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.LIndex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15139,8 +15845,10 @@ func (w *RedisClusterClientWrapper) LInsert(ctx context.Context, key string, op 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LInsert", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.LInsert", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.LInsert", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15181,8 +15889,10 @@ func (w *RedisClusterClientWrapper) LInsertAfter(ctx context.Context, key string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LInsertAfter", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.LInsertAfter", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.LInsertAfter", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15223,8 +15933,10 @@ func (w *RedisClusterClientWrapper) LInsertBefore(ctx context.Context, key strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LInsertBefore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.LInsertBefore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.LInsertBefore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15265,8 +15977,10 @@ func (w *RedisClusterClientWrapper) LLen(ctx context.Context, key string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LLen", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.LLen", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.LLen", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15307,8 +16021,10 @@ func (w *RedisClusterClientWrapper) LPop(ctx context.Context, key string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LPop", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.LPop", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.LPop", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15349,8 +16065,10 @@ func (w *RedisClusterClientWrapper) LPush(ctx context.Context, key string, value
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LPush", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.LPush", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.LPush", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15391,8 +16109,10 @@ func (w *RedisClusterClientWrapper) LPushX(ctx context.Context, key string, valu
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LPushX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.LPushX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.LPushX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15433,8 +16153,10 @@ func (w *RedisClusterClientWrapper) LRange(ctx context.Context, key string, star
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.LRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.LRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15475,8 +16197,10 @@ func (w *RedisClusterClientWrapper) LRem(ctx context.Context, key string, count 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LRem", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.LRem", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.LRem", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15517,8 +16241,10 @@ func (w *RedisClusterClientWrapper) LSet(ctx context.Context, key string, index 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LSet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.LSet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.LSet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15559,8 +16285,10 @@ func (w *RedisClusterClientWrapper) LTrim(ctx context.Context, key string, start
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LTrim", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.LTrim", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.LTrim", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15601,8 +16329,10 @@ func (w *RedisClusterClientWrapper) LastSave(ctx context.Context) *redis.IntCmd 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.LastSave", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.LastSave", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.LastSave", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15643,8 +16373,10 @@ func (w *RedisClusterClientWrapper) MGet(ctx context.Context, keys ...string) *r
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.MGet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.MGet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.MGet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15685,8 +16417,10 @@ func (w *RedisClusterClientWrapper) MSet(ctx context.Context, pairs ...interface
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.MSet", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.MSet", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.MSet", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15727,8 +16461,10 @@ func (w *RedisClusterClientWrapper) MSetNX(ctx context.Context, pairs ...interfa
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.MSetNX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.MSetNX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.MSetNX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15769,8 +16505,10 @@ func (w *RedisClusterClientWrapper) MemoryUsage(ctx context.Context, key string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.MemoryUsage", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.MemoryUsage", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.MemoryUsage", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15811,8 +16549,10 @@ func (w *RedisClusterClientWrapper) Migrate(ctx context.Context, host string, po
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Migrate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Migrate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Migrate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15853,8 +16593,10 @@ func (w *RedisClusterClientWrapper) Move(ctx context.Context, key string, db int
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Move", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Move", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Move", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15895,8 +16637,10 @@ func (w *RedisClusterClientWrapper) ObjectEncoding(ctx context.Context, key stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ObjectEncoding", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ObjectEncoding", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ObjectEncoding", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15937,8 +16681,10 @@ func (w *RedisClusterClientWrapper) ObjectIdleTime(ctx context.Context, key stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ObjectIdleTime", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ObjectIdleTime", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ObjectIdleTime", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -15979,8 +16725,10 @@ func (w *RedisClusterClientWrapper) ObjectRefCount(ctx context.Context, key stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ObjectRefCount", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ObjectRefCount", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ObjectRefCount", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16021,8 +16769,10 @@ func (w *RedisClusterClientWrapper) PExpire(ctx context.Context, key string, exp
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PExpire", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.PExpire", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.PExpire", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16063,8 +16813,10 @@ func (w *RedisClusterClientWrapper) PExpireAt(ctx context.Context, key string, t
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PExpireAt", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.PExpireAt", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.PExpireAt", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16105,8 +16857,10 @@ func (w *RedisClusterClientWrapper) PFAdd(ctx context.Context, key string, els .
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PFAdd", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.PFAdd", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.PFAdd", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16147,8 +16901,10 @@ func (w *RedisClusterClientWrapper) PFCount(ctx context.Context, keys ...string)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PFCount", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.PFCount", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.PFCount", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16189,8 +16945,10 @@ func (w *RedisClusterClientWrapper) PFMerge(ctx context.Context, dest string, ke
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PFMerge", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.PFMerge", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.PFMerge", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16231,8 +16989,10 @@ func (w *RedisClusterClientWrapper) PTTL(ctx context.Context, key string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PTTL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.PTTL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.PTTL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16273,8 +17033,10 @@ func (w *RedisClusterClientWrapper) Persist(ctx context.Context, key string) *re
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Persist", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Persist", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Persist", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16315,8 +17077,10 @@ func (w *RedisClusterClientWrapper) Ping(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Ping", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Ping", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Ping", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16357,8 +17121,10 @@ func (w *RedisClusterClientWrapper) PubSubChannels(ctx context.Context, pattern 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PubSubChannels", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.PubSubChannels", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.PubSubChannels", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16399,8 +17165,10 @@ func (w *RedisClusterClientWrapper) PubSubNumPat(ctx context.Context) *redis.Int
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PubSubNumPat", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.PubSubNumPat", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.PubSubNumPat", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16441,8 +17209,10 @@ func (w *RedisClusterClientWrapper) PubSubNumSub(ctx context.Context, channels .
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.PubSubNumSub", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.PubSubNumSub", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.PubSubNumSub", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16483,8 +17253,10 @@ func (w *RedisClusterClientWrapper) Publish(ctx context.Context, channel string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Publish", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Publish", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Publish", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16525,8 +17297,10 @@ func (w *RedisClusterClientWrapper) Quit(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Quit", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Quit", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Quit", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16567,8 +17341,10 @@ func (w *RedisClusterClientWrapper) RPop(ctx context.Context, key string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.RPop", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.RPop", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.RPop", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16609,8 +17385,10 @@ func (w *RedisClusterClientWrapper) RPopLPush(ctx context.Context, source string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.RPopLPush", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.RPopLPush", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.RPopLPush", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16651,8 +17429,10 @@ func (w *RedisClusterClientWrapper) RPush(ctx context.Context, key string, value
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.RPush", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.RPush", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.RPush", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16693,8 +17473,10 @@ func (w *RedisClusterClientWrapper) RPushX(ctx context.Context, key string, valu
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.RPushX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.RPushX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.RPushX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16735,8 +17517,10 @@ func (w *RedisClusterClientWrapper) RandomKey(ctx context.Context) *redis.String
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.RandomKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.RandomKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.RandomKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16777,8 +17561,10 @@ func (w *RedisClusterClientWrapper) ReadOnly(ctx context.Context) *redis.StatusC
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ReadOnly", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ReadOnly", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ReadOnly", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16819,8 +17605,10 @@ func (w *RedisClusterClientWrapper) ReadWrite(ctx context.Context) *redis.Status
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ReadWrite", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ReadWrite", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ReadWrite", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16861,8 +17649,10 @@ func (w *RedisClusterClientWrapper) Rename(ctx context.Context, key string, newk
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Rename", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Rename", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Rename", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16903,8 +17693,10 @@ func (w *RedisClusterClientWrapper) RenameNX(ctx context.Context, key string, ne
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.RenameNX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.RenameNX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.RenameNX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16945,8 +17737,10 @@ func (w *RedisClusterClientWrapper) Restore(ctx context.Context, key string, ttl
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Restore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Restore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Restore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -16987,8 +17781,10 @@ func (w *RedisClusterClientWrapper) RestoreReplace(ctx context.Context, key stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.RestoreReplace", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.RestoreReplace", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.RestoreReplace", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17029,8 +17825,10 @@ func (w *RedisClusterClientWrapper) SAdd(ctx context.Context, key string, member
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SAdd", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SAdd", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SAdd", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17071,8 +17869,10 @@ func (w *RedisClusterClientWrapper) SCard(ctx context.Context, key string) *redi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SCard", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SCard", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SCard", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17113,8 +17913,10 @@ func (w *RedisClusterClientWrapper) SDiff(ctx context.Context, keys ...string) *
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SDiff", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SDiff", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SDiff", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17155,8 +17957,10 @@ func (w *RedisClusterClientWrapper) SDiffStore(ctx context.Context, destination 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SDiffStore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SDiffStore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SDiffStore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17197,8 +18001,10 @@ func (w *RedisClusterClientWrapper) SInter(ctx context.Context, keys ...string) 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SInter", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SInter", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SInter", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17239,8 +18045,10 @@ func (w *RedisClusterClientWrapper) SInterStore(ctx context.Context, destination
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SInterStore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SInterStore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SInterStore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17281,8 +18089,10 @@ func (w *RedisClusterClientWrapper) SIsMember(ctx context.Context, key string, m
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SIsMember", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SIsMember", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SIsMember", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17323,8 +18133,10 @@ func (w *RedisClusterClientWrapper) SMembers(ctx context.Context, key string) *r
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SMembers", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SMembers", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SMembers", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17365,8 +18177,10 @@ func (w *RedisClusterClientWrapper) SMembersMap(ctx context.Context, key string)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SMembersMap", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SMembersMap", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SMembersMap", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17407,8 +18221,10 @@ func (w *RedisClusterClientWrapper) SMove(ctx context.Context, source string, de
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SMove", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SMove", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SMove", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17449,8 +18265,10 @@ func (w *RedisClusterClientWrapper) SPop(ctx context.Context, key string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SPop", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SPop", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SPop", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17491,8 +18309,10 @@ func (w *RedisClusterClientWrapper) SPopN(ctx context.Context, key string, count
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SPopN", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SPopN", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SPopN", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17533,8 +18353,10 @@ func (w *RedisClusterClientWrapper) SRandMember(ctx context.Context, key string)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SRandMember", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SRandMember", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SRandMember", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17575,8 +18397,10 @@ func (w *RedisClusterClientWrapper) SRandMemberN(ctx context.Context, key string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SRandMemberN", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SRandMemberN", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SRandMemberN", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17617,8 +18441,10 @@ func (w *RedisClusterClientWrapper) SRem(ctx context.Context, key string, member
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SRem", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SRem", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SRem", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17659,8 +18485,10 @@ func (w *RedisClusterClientWrapper) SScan(ctx context.Context, key string, curso
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SScan", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SScan", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SScan", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17701,8 +18529,10 @@ func (w *RedisClusterClientWrapper) SUnion(ctx context.Context, keys ...string) 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SUnion", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SUnion", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SUnion", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17743,8 +18573,10 @@ func (w *RedisClusterClientWrapper) SUnionStore(ctx context.Context, destination
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SUnionStore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SUnionStore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SUnionStore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17785,8 +18617,10 @@ func (w *RedisClusterClientWrapper) Save(ctx context.Context) *redis.StatusCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Save", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Save", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Save", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17827,8 +18661,10 @@ func (w *RedisClusterClientWrapper) Scan(ctx context.Context, cursor uint64, mat
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Scan", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Scan", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Scan", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17869,8 +18705,10 @@ func (w *RedisClusterClientWrapper) ScriptExists(ctx context.Context, hashes ...
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ScriptExists", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ScriptExists", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ScriptExists", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17911,8 +18749,10 @@ func (w *RedisClusterClientWrapper) ScriptFlush(ctx context.Context) *redis.Stat
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ScriptFlush", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ScriptFlush", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ScriptFlush", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17953,8 +18793,10 @@ func (w *RedisClusterClientWrapper) ScriptKill(ctx context.Context) *redis.Statu
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ScriptKill", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ScriptKill", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ScriptKill", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -17995,8 +18837,10 @@ func (w *RedisClusterClientWrapper) ScriptLoad(ctx context.Context, script strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ScriptLoad", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ScriptLoad", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ScriptLoad", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18037,8 +18881,10 @@ func (w *RedisClusterClientWrapper) Set(ctx context.Context, key string, value i
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Set", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Set", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Set", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18079,8 +18925,10 @@ func (w *RedisClusterClientWrapper) SetBit(ctx context.Context, key string, offs
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SetBit", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SetBit", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SetBit", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18121,8 +18969,10 @@ func (w *RedisClusterClientWrapper) SetNX(ctx context.Context, key string, value
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SetNX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SetNX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SetNX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18163,8 +19013,10 @@ func (w *RedisClusterClientWrapper) SetRange(ctx context.Context, key string, of
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SetRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SetRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SetRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18205,8 +19057,10 @@ func (w *RedisClusterClientWrapper) SetXX(ctx context.Context, key string, value
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SetXX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SetXX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SetXX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18247,8 +19101,10 @@ func (w *RedisClusterClientWrapper) Shutdown(ctx context.Context) *redis.StatusC
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Shutdown", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Shutdown", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Shutdown", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18289,8 +19145,10 @@ func (w *RedisClusterClientWrapper) ShutdownNoSave(ctx context.Context) *redis.S
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ShutdownNoSave", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ShutdownNoSave", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ShutdownNoSave", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18331,8 +19189,10 @@ func (w *RedisClusterClientWrapper) ShutdownSave(ctx context.Context) *redis.Sta
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ShutdownSave", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ShutdownSave", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ShutdownSave", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18373,8 +19233,10 @@ func (w *RedisClusterClientWrapper) SlaveOf(ctx context.Context, host string, po
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SlaveOf", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SlaveOf", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SlaveOf", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18419,8 +19281,10 @@ func (w *RedisClusterClientWrapper) Sort(ctx context.Context, key string, sort *
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Sort", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Sort", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Sort", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18461,8 +19325,10 @@ func (w *RedisClusterClientWrapper) SortInterfaces(ctx context.Context, key stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SortInterfaces", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SortInterfaces", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SortInterfaces", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18503,8 +19369,10 @@ func (w *RedisClusterClientWrapper) SortStore(ctx context.Context, key string, s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.SortStore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.SortStore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.SortStore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18545,8 +19413,10 @@ func (w *RedisClusterClientWrapper) StrLen(ctx context.Context, key string) *red
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.StrLen", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.StrLen", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.StrLen", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18591,8 +19461,10 @@ func (w *RedisClusterClientWrapper) TTL(ctx context.Context, key string) *redis.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.TTL", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.TTL", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.TTL", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18633,8 +19505,10 @@ func (w *RedisClusterClientWrapper) Time(ctx context.Context) *redis.TimeCmd {
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Time", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Time", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Time", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18675,8 +19549,10 @@ func (w *RedisClusterClientWrapper) Touch(ctx context.Context, keys ...string) *
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Touch", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Touch", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Touch", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18717,8 +19593,10 @@ func (w *RedisClusterClientWrapper) Type(ctx context.Context, key string) *redis
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Type", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Type", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Type", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18759,8 +19637,10 @@ func (w *RedisClusterClientWrapper) Unlink(ctx context.Context, keys ...string) 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Unlink", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Unlink", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Unlink", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18801,8 +19681,10 @@ func (w *RedisClusterClientWrapper) Wait(ctx context.Context, numSlaves int, tim
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.Wait", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.Wait", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.Wait", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18843,8 +19725,10 @@ func (w *RedisClusterClientWrapper) XAck(ctx context.Context, stream string, gro
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XAck", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XAck", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XAck", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18885,8 +19769,10 @@ func (w *RedisClusterClientWrapper) XAdd(ctx context.Context, a *redis.XAddArgs)
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XAdd", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XAdd", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XAdd", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18927,8 +19813,10 @@ func (w *RedisClusterClientWrapper) XClaim(ctx context.Context, a *redis.XClaimA
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XClaim", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XClaim", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XClaim", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -18969,8 +19857,10 @@ func (w *RedisClusterClientWrapper) XClaimJustID(ctx context.Context, a *redis.X
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XClaimJustID", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XClaimJustID", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XClaimJustID", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19011,8 +19901,10 @@ func (w *RedisClusterClientWrapper) XDel(ctx context.Context, stream string, ids
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XDel", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XDel", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XDel", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19053,8 +19945,10 @@ func (w *RedisClusterClientWrapper) XGroupCreate(ctx context.Context, stream str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XGroupCreate", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XGroupCreate", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XGroupCreate", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19095,8 +19989,10 @@ func (w *RedisClusterClientWrapper) XGroupCreateMkStream(ctx context.Context, st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XGroupCreateMkStream", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XGroupCreateMkStream", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XGroupCreateMkStream", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19137,8 +20033,10 @@ func (w *RedisClusterClientWrapper) XGroupDelConsumer(ctx context.Context, strea
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XGroupDelConsumer", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XGroupDelConsumer", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XGroupDelConsumer", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19179,8 +20077,10 @@ func (w *RedisClusterClientWrapper) XGroupDestroy(ctx context.Context, stream st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XGroupDestroy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XGroupDestroy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XGroupDestroy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19221,8 +20121,10 @@ func (w *RedisClusterClientWrapper) XGroupSetID(ctx context.Context, stream stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XGroupSetID", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XGroupSetID", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XGroupSetID", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19263,8 +20165,10 @@ func (w *RedisClusterClientWrapper) XLen(ctx context.Context, stream string) *re
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XLen", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XLen", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XLen", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19305,8 +20209,10 @@ func (w *RedisClusterClientWrapper) XPending(ctx context.Context, stream string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XPending", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XPending", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XPending", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19347,8 +20253,10 @@ func (w *RedisClusterClientWrapper) XPendingExt(ctx context.Context, a *redis.XP
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XPendingExt", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XPendingExt", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XPendingExt", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19389,8 +20297,10 @@ func (w *RedisClusterClientWrapper) XRange(ctx context.Context, stream string, s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19431,8 +20341,10 @@ func (w *RedisClusterClientWrapper) XRangeN(ctx context.Context, stream string, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XRangeN", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XRangeN", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XRangeN", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19473,8 +20385,10 @@ func (w *RedisClusterClientWrapper) XRead(ctx context.Context, a *redis.XReadArg
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XRead", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XRead", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XRead", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19515,8 +20429,10 @@ func (w *RedisClusterClientWrapper) XReadGroup(ctx context.Context, a *redis.XRe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XReadGroup", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XReadGroup", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XReadGroup", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19557,8 +20473,10 @@ func (w *RedisClusterClientWrapper) XReadStreams(ctx context.Context, streams ..
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XReadStreams", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XReadStreams", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XReadStreams", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19599,8 +20517,10 @@ func (w *RedisClusterClientWrapper) XRevRange(ctx context.Context, stream string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XRevRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XRevRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XRevRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19641,8 +20561,10 @@ func (w *RedisClusterClientWrapper) XRevRangeN(ctx context.Context, stream strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XRevRangeN", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XRevRangeN", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XRevRangeN", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19683,8 +20605,10 @@ func (w *RedisClusterClientWrapper) XTrim(ctx context.Context, key string, maxLe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XTrim", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XTrim", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XTrim", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19725,8 +20649,10 @@ func (w *RedisClusterClientWrapper) XTrimApprox(ctx context.Context, key string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.XTrimApprox", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.XTrimApprox", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.XTrimApprox", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19767,8 +20693,10 @@ func (w *RedisClusterClientWrapper) ZAdd(ctx context.Context, key string, member
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZAdd", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZAdd", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZAdd", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19809,8 +20737,10 @@ func (w *RedisClusterClientWrapper) ZAddCh(ctx context.Context, key string, memb
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZAddCh", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZAddCh", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZAddCh", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19851,8 +20781,10 @@ func (w *RedisClusterClientWrapper) ZAddNX(ctx context.Context, key string, memb
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZAddNX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZAddNX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZAddNX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19893,8 +20825,10 @@ func (w *RedisClusterClientWrapper) ZAddNXCh(ctx context.Context, key string, me
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZAddNXCh", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZAddNXCh", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZAddNXCh", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19935,8 +20869,10 @@ func (w *RedisClusterClientWrapper) ZAddXX(ctx context.Context, key string, memb
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZAddXX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZAddXX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZAddXX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -19977,8 +20913,10 @@ func (w *RedisClusterClientWrapper) ZAddXXCh(ctx context.Context, key string, me
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZAddXXCh", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZAddXXCh", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZAddXXCh", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20019,8 +20957,10 @@ func (w *RedisClusterClientWrapper) ZCard(ctx context.Context, key string) *redi
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZCard", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZCard", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZCard", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20061,8 +21001,10 @@ func (w *RedisClusterClientWrapper) ZCount(ctx context.Context, key string, min 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZCount", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZCount", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZCount", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20103,8 +21045,10 @@ func (w *RedisClusterClientWrapper) ZIncr(ctx context.Context, key string, membe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZIncr", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZIncr", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZIncr", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20145,8 +21089,10 @@ func (w *RedisClusterClientWrapper) ZIncrBy(ctx context.Context, key string, inc
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrBy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrBy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrBy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20187,8 +21133,10 @@ func (w *RedisClusterClientWrapper) ZIncrNX(ctx context.Context, key string, mem
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrNX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrNX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrNX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20229,8 +21177,10 @@ func (w *RedisClusterClientWrapper) ZIncrXX(ctx context.Context, key string, mem
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrXX", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrXX", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZIncrXX", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20271,8 +21221,10 @@ func (w *RedisClusterClientWrapper) ZInterStore(ctx context.Context, destination
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZInterStore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZInterStore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZInterStore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20313,8 +21265,10 @@ func (w *RedisClusterClientWrapper) ZLexCount(ctx context.Context, key string, m
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZLexCount", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZLexCount", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZLexCount", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20355,8 +21309,10 @@ func (w *RedisClusterClientWrapper) ZPopMax(ctx context.Context, key string, cou
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZPopMax", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZPopMax", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZPopMax", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20397,8 +21353,10 @@ func (w *RedisClusterClientWrapper) ZPopMin(ctx context.Context, key string, cou
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZPopMin", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZPopMin", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZPopMin", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20439,8 +21397,10 @@ func (w *RedisClusterClientWrapper) ZRange(ctx context.Context, key string, star
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20481,8 +21441,10 @@ func (w *RedisClusterClientWrapper) ZRangeByLex(ctx context.Context, key string,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByLex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByLex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByLex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20523,8 +21485,10 @@ func (w *RedisClusterClientWrapper) ZRangeByScore(ctx context.Context, key strin
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByScore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByScore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByScore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20565,8 +21529,10 @@ func (w *RedisClusterClientWrapper) ZRangeByScoreWithScores(ctx context.Context,
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByScoreWithScores", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByScoreWithScores", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeByScoreWithScores", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20607,8 +21573,10 @@ func (w *RedisClusterClientWrapper) ZRangeWithScores(ctx context.Context, key st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeWithScores", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeWithScores", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRangeWithScores", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20649,8 +21617,10 @@ func (w *RedisClusterClientWrapper) ZRank(ctx context.Context, key string, membe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRank", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRank", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRank", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20691,8 +21661,10 @@ func (w *RedisClusterClientWrapper) ZRem(ctx context.Context, key string, member
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRem", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRem", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRem", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20733,8 +21705,10 @@ func (w *RedisClusterClientWrapper) ZRemRangeByLex(ctx context.Context, key stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByLex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByLex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByLex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20775,8 +21749,10 @@ func (w *RedisClusterClientWrapper) ZRemRangeByRank(ctx context.Context, key str
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByRank", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByRank", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByRank", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20817,8 +21793,10 @@ func (w *RedisClusterClientWrapper) ZRemRangeByScore(ctx context.Context, key st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByScore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByScore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRemRangeByScore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20859,8 +21837,10 @@ func (w *RedisClusterClientWrapper) ZRevRange(ctx context.Context, key string, s
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20901,8 +21881,10 @@ func (w *RedisClusterClientWrapper) ZRevRangeByLex(ctx context.Context, key stri
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByLex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByLex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByLex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20943,8 +21925,10 @@ func (w *RedisClusterClientWrapper) ZRevRangeByScore(ctx context.Context, key st
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByScore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByScore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByScore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -20985,8 +21969,10 @@ func (w *RedisClusterClientWrapper) ZRevRangeByScoreWithScores(ctx context.Conte
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByScoreWithScores", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByScoreWithScores", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeByScoreWithScores", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -21027,8 +22013,10 @@ func (w *RedisClusterClientWrapper) ZRevRangeWithScores(ctx context.Context, key
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeWithScores", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeWithScores", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRangeWithScores", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -21069,8 +22057,10 @@ func (w *RedisClusterClientWrapper) ZRevRank(ctx context.Context, key string, me
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRank", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRank", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZRevRank", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -21111,8 +22101,10 @@ func (w *RedisClusterClientWrapper) ZScan(ctx context.Context, key string, curso
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZScan", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZScan", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZScan", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -21153,8 +22145,10 @@ func (w *RedisClusterClientWrapper) ZScore(ctx context.Context, key string, memb
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZScore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZScore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZScore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -21195,8 +22189,10 @@ func (w *RedisClusterClientWrapper) ZUnionStore(ctx context.Context, dest string
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.ClusterClient.ZUnionStore", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ClusterClient.ZUnionStore", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ClusterClient.ZUnionStore", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span

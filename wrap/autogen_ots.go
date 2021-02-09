@@ -112,8 +112,10 @@ func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, reque
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.AbortTransaction", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.AbortTransaction", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.AbortTransaction", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -155,8 +157,10 @@ func (w *OTSTableStoreClientWrapper) BatchGetRow(ctx context.Context, request *t
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.BatchGetRow", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.BatchGetRow", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.BatchGetRow", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -198,8 +202,10 @@ func (w *OTSTableStoreClientWrapper) BatchWriteRow(ctx context.Context, request 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.BatchWriteRow", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.BatchWriteRow", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.BatchWriteRow", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -241,8 +247,10 @@ func (w *OTSTableStoreClientWrapper) CommitTransaction(ctx context.Context, requ
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.CommitTransaction", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.CommitTransaction", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.CommitTransaction", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -284,8 +292,10 @@ func (w *OTSTableStoreClientWrapper) ComputeSplitPointsBySize(ctx context.Contex
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.ComputeSplitPointsBySize", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.ComputeSplitPointsBySize", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.ComputeSplitPointsBySize", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -327,8 +337,10 @@ func (w *OTSTableStoreClientWrapper) CreateIndex(ctx context.Context, request *t
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.CreateIndex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.CreateIndex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.CreateIndex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -370,8 +382,10 @@ func (w *OTSTableStoreClientWrapper) CreateSearchIndex(ctx context.Context, requ
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.CreateSearchIndex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.CreateSearchIndex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.CreateSearchIndex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -413,8 +427,10 @@ func (w *OTSTableStoreClientWrapper) CreateTable(ctx context.Context, request *t
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.CreateTable", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.CreateTable", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.CreateTable", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -456,8 +472,10 @@ func (w *OTSTableStoreClientWrapper) DeleteIndex(ctx context.Context, request *t
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteIndex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteIndex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteIndex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -499,8 +517,10 @@ func (w *OTSTableStoreClientWrapper) DeleteRow(ctx context.Context, request *tab
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteRow", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteRow", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteRow", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -542,8 +562,10 @@ func (w *OTSTableStoreClientWrapper) DeleteSearchIndex(ctx context.Context, requ
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteSearchIndex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteSearchIndex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteSearchIndex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -585,8 +607,10 @@ func (w *OTSTableStoreClientWrapper) DeleteTable(ctx context.Context, request *t
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteTable", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteTable", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteTable", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -628,8 +652,10 @@ func (w *OTSTableStoreClientWrapper) DescribeSearchIndex(ctx context.Context, re
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeSearchIndex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeSearchIndex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeSearchIndex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -671,8 +697,10 @@ func (w *OTSTableStoreClientWrapper) DescribeStream(ctx context.Context, req *ta
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeStream", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeStream", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeStream", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -714,8 +742,10 @@ func (w *OTSTableStoreClientWrapper) DescribeTable(ctx context.Context, request 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeTable", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeTable", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.DescribeTable", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -757,8 +787,10 @@ func (w *OTSTableStoreClientWrapper) GetRange(ctx context.Context, request *tabl
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.GetRange", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.GetRange", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.GetRange", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -800,8 +832,10 @@ func (w *OTSTableStoreClientWrapper) GetRow(ctx context.Context, request *tables
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.GetRow", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.GetRow", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.GetRow", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -843,8 +877,10 @@ func (w *OTSTableStoreClientWrapper) GetShardIterator(ctx context.Context, req *
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.GetShardIterator", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.GetShardIterator", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.GetShardIterator", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -886,8 +922,10 @@ func (w *OTSTableStoreClientWrapper) GetStreamRecord(ctx context.Context, req *t
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.GetStreamRecord", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.GetStreamRecord", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.GetStreamRecord", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -929,8 +967,10 @@ func (w *OTSTableStoreClientWrapper) ListSearchIndex(ctx context.Context, reques
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.ListSearchIndex", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.ListSearchIndex", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.ListSearchIndex", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -972,8 +1012,10 @@ func (w *OTSTableStoreClientWrapper) ListStream(ctx context.Context, req *tables
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.ListStream", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.ListStream", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.ListStream", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1015,8 +1057,10 @@ func (w *OTSTableStoreClientWrapper) ListTable(ctx context.Context) (*tablestore
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.ListTable", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.ListTable", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.ListTable", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1058,8 +1102,10 @@ func (w *OTSTableStoreClientWrapper) PutRow(ctx context.Context, request *tables
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.PutRow", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.PutRow", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.PutRow", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1101,8 +1147,10 @@ func (w *OTSTableStoreClientWrapper) Search(ctx context.Context, request *tables
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.Search", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.Search", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.Search", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1144,8 +1192,10 @@ func (w *OTSTableStoreClientWrapper) StartLocalTransaction(ctx context.Context, 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.StartLocalTransaction", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.StartLocalTransaction", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.StartLocalTransaction", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1187,8 +1237,10 @@ func (w *OTSTableStoreClientWrapper) UpdateRow(ctx context.Context, request *tab
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.UpdateRow", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.UpdateRow", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.UpdateRow", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1230,8 +1282,10 @@ func (w *OTSTableStoreClientWrapper) UpdateTable(ctx context.Context, request *t
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.TableStoreClient.UpdateTable", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.UpdateTable", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.UpdateTable", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span

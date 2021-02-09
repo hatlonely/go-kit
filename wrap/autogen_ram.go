@@ -112,8 +112,10 @@ func (w *RAMClientWrapper) AddUserToGroup(ctx context.Context, request *ram.AddU
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AddUserToGroup", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.AddUserToGroup", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.AddUserToGroup", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -165,8 +167,10 @@ func (w *RAMClientWrapper) AttachPolicyToGroup(ctx context.Context, request *ram
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AttachPolicyToGroup", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.AttachPolicyToGroup", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.AttachPolicyToGroup", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -218,8 +222,10 @@ func (w *RAMClientWrapper) AttachPolicyToRole(ctx context.Context, request *ram.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AttachPolicyToRole", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.AttachPolicyToRole", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.AttachPolicyToRole", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -271,8 +277,10 @@ func (w *RAMClientWrapper) AttachPolicyToUser(ctx context.Context, request *ram.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.AttachPolicyToUser", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.AttachPolicyToUser", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.AttachPolicyToUser", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -324,8 +332,10 @@ func (w *RAMClientWrapper) BindMFADevice(ctx context.Context, request *ram.BindM
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.BindMFADevice", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.BindMFADevice", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.BindMFADevice", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -377,8 +387,10 @@ func (w *RAMClientWrapper) ChangePassword(ctx context.Context, request *ram.Chan
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ChangePassword", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ChangePassword", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ChangePassword", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -430,8 +442,10 @@ func (w *RAMClientWrapper) ClearAccountAlias(ctx context.Context, request *ram.C
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ClearAccountAlias", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ClearAccountAlias", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ClearAccountAlias", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -483,8 +497,10 @@ func (w *RAMClientWrapper) CreateAccessKey(ctx context.Context, request *ram.Cre
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateAccessKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateAccessKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateAccessKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -536,8 +552,10 @@ func (w *RAMClientWrapper) CreateGroup(ctx context.Context, request *ram.CreateG
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateGroup", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateGroup", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateGroup", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -589,8 +607,10 @@ func (w *RAMClientWrapper) CreateLoginProfile(ctx context.Context, request *ram.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateLoginProfile", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateLoginProfile", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateLoginProfile", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -642,8 +662,10 @@ func (w *RAMClientWrapper) CreatePolicy(ctx context.Context, request *ram.Create
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreatePolicy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreatePolicy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreatePolicy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -685,8 +707,10 @@ func (w *RAMClientWrapper) CreatePolicyVersion(ctx context.Context, request *ram
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreatePolicyVersion", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreatePolicyVersion", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreatePolicyVersion", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -748,8 +772,10 @@ func (w *RAMClientWrapper) CreateRole(ctx context.Context, request *ram.CreateRo
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateRole", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateRole", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateRole", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -801,8 +827,10 @@ func (w *RAMClientWrapper) CreateUser(ctx context.Context, request *ram.CreateUs
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateUser", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateUser", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateUser", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -854,8 +882,10 @@ func (w *RAMClientWrapper) CreateVirtualMFADevice(ctx context.Context, request *
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.CreateVirtualMFADevice", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateVirtualMFADevice", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateVirtualMFADevice", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -907,8 +937,10 @@ func (w *RAMClientWrapper) DeleteAccessKey(ctx context.Context, request *ram.Del
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteAccessKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteAccessKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteAccessKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -960,8 +992,10 @@ func (w *RAMClientWrapper) DeleteGroup(ctx context.Context, request *ram.DeleteG
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteGroup", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteGroup", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteGroup", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1013,8 +1047,10 @@ func (w *RAMClientWrapper) DeleteLoginProfile(ctx context.Context, request *ram.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteLoginProfile", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteLoginProfile", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteLoginProfile", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1066,8 +1102,10 @@ func (w *RAMClientWrapper) DeletePolicy(ctx context.Context, request *ram.Delete
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeletePolicy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeletePolicy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeletePolicy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1109,8 +1147,10 @@ func (w *RAMClientWrapper) DeletePolicyVersion(ctx context.Context, request *ram
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeletePolicyVersion", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeletePolicyVersion", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeletePolicyVersion", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1172,8 +1212,10 @@ func (w *RAMClientWrapper) DeleteRole(ctx context.Context, request *ram.DeleteRo
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteRole", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteRole", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteRole", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1225,8 +1267,10 @@ func (w *RAMClientWrapper) DeleteUser(ctx context.Context, request *ram.DeleteUs
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteUser", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteUser", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteUser", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1278,8 +1322,10 @@ func (w *RAMClientWrapper) DeleteVirtualMFADevice(ctx context.Context, request *
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DeleteVirtualMFADevice", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteVirtualMFADevice", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteVirtualMFADevice", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1331,8 +1377,10 @@ func (w *RAMClientWrapper) DetachPolicyFromGroup(ctx context.Context, request *r
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DetachPolicyFromGroup", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DetachPolicyFromGroup", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DetachPolicyFromGroup", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1384,8 +1432,10 @@ func (w *RAMClientWrapper) DetachPolicyFromRole(ctx context.Context, request *ra
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DetachPolicyFromRole", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DetachPolicyFromRole", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DetachPolicyFromRole", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1437,8 +1487,10 @@ func (w *RAMClientWrapper) DetachPolicyFromUser(ctx context.Context, request *ra
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.DetachPolicyFromUser", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DetachPolicyFromUser", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DetachPolicyFromUser", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1490,8 +1542,10 @@ func (w *RAMClientWrapper) GetAccessKeyLastUsed(ctx context.Context, request *ra
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetAccessKeyLastUsed", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetAccessKeyLastUsed", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetAccessKeyLastUsed", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1543,8 +1597,10 @@ func (w *RAMClientWrapper) GetAccountAlias(ctx context.Context, request *ram.Get
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetAccountAlias", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetAccountAlias", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetAccountAlias", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1596,8 +1652,10 @@ func (w *RAMClientWrapper) GetGroup(ctx context.Context, request *ram.GetGroupRe
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetGroup", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetGroup", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetGroup", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1649,8 +1707,10 @@ func (w *RAMClientWrapper) GetLoginProfile(ctx context.Context, request *ram.Get
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetLoginProfile", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetLoginProfile", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetLoginProfile", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1702,8 +1762,10 @@ func (w *RAMClientWrapper) GetPasswordPolicy(ctx context.Context, request *ram.G
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetPasswordPolicy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetPasswordPolicy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetPasswordPolicy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1755,8 +1817,10 @@ func (w *RAMClientWrapper) GetPolicy(ctx context.Context, request *ram.GetPolicy
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetPolicy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetPolicy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetPolicy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1798,8 +1862,10 @@ func (w *RAMClientWrapper) GetPolicyVersion(ctx context.Context, request *ram.Ge
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetPolicyVersion", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetPolicyVersion", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetPolicyVersion", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1861,8 +1927,10 @@ func (w *RAMClientWrapper) GetRole(ctx context.Context, request *ram.GetRoleRequ
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetRole", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetRole", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetRole", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1914,8 +1982,10 @@ func (w *RAMClientWrapper) GetSecurityPreference(ctx context.Context, request *r
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetSecurityPreference", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetSecurityPreference", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetSecurityPreference", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -1967,8 +2037,10 @@ func (w *RAMClientWrapper) GetUser(ctx context.Context, request *ram.GetUserRequ
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetUser", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetUser", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetUser", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2010,8 +2082,10 @@ func (w *RAMClientWrapper) GetUserMFAInfo(ctx context.Context, request *ram.GetU
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.GetUserMFAInfo", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetUserMFAInfo", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetUserMFAInfo", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2073,8 +2147,10 @@ func (w *RAMClientWrapper) ListAccessKeys(ctx context.Context, request *ram.List
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListAccessKeys", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListAccessKeys", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListAccessKeys", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2126,8 +2202,10 @@ func (w *RAMClientWrapper) ListEntitiesForPolicy(ctx context.Context, request *r
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListEntitiesForPolicy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListEntitiesForPolicy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListEntitiesForPolicy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2179,8 +2257,10 @@ func (w *RAMClientWrapper) ListGroups(ctx context.Context, request *ram.ListGrou
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListGroups", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListGroups", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListGroups", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2222,8 +2302,10 @@ func (w *RAMClientWrapper) ListGroupsForUser(ctx context.Context, request *ram.L
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListGroupsForUser", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListGroupsForUser", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListGroupsForUser", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2285,8 +2367,10 @@ func (w *RAMClientWrapper) ListPolicies(ctx context.Context, request *ram.ListPo
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListPolicies", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListPolicies", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListPolicies", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2328,8 +2412,10 @@ func (w *RAMClientWrapper) ListPoliciesForGroup(ctx context.Context, request *ra
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListPoliciesForGroup", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListPoliciesForGroup", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListPoliciesForGroup", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2381,8 +2467,10 @@ func (w *RAMClientWrapper) ListPoliciesForRole(ctx context.Context, request *ram
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListPoliciesForRole", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListPoliciesForRole", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListPoliciesForRole", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2434,8 +2522,10 @@ func (w *RAMClientWrapper) ListPoliciesForUser(ctx context.Context, request *ram
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListPoliciesForUser", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListPoliciesForUser", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListPoliciesForUser", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2497,8 +2587,10 @@ func (w *RAMClientWrapper) ListPolicyVersions(ctx context.Context, request *ram.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListPolicyVersions", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListPolicyVersions", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListPolicyVersions", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2550,8 +2642,10 @@ func (w *RAMClientWrapper) ListRoles(ctx context.Context, request *ram.ListRoles
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListRoles", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListRoles", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListRoles", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2603,8 +2697,10 @@ func (w *RAMClientWrapper) ListUsers(ctx context.Context, request *ram.ListUsers
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListUsers", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListUsers", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListUsers", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2646,8 +2742,10 @@ func (w *RAMClientWrapper) ListUsersForGroup(ctx context.Context, request *ram.L
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListUsersForGroup", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListUsersForGroup", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListUsersForGroup", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2709,8 +2807,10 @@ func (w *RAMClientWrapper) ListVirtualMFADevices(ctx context.Context, request *r
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.ListVirtualMFADevices", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListVirtualMFADevices", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListVirtualMFADevices", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2762,8 +2862,10 @@ func (w *RAMClientWrapper) RemoveUserFromGroup(ctx context.Context, request *ram
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.RemoveUserFromGroup", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.RemoveUserFromGroup", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.RemoveUserFromGroup", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2815,8 +2917,10 @@ func (w *RAMClientWrapper) SetAccountAlias(ctx context.Context, request *ram.Set
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetAccountAlias", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetAccountAlias", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetAccountAlias", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2868,8 +2972,10 @@ func (w *RAMClientWrapper) SetDefaultPolicyVersion(ctx context.Context, request 
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetDefaultPolicyVersion", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetDefaultPolicyVersion", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetDefaultPolicyVersion", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2921,8 +3027,10 @@ func (w *RAMClientWrapper) SetPasswordPolicy(ctx context.Context, request *ram.S
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetPasswordPolicy", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetPasswordPolicy", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetPasswordPolicy", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -2974,8 +3082,10 @@ func (w *RAMClientWrapper) SetSecurityPreference(ctx context.Context, request *r
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.SetSecurityPreference", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SetSecurityPreference", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SetSecurityPreference", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3027,8 +3137,10 @@ func (w *RAMClientWrapper) UnbindMFADevice(ctx context.Context, request *ram.Unb
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UnbindMFADevice", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UnbindMFADevice", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UnbindMFADevice", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3080,8 +3192,10 @@ func (w *RAMClientWrapper) UpdateAccessKey(ctx context.Context, request *ram.Upd
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateAccessKey", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateAccessKey", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateAccessKey", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3133,8 +3247,10 @@ func (w *RAMClientWrapper) UpdateGroup(ctx context.Context, request *ram.UpdateG
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateGroup", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateGroup", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateGroup", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3186,8 +3302,10 @@ func (w *RAMClientWrapper) UpdateLoginProfile(ctx context.Context, request *ram.
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateLoginProfile", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateLoginProfile", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateLoginProfile", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3239,8 +3357,10 @@ func (w *RAMClientWrapper) UpdateRole(ctx context.Context, request *ram.UpdateRo
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateRole", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateRole", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateRole", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
@@ -3292,8 +3412,10 @@ func (w *RAMClientWrapper) UpdateUser(ctx context.Context, request *ram.UpdateUs
 			}
 		}
 		if w.parallelController != nil {
-			if err := w.parallelController.GetToken(ctx, fmt.Sprintf("%s.Client.UpdateUser", w.options.Name)); err != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateUser", w.options.Name)); err != nil {
 				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateUser", w.options.Name), token)
 			}
 		}
 		var span opentracing.Span
