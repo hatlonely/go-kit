@@ -59,7 +59,7 @@ func (l *LocalLocker) Unlock(ctx context.Context, key string) error {
 	m, ok := l.mutexMap[key]
 	l.mutex.RUnlock()
 	if !ok {
-		return errors.New("release not exist key")
+		return errors.New("release unlocked key")
 	}
 	m.Release()
 	return nil
