@@ -13,8 +13,18 @@ import (
 var ErrLocked = errors.New("locked")
 
 type Locker interface {
+	// 尝试获取锁
+	// 1. 获取成功，返回 nil
+	// 2. 获取失败，返回 ErrLocked
+	// 3. 其他错误，返回 err
 	TryLock(ctx context.Context, key string) error
+	// 获取锁
+	// 1. 获取成功，返回 nil
+	// 2. 其他错误，返回 err
 	Lock(ctx context.Context, key string) error
+	// 释放锁
+	// 1. 释放成功，返回 nil
+	// 2. 其他错误，返回 err
 	Unlock(ctx context.Context, key string) error
 }
 
