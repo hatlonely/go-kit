@@ -12,7 +12,7 @@ import (
 	"github.com/hatlonely/go-kit/wrap"
 )
 
-type RedisIncrParallelControllerOptions struct {
+type RedisParallelControllerOptions struct {
 	Redis           wrap.RedisClientWrapperOptions
 	Prefix          string
 	MaxToken        map[string]int
@@ -20,26 +20,26 @@ type RedisIncrParallelControllerOptions struct {
 	Interval        time.Duration
 }
 
-type RedisIncrParallelController struct {
+type RedisParallelController struct {
 	client            *wrap.RedisClientWrapper
-	options           *RedisIncrParallelControllerOptions
+	options           *RedisParallelControllerOptions
 	getTokenScriptSha string
 	putTokenScriptSha string
 }
 
-func NewRedisIncrParallelControllerWithOptions(options *RedisIncrParallelControllerOptions) (*RedisIncrParallelController, error) {
+func NewRedisParallelControllerWithOptions(options *RedisParallelControllerOptions) (*RedisParallelController, error) {
 	client, err := wrap.NewRedisClientWrapperWithOptions(&options.Redis)
 	if err != nil {
 		return nil, errors.WithMessage(err, "wrap.NewRedisClientWrapperWithOptions")
 	}
 
-	c := &RedisIncrParallelController{client: client, options: options}
+	c := &RedisParallelController{client: client, options: options}
 	{
 		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 		defer cancel()
 		res := client.ScriptLoad(ctx, `
 local r = redis.call('GET', KEYS[1])
-if r < ARGV[1] then
+if not r or tonumber(r) < tonumber(ARGV[1]) then
   redis.call('INCR', KEYS[1])
   return 1
 end
@@ -49,17 +49,19 @@ return 0
 			return nil, errors.New("redis return nil")
 		}
 		if res.Err() != nil {
-			return nil, errors.Wrap(err, "client.ScriptLoad failed")
+			return nil, errors.Wrap(res.Err(), "client.ScriptLoad failed")
 		}
 		c.getTokenScriptSha = res.Val()
 	}
 	{
-
 		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 		defer cancel()
 		res := client.ScriptLoad(ctx, `
 local r = redis.call('GET', KEYS[1])
-if r > 0 then
+if not r then
+  return 0
+end
+if tonumber(r) > 0 then
   redis.call('DECR', KEYS[1])
   return 1
 end
@@ -69,7 +71,7 @@ return 0
 			return nil, errors.New("redis return nil")
 		}
 		if res.Err() != nil {
-			return nil, errors.Wrap(err, "client.ScriptLoad failed")
+			return nil, errors.Wrap(res.Err(), "client.ScriptLoad failed")
 		}
 		c.putTokenScriptSha = res.Val()
 	}
@@ -77,7 +79,7 @@ return 0
 	return c, nil
 }
 
-func (c *RedisIncrParallelController) TryAcquire(ctx context.Context, key string) (int, error) {
+func (c *RedisParallelController) TryAcquire(ctx context.Context, key string) (int, error) {
 	maxToken := c.calculateMaxToken(key)
 	if maxToken == 0 {
 		return 0, nil
@@ -91,13 +93,13 @@ func (c *RedisIncrParallelController) TryAcquire(ctx context.Context, key string
 	if res.Err() != nil {
 		return 0, errors.Wrap(res.Err(), "c.client.Incr failed")
 	}
-	if res.Val() == 1 {
+	if res.Val() == int64(1) {
 		return 0, nil
 	}
 	return 0, micro.ErrParallelControl
 }
 
-func (c *RedisIncrParallelController) Acquire(ctx context.Context, key string) (int, error) {
+func (c *RedisParallelController) Acquire(ctx context.Context, key string) (int, error) {
 	maxToken := c.calculateMaxToken(key)
 	if maxToken == 0 {
 		return 0, nil
@@ -112,18 +114,18 @@ func (c *RedisIncrParallelController) Acquire(ctx context.Context, key string) (
 		if res.Err() != nil {
 			return 0, errors.Wrap(res.Err(), "c.client.Incr failed")
 		}
-		if res.Val() == 1 {
+		if res.Val() == int64(1) {
 			return 0, nil
 		}
 		select {
 		case <-ctx.Done():
-			return 0, errors.New("context cancel")
+			return 0, micro.ErrContextCancel
 		case <-time.After(c.options.Interval):
 		}
 	}
 }
 
-func (c *RedisIncrParallelController) Release(ctx context.Context, key string, token int) error {
+func (c *RedisParallelController) Release(ctx context.Context, key string, token int) error {
 	maxToken := c.calculateMaxToken(key)
 	if maxToken == 0 {
 		return nil
@@ -140,14 +142,14 @@ func (c *RedisIncrParallelController) Release(ctx context.Context, key string, t
 	return nil
 }
 
-func (c *RedisIncrParallelController) generateKey(key string) string {
+func (c *RedisParallelController) generateKey(key string) string {
 	if c.options.Prefix == "" {
 		return key
 	}
 	return fmt.Sprintf("%s_%s", c.options.Prefix, key)
 }
 
-func (c *RedisIncrParallelController) calculateMaxToken(key string) int {
+func (c *RedisParallelController) calculateMaxToken(key string) int {
 	if qps, ok := c.options.MaxToken[key]; ok {
 		return qps
 	}
