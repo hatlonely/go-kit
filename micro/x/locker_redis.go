@@ -89,6 +89,10 @@ return 0
 	return l, nil
 }
 
+func (l *RedisLocker) SetLogger(log Logger) {
+	l.log = log
+}
+
 func (l *RedisLocker) TryLock(ctx context.Context, key string) error {
 	_, ok := l.uuidMap.Load(key)
 	if ok {

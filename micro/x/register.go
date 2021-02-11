@@ -8,4 +8,6 @@ func init() {
 	micro.RegisterRateLimiter("Redis", NewRedisRateLimiterWithOptions)
 
 	micro.RegisterParallelController("RedisIncr", NewRedisIncrParallelControllerWithOptions)
+
+	micro.RegisterLocker("Redis", NewRedisLockerWithOptions)
 }
