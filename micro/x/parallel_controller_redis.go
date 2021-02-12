@@ -21,10 +21,10 @@ type RedisParallelControllerOptions struct {
 }
 
 type RedisParallelController struct {
-	client           *wrap.RedisClientWrapper
-	options          *RedisParallelControllerOptions
-	acquireScriptSha string
-	releaseScriptSha string
+	client            *wrap.RedisClientWrapper
+	options           *RedisParallelControllerOptions
+	acquireScriptSha1 string
+	releaseScriptSha1 string
 }
 
 func NewRedisParallelControllerWithOptions(options *RedisParallelControllerOptions) (*RedisParallelController, error) {
@@ -51,7 +51,7 @@ return 0
 		if res.Err() != nil {
 			return nil, errors.Wrap(res.Err(), "client.ScriptLoad failed")
 		}
-		c.acquireScriptSha = res.Val()
+		c.acquireScriptSha1 = res.Val()
 	}
 	{
 		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -73,7 +73,7 @@ return 0
 		if res.Err() != nil {
 			return nil, errors.Wrap(res.Err(), "client.ScriptLoad failed")
 		}
-		c.releaseScriptSha = res.Val()
+		c.releaseScriptSha1 = res.Val()
 	}
 
 	return c, nil
@@ -86,7 +86,7 @@ func (c *RedisParallelController) TryAcquire(ctx context.Context, key string) (i
 	}
 
 	key = c.generateKey(key)
-	res := c.client.EvalSha(ctx, c.acquireScriptSha, []string{key}, maxToken)
+	res := c.client.EvalSha(ctx, c.acquireScriptSha1, []string{key}, maxToken)
 	if res == nil {
 		return 0, errors.New("redis return nil")
 	}
@@ -107,7 +107,7 @@ func (c *RedisParallelController) Acquire(ctx context.Context, key string) (int,
 
 	key = c.generateKey(key)
 	for {
-		res := c.client.EvalSha(ctx, c.acquireScriptSha, []string{key}, maxToken)
+		res := c.client.EvalSha(ctx, c.acquireScriptSha1, []string{key}, maxToken)
 		if res == nil {
 			return 0, errors.New("redis return nil")
 		}
@@ -132,7 +132,7 @@ func (c *RedisParallelController) Release(ctx context.Context, key string, token
 	}
 
 	key = c.generateKey(key)
-	res := c.client.EvalSha(ctx, c.releaseScriptSha, []string{key})
+	res := c.client.EvalSha(ctx, c.releaseScriptSha1, []string{key})
 	if res == nil {
 		return errors.New("redis return nil")
 	}
