@@ -2,16 +2,12 @@ package microx
 
 import (
 	"context"
-	"fmt"
-	"sync"
 	"testing"
 	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
 
-	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/micro"
-	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/wrap"
 )
 
@@ -24,79 +20,39 @@ func TestRedisRateLimiter(t *testing.T) {
 					Delay:    time.Millisecond * 500,
 				},
 			},
-			DefaultQPS: 2,
+			DefaultQPS: 3,
 			QPS: map[string]int{
-				"Key1": 1,
+				"key1": 2,
+				"key2": 0,
 			},
 		})
 		So(err, ShouldBeNil)
+
+		{
+			now := time.Now()
+			So(r.Allow(context.Background(), "key1"), ShouldBeNil)
+			So(r.Allow(context.Background(), "key1"), ShouldBeNil)
+			So(r.Allow(context.Background(), "key1"), ShouldEqual, micro.ErrFlowControl)
+			So(r.Wait(context.Background(), "key1"), ShouldBeNil)
+			So(time.Now().Sub(now), ShouldBeGreaterThan, 20*time.Millisecond)
+		}
+		{
+			now := time.Now()
+			So(r.Allow(context.Background(), "key3"), ShouldBeNil)
+			So(r.Allow(context.Background(), "key3"), ShouldBeNil)
+			So(r.Allow(context.Background(), "key3"), ShouldBeNil)
+			So(r.Allow(context.Background(), "key3"), ShouldEqual, micro.ErrFlowControl)
+			So(r.Wait(context.Background(), "key3"), ShouldBeNil)
+			So(time.Now().Sub(now), ShouldBeGreaterThan, 20*time.Millisecond)
+		}
 
 		for i := 0; i < 10; i++ {
-			ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*2500)
-			err := r.WaitN(ctx, "Key0", 1)
-			cancel()
-			fmt.Println("hello world")
-			So(err, ShouldBeNil)
+			So(r.Allow(context.Background(), "key2"), ShouldBeNil)
 		}
-	})
-}
-
-func TestRedisRateLimiter_WaitN_Parallel(t *testing.T) {
-	r, _ := NewRedisRateLimiterWithOptions(&RedisRateLimiterOptions{
-		Redis: wrap.RedisClientWrapperOptions{
-			Retry: micro.RetryOptions{
-				Attempts: 3,
-				Delay:    time.Millisecond * 500,
-			},
-		},
-		QPS: map[string]int{
-			"Key1": 10,
-		},
-	})
-
-	var wg sync.WaitGroup
-	for i := 0; i < 10; i++ {
-		wg.Add(1)
-		go func(i int) {
-			for i := 0; i < 10; i++ {
-				err := r.WaitN(context.Background(), "Key1", 1)
-				fmt.Println("hello world", err, i)
-			}
-			wg.Done()
-		}(i)
-	}
-	wg.Wait()
-}
-
-func TestNewRedisRateLimiterWithConfig(t *testing.T) {
-	Convey("t", t, func() {
-		cfg, err := config.NewConfigWithOptions(&config.Options{
-			Provider: config.ProviderOptions{
-				Type: "Memory",
-				Options: &config.MemoryProviderOptions{
-					Buffer: `{
-"rateLimiter": {
-    "redis": {
-      "wrapper": {
-        "enableTrace": true,
-        "enableMetric": true,
-      }
-    },
-    "qps": {
-      "DB.First": 1
-    }
-  },
-}`,
-				},
-			},
-		})
-
-		So(err, ShouldBeNil)
-		v, ok := cfg.Get("")
-		fmt.Println(v, ok)
-
-		r, err := NewRedisRateLimiterWithConfig(cfg.Sub("rateLimiter"), refx.WithCamelName())
-		So(err, ShouldBeNil)
-		So(r, ShouldNotBeNil)
+		now := time.Now()
+		for i := 0; i < 10; i++ {
+			So(r.Wait(context.Background(), "key2"), ShouldBeNil)
+		}
+		So(time.Now().Sub(now), ShouldBeLessThan, 20*time.Millisecond)
 	})
 }

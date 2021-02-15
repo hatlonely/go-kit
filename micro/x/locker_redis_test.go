@@ -2,7 +2,6 @@ package microx
 
 import (
 	"context"
-	"fmt"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -29,7 +28,6 @@ func TestLocalLocker_Lock_UnLock(t *testing.T) {
 			wg.Add(1)
 			go func(i int) {
 				for j := 0; j < 100; j++ {
-					fmt.Println(i, j)
 					c.So(l.Lock(context.Background(), "key1"), ShouldBeNil)
 					atomic.AddInt64(&m, 1)
 					c.So(m, ShouldEqual, 1)
