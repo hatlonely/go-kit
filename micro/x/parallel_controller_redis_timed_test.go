@@ -13,23 +13,24 @@ import (
 	"github.com/hatlonely/go-kit/wrap"
 )
 
-func TestRedisParallelController_Acquire_Release(t *testing.T) {
-	Convey("TestRedisParallelController_Acquire_Release", t, func(c C) {
+func TestRedisTimedParallelController_Acquire_Release(t *testing.T) {
+	Convey("TestRedisTimedParallelController_Acquire_Release", t, func(c C) {
 		for i := 1; i < 10; i++ {
-			ctl, err := NewRedisParallelControllerWithOptions(&RedisParallelControllerOptions{
+			ctl, err := NewRedisTimedParallelControllerWithOptions(&RedisTimedParallelControllerOptions{
 				Redis: wrap.RedisClientWrapperOptions{
 					Retry: micro.RetryOptions{
 						Attempts: 1,
 					},
 				},
-				Prefix: "pc",
+				Prefix: "rtpc",
 				MaxToken: map[string]int{
 					"key1": i,
 				},
-				Interval: time.Millisecond,
+				Interval:   time.Millisecond,
+				Expiration: time.Second,
 			})
 			c.So(err, ShouldBeNil)
-			ctl.client.Del(context.Background(), "pc_key1")
+			ctl.client.Del(context.Background(), "rtpc_key1")
 			var wg sync.WaitGroup
 			var m int64
 			for j := 0; j < 20; j++ {
@@ -37,8 +38,8 @@ func TestRedisParallelController_Acquire_Release(t *testing.T) {
 				go func(i int) {
 					for k := 0; k < 100; k++ {
 						res, err := ctl.Acquire(context.Background(), "key1")
-						c.So(res, ShouldEqual, 0)
 						c.So(err, ShouldBeNil)
+						c.So(res, ShouldNotEqual, 0)
 						atomic.AddInt64(&m, 1)
 						c.So(m, ShouldBeLessThanOrEqualTo, i)
 						c.So(m, ShouldBeGreaterThanOrEqualTo, 0)
@@ -56,57 +57,59 @@ func TestRedisParallelController_Acquire_Release(t *testing.T) {
 	})
 }
 
-func TestRedisParallelController_TryAcquire(t *testing.T) {
-	Convey("TestRedisParallelController_TryAcquire", t, func() {
-		ctl, err := NewRedisParallelControllerWithOptions(&RedisParallelControllerOptions{
+func TestRedisTimedParallelController_TryAcquire(t *testing.T) {
+	Convey("TestRedisTimedParallelController_TryAcquire", t, func() {
+		ctl, err := NewRedisTimedParallelControllerWithOptions(&RedisTimedParallelControllerOptions{
 			Redis: wrap.RedisClientWrapperOptions{
 				Retry: micro.RetryOptions{
 					Attempts: 1,
 				},
 			},
-			Prefix: "pc",
+			Prefix: "rtpc",
 			MaxToken: map[string]int{
 				"key1": 2,
 			},
-			Interval: time.Second,
+			Interval:   time.Second,
+			Expiration: time.Second * 10,
 		})
 		So(err, ShouldBeNil)
-		ctl.client.Del(context.Background(), "pc_key1")
-		res, err := ctl.TryAcquire(context.Background(), "key1")
+		ctl.client.Del(context.Background(), "rtpc_key1")
+		token1, err := ctl.TryAcquire(context.Background(), "key1")
 		So(err, ShouldBeNil)
-		So(res, ShouldEqual, 0)
-		res, err = ctl.Acquire(context.Background(), "key1")
+		So(token1, ShouldNotEqual, 0)
+		token2, err := ctl.Acquire(context.Background(), "key1")
 		So(err, ShouldBeNil)
-		So(res, ShouldEqual, 0)
-		res, err = ctl.TryAcquire(context.Background(), "key1")
+		So(token2, ShouldNotEqual, 0)
+		token3, err := ctl.TryAcquire(context.Background(), "key1")
 		So(err, ShouldEqual, micro.ErrParallelControl)
-		So(res, ShouldEqual, 0)
-		So(ctl.Release(context.Background(), "key1", res), ShouldBeNil)
-		res, err = ctl.TryAcquire(context.Background(), "key1")
+		So(token3, ShouldEqual, 0)
+		So(ctl.Release(context.Background(), "key1", token1), ShouldBeNil)
+		token4, err := ctl.TryAcquire(context.Background(), "key1")
 		So(err, ShouldBeNil)
-		So(res, ShouldEqual, 0)
-		res, err = ctl.TryAcquire(context.Background(), "key1")
+		So(token4, ShouldNotEqual, 0)
+		token5, err := ctl.TryAcquire(context.Background(), "key1")
 		So(err, ShouldEqual, micro.ErrParallelControl)
-		So(res, ShouldEqual, 0)
+		So(token5, ShouldEqual, 0)
 	})
 }
 
-func TestRedisParallelController_ContextCancel(t *testing.T) {
-	Convey("TestRedisParallelController_ContextCancel", t, func() {
-		ctl, err := NewRedisParallelControllerWithOptions(&RedisParallelControllerOptions{
+func TestRedisTimedParallelController_ContextCancel(t *testing.T) {
+	Convey("TestRedisTimedParallelController_ContextCancel", t, func() {
+		ctl, err := NewRedisTimedParallelControllerWithOptions(&RedisTimedParallelControllerOptions{
 			Redis: wrap.RedisClientWrapperOptions{
 				Retry: micro.RetryOptions{
 					Attempts: 1,
 				},
 			},
-			Prefix: "pc",
+			Prefix: "rtpc",
 			MaxToken: map[string]int{
 				"key1": 2,
 			},
-			Interval: time.Second,
+			Interval:   time.Second,
+			Expiration: time.Second * 10,
 		})
 		So(err, ShouldBeNil)
-		ctl.client.Del(context.Background(), "pc_key1")
+		ctl.client.Del(context.Background(), "rtpc_key1")
 		Convey("key not match", func() {
 			for i := 0; i < 10; i++ {
 				res, err := ctl.Acquire(context.Background(), "key2")
