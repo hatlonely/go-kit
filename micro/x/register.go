@@ -7,7 +7,8 @@ import (
 func init() {
 	micro.RegisterRateLimiter("Redis", NewRedisRateLimiterWithOptions)
 
-	micro.RegisterParallelController("RedisIncr", NewRedisParallelControllerWithOptions)
+	micro.RegisterParallelController("Redis", NewRedisParallelControllerWithOptions)
+	micro.RegisterParallelController("RedisTimed", NewRedisTimedParallelControllerWithOptions)
 
 	micro.RegisterLocker("Redis", NewRedisLockerWithOptions)
 }
