@@ -80,6 +80,25 @@ type RateLimiter interface {
 - `LocalGroupRateLimiter`: 每个方法都有单独的限流器，互不干扰
 - `LocalShareRateLimiter`: 所有方法共享同一个限流器，不同的方法可以设置每次请求消耗的 token 数量
 
+使用示例
+
+```go
+r, err := NewRateLimiterWithOptions(&RateLimiterOptions{
+Type: "LocalGroup",
+	Options: &LocalGroupRateLimiterOptions{
+		"key": {
+			Interval: time.Second,
+			Burst:    2,
+		},
+	},
+})
+
+_ = r.Wait(context.Background(), "key")
+doSomething()
+```
+
+可以通过 `RegisterRateLimiter` 拓展自己的 `RateLimiter` 实现
+
 ## ParallelController
 
 并发控制器，和限流器类似，但是没有时间概念，控制的是正在处理的请求并发数量，token 需要通过 `Release` 方法返还，也有几种使用场景
@@ -110,6 +129,26 @@ type ParallelController interface {
 
 - `LocalSemaphoreParallelController`: 基于信号量实现的并发控制器
 - `LocalTimedSemaphoreParallelController`：使用 treemap 实现带超时机制的并发控制器
+
+使用示例
+
+```go
+r, err := NewParallelControllerWithOptions(&ParallelControllerOptions{
+	Type: "LocalSemaphore",
+	Options: &LocalSemaphoreParallelControllerOptions{
+		"key": 2,
+	},
+})
+
+token, err := r.Acquire(context.Background(), "key")
+if err != nil {
+    panic(err)
+}
+doSomething()
+r.Release(context.Background(), "key", token)
+```
+
+可以通过 `RegisterParallelController` 拓展自己的 `ParallelController` 实现
 
 ## Locker
 
