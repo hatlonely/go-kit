@@ -13,12 +13,20 @@ import (
 )
 
 type RedisTimedParallelControllerOptions struct {
-	Redis           wrap.RedisClientWrapperOptions
-	Prefix          string
-	MaxToken        map[string]int
+	Redis wrap.RedisClientWrapperOptions
+	// key 前缀，可当成命名空间使用
+	Prefix string
+	// MaxToken 计算规则
+	// 1. key 在 map 中，直接返回 key 对应的 qps
+	// 2. key 按 '|' 分割，第 0 个字符串作为 key，如果在 map 中，返回 qps
+	// 3. 返回 DefaultQPS
+	MaxToken map[string]int
+	// MaxToken 中未匹配到，使用 DefaultMaxToken，默认为 0，不限流
 	DefaultMaxToken int
-	Interval        time.Duration
-	Expiration      time.Duration
+	// 获取 token 失败时重试时间间隔最大值
+	Interval time.Duration
+	// token 过期时间
+	Expiration time.Duration
 }
 
 type RedisTimedParallelController struct {
@@ -148,13 +156,13 @@ func (c *RedisTimedParallelController) generateKey(key string) string {
 }
 
 func (c *RedisTimedParallelController) calculateMaxToken(key string) int {
-	if qps, ok := c.options.MaxToken[key]; ok {
-		return qps
+	if maxToken, ok := c.options.MaxToken[key]; ok {
+		return maxToken
 	}
 
 	if idx := strings.Index(key, "|"); idx != -1 {
-		if qps, ok := c.options.MaxToken[key[:idx]]; ok {
-			return qps
+		if maxToken, ok := c.options.MaxToken[key[:idx]]; ok {
+			return maxToken
 		}
 	}
 
