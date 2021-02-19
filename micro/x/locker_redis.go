@@ -3,6 +3,7 @@ package microx
 import (
 	"context"
 	"fmt"
+	"math/rand"
 	"sync"
 	"time"
 
@@ -16,11 +17,15 @@ import (
 )
 
 type RedisLockerOptions struct {
-	Redis      wrap.RedisClientWrapperOptions
-	Prefix     string
+	Redis wrap.RedisClientWrapperOptions
+	// key 前缀，可当成命名空间使用
+	Prefix string
+	// 锁过期时间
 	Expiration time.Duration
-	RenewTime  time.Duration
-	Interval   time.Duration
+	// 锁刷新时间，锁刷新间隔 = Expiration - RenewTime
+	RenewTime time.Duration
+	// 所获取失败最大重试间隔
+	Interval time.Duration
 }
 
 type RedisLocker struct {
@@ -125,7 +130,7 @@ func (l *RedisLocker) Lock(ctx context.Context, key string) error {
 		select {
 		case <-ctx.Done():
 			return micro.ErrContextCancel
-		case <-time.After(l.options.Interval):
+		case <-time.After(time.Duration(rand.Int63n(l.options.Interval.Microseconds())) * time.Millisecond):
 		}
 	}
 
@@ -148,7 +153,7 @@ func (l *RedisLocker) Lock(ctx context.Context, key string) error {
 		select {
 		case <-ctx.Done():
 			return micro.ErrContextCancel
-		case <-time.After(l.options.Interval):
+		case <-time.After(time.Duration(rand.Int63n(l.options.Interval.Microseconds())) * time.Millisecond):
 		}
 	}
 	return nil

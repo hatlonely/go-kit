@@ -3,6 +3,7 @@ package microx
 import (
 	"context"
 	"fmt"
+	"math/rand"
 	"strings"
 	"time"
 
@@ -126,7 +127,7 @@ func (c *RedisTimedParallelController) Acquire(ctx context.Context, key string) 
 		select {
 		case <-ctx.Done():
 			return 0, micro.ErrContextCancel
-		case <-time.After(c.options.Interval):
+		case <-time.After(time.Duration(rand.Int63n(c.options.Interval.Microseconds())) * time.Millisecond):
 		}
 	}
 }
