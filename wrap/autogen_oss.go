@@ -20,6 +20,25 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
+func NewOSSBucketWrapper(
+	obj *oss.Bucket,
+	retry *micro.Retry,
+	options *WrapperOptions,
+	durationMetric *prometheus.HistogramVec,
+	inflightMetric *prometheus.GaugeVec,
+	rateLimiter micro.RateLimiter,
+	parallelController micro.ParallelController) *OSSBucketWrapper {
+	return &OSSBucketWrapper{
+		obj:                obj,
+		retry:              retry,
+		options:            options,
+		durationMetric:     durationMetric,
+		inflightMetric:     inflightMetric,
+		rateLimiter:        rateLimiter,
+		parallelController: parallelController,
+	}
+}
+
 type OSSBucketWrapper struct {
 	obj                *oss.Bucket
 	retry              *micro.Retry
@@ -32,6 +51,25 @@ type OSSBucketWrapper struct {
 
 func (w *OSSBucketWrapper) Unwrap() *oss.Bucket {
 	return w.obj
+}
+
+func NewOSSClientWrapper(
+	obj *oss.Client,
+	retry *micro.Retry,
+	options *WrapperOptions,
+	durationMetric *prometheus.HistogramVec,
+	inflightMetric *prometheus.GaugeVec,
+	rateLimiter micro.RateLimiter,
+	parallelController micro.ParallelController) *OSSClientWrapper {
+	return &OSSClientWrapper{
+		obj:                obj,
+		retry:              retry,
+		options:            options,
+		durationMetric:     durationMetric,
+		inflightMetric:     inflightMetric,
+		rateLimiter:        rateLimiter,
+		parallelController: parallelController,
+	}
 }
 
 type OSSClientWrapper struct {

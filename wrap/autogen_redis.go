@@ -17,6 +17,25 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
+func NewRedisClientWrapper(
+	obj *redis.Client,
+	retry *micro.Retry,
+	options *WrapperOptions,
+	durationMetric *prometheus.HistogramVec,
+	inflightMetric *prometheus.GaugeVec,
+	rateLimiter micro.RateLimiter,
+	parallelController micro.ParallelController) *RedisClientWrapper {
+	return &RedisClientWrapper{
+		obj:                obj,
+		retry:              retry,
+		options:            options,
+		durationMetric:     durationMetric,
+		inflightMetric:     inflightMetric,
+		rateLimiter:        rateLimiter,
+		parallelController: parallelController,
+	}
+}
+
 type RedisClientWrapper struct {
 	obj                *redis.Client
 	retry              *micro.Retry
@@ -99,6 +118,25 @@ func (w *RedisClientWrapper) CreateMetric(options *WrapperOptions) {
 		Help:        "redis Client inflight",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "custom"})
+}
+
+func NewRedisClusterClientWrapper(
+	obj *redis.ClusterClient,
+	retry *micro.Retry,
+	options *WrapperOptions,
+	durationMetric *prometheus.HistogramVec,
+	inflightMetric *prometheus.GaugeVec,
+	rateLimiter micro.RateLimiter,
+	parallelController micro.ParallelController) *RedisClusterClientWrapper {
+	return &RedisClusterClientWrapper{
+		obj:                obj,
+		retry:              retry,
+		options:            options,
+		durationMetric:     durationMetric,
+		inflightMetric:     inflightMetric,
+		rateLimiter:        rateLimiter,
+		parallelController: parallelController,
+	}
 }
 
 type RedisClusterClientWrapper struct {

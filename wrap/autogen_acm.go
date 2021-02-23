@@ -19,6 +19,25 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
+func NewACMConfigClientWrapper(
+	obj *config_client.ConfigClient,
+	retry *micro.Retry,
+	options *WrapperOptions,
+	durationMetric *prometheus.HistogramVec,
+	inflightMetric *prometheus.GaugeVec,
+	rateLimiter micro.RateLimiter,
+	parallelController micro.ParallelController) *ACMConfigClientWrapper {
+	return &ACMConfigClientWrapper{
+		obj:                obj,
+		retry:              retry,
+		options:            options,
+		durationMetric:     durationMetric,
+		inflightMetric:     inflightMetric,
+		rateLimiter:        rateLimiter,
+		parallelController: parallelController,
+	}
+}
+
 type ACMConfigClientWrapper struct {
 	obj                *config_client.ConfigClient
 	retry              *micro.Retry

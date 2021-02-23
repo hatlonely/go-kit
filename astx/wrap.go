@@ -428,6 +428,25 @@ func renderTemplate(tplStr string, vals interface{}, tplName string) string {
 }
 
 const WrapperClassTpl = `
+func New{{.WrapClass}}(
+	obj *{{.Package}}.{{.Class}},
+	retry *micro.Retry,
+	options *{{.WrapPackagePrefix}}WrapperOptions,
+	durationMetric *prometheus.HistogramVec,
+	inflightMetric *prometheus.GaugeVec,
+	rateLimiter micro.RateLimiter,
+	parallelController micro.ParallelController) *{{.WrapClass}} {
+	return &{{.WrapClass}}{
+		obj:                obj,
+		retry:              retry,
+		options:            options,
+		durationMetric:     durationMetric,
+		inflightMetric:     inflightMetric,
+		rateLimiter:        rateLimiter,
+		parallelController: parallelController,
+	}
+}
+
 type {{.WrapClass}} struct {
 	obj                *{{.Package}}.{{.Class}}
 {{- if .EnableHystrix}}

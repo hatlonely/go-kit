@@ -17,6 +17,25 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
+func NewOTSTableStoreClientWrapper(
+	obj *tablestore.TableStoreClient,
+	retry *micro.Retry,
+	options *WrapperOptions,
+	durationMetric *prometheus.HistogramVec,
+	inflightMetric *prometheus.GaugeVec,
+	rateLimiter micro.RateLimiter,
+	parallelController micro.ParallelController) *OTSTableStoreClientWrapper {
+	return &OTSTableStoreClientWrapper{
+		obj:                obj,
+		retry:              retry,
+		options:            options,
+		durationMetric:     durationMetric,
+		inflightMetric:     inflightMetric,
+		rateLimiter:        rateLimiter,
+		parallelController: parallelController,
+	}
+}
+
 type OTSTableStoreClientWrapper struct {
 	obj                *tablestore.TableStoreClient
 	retry              *micro.Retry

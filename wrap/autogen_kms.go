@@ -17,6 +17,25 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
+func NewKMSClientWrapper(
+	obj *kms.Client,
+	retry *micro.Retry,
+	options *WrapperOptions,
+	durationMetric *prometheus.HistogramVec,
+	inflightMetric *prometheus.GaugeVec,
+	rateLimiter micro.RateLimiter,
+	parallelController micro.ParallelController) *KMSClientWrapper {
+	return &KMSClientWrapper{
+		obj:                obj,
+		retry:              retry,
+		options:            options,
+		durationMetric:     durationMetric,
+		inflightMetric:     inflightMetric,
+		rateLimiter:        rateLimiter,
+		parallelController: parallelController,
+	}
+}
+
 type KMSClientWrapper struct {
 	obj                *kms.Client
 	retry              *micro.Retry

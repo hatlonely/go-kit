@@ -17,6 +17,25 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
+func NewRAMClientWrapper(
+	obj *ram.Client,
+	retry *micro.Retry,
+	options *WrapperOptions,
+	durationMetric *prometheus.HistogramVec,
+	inflightMetric *prometheus.GaugeVec,
+	rateLimiter micro.RateLimiter,
+	parallelController micro.ParallelController) *RAMClientWrapper {
+	return &RAMClientWrapper{
+		obj:                obj,
+		retry:              retry,
+		options:            options,
+		durationMetric:     durationMetric,
+		inflightMetric:     inflightMetric,
+		rateLimiter:        rateLimiter,
+		parallelController: parallelController,
+	}
+}
+
 type RAMClientWrapper struct {
 	obj                *ram.Client
 	retry              *micro.Retry
