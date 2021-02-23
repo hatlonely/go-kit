@@ -7,6 +7,7 @@ require (
 	github.com/HdrHistogram/hdrhistogram-go v1.0.1 // indirect
 	github.com/PaesslerAG/gval v1.1.0
 	github.com/agiledragon/gomonkey v2.0.1+incompatible
+	github.com/alibabacloud-go/pds-sdk v1.0.5
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.884
 	github.com/aliyun/aliyun-oss-go-sdk v2.1.6+incompatible
 	github.com/aliyun/aliyun-tablestore-go-sdk v4.1.3+incompatible

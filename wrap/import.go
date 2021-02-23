@@ -1,6 +1,7 @@
 package wrap
 
 import (
+	_ "github.com/alibabacloud-go/pds-sdk/client"
 	_ "github.com/aliyun/alibaba-cloud-sdk-go/services/kms"
 	_ "github.com/aliyun/alibaba-cloud-sdk-go/services/ram"
 	_ "github.com/aliyun/alibaba-cloud-sdk-go/services/sts"

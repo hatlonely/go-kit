@@ -48,6 +48,7 @@ wrap: wrap/autogen_ots.go \
 	wrap/autogen_sts.go \
 	wrap/autogen_acm.go \
 	wrap/autogen_oss.go \
+	wrap/autogen_pds.go \
 	wrap/autogen_gorm.go \
 	wrap/autogen_elasticsearch.go \
 	wrap/autogen_mongo.go \
@@ -140,6 +141,20 @@ wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.metric '{"Client": {"exclude": "^Bucket$$"}}' \
 		--rule.rateLimiter '{"Client": {"exclude": "^Bucket$$"}}' \
 		--rule.parallelController '{"Client": {"exclude": "^Bucket$$"}}' \
+		--output $@
+
+wrap/autogen_pds.go: build/bin/gen vendor $(wildcard astx/*.go)
+	build/bin/gen wrap --sourcePath vendor \
+		--packagePath "github.com/alibabacloud-go/pds-sdk/client" \
+		--packageName client \
+		--classPrefix PDS \
+		--starClasses Client \
+		--rule.constructor.include "^Client$$" \
+		--rule.createMetric.include "^Client$$" \
+		--rule.onWrapperChange.include "^Client$$" \
+		--rule.onRetryChange.include "^Client$$" \
+		--rule.onRateLimiterChange.include "^Client$$" \
+		--rule.onParallelControllerChange.include "^Client$$" \
 		--output $@
 
 wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
