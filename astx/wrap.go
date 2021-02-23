@@ -68,6 +68,7 @@ type WrapperGeneratorOptions struct {
 	Rule struct {
 		Class                      Rule
 		StarClass                  Rule
+		Constructor                Rule
 		OnWrapperChange            Rule
 		OnRetryChange              Rule
 		OnRateLimiterChange        Rule
@@ -96,6 +97,9 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 	}
 
 	excludeAllRegex := regexp.MustCompile(`.*`)
+	if options.Rule.Constructor.Exclude == nil {
+		options.Rule.Constructor.Exclude = excludeAllRegex
+	}
 	if options.Rule.OnWrapperChange.Exclude == nil {
 		options.Rule.OnWrapperChange.Exclude = excludeAllRegex
 	}
@@ -174,6 +178,7 @@ type RenderInfo struct {
 
 	EnableRuleForNoErrorFunc bool
 	Rule                     struct {
+		Constructor                bool
 		OnWrapperChange            bool
 		OnRetryChange              bool
 		OnRateLimiterChange        bool
@@ -246,6 +251,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 	for _, cls := range classes {
 		info.Class = cls
 		info.WrapClass = g.wrapClassMap[cls]
+		info.Rule.Constructor = g.MatchRule(cls, g.options.Rule.Constructor)
 		info.Rule.OnWrapperChange = g.MatchRule(cls, g.options.Rule.OnWrapperChange)
 		info.Rule.OnRetryChange = g.MatchRule(cls, g.options.Rule.OnRetryChange)
 		info.Rule.OnRateLimiterChange = g.MatchRule(cls, g.options.Rule.OnRateLimiterChange)
@@ -428,6 +434,8 @@ func renderTemplate(tplStr string, vals interface{}, tplName string) string {
 }
 
 const WrapperClassTpl = `
+{{- if .Rule.Constructor}}
+
 func New{{.WrapClass}}(
 	obj *{{.Package}}.{{.Class}},
 	retry *micro.Retry,
@@ -446,6 +454,7 @@ func New{{.WrapClass}}(
 		parallelController: parallelController,
 	}
 }
+{{- end}}
 
 type {{.WrapClass}} struct {
 	obj                *{{.Package}}.{{.Class}}

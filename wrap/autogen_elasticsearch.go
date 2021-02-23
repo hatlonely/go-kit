@@ -18,25 +18,6 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-func NewESAliasServiceWrapper(
-	obj *elastic.AliasService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESAliasServiceWrapper {
-	return &ESAliasServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESAliasServiceWrapper struct {
 	obj                *elastic.AliasService
 	retry              *micro.Retry
@@ -49,25 +30,6 @@ type ESAliasServiceWrapper struct {
 
 func (w *ESAliasServiceWrapper) Unwrap() *elastic.AliasService {
 	return w.obj
-}
-
-func NewESAliasesServiceWrapper(
-	obj *elastic.AliasesService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESAliasesServiceWrapper {
-	return &ESAliasesServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESAliasesServiceWrapper struct {
@@ -84,25 +46,6 @@ func (w *ESAliasesServiceWrapper) Unwrap() *elastic.AliasesService {
 	return w.obj
 }
 
-func NewESBulkProcessorServiceWrapper(
-	obj *elastic.BulkProcessorService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESBulkProcessorServiceWrapper {
-	return &ESBulkProcessorServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESBulkProcessorServiceWrapper struct {
 	obj                *elastic.BulkProcessorService
 	retry              *micro.Retry
@@ -115,25 +58,6 @@ type ESBulkProcessorServiceWrapper struct {
 
 func (w *ESBulkProcessorServiceWrapper) Unwrap() *elastic.BulkProcessorService {
 	return w.obj
-}
-
-func NewESBulkServiceWrapper(
-	obj *elastic.BulkService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESBulkServiceWrapper {
-	return &ESBulkServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESBulkServiceWrapper struct {
@@ -150,25 +74,6 @@ func (w *ESBulkServiceWrapper) Unwrap() *elastic.BulkService {
 	return w.obj
 }
 
-func NewESCatAliasesServiceWrapper(
-	obj *elastic.CatAliasesService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESCatAliasesServiceWrapper {
-	return &ESCatAliasesServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESCatAliasesServiceWrapper struct {
 	obj                *elastic.CatAliasesService
 	retry              *micro.Retry
@@ -181,25 +86,6 @@ type ESCatAliasesServiceWrapper struct {
 
 func (w *ESCatAliasesServiceWrapper) Unwrap() *elastic.CatAliasesService {
 	return w.obj
-}
-
-func NewESCatAllocationServiceWrapper(
-	obj *elastic.CatAllocationService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESCatAllocationServiceWrapper {
-	return &ESCatAllocationServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESCatAllocationServiceWrapper struct {
@@ -216,25 +102,6 @@ func (w *ESCatAllocationServiceWrapper) Unwrap() *elastic.CatAllocationService {
 	return w.obj
 }
 
-func NewESCatCountServiceWrapper(
-	obj *elastic.CatCountService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESCatCountServiceWrapper {
-	return &ESCatCountServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESCatCountServiceWrapper struct {
 	obj                *elastic.CatCountService
 	retry              *micro.Retry
@@ -247,25 +114,6 @@ type ESCatCountServiceWrapper struct {
 
 func (w *ESCatCountServiceWrapper) Unwrap() *elastic.CatCountService {
 	return w.obj
-}
-
-func NewESCatHealthServiceWrapper(
-	obj *elastic.CatHealthService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESCatHealthServiceWrapper {
-	return &ESCatHealthServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESCatHealthServiceWrapper struct {
@@ -282,25 +130,6 @@ func (w *ESCatHealthServiceWrapper) Unwrap() *elastic.CatHealthService {
 	return w.obj
 }
 
-func NewESCatIndicesServiceWrapper(
-	obj *elastic.CatIndicesService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESCatIndicesServiceWrapper {
-	return &ESCatIndicesServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESCatIndicesServiceWrapper struct {
 	obj                *elastic.CatIndicesService
 	retry              *micro.Retry
@@ -315,25 +144,6 @@ func (w *ESCatIndicesServiceWrapper) Unwrap() *elastic.CatIndicesService {
 	return w.obj
 }
 
-func NewESCatShardsServiceWrapper(
-	obj *elastic.CatShardsService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESCatShardsServiceWrapper {
-	return &ESCatShardsServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESCatShardsServiceWrapper struct {
 	obj                *elastic.CatShardsService
 	retry              *micro.Retry
@@ -346,25 +156,6 @@ type ESCatShardsServiceWrapper struct {
 
 func (w *ESCatShardsServiceWrapper) Unwrap() *elastic.CatShardsService {
 	return w.obj
-}
-
-func NewESClearScrollServiceWrapper(
-	obj *elastic.ClearScrollService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESClearScrollServiceWrapper {
-	return &ESClearScrollServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESClearScrollServiceWrapper struct {
@@ -484,25 +275,6 @@ func (w *ESClientWrapper) CreateMetric(options *WrapperOptions) {
 	}, []string{"method", "custom"})
 }
 
-func NewESClusterHealthServiceWrapper(
-	obj *elastic.ClusterHealthService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESClusterHealthServiceWrapper {
-	return &ESClusterHealthServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESClusterHealthServiceWrapper struct {
 	obj                *elastic.ClusterHealthService
 	retry              *micro.Retry
@@ -515,25 +287,6 @@ type ESClusterHealthServiceWrapper struct {
 
 func (w *ESClusterHealthServiceWrapper) Unwrap() *elastic.ClusterHealthService {
 	return w.obj
-}
-
-func NewESClusterRerouteServiceWrapper(
-	obj *elastic.ClusterRerouteService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESClusterRerouteServiceWrapper {
-	return &ESClusterRerouteServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESClusterRerouteServiceWrapper struct {
@@ -550,25 +303,6 @@ func (w *ESClusterRerouteServiceWrapper) Unwrap() *elastic.ClusterRerouteService
 	return w.obj
 }
 
-func NewESClusterStateServiceWrapper(
-	obj *elastic.ClusterStateService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESClusterStateServiceWrapper {
-	return &ESClusterStateServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESClusterStateServiceWrapper struct {
 	obj                *elastic.ClusterStateService
 	retry              *micro.Retry
@@ -581,25 +315,6 @@ type ESClusterStateServiceWrapper struct {
 
 func (w *ESClusterStateServiceWrapper) Unwrap() *elastic.ClusterStateService {
 	return w.obj
-}
-
-func NewESClusterStatsServiceWrapper(
-	obj *elastic.ClusterStatsService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESClusterStatsServiceWrapper {
-	return &ESClusterStatsServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESClusterStatsServiceWrapper struct {
@@ -616,25 +331,6 @@ func (w *ESClusterStatsServiceWrapper) Unwrap() *elastic.ClusterStatsService {
 	return w.obj
 }
 
-func NewESCountServiceWrapper(
-	obj *elastic.CountService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESCountServiceWrapper {
-	return &ESCountServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESCountServiceWrapper struct {
 	obj                *elastic.CountService
 	retry              *micro.Retry
@@ -647,25 +343,6 @@ type ESCountServiceWrapper struct {
 
 func (w *ESCountServiceWrapper) Unwrap() *elastic.CountService {
 	return w.obj
-}
-
-func NewESDeleteByQueryServiceWrapper(
-	obj *elastic.DeleteByQueryService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESDeleteByQueryServiceWrapper {
-	return &ESDeleteByQueryServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESDeleteByQueryServiceWrapper struct {
@@ -682,25 +359,6 @@ func (w *ESDeleteByQueryServiceWrapper) Unwrap() *elastic.DeleteByQueryService {
 	return w.obj
 }
 
-func NewESDeleteScriptServiceWrapper(
-	obj *elastic.DeleteScriptService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESDeleteScriptServiceWrapper {
-	return &ESDeleteScriptServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESDeleteScriptServiceWrapper struct {
 	obj                *elastic.DeleteScriptService
 	retry              *micro.Retry
@@ -713,25 +371,6 @@ type ESDeleteScriptServiceWrapper struct {
 
 func (w *ESDeleteScriptServiceWrapper) Unwrap() *elastic.DeleteScriptService {
 	return w.obj
-}
-
-func NewESDeleteServiceWrapper(
-	obj *elastic.DeleteService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESDeleteServiceWrapper {
-	return &ESDeleteServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESDeleteServiceWrapper struct {
@@ -748,25 +387,6 @@ func (w *ESDeleteServiceWrapper) Unwrap() *elastic.DeleteService {
 	return w.obj
 }
 
-func NewESExistsServiceWrapper(
-	obj *elastic.ExistsService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESExistsServiceWrapper {
-	return &ESExistsServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESExistsServiceWrapper struct {
 	obj                *elastic.ExistsService
 	retry              *micro.Retry
@@ -779,25 +399,6 @@ type ESExistsServiceWrapper struct {
 
 func (w *ESExistsServiceWrapper) Unwrap() *elastic.ExistsService {
 	return w.obj
-}
-
-func NewESExplainServiceWrapper(
-	obj *elastic.ExplainService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESExplainServiceWrapper {
-	return &ESExplainServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESExplainServiceWrapper struct {
@@ -814,25 +415,6 @@ func (w *ESExplainServiceWrapper) Unwrap() *elastic.ExplainService {
 	return w.obj
 }
 
-func NewESFieldCapsServiceWrapper(
-	obj *elastic.FieldCapsService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESFieldCapsServiceWrapper {
-	return &ESFieldCapsServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESFieldCapsServiceWrapper struct {
 	obj                *elastic.FieldCapsService
 	retry              *micro.Retry
@@ -845,25 +427,6 @@ type ESFieldCapsServiceWrapper struct {
 
 func (w *ESFieldCapsServiceWrapper) Unwrap() *elastic.FieldCapsService {
 	return w.obj
-}
-
-func NewESGetScriptServiceWrapper(
-	obj *elastic.GetScriptService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESGetScriptServiceWrapper {
-	return &ESGetScriptServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESGetScriptServiceWrapper struct {
@@ -880,25 +443,6 @@ func (w *ESGetScriptServiceWrapper) Unwrap() *elastic.GetScriptService {
 	return w.obj
 }
 
-func NewESGetServiceWrapper(
-	obj *elastic.GetService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESGetServiceWrapper {
-	return &ESGetServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESGetServiceWrapper struct {
 	obj                *elastic.GetService
 	retry              *micro.Retry
@@ -911,25 +455,6 @@ type ESGetServiceWrapper struct {
 
 func (w *ESGetServiceWrapper) Unwrap() *elastic.GetService {
 	return w.obj
-}
-
-func NewESIndexServiceWrapper(
-	obj *elastic.IndexService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndexServiceWrapper {
-	return &ESIndexServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndexServiceWrapper struct {
@@ -946,25 +471,6 @@ func (w *ESIndexServiceWrapper) Unwrap() *elastic.IndexService {
 	return w.obj
 }
 
-func NewESIndicesAnalyzeServiceWrapper(
-	obj *elastic.IndicesAnalyzeService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesAnalyzeServiceWrapper {
-	return &ESIndicesAnalyzeServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesAnalyzeServiceWrapper struct {
 	obj                *elastic.IndicesAnalyzeService
 	retry              *micro.Retry
@@ -977,25 +483,6 @@ type ESIndicesAnalyzeServiceWrapper struct {
 
 func (w *ESIndicesAnalyzeServiceWrapper) Unwrap() *elastic.IndicesAnalyzeService {
 	return w.obj
-}
-
-func NewESIndicesClearCacheServiceWrapper(
-	obj *elastic.IndicesClearCacheService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesClearCacheServiceWrapper {
-	return &ESIndicesClearCacheServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndicesClearCacheServiceWrapper struct {
@@ -1012,25 +499,6 @@ func (w *ESIndicesClearCacheServiceWrapper) Unwrap() *elastic.IndicesClearCacheS
 	return w.obj
 }
 
-func NewESIndicesCloseServiceWrapper(
-	obj *elastic.IndicesCloseService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesCloseServiceWrapper {
-	return &ESIndicesCloseServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesCloseServiceWrapper struct {
 	obj                *elastic.IndicesCloseService
 	retry              *micro.Retry
@@ -1043,25 +511,6 @@ type ESIndicesCloseServiceWrapper struct {
 
 func (w *ESIndicesCloseServiceWrapper) Unwrap() *elastic.IndicesCloseService {
 	return w.obj
-}
-
-func NewESIndicesCreateServiceWrapper(
-	obj *elastic.IndicesCreateService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesCreateServiceWrapper {
-	return &ESIndicesCreateServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndicesCreateServiceWrapper struct {
@@ -1078,25 +527,6 @@ func (w *ESIndicesCreateServiceWrapper) Unwrap() *elastic.IndicesCreateService {
 	return w.obj
 }
 
-func NewESIndicesDeleteIndexTemplateServiceWrapper(
-	obj *elastic.IndicesDeleteIndexTemplateService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesDeleteIndexTemplateServiceWrapper {
-	return &ESIndicesDeleteIndexTemplateServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesDeleteIndexTemplateServiceWrapper struct {
 	obj                *elastic.IndicesDeleteIndexTemplateService
 	retry              *micro.Retry
@@ -1109,25 +539,6 @@ type ESIndicesDeleteIndexTemplateServiceWrapper struct {
 
 func (w *ESIndicesDeleteIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesDeleteIndexTemplateService {
 	return w.obj
-}
-
-func NewESIndicesDeleteServiceWrapper(
-	obj *elastic.IndicesDeleteService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesDeleteServiceWrapper {
-	return &ESIndicesDeleteServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndicesDeleteServiceWrapper struct {
@@ -1144,25 +555,6 @@ func (w *ESIndicesDeleteServiceWrapper) Unwrap() *elastic.IndicesDeleteService {
 	return w.obj
 }
 
-func NewESIndicesDeleteTemplateServiceWrapper(
-	obj *elastic.IndicesDeleteTemplateService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesDeleteTemplateServiceWrapper {
-	return &ESIndicesDeleteTemplateServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesDeleteTemplateServiceWrapper struct {
 	obj                *elastic.IndicesDeleteTemplateService
 	retry              *micro.Retry
@@ -1175,25 +567,6 @@ type ESIndicesDeleteTemplateServiceWrapper struct {
 
 func (w *ESIndicesDeleteTemplateServiceWrapper) Unwrap() *elastic.IndicesDeleteTemplateService {
 	return w.obj
-}
-
-func NewESIndicesExistsServiceWrapper(
-	obj *elastic.IndicesExistsService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesExistsServiceWrapper {
-	return &ESIndicesExistsServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndicesExistsServiceWrapper struct {
@@ -1210,25 +583,6 @@ func (w *ESIndicesExistsServiceWrapper) Unwrap() *elastic.IndicesExistsService {
 	return w.obj
 }
 
-func NewESIndicesExistsTemplateServiceWrapper(
-	obj *elastic.IndicesExistsTemplateService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesExistsTemplateServiceWrapper {
-	return &ESIndicesExistsTemplateServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesExistsTemplateServiceWrapper struct {
 	obj                *elastic.IndicesExistsTemplateService
 	retry              *micro.Retry
@@ -1241,25 +595,6 @@ type ESIndicesExistsTemplateServiceWrapper struct {
 
 func (w *ESIndicesExistsTemplateServiceWrapper) Unwrap() *elastic.IndicesExistsTemplateService {
 	return w.obj
-}
-
-func NewESIndicesFlushServiceWrapper(
-	obj *elastic.IndicesFlushService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesFlushServiceWrapper {
-	return &ESIndicesFlushServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndicesFlushServiceWrapper struct {
@@ -1276,25 +611,6 @@ func (w *ESIndicesFlushServiceWrapper) Unwrap() *elastic.IndicesFlushService {
 	return w.obj
 }
 
-func NewESIndicesForcemergeServiceWrapper(
-	obj *elastic.IndicesForcemergeService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesForcemergeServiceWrapper {
-	return &ESIndicesForcemergeServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesForcemergeServiceWrapper struct {
 	obj                *elastic.IndicesForcemergeService
 	retry              *micro.Retry
@@ -1307,25 +623,6 @@ type ESIndicesForcemergeServiceWrapper struct {
 
 func (w *ESIndicesForcemergeServiceWrapper) Unwrap() *elastic.IndicesForcemergeService {
 	return w.obj
-}
-
-func NewESIndicesFreezeServiceWrapper(
-	obj *elastic.IndicesFreezeService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesFreezeServiceWrapper {
-	return &ESIndicesFreezeServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndicesFreezeServiceWrapper struct {
@@ -1342,25 +639,6 @@ func (w *ESIndicesFreezeServiceWrapper) Unwrap() *elastic.IndicesFreezeService {
 	return w.obj
 }
 
-func NewESIndicesGetFieldMappingServiceWrapper(
-	obj *elastic.IndicesGetFieldMappingService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesGetFieldMappingServiceWrapper {
-	return &ESIndicesGetFieldMappingServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesGetFieldMappingServiceWrapper struct {
 	obj                *elastic.IndicesGetFieldMappingService
 	retry              *micro.Retry
@@ -1373,25 +651,6 @@ type ESIndicesGetFieldMappingServiceWrapper struct {
 
 func (w *ESIndicesGetFieldMappingServiceWrapper) Unwrap() *elastic.IndicesGetFieldMappingService {
 	return w.obj
-}
-
-func NewESIndicesGetIndexTemplateServiceWrapper(
-	obj *elastic.IndicesGetIndexTemplateService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesGetIndexTemplateServiceWrapper {
-	return &ESIndicesGetIndexTemplateServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndicesGetIndexTemplateServiceWrapper struct {
@@ -1408,25 +667,6 @@ func (w *ESIndicesGetIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesGetIn
 	return w.obj
 }
 
-func NewESIndicesGetMappingServiceWrapper(
-	obj *elastic.IndicesGetMappingService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesGetMappingServiceWrapper {
-	return &ESIndicesGetMappingServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesGetMappingServiceWrapper struct {
 	obj                *elastic.IndicesGetMappingService
 	retry              *micro.Retry
@@ -1439,25 +679,6 @@ type ESIndicesGetMappingServiceWrapper struct {
 
 func (w *ESIndicesGetMappingServiceWrapper) Unwrap() *elastic.IndicesGetMappingService {
 	return w.obj
-}
-
-func NewESIndicesGetServiceWrapper(
-	obj *elastic.IndicesGetService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesGetServiceWrapper {
-	return &ESIndicesGetServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndicesGetServiceWrapper struct {
@@ -1474,25 +695,6 @@ func (w *ESIndicesGetServiceWrapper) Unwrap() *elastic.IndicesGetService {
 	return w.obj
 }
 
-func NewESIndicesGetSettingsServiceWrapper(
-	obj *elastic.IndicesGetSettingsService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesGetSettingsServiceWrapper {
-	return &ESIndicesGetSettingsServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesGetSettingsServiceWrapper struct {
 	obj                *elastic.IndicesGetSettingsService
 	retry              *micro.Retry
@@ -1505,25 +707,6 @@ type ESIndicesGetSettingsServiceWrapper struct {
 
 func (w *ESIndicesGetSettingsServiceWrapper) Unwrap() *elastic.IndicesGetSettingsService {
 	return w.obj
-}
-
-func NewESIndicesGetTemplateServiceWrapper(
-	obj *elastic.IndicesGetTemplateService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesGetTemplateServiceWrapper {
-	return &ESIndicesGetTemplateServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndicesGetTemplateServiceWrapper struct {
@@ -1540,25 +723,6 @@ func (w *ESIndicesGetTemplateServiceWrapper) Unwrap() *elastic.IndicesGetTemplat
 	return w.obj
 }
 
-func NewESIndicesOpenServiceWrapper(
-	obj *elastic.IndicesOpenService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesOpenServiceWrapper {
-	return &ESIndicesOpenServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesOpenServiceWrapper struct {
 	obj                *elastic.IndicesOpenService
 	retry              *micro.Retry
@@ -1571,25 +735,6 @@ type ESIndicesOpenServiceWrapper struct {
 
 func (w *ESIndicesOpenServiceWrapper) Unwrap() *elastic.IndicesOpenService {
 	return w.obj
-}
-
-func NewESIndicesPutIndexTemplateServiceWrapper(
-	obj *elastic.IndicesPutIndexTemplateService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesPutIndexTemplateServiceWrapper {
-	return &ESIndicesPutIndexTemplateServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndicesPutIndexTemplateServiceWrapper struct {
@@ -1606,25 +751,6 @@ func (w *ESIndicesPutIndexTemplateServiceWrapper) Unwrap() *elastic.IndicesPutIn
 	return w.obj
 }
 
-func NewESIndicesPutMappingServiceWrapper(
-	obj *elastic.IndicesPutMappingService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesPutMappingServiceWrapper {
-	return &ESIndicesPutMappingServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesPutMappingServiceWrapper struct {
 	obj                *elastic.IndicesPutMappingService
 	retry              *micro.Retry
@@ -1637,25 +763,6 @@ type ESIndicesPutMappingServiceWrapper struct {
 
 func (w *ESIndicesPutMappingServiceWrapper) Unwrap() *elastic.IndicesPutMappingService {
 	return w.obj
-}
-
-func NewESIndicesPutSettingsServiceWrapper(
-	obj *elastic.IndicesPutSettingsService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesPutSettingsServiceWrapper {
-	return &ESIndicesPutSettingsServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndicesPutSettingsServiceWrapper struct {
@@ -1672,25 +779,6 @@ func (w *ESIndicesPutSettingsServiceWrapper) Unwrap() *elastic.IndicesPutSetting
 	return w.obj
 }
 
-func NewESIndicesPutTemplateServiceWrapper(
-	obj *elastic.IndicesPutTemplateService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesPutTemplateServiceWrapper {
-	return &ESIndicesPutTemplateServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesPutTemplateServiceWrapper struct {
 	obj                *elastic.IndicesPutTemplateService
 	retry              *micro.Retry
@@ -1703,25 +791,6 @@ type ESIndicesPutTemplateServiceWrapper struct {
 
 func (w *ESIndicesPutTemplateServiceWrapper) Unwrap() *elastic.IndicesPutTemplateService {
 	return w.obj
-}
-
-func NewESIndicesRolloverServiceWrapper(
-	obj *elastic.IndicesRolloverService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesRolloverServiceWrapper {
-	return &ESIndicesRolloverServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndicesRolloverServiceWrapper struct {
@@ -1738,25 +807,6 @@ func (w *ESIndicesRolloverServiceWrapper) Unwrap() *elastic.IndicesRolloverServi
 	return w.obj
 }
 
-func NewESIndicesSegmentsServiceWrapper(
-	obj *elastic.IndicesSegmentsService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesSegmentsServiceWrapper {
-	return &ESIndicesSegmentsServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesSegmentsServiceWrapper struct {
 	obj                *elastic.IndicesSegmentsService
 	retry              *micro.Retry
@@ -1769,25 +819,6 @@ type ESIndicesSegmentsServiceWrapper struct {
 
 func (w *ESIndicesSegmentsServiceWrapper) Unwrap() *elastic.IndicesSegmentsService {
 	return w.obj
-}
-
-func NewESIndicesShrinkServiceWrapper(
-	obj *elastic.IndicesShrinkService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesShrinkServiceWrapper {
-	return &ESIndicesShrinkServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndicesShrinkServiceWrapper struct {
@@ -1804,25 +835,6 @@ func (w *ESIndicesShrinkServiceWrapper) Unwrap() *elastic.IndicesShrinkService {
 	return w.obj
 }
 
-func NewESIndicesStatsServiceWrapper(
-	obj *elastic.IndicesStatsService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesStatsServiceWrapper {
-	return &ESIndicesStatsServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesStatsServiceWrapper struct {
 	obj                *elastic.IndicesStatsService
 	retry              *micro.Retry
@@ -1835,25 +847,6 @@ type ESIndicesStatsServiceWrapper struct {
 
 func (w *ESIndicesStatsServiceWrapper) Unwrap() *elastic.IndicesStatsService {
 	return w.obj
-}
-
-func NewESIndicesSyncedFlushServiceWrapper(
-	obj *elastic.IndicesSyncedFlushService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesSyncedFlushServiceWrapper {
-	return &ESIndicesSyncedFlushServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIndicesSyncedFlushServiceWrapper struct {
@@ -1870,25 +863,6 @@ func (w *ESIndicesSyncedFlushServiceWrapper) Unwrap() *elastic.IndicesSyncedFlus
 	return w.obj
 }
 
-func NewESIndicesUnfreezeServiceWrapper(
-	obj *elastic.IndicesUnfreezeService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIndicesUnfreezeServiceWrapper {
-	return &ESIndicesUnfreezeServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIndicesUnfreezeServiceWrapper struct {
 	obj                *elastic.IndicesUnfreezeService
 	retry              *micro.Retry
@@ -1901,25 +875,6 @@ type ESIndicesUnfreezeServiceWrapper struct {
 
 func (w *ESIndicesUnfreezeServiceWrapper) Unwrap() *elastic.IndicesUnfreezeService {
 	return w.obj
-}
-
-func NewESIngestDeletePipelineServiceWrapper(
-	obj *elastic.IngestDeletePipelineService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIngestDeletePipelineServiceWrapper {
-	return &ESIngestDeletePipelineServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIngestDeletePipelineServiceWrapper struct {
@@ -1936,25 +891,6 @@ func (w *ESIngestDeletePipelineServiceWrapper) Unwrap() *elastic.IngestDeletePip
 	return w.obj
 }
 
-func NewESIngestGetPipelineServiceWrapper(
-	obj *elastic.IngestGetPipelineService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIngestGetPipelineServiceWrapper {
-	return &ESIngestGetPipelineServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIngestGetPipelineServiceWrapper struct {
 	obj                *elastic.IngestGetPipelineService
 	retry              *micro.Retry
@@ -1967,25 +903,6 @@ type ESIngestGetPipelineServiceWrapper struct {
 
 func (w *ESIngestGetPipelineServiceWrapper) Unwrap() *elastic.IngestGetPipelineService {
 	return w.obj
-}
-
-func NewESIngestPutPipelineServiceWrapper(
-	obj *elastic.IngestPutPipelineService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIngestPutPipelineServiceWrapper {
-	return &ESIngestPutPipelineServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESIngestPutPipelineServiceWrapper struct {
@@ -2002,25 +919,6 @@ func (w *ESIngestPutPipelineServiceWrapper) Unwrap() *elastic.IngestPutPipelineS
 	return w.obj
 }
 
-func NewESIngestSimulatePipelineServiceWrapper(
-	obj *elastic.IngestSimulatePipelineService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESIngestSimulatePipelineServiceWrapper {
-	return &ESIngestSimulatePipelineServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESIngestSimulatePipelineServiceWrapper struct {
 	obj                *elastic.IngestSimulatePipelineService
 	retry              *micro.Retry
@@ -2033,25 +931,6 @@ type ESIngestSimulatePipelineServiceWrapper struct {
 
 func (w *ESIngestSimulatePipelineServiceWrapper) Unwrap() *elastic.IngestSimulatePipelineService {
 	return w.obj
-}
-
-func NewESMgetServiceWrapper(
-	obj *elastic.MgetService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESMgetServiceWrapper {
-	return &ESMgetServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESMgetServiceWrapper struct {
@@ -2068,25 +947,6 @@ func (w *ESMgetServiceWrapper) Unwrap() *elastic.MgetService {
 	return w.obj
 }
 
-func NewESMultiSearchServiceWrapper(
-	obj *elastic.MultiSearchService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESMultiSearchServiceWrapper {
-	return &ESMultiSearchServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESMultiSearchServiceWrapper struct {
 	obj                *elastic.MultiSearchService
 	retry              *micro.Retry
@@ -2099,25 +959,6 @@ type ESMultiSearchServiceWrapper struct {
 
 func (w *ESMultiSearchServiceWrapper) Unwrap() *elastic.MultiSearchService {
 	return w.obj
-}
-
-func NewESMultiTermvectorServiceWrapper(
-	obj *elastic.MultiTermvectorService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESMultiTermvectorServiceWrapper {
-	return &ESMultiTermvectorServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESMultiTermvectorServiceWrapper struct {
@@ -2134,25 +975,6 @@ func (w *ESMultiTermvectorServiceWrapper) Unwrap() *elastic.MultiTermvectorServi
 	return w.obj
 }
 
-func NewESNodesInfoServiceWrapper(
-	obj *elastic.NodesInfoService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESNodesInfoServiceWrapper {
-	return &ESNodesInfoServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESNodesInfoServiceWrapper struct {
 	obj                *elastic.NodesInfoService
 	retry              *micro.Retry
@@ -2165,25 +987,6 @@ type ESNodesInfoServiceWrapper struct {
 
 func (w *ESNodesInfoServiceWrapper) Unwrap() *elastic.NodesInfoService {
 	return w.obj
-}
-
-func NewESNodesStatsServiceWrapper(
-	obj *elastic.NodesStatsService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESNodesStatsServiceWrapper {
-	return &ESNodesStatsServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESNodesStatsServiceWrapper struct {
@@ -2200,25 +1003,6 @@ func (w *ESNodesStatsServiceWrapper) Unwrap() *elastic.NodesStatsService {
 	return w.obj
 }
 
-func NewESPingServiceWrapper(
-	obj *elastic.PingService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESPingServiceWrapper {
-	return &ESPingServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESPingServiceWrapper struct {
 	obj                *elastic.PingService
 	retry              *micro.Retry
@@ -2231,25 +1015,6 @@ type ESPingServiceWrapper struct {
 
 func (w *ESPingServiceWrapper) Unwrap() *elastic.PingService {
 	return w.obj
-}
-
-func NewESPutScriptServiceWrapper(
-	obj *elastic.PutScriptService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESPutScriptServiceWrapper {
-	return &ESPutScriptServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESPutScriptServiceWrapper struct {
@@ -2266,25 +1031,6 @@ func (w *ESPutScriptServiceWrapper) Unwrap() *elastic.PutScriptService {
 	return w.obj
 }
 
-func NewESRefreshServiceWrapper(
-	obj *elastic.RefreshService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESRefreshServiceWrapper {
-	return &ESRefreshServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESRefreshServiceWrapper struct {
 	obj                *elastic.RefreshService
 	retry              *micro.Retry
@@ -2297,25 +1043,6 @@ type ESRefreshServiceWrapper struct {
 
 func (w *ESRefreshServiceWrapper) Unwrap() *elastic.RefreshService {
 	return w.obj
-}
-
-func NewESReindexServiceWrapper(
-	obj *elastic.ReindexService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESReindexServiceWrapper {
-	return &ESReindexServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESReindexServiceWrapper struct {
@@ -2332,25 +1059,6 @@ func (w *ESReindexServiceWrapper) Unwrap() *elastic.ReindexService {
 	return w.obj
 }
 
-func NewESScrollServiceWrapper(
-	obj *elastic.ScrollService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESScrollServiceWrapper {
-	return &ESScrollServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESScrollServiceWrapper struct {
 	obj                *elastic.ScrollService
 	retry              *micro.Retry
@@ -2363,25 +1071,6 @@ type ESScrollServiceWrapper struct {
 
 func (w *ESScrollServiceWrapper) Unwrap() *elastic.ScrollService {
 	return w.obj
-}
-
-func NewESSearchServiceWrapper(
-	obj *elastic.SearchService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESSearchServiceWrapper {
-	return &ESSearchServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESSearchServiceWrapper struct {
@@ -2398,25 +1087,6 @@ func (w *ESSearchServiceWrapper) Unwrap() *elastic.SearchService {
 	return w.obj
 }
 
-func NewESSearchShardsServiceWrapper(
-	obj *elastic.SearchShardsService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESSearchShardsServiceWrapper {
-	return &ESSearchShardsServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESSearchShardsServiceWrapper struct {
 	obj                *elastic.SearchShardsService
 	retry              *micro.Retry
@@ -2429,25 +1099,6 @@ type ESSearchShardsServiceWrapper struct {
 
 func (w *ESSearchShardsServiceWrapper) Unwrap() *elastic.SearchShardsService {
 	return w.obj
-}
-
-func NewESSnapshotCreateRepositoryServiceWrapper(
-	obj *elastic.SnapshotCreateRepositoryService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESSnapshotCreateRepositoryServiceWrapper {
-	return &ESSnapshotCreateRepositoryServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESSnapshotCreateRepositoryServiceWrapper struct {
@@ -2464,25 +1115,6 @@ func (w *ESSnapshotCreateRepositoryServiceWrapper) Unwrap() *elastic.SnapshotCre
 	return w.obj
 }
 
-func NewESSnapshotCreateServiceWrapper(
-	obj *elastic.SnapshotCreateService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESSnapshotCreateServiceWrapper {
-	return &ESSnapshotCreateServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESSnapshotCreateServiceWrapper struct {
 	obj                *elastic.SnapshotCreateService
 	retry              *micro.Retry
@@ -2495,25 +1127,6 @@ type ESSnapshotCreateServiceWrapper struct {
 
 func (w *ESSnapshotCreateServiceWrapper) Unwrap() *elastic.SnapshotCreateService {
 	return w.obj
-}
-
-func NewESSnapshotDeleteRepositoryServiceWrapper(
-	obj *elastic.SnapshotDeleteRepositoryService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESSnapshotDeleteRepositoryServiceWrapper {
-	return &ESSnapshotDeleteRepositoryServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESSnapshotDeleteRepositoryServiceWrapper struct {
@@ -2530,25 +1143,6 @@ func (w *ESSnapshotDeleteRepositoryServiceWrapper) Unwrap() *elastic.SnapshotDel
 	return w.obj
 }
 
-func NewESSnapshotDeleteServiceWrapper(
-	obj *elastic.SnapshotDeleteService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESSnapshotDeleteServiceWrapper {
-	return &ESSnapshotDeleteServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESSnapshotDeleteServiceWrapper struct {
 	obj                *elastic.SnapshotDeleteService
 	retry              *micro.Retry
@@ -2561,25 +1155,6 @@ type ESSnapshotDeleteServiceWrapper struct {
 
 func (w *ESSnapshotDeleteServiceWrapper) Unwrap() *elastic.SnapshotDeleteService {
 	return w.obj
-}
-
-func NewESSnapshotGetRepositoryServiceWrapper(
-	obj *elastic.SnapshotGetRepositoryService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESSnapshotGetRepositoryServiceWrapper {
-	return &ESSnapshotGetRepositoryServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESSnapshotGetRepositoryServiceWrapper struct {
@@ -2596,25 +1171,6 @@ func (w *ESSnapshotGetRepositoryServiceWrapper) Unwrap() *elastic.SnapshotGetRep
 	return w.obj
 }
 
-func NewESSnapshotGetServiceWrapper(
-	obj *elastic.SnapshotGetService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESSnapshotGetServiceWrapper {
-	return &ESSnapshotGetServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESSnapshotGetServiceWrapper struct {
 	obj                *elastic.SnapshotGetService
 	retry              *micro.Retry
@@ -2627,25 +1183,6 @@ type ESSnapshotGetServiceWrapper struct {
 
 func (w *ESSnapshotGetServiceWrapper) Unwrap() *elastic.SnapshotGetService {
 	return w.obj
-}
-
-func NewESSnapshotRestoreServiceWrapper(
-	obj *elastic.SnapshotRestoreService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESSnapshotRestoreServiceWrapper {
-	return &ESSnapshotRestoreServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESSnapshotRestoreServiceWrapper struct {
@@ -2662,25 +1199,6 @@ func (w *ESSnapshotRestoreServiceWrapper) Unwrap() *elastic.SnapshotRestoreServi
 	return w.obj
 }
 
-func NewESSnapshotStatusServiceWrapper(
-	obj *elastic.SnapshotStatusService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESSnapshotStatusServiceWrapper {
-	return &ESSnapshotStatusServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESSnapshotStatusServiceWrapper struct {
 	obj                *elastic.SnapshotStatusService
 	retry              *micro.Retry
@@ -2693,25 +1211,6 @@ type ESSnapshotStatusServiceWrapper struct {
 
 func (w *ESSnapshotStatusServiceWrapper) Unwrap() *elastic.SnapshotStatusService {
 	return w.obj
-}
-
-func NewESSnapshotVerifyRepositoryServiceWrapper(
-	obj *elastic.SnapshotVerifyRepositoryService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESSnapshotVerifyRepositoryServiceWrapper {
-	return &ESSnapshotVerifyRepositoryServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESSnapshotVerifyRepositoryServiceWrapper struct {
@@ -2728,25 +1227,6 @@ func (w *ESSnapshotVerifyRepositoryServiceWrapper) Unwrap() *elastic.SnapshotVer
 	return w.obj
 }
 
-func NewESTasksCancelServiceWrapper(
-	obj *elastic.TasksCancelService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESTasksCancelServiceWrapper {
-	return &ESTasksCancelServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESTasksCancelServiceWrapper struct {
 	obj                *elastic.TasksCancelService
 	retry              *micro.Retry
@@ -2759,25 +1239,6 @@ type ESTasksCancelServiceWrapper struct {
 
 func (w *ESTasksCancelServiceWrapper) Unwrap() *elastic.TasksCancelService {
 	return w.obj
-}
-
-func NewESTasksGetTaskServiceWrapper(
-	obj *elastic.TasksGetTaskService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESTasksGetTaskServiceWrapper {
-	return &ESTasksGetTaskServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESTasksGetTaskServiceWrapper struct {
@@ -2794,25 +1255,6 @@ func (w *ESTasksGetTaskServiceWrapper) Unwrap() *elastic.TasksGetTaskService {
 	return w.obj
 }
 
-func NewESTasksListServiceWrapper(
-	obj *elastic.TasksListService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESTasksListServiceWrapper {
-	return &ESTasksListServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESTasksListServiceWrapper struct {
 	obj                *elastic.TasksListService
 	retry              *micro.Retry
@@ -2825,25 +1267,6 @@ type ESTasksListServiceWrapper struct {
 
 func (w *ESTasksListServiceWrapper) Unwrap() *elastic.TasksListService {
 	return w.obj
-}
-
-func NewESTermvectorsServiceWrapper(
-	obj *elastic.TermvectorsService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESTermvectorsServiceWrapper {
-	return &ESTermvectorsServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESTermvectorsServiceWrapper struct {
@@ -2860,25 +1283,6 @@ func (w *ESTermvectorsServiceWrapper) Unwrap() *elastic.TermvectorsService {
 	return w.obj
 }
 
-func NewESUpdateByQueryServiceWrapper(
-	obj *elastic.UpdateByQueryService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESUpdateByQueryServiceWrapper {
-	return &ESUpdateByQueryServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESUpdateByQueryServiceWrapper struct {
 	obj                *elastic.UpdateByQueryService
 	retry              *micro.Retry
@@ -2891,25 +1295,6 @@ type ESUpdateByQueryServiceWrapper struct {
 
 func (w *ESUpdateByQueryServiceWrapper) Unwrap() *elastic.UpdateByQueryService {
 	return w.obj
-}
-
-func NewESUpdateServiceWrapper(
-	obj *elastic.UpdateService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESUpdateServiceWrapper {
-	return &ESUpdateServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESUpdateServiceWrapper struct {
@@ -2926,25 +1311,6 @@ func (w *ESUpdateServiceWrapper) Unwrap() *elastic.UpdateService {
 	return w.obj
 }
 
-func NewESValidateServiceWrapper(
-	obj *elastic.ValidateService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESValidateServiceWrapper {
-	return &ESValidateServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESValidateServiceWrapper struct {
 	obj                *elastic.ValidateService
 	retry              *micro.Retry
@@ -2957,25 +1323,6 @@ type ESValidateServiceWrapper struct {
 
 func (w *ESValidateServiceWrapper) Unwrap() *elastic.ValidateService {
 	return w.obj
-}
-
-func NewESXPackIlmDeleteLifecycleServiceWrapper(
-	obj *elastic.XPackIlmDeleteLifecycleService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackIlmDeleteLifecycleServiceWrapper {
-	return &ESXPackIlmDeleteLifecycleServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESXPackIlmDeleteLifecycleServiceWrapper struct {
@@ -2992,25 +1339,6 @@ func (w *ESXPackIlmDeleteLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmDele
 	return w.obj
 }
 
-func NewESXPackIlmGetLifecycleServiceWrapper(
-	obj *elastic.XPackIlmGetLifecycleService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackIlmGetLifecycleServiceWrapper {
-	return &ESXPackIlmGetLifecycleServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESXPackIlmGetLifecycleServiceWrapper struct {
 	obj                *elastic.XPackIlmGetLifecycleService
 	retry              *micro.Retry
@@ -3023,25 +1351,6 @@ type ESXPackIlmGetLifecycleServiceWrapper struct {
 
 func (w *ESXPackIlmGetLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmGetLifecycleService {
 	return w.obj
-}
-
-func NewESXPackIlmPutLifecycleServiceWrapper(
-	obj *elastic.XPackIlmPutLifecycleService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackIlmPutLifecycleServiceWrapper {
-	return &ESXPackIlmPutLifecycleServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESXPackIlmPutLifecycleServiceWrapper struct {
@@ -3058,25 +1367,6 @@ func (w *ESXPackIlmPutLifecycleServiceWrapper) Unwrap() *elastic.XPackIlmPutLife
 	return w.obj
 }
 
-func NewESXPackInfoServiceWrapper(
-	obj *elastic.XPackInfoService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackInfoServiceWrapper {
-	return &ESXPackInfoServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESXPackInfoServiceWrapper struct {
 	obj                *elastic.XPackInfoService
 	retry              *micro.Retry
@@ -3089,25 +1379,6 @@ type ESXPackInfoServiceWrapper struct {
 
 func (w *ESXPackInfoServiceWrapper) Unwrap() *elastic.XPackInfoService {
 	return w.obj
-}
-
-func NewESXPackSecurityChangePasswordServiceWrapper(
-	obj *elastic.XPackSecurityChangePasswordService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackSecurityChangePasswordServiceWrapper {
-	return &ESXPackSecurityChangePasswordServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESXPackSecurityChangePasswordServiceWrapper struct {
@@ -3124,25 +1395,6 @@ func (w *ESXPackSecurityChangePasswordServiceWrapper) Unwrap() *elastic.XPackSec
 	return w.obj
 }
 
-func NewESXPackSecurityDeleteRoleMappingServiceWrapper(
-	obj *elastic.XPackSecurityDeleteRoleMappingService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackSecurityDeleteRoleMappingServiceWrapper {
-	return &ESXPackSecurityDeleteRoleMappingServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESXPackSecurityDeleteRoleMappingServiceWrapper struct {
 	obj                *elastic.XPackSecurityDeleteRoleMappingService
 	retry              *micro.Retry
@@ -3155,25 +1407,6 @@ type ESXPackSecurityDeleteRoleMappingServiceWrapper struct {
 
 func (w *ESXPackSecurityDeleteRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteRoleMappingService {
 	return w.obj
-}
-
-func NewESXPackSecurityDeleteRoleServiceWrapper(
-	obj *elastic.XPackSecurityDeleteRoleService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackSecurityDeleteRoleServiceWrapper {
-	return &ESXPackSecurityDeleteRoleServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESXPackSecurityDeleteRoleServiceWrapper struct {
@@ -3190,25 +1423,6 @@ func (w *ESXPackSecurityDeleteRoleServiceWrapper) Unwrap() *elastic.XPackSecurit
 	return w.obj
 }
 
-func NewESXPackSecurityDeleteUserServiceWrapper(
-	obj *elastic.XPackSecurityDeleteUserService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackSecurityDeleteUserServiceWrapper {
-	return &ESXPackSecurityDeleteUserServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESXPackSecurityDeleteUserServiceWrapper struct {
 	obj                *elastic.XPackSecurityDeleteUserService
 	retry              *micro.Retry
@@ -3221,25 +1435,6 @@ type ESXPackSecurityDeleteUserServiceWrapper struct {
 
 func (w *ESXPackSecurityDeleteUserServiceWrapper) Unwrap() *elastic.XPackSecurityDeleteUserService {
 	return w.obj
-}
-
-func NewESXPackSecurityDisableUserServiceWrapper(
-	obj *elastic.XPackSecurityDisableUserService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackSecurityDisableUserServiceWrapper {
-	return &ESXPackSecurityDisableUserServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESXPackSecurityDisableUserServiceWrapper struct {
@@ -3256,25 +1451,6 @@ func (w *ESXPackSecurityDisableUserServiceWrapper) Unwrap() *elastic.XPackSecuri
 	return w.obj
 }
 
-func NewESXPackSecurityEnableUserServiceWrapper(
-	obj *elastic.XPackSecurityEnableUserService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackSecurityEnableUserServiceWrapper {
-	return &ESXPackSecurityEnableUserServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESXPackSecurityEnableUserServiceWrapper struct {
 	obj                *elastic.XPackSecurityEnableUserService
 	retry              *micro.Retry
@@ -3287,25 +1463,6 @@ type ESXPackSecurityEnableUserServiceWrapper struct {
 
 func (w *ESXPackSecurityEnableUserServiceWrapper) Unwrap() *elastic.XPackSecurityEnableUserService {
 	return w.obj
-}
-
-func NewESXPackSecurityGetRoleMappingServiceWrapper(
-	obj *elastic.XPackSecurityGetRoleMappingService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackSecurityGetRoleMappingServiceWrapper {
-	return &ESXPackSecurityGetRoleMappingServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESXPackSecurityGetRoleMappingServiceWrapper struct {
@@ -3322,25 +1479,6 @@ func (w *ESXPackSecurityGetRoleMappingServiceWrapper) Unwrap() *elastic.XPackSec
 	return w.obj
 }
 
-func NewESXPackSecurityGetRoleServiceWrapper(
-	obj *elastic.XPackSecurityGetRoleService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackSecurityGetRoleServiceWrapper {
-	return &ESXPackSecurityGetRoleServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESXPackSecurityGetRoleServiceWrapper struct {
 	obj                *elastic.XPackSecurityGetRoleService
 	retry              *micro.Retry
@@ -3353,25 +1491,6 @@ type ESXPackSecurityGetRoleServiceWrapper struct {
 
 func (w *ESXPackSecurityGetRoleServiceWrapper) Unwrap() *elastic.XPackSecurityGetRoleService {
 	return w.obj
-}
-
-func NewESXPackSecurityGetUserServiceWrapper(
-	obj *elastic.XPackSecurityGetUserService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackSecurityGetUserServiceWrapper {
-	return &ESXPackSecurityGetUserServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESXPackSecurityGetUserServiceWrapper struct {
@@ -3388,25 +1507,6 @@ func (w *ESXPackSecurityGetUserServiceWrapper) Unwrap() *elastic.XPackSecurityGe
 	return w.obj
 }
 
-func NewESXPackSecurityPutRoleMappingServiceWrapper(
-	obj *elastic.XPackSecurityPutRoleMappingService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackSecurityPutRoleMappingServiceWrapper {
-	return &ESXPackSecurityPutRoleMappingServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESXPackSecurityPutRoleMappingServiceWrapper struct {
 	obj                *elastic.XPackSecurityPutRoleMappingService
 	retry              *micro.Retry
@@ -3419,25 +1519,6 @@ type ESXPackSecurityPutRoleMappingServiceWrapper struct {
 
 func (w *ESXPackSecurityPutRoleMappingServiceWrapper) Unwrap() *elastic.XPackSecurityPutRoleMappingService {
 	return w.obj
-}
-
-func NewESXPackSecurityPutRoleServiceWrapper(
-	obj *elastic.XPackSecurityPutRoleService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackSecurityPutRoleServiceWrapper {
-	return &ESXPackSecurityPutRoleServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESXPackSecurityPutRoleServiceWrapper struct {
@@ -3454,25 +1535,6 @@ func (w *ESXPackSecurityPutRoleServiceWrapper) Unwrap() *elastic.XPackSecurityPu
 	return w.obj
 }
 
-func NewESXPackSecurityPutUserServiceWrapper(
-	obj *elastic.XPackSecurityPutUserService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackSecurityPutUserServiceWrapper {
-	return &ESXPackSecurityPutUserServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESXPackSecurityPutUserServiceWrapper struct {
 	obj                *elastic.XPackSecurityPutUserService
 	retry              *micro.Retry
@@ -3485,25 +1547,6 @@ type ESXPackSecurityPutUserServiceWrapper struct {
 
 func (w *ESXPackSecurityPutUserServiceWrapper) Unwrap() *elastic.XPackSecurityPutUserService {
 	return w.obj
-}
-
-func NewESXPackWatcherAckWatchServiceWrapper(
-	obj *elastic.XPackWatcherAckWatchService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackWatcherAckWatchServiceWrapper {
-	return &ESXPackWatcherAckWatchServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESXPackWatcherAckWatchServiceWrapper struct {
@@ -3520,25 +1563,6 @@ func (w *ESXPackWatcherAckWatchServiceWrapper) Unwrap() *elastic.XPackWatcherAck
 	return w.obj
 }
 
-func NewESXPackWatcherActivateWatchServiceWrapper(
-	obj *elastic.XPackWatcherActivateWatchService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackWatcherActivateWatchServiceWrapper {
-	return &ESXPackWatcherActivateWatchServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESXPackWatcherActivateWatchServiceWrapper struct {
 	obj                *elastic.XPackWatcherActivateWatchService
 	retry              *micro.Retry
@@ -3551,25 +1575,6 @@ type ESXPackWatcherActivateWatchServiceWrapper struct {
 
 func (w *ESXPackWatcherActivateWatchServiceWrapper) Unwrap() *elastic.XPackWatcherActivateWatchService {
 	return w.obj
-}
-
-func NewESXPackWatcherDeactivateWatchServiceWrapper(
-	obj *elastic.XPackWatcherDeactivateWatchService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackWatcherDeactivateWatchServiceWrapper {
-	return &ESXPackWatcherDeactivateWatchServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESXPackWatcherDeactivateWatchServiceWrapper struct {
@@ -3586,25 +1591,6 @@ func (w *ESXPackWatcherDeactivateWatchServiceWrapper) Unwrap() *elastic.XPackWat
 	return w.obj
 }
 
-func NewESXPackWatcherDeleteWatchServiceWrapper(
-	obj *elastic.XPackWatcherDeleteWatchService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackWatcherDeleteWatchServiceWrapper {
-	return &ESXPackWatcherDeleteWatchServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESXPackWatcherDeleteWatchServiceWrapper struct {
 	obj                *elastic.XPackWatcherDeleteWatchService
 	retry              *micro.Retry
@@ -3617,25 +1603,6 @@ type ESXPackWatcherDeleteWatchServiceWrapper struct {
 
 func (w *ESXPackWatcherDeleteWatchServiceWrapper) Unwrap() *elastic.XPackWatcherDeleteWatchService {
 	return w.obj
-}
-
-func NewESXPackWatcherExecuteWatchServiceWrapper(
-	obj *elastic.XPackWatcherExecuteWatchService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackWatcherExecuteWatchServiceWrapper {
-	return &ESXPackWatcherExecuteWatchServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESXPackWatcherExecuteWatchServiceWrapper struct {
@@ -3652,25 +1619,6 @@ func (w *ESXPackWatcherExecuteWatchServiceWrapper) Unwrap() *elastic.XPackWatche
 	return w.obj
 }
 
-func NewESXPackWatcherGetWatchServiceWrapper(
-	obj *elastic.XPackWatcherGetWatchService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackWatcherGetWatchServiceWrapper {
-	return &ESXPackWatcherGetWatchServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESXPackWatcherGetWatchServiceWrapper struct {
 	obj                *elastic.XPackWatcherGetWatchService
 	retry              *micro.Retry
@@ -3683,25 +1631,6 @@ type ESXPackWatcherGetWatchServiceWrapper struct {
 
 func (w *ESXPackWatcherGetWatchServiceWrapper) Unwrap() *elastic.XPackWatcherGetWatchService {
 	return w.obj
-}
-
-func NewESXPackWatcherPutWatchServiceWrapper(
-	obj *elastic.XPackWatcherPutWatchService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackWatcherPutWatchServiceWrapper {
-	return &ESXPackWatcherPutWatchServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESXPackWatcherPutWatchServiceWrapper struct {
@@ -3718,25 +1647,6 @@ func (w *ESXPackWatcherPutWatchServiceWrapper) Unwrap() *elastic.XPackWatcherPut
 	return w.obj
 }
 
-func NewESXPackWatcherStartServiceWrapper(
-	obj *elastic.XPackWatcherStartService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackWatcherStartServiceWrapper {
-	return &ESXPackWatcherStartServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESXPackWatcherStartServiceWrapper struct {
 	obj                *elastic.XPackWatcherStartService
 	retry              *micro.Retry
@@ -3751,25 +1661,6 @@ func (w *ESXPackWatcherStartServiceWrapper) Unwrap() *elastic.XPackWatcherStartS
 	return w.obj
 }
 
-func NewESXPackWatcherStatsServiceWrapper(
-	obj *elastic.XPackWatcherStatsService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackWatcherStatsServiceWrapper {
-	return &ESXPackWatcherStatsServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type ESXPackWatcherStatsServiceWrapper struct {
 	obj                *elastic.XPackWatcherStatsService
 	retry              *micro.Retry
@@ -3782,25 +1673,6 @@ type ESXPackWatcherStatsServiceWrapper struct {
 
 func (w *ESXPackWatcherStatsServiceWrapper) Unwrap() *elastic.XPackWatcherStatsService {
 	return w.obj
-}
-
-func NewESXPackWatcherStopServiceWrapper(
-	obj *elastic.XPackWatcherStopService,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *ESXPackWatcherStopServiceWrapper {
-	return &ESXPackWatcherStopServiceWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type ESXPackWatcherStopServiceWrapper struct {

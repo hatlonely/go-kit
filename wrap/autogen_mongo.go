@@ -124,25 +124,6 @@ func (w *MongoClientWrapper) CreateMetric(options *WrapperOptions) {
 	}, []string{"method", "custom"})
 }
 
-func NewMongoCollectionWrapper(
-	obj *mongo.Collection,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *MongoCollectionWrapper {
-	return &MongoCollectionWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type MongoCollectionWrapper struct {
 	obj                *mongo.Collection
 	retry              *micro.Retry
@@ -155,25 +136,6 @@ type MongoCollectionWrapper struct {
 
 func (w *MongoCollectionWrapper) Unwrap() *mongo.Collection {
 	return w.obj
-}
-
-func NewMongoDatabaseWrapper(
-	obj *mongo.Database,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *MongoDatabaseWrapper {
-	return &MongoDatabaseWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
 }
 
 type MongoDatabaseWrapper struct {

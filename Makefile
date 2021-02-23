@@ -59,6 +59,7 @@ wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName tablestore \
 		--classPrefix OTS \
 		--starClasses TableStoreClient \
+		--rule.constructor.include "^TableStoreClient$$" \
 		--rule.createMetric.include "^TableStoreClient$$" \
 		--rule.onWrapperChange.include "^TableStoreClient$$" \
 		--rule.onRetryChange.include "^TableStoreClient$$" \
@@ -72,6 +73,7 @@ wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName kms \
 		--classPrefix KMS \
 		--starClasses Client \
+		--rule.constructor.include "^Client$$" \
 		--rule.createMetric.include "^Client$$" \
 		--rule.onWrapperChange.include "^Client$$" \
 		--rule.onRetryChange.include "^Client$$" \
@@ -85,6 +87,7 @@ wrap/autogen_ram.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName ram \
 		--classPrefix RAM \
 		--starClasses Client \
+		--rule.constructor.include "^Client$$" \
 		--rule.createMetric.include "^Client$$" \
 		--rule.onWrapperChange.include "^Client$$" \
 		--rule.onRetryChange.include "^Client$$" \
@@ -98,6 +101,7 @@ wrap/autogen_sts.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName sts \
 		--classPrefix STS \
 		--starClasses Client \
+		--rule.constructor.include "^Client$$" \
 		--rule.createMetric.include "^Client$$" \
 		--rule.onWrapperChange.include "^Client$$" \
 		--rule.onRetryChange.include "^Client$$" \
@@ -111,6 +115,7 @@ wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName config_client \
 		--classPrefix ACM \
 		--starClasses ConfigClient \
+		--rule.constructor.include "^ConfigClient$$" \
 		--rule.createMetric.include "^ConfigClient$$" \
 		--rule.onWrapperChange.include "^ConfigClient$$" \
 		--rule.onRetryChange.include "^ConfigClient$$" \
@@ -124,6 +129,7 @@ wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName oss \
 		--classPrefix OSS \
 		--starClasses Client,Bucket \
+		--rule.constructor.include "^Client$$" \
 		--rule.createMetric.include "^Client$$" \
 		--rule.onWrapperChange.include "^Client$$" \
 		--rule.onRetryChange.include "^Client$$" \
@@ -143,6 +149,7 @@ wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--classPrefix GORM \
 		--classes DB,Association \
 		--errorField Error \
+		--rule.constructor.include "^DB$$" \
 		--rule.createMetric.include "^DB$$" \
 		--rule.onWrapperChange.include "^DB$$" \
 		--rule.onRetryChange.include "^DB$$" \
@@ -158,6 +165,7 @@ wrap/autogen_elasticsearch.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName elastic \
 		--classPrefix ES \
 		--rule.starClass '{"include": "^(?i:(Client)|(.*Service))$$", "exclude": ".*"}' \
+		--rule.constructor.include "^Client$$" \
 		--rule.createMetric.include "^Client$$" \
 		--rule.onWrapperChange.include "^Client$$" \
 		--rule.onRetryChange.include "^Client$$" \
@@ -176,6 +184,7 @@ wrap/autogen_mongo.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packageName mongo \
 		--classPrefix Mongo \
 		--rule.starClass '{"include": "^(?i:(Client)|(Database)|(Collection))$$", "exclude": ".*"}' \
+		--rule.constructor.include "^Client$$" \
 		--rule.createMetric.include "^Client$$" \
 		--rule.onWrapperChange.include "^Client$$" \
 		--rule.onRetryChange.include "^Client$$" \
@@ -195,6 +204,7 @@ wrap/autogen_redis.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--errorField "Err()" \
 		--inherit '{"Client": ["cmdable", "baseClient"], "ClusterClient": ["cmdable"]}' \
 		--starClasses Client,ClusterClient \
+		--rule.constructor.include "^(?i:(Client)|(ClusterClient))$$" \
 		--rule.createMetric.include "^(?i:(Client)|(ClusterClient))$$" \
 		--rule.onWrapperChange.include "^(?i:(Client)|(ClusterClient))$$" \
 		--rule.onRetryChange.include "^(?i:(Client)|(ClusterClient))$$" \

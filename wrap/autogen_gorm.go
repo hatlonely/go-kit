@@ -18,25 +18,6 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-func NewGORMAssociationWrapper(
-	obj *gorm.Association,
-	retry *micro.Retry,
-	options *WrapperOptions,
-	durationMetric *prometheus.HistogramVec,
-	inflightMetric *prometheus.GaugeVec,
-	rateLimiter micro.RateLimiter,
-	parallelController micro.ParallelController) *GORMAssociationWrapper {
-	return &GORMAssociationWrapper{
-		obj:                obj,
-		retry:              retry,
-		options:            options,
-		durationMetric:     durationMetric,
-		inflightMetric:     inflightMetric,
-		rateLimiter:        rateLimiter,
-		parallelController: parallelController,
-	}
-}
-
 type GORMAssociationWrapper struct {
 	obj                *gorm.Association
 	retry              *micro.Retry
