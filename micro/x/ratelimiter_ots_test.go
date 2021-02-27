@@ -12,6 +12,34 @@ import (
 	"github.com/hatlonely/go-kit/wrap"
 )
 
+// BenchmarkOTSRateLimiter_Wait-12    	     262	   3858786 ns/op
+func BenchmarkOTSRateLimiter_Wait(b *testing.B) {
+	r, _ := NewOTSRateLimiterWithOptions(&OTSRateLimiterOptions{
+		OTS: wrap.OTSTableStoreClientWrapperOptions{
+			OTS: wrap.OTSOptions{
+				Endpoint:        "https://xx.cn-shanghai.ots.aliyuncs.com",
+				AccessKeyID:     "xx",
+				AccessKeySecret: "xx",
+				InstanceName:    "xx",
+			},
+			Retry: micro.RetryOptions{
+				Attempts:      3,
+				Delay:         time.Millisecond * 500,
+				LastErrorOnly: true,
+			},
+		},
+		Table:      "RateLimiter",
+		DefaultQPS: 9999999999,
+		Window:     time.Second * 1,
+	})
+
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			r.Wait(context.Background(), "key1")
+		}
+	})
+}
+
 func TestOTSRateLimiter(t *testing.T) {
 	Convey("TestOTSRateLimiter", t, func() {
 		r, err := NewOTSRateLimiterWithOptions(&OTSRateLimiterOptions{

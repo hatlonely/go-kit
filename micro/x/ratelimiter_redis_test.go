@@ -11,6 +11,26 @@ import (
 	"github.com/hatlonely/go-kit/wrap"
 )
 
+// BenchmarkRedisRateLimiter_Wait-12    	  103843	     11429 ns/op
+func BenchmarkRedisRateLimiter_Wait(b *testing.B) {
+	r, _ := NewRedisRateLimiterWithOptions(&RedisRateLimiterOptions{
+		Redis: wrap.RedisClientWrapperOptions{
+			Retry: micro.RetryOptions{
+				Attempts: 3,
+				Delay:    time.Millisecond * 500,
+			},
+		},
+		Window:     time.Second,
+		DefaultQPS: 9999999999,
+	})
+
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			r.Wait(context.Background(), "key1")
+		}
+	})
+}
+
 func TestRedisRateLimiter(t *testing.T) {
 	Convey("TestRedisRateLimiter", t, func() {
 		r, err := NewRedisRateLimiterWithOptions(&RedisRateLimiterOptions{
