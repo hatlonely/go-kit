@@ -17,6 +17,8 @@ import (
 
 type RedisRateLimiterOptions struct {
 	Redis wrap.RedisClientWrapperOptions
+	// 窗口长度
+	Window time.Duration `dft:"1s"`
 	// key 前缀，可当成命名空间使用
 	Prefix string
 	// QPS 计算规则
@@ -76,7 +78,7 @@ func (r *RedisRateLimiter) Allow(ctx context.Context, key string) error {
 		return nil
 	}
 
-	now := time.Now()
+	now := time.Now().Truncate(r.options.Window)
 	tsKey := fmt.Sprintf("%s_%d", r.generateKey(key), now.Unix())
 	var res *redis.IntCmd
 	_, err := r.client.TxPipelined(ctx, func(pipe redis.Pipeliner) error {
@@ -106,7 +108,7 @@ func (r *RedisRateLimiter) WaitN(ctx context.Context, key string, n int) error {
 	}
 
 	for {
-		now := time.Now()
+		now := time.Now().Truncate(r.options.Window)
 		tsKey := fmt.Sprintf("%s_%d", r.generateKey(key), now.Unix())
 		var res *redis.IntCmd
 		_, err := r.client.TxPipelined(ctx, func(pipe redis.Pipeliner) error {
@@ -125,13 +127,10 @@ func (r *RedisRateLimiter) WaitN(ctx context.Context, key string, n int) error {
 			n = val - qps
 		}
 
-		d := now.Add(time.Second).Sub(time.Now())
-		if d > 0 {
-			select {
-			case <-time.After(d):
-			case <-ctx.Done():
-				return errors.New("cancel by ctx.Done")
-			}
+		select {
+		case <-time.After(time.Until(now.Add(time.Second))):
+		case <-ctx.Done():
+			return errors.New("cancel by ctx.Done")
 		}
 	}
 	return nil

@@ -2,6 +2,7 @@ package microx
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
@@ -11,21 +12,29 @@ import (
 	"github.com/hatlonely/go-kit/wrap"
 )
 
-func TestRedisRateLimiter(t *testing.T) {
-	Convey("TestRedisRateLimiter", t, func() {
-		r, err := NewRedisRateLimiterWithOptions(&RedisRateLimiterOptions{
-			Redis: wrap.RedisClientWrapperOptions{
+func TestOTSRateLimiter(t *testing.T) {
+	Convey("TestOTSRateLimiter", t, func() {
+		r, err := NewOTSRateLimiterWithOptions(&OTSRateLimiterOptions{
+			OTS: wrap.OTSTableStoreClientWrapperOptions{
+				OTS: wrap.OTSOptions{
+					Endpoint:        "https://test-name.cn-shanghai.ots.aliyuncs.com",
+					AccessKeyID:     "test-ak",
+					AccessKeySecret: "test-sk",
+					InstanceName:    "test-name",
+				},
 				Retry: micro.RetryOptions{
-					Attempts: 3,
-					Delay:    time.Millisecond * 500,
+					Attempts:      3,
+					Delay:         time.Millisecond * 500,
+					LastErrorOnly: true,
 				},
 			},
-			Window:     time.Second,
+			Table:      "RateLimiter",
 			DefaultQPS: 3,
 			QPS: map[string]int{
 				"key1": 2,
 				"key2": 0,
 			},
+			Window: time.Second * 5,
 		})
 		So(err, ShouldBeNil)
 
@@ -57,5 +66,10 @@ func TestRedisRateLimiter(t *testing.T) {
 			So(r.Wait(context.Background(), "key2"), ShouldBeNil)
 		}
 		So(time.Now().Sub(now), ShouldBeLessThan, 20*time.Millisecond)
+
+		for i := 0; i < 30; i++ {
+			So(r.Wait(context.Background(), "key3"), ShouldBeNil)
+			fmt.Println(time.Now(), "hello world")
+		}
 	})
 }
