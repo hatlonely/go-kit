@@ -24,10 +24,10 @@ func BenchmarkRedisTimedParallelController_Acquire(b *testing.B) {
 				Attempts: 1,
 			},
 		},
-		Prefix:          "pc",
+		Prefix:          "redis_timed",
 		DefaultMaxToken: 999999999,
 		Interval:        time.Second,
-		Expiration:      5 * time.Second,
+		Expiration:      100 * time.Second,
 	})
 
 	b.RunParallel(func(pb *testing.PB) {

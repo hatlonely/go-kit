@@ -24,7 +24,7 @@ func BenchmarkRedisParallelController_Acquire(b *testing.B) {
 				Attempts: 1,
 			},
 		},
-		Prefix:          "pc",
+		Prefix:          "redis",
 		DefaultMaxToken: 999999999,
 		Interval:        time.Second,
 	})
