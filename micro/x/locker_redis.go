@@ -193,7 +193,6 @@ func (l *RedisLocker) renew(key string) {
 			break
 		}
 		val := v.(*redisLockerValue)
-		sleepTime := l.options.Expiration - time.Now().Sub(val.updatedAt) - l.options.RenewTime
 
 		res := l.client.EvalSha(context.Background(), l.renewScriptSha1, []string{l.calculateKey(key)}, val.value, l.options.Expiration.Seconds())
 		if res == nil {
@@ -216,7 +215,7 @@ func (l *RedisLocker) renew(key string) {
 		case <-val.ctx.Done():
 			val.wg.Done()
 			return
-		case <-time.After(sleepTime):
+		case <-time.After(time.Until(val.updatedAt.Add(l.options.Expiration - l.options.RenewTime))):
 		}
 	}
 }
