@@ -13,8 +13,33 @@ import (
 	"github.com/hatlonely/go-kit/wrap"
 )
 
-func TestLocalLocker_Lock_UnLock(t *testing.T) {
-	Convey("TestLocalLocker_Lock", t, func(c C) {
+// BenchmarkRedisLocker_Lock-12    	    2778	    413410 ns/op
+func BenchmarkRedisLocker_Lock(b *testing.B) {
+	l, _ := NewRedisLockerWithOptions(&RedisLockerOptions{
+		Redis: wrap.RedisClientWrapperOptions{
+			Redis: wrap.RedisOptions{
+				Addr: "127.0.0.1:6379",
+			},
+			Retry: micro.RetryOptions{
+				Attempts: 1,
+			},
+		},
+		Prefix:     "redis_locker",
+		Expiration: 2 * time.Second,
+		RenewTime:  1 * time.Second,
+		Interval:   time.Microsecond,
+	})
+
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			_ = l.Lock(context.Background(), "key")
+			_ = l.Unlock(context.Background(), "key")
+		}
+	})
+}
+
+func TestRedisLocker_Lock_UnLock(t *testing.T) {
+	Convey("TestRedisLocker_Lock_UnLock", t, func(c C) {
 		l, err := NewRedisLockerWithOptions(&RedisLockerOptions{
 			Prefix:     "redis_locker_test",
 			Expiration: 30 * time.Second,
@@ -44,8 +69,8 @@ func TestLocalLocker_Lock_UnLock(t *testing.T) {
 	})
 }
 
-func TestLocalLocker_TryLock(t *testing.T) {
-	Convey("TestLocalLocker_TryLock", t, func() {
+func TestRedisLocker_TryLock(t *testing.T) {
+	Convey("TestRedisLocker_TryLock", t, func() {
 		l, err := NewRedisLockerWithOptions(&RedisLockerOptions{
 			Redis: wrap.RedisClientWrapperOptions{
 				Retry: micro.RetryOptions{

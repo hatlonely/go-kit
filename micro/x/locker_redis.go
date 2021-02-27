@@ -47,6 +47,10 @@ type redisLockerValue struct {
 }
 
 func NewRedisLockerWithOptions(options *RedisLockerOptions, opts ...refx.Option) (*RedisLocker, error) {
+	if options.Interval == 0 {
+		options.Interval = time.Microsecond
+	}
+
 	l := &RedisLocker{
 		options: options,
 		log:     logger.NewStdoutTextLogger(),
@@ -130,7 +134,7 @@ func (l *RedisLocker) Lock(ctx context.Context, key string) error {
 		select {
 		case <-ctx.Done():
 			return micro.ErrContextCancel
-		case <-time.After(time.Duration(rand.Int63n(l.options.Interval.Microseconds())) * time.Millisecond):
+		case <-time.After(time.Duration(rand.Int63n(l.options.Interval.Microseconds())) * time.Microsecond):
 		}
 	}
 
@@ -153,7 +157,7 @@ func (l *RedisLocker) Lock(ctx context.Context, key string) error {
 		select {
 		case <-ctx.Done():
 			return micro.ErrContextCancel
-		case <-time.After(time.Duration(rand.Int63n(l.options.Interval.Microseconds())) * time.Millisecond):
+		case <-time.After(time.Duration(rand.Int63n(l.options.Interval.Microseconds())) * time.Microsecond):
 		}
 	}
 	return nil
