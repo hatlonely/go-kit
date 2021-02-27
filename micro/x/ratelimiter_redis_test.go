@@ -15,6 +15,9 @@ import (
 func BenchmarkRedisRateLimiter_Wait(b *testing.B) {
 	r, _ := NewRedisRateLimiterWithOptions(&RedisRateLimiterOptions{
 		Redis: wrap.RedisClientWrapperOptions{
+			Redis: wrap.RedisOptions{
+				Addr: "127.0.0.1:6379",
+			},
 			Retry: micro.RetryOptions{
 				Attempts: 3,
 				Delay:    time.Millisecond * 500,

@@ -13,6 +13,30 @@ import (
 	"github.com/hatlonely/go-kit/wrap"
 )
 
+// BenchmarkRedisParallelController_Acquire-12    	   47853	     24236 ns/op
+func BenchmarkRedisParallelController_Acquire(b *testing.B) {
+	ctl, _ := NewRedisParallelControllerWithOptions(&RedisParallelControllerOptions{
+		Redis: wrap.RedisClientWrapperOptions{
+			Redis: wrap.RedisOptions{
+				Addr: "127.0.0.1:6379",
+			},
+			Retry: micro.RetryOptions{
+				Attempts: 1,
+			},
+		},
+		Prefix:          "pc",
+		DefaultMaxToken: 999999999,
+		Interval:        time.Second,
+	})
+
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			token, _ := ctl.Acquire(context.Background(), "key1")
+			_ = ctl.Release(context.Background(), "key1", token)
+		}
+	})
+}
+
 func TestRedisParallelController_Acquire_Release(t *testing.T) {
 	Convey("TestRedisParallelController_Acquire_Release", t, func(c C) {
 		for i := 1; i < 10; i++ {
