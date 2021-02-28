@@ -38,6 +38,10 @@ type RedisTimedParallelController struct {
 }
 
 func NewRedisTimedParallelControllerWithOptions(options *RedisTimedParallelControllerOptions) (*RedisTimedParallelController, error) {
+	if options.Interval == 0 {
+		options.Interval = time.Microsecond
+	}
+
 	c := &RedisTimedParallelController{
 		options: options,
 	}
@@ -127,7 +131,7 @@ func (c *RedisTimedParallelController) Acquire(ctx context.Context, key string) 
 		select {
 		case <-ctx.Done():
 			return 0, micro.ErrContextCancel
-		case <-time.After(time.Duration(rand.Int63n(c.options.Interval.Microseconds())) * time.Millisecond):
+		case <-time.After(time.Duration(rand.Int63n(c.options.Interval.Microseconds())) * time.Microsecond):
 		}
 	}
 }

@@ -73,7 +73,7 @@ func NewOTSRateLimiterWithOptions(options *OTSRateLimiterOptions) (*OTSRateLimit
 	})
 	if err != nil {
 		if !strings.Contains(err.Error(), "does not exist") {
-			return nil, err
+			return nil, errors.Wrap(err, "client.DescribeTable failed")
 		}
 		req := &tablestore.CreateTableRequest{
 			TableMeta: &tablestore.TableMeta{

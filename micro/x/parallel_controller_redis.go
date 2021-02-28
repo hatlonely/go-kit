@@ -36,6 +36,10 @@ type RedisParallelController struct {
 }
 
 func NewRedisParallelControllerWithOptions(options *RedisParallelControllerOptions) (*RedisParallelController, error) {
+	if options.Interval == 0 {
+		options.Interval = time.Microsecond
+	}
+
 	client, err := wrap.NewRedisClientWrapperWithOptions(&options.Redis)
 	if err != nil {
 		return nil, errors.WithMessage(err, "wrap.NewRedisClientWrapperWithOptions")
@@ -128,7 +132,7 @@ func (c *RedisParallelController) Acquire(ctx context.Context, key string) (int,
 		select {
 		case <-ctx.Done():
 			return 0, micro.ErrContextCancel
-		case <-time.After(time.Duration(rand.Int63n(c.options.Interval.Microseconds())) * time.Millisecond):
+		case <-time.After(time.Duration(rand.Int63n(c.options.Interval.Microseconds())) * time.Microsecond):
 		}
 	}
 }
