@@ -10,6 +10,7 @@ func init() {
 
 	micro.RegisterParallelController("Redis", NewRedisParallelControllerWithOptions)
 	micro.RegisterParallelController("RedisTimed", NewRedisTimedParallelControllerWithOptions)
+	micro.RegisterParallelController("OTS", NewOTSParallelControllerWithOptions)
 
 	micro.RegisterLocker("Redis", NewRedisLockerWithOptions)
 }
