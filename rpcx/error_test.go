@@ -13,7 +13,7 @@ import (
 
 func TestNewError(t *testing.T) {
 	Convey("test NewError", t, func() {
-		err := NewError(codes.InvalidArgument, "InvalidArgument", "invalid argument", errors.New("error"))
+		err := NewError(errors.New("error"), codes.InvalidArgument, "InvalidArgument", "invalid argument")
 		So(err.Code, ShouldEqual, codes.InvalidArgument)
 		So(err.err.Error(), ShouldEqual, "error")
 		So(err.Detail.Code, ShouldEqual, "InvalidArgument")
@@ -24,7 +24,7 @@ func TestNewError(t *testing.T) {
 	})
 
 	Convey("test NewErrorf", t, func() {
-		err := NewErrorf(codes.InvalidArgument, "InvalidArgument", "invalid argument field %s", "text")
+		err := NewErrorf(nil, codes.InvalidArgument, "InvalidArgument", "invalid argument field %s", "text")
 		So(err.Code, ShouldEqual, codes.InvalidArgument)
 		So(err.err.Error(), ShouldEqual, "invalid argument field text")
 		So(err.Detail.Code, ShouldEqual, "InvalidArgument")
@@ -49,7 +49,7 @@ func TestNewError(t *testing.T) {
 
 func TestErrorSet(t *testing.T) {
 	Convey("TestErrorSet", t, func() {
-		err := NewError(codes.InvalidArgument, "InvalidArgument", "invalid argument", errors.New("error"))
+		err := NewError(errors.New("error"), codes.InvalidArgument, "InvalidArgument", "invalid argument")
 
 		Convey("SetRequest", func() {
 			err = err.SetRequestID("test-request-id")
@@ -75,7 +75,7 @@ func TestErrorSet(t *testing.T) {
 
 func TestError_ToStatus(t *testing.T) {
 	Convey("TestError_ToStatus", t, func() {
-		err := NewError(codes.InvalidArgument, "InvalidArgument", "invalid argument", errors.New("error"))
+		err := NewError(errors.New("error"), codes.InvalidArgument, "InvalidArgument", "invalid argument")
 		err = err.SetRequestID("test-request-id").SetStatus(http.StatusBadRequest)
 
 		detail := StatusErrorDetail(err.ToStatus().Err(), "test-request-id")

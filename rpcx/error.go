@@ -13,7 +13,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func NewError(rpcCode codes.Code, code string, message string, err error) *Error {
+func NewError(err error, rpcCode codes.Code, code string, message string) *Error {
 	return &Error{
 		err:  err,
 		Code: rpcCode,
@@ -25,10 +25,13 @@ func NewError(rpcCode codes.Code, code string, message string, err error) *Error
 	}
 }
 
-func NewErrorf(rpcCode codes.Code, code string, format string, args ...interface{}) *Error {
+func NewErrorf(err error, rpcCode codes.Code, code string, format string, args ...interface{}) *Error {
 	str := fmt.Sprintf(format, args...)
+	if err == nil {
+		err = errors.New(str)
+	}
 	return &Error{
-		err:  errors.New(str),
+		err:  err,
 		Code: rpcCode,
 		Detail: &ErrorDetail{
 			Status:  int32(runtime.HTTPStatusFromCode(rpcCode)),

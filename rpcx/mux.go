@@ -128,7 +128,7 @@ func StatusErrorDetail(err error, requestID string) *ErrorDetail {
 		}
 	} else {
 		// 未走到 grpc handler 中的错误处理
-		return NewErrorf(s.Code(), http.StatusText(runtime.HTTPStatusFromCode(s.Code())), s.Message()).SetRequestID(requestID).Detail
+		return NewErrorf(nil, s.Code(), http.StatusText(runtime.HTTPStatusFromCode(s.Code())), s.Message()).SetRequestID(requestID).Detail
 	}
 	return NewInternalError(err).SetRequestID(requestID).Detail
 }

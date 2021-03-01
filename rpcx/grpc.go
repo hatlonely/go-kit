@@ -236,7 +236,7 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 				}
 				if err = g.rateLimiter.Allow(ctx, key); err != nil {
 					if err == micro.ErrFlowControl {
-						err = NewError(codes.ResourceExhausted, "ResourceExhausted", err.Error(), err)
+						err = NewError(err, codes.ResourceExhausted, "ResourceExhausted", err.Error())
 					} else {
 						g.appLog.Warnf("g.rateLimiter.Allow failed. err: [%+v]", err)
 					}
@@ -253,7 +253,7 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 				var token int
 				if token, err = g.parallelController.TryAcquire(ctx, key); err != nil {
 					if err == micro.ErrParallelControl {
-						err = NewError(codes.ResourceExhausted, "ResourceExhausted", err.Error(), err)
+						err = NewError(err, codes.ResourceExhausted, "ResourceExhausted", err.Error())
 					} else {
 						g.appLog.Warnf("g.parallelController.Acquire failed. err: [%+v]", err)
 					}
@@ -278,7 +278,7 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 		if err == nil {
 			for _, validate := range g.validators {
 				if err = validate(req); err != nil {
-					err = NewError(codes.InvalidArgument, "InvalidArgument", err.Error(), err)
+					err = NewError(err, codes.InvalidArgument, "InvalidArgument", err.Error())
 					break
 				}
 			}
@@ -294,7 +294,7 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 				if e.Detail.Status == 0 {
 					e.Detail.Status = int32(runtime.HTTPStatusFromCode(e.Code))
 				}
-				err = NewError(e.Code, e.Detail.Code, e.Detail.Message, err).SetStatus(int(e.Detail.Status)).SetRequestID(e.Detail.RequestID).SetRefer(e.Detail.Refer)
+				err = NewError(err, e.Code, e.Detail.Code, e.Detail.Message).SetStatus(int(e.Detail.Status)).SetRequestID(e.Detail.RequestID).SetRefer(e.Detail.Refer)
 			default:
 				err = NewInternalError(err)
 			}
