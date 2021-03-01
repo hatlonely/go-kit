@@ -17,7 +17,7 @@ import (
 
 type RedisRateLimiterOptions struct {
 	Redis wrap.RedisClientWrapperOptions
-	// 窗口长度
+	// 限流窗口长度
 	Window time.Duration `dft:"1s"`
 	// key 前缀，可当成命名空间使用
 	Prefix string

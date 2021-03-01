@@ -17,10 +17,10 @@ import (
 
 type OTSRateLimiterOptions struct {
 	OTS wrap.OTSTableStoreClientWrapperOptions
-	// 窗口长度
-	Window time.Duration `dft:"1s"`
 	// OTS 表名
 	Table string
+	// 限流窗口长度
+	Window time.Duration `dft:"1s"`
 	// key 前缀，可当成命名空间使用
 	Prefix string
 	// QPS 计算规则
