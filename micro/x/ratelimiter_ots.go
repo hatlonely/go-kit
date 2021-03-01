@@ -188,7 +188,7 @@ func (r *OTSRateLimiter) WaitN(ctx context.Context, key string, n int) error {
 		}
 
 		select {
-		case <-time.After(time.Until(now.Add(time.Second))):
+		case <-time.After(time.Until(now.Add(r.options.Window))):
 		case <-ctx.Done():
 			return errors.New("cancel by ctx.Done")
 		}
