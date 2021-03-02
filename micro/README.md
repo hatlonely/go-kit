@@ -150,6 +150,14 @@ r.Release(context.Background(), "key", token)
 
 可以通过 `RegisterParallelController` 拓展自己的 `ParallelController` 实现
 
+`ParallelController` 有从获取的 token 到返还的过程，这中间有可能因为发生错误而失败，特别是在基于中心存储的实现上，这种错误是非常常见的，比如
+
+- 服务由于异常 panic，已经获取的 token 都将泄漏
+- 服务重启，而没有等待所有的 token 都返还
+- 网络错误，导致 release 失败
+
+这些错误很难避免，因此引入一个自动恢复机制解决这类问题是很有必要的，常见的解决方案可以引入一个超时自动恢复机制，在每次 Acquire 时先释放已经超时的 token
+
 ## Locker
 
 锁

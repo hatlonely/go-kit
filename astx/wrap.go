@@ -680,7 +680,7 @@ const WrapperFunctionBodyWithoutErrorTpl = `
 {{- if .Rule.ParallelController}}
 	if w.parallelController != nil {
 		token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.{{.Class}}.{{.Function.Name}}", w.options.Name))
-		if err != nil {
+		if err == nil {
 			defer w.parallelController.Release(ctx, fmt.Sprintf("%s.{{.Class}}.{{.Function.Name}}", w.options.Name), token)
 		}
 	}
