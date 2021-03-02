@@ -47,6 +47,12 @@ func init() {
 			if strings.Contains(e.Error(), "timeout") {
 				return true
 			}
+			if strings.Contains(e.Error(), "connection reset by peer") {
+				return true
+			}
+			if strings.Contains(e.Error(), "use of closed network connection") {
+				return true
+			}
 		}
 		return false
 	})

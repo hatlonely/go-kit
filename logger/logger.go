@@ -106,20 +106,22 @@ type Logger struct {
 
 func (l *Logger) With(key string, val interface{}) *Logger {
 	return &Logger{
-		parent: l,
-		useVal: true,
-		level:  l.level,
-		key:    key,
-		val:    val,
+		parent:  l,
+		useVal:  true,
+		level:   l.level,
+		flatMap: l.flatMap,
+		key:     key,
+		val:     val,
 	}
 }
 
 func (l *Logger) WithFunc(key string, val func() interface{}) *Logger {
 	return &Logger{
-		parent: l,
-		level:  l.level,
-		key:    key,
-		fun:    val,
+		parent:  l,
+		level:   l.level,
+		flatMap: l.flatMap,
+		key:     key,
+		fun:     val,
 	}
 }
 
