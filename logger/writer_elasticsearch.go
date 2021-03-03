@@ -6,30 +6,18 @@ import (
 	"sync"
 	"time"
 
-	"github.com/avast/retry-go"
-	"github.com/olivere/elastic/v7"
 	uuid "github.com/satori/go.uuid"
 
 	"github.com/hatlonely/go-kit/cast"
+	"github.com/hatlonely/go-kit/wrap"
 )
 
 type ElasticSearchWriter struct {
-	esCli    *elastic.Client
+	esCli    *wrap.ESClientWrapper
 	messages chan map[string]interface{}
 	wg       sync.WaitGroup
 
 	options *ElasticSearchWriterOptions
-}
-
-type ElasticSearchOptions struct {
-	URI                       string `dft:"http://elasticsearch:9200"`
-	EnableSniff               bool
-	Username                  string
-	Password                  string
-	EnableHealthCheck         bool          `dft:"true"`
-	HealthCheckInterval       time.Duration `dft:"60s"`
-	HealthCheckTimeout        time.Duration `dft:"5s"`
-	HealthCheckTimeoutStartUp time.Duration `dft:"5s"`
 }
 
 type ElasticSearchWriterOptions struct {
@@ -39,19 +27,11 @@ type ElasticSearchWriterOptions struct {
 	MsgChanLen int           `dft:"200"`
 	WorkerNum  int           `dft:"1"`
 
-	ES ElasticSearchOptions
+	ESClientWrapper wrap.ESClientWrapperOptions
 }
 
 func NewElasticSearchWriterWithOptions(options *ElasticSearchWriterOptions) (*ElasticSearchWriter, error) {
-	client, err := elastic.NewClient(
-		elastic.SetURL(options.ES.URI),
-		elastic.SetSniff(options.ES.EnableSniff),
-		elastic.SetBasicAuth(options.ES.Username, options.ES.Password),
-		elastic.SetHealthcheck(options.ES.EnableHealthCheck),
-		elastic.SetHealthcheckInterval(options.ES.HealthCheckInterval),
-		elastic.SetHealthcheckTimeout(options.ES.HealthCheckTimeout),
-		elastic.SetHealthcheckTimeoutStartup(options.ES.HealthCheckTimeoutStartUp),
-	)
+	client, err := wrap.NewESClientWrapperWithOptions(&options.ESClientWrapper)
 
 	if err != nil {
 		return nil, err
@@ -59,7 +39,7 @@ func NewElasticSearchWriterWithOptions(options *ElasticSearchWriterOptions) (*El
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
 	defer cancel()
-	if _, _, err := client.Ping(options.ES.URI).Do(ctx); err != nil {
+	if _, _, err := client.Ping(options.ESClientWrapper.ES.URI).Do(ctx); err != nil {
 		return nil, err
 	}
 
@@ -97,16 +77,10 @@ func (w *ElasticSearchWriter) work() {
 		if _, ok := kvs[w.options.IDField]; !ok {
 			kvs[w.options.IDField] = uuid.NewV4().String()
 		}
-		err := retry.Do(func() error {
-			ctx, cancel := context.WithTimeout(context.Background(), w.options.Timeout)
-			defer cancel()
-			if _, err := w.esCli.Index().Index(w.options.Index).Id(cast.ToString(kvs[w.options.IDField])).BodyJson(kvs).Do(ctx); err != nil {
-				return err
-			}
-			return nil
-		}, retry.Attempts(6), retry.DelayType(retry.BackOffDelay), retry.LastErrorOnly(true))
-		if err != nil {
+		ctx, cancel := context.WithTimeout(context.Background(), w.options.Timeout)
+		if _, err := w.esCli.Index().Index(w.options.Index).Id(cast.ToString(kvs[w.options.IDField])).BodyJson(kvs).Do(ctx); err != nil {
 			fmt.Printf("ElasticSearchWriter write log failed, err: [%v]\n", err)
 		}
+		cancel()
 	}
 }
