@@ -55,6 +55,7 @@ func TestNewStdoutLogger(t *testing.T) {
 		}).Info("")
 		log.With("Key1", "Val1").With("Key2", "Val2").Info("")
 		log.With("Key3", "Val3").With("Key4", "Val4").Info("")
+		log.WithFields(map[string]interface{}{"Key1": "Val1", "Key2": "Val2"}).Info("")
 	})
 }
 

@@ -98,32 +98,52 @@ type Logger struct {
 	level   Level
 	flatMap bool
 
-	useVal bool
-	key    string
-	val    interface{}
-	fun    func() interface{}
+	nodeType NodeType
+	key      string
+	val      interface{}
+	fun      func() interface{}
+	kvs      map[string]interface{}
 }
 
 func (l *Logger) With(key string, val interface{}) *Logger {
 	return &Logger{
-		parent:  l,
-		useVal:  true,
-		level:   l.level,
-		flatMap: l.flatMap,
-		key:     key,
-		val:     val,
+		parent:   l,
+		nodeType: NodeTypeVal,
+		level:    l.level,
+		flatMap:  l.flatMap,
+		key:      key,
+		val:      val,
 	}
 }
 
 func (l *Logger) WithFunc(key string, val func() interface{}) *Logger {
 	return &Logger{
-		parent:  l,
-		level:   l.level,
-		flatMap: l.flatMap,
-		key:     key,
-		fun:     val,
+		parent:   l,
+		nodeType: NodeTypeFunc,
+		level:    l.level,
+		flatMap:  l.flatMap,
+		key:      key,
+		fun:      val,
 	}
 }
+
+func (l *Logger) WithFields(kvs map[string]interface{}) *Logger {
+	return &Logger{
+		parent:   l,
+		nodeType: NodeTypeMap,
+		level:    l.level,
+		flatMap:  l.flatMap,
+		kvs:      kvs,
+	}
+}
+
+type NodeType int
+
+const (
+	NodeTypeVal  NodeType = 1
+	NodeTypeFunc NodeType = 2
+	NodeTypeMap  NodeType = 3
+)
 
 //go:generate enumer -type Level -trimprefix Level -text
 type Level int
@@ -196,10 +216,15 @@ func (l *Logger) Log(level Level, v interface{}) {
 
 	node := l
 	for node.parent != nil {
-		if node.useVal {
+		switch node.nodeType {
+		case NodeTypeVal:
 			kvs[node.key] = node.val
-		} else {
+		case NodeTypeFunc:
 			kvs[node.key] = node.fun()
+		case NodeTypeMap:
+			for k, v := range node.kvs {
+				kvs[k] = v
+			}
 		}
 		node = node.parent
 	}
