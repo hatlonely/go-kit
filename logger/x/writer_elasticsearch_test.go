@@ -1,4 +1,4 @@
-package logger
+package loggerx
 
 import (
 	"context"
@@ -9,6 +9,9 @@ import (
 	. "github.com/agiledragon/gomonkey"
 	"github.com/olivere/elastic/v7"
 	. "github.com/smartystreets/goconvey/convey"
+
+	"github.com/hatlonely/go-kit/logger"
+	"github.com/hatlonely/go-kit/wrap"
 )
 
 func TestElasticSearchWriter_Write(t *testing.T) {
@@ -25,7 +28,7 @@ func TestElasticSearchWriter_Write(t *testing.T) {
 	defer patches.Reset()
 
 	Convey("", t, func() {
-		writer, err := NewWriterWithOptions(&WriterOptions{
+		writer, err := logger.NewWriterWithOptions(&logger.WriterOptions{
 			Type: "ElasticSearch",
 			Options: &ElasticSearchWriterOptions{
 				Index:      "hatlonely",
@@ -33,8 +36,10 @@ func TestElasticSearchWriter_Write(t *testing.T) {
 				Timeout:    200 * time.Millisecond,
 				MsgChanLen: 200,
 				WorkerNum:  2,
-				ES: ElasticSearchOptions{
-					URI: "http://127.0.0.1:9200",
+				ESClientWrapper: wrap.ESClientWrapperOptions{
+					ES: wrap.ESOptions{
+						URI: "http://127.0.0.1:9200",
+					},
 				},
 			},
 		})
