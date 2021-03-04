@@ -9,6 +9,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 
 	"github.com/hatlonely/go-kit/cast"
+	"github.com/hatlonely/go-kit/strx"
 	"github.com/hatlonely/go-kit/wrap"
 )
 
@@ -79,7 +80,7 @@ func (w *ElasticSearchWriter) work() {
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), w.options.Timeout)
 		if _, err := w.esCli.Index().Index(w.options.Index).Id(cast.ToString(kvs[w.options.IDField])).BodyJson(kvs).Do(ctx); err != nil {
-			fmt.Printf("ElasticSearchWriter write log failed, err: [%v]\n", err)
+			fmt.Printf("ElasticSearchWriter write log failed. err: [%+v], kvs: [%v]\n", err, strx.JsonMarshal(kvs))
 		}
 		cancel()
 	}
