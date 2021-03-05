@@ -7,9 +7,9 @@ import (
 	"fmt"
 )
 
-const _LevelName = "DebugInfoWarnError"
+const _LevelName = "DebugInfoWarnErrorFatal"
 
-var _LevelIndex = [...]uint8{0, 5, 9, 13, 18}
+var _LevelIndex = [...]uint8{0, 5, 9, 13, 18, 23}
 
 func (i Level) String() string {
 	i -= 1
@@ -19,13 +19,14 @@ func (i Level) String() string {
 	return _LevelName[_LevelIndex[i]:_LevelIndex[i+1]]
 }
 
-var _LevelValues = []Level{1, 2, 3, 4}
+var _LevelValues = []Level{1, 2, 3, 4, 5}
 
 var _LevelNameToValueMap = map[string]Level{
 	_LevelName[0:5]:   1,
 	_LevelName[5:9]:   2,
 	_LevelName[9:13]:  3,
 	_LevelName[13:18]: 4,
+	_LevelName[18:23]: 5,
 }
 
 // LevelString retrieves an enum value from the enum constants string name.

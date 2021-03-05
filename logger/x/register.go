@@ -5,5 +5,7 @@ import (
 )
 
 func init() {
+	logger.RegisterFormatter("Markdown", NewMarkdownFormatterWithOptions)
+
 	logger.RegisterWriter("ElasticSearch", NewElasticSearchWriterWithOptions)
 }

@@ -43,6 +43,7 @@ func NewDingTalkWriterWithOptions(options *DingTalkWriterOptions) (*DingTalkWrit
 
 	w := &DingTalkWriter{
 		options:   options,
+		messages:  make(chan map[string]interface{}, options.MsgChanLen),
 		formatter: formatter,
 		cli: &http.Client{
 			Transport: &http.Transport{

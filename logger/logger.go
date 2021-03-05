@@ -153,6 +153,7 @@ const (
 	LevelInfo  Level = 2
 	LevelWarn  Level = 3
 	LevelError Level = 4
+	LevelFatal Level = 5
 )
 
 func (l *Logger) Debug(v interface{}) {
@@ -169,6 +170,10 @@ func (l *Logger) Warn(v interface{}) {
 
 func (l *Logger) Error(v interface{}) {
 	l.Log(LevelError, v)
+}
+
+func (l *Logger) Fatal(v interface{}) {
+	l.Log(LevelFatal, v)
 }
 
 func (l *Logger) Debugf(format string, args ...interface{}) {
