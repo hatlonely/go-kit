@@ -1,9 +1,14 @@
 package loggerx
 
 import (
+	"bytes"
+	"io/ioutil"
+	"net/http"
+	"reflect"
 	"testing"
 	"time"
 
+	. "github.com/agiledragon/gomonkey"
 	. "github.com/smartystreets/goconvey/convey"
 
 	"github.com/hatlonely/go-kit/logger"
@@ -18,9 +23,18 @@ func TestCalculateDingTalkSign(t *testing.T) {
 
 func TestDingTalkWriter_Send(t *testing.T) {
 	Convey("", t, func() {
+		patches := ApplyMethod(reflect.TypeOf(&http.Client{}), "Do", func(cli *http.Client, req *http.Request) (*http.Response, error) {
+			return &http.Response{
+				Status:     http.StatusText(http.StatusOK),
+				StatusCode: http.StatusOK,
+				Body:       ioutil.NopCloser(bytes.NewBuffer([]byte(`{"errcode":0,"errmsg":"ok"}`))),
+			}, nil
+		})
+		defer patches.Reset()
+
 		w, err := NewDingTalkWriterWithOptions(&DingTalkWriterOptions{
-			AccessToken:         "fbade6a40c8110b14f499f736a3f257ead441a0e75e1cb5471679ae6d79aea0c",
-			Secret:              "SEC01ae9d8839d281c45d0e1eb3dab7ef167431873b5a5b3ba002e3324dc2b39b53",
+			AccessToken:         "test-token",
+			Secret:              "test-secret",
 			Title:               "测试",
 			DialTimeout:         3 * time.Second,
 			Timeout:             6 * time.Second,
