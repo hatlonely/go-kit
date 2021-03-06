@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 
 	"github.com/hatlonely/go-kit/cast"
@@ -14,15 +15,8 @@ import (
 	"github.com/hatlonely/go-kit/wrap"
 )
 
-type ElasticSearchWriter struct {
-	esCli    *wrap.ESClientWrapper
-	messages chan *logger.Info
-	wg       sync.WaitGroup
-
-	options *ElasticSearchWriterOptions
-}
-
 type ElasticSearchWriterOptions struct {
+	Level      string
 	Index      string
 	IDField    string
 	Timeout    time.Duration `dft:"200ms"`
@@ -33,8 +27,12 @@ type ElasticSearchWriterOptions struct {
 }
 
 func NewElasticSearchWriterWithOptions(options *ElasticSearchWriterOptions) (*ElasticSearchWriter, error) {
-	client, err := wrap.NewESClientWrapperWithOptions(&options.ESClientWrapper)
+	level, err := logger.LevelString(options.Level)
+	if err != nil {
+		return nil, errors.Wrap(err, "LevelToString failed")
+	}
 
+	client, err := wrap.NewESClientWrapperWithOptions(&options.ESClientWrapper)
 	if err != nil {
 		return nil, err
 	}
@@ -46,6 +44,7 @@ func NewElasticSearchWriterWithOptions(options *ElasticSearchWriterOptions) (*El
 	}
 
 	w := &ElasticSearchWriter{
+		level:    level,
 		esCli:    client,
 		messages: make(chan *logger.Info, options.MsgChanLen),
 		options:  options,
@@ -62,7 +61,20 @@ func NewElasticSearchWriterWithOptions(options *ElasticSearchWriterOptions) (*El
 	return w, nil
 }
 
+type ElasticSearchWriter struct {
+	options *ElasticSearchWriterOptions
+	level   logger.Level
+
+	esCli    *wrap.ESClientWrapper
+	messages chan *logger.Info
+	wg       sync.WaitGroup
+}
+
 func (w *ElasticSearchWriter) Write(info *logger.Info) error {
+	if info.Level < w.level {
+		return nil
+	}
+
 	w.messages <- info
 	return nil
 }

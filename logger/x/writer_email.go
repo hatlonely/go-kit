@@ -14,6 +14,8 @@ import (
 )
 
 type EmailWriterOptions struct {
+	Level string
+
 	Server   string
 	Port     int
 	Password string
@@ -29,6 +31,11 @@ type EmailWriterOptions struct {
 }
 
 func NewEmailWriterWithOptions(options *EmailWriterOptions) (*EmailWriter, error) {
+	level, err := logger.LevelString(options.Level)
+	if err != nil {
+		return nil, errors.Wrap(err, "LevelToString failed")
+	}
+
 	formatter, err := logger.NewFormatterWithOptions(&options.Formatter)
 	if err != nil {
 		return nil, errors.WithMessage(err, "logger.NewFormatterWithOptions failed")
@@ -36,6 +43,7 @@ func NewEmailWriterWithOptions(options *EmailWriterOptions) (*EmailWriter, error
 
 	w := &EmailWriter{
 		options:   options,
+		level:     level,
 		messages:  make(chan *logger.Info, options.MsgChanLen),
 		formatter: formatter,
 	}
@@ -53,6 +61,7 @@ func NewEmailWriterWithOptions(options *EmailWriterOptions) (*EmailWriter, error
 
 type EmailWriter struct {
 	options   *EmailWriterOptions
+	level     logger.Level
 	formatter logger.Formatter
 
 	messages chan *logger.Info
@@ -60,6 +69,10 @@ type EmailWriter struct {
 }
 
 func (w *EmailWriter) Write(info *logger.Info) error {
+	if info.Level < w.level {
+		return nil
+	}
+
 	w.messages <- info
 	return nil
 }

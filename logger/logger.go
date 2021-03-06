@@ -70,7 +70,7 @@ func NewLoggerWithOptions(options *Options, opts ...refx.Option) (*Logger, error
 	}
 	level, err := LevelString(options.Level)
 	if err != nil {
-		return nil, errors.WithMessage(err, "LevelToString failed")
+		return nil, errors.Wrap(err, "LevelToString failed")
 	}
 	return &Logger{
 		level:   level,

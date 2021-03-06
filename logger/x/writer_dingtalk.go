@@ -22,6 +22,8 @@ import (
 )
 
 type DingTalkWriterOptions struct {
+	Level string
+
 	AccessToken string
 	Secret      string
 	Title       string
@@ -36,6 +38,11 @@ type DingTalkWriterOptions struct {
 }
 
 func NewDingTalkWriterWithOptions(options *DingTalkWriterOptions) (*DingTalkWriter, error) {
+	level, err := logger.LevelString(options.Level)
+	if err != nil {
+		return nil, errors.Wrap(err, "LevelToString failed")
+	}
+
 	formatter, err := logger.NewFormatterWithOptions(&options.Formatter)
 	if err != nil {
 		return nil, errors.WithMessage(err, "logger.NewFormatterWithOptions failed")
@@ -43,6 +50,7 @@ func NewDingTalkWriterWithOptions(options *DingTalkWriterOptions) (*DingTalkWrit
 
 	w := &DingTalkWriter{
 		options:   options,
+		level:     level,
 		messages:  make(chan *logger.Info, options.MsgChanLen),
 		formatter: formatter,
 		cli: &http.Client{
@@ -73,6 +81,7 @@ func NewDingTalkWriterWithOptions(options *DingTalkWriterOptions) (*DingTalkWrit
 
 type DingTalkWriter struct {
 	options   *DingTalkWriterOptions
+	level     logger.Level
 	formatter logger.Formatter
 	cli       *http.Client
 
@@ -98,6 +107,10 @@ type DingTalkError struct {
 }
 
 func (w *DingTalkWriter) Write(info *logger.Info) error {
+	if info.Level < w.level {
+		return nil
+	}
+
 	w.messages <- info
 	return nil
 }
