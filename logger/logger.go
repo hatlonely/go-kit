@@ -21,7 +21,7 @@ func NewStdoutTextLogger() *Logger {
 				Formatter: FormatterOptions{
 					Type: "Text",
 					Options: &TextFormatOptions{
-						Template: "{{.time}} [{{.level}}] [{{.caller}}:{{.file}}] {{.data}}",
+						Template: "{{.Time}} [{{.Level}}] [{{.Caller}}:{{.File}}] [{{.Fields}}] {{.Data}}",
 					},
 				},
 			},
