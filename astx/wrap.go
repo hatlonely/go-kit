@@ -66,6 +66,8 @@ type WrapperGeneratorOptions struct {
 	EnableHystrix            bool                `flag:"usage: enable hystrix code"`
 
 	Rule struct {
+		MainClass                  Rule            // default rule for Constructor/OnWrapperChange/OnRetryChange/OnRateLimiterChange/OnParallelControllerChange
+		Wrap                       map[string]Rule // default rule for Trace/Retry/Metric/RateLimiter/ParallelController
 		Class                      Rule
 		StarClass                  Rule
 		Constructor                Rule
@@ -85,6 +87,15 @@ type WrapperGeneratorOptions struct {
 	}
 }
 
+func fillDefaultRule(dst *Rule, dft Rule) {
+	if dst.Include == nil {
+		dst.Include = dft.Include
+	}
+	if dst.Exclude == nil {
+		dst.Exclude = dft.Exclude
+	}
+}
+
 func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGenerator {
 	wrapClassMap := map[string]string{}
 	starClassSet := map[string]bool{}
@@ -97,24 +108,16 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 	}
 
 	excludeAllRegex := regexp.MustCompile(`.*`)
-	if options.Rule.Constructor.Exclude == nil {
-		options.Rule.Constructor.Exclude = excludeAllRegex
+	if options.Rule.MainClass.Exclude == nil {
+		options.Rule.MainClass.Exclude = excludeAllRegex
 	}
-	if options.Rule.OnWrapperChange.Exclude == nil {
-		options.Rule.OnWrapperChange.Exclude = excludeAllRegex
-	}
-	if options.Rule.OnRetryChange.Exclude == nil {
-		options.Rule.OnRetryChange.Exclude = excludeAllRegex
-	}
-	if options.Rule.OnRateLimiterChange.Exclude == nil {
-		options.Rule.OnRateLimiterChange.Exclude = excludeAllRegex
-	}
-	if options.Rule.OnParallelControllerChange.Exclude == nil {
-		options.Rule.OnParallelControllerChange.Exclude = excludeAllRegex
-	}
-	if options.Rule.CreateMetric.Exclude == nil {
-		options.Rule.CreateMetric.Exclude = excludeAllRegex
-	}
+	fillDefaultRule(&options.Rule.Constructor, options.Rule.MainClass)
+	fillDefaultRule(&options.Rule.OnWrapperChange, options.Rule.MainClass)
+	fillDefaultRule(&options.Rule.OnRetryChange, options.Rule.MainClass)
+	fillDefaultRule(&options.Rule.OnRateLimiterChange, options.Rule.MainClass)
+	fillDefaultRule(&options.Rule.OnParallelControllerChange, options.Rule.MainClass)
+	fillDefaultRule(&options.Rule.CreateMetric, options.Rule.MainClass)
+
 	if options.Rule.StarClass.Exclude == nil {
 		options.Rule.StarClass.Exclude = excludeAllRegex
 	}
@@ -130,6 +133,22 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 				Exclude: regexp.MustCompile(`^.*$`),
 			},
 		}
+	}
+
+	if len(options.Rule.Retry) == 0 {
+		options.Rule.Retry = options.Rule.Wrap
+	}
+	if len(options.Rule.Trace) == 0 {
+		options.Rule.Trace = options.Rule.Wrap
+	}
+	if len(options.Rule.Metric) == 0 {
+		options.Rule.Metric = options.Rule.Wrap
+	}
+	if len(options.Rule.RateLimiter) == 0 {
+		options.Rule.RateLimiter = options.Rule.Wrap
+	}
+	if len(options.Rule.ParallelController) == 0 {
+		options.Rule.ParallelController = options.Rule.Wrap
 	}
 
 	var wrapPackagePrefix string

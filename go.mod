@@ -9,18 +9,22 @@ require (
 	github.com/agiledragon/gomonkey v2.0.1+incompatible
 	github.com/alibabacloud-go/pds-sdk v1.0.5
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.884
+	github.com/aliyun/aliyun-mns-go-sdk v0.0.0-20210305050620-d1b5875bda58
 	github.com/aliyun/aliyun-oss-go-sdk v2.1.6+incompatible
 	github.com/aliyun/aliyun-tablestore-go-sdk v4.1.3+incompatible
 	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/coocood/freecache v1.1.1
 	github.com/emirpasic/gods v1.12.0
+	github.com/facebookgo/stack v0.0.0-20160209184415-751773369052 // indirect
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/generikvault/gvalstrings v0.0.0-20180926130504-471f38f0112a
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/go-redis/redis v6.15.8+incompatible
+	github.com/gogap/errors v0.0.0-20200228125012-531a6449b28c // indirect
+	github.com/gogap/stack v0.0.0-20150131034635-fef68dddd4f8 // indirect
 	github.com/golang/protobuf v1.4.3
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.1-0.20190118093823-f849b5445de4
 	github.com/grpc-ecosystem/grpc-gateway v1.15.2
@@ -41,6 +45,7 @@ require (
 	github.com/tebeka/strftime v0.1.4 // indirect
 	github.com/uber/jaeger-client-go v2.25.0+incompatible
 	github.com/uber/jaeger-lib v2.4.0+incompatible // indirect
+	github.com/valyala/fasthttp v1.22.0 // indirect
 	github.com/yosuke-furukawa/json5 v0.1.1
 	go.mongodb.org/mongo-driver v1.4.3
 	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324
