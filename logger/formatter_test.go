@@ -20,7 +20,7 @@ func TestNewFormatterWithOptions(t *testing.T) {
 
 		Convey("case text", func() {
 			formatter, err := NewFormatterWithOptions(&FormatterOptions{
-				Type: "text",
+				Type: "Text",
 				Options: &TextFormatOptions{
 					Template: "{{.Time}} [{{.Level}}] [{{.Caller}}:{{.File}}] [{{.Fields}}] {{.Data}}",
 				},
