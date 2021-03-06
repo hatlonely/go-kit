@@ -14,7 +14,7 @@ func NewStdoutWriter() *StdoutWriter {
 		Formatter: FormatterOptions{
 			Type: "Text",
 			Options: &TextFormatOptions{
-				Format: "{{.time}} [{{.level}}] [{{.caller}}:{{.file}}] {{.data}}",
+				Template: "{{.Time}} [{{.Level}}] [{{.Caller}}:{{.File}}] [{{.Fields}}] {{.Data}}",
 			},
 		},
 	})
@@ -33,8 +33,8 @@ type StdoutWriter struct {
 	formatter Formatter
 }
 
-func (w *StdoutWriter) Write(kvs map[string]interface{}) error {
-	buf, err := w.formatter.Format(kvs)
+func (w *StdoutWriter) Write(info *Info) error {
+	buf, err := w.formatter.Format(info)
 	if err != nil {
 		return err
 	}

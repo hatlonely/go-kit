@@ -8,9 +8,9 @@ import (
 )
 
 func NewTextFormatterWithOptions(options *TextFormatOptions) (*TextFormatter, error) {
-	tpl, err := template.New(`__Logger_Text_Formatter__`).Parse(options.Format)
+	tpl, err := template.New(`__Logger_Text_Formatter__`).Parse(options.Template)
 	if err != nil {
-		return nil, errors.Wrapf(err, "template.Parse format [%v] failed", options.Format)
+		return nil, errors.Wrapf(err, "template.Parse format [%v] failed", options.Template)
 	}
 	return &TextFormatter{
 		tpl: tpl,
@@ -21,13 +21,13 @@ type TextFormatter struct {
 	tpl *template.Template
 }
 
-func (f *TextFormatter) Format(kvs map[string]interface{}) ([]byte, error) {
+func (f *TextFormatter) Format(info *Info) ([]byte, error) {
 	var buf bytes.Buffer
 
-	err := f.tpl.Execute(&buf, kvs)
+	err := f.tpl.Execute(&buf, info)
 	return buf.Bytes(), err
 }
 
 type TextFormatOptions struct {
-	Format string `dft:"{{.time}} [{{.level}}] [{{.caller}}:{{.file}}] {{.data}}"`
+	Template string `dft:"{{.Time}} [{{.Level}}] [{{.Caller}}:{{.File}}] [{{.Fields}}] {{.Data}}"`
 }

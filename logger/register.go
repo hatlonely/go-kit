@@ -4,6 +4,6 @@ func init() {
 	RegisterWriter("RotateFile", NewRotateFileWriterWithOptions)
 	RegisterWriter("Stdout", NewStdoutWriterWithOptions)
 
-	RegisterFormatter("Json", JsonFormatter{})
+	RegisterFormatter("Json", NewJsonFormatterWithOptions)
 	RegisterFormatter("Text", NewTextFormatterWithOptions)
 }

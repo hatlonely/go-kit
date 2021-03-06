@@ -66,8 +66,8 @@ func NewRotateFileWriter(opts ...RotateFileWriterOption) (*RotateFileWriter, err
 	return NewRotateFileWriterWithOptions(&options)
 }
 
-func (w *RotateFileWriter) Write(kvs map[string]interface{}) error {
-	buf, err := json.Marshal(kvs)
+func (w *RotateFileWriter) Write(info *Info) error {
+	buf, err := w.formatter.Format(info)
 	if err != nil {
 		return err
 	}

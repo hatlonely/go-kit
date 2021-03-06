@@ -23,7 +23,7 @@ func RegisterFormatter(key string, constructor interface{}) {
 var formatterConstructorMap = map[string]*refx.Constructor{}
 
 type Formatter interface {
-	Format(kvs map[string]interface{}) ([]byte, error)
+	Format(info *Info) ([]byte, error)
 }
 
 type FormatterOptions struct {

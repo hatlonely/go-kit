@@ -21,7 +21,7 @@ func NewStdoutTextLogger() *Logger {
 				Formatter: FormatterOptions{
 					Type: "Text",
 					Options: &TextFormatOptions{
-						Format: "{{.time}} [{{.level}}] [{{.caller}}:{{.file}}] {{.data}}",
+						Template: "{{.time}} [{{.level}}] [{{.caller}}:{{.file}}] {{.data}}",
 					},
 				},
 			},
@@ -75,13 +75,11 @@ func NewLoggerWithOptions(options *Options, opts ...refx.Option) (*Logger, error
 	return &Logger{
 		level:   level,
 		writers: writers,
-		flatMap: options.FlatMap,
 	}, nil
 }
 
 type Options struct {
-	Level   string `rule:"x in ['Info', 'Warn', 'Debug', 'Error']"`
-	FlatMap bool
+	Level   string `rule:"x in ['Info', 'Warn', 'Debug', 'Error', 'Fatal']"`
 	Writers []WriterOptions
 }
 
@@ -196,46 +194,46 @@ func (l *Logger) Logf(level Level, format string, args ...interface{}) {
 	l.Log(level, fmt.Sprintf(format, args...))
 }
 
+type Info struct {
+	Time   time.Time
+	Level  Level
+	File   string
+	Caller string
+	Fields map[string]interface{}
+	Data   interface{}
+}
+
 func (l *Logger) Log(level Level, v interface{}) {
 	if level < l.level {
 		return
 	}
-	pc, file, line, _ := runtime.Caller(2)
-	fun := runtime.FuncForPC(pc).Name()
 
-	now := time.Now()
-	kvs := map[string]interface{}{
-		"timestamp": now.Unix(),
-		"time":      now.Format(time.RFC3339Nano),
-		"level":     level.String(),
-		"file":      fmt.Sprintf("%s:%v", path.Base(file), line),
-		"caller":    fun,
-	}
-	if l.flatMap {
-		for key, val := range v.(map[string]interface{}) {
-			kvs[key] = val
-		}
-	} else {
-		kvs["data"] = v
-	}
-
+	fields := map[string]interface{}{}
 	node := l
 	for node.parent != nil {
 		switch node.nodeType {
 		case NodeTypeVal:
-			kvs[node.key] = node.val
+			fields[node.key] = node.val
 		case NodeTypeFunc:
-			kvs[node.key] = node.fun()
+			fields[node.key] = node.fun()
 		case NodeTypeMap:
 			for k, v := range node.kvs {
-				kvs[k] = v
+				fields[k] = v
 			}
 		}
 		node = node.parent
 	}
 
+	pc, file, line, _ := runtime.Caller(2)
 	for _, writer := range node.writers {
-		_ = writer.Write(kvs)
+		_ = writer.Write(&Info{
+			Time:   time.Now(),
+			Level:  level,
+			File:   fmt.Sprintf("%s:%v", path.Base(file), line),
+			Caller: runtime.FuncForPC(pc).Name(),
+			Fields: fields,
+			Data:   v,
+		})
 	}
 }
 

@@ -1,48 +1,43 @@
 package logger
 
 import (
+	"reflect"
 	"testing"
 	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestStdoutWriter(t *testing.T) {
-	Convey("TestStdoutWriter", t, func() {
-		writer, err := NewWriterWithOptions(&WriterOptions{
-			Type: "Stdout",
-			Options: &StdoutWriterOptions{
-				Formatter: FormatterOptions{
-					Type: "Json",
+func TestNewWriterWithOptions(t *testing.T) {
+	Convey("TestNewWriterWithOptions", t, func() {
+		Convey("case stdout", func() {
+			writer, err := NewWriterWithOptions(&WriterOptions{
+				Type: "Stdout",
+				Options: &StdoutWriterOptions{
+					Formatter: FormatterOptions{
+						Type:    "Json",
+						Options: &JsonFormatterOptions{},
+					},
 				},
-			},
+			})
+			So(err, ShouldBeNil)
+			So(reflect.TypeOf(writer).String(), ShouldEqual, "*logger.StdoutWriter")
 		})
 
-		So(err, ShouldBeNil)
-		_ = writer.Write(map[string]interface{}{
-			"key1": "val1",
-			"key2": "val2",
-		})
-	})
-}
-
-func TestRotateFileWriter(t *testing.T) {
-	Convey("TestRotateFileWriter", t, func() {
-		writer, err := NewWriterWithOptions(&WriterOptions{
-			Type: "RotateFile",
-			Options: &RotateFileWriterOptions{
-				Formatter: FormatterOptions{
-					Type: "Json",
+		Convey("case rotate file", func() {
+			writer, err := NewWriterWithOptions(&WriterOptions{
+				Type: "RotateFile",
+				Options: &RotateFileWriterOptions{
+					Filename: "tmp/test.log",
+					MaxAge:   24 * time.Hour,
+					Formatter: FormatterOptions{
+						Type:    "Json",
+						Options: &JsonFormatterOptions{},
+					},
 				},
-				MaxAge:   24 * time.Hour,
-				Filename: "log/test.log",
-			},
-		})
-
-		So(err, ShouldBeNil)
-		_ = writer.Write(map[string]interface{}{
-			"key1": "val1",
-			"key2": "val2",
+			})
+			So(err, ShouldBeNil)
+			So(reflect.TypeOf(writer).String(), ShouldEqual, "*logger.RotateFileWriter")
 		})
 	})
 }

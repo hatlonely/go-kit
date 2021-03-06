@@ -18,7 +18,7 @@ func TestLogger(t *testing.T) {
 					Formatter: FormatterOptions{
 						Type: "Text",
 						Options: &TextFormatOptions{
-							Format: "{{.time}} [{{.level}}] [{{.caller}}:{{.file}}] {{.data}}",
+							Template: "{{.time}} [{{.level}}] [{{.caller}}:{{.file}}] {{.data}}",
 						},
 					},
 				},
@@ -28,7 +28,8 @@ func TestLogger(t *testing.T) {
 					MaxAge:   24 * time.Hour,
 					Filename: "log/test.log",
 					Formatter: FormatterOptions{
-						Type: "Json",
+						Type:    "Json",
+						Options: &JsonFormatterOptions{},
 					},
 				},
 			}},
@@ -62,13 +63,15 @@ func TestNewStdoutLogger(t *testing.T) {
 func TestNewFlatMapLogger(t *testing.T) {
 	Convey("TestNewFlatMapLogger", t, func() {
 		log, _ := NewLoggerWithOptions(&Options{
-			Level:   "Debug",
-			FlatMap: true,
+			Level: "Debug",
 			Writers: []WriterOptions{{
 				Type: "Stdout",
 				Options: &StdoutWriterOptions{
 					Formatter: FormatterOptions{
 						Type: "Json",
+						Options: &JsonFormatterOptions{
+							FlatMap: true,
+						},
 					},
 				},
 			}},
@@ -79,7 +82,7 @@ func TestNewFlatMapLogger(t *testing.T) {
 }
 
 func TestParallel(t *testing.T) {
-	w, err := NewRotateFileWriter(WithRotateFilename("log/test.log"))
+	w, err := NewRotateFileWriter(WithRotateFilename("tmp/test.log"))
 	if err != nil {
 		panic(err)
 	}
@@ -102,8 +105,8 @@ func TestParallel(t *testing.T) {
 	wg.Wait()
 }
 
-func BenchmarkHello(b *testing.B) {
-	w, err := NewRotateFileWriter(WithRotateFilename("log/test.log"))
+func BenchmarkLogger(b *testing.B) {
+	w, err := NewRotateFileWriter(WithRotateFilename("tmp/test.log"))
 	if err != nil {
 		panic(err)
 	}

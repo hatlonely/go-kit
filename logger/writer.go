@@ -24,7 +24,7 @@ func RegisterWriter(key string, constructor interface{}) {
 var writerConstructorMap = map[string]*refx.Constructor{}
 
 type Writer interface {
-	Write(kvs map[string]interface{}) error
+	Write(info *Info) error
 	Close() error
 }
 
