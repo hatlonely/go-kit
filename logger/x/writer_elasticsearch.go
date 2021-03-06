@@ -9,13 +9,14 @@ import (
 	uuid "github.com/satori/go.uuid"
 
 	"github.com/hatlonely/go-kit/cast"
+	"github.com/hatlonely/go-kit/logger"
 	"github.com/hatlonely/go-kit/strx"
 	"github.com/hatlonely/go-kit/wrap"
 )
 
 type ElasticSearchWriter struct {
 	esCli    *wrap.ESClientWrapper
-	messages chan map[string]interface{}
+	messages chan *logger.Info
 	wg       sync.WaitGroup
 
 	options *ElasticSearchWriterOptions
@@ -46,7 +47,7 @@ func NewElasticSearchWriterWithOptions(options *ElasticSearchWriterOptions) (*El
 
 	w := &ElasticSearchWriter{
 		esCli:    client,
-		messages: make(chan map[string]interface{}, options.MsgChanLen),
+		messages: make(chan *logger.Info, options.MsgChanLen),
 		options:  options,
 	}
 
@@ -61,8 +62,8 @@ func NewElasticSearchWriterWithOptions(options *ElasticSearchWriterOptions) (*El
 	return w, nil
 }
 
-func (w *ElasticSearchWriter) Write(kvs map[string]interface{}) error {
-	w.messages <- kvs
+func (w *ElasticSearchWriter) Write(info *logger.Info) error {
+	w.messages <- info
 	return nil
 }
 
@@ -74,13 +75,13 @@ func (w *ElasticSearchWriter) Close() error {
 }
 
 func (w *ElasticSearchWriter) work() {
-	for kvs := range w.messages {
-		if _, ok := kvs[w.options.IDField]; !ok {
-			kvs[w.options.IDField] = uuid.NewV4().String()
+	for info := range w.messages {
+		if _, ok := info.Fields[w.options.IDField]; !ok {
+			info.Fields[w.options.IDField] = uuid.NewV4().String()
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), w.options.Timeout)
-		if _, err := w.esCli.Index().Index(w.options.Index).Id(cast.ToString(kvs[w.options.IDField])).BodyJson(kvs).Do(ctx); err != nil {
-			fmt.Printf("ElasticSearchWriter write log failed. err: [%+v], kvs: [%v]\n", err, strx.JsonMarshal(kvs))
+		if _, err := w.esCli.Index().Index(w.options.Index).Id(cast.ToString(info.Fields[w.options.IDField])).BodyJson(info).Do(ctx); err != nil {
+			fmt.Printf("ElasticSearchWriter write log failed. err: [%+v], kvs: [%v]\n", err, strx.JsonMarshal(info))
 		}
 		cancel()
 	}

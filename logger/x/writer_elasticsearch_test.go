@@ -27,33 +27,37 @@ func TestElasticSearchWriter_Write(t *testing.T) {
 
 	defer patches.Reset()
 
-	Convey("", t, func() {
-		writer, err := logger.NewWriterWithOptions(&logger.WriterOptions{
-			Type: "ElasticSearch",
-			Options: &ElasticSearchWriterOptions{
-				Index:      "hatlonely",
-				IDField:    "requestID",
-				Timeout:    200 * time.Millisecond,
-				MsgChanLen: 200,
-				WorkerNum:  2,
-				ESClientWrapper: wrap.ESClientWrapperOptions{
-					ES: wrap.ESOptions{
-						URI: "http://127.0.0.1:9200",
-					},
+	ts, _ := time.Parse(time.RFC3339Nano, "2020-11-07T16:07:36.65798+08:00")
+	info := &logger.Info{
+		Time:   ts,
+		Level:  logger.LevelInfo,
+		File:   "formatter_test.go:18",
+		Caller: "TextFormatter",
+		Fields: map[string]interface{}{
+			"meta1": "val1",
+			"meta2": "val2",
+		},
+		Data: map[string]interface{}{
+			"key1": "val1",
+			"key2": "val2",
+		},
+	}
+	Convey("TestElasticSearchWriter_Write", t, func() {
+		writer, err := NewElasticSearchWriterWithOptions(&ElasticSearchWriterOptions{
+			Index:      "hatlonely",
+			IDField:    "requestID",
+			Timeout:    200 * time.Millisecond,
+			MsgChanLen: 200,
+			WorkerNum:  2,
+			ESClientWrapper: wrap.ESClientWrapperOptions{
+				ES: wrap.ESOptions{
+					URI: "http://127.0.0.1:9200",
 				},
 			},
 		})
 
 		So(err, ShouldBeNil)
-		_ = writer.Write(map[string]interface{}{
-			"key1": "val1",
-			"key2": "val2",
-		})
-		_ = writer.Write(map[string]interface{}{
-			"key3": "val3",
-			"key4": "val4",
-		})
-
-		defer writer.Close()
+		So(writer.Write(info), ShouldBeNil)
+		So(writer.Close(), ShouldBeNil)
 	})
 }

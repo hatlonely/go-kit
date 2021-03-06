@@ -22,7 +22,23 @@ func TestCalculateDingTalkSign(t *testing.T) {
 }
 
 func TestDingTalkWriter_Write(t *testing.T) {
-	Convey("", t, func() {
+	ts, _ := time.Parse(time.RFC3339Nano, "2020-11-07T16:07:36.65798+08:00")
+	info := &logger.Info{
+		Time:   ts,
+		Level:  logger.LevelInfo,
+		File:   "formatter_test.go:18",
+		Caller: "TextFormatter",
+		Fields: map[string]interface{}{
+			"meta1": "val1",
+			"meta2": "val2",
+		},
+		Data: map[string]interface{}{
+			"key1": "val1",
+			"key2": "val2",
+		},
+	}
+
+	Convey("TestDingTalkWriter_Write", t, func() {
 		patches := ApplyMethod(reflect.TypeOf(&http.Client{}), "Do", func(cli *http.Client, req *http.Request) (*http.Response, error) {
 			return &http.Response{
 				Status:     http.StatusText(http.StatusOK),
@@ -50,25 +66,13 @@ func TestDingTalkWriter_Write(t *testing.T) {
 		})
 		So(err, ShouldBeNil)
 
-		now := time.Now()
-		So(w.Write(map[string]interface{}{
-			"timestamp": now.Unix(),
-			"time":      now.Format(time.RFC3339Nano),
-			"level":     logger.LevelError.String(),
-			"file":      "test-file",
-			"caller":    "test-caller",
-			"data": map[string]interface{}{
-				"key1": "val1",
-				"key2": "val2",
-			},
-		}), ShouldBeNil)
-
+		So(w.Write(info), ShouldBeNil)
 		So(w.Close(), ShouldBeNil)
 	})
 }
 
 func TestLoggerWithDingTalkWriter(t *testing.T) {
-	Convey("", t, func() {
+	Convey("TestLoggerWithDingTalkWriter", t, func() {
 		patches := ApplyMethod(reflect.TypeOf(&http.Client{}), "Do", func(cli *http.Client, req *http.Request) (*http.Response, error) {
 			return &http.Response{
 				Status:     http.StatusText(http.StatusOK),

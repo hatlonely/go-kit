@@ -43,7 +43,7 @@ func NewDingTalkWriterWithOptions(options *DingTalkWriterOptions) (*DingTalkWrit
 
 	w := &DingTalkWriter{
 		options:   options,
-		messages:  make(chan map[string]interface{}, options.MsgChanLen),
+		messages:  make(chan *logger.Info, options.MsgChanLen),
 		formatter: formatter,
 		cli: &http.Client{
 			Transport: &http.Transport{
@@ -76,7 +76,7 @@ type DingTalkWriter struct {
 	formatter logger.Formatter
 	cli       *http.Client
 
-	messages chan map[string]interface{}
+	messages chan *logger.Info
 	wg       sync.WaitGroup
 }
 
@@ -97,8 +97,8 @@ type DingTalkError struct {
 	ErrMsg  string `json:"errmsg"`
 }
 
-func (w *DingTalkWriter) Write(kvs map[string]interface{}) error {
-	w.messages <- kvs
+func (w *DingTalkWriter) Write(info *logger.Info) error {
+	w.messages <- info
 	return nil
 }
 
@@ -110,9 +110,9 @@ func (w *DingTalkWriter) Close() error {
 }
 
 func (w *DingTalkWriter) work() {
-	for kvs := range w.messages {
-		if err := w.send(kvs); err != nil {
-			fmt.Printf("DingTalkWriter write log failed. err: [%+v], kvs: [%v]\n", err, strx.JsonMarshal(kvs))
+	for info := range w.messages {
+		if err := w.send(info); err != nil {
+			fmt.Printf("DingTalkWriter write log failed. err: [%+v], kvs: [%v]\n", err, strx.JsonMarshal(info))
 		}
 	}
 }
@@ -124,10 +124,10 @@ func calculateSign(timestamp int64, secret string) string {
 	return url.QueryEscape(sign)
 }
 
-func (w *DingTalkWriter) send(kvs map[string]interface{}) error {
-	buf, err := w.formatter.Format(kvs)
+func (w *DingTalkWriter) send(info *logger.Info) error {
+	buf, err := w.formatter.Format(info)
 	if err != nil {
-		buf, err = json.Marshal(kvs)
+		buf, err = json.Marshal(info)
 	}
 
 	var message DingTalkMessage
