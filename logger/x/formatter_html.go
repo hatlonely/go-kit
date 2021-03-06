@@ -47,6 +47,5 @@ func (f *HtmlFormatter) Format(info *logger.Info) ([]byte, error) {
 	buf.Write(d)
 	buf.WriteString("\n</code></pre>\n")
 
-	fmt.Println(buf.String())
 	return buf.Bytes(), nil
 }
