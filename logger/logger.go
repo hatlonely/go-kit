@@ -94,7 +94,6 @@ type Logger struct {
 	parent  *Logger
 	writers []Writer
 	level   Level
-	flatMap bool
 
 	nodeType NodeType
 	key      string
@@ -108,7 +107,6 @@ func (l *Logger) With(key string, val interface{}) *Logger {
 		parent:   l,
 		nodeType: NodeTypeVal,
 		level:    l.level,
-		flatMap:  l.flatMap,
 		key:      key,
 		val:      val,
 	}
@@ -119,7 +117,6 @@ func (l *Logger) WithFunc(key string, val func() interface{}) *Logger {
 		parent:   l,
 		nodeType: NodeTypeFunc,
 		level:    l.level,
-		flatMap:  l.flatMap,
 		key:      key,
 		fun:      val,
 	}
@@ -130,7 +127,6 @@ func (l *Logger) WithFields(kvs map[string]interface{}) *Logger {
 		parent:   l,
 		nodeType: NodeTypeMap,
 		level:    l.level,
-		flatMap:  l.flatMap,
 		kvs:      kvs,
 	}
 }
