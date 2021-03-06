@@ -6,6 +6,7 @@ import (
 
 func init() {
 	logger.RegisterFormatter("Markdown", NewMarkdownFormatterWithOptions)
+	logger.RegisterFormatter("Html", NewHtmlFormatterWithOptions)
 
 	logger.RegisterWriter("ElasticSearch", NewElasticSearchWriterWithOptions)
 	logger.RegisterWriter("DingTalk", NewDingTalkWriterWithOptions)

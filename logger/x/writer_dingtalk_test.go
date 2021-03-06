@@ -49,6 +49,7 @@ func TestDingTalkWriter_Write(t *testing.T) {
 		defer patches.Reset()
 
 		w, err := NewDingTalkWriterWithOptions(&DingTalkWriterOptions{
+			Level:               "Info",
 			AccessToken:         "xx",
 			Secret:              "xx",
 			Title:               "测试",
@@ -83,6 +84,7 @@ func TestLoggerWithDingTalkWriter(t *testing.T) {
 		defer patches.Reset()
 
 		w, err := NewDingTalkWriterWithOptions(&DingTalkWriterOptions{
+			Level:               "Info",
 			AccessToken:         "xx",
 			Secret:              "xx",
 			Title:               "测试",

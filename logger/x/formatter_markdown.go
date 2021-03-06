@@ -41,7 +41,7 @@ func (f *MarkdownFormatter) Format(info *logger.Info) ([]byte, error) {
 	}
 
 	buf.WriteString("```json\n")
-	d, _ := json.MarshalIndent(info.Data, "  ", "  ")
+	d, _ := json.MarshalIndent(info.Data, "", "  ")
 	buf.Write(d)
 	buf.WriteString("\n```\n")
 

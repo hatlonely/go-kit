@@ -37,13 +37,13 @@ func TestEmailWriter_Write(t *testing.T) {
 			c.So(string(msg), ShouldStartWith, `From: hatlonely@foxmail.com
 To: hatlonely@foxmail.com
 Subject: 告警测试
-Content-Type: text/html; charset=UTF-8;
-`)
+Content-Type: text/html; charset=UTF-8;`)
 			return nil
 		})
 		defer patches.Reset()
 
 		w, err := NewEmailWriterWithOptions(&EmailWriterOptions{
+			Level:      "Info",
 			Server:     "smtp.qq.com",
 			Port:       25,
 			Username:   "hatlonely@foxmail.com",
@@ -53,8 +53,8 @@ Content-Type: text/html; charset=UTF-8;
 			WorkerNum:  1,
 			MsgChanLen: 200,
 			Formatter: logger.FormatterOptions{
-				Type: "Markdown",
-				Options: &MarkdownFormatterOptions{
+				Type: "Html",
+				Options: &HtmlFormatterOptions{
 					DefaultTitle: "测试告警",
 				},
 			},
