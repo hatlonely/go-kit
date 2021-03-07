@@ -53,7 +53,8 @@ wrap: wrap/autogen_ots.go \
 	wrap/autogen_elasticsearch.go \
 	wrap/autogen_mongo.go \
 	wrap/autogen_redis.go \
-	wrap/autogen_mns.go
+	wrap/autogen_mns.go \
+	wrap/autogen_sms.go
 
 wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 	build/bin/gen wrap --sourcePath vendor \
@@ -87,6 +88,15 @@ wrap/autogen_sts.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--packagePath "github.com/aliyun/alibaba-cloud-sdk-go/services/sts" \
 		--packageName sts \
 		--classPrefix STS \
+		--starClasses Client \
+		--rule.mainClass.include "^Client$$" \
+		--output $@
+
+wrap/autogen_sms.go: build/bin/gen vendor $(wildcard astx/*.go)
+	build/bin/gen wrap --sourcePath vendor \
+		--packagePath "github.com/aliyun/alibaba-cloud-sdk-go/services/dysmsapi" \
+		--packageName dysmsapi \
+		--classPrefix SMS \
 		--starClasses Client \
 		--rule.mainClass.include "^Client$$" \
 		--output $@
