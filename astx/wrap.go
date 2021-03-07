@@ -69,6 +69,7 @@ type WrapperGeneratorOptions struct {
 		MainClass                  Rule            // default rule for Constructor/OnWrapperChange/OnRetryChange/OnRateLimiterChange/OnParallelControllerChange
 		Wrap                       map[string]Rule // default rule for Trace/Retry/Metric/RateLimiter/ParallelController
 		Class                      Rule
+		Interface                  Rule
 		StarClass                  Rule
 		Constructor                Rule
 		OnWrapperChange            Rule
@@ -127,6 +128,9 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 	if options.Rule.ErrorInResult.Exclude == nil {
 		options.Rule.ErrorInResult.Exclude = excludeAllRegex
 	}
+	if options.Rule.Interface.Exclude == nil {
+		options.Rule.Interface.Exclude = excludeAllRegex
+	}
 	if len(options.Rule.Hystrix) == 0 {
 		options.Rule.Hystrix = map[string]Rule{
 			"default": {
@@ -179,6 +183,7 @@ type RenderInfo struct {
 	PackagePath       string
 	ErrorField        string
 	Interface         string
+	ObjectType        string
 	EnableHystrix     bool
 	IsStarClass       bool
 	NewLine           string
@@ -203,6 +208,7 @@ type RenderInfo struct {
 		OnRateLimiterChange        bool
 		OnParallelControllerChange bool
 		CreateMetric               bool
+		Interface                  bool
 		Trace                      bool
 		Retry                      bool
 		Metric                     bool
@@ -276,8 +282,14 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		info.Rule.OnRateLimiterChange = g.MatchRule(cls, g.options.Rule.OnRateLimiterChange)
 		info.Rule.OnParallelControllerChange = g.MatchRule(cls, g.options.Rule.OnParallelControllerChange)
 		info.Rule.CreateMetric = g.MatchRule(cls, g.options.Rule.CreateMetric)
+		info.Rule.Interface = g.MatchRule(cls, g.options.Rule.Interface)
 		info.IsStarClass = g.starClassSet[cls]
 		info.Interface = fmt.Sprintf("I%s%s", g.options.ClassPrefix, cls)
+		if info.Rule.Interface {
+			info.ObjectType = fmt.Sprintf("%s.%s", info.Package, info.Class)
+		} else {
+			info.ObjectType = fmt.Sprintf("*%s.%s", info.Package, info.Class)
+		}
 
 		if g.options.Debug {
 			fmt.Printf("process class: %v, info: %v\n", cls, strx.JsonMarshalIndent(info))
@@ -456,7 +468,7 @@ const WrapperClassTpl = `
 {{- if .Rule.Constructor}}
 
 func New{{.WrapClass}}(
-	obj *{{.Package}}.{{.Class}},
+	obj {{.ObjectType}},
 	retry *micro.Retry,
 	options *{{.WrapPackagePrefix}}WrapperOptions,
 	durationMetric *prometheus.HistogramVec,
@@ -476,7 +488,7 @@ func New{{.WrapClass}}(
 {{- end}}
 
 type {{.WrapClass}} struct {
-	obj                *{{.Package}}.{{.Class}}
+	obj                {{.ObjectType}}
 {{- if .EnableHystrix}}
 	backupObj          {{.Interface}}
 {{- end}}
@@ -489,11 +501,11 @@ type {{.WrapClass}} struct {
 }
 
 {{- if .IsStarClass}}
-func (w *{{.WrapClass}}) {{.UnwrapFunc}}() *{{.Package}}.{{.Class}} {
+func (w *{{.WrapClass}}) {{.UnwrapFunc}}() {{.ObjectType}} {
 	return w.obj
 }
 {{- else}}
-func (w {{.WrapClass}}) {{.UnwrapFunc}}() *{{.Package}}.{{.Class}} {
+func (w {{.WrapClass}}) {{.UnwrapFunc}}() {{.ObjectType}} {
 	return w.obj
 }
 {{- end}}

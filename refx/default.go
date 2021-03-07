@@ -2,6 +2,7 @@ package refx
 
 import (
 	"reflect"
+	"regexp"
 	"sync"
 	"time"
 
@@ -13,13 +14,13 @@ import (
 var mutex sync.RWMutex
 var defaultValueMap = map[reflect.Type]reflect.Value{}
 
-func SetDefaultValueP(v interface{}) {
-	if err := SetDefaultValue(v); err != nil {
+func SetDefaultValueCopyP(v interface{}) {
+	if err := SetDefaultValueCopy(v); err != nil {
 		panic(err)
 	}
 }
 
-func SetDefaultValue(v interface{}) error {
+func SetDefaultValueCopy(v interface{}) error {
 	if reflect.ValueOf(v).IsNil() {
 		return nil
 	}
@@ -37,7 +38,7 @@ func SetDefaultValue(v interface{}) error {
 	}
 	mutex.RUnlock()
 
-	if err := setDefaultValue(v); err != nil {
+	if err := SetDefaultValue(v); err != nil {
 		return err
 	}
 
@@ -50,7 +51,13 @@ func SetDefaultValue(v interface{}) error {
 	return nil
 }
 
-func setDefaultValue(v interface{}) error {
+func SetDefaultValueP(v interface{}) {
+	if err := SetDefaultValue(v); err != nil {
+		panic(err)
+	}
+}
+
+func SetDefaultValue(v interface{}) error {
 	if reflect.TypeOf(v).Kind() != reflect.Ptr || reflect.TypeOf(v).Elem().Kind() != reflect.Struct {
 		return errors.Errorf("expect a struct point. got [%v]", reflect.TypeOf(v))
 	}
@@ -61,10 +68,9 @@ func setDefaultValue(v interface{}) error {
 		if !rv.Field(i).CanSet() {
 			continue
 		}
-
-		if rt.Field(i).Type.Kind() == reflect.Struct && rt.Field(i).Type != reflect.TypeOf(time.Time{}) {
+		if rt.Field(i).Type.Kind() == reflect.Struct && rt.Field(i).Type != reflect.TypeOf(time.Time{}) && rt.Field(i).Type != reflect.TypeOf(regexp.Regexp{}) {
 			if err := SetDefaultValue(rv.Field(i).Addr().Interface()); err != nil {
-				return errors.WithMessage(err, "SetDefaultValue failed")
+				return errors.WithMessage(err, "SetDefaultValueCopy failed")
 			}
 			continue
 		}

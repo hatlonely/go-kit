@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"reflect"
+	"regexp"
 	"testing"
 	"time"
 
@@ -33,6 +34,28 @@ func TestReflectCopy(t *testing.T) {
 		So(a1.Key2, ShouldEqual, 3)
 		So(a2.Key1, ShouldEqual, "val1")
 		So(a2.Key2, ShouldEqual, 2)
+	})
+}
+
+func TestSetDefaultValueP(t *testing.T) {
+	Convey("TestSetDefaultValueP", t, func() {
+		type A struct {
+			Key1 string `dft:"val1"`
+			Key2 int    `dft:"2"`
+		}
+
+		var a A
+		SetDefaultValueCopyP(&a)
+
+		So(a.Key1, ShouldEqual, "val1")
+		So(a.Key2, ShouldEqual, 2)
+		a.Key1 = "hello"
+		So(a.Key1, ShouldEqual, "hello")
+
+		var b A
+		SetDefaultValueCopyP(&b)
+		So(b.Key1, ShouldEqual, "val1")
+		So(b.Key2, ShouldEqual, 2)
 	})
 }
 
@@ -68,7 +91,7 @@ func TestSetDefaultValue(t *testing.T) {
 		Convey("case normal", func() {
 			var v B
 			v.A2 = &A{}
-			So(SetDefaultValue(&v), ShouldBeNil)
+			So(SetDefaultValueCopy(&v), ShouldBeNil)
 
 			So(v.Key1, ShouldEqual, "val1")
 			So(v.Key2, ShouldEqual, 2)
@@ -89,16 +112,38 @@ func TestSetDefaultValue(t *testing.T) {
 		Convey("case nil", func() {
 			var v *B
 			fmt.Println(v)
-			So(SetDefaultValue(v), ShouldBeNil)
+			So(SetDefaultValueCopy(v), ShouldBeNil)
 		})
 
 		Convey("case non point", func() {
 			var v B
-			So(setDefaultValue(v), ShouldNotBeNil)
+			So(SetDefaultValue(v), ShouldNotBeNil)
 			So(func() {
-				SetDefaultValueP(v)
+				SetDefaultValueCopyP(v)
 			}, ShouldPanic)
 		})
+	})
+}
+
+func TestDeepCopy(t *testing.T) {
+	Convey("TestDeepCopy", t, func() {
+		type A struct {
+			Key1 *regexp.Regexp `dft:"val1"`
+			Key2 *regexp.Regexp `dft:"val2"`
+		}
+
+		var a1 A
+		SetDefaultValueP(&a1)
+		So(a1.Key1.String(), ShouldEqual, "val1")
+		So(a1.Key2.String(), ShouldEqual, "val2")
+
+		a1.Key1 = regexp.MustCompile("val3")
+		a1.Key2 = regexp.MustCompile("val4")
+
+		var a2 A
+		SetDefaultValueP(&a2)
+		So(a2.Key1.String(), ShouldEqual, "val1")
+		So(a2.Key2.String(), ShouldEqual, "val2")
 	})
 }
 
@@ -133,14 +178,14 @@ func BenchmarkSetDefaultValue(b *testing.B) {
 	b.Run("set default with cache", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			var v B
-			_ = SetDefaultValue(&v)
+			_ = SetDefaultValueCopy(&v)
 		}
 	})
 
 	b.Run("set default 1", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			var v B
-			_ = setDefaultValue(&v)
+			_ = SetDefaultValue(&v)
 		}
 	})
 }
@@ -176,7 +221,7 @@ func BenchmarkSetDefaultValue2(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			var v B
-			_ = SetDefaultValue(&v)
+			_ = SetDefaultValueCopy(&v)
 		}
 	})
 }

@@ -13,7 +13,7 @@ import (
 func TestNewRetryWithOptions(t *testing.T) {
 	Convey("TestNewRetryWithOptions", t, func() {
 		var options RetryOptions
-		refx.SetDefaultValueP(&options)
+		refx.SetDefaultValueCopyP(&options)
 		Convey("default", func() {
 			So(options.Attempts, ShouldEqual, 3)
 			So(options.Delay, ShouldEqual, time.Second)
@@ -60,7 +60,7 @@ func TestParseDelayType(t *testing.T) {
 func TestRetry_Do(t *testing.T) {
 	Convey("TestRetry_Do", t, func() {
 		var options RetryOptions
-		refx.SetDefaultValueP(&options)
+		refx.SetDefaultValueCopyP(&options)
 		retry, err := NewRetryWithOptions(&options)
 		So(err, ShouldBeNil)
 

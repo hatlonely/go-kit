@@ -119,6 +119,15 @@ wrap/autogen_pds.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--rule.mainClass.include "^Client$$" \
 		--output $@
 
+wrap/autogen_mns.go: build/bin/gen vendor $(wildcard astx/*.go)
+	build/bin/gen wrap --sourcePath vendor \
+		--packagePath "github.com/aliyun/aliyun-mns-go-sdk" \
+		--packageName ali_mns \
+		--starClasses MNSClient,MNSQueue,MNSTopic \
+		--rule.mainClass.include "^MNSClient$$" \
+		--rule.interface.include "^MNSClient$$" \
+		--output $@
+
 wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
 	build/bin/gen wrap --sourcePath vendor \
 		--packagePath "github.com/jinzhu/gorm" \
