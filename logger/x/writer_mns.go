@@ -16,13 +16,13 @@ import (
 )
 
 type MNSWriterOptions struct {
-	Level            string
-	MsgChanLen       int `dft:"200"`
-	WorkerNum        int `dft:"1"`
-	Formatter        logger.FormatterOptions
-	MNSClientWrapper wrap.MNSClientWrapperOptions
-	Topic            string
-	Timeout          time.Duration `dft:"3s"`
+	MNS        wrap.MNSClientWrapperOptions
+	Level      string
+	MsgChanLen int `dft:"200"`
+	WorkerNum  int `dft:"1"`
+	Formatter  logger.FormatterOptions
+	Topic      string
+	Timeout    time.Duration `dft:"3s"`
 }
 
 func NewMNSWriterWithOptions(options *MNSWriterOptions) (*MNSWriter, error) {
@@ -36,7 +36,7 @@ func NewMNSWriterWithOptions(options *MNSWriterOptions) (*MNSWriter, error) {
 		return nil, errors.WithMessage(err, "logger.NewFormatterWithOptions failed")
 	}
 
-	client, err := wrap.NewMNSClientWrapperWithOptions(&options.MNSClientWrapper)
+	client, err := wrap.NewMNSClientWrapperWithOptions(&options.MNS)
 	if err != nil {
 		return nil, errors.WithMessage(err, "wrap.NewMNSClientWrapperWithOptions failed")
 	}

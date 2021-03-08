@@ -16,14 +16,13 @@ import (
 )
 
 type ElasticSearchWriterOptions struct {
+	ES         wrap.ESClientWrapperOptions
 	Level      string
 	Index      string
 	IDField    string
 	Timeout    time.Duration `dft:"200ms"`
 	MsgChanLen int           `dft:"200"`
 	WorkerNum  int           `dft:"1"`
-
-	ESClientWrapper wrap.ESClientWrapperOptions
 }
 
 func NewElasticSearchWriterWithOptions(options *ElasticSearchWriterOptions) (*ElasticSearchWriter, error) {
@@ -32,14 +31,14 @@ func NewElasticSearchWriterWithOptions(options *ElasticSearchWriterOptions) (*El
 		return nil, errors.Wrap(err, "LevelToString failed")
 	}
 
-	client, err := wrap.NewESClientWrapperWithOptions(&options.ESClientWrapper)
+	client, err := wrap.NewESClientWrapperWithOptions(&options.ES)
 	if err != nil {
 		return nil, err
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
 	defer cancel()
-	if _, _, err := client.Ping(options.ESClientWrapper.ES.URI).Do(ctx); err != nil {
+	if _, _, err := client.Ping(options.ES.ES.URI).Do(ctx); err != nil {
 		return nil, err
 	}
 

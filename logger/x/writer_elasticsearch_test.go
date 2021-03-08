@@ -50,7 +50,7 @@ func TestElasticSearchWriter_Write(t *testing.T) {
 			Timeout:    200 * time.Millisecond,
 			MsgChanLen: 200,
 			WorkerNum:  2,
-			ESClientWrapper: wrap.ESClientWrapperOptions{
+			ES: wrap.ESClientWrapperOptions{
 				ES: wrap.ESOptions{
 					URI: "http://127.0.0.1:9200",
 				},
