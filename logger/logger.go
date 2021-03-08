@@ -186,6 +186,10 @@ func (l *Logger) Errorf(format string, args ...interface{}) {
 	l.Logf(LevelError, format, args...)
 }
 
+func (l *Logger) Fatalf(format string, args ...interface{}) {
+	l.Logf(LevelFatal, format, args...)
+}
+
 func (l *Logger) Logf(level Level, format string, args ...interface{}) {
 	l.Log(level, fmt.Sprintf(format, args...))
 }
