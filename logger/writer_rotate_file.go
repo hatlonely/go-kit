@@ -21,7 +21,7 @@ type RotateFileWriterOptions struct {
 }
 
 func NewRotateFileWriterWithConfig(cfg *config.Config, opts ...refx.Option) (*RotateFileWriter, error) {
-	options := defaultRotateFileWriterOptions
+	var options RotateFileWriterOptions
 	if err := cfg.Unmarshal(&options, opts...); err != nil {
 		return nil, err
 	}
@@ -101,13 +101,6 @@ func (w *RotateFileWriter) Write(info *Info) error {
 
 func (w *RotateFileWriter) Close() error {
 	return w.out.Close()
-}
-
-var defaultRotateFileWriterOptions = RotateFileWriterOptions{
-	MaxAge: time.Hour,
-	Formatter: FormatterOptions{
-		Type: "Json",
-	},
 }
 
 type RotateFileWriterOption func(*RotateFileWriterOptions)
