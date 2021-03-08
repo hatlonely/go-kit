@@ -108,13 +108,13 @@ func (w *STSClientWrapper) OnParallelControllerChange(opts ...refx.Option) confi
 
 func (w *STSClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:        "sts_Client_durationMs",
+		Name:        fmt.Sprintf("%s_sts_Client_durationMs", options.Name),
 		Help:        "sts Client response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
 	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name:        "sts_Client_inflight",
+		Name:        fmt.Sprintf("%s_sts_Client_inflight", options.Name),
 		Help:        "sts Client inflight",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "custom"})

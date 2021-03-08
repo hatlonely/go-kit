@@ -112,13 +112,13 @@ func (w *MongoClientWrapper) OnParallelControllerChange(opts ...refx.Option) con
 
 func (w *MongoClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:        "mongo_Client_durationMs",
+		Name:        fmt.Sprintf("%s_mongo_Client_durationMs", options.Name),
 		Help:        "mongo Client response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
 	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name:        "mongo_Client_inflight",
+		Name:        fmt.Sprintf("%s_mongo_Client_inflight", options.Name),
 		Help:        "mongo Client inflight",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "custom"})

@@ -584,13 +584,13 @@ func (w *{{.WrapClass}}) OnParallelControllerChange(opts ...refx.Option) config.
 
 func (w *{{.WrapClass}}) CreateMetric(options *{{.WrapPackagePrefix}}WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:        "{{.Package}}_{{.Class}}_durationMs",
+		Name:        fmt.Sprintf("%s_{{.Package}}_{{.Class}}_durationMs", options.Name),
 		Help:        "{{.Package}} {{.Class}} response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
 	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name:        "{{.Package}}_{{.Class}}_inflight",
+		Name:        fmt.Sprintf("%s_{{.Package}}_{{.Class}}_inflight", options.Name),
 		Help:        "{{.Package}} {{.Class}} inflight",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "custom"})

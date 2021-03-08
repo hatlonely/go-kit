@@ -108,13 +108,13 @@ func (w *SMSClientWrapper) OnParallelControllerChange(opts ...refx.Option) confi
 
 func (w *SMSClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:        "dysmsapi_Client_durationMs",
+		Name:        fmt.Sprintf("%s_dysmsapi_Client_durationMs", options.Name),
 		Help:        "dysmsapi Client response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
 	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name:        "dysmsapi_Client_inflight",
+		Name:        fmt.Sprintf("%s_dysmsapi_Client_inflight", options.Name),
 		Help:        "dysmsapi Client inflight",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "custom"})

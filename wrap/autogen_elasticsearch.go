@@ -263,13 +263,13 @@ func (w *ESClientWrapper) OnParallelControllerChange(opts ...refx.Option) config
 
 func (w *ESClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:        "elastic_Client_durationMs",
+		Name:        fmt.Sprintf("%s_elastic_Client_durationMs", options.Name),
 		Help:        "elastic Client response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
 	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name:        "elastic_Client_inflight",
+		Name:        fmt.Sprintf("%s_elastic_Client_inflight", options.Name),
 		Help:        "elastic Client inflight",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "custom"})

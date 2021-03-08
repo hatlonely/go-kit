@@ -108,13 +108,13 @@ func (w *MNSClientWrapper) OnParallelControllerChange(opts ...refx.Option) confi
 
 func (w *MNSClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:        "ali_mns_MNSClient_durationMs",
+		Name:        fmt.Sprintf("%s_ali_mns_MNSClient_durationMs", options.Name),
 		Help:        "ali_mns MNSClient response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
 	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name:        "ali_mns_MNSClient_inflight",
+		Name:        fmt.Sprintf("%s_ali_mns_MNSClient_inflight", options.Name),
 		Help:        "ali_mns MNSClient inflight",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "custom"})

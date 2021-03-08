@@ -108,13 +108,13 @@ func (w *OTSTableStoreClientWrapper) OnParallelControllerChange(opts ...refx.Opt
 
 func (w *OTSTableStoreClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:        "tablestore_TableStoreClient_durationMs",
+		Name:        fmt.Sprintf("%s_tablestore_TableStoreClient_durationMs", options.Name),
 		Help:        "tablestore TableStoreClient response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
 	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name:        "tablestore_TableStoreClient_inflight",
+		Name:        fmt.Sprintf("%s_tablestore_TableStoreClient_inflight", options.Name),
 		Help:        "tablestore TableStoreClient inflight",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "custom"})

@@ -108,13 +108,13 @@ func (w *RedisClientWrapper) OnParallelControllerChange(opts ...refx.Option) con
 
 func (w *RedisClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:        "redis_Client_durationMs",
+		Name:        fmt.Sprintf("%s_redis_Client_durationMs", options.Name),
 		Help:        "redis Client response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
 	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name:        "redis_Client_inflight",
+		Name:        fmt.Sprintf("%s_redis_Client_inflight", options.Name),
 		Help:        "redis Client inflight",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "custom"})
@@ -211,13 +211,13 @@ func (w *RedisClusterClientWrapper) OnParallelControllerChange(opts ...refx.Opti
 
 func (w *RedisClusterClientWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:        "redis_ClusterClient_durationMs",
+		Name:        fmt.Sprintf("%s_redis_ClusterClient_durationMs", options.Name),
 		Help:        "redis ClusterClient response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
 	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name:        "redis_ClusterClient_inflight",
+		Name:        fmt.Sprintf("%s_redis_ClusterClient_inflight", options.Name),
 		Help:        "redis ClusterClient inflight",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "custom"})

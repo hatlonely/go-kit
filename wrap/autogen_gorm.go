@@ -123,13 +123,13 @@ func (w *GORMDBWrapper) OnParallelControllerChange(opts ...refx.Option) config.O
 
 func (w *GORMDBWrapper) CreateMetric(options *WrapperOptions) {
 	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:        "gorm_DB_durationMs",
+		Name:        fmt.Sprintf("%s_gorm_DB_durationMs", options.Name),
 		Help:        "gorm DB response time milliseconds",
 		Buckets:     options.Metric.Buckets,
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "errCode", "custom"})
 	w.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name:        "gorm_DB_inflight",
+		Name:        fmt.Sprintf("%s_gorm_DB_inflight", options.Name),
 		Help:        "gorm DB inflight",
 		ConstLabels: options.Metric.ConstLabels,
 	}, []string{"method", "custom"})
