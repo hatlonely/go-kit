@@ -47,7 +47,7 @@ func TestMNSWriter_Write(t *testing.T) {
 					DefaultTitle: "测试告警",
 				},
 			},
-			MNS: wrap.MNSClientWrapperOptions{
+			MNSClientWrapper: wrap.MNSClientWrapperOptions{
 				MNS: wrap.MNSOptions{
 					Endpoint:        "http://xx.mns.cn-shanghai.aliyuncs.com/",
 					AccessKeyID:     "xx",
