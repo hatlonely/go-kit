@@ -25,6 +25,7 @@ func TestLogger(t *testing.T) {
 			}, {
 				Type: "RotateFile",
 				Options: &RotateFileWriterOptions{
+					Level:    "Info",
 					MaxAge:   24 * time.Hour,
 					Filename: "log/test.log",
 					Formatter: FormatterOptions{

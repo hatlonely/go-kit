@@ -22,7 +22,7 @@ import (
 )
 
 type DingTalkWriterOptions struct {
-	Level string
+	Level string `dft:"Debug"`
 
 	AccessToken string
 	Secret      string

@@ -13,9 +13,11 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-type RotateFileWriter struct {
-	out       *rotatelogs.RotateLogs
-	formatter Formatter
+type RotateFileWriterOptions struct {
+	Level     string        `dft:"Debug"`
+	Filename  string        `bind:"required"`
+	MaxAge    time.Duration `dft:"24h"`
+	Formatter FormatterOptions
 }
 
 func NewRotateFileWriterWithConfig(cfg *config.Config, opts ...refx.Option) (*RotateFileWriter, error) {
@@ -27,6 +29,11 @@ func NewRotateFileWriterWithConfig(cfg *config.Config, opts ...refx.Option) (*Ro
 }
 
 func NewRotateFileWriterWithOptions(options *RotateFileWriterOptions, opts ...refx.Option) (*RotateFileWriter, error) {
+	level, err := LevelString(options.Level)
+	if err != nil {
+		return nil, errors.Wrap(err, "LevelToString failed")
+	}
+
 	formatter, err := NewFormatterWithOptions(&options.Formatter, opts...)
 	if err != nil {
 		return nil, errors.WithMessage(err, "NewFormatterWithOptions failed")
@@ -52,13 +59,21 @@ func NewRotateFileWriterWithOptions(options *RotateFileWriterOptions, opts ...re
 	}
 
 	return &RotateFileWriter{
+		level:     level,
 		out:       out,
 		formatter: formatter,
 	}, nil
 }
 
+type RotateFileWriter struct {
+	level     Level
+	out       *rotatelogs.RotateLogs
+	formatter Formatter
+}
+
 func NewRotateFileWriter(opts ...RotateFileWriterOption) (*RotateFileWriter, error) {
-	options := defaultRotateFileWriterOptions
+	var options RotateFileWriterOptions
+	refx.SetDefaultValueP(&options)
 	for _, opt := range opts {
 		opt(&options)
 	}
@@ -67,6 +82,10 @@ func NewRotateFileWriter(opts ...RotateFileWriterOption) (*RotateFileWriter, err
 }
 
 func (w *RotateFileWriter) Write(info *Info) error {
+	if info.Level < w.level {
+		return nil
+	}
+
 	buf, err := w.formatter.Format(info)
 	if err != nil {
 		return err
@@ -82,12 +101,6 @@ func (w *RotateFileWriter) Write(info *Info) error {
 
 func (w *RotateFileWriter) Close() error {
 	return w.out.Close()
-}
-
-type RotateFileWriterOptions struct {
-	Filename  string        `bind:"required"`
-	MaxAge    time.Duration `dft:"24h"`
-	Formatter FormatterOptions
 }
 
 var defaultRotateFileWriterOptions = RotateFileWriterOptions{

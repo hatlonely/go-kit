@@ -28,6 +28,7 @@ func TestRotateFileWriter(t *testing.T) {
 		writer, err := NewWriterWithOptions(&WriterOptions{
 			Type: "RotateFile",
 			Options: &RotateFileWriterOptions{
+				Level: "Info",
 				Formatter: FormatterOptions{
 					Type: "Json",
 				},

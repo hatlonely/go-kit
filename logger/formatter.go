@@ -27,7 +27,7 @@ type Formatter interface {
 }
 
 type FormatterOptions struct {
-	Type    string
+	Type    string `dft:"Json"`
 	Options interface{}
 }
 

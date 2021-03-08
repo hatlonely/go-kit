@@ -14,7 +14,7 @@ import (
 )
 
 type EmailWriterOptions struct {
-	Level string
+	Level string `dft:"Debug"`
 
 	Server   string
 	Port     int

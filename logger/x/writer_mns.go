@@ -17,9 +17,9 @@ import (
 
 type MNSWriterOptions struct {
 	MNS        wrap.MNSClientWrapperOptions
-	Level      string
-	MsgChanLen int `dft:"200"`
-	WorkerNum  int `dft:"1"`
+	Level      string `dft:"Debug"`
+	MsgChanLen int    `dft:"200"`
+	WorkerNum  int    `dft:"1"`
 	Formatter  logger.FormatterOptions
 	Topic      string
 	Timeout    time.Duration `dft:"3s"`

@@ -28,6 +28,7 @@ func TestNewWriterWithOptions(t *testing.T) {
 			writer, err := NewWriterWithOptions(&WriterOptions{
 				Type: "RotateFile",
 				Options: &RotateFileWriterOptions{
+					Level:    "Info",
 					Filename: "tmp/test.log",
 					MaxAge:   24 * time.Hour,
 					Formatter: FormatterOptions{

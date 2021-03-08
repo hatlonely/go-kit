@@ -17,7 +17,7 @@ import (
 
 type ElasticSearchWriterOptions struct {
 	ES         wrap.ESClientWrapperOptions
-	Level      string
+	Level      string `dft:"Debug"`
 	Index      string
 	IDField    string
 	Timeout    time.Duration `dft:"200ms"`
