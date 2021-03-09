@@ -48,37 +48,30 @@ func main() {
 			strx.Trac(f.Usage())
 			strx.Trac(`Example:
   gen wrap --sourcePath vendor \
-      --packagePath "go.mongodb.org/mongo-driver/mongo" \
-      --packageName mongo \
-      --classPrefix Mongo \
-      --rule.starClass '{"include": "^(?i:(Client)|(Database)|(Collection))$$", "exclude": ".*"}' \
-      --rule.createMetric.include "^Client$$" \
-      --rule.onWrapperChange.include "^Client$$" \
-      --rule.onRetryChange.include "^Client$$" \
-      --rule.trace '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
-      --rule.metric '{"Client": {"exclude": "^Database$$"}, "Database": {"exclude": "^Collection$$"}}' \
-      --output wrap/autogen_mongo.go
-  gen wrap --sourcePath vendor \
       --packagePath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" \
       --packageName tablestore \
       --classPrefix OTS \
       --starClasses TableStoreClient \
-      --rule.createMetric.include "^TableStoreClient$$" \
-      --rule.onWrapperChange.include "^TableStoreClient$$" \
-      --rule.onRetryChange.include "^TableStoreClient$$" \
-      --output wrap/autogen_ots.go
+      --rule.mainClass.include "^TableStoreClient$$" \
+      --output $@
   gen wrap --sourcePath vendor \
-      --packagePath "github.com/olivere/elastic/v7" \
+      --packagePath "github.com/go-redis/redis" \
+      --packageName redis \
+      --classPrefix Redis \
+      --errorField "Err()" \
+      --inherit '{"Client": ["cmdable", "baseClient"], "ClusterClient": ["cmdable"]}' \
+      --starClasses Client,ClusterClient \
+      --rule.mainClass.include "^(?i:(Client)|(ClusterClient))$$" \
+      --rule.errorInResult.include "^\*redis\..*Cmd$$" \
+      --output $@
+  gen wrap --sourcePath vendor \
+  	  --packagePath "github.com/olivere/elastic/v7" \
       --packageName elastic \
       --classPrefix ES \
       --rule.starClass '{"include": "^(?i:(Client)|(.*Service))$$", "exclude": ".*"}' \
-      --rule.createMetric.include "^Client$$" \
-      --rule.onWrapperChange.include "^Client$$" \
-      --rule.onRetryChange.include "^Client$$" \
-      --rule.trace '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
-      --rule.retry '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
-      --rule.metric '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
-      --output wrap/autogen_elasticsearch.go
+      --rule.mainClass.include "^Client$$" \
+      --rule.wrap '{"default": {"exclude": ".*", "include": "^(Do)|(DoAsync)$$"}, "Client": {"exclude": ".*"}}' \
+      --output $@
 `)
 		default:
 			strx.Trac(flag.Usage())
