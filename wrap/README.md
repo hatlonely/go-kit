@@ -13,6 +13,18 @@
 7. 阿里 client 支持从 ecs role 中获取授权信息
 8. wrap 代码由自动生成
 
+## Quick Start
+
+```shell
+client, err := wrap.NewOTSTableStoreClientWrapperWithOptions(&OTSTableStoreClientWrapperOptions{...})
+refx.Muxt(err)
+
+res, err := client.GetRow(ctx, &tablestore.GetRowRequest{...})
+if err != nil {
+  ...
+}
+```
+
 ## Context
 
 在 Context 中可以传递一些动态的选项，用来改变函数执行的逻辑
