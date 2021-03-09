@@ -1,12 +1,15 @@
 ## Feature
 
-1. 封装一些利用反射操作 map/slice 嵌套结构的方法，是 config/flag 的底层存储
+1. 封装一些利用反射操作 `map/slice` 嵌套结构的方法，是 `config/flag` 的底层存储
 2. 通过 `dft` 支持结构体默认值
 
 ## Quick Start
 
 ```go
 func SetDefaultValue(v interface{}) error
+func SetDefaultValueCopy(v interface{}) error
+func SetDefaultValueP(v interface{})
+func SetDefaultValueCopyP(v interface{})
 
 func InterfaceToStruct(src interface{}, dst interface{}, opts ...Option) error
 func InterfaceDiff(v1 interface{}, v2 interface{}) ([]string, error)
