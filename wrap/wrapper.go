@@ -2,6 +2,8 @@ package wrap
 
 import (
 	"context"
+
+	"github.com/opentracing/opentracing-go"
 )
 
 type WrapperOptions struct {
@@ -22,6 +24,7 @@ type CtxOptions struct {
 	DisableMetric          bool
 	MetricCustomLabelValue string
 	TraceTags              map[string]string
+	startSpanOpts          []opentracing.StartSpanOption
 }
 
 type CtxOption func(options *CtxOptions)
@@ -50,6 +53,12 @@ func WithCtxTraceTag(key string, val string) CtxOption {
 			options.TraceTags = map[string]string{}
 		}
 		options.TraceTags[key] = val
+	}
+}
+
+func WithCtxStartSpanOpts(opts ...opentracing.StartSpanOption) CtxOption {
+	return func(options *CtxOptions) {
+		options.startSpanOpts = opts
 	}
 }
 

@@ -140,7 +140,7 @@ func (w *ACMConfigClientWrapper) CancelListenConfig(ctx context.Context, param v
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.CancelListenConfig")
+			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.CancelListenConfig", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -185,7 +185,7 @@ func (w *ACMConfigClientWrapper) DeleteConfig(ctx context.Context, param vo.Conf
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.DeleteConfig")
+			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.DeleteConfig", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -230,7 +230,7 @@ func (w *ACMConfigClientWrapper) GetConfig(ctx context.Context, param vo.ConfigP
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.GetConfig")
+			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.GetConfig", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -274,7 +274,7 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.ListenConfig")
+			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.ListenConfig", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -319,7 +319,7 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.PublishConfig")
+			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.PublishConfig", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -364,7 +364,7 @@ func (w *ACMConfigClientWrapper) SearchConfig(ctx context.Context, param vo.Sear
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.SearchConfig")
+			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.SearchConfig", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}

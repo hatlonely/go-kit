@@ -139,7 +139,7 @@ func (w *RAMClientWrapper) AddUserToGroup(ctx context.Context, request *ram.AddU
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.AddUserToGroup")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.AddUserToGroup", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -194,7 +194,7 @@ func (w *RAMClientWrapper) AttachPolicyToGroup(ctx context.Context, request *ram
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.AttachPolicyToGroup")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.AttachPolicyToGroup", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -249,7 +249,7 @@ func (w *RAMClientWrapper) AttachPolicyToRole(ctx context.Context, request *ram.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.AttachPolicyToRole")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.AttachPolicyToRole", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -304,7 +304,7 @@ func (w *RAMClientWrapper) AttachPolicyToUser(ctx context.Context, request *ram.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.AttachPolicyToUser")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.AttachPolicyToUser", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -359,7 +359,7 @@ func (w *RAMClientWrapper) BindMFADevice(ctx context.Context, request *ram.BindM
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.BindMFADevice")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.BindMFADevice", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -414,7 +414,7 @@ func (w *RAMClientWrapper) ChangePassword(ctx context.Context, request *ram.Chan
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ChangePassword")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ChangePassword", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -469,7 +469,7 @@ func (w *RAMClientWrapper) ClearAccountAlias(ctx context.Context, request *ram.C
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ClearAccountAlias")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ClearAccountAlias", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -524,7 +524,7 @@ func (w *RAMClientWrapper) CreateAccessKey(ctx context.Context, request *ram.Cre
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreateAccessKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreateAccessKey", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -579,7 +579,7 @@ func (w *RAMClientWrapper) CreateGroup(ctx context.Context, request *ram.CreateG
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreateGroup")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreateGroup", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -634,7 +634,7 @@ func (w *RAMClientWrapper) CreateLoginProfile(ctx context.Context, request *ram.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreateLoginProfile")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreateLoginProfile", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -689,7 +689,7 @@ func (w *RAMClientWrapper) CreatePolicy(ctx context.Context, request *ram.Create
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreatePolicy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreatePolicy", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -734,7 +734,7 @@ func (w *RAMClientWrapper) CreatePolicyVersion(ctx context.Context, request *ram
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreatePolicyVersion")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreatePolicyVersion", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -799,7 +799,7 @@ func (w *RAMClientWrapper) CreateRole(ctx context.Context, request *ram.CreateRo
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreateRole")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreateRole", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -854,7 +854,7 @@ func (w *RAMClientWrapper) CreateUser(ctx context.Context, request *ram.CreateUs
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreateUser")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreateUser", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -909,7 +909,7 @@ func (w *RAMClientWrapper) CreateVirtualMFADevice(ctx context.Context, request *
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreateVirtualMFADevice")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.CreateVirtualMFADevice", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -964,7 +964,7 @@ func (w *RAMClientWrapper) DeleteAccessKey(ctx context.Context, request *ram.Del
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeleteAccessKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeleteAccessKey", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1019,7 +1019,7 @@ func (w *RAMClientWrapper) DeleteGroup(ctx context.Context, request *ram.DeleteG
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeleteGroup")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeleteGroup", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1074,7 +1074,7 @@ func (w *RAMClientWrapper) DeleteLoginProfile(ctx context.Context, request *ram.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeleteLoginProfile")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeleteLoginProfile", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1129,7 +1129,7 @@ func (w *RAMClientWrapper) DeletePolicy(ctx context.Context, request *ram.Delete
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeletePolicy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeletePolicy", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1174,7 +1174,7 @@ func (w *RAMClientWrapper) DeletePolicyVersion(ctx context.Context, request *ram
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeletePolicyVersion")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeletePolicyVersion", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1239,7 +1239,7 @@ func (w *RAMClientWrapper) DeleteRole(ctx context.Context, request *ram.DeleteRo
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeleteRole")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeleteRole", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1294,7 +1294,7 @@ func (w *RAMClientWrapper) DeleteUser(ctx context.Context, request *ram.DeleteUs
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeleteUser")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeleteUser", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1349,7 +1349,7 @@ func (w *RAMClientWrapper) DeleteVirtualMFADevice(ctx context.Context, request *
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeleteVirtualMFADevice")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DeleteVirtualMFADevice", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1404,7 +1404,7 @@ func (w *RAMClientWrapper) DetachPolicyFromGroup(ctx context.Context, request *r
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DetachPolicyFromGroup")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DetachPolicyFromGroup", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1459,7 +1459,7 @@ func (w *RAMClientWrapper) DetachPolicyFromRole(ctx context.Context, request *ra
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DetachPolicyFromRole")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DetachPolicyFromRole", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1514,7 +1514,7 @@ func (w *RAMClientWrapper) DetachPolicyFromUser(ctx context.Context, request *ra
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DetachPolicyFromUser")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.DetachPolicyFromUser", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1569,7 +1569,7 @@ func (w *RAMClientWrapper) GetAccessKeyLastUsed(ctx context.Context, request *ra
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetAccessKeyLastUsed")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetAccessKeyLastUsed", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1624,7 +1624,7 @@ func (w *RAMClientWrapper) GetAccountAlias(ctx context.Context, request *ram.Get
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetAccountAlias")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetAccountAlias", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1679,7 +1679,7 @@ func (w *RAMClientWrapper) GetGroup(ctx context.Context, request *ram.GetGroupRe
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetGroup")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetGroup", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1734,7 +1734,7 @@ func (w *RAMClientWrapper) GetLoginProfile(ctx context.Context, request *ram.Get
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetLoginProfile")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetLoginProfile", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1789,7 +1789,7 @@ func (w *RAMClientWrapper) GetPasswordPolicy(ctx context.Context, request *ram.G
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetPasswordPolicy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetPasswordPolicy", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1844,7 +1844,7 @@ func (w *RAMClientWrapper) GetPolicy(ctx context.Context, request *ram.GetPolicy
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetPolicy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetPolicy", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1889,7 +1889,7 @@ func (w *RAMClientWrapper) GetPolicyVersion(ctx context.Context, request *ram.Ge
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetPolicyVersion")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetPolicyVersion", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1954,7 +1954,7 @@ func (w *RAMClientWrapper) GetRole(ctx context.Context, request *ram.GetRoleRequ
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetRole")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetRole", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2009,7 +2009,7 @@ func (w *RAMClientWrapper) GetSecurityPreference(ctx context.Context, request *r
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetSecurityPreference")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetSecurityPreference", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2064,7 +2064,7 @@ func (w *RAMClientWrapper) GetUser(ctx context.Context, request *ram.GetUserRequ
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetUser")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetUser", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2109,7 +2109,7 @@ func (w *RAMClientWrapper) GetUserMFAInfo(ctx context.Context, request *ram.GetU
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetUserMFAInfo")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.GetUserMFAInfo", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2174,7 +2174,7 @@ func (w *RAMClientWrapper) ListAccessKeys(ctx context.Context, request *ram.List
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListAccessKeys")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListAccessKeys", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2229,7 +2229,7 @@ func (w *RAMClientWrapper) ListEntitiesForPolicy(ctx context.Context, request *r
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListEntitiesForPolicy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListEntitiesForPolicy", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2284,7 +2284,7 @@ func (w *RAMClientWrapper) ListGroups(ctx context.Context, request *ram.ListGrou
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListGroups")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListGroups", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2329,7 +2329,7 @@ func (w *RAMClientWrapper) ListGroupsForUser(ctx context.Context, request *ram.L
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListGroupsForUser")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListGroupsForUser", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2394,7 +2394,7 @@ func (w *RAMClientWrapper) ListPolicies(ctx context.Context, request *ram.ListPo
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListPolicies")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListPolicies", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2439,7 +2439,7 @@ func (w *RAMClientWrapper) ListPoliciesForGroup(ctx context.Context, request *ra
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListPoliciesForGroup")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListPoliciesForGroup", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2494,7 +2494,7 @@ func (w *RAMClientWrapper) ListPoliciesForRole(ctx context.Context, request *ram
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListPoliciesForRole")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListPoliciesForRole", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2549,7 +2549,7 @@ func (w *RAMClientWrapper) ListPoliciesForUser(ctx context.Context, request *ram
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListPoliciesForUser")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListPoliciesForUser", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2614,7 +2614,7 @@ func (w *RAMClientWrapper) ListPolicyVersions(ctx context.Context, request *ram.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListPolicyVersions")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListPolicyVersions", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2669,7 +2669,7 @@ func (w *RAMClientWrapper) ListRoles(ctx context.Context, request *ram.ListRoles
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListRoles")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListRoles", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2724,7 +2724,7 @@ func (w *RAMClientWrapper) ListUsers(ctx context.Context, request *ram.ListUsers
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListUsers")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListUsers", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2769,7 +2769,7 @@ func (w *RAMClientWrapper) ListUsersForGroup(ctx context.Context, request *ram.L
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListUsersForGroup")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListUsersForGroup", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2834,7 +2834,7 @@ func (w *RAMClientWrapper) ListVirtualMFADevices(ctx context.Context, request *r
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListVirtualMFADevices")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.ListVirtualMFADevices", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2889,7 +2889,7 @@ func (w *RAMClientWrapper) RemoveUserFromGroup(ctx context.Context, request *ram
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.RemoveUserFromGroup")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.RemoveUserFromGroup", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2944,7 +2944,7 @@ func (w *RAMClientWrapper) SetAccountAlias(ctx context.Context, request *ram.Set
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.SetAccountAlias")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.SetAccountAlias", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2999,7 +2999,7 @@ func (w *RAMClientWrapper) SetDefaultPolicyVersion(ctx context.Context, request 
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.SetDefaultPolicyVersion")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.SetDefaultPolicyVersion", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3054,7 +3054,7 @@ func (w *RAMClientWrapper) SetPasswordPolicy(ctx context.Context, request *ram.S
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.SetPasswordPolicy")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.SetPasswordPolicy", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3109,7 +3109,7 @@ func (w *RAMClientWrapper) SetSecurityPreference(ctx context.Context, request *r
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.SetSecurityPreference")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.SetSecurityPreference", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3164,7 +3164,7 @@ func (w *RAMClientWrapper) UnbindMFADevice(ctx context.Context, request *ram.Unb
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.UnbindMFADevice")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.UnbindMFADevice", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3219,7 +3219,7 @@ func (w *RAMClientWrapper) UpdateAccessKey(ctx context.Context, request *ram.Upd
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.UpdateAccessKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.UpdateAccessKey", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3274,7 +3274,7 @@ func (w *RAMClientWrapper) UpdateGroup(ctx context.Context, request *ram.UpdateG
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.UpdateGroup")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.UpdateGroup", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3329,7 +3329,7 @@ func (w *RAMClientWrapper) UpdateLoginProfile(ctx context.Context, request *ram.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.UpdateLoginProfile")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.UpdateLoginProfile", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3384,7 +3384,7 @@ func (w *RAMClientWrapper) UpdateRole(ctx context.Context, request *ram.UpdateRo
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.UpdateRole")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.UpdateRole", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3439,7 +3439,7 @@ func (w *RAMClientWrapper) UpdateUser(ctx context.Context, request *ram.UpdateUs
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.UpdateUser")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ram.Client.UpdateUser", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}

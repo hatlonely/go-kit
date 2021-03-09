@@ -139,7 +139,7 @@ func (w *PDSClientWrapper) AccountRevoke(ctx context.Context, request *client.Re
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.AccountRevoke")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.AccountRevoke", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -184,7 +184,7 @@ func (w *PDSClientWrapper) AccountRevokeEx(ctx context.Context, request *client.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.AccountRevokeEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.AccountRevokeEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -229,7 +229,7 @@ func (w *PDSClientWrapper) AccountToken(ctx context.Context, request *client.Acc
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.AccountToken")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.AccountToken", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -274,7 +274,7 @@ func (w *PDSClientWrapper) AccountTokenEx(ctx context.Context, request *client.A
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.AccountTokenEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.AccountTokenEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -319,7 +319,7 @@ func (w *PDSClientWrapper) AdminListStores(ctx context.Context, request *client.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.AdminListStores")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.AdminListStores", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -364,7 +364,7 @@ func (w *PDSClientWrapper) AdminListStoresEx(ctx context.Context, request *clien
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.AdminListStoresEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.AdminListStoresEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -413,7 +413,7 @@ func (w *PDSClientWrapper) BatchOperation(ctx context.Context, request *client.B
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.BatchOperation")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.BatchOperation", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -458,7 +458,7 @@ func (w *PDSClientWrapper) BatchOperationEx(ctx context.Context, request *client
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.BatchOperationEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.BatchOperationEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -503,7 +503,7 @@ func (w *PDSClientWrapper) CancelLink(ctx context.Context, request *client.Cance
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CancelLink")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CancelLink", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -548,7 +548,7 @@ func (w *PDSClientWrapper) CancelLinkEx(ctx context.Context, request *client.Can
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CancelLinkEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CancelLinkEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -593,7 +593,7 @@ func (w *PDSClientWrapper) CancelShareLink(ctx context.Context, request *client.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CancelShareLink")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CancelShareLink", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -638,7 +638,7 @@ func (w *PDSClientWrapper) CancelShareLinkEx(ctx context.Context, request *clien
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CancelShareLinkEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CancelShareLinkEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -683,7 +683,7 @@ func (w *PDSClientWrapper) ChangePassword(ctx context.Context, request *client.D
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ChangePassword")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ChangePassword", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -728,7 +728,7 @@ func (w *PDSClientWrapper) ChangePasswordEx(ctx context.Context, request *client
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ChangePasswordEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ChangePasswordEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -773,7 +773,7 @@ func (w *PDSClientWrapper) CheckExist(ctx context.Context, request *client.Mobil
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CheckExist")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CheckExist", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -818,7 +818,7 @@ func (w *PDSClientWrapper) CheckExistEx(ctx context.Context, request *client.Mob
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CheckExistEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CheckExistEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -863,7 +863,7 @@ func (w *PDSClientWrapper) CompleteFile(ctx context.Context, request *client.Com
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CompleteFile")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CompleteFile", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -908,7 +908,7 @@ func (w *PDSClientWrapper) CompleteFileEx(ctx context.Context, request *client.C
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CompleteFileEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CompleteFileEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -953,7 +953,7 @@ func (w *PDSClientWrapper) ConfirmLink(ctx context.Context, request *client.Conf
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ConfirmLink")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ConfirmLink", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -998,7 +998,7 @@ func (w *PDSClientWrapper) ConfirmLinkEx(ctx context.Context, request *client.Co
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ConfirmLinkEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ConfirmLinkEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1043,7 +1043,7 @@ func (w *PDSClientWrapper) CopyFile(ctx context.Context, request *client.CopyFil
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CopyFile")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CopyFile", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1088,7 +1088,7 @@ func (w *PDSClientWrapper) CopyFileEx(ctx context.Context, request *client.CopyF
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CopyFileEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CopyFileEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1133,7 +1133,7 @@ func (w *PDSClientWrapper) CreateDrive(ctx context.Context, request *client.Crea
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateDrive")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateDrive", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1178,7 +1178,7 @@ func (w *PDSClientWrapper) CreateDriveEx(ctx context.Context, request *client.Cr
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateDriveEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateDriveEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1223,7 +1223,7 @@ func (w *PDSClientWrapper) CreateFile(ctx context.Context, request *client.Creat
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateFile")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateFile", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1268,7 +1268,7 @@ func (w *PDSClientWrapper) CreateFileEx(ctx context.Context, request *client.Cre
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateFileEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateFileEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1313,7 +1313,7 @@ func (w *PDSClientWrapper) CreateShare(ctx context.Context, request *client.Crea
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateShare")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateShare", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1358,7 +1358,7 @@ func (w *PDSClientWrapper) CreateShareEx(ctx context.Context, request *client.Cr
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateShareEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateShareEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1403,7 +1403,7 @@ func (w *PDSClientWrapper) CreateShareLink(ctx context.Context, request *client.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateShareLink")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateShareLink", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1448,7 +1448,7 @@ func (w *PDSClientWrapper) CreateShareLinkEx(ctx context.Context, request *clien
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateShareLinkEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateShareLinkEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1493,7 +1493,7 @@ func (w *PDSClientWrapper) CreateStory(ctx context.Context, request *client.Crea
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateStory")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateStory", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1538,7 +1538,7 @@ func (w *PDSClientWrapper) CreateStoryEx(ctx context.Context, request *client.Cr
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateStoryEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateStoryEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1583,7 +1583,7 @@ func (w *PDSClientWrapper) CreateUser(ctx context.Context, request *client.Creat
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateUser")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateUser", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1628,7 +1628,7 @@ func (w *PDSClientWrapper) CreateUserEx(ctx context.Context, request *client.Cre
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateUserEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateUserEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1673,7 +1673,7 @@ func (w *PDSClientWrapper) DeleteDrive(ctx context.Context, request *client.Dele
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteDrive")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteDrive", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1718,7 +1718,7 @@ func (w *PDSClientWrapper) DeleteDriveEx(ctx context.Context, request *client.De
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteDriveEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteDriveEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1763,7 +1763,7 @@ func (w *PDSClientWrapper) DeleteFile(ctx context.Context, request *client.Delet
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteFile")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteFile", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1808,7 +1808,7 @@ func (w *PDSClientWrapper) DeleteFileEx(ctx context.Context, request *client.Del
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteFileEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteFileEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1853,7 +1853,7 @@ func (w *PDSClientWrapper) DeleteShare(ctx context.Context, request *client.Dele
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteShare")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteShare", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1898,7 +1898,7 @@ func (w *PDSClientWrapper) DeleteShareEx(ctx context.Context, request *client.De
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteShareEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteShareEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1943,7 +1943,7 @@ func (w *PDSClientWrapper) DeleteUser(ctx context.Context, request *client.Delet
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteUser")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteUser", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1988,7 +1988,7 @@ func (w *PDSClientWrapper) DeleteUserEx(ctx context.Context, request *client.Del
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteUserEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteUserEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2033,7 +2033,7 @@ func (w *PDSClientWrapper) GetAccessKeyId(ctx context.Context) (*string, error) 
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetAccessKeyId")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetAccessKeyId", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2078,7 +2078,7 @@ func (w *PDSClientWrapper) GetAccessKeySecret(ctx context.Context) (*string, err
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetAccessKeySecret")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetAccessKeySecret", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2123,7 +2123,7 @@ func (w *PDSClientWrapper) GetAccessToken(ctx context.Context) (*string, error) 
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetAccessToken")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetAccessToken", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2168,7 +2168,7 @@ func (w *PDSClientWrapper) GetAccessTokenByLinkInfo(ctx context.Context, request
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetAccessTokenByLinkInfo")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetAccessTokenByLinkInfo", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2213,7 +2213,7 @@ func (w *PDSClientWrapper) GetAccessTokenByLinkInfoEx(ctx context.Context, reque
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetAccessTokenByLinkInfoEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetAccessTokenByLinkInfoEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2258,7 +2258,7 @@ func (w *PDSClientWrapper) GetAsyncTaskInfo(ctx context.Context, request *client
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetAsyncTaskInfo")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetAsyncTaskInfo", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2303,7 +2303,7 @@ func (w *PDSClientWrapper) GetAsyncTaskInfoEx(ctx context.Context, request *clie
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetAsyncTaskInfoEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetAsyncTaskInfoEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2348,7 +2348,7 @@ func (w *PDSClientWrapper) GetCaptcha(ctx context.Context, request *client.GetCa
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetCaptcha")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetCaptcha", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2393,7 +2393,7 @@ func (w *PDSClientWrapper) GetCaptchaEx(ctx context.Context, request *client.Get
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetCaptchaEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetCaptchaEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2438,7 +2438,7 @@ func (w *PDSClientWrapper) GetDefaultDrive(ctx context.Context, request *client.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetDefaultDrive")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetDefaultDrive", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2483,7 +2483,7 @@ func (w *PDSClientWrapper) GetDefaultDriveEx(ctx context.Context, request *clien
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetDefaultDriveEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetDefaultDriveEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2528,7 +2528,7 @@ func (w *PDSClientWrapper) GetDownloadUrl(ctx context.Context, request *client.G
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetDownloadUrl")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetDownloadUrl", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2573,7 +2573,7 @@ func (w *PDSClientWrapper) GetDownloadUrlEx(ctx context.Context, request *client
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetDownloadUrlEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetDownloadUrlEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2618,7 +2618,7 @@ func (w *PDSClientWrapper) GetDrive(ctx context.Context, request *client.GetDriv
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetDrive")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetDrive", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2663,7 +2663,7 @@ func (w *PDSClientWrapper) GetDriveEx(ctx context.Context, request *client.GetDr
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetDriveEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetDriveEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2713,7 +2713,7 @@ func (w *PDSClientWrapper) GetFile(ctx context.Context, request *client.GetFileR
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetFile")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetFile", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2758,7 +2758,7 @@ func (w *PDSClientWrapper) GetFileByPath(ctx context.Context, request *client.Ge
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetFileByPath")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetFileByPath", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2803,7 +2803,7 @@ func (w *PDSClientWrapper) GetFileByPathEx(ctx context.Context, request *client.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetFileByPathEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetFileByPathEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2848,7 +2848,7 @@ func (w *PDSClientWrapper) GetFileEx(ctx context.Context, request *client.GetFil
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetFileEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetFileEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2893,7 +2893,7 @@ func (w *PDSClientWrapper) GetLastCursor(ctx context.Context, request *client.Ge
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetLastCursor")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetLastCursor", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2938,7 +2938,7 @@ func (w *PDSClientWrapper) GetLastCursorEx(ctx context.Context, request *client.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetLastCursorEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetLastCursorEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2983,7 +2983,7 @@ func (w *PDSClientWrapper) GetLinkInfo(ctx context.Context, request *client.GetB
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetLinkInfo")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetLinkInfo", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3028,7 +3028,7 @@ func (w *PDSClientWrapper) GetLinkInfoByUserId(ctx context.Context, request *cli
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetLinkInfoByUserId")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetLinkInfoByUserId", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3073,7 +3073,7 @@ func (w *PDSClientWrapper) GetLinkInfoByUserIdEx(ctx context.Context, request *c
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetLinkInfoByUserIdEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetLinkInfoByUserIdEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3118,7 +3118,7 @@ func (w *PDSClientWrapper) GetLinkInfoEx(ctx context.Context, request *client.Ge
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetLinkInfoEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetLinkInfoEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3163,7 +3163,7 @@ func (w *PDSClientWrapper) GetMediaPlayUrl(ctx context.Context, request *client.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetMediaPlayUrl")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetMediaPlayUrl", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3208,7 +3208,7 @@ func (w *PDSClientWrapper) GetMediaPlayUrlEx(ctx context.Context, request *clien
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetMediaPlayUrlEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetMediaPlayUrlEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3253,7 +3253,7 @@ func (w *PDSClientWrapper) GetOfficeEditUrl(ctx context.Context, request *client
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetOfficeEditUrl")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetOfficeEditUrl", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3298,7 +3298,7 @@ func (w *PDSClientWrapper) GetOfficeEditUrlEx(ctx context.Context, request *clie
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetOfficeEditUrlEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetOfficeEditUrlEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3343,7 +3343,7 @@ func (w *PDSClientWrapper) GetOfficePreviewUrl(ctx context.Context, request *cli
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetOfficePreviewUrl")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetOfficePreviewUrl", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3388,7 +3388,7 @@ func (w *PDSClientWrapper) GetOfficePreviewUrlEx(ctx context.Context, request *c
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetOfficePreviewUrlEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetOfficePreviewUrlEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3438,7 +3438,7 @@ func (w *PDSClientWrapper) GetPhotoCount(ctx context.Context, request *client.Ge
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetPhotoCount")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetPhotoCount", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3483,7 +3483,7 @@ func (w *PDSClientWrapper) GetPhotoCountEx(ctx context.Context, request *client.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetPhotoCountEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetPhotoCountEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3528,7 +3528,7 @@ func (w *PDSClientWrapper) GetPublicKey(ctx context.Context, request *client.Get
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetPublicKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetPublicKey", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3573,7 +3573,7 @@ func (w *PDSClientWrapper) GetPublicKeyEx(ctx context.Context, request *client.G
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetPublicKeyEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetPublicKeyEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3623,7 +3623,7 @@ func (w *PDSClientWrapper) GetSecurityToken(ctx context.Context) (*string, error
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetSecurityToken")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetSecurityToken", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3668,7 +3668,7 @@ func (w *PDSClientWrapper) GetShare(ctx context.Context, request *client.GetShar
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShare")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShare", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3713,7 +3713,7 @@ func (w *PDSClientWrapper) GetShareByAnonymous(ctx context.Context, request *cli
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareByAnonymous")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareByAnonymous", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3758,7 +3758,7 @@ func (w *PDSClientWrapper) GetShareByAnonymousEx(ctx context.Context, request *c
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareByAnonymousEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareByAnonymousEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3803,7 +3803,7 @@ func (w *PDSClientWrapper) GetShareEx(ctx context.Context, request *client.GetSh
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3848,7 +3848,7 @@ func (w *PDSClientWrapper) GetShareId(ctx context.Context, request *client.GetSh
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareId")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareId", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3893,7 +3893,7 @@ func (w *PDSClientWrapper) GetShareIdEx(ctx context.Context, request *client.Get
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareIdEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareIdEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3938,7 +3938,7 @@ func (w *PDSClientWrapper) GetShareToken(ctx context.Context, request *client.Ge
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareToken")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareToken", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3983,7 +3983,7 @@ func (w *PDSClientWrapper) GetShareTokenEx(ctx context.Context, request *client.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareTokenEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareTokenEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4028,7 +4028,7 @@ func (w *PDSClientWrapper) GetStoryDetail(ctx context.Context, request *client.G
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetStoryDetail")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetStoryDetail", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4073,7 +4073,7 @@ func (w *PDSClientWrapper) GetStoryDetailEx(ctx context.Context, request *client
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetStoryDetailEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetStoryDetailEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4118,7 +4118,7 @@ func (w *PDSClientWrapper) GetUploadUrl(ctx context.Context, request *client.Get
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetUploadUrl")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetUploadUrl", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4163,7 +4163,7 @@ func (w *PDSClientWrapper) GetUploadUrlEx(ctx context.Context, request *client.G
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetUploadUrlEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetUploadUrlEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4208,7 +4208,7 @@ func (w *PDSClientWrapper) GetUser(ctx context.Context, request *client.GetUserR
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetUser")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetUser", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4253,7 +4253,7 @@ func (w *PDSClientWrapper) GetUserAccessToken(ctx context.Context, request *clie
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetUserAccessToken")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetUserAccessToken", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4298,7 +4298,7 @@ func (w *PDSClientWrapper) GetUserAccessTokenEx(ctx context.Context, request *cl
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetUserAccessTokenEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetUserAccessTokenEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4348,7 +4348,7 @@ func (w *PDSClientWrapper) GetUserEx(ctx context.Context, request *client.GetUse
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetUserEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetUserEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4393,7 +4393,7 @@ func (w *PDSClientWrapper) GetVideoPreviewSpriteUrl(ctx context.Context, request
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetVideoPreviewSpriteUrl")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetVideoPreviewSpriteUrl", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4438,7 +4438,7 @@ func (w *PDSClientWrapper) GetVideoPreviewSpriteUrlEx(ctx context.Context, reque
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetVideoPreviewSpriteUrlEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetVideoPreviewSpriteUrlEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4483,7 +4483,7 @@ func (w *PDSClientWrapper) GetVideoPreviewUrl(ctx context.Context, request *clie
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetVideoPreviewUrl")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetVideoPreviewUrl", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4528,7 +4528,7 @@ func (w *PDSClientWrapper) GetVideoPreviewUrlEx(ctx context.Context, request *cl
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetVideoPreviewUrlEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetVideoPreviewUrlEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4572,7 +4572,7 @@ func (w *PDSClientWrapper) Init(ctx context.Context, config *client.Config) erro
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.Init")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.Init", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4617,7 +4617,7 @@ func (w *PDSClientWrapper) Link(ctx context.Context, request *client.AccountLink
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.Link")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.Link", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4662,7 +4662,7 @@ func (w *PDSClientWrapper) LinkEx(ctx context.Context, request *client.AccountLi
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.LinkEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.LinkEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4707,7 +4707,7 @@ func (w *PDSClientWrapper) ListAddressGroups(ctx context.Context, request *clien
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListAddressGroups")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListAddressGroups", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4752,7 +4752,7 @@ func (w *PDSClientWrapper) ListAddressGroupsEx(ctx context.Context, request *cli
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListAddressGroupsEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListAddressGroupsEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4797,7 +4797,7 @@ func (w *PDSClientWrapper) ListDrives(ctx context.Context, request *client.ListD
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListDrives")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListDrives", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4842,7 +4842,7 @@ func (w *PDSClientWrapper) ListDrivesEx(ctx context.Context, request *client.Lis
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListDrivesEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListDrivesEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4887,7 +4887,7 @@ func (w *PDSClientWrapper) ListFacegroups(ctx context.Context, request *client.L
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFacegroups")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFacegroups", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4932,7 +4932,7 @@ func (w *PDSClientWrapper) ListFacegroupsEx(ctx context.Context, request *client
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFacegroupsEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFacegroupsEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -4977,7 +4977,7 @@ func (w *PDSClientWrapper) ListFile(ctx context.Context, request *client.ListFil
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFile")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFile", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5022,7 +5022,7 @@ func (w *PDSClientWrapper) ListFileByAnonymous(ctx context.Context, request *cli
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFileByAnonymous")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFileByAnonymous", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5067,7 +5067,7 @@ func (w *PDSClientWrapper) ListFileByAnonymousEx(ctx context.Context, request *c
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFileByAnonymousEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFileByAnonymousEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5112,7 +5112,7 @@ func (w *PDSClientWrapper) ListFileByCustomIndexKey(ctx context.Context, request
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFileByCustomIndexKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFileByCustomIndexKey", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5157,7 +5157,7 @@ func (w *PDSClientWrapper) ListFileByCustomIndexKeyEx(ctx context.Context, reque
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFileByCustomIndexKeyEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFileByCustomIndexKeyEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5202,7 +5202,7 @@ func (w *PDSClientWrapper) ListFileDelta(ctx context.Context, request *client.Li
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFileDelta")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFileDelta", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5247,7 +5247,7 @@ func (w *PDSClientWrapper) ListFileDeltaEx(ctx context.Context, request *client.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFileDeltaEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFileDeltaEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5292,7 +5292,7 @@ func (w *PDSClientWrapper) ListFileEx(ctx context.Context, request *client.ListF
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFileEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListFileEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5337,7 +5337,7 @@ func (w *PDSClientWrapper) ListMyDrives(ctx context.Context, request *client.Lis
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListMyDrives")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListMyDrives", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5382,7 +5382,7 @@ func (w *PDSClientWrapper) ListMyDrivesEx(ctx context.Context, request *client.L
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListMyDrivesEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListMyDrivesEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5427,7 +5427,7 @@ func (w *PDSClientWrapper) ListShare(ctx context.Context, request *client.ListSh
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListShare")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListShare", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5472,7 +5472,7 @@ func (w *PDSClientWrapper) ListShareEx(ctx context.Context, request *client.List
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListShareEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListShareEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5517,7 +5517,7 @@ func (w *PDSClientWrapper) ListShareLink(ctx context.Context, request *client.Li
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListShareLink")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListShareLink", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5562,7 +5562,7 @@ func (w *PDSClientWrapper) ListShareLinkEx(ctx context.Context, request *client.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListShareLinkEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListShareLinkEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5607,7 +5607,7 @@ func (w *PDSClientWrapper) ListStory(ctx context.Context, request *client.ListSt
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListStory")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListStory", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5652,7 +5652,7 @@ func (w *PDSClientWrapper) ListStoryEx(ctx context.Context, request *client.List
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListStoryEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListStoryEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5697,7 +5697,7 @@ func (w *PDSClientWrapper) ListTags(ctx context.Context, request *client.ListIma
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListTags")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListTags", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5742,7 +5742,7 @@ func (w *PDSClientWrapper) ListTagsEx(ctx context.Context, request *client.ListI
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListTagsEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListTagsEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5787,7 +5787,7 @@ func (w *PDSClientWrapper) ListUploadedParts(ctx context.Context, request *clien
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListUploadedParts")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListUploadedParts", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5832,7 +5832,7 @@ func (w *PDSClientWrapper) ListUploadedPartsEx(ctx context.Context, request *cli
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListUploadedPartsEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListUploadedPartsEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5877,7 +5877,7 @@ func (w *PDSClientWrapper) ListUsers(ctx context.Context, request *client.ListUs
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListUsers")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListUsers", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5922,7 +5922,7 @@ func (w *PDSClientWrapper) ListUsersEx(ctx context.Context, request *client.List
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListUsersEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListUsersEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -5967,7 +5967,7 @@ func (w *PDSClientWrapper) Login(ctx context.Context, request *client.MobileLogi
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.Login")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.Login", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6012,7 +6012,7 @@ func (w *PDSClientWrapper) LoginEx(ctx context.Context, request *client.MobileLo
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.LoginEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.LoginEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6057,7 +6057,7 @@ func (w *PDSClientWrapper) MobileSendSmsCode(ctx context.Context, request *clien
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.MobileSendSmsCode")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.MobileSendSmsCode", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6102,7 +6102,7 @@ func (w *PDSClientWrapper) MobileSendSmsCodeEx(ctx context.Context, request *cli
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.MobileSendSmsCodeEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.MobileSendSmsCodeEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6147,7 +6147,7 @@ func (w *PDSClientWrapper) MoveFile(ctx context.Context, request *client.MoveFil
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.MoveFile")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.MoveFile", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6192,7 +6192,7 @@ func (w *PDSClientWrapper) MoveFileEx(ctx context.Context, request *client.MoveF
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.MoveFileEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.MoveFileEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6237,7 +6237,7 @@ func (w *PDSClientWrapper) ParseKeywords(ctx context.Context, request *client.Pa
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ParseKeywords")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ParseKeywords", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6282,7 +6282,7 @@ func (w *PDSClientWrapper) ParseKeywordsEx(ctx context.Context, request *client.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ParseKeywordsEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ParseKeywordsEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6327,7 +6327,7 @@ func (w *PDSClientWrapper) Register(ctx context.Context, request *client.MobileR
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.Register")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.Register", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6372,7 +6372,7 @@ func (w *PDSClientWrapper) RegisterEx(ctx context.Context, request *client.Mobil
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.RegisterEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.RegisterEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6417,7 +6417,7 @@ func (w *PDSClientWrapper) RemoveStoryImages(ctx context.Context, request *clien
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.RemoveStoryImages")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.RemoveStoryImages", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6462,7 +6462,7 @@ func (w *PDSClientWrapper) RemoveStoryImagesEx(ctx context.Context, request *cli
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.RemoveStoryImagesEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.RemoveStoryImagesEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6507,7 +6507,7 @@ func (w *PDSClientWrapper) ScanFileMeta(ctx context.Context, request *client.Sca
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ScanFileMeta")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ScanFileMeta", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6552,7 +6552,7 @@ func (w *PDSClientWrapper) ScanFileMetaEx(ctx context.Context, request *client.S
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ScanFileMetaEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ScanFileMetaEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6597,7 +6597,7 @@ func (w *PDSClientWrapper) SearchAddressGroups(ctx context.Context, request *cli
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SearchAddressGroups")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SearchAddressGroups", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6642,7 +6642,7 @@ func (w *PDSClientWrapper) SearchAddressGroupsEx(ctx context.Context, request *c
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SearchAddressGroupsEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SearchAddressGroupsEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6687,7 +6687,7 @@ func (w *PDSClientWrapper) SearchFile(ctx context.Context, request *client.Searc
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SearchFile")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SearchFile", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6732,7 +6732,7 @@ func (w *PDSClientWrapper) SearchFileEx(ctx context.Context, request *client.Sea
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SearchFileEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SearchFileEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6777,7 +6777,7 @@ func (w *PDSClientWrapper) SearchUser(ctx context.Context, request *client.Searc
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SearchUser")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SearchUser", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6822,7 +6822,7 @@ func (w *PDSClientWrapper) SearchUserEx(ctx context.Context, request *client.Sea
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SearchUserEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SearchUserEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6870,7 +6870,7 @@ func (w *PDSClientWrapper) SetExpireTime(ctx context.Context, expireTime *string
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SetExpireTime")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SetExpireTime", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6915,7 +6915,7 @@ func (w *PDSClientWrapper) SetPassword(ctx context.Context, request *client.Defa
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SetPassword")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SetPassword", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -6960,7 +6960,7 @@ func (w *PDSClientWrapper) SetPasswordEx(ctx context.Context, request *client.De
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SetPasswordEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SetPasswordEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7013,7 +7013,7 @@ func (w *PDSClientWrapper) Token(ctx context.Context, request *client.RefreshOff
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.Token")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.Token", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7058,7 +7058,7 @@ func (w *PDSClientWrapper) TokenEx(ctx context.Context, request *client.RefreshO
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.TokenEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.TokenEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7103,7 +7103,7 @@ func (w *PDSClientWrapper) UpdateDrive(ctx context.Context, request *client.Upda
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateDrive")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateDrive", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7148,7 +7148,7 @@ func (w *PDSClientWrapper) UpdateDriveEx(ctx context.Context, request *client.Up
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateDriveEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateDriveEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7193,7 +7193,7 @@ func (w *PDSClientWrapper) UpdateFacegroupInfo(ctx context.Context, request *cli
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateFacegroupInfo")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateFacegroupInfo", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7238,7 +7238,7 @@ func (w *PDSClientWrapper) UpdateFacegroupInfoEx(ctx context.Context, request *c
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateFacegroupInfoEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateFacegroupInfoEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7283,7 +7283,7 @@ func (w *PDSClientWrapper) UpdateFile(ctx context.Context, request *client.Updat
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateFile")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateFile", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7328,7 +7328,7 @@ func (w *PDSClientWrapper) UpdateFileEx(ctx context.Context, request *client.Upd
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateFileEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateFileEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7373,7 +7373,7 @@ func (w *PDSClientWrapper) UpdateShare(ctx context.Context, request *client.Upda
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateShare")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateShare", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7418,7 +7418,7 @@ func (w *PDSClientWrapper) UpdateShareEx(ctx context.Context, request *client.Up
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateShareEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateShareEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7463,7 +7463,7 @@ func (w *PDSClientWrapper) UpdateUser(ctx context.Context, request *client.Updat
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateUser")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateUser", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7508,7 +7508,7 @@ func (w *PDSClientWrapper) UpdateUserEx(ctx context.Context, request *client.Upd
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateUserEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateUserEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7553,7 +7553,7 @@ func (w *PDSClientWrapper) VerifyCode(ctx context.Context, request *client.Verif
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.VerifyCode")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.VerifyCode", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -7598,7 +7598,7 @@ func (w *PDSClientWrapper) VerifyCodeEx(ctx context.Context, request *client.Ver
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.VerifyCodeEx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.VerifyCodeEx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}

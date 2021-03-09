@@ -167,7 +167,7 @@ func (w *MNSQueueWrapper) BatchDeleteMessage(ctx context.Context, receiptHandles
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSQueue.BatchDeleteMessage")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSQueue.BatchDeleteMessage", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -220,7 +220,7 @@ func (w *MNSQueueWrapper) BatchSendMessage(ctx context.Context, messages ...ali_
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSQueue.BatchSendMessage")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSQueue.BatchSendMessage", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -265,7 +265,7 @@ func (w *MNSQueueWrapper) ChangeMessageVisibility(ctx context.Context, receiptHa
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSQueue.ChangeMessageVisibility")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSQueue.ChangeMessageVisibility", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -309,7 +309,7 @@ func (w *MNSQueueWrapper) DeleteMessage(ctx context.Context, receiptHandle strin
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSQueue.DeleteMessage")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSQueue.DeleteMessage", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -372,7 +372,7 @@ func (w *MNSQueueWrapper) SendMessage(ctx context.Context, message ali_mns.Messa
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSQueue.SendMessage")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSQueue.SendMessage", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -427,7 +427,7 @@ func (w *MNSTopicWrapper) GetSubscriptionAttributes(ctx context.Context, subscri
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSTopic.GetSubscriptionAttributes")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSTopic.GetSubscriptionAttributes", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -472,7 +472,7 @@ func (w *MNSTopicWrapper) ListSubscriptionByTopic(ctx context.Context, nextMarke
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSTopic.ListSubscriptionByTopic")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSTopic.ListSubscriptionByTopic", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -517,7 +517,7 @@ func (w *MNSTopicWrapper) ListSubscriptionDetailByTopic(ctx context.Context, nex
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSTopic.ListSubscriptionDetailByTopic")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSTopic.ListSubscriptionDetailByTopic", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -567,7 +567,7 @@ func (w *MNSTopicWrapper) PublishMessage(ctx context.Context, message ali_mns.Me
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSTopic.PublishMessage")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSTopic.PublishMessage", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -611,7 +611,7 @@ func (w *MNSTopicWrapper) SetSubscriptionAttributes(ctx context.Context, subscri
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSTopic.SetSubscriptionAttributes")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSTopic.SetSubscriptionAttributes", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -655,7 +655,7 @@ func (w *MNSTopicWrapper) Subscribe(ctx context.Context, subscriptionName string
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSTopic.Subscribe")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSTopic.Subscribe", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -699,7 +699,7 @@ func (w *MNSTopicWrapper) Unsubscribe(ctx context.Context, subscriptionName stri
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSTopic.Unsubscribe")
+			span, _ = opentracing.StartSpanFromContext(ctx, "ali_mns.MNSTopic.Unsubscribe", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}

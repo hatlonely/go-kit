@@ -1,13 +1,19 @@
 # wrap
 
-对一些常见库进行 wrap，保留原生库的所有功能，并提供通用的 trace/metric/retry/ratelimiter 功能
+对一些常见库进行 wrap，并保留原生库的所有功能，wrap 代码通过工具自动生成
 
 ## Feature
 
-1. 支持 trace/metric/retry/ratelimiter
-2. 支持自动从 ecs role 中获取 ak/sk/token 更新 client
-3. 支持配置热加载
-4. wrap 代码自动生成
+1. 支持 retry
+2. 支持 trace
+3. 支持 metric
+4. 支持 rateLimiter
+5. 支持 parallelController
+6. 支持配置热加载
+7. 阿里 client 支持从 ecs role 中获取授权信息
+8. wrap 代码由自动生成
+
+## 
 
 ## 代码结构
 

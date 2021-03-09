@@ -153,7 +153,7 @@ func (w GORMAssociationWrapper) Append(ctx context.Context, values ...interface{
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Append")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Append", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -197,7 +197,7 @@ func (w GORMAssociationWrapper) Clear(ctx context.Context) GORMAssociationWrappe
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Clear")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Clear", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -246,7 +246,7 @@ func (w GORMAssociationWrapper) Delete(ctx context.Context, values ...interface{
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Delete")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Delete", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -290,7 +290,7 @@ func (w GORMAssociationWrapper) Find(ctx context.Context, value interface{}) GOR
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Find")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Find", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -334,7 +334,7 @@ func (w GORMAssociationWrapper) Replace(ctx context.Context, values ...interface
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Replace")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.Association.Replace", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -383,7 +383,7 @@ func (w GORMDBWrapper) AddForeignKey(ctx context.Context, field string, dest str
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AddForeignKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AddForeignKey", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -427,7 +427,7 @@ func (w GORMDBWrapper) AddIndex(ctx context.Context, indexName string, columns .
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AddIndex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AddIndex", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -471,7 +471,7 @@ func (w GORMDBWrapper) AddUniqueIndex(ctx context.Context, indexName string, col
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AddUniqueIndex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AddUniqueIndex", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -515,7 +515,7 @@ func (w GORMDBWrapper) Assign(ctx context.Context, attrs ...interface{}) GORMDBW
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Assign")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Assign", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -559,7 +559,7 @@ func (w GORMDBWrapper) Association(ctx context.Context, column string) GORMAssoc
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Association")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Association", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -603,7 +603,7 @@ func (w GORMDBWrapper) Attrs(ctx context.Context, attrs ...interface{}) GORMDBWr
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Attrs")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Attrs", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -647,7 +647,7 @@ func (w GORMDBWrapper) AutoMigrate(ctx context.Context, values ...interface{}) G
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AutoMigrate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.AutoMigrate", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -691,7 +691,7 @@ func (w GORMDBWrapper) Begin(ctx context.Context) GORMDBWrapper {
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Begin")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Begin", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -735,7 +735,7 @@ func (w GORMDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) GORMDBW
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.BeginTx")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.BeginTx", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -779,7 +779,7 @@ func (w GORMDBWrapper) BlockGlobalUpdate(ctx context.Context, enable bool) GORMD
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.BlockGlobalUpdate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.BlockGlobalUpdate", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -828,7 +828,7 @@ func (w GORMDBWrapper) Close(ctx context.Context) error {
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Close")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Close", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -872,7 +872,7 @@ func (w GORMDBWrapper) Commit(ctx context.Context) GORMDBWrapper {
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Commit")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Commit", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -921,7 +921,7 @@ func (w GORMDBWrapper) Count(ctx context.Context, value interface{}) GORMDBWrapp
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Count")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Count", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -965,7 +965,7 @@ func (w GORMDBWrapper) Create(ctx context.Context, value interface{}) GORMDBWrap
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Create")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Create", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1009,7 +1009,7 @@ func (w GORMDBWrapper) CreateTable(ctx context.Context, models ...interface{}) G
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.CreateTable")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.CreateTable", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1058,7 +1058,7 @@ func (w GORMDBWrapper) Debug(ctx context.Context) GORMDBWrapper {
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Debug")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Debug", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1102,7 +1102,7 @@ func (w GORMDBWrapper) Delete(ctx context.Context, value interface{}, where ...i
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Delete")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Delete", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1151,7 +1151,7 @@ func (w GORMDBWrapper) DropColumn(ctx context.Context, column string) GORMDBWrap
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.DropColumn")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.DropColumn", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1195,7 +1195,7 @@ func (w GORMDBWrapper) DropTable(ctx context.Context, values ...interface{}) GOR
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.DropTable")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.DropTable", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1239,7 +1239,7 @@ func (w GORMDBWrapper) DropTableIfExists(ctx context.Context, values ...interfac
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.DropTableIfExists")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.DropTableIfExists", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1283,7 +1283,7 @@ func (w GORMDBWrapper) Exec(ctx context.Context, sql string, values ...interface
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Exec")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Exec", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1327,7 +1327,7 @@ func (w GORMDBWrapper) Find(ctx context.Context, out interface{}, where ...inter
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Find")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Find", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1371,7 +1371,7 @@ func (w GORMDBWrapper) First(ctx context.Context, out interface{}, where ...inte
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.First")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.First", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1415,7 +1415,7 @@ func (w GORMDBWrapper) FirstOrCreate(ctx context.Context, out interface{}, where
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.FirstOrCreate")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.FirstOrCreate", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1459,7 +1459,7 @@ func (w GORMDBWrapper) FirstOrInit(ctx context.Context, out interface{}, where .
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.FirstOrInit")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.FirstOrInit", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1513,7 +1513,7 @@ func (w GORMDBWrapper) Group(ctx context.Context, query string) GORMDBWrapper {
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Group")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Group", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1567,7 +1567,7 @@ func (w GORMDBWrapper) Having(ctx context.Context, query interface{}, values ...
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Having")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Having", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1611,7 +1611,7 @@ func (w GORMDBWrapper) InstantSet(ctx context.Context, name string, value interf
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.InstantSet")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.InstantSet", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1655,7 +1655,7 @@ func (w GORMDBWrapper) Joins(ctx context.Context, query string, args ...interfac
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Joins")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Joins", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1699,7 +1699,7 @@ func (w GORMDBWrapper) Last(ctx context.Context, out interface{}, where ...inter
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Last")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Last", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1743,7 +1743,7 @@ func (w GORMDBWrapper) Limit(ctx context.Context, limit interface{}) GORMDBWrapp
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Limit")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Limit", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1787,7 +1787,7 @@ func (w GORMDBWrapper) LogMode(ctx context.Context, enable bool) GORMDBWrapper {
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.LogMode")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.LogMode", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1831,7 +1831,7 @@ func (w GORMDBWrapper) Model(ctx context.Context, value interface{}) GORMDBWrapp
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Model")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Model", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1875,7 +1875,7 @@ func (w GORMDBWrapper) ModifyColumn(ctx context.Context, column string, typ stri
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.ModifyColumn")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.ModifyColumn", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1919,7 +1919,7 @@ func (w GORMDBWrapper) New(ctx context.Context) GORMDBWrapper {
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.New")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.New", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1973,7 +1973,7 @@ func (w GORMDBWrapper) Not(ctx context.Context, query interface{}, args ...inter
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Not")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Not", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2017,7 +2017,7 @@ func (w GORMDBWrapper) Offset(ctx context.Context, offset interface{}) GORMDBWra
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Offset")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Offset", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2061,7 +2061,7 @@ func (w GORMDBWrapper) Omit(ctx context.Context, columns ...string) GORMDBWrappe
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Omit")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Omit", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2105,7 +2105,7 @@ func (w GORMDBWrapper) Or(ctx context.Context, query interface{}, args ...interf
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Or")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Or", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2149,7 +2149,7 @@ func (w GORMDBWrapper) Order(ctx context.Context, value interface{}, reorder ...
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Order")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Order", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2193,7 +2193,7 @@ func (w GORMDBWrapper) Pluck(ctx context.Context, column string, value interface
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Pluck")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Pluck", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2237,7 +2237,7 @@ func (w GORMDBWrapper) Preload(ctx context.Context, column string, conditions ..
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Preload")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Preload", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2281,7 +2281,7 @@ func (w GORMDBWrapper) Preloads(ctx context.Context, out interface{}) GORMDBWrap
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Preloads")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Preloads", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2330,7 +2330,7 @@ func (w GORMDBWrapper) Raw(ctx context.Context, sql string, values ...interface{
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Raw")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Raw", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2379,7 +2379,7 @@ func (w GORMDBWrapper) Related(ctx context.Context, value interface{}, foreignKe
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Related")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Related", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2423,7 +2423,7 @@ func (w GORMDBWrapper) RemoveForeignKey(ctx context.Context, field string, dest 
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.RemoveForeignKey")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.RemoveForeignKey", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2467,7 +2467,7 @@ func (w GORMDBWrapper) RemoveIndex(ctx context.Context, indexName string) GORMDB
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.RemoveIndex")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.RemoveIndex", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2511,7 +2511,7 @@ func (w GORMDBWrapper) Rollback(ctx context.Context) GORMDBWrapper {
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Rollback")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Rollback", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2555,7 +2555,7 @@ func (w GORMDBWrapper) RollbackUnlessCommitted(ctx context.Context) GORMDBWrappe
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.RollbackUnlessCommitted")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.RollbackUnlessCommitted", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2605,7 +2605,7 @@ func (w GORMDBWrapper) Rows(ctx context.Context) (*sql.Rows, error) {
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Rows")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Rows", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2649,7 +2649,7 @@ func (w GORMDBWrapper) Save(ctx context.Context, value interface{}) GORMDBWrappe
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Save")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Save", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2693,7 +2693,7 @@ func (w GORMDBWrapper) Scan(ctx context.Context, dest interface{}) GORMDBWrapper
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Scan")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Scan", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2737,7 +2737,7 @@ func (w GORMDBWrapper) ScanRows(ctx context.Context, rows *sql.Rows, result inte
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.ScanRows")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.ScanRows", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2781,7 +2781,7 @@ func (w GORMDBWrapper) Scopes(ctx context.Context, funcs ...func(*gorm.DB) *gorm
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Scopes")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Scopes", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2825,7 +2825,7 @@ func (w GORMDBWrapper) Select(ctx context.Context, query interface{}, args ...in
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Select")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Select", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2869,7 +2869,7 @@ func (w GORMDBWrapper) Set(ctx context.Context, name string, value interface{}) 
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Set")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Set", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2917,7 +2917,7 @@ func (w GORMDBWrapper) SetNowFuncOverride(ctx context.Context, nowFuncOverride f
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.SetNowFuncOverride")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.SetNowFuncOverride", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -2970,7 +2970,7 @@ func (w GORMDBWrapper) Table(ctx context.Context, name string) GORMDBWrapper {
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Table")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Table", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3014,7 +3014,7 @@ func (w GORMDBWrapper) Take(ctx context.Context, out interface{}, where ...inter
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Take")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Take", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3058,7 +3058,7 @@ func (w GORMDBWrapper) Transaction(ctx context.Context, fc func(tx *gorm.DB) err
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Transaction")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Transaction", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3102,7 +3102,7 @@ func (w GORMDBWrapper) Unscoped(ctx context.Context) GORMDBWrapper {
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Unscoped")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Unscoped", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3146,7 +3146,7 @@ func (w GORMDBWrapper) Update(ctx context.Context, attrs ...interface{}) GORMDBW
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Update")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Update", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3190,7 +3190,7 @@ func (w GORMDBWrapper) UpdateColumn(ctx context.Context, attrs ...interface{}) G
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.UpdateColumn")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.UpdateColumn", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3234,7 +3234,7 @@ func (w GORMDBWrapper) UpdateColumns(ctx context.Context, values interface{}) GO
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.UpdateColumns")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.UpdateColumns", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3278,7 +3278,7 @@ func (w GORMDBWrapper) Updates(ctx context.Context, values interface{}, ignorePr
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Updates")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Updates", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -3322,7 +3322,7 @@ func (w GORMDBWrapper) Where(ctx context.Context, query interface{}, args ...int
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Where")
+			span, _ = opentracing.StartSpanFromContext(ctx, "gorm.DB.Where", ctxOptions.startSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
