@@ -5,7 +5,7 @@
   "provider": {
     "type": "Local",
     "options": {
-      "filename": "test.json"
+      "filename": "../test.json"
     }
   },
   "cipher": {
