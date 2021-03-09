@@ -1,0 +1,22 @@
+{
+  "decoder": {
+    "type": "Json"
+  },
+  "provider": {
+    "type": "Local",
+    "options": {
+      "filename": "test.json"
+    }
+  },
+  "cipher": {
+    "type": "Group",
+    "cipherGroup": [{
+      "type": "AES",
+      "options": {
+        "key": "123456"
+      }
+    }, {
+      "type": "Base64"
+    }]
+  }
+}

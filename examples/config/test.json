@@ -1,0 +1,66 @@
+{
+  "http": {
+    "port": 80
+  },
+  "grpc": {
+    "port": 6080
+  },
+  "service": {
+    "accountExpiration": "5m",
+    "captchaExpiration": "30m"
+  },
+  "redis": {
+    "addr": "127.0.0.1:6379",
+    "dialTimeout": "200ms",
+    "readTimeout": "200ms",
+    "writeTimeout": "200ms",
+    "maxRetries": 3,
+    "poolSize": 20,
+    "db": 0,
+    "password": ""
+  },
+  "mysql": {
+    "username": "root",
+    "password": "123456",
+    "database": "account",
+    "host": "127.0.0.1",
+    "port": 3306,
+    "connMaxLifeTime": "60s",
+    "maxIdleConns": 10,
+    "maxOpenConns": 20
+  },
+  "email": {
+    "username": "hatlonely@foxmail.com",
+    "password": "123456",
+    "server": "smtp.qq.com",
+    "port": 25
+  },
+  "logger": {
+    "grpc": {
+      "level": "Info",
+      "writers": [{
+        "type": "RotateFile",
+        "rotateFileWriter": {
+          "filename": "log/account.rpc",
+          "maxAge": "24h",
+          "formatter": {
+            "type": "Json"
+          }
+        }
+      }]
+    },
+    "info": {
+      "level": "Info",
+      "writers": [{
+        "type": "RotateFile",
+        "rotateFileWriter": {
+          "filename": "log/account.log",
+          "maxAge": "48h",
+          "formatter": {
+            "type": "Json"
+          }
+        }
+      }]
+    }
+  }
+}
