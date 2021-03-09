@@ -13,144 +13,6 @@
 7. 阿里 client 支持从 ecs role 中获取授权信息
 8. wrap 代码由自动生成
 
-## 
-
-## 代码结构
-
-代码分为三个部分
-
-1. 所有库公用的结构，封装了一些通用的逻辑和结构，包括 `retry/error/logger/wrapper`
-2. 不同库逻辑相似性不高，不可自动生成的代码，目前主要是各个库的构造方式 `constructor_<T>.go`
-3. 可自动生成的代码，包括各个函数接口，以及其他一些相似性较高的逻辑，比如 `OnRetryChange`
-
-## Retry
-
-封装了`github.com/avast/retry-go` 相关的逻辑，支持 retry 的配置化，提供常见的通用 retryIf 方法，支持用户可以拓展自己的 retryIf
-
-```go
-type RetryOptions struct {
-	Attempts uint `dft:"3"`
-	// 重试间隔，当 DelayType == Fixed || DelayType == BackOff 时有效
-	Delay time.Duration `dft:"1s"`
-	// 最大重试间隔时间
-	MaxDelay time.Duration `dft:"3m"`
-	// 随机重试间隔，当 DelayType == Random 时有效
-	MaxJitter     time.Duration `dft:"1s"`
-	LastErrorOnly bool
-	// Fixed: 固定重试间隔为 Delay
-	// BackOff: 以 Delay 为基础，重试间隔指数增长，Delay, Delay >> 1, Delay >> 2
-	// Random: 重试间隔为 (0, MaxJitter) 中的一个随机值
-	// Fixed,Random: 重试间隔 (Delay, Delay + MaxJitter) 中的一个随机值
-	DelayType string `dft:"BackOff"`
-	// 使用定义在 retryRetryIfMap 中的 retryIf 方法
-	// 默认重试非 retry.Unrecoverable 的所有错误
-	RetryIf string
-}
-```
-
-### retryIf 的拓展
-
-在 `retryRetryIfMap` 中定义了默认的 `retryIf` 处理，用户可以通过 `RegisterRetryRetryIf` 方法来定义自己的 `retryIf` 方法
-
-```go
-func init() {
-    wrap.RegisterRetryRetryIf("MyRetryIf", func(err error) bool {
-    	switch e := err.(type) {
-        case *MyError:
-            if e.HttpStatusCode >= http.StatusInternalServerError {
-                return true
-            }
-            if strings.Contains(e.Error(), "timeout") {
-                return true
-            }
-        }
-        return false
-    })
-}
-```
-
-### Retry 函数代码模板
-
-```go
-err = w.retry.Do(func() error {
-    {{.function.resultList}} = w.obj.{{.function.name}}({{.function.paramList}})
-    return {{.function.lastResult}}
-})
-```
-
-## Trace
-
-trace 目前支持 opentracing，用 GlobalTracer 从 context 中获取 trace
-
-### Trace 函数代码模板
-
-```go
-if w.options.EnableTrace {
-    span, _ := opentracing.StartSpanFromContext(ctx, "{{.package}}.{{.class}}.{{.function.name}}")
-    defer span.Finish()
-}
-```
-
-## Metric
-
-有两个 Metric
-
-- durationMetric 使用 HistogramVec 用于统计平均响应时间和分位数
-- totalMetric 使用 CounterVec 用于统计 QPS 和错误分布
-
-### Metric 初始化模板
-
-```go
-func (w *{{.wrapClass}}) CreateMetric(options *{{.wrapPackagePrefix}}WrapperOptions) {
-	w.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:        "{{.package}}_{{.class}}_durationMs",
-		Help:        "{{.package}} {{.class}} response time milliseconds",
-		Buckets:     options.Metric.Buckets,
-		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode", "custom"})
-	w.totalMetric = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name:        "{{.package}}_{{.class}}_total",
-		Help:        "{{.package}} {{.class}} request total",
-		ConstLabels: options.Metric.ConstLabels,
-	}, []string{"method", "errCode", "custom"})
-}
-```
-
-### Metric 函数代码模板
-
-```go
-if w.options.EnableMetric {
-    ts := time.Now()
-    defer func() {
-        w.totalMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}).Inc()
-        w.durationMetric.WithLabelValues("{{.package}}.{{.class}}.{{.function.name}}", {{.function.errCode}}).Observe(float64(time.Now().Sub(ts).Milliseconds()))
-    }()
-}
-```
-
-### Label
-
-- `method`: 方法名
-- `errCode`: 错误码
-- `custom`: 用户自定义 Label，常见的使用场景是一个 client 有多种不同业务在使用，业务字段可以设置在这个字段上
-
-## RateLimiter
-
-```go
-type RateLimiterGroup interface {
-	Wait(ctx context.Context, key string) error
-}
-```
-
-基于 `golang.org/x/time/rate` 默认提供两种本地限流策略，
-
-- `LocalGroupRateLimiter`: 每个方法都有单独的限流器，互不干扰
-- `LocalShareRateLimiter`: 所有方法共享同一个限流器，不同的方法可以设置每次请求消耗的 token 数量
-
-### RateLimiter 的错误处理
-
-如果被 wrap 函数本身返回 error，这个错误会直接返回，否则这个错误会被忽略
-
 ## Context
 
 在 Context 中可以传递一些动态的选项，用来改变函数执行的逻辑
@@ -160,47 +22,164 @@ type CtxOptions struct {
 	DisableTrace           bool
 	DisableMetric          bool
 	MetricCustomLabelValue string
+	TraceTags              map[string]string
+	startSpanOpts          []opentracing.StartSpanOption
 }
 ```
 
-用户可以通过 `NewContext` 来创建新的 context，调用方式类似
+用户可以通过 `NewContext` 来创建新的 context
 
 ```go
 res, err := w.GetRow(wrap.NewContext(ctx, wrap.WithCtxDisableTrace(), wrap.WithMetricCustomLabelValue("myCustomVal")), &tablestore.GetRowRequest{...})
 ```
 
+## wrap 函数
+
+```go
+func (w *OTSTableStoreClientWrapper) GetRow(ctx context.Context, request *tablestore.GetRowRequest) (*tablestore.GetRowResponse, error) {
+	ctxOptions := FromContext(ctx)
+	var res0 *tablestore.GetRowResponse
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.GetRow", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.GetRow", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.GetRow", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetRow", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.GetRow", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.GetRow", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.GetRow", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		res0, err = w.obj.GetRow(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return res0, err
+}
+```
+
+## 微服务组件
+
+参考 [micro](../micro)
+
 ## 热加载
 
 Wrapper 创建的代码逻辑是手动编写的，提供两种创建方式，`NewWithOptions` 以及 `NewWithConfig`，`NewWithConfig` 使用 config 模块的动态加载机制实现了配置的热加载，
-热加载包括三个部分，Wrapper、Retry 以及被 Wrap 的类，其中 Wrapper 和 Retry 的热加载逻辑可以自动生成，但需要在构造方法中调用，
-此外，Metric 需要提前定义，是无法热加载的
+热加载包括三个部分，Wrapper、Retry 以及被 Wrap 的类，其中 Wrapper 和 Retry 的热加载逻辑可以自动生成，但需要在构造方法中调用， 此外，Metric 需要提前定义，是无法热加载的
 
 
 ```go
-func (w *{{.wrapClass}}) OnWrapperChange(opts ...refx.Option) config.OnChangeHandler {
-	return func(cfg *config.Config) error {
-		var options {{.wrapPackagePrefix}}WrapperOptions
-		if err := cfg.Unmarshal(&options, opts...); err != nil {
-			return errors.Wrap(err, "cfg.Unmarshal failed")
-		}
-		w.options = &options
-		return nil
+func NewOTSTableStoreClientWrapperWithOptions(options *OTSTableStoreClientWrapperOptions, opts ...refx.Option) (*OTSTableStoreClientWrapper, error) {
+	var w OTSTableStoreClientWrapper
+	var err error
+
+	w.options = &options.Wrapper
+	w.retry, err = micro.NewRetryWithOptions(&options.Retry)
+	if err != nil {
+		return nil, errors.Wrap(err, "micro.NewRetryWithOptions failed")
 	}
+	w.rateLimiter, err = micro.NewRateLimiterWithOptions(&options.RateLimiter, opts...)
+	if err != nil {
+		return nil, errors.Wrap(err, "micro.NewRateLimiterWithOptions failed")
+	}
+	w.parallelController, err = micro.NewParallelControllerWithOptions(&options.ParallelController, opts...)
+	if err != nil {
+		return nil, errors.Wrap(err, "micro.NewParallelControllerWithOptions failed")
+	}
+	if w.options.EnableMetric {
+		w.CreateMetric(w.options)
+	}
+
+	if options.OTS.AccessKeyID != "" {
+		client := tablestore.NewClient(options.OTS.Endpoint, options.OTS.InstanceName, options.OTS.AccessKeyID, options.OTS.AccessKeySecret)
+		if _, err := client.ListTable(); err != nil {
+			return nil, errors.Wrap(err, "tablestore.TableStoreClient.ListTable failed")
+		}
+		w.obj = client
+	} else {
+		res, err := alics.ECSMetaDataRamSecurityCredentials()
+		if err != nil {
+			return nil, errors.Wrap(err, "alics.ECSMetaDataRamSecurityCredentials failed")
+		}
+		client := tablestore.NewClientWithConfig(options.OTS.Endpoint, options.OTS.InstanceName, res.AccessKeyID, res.AccessKeySecret, res.SecurityToken, nil)
+		if _, err := client.ListTable(); err != nil {
+			return nil, errors.Wrap(err, "tablestore.TableStoreClient.ListTable failed")
+		}
+		w.obj = client
+		go w.UpdateCredentialByECSRole(res, &options.OTS)
+	}
+
+	return &w, nil
 }
 
-func (w *{{.wrapClass}}) OnRetryChange(opts ...refx.Option) config.OnChangeHandler {
-	return func(cfg *config.Config) error {
-		var options {{.wrapPackagePrefix}}RetryOptions
+func NewOTSTableStoreClientWrapperWithConfig(cfg *config.Config, opts ...refx.Option) (*OTSTableStoreClientWrapper, error) {
+	var options OTSTableStoreClientWrapperOptions
+	if err := cfg.Unmarshal(&options, opts...); err != nil {
+		return nil, errors.Wrap(err, "config.Config.Unmarshal failed")
+	}
+	w, err := NewOTSTableStoreClientWrapperWithOptions(&options, opts...)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewOTSTableStoreClientWrapperWithOptions failed")
+	}
+
+	refxOptions := refx.NewOptions(opts...)
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Wrapper"), w.OnWrapperChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("Retry"), w.OnRetryChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("RateLimiter"), w.OnRateLimiterChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("ParallelController"), w.OnParallelControllerChange(opts...))
+	cfg.AddOnItemChangeHandler(refxOptions.FormatKey("OTS"), func(cfg *config.Config) error {
+		var options OTSOptions
 		if err := cfg.Unmarshal(&options, opts...); err != nil {
 			return errors.Wrap(err, "cfg.Unmarshal failed")
 		}
-		retry, err := {{.wrapPackagePrefix}}NewRetryWithOptions(&options)
-		if err != nil {
-			return errors.Wrap(err, "NewRetryWithOptions failed")
+
+		if options.AccessKeyID != "" {
+			client := tablestore.NewClient(options.Endpoint, options.InstanceName, options.AccessKeyID, options.AccessKeySecret)
+			if _, err := client.ListTable(); err != nil {
+				return errors.Wrap(err, "tablestore.TableStoreClient.ListTable failed")
+			}
+			w.obj = client
+			return nil
 		}
-		w.retry = retry
+
+		res, err := alics.ECSMetaDataRamSecurityCredentials()
+		if err != nil {
+			return errors.Wrap(err, "alics.ECSMetaDataRamSecurityCredentials failed")
+		}
+		client := tablestore.NewClientWithConfig(options.Endpoint, options.InstanceName, res.AccessKeyID, res.AccessKeySecret, res.SecurityToken, nil)
+		if _, err := client.ListTable(); err != nil {
+			return errors.Wrap(err, "tablestore.TableStoreClient.ListTable failed")
+		}
+		w.obj = client
+		go w.UpdateCredentialByECSRole(res, &options)
 		return nil
-	}
+	})
+
+	return w, err
 }
 ```
 
