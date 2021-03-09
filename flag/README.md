@@ -32,7 +32,7 @@ func main() {
 }
 ```
 
-add 风格 api
+add 风格用法
 
 ```go
 package main
