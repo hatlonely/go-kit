@@ -40,7 +40,7 @@ func main() {
 		return
 	}
 	if options.ConfigPath == "" {
-		options.ConfigPath = "test.json"
+		options.ConfigPath = "../config/test.json"
 	}
 	cfg, err := config.NewConfigWithSimpleFile(options.ConfigPath)
 	if err != nil {
