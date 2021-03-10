@@ -65,7 +65,7 @@ func main() {
       --rule.errorInResult.include "^\*redis\..*Cmd$$" \
       --output $@
   gen wrap --sourcePath vendor \
-  	  --packagePath "github.com/olivere/elastic/v7" \
+      --packagePath "github.com/olivere/elastic/v7" \
       --packageName elastic \
       --classPrefix ES \
       --rule.starClass '{"include": "^(?i:(Client)|(.*Service))$$", "exclude": ".*"}' \
