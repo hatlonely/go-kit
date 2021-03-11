@@ -5,19 +5,22 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	jsoniter "github.com/json-iterator/go"
 	uuid "github.com/satori/go.uuid"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 type MuxInterceptorOptions struct {
-	Headers          []string `dft:"X-Request-Id"`
-	ContentType      string   `dft:"application/json"`
-	UseFieldKey      bool
-	RequestIDMetaKey string `dft:"X-Request-Id"`
-	MarshalOmitempty bool
+	Headers                 []string `dft:"X-Request-Id"`
+	ContentType             string   `dft:"application/json"`
+	UseFieldKey             bool
+	RequestIDMetaKey        string `dft:"X-Request-Id"`
+	MarshalUseProtoNames    bool
+	MarshalEmitUnpopulated  bool
+	UnmarshalDiscardUnknown bool
 }
 
 type MuxInterceptor struct {
@@ -44,14 +47,20 @@ func (m *MuxInterceptor) ServeMuxOptions() []runtime.ServeMuxOption {
 	opts = append(opts, m.MuxIncomingHeaderMatcher())
 	opts = append(opts, m.MuxOutgoingHeaderMatcher())
 	opts = append(opts, m.MuxProtoErrorHandler())
-	if m.options.MarshalOmitempty {
-		opts = append(opts, m.MuxMarshalerOption())
-	}
+	opts = append(opts, m.MuxMarshalerOption())
 	return opts
 }
 
 func (m *MuxInterceptor) MuxMarshalerOption() runtime.ServeMuxOption {
-	return runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{OrigName: true, EmitDefaults: true})
+	return runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{
+		MarshalOptions: protojson.MarshalOptions{
+			UseProtoNames:   m.options.MarshalUseProtoNames,
+			EmitUnpopulated: m.options.MarshalEmitUnpopulated,
+		},
+		UnmarshalOptions: protojson.UnmarshalOptions{
+			DiscardUnknown: m.options.UnmarshalDiscardUnknown,
+		},
+	})
 }
 
 func (m *MuxInterceptor) MuxMetaData() runtime.ServeMuxOption {
@@ -82,7 +91,7 @@ func (m *MuxInterceptor) MuxOutgoingHeaderMatcher() runtime.ServeMuxOption {
 }
 
 func (m *MuxInterceptor) MuxProtoErrorHandler() runtime.ServeMuxOption {
-	return runtime.WithProtoErrorHandler(func(ctx context.Context, mux *runtime.ServeMux, marshaler runtime.Marshaler, res http.ResponseWriter, req *http.Request, err error) {
+	return runtime.WithErrorHandler(func(ctx context.Context, mux *runtime.ServeMux, marshaler runtime.Marshaler, res http.ResponseWriter, req *http.Request, err error) {
 		res.Header().Set("Content-Type", m.options.ContentType)
 		for _, header := range m.options.Headers {
 			res.Header().Set(header, req.Header.Get(header))

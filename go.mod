@@ -27,7 +27,7 @@ require (
 	github.com/gogap/stack v0.0.0-20150131034635-fef68dddd4f8 // indirect
 	github.com/golang/protobuf v1.4.3
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.1-0.20190118093823-f849b5445de4
-	github.com/grpc-ecosystem/grpc-gateway v1.15.2
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.3.0
 	github.com/jinzhu/gorm v1.9.15
 	github.com/jonboulle/clockwork v0.2.0 // indirect
 	github.com/json-iterator/go v1.1.10
@@ -50,10 +50,10 @@ require (
 	go.mongodb.org/mongo-driver v1.4.3
 	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324
 	golang.org/x/tools v0.1.0 // indirect
-	google.golang.org/grpc v1.32.0
-	google.golang.org/protobuf v1.25.0 // indirect
+	google.golang.org/grpc v1.36.0
+	google.golang.org/protobuf v1.25.1-0.20201208041424-160c7477e0e8
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0
 	gopkg.in/ini.v1 v1.62.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )

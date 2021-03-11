@@ -9,7 +9,7 @@ import (
 	"net/http/pprof"
 	"time"
 
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -28,18 +28,20 @@ type GrpcGatewayOptions struct {
 	GrpcPort    int
 	ExitTimeout time.Duration
 
-	Headers          []string `dft:"X-Request-Id"`
-	Validators       []string
-	PrivateIP        string
-	Hostname         string
-	RequestIDMetaKey string `dft:"x-request-id"`
-	ContentType      string `dft:"application/json"`
-	PascalNameKey    bool
-	EnableTrace      bool
-	EnableMetric     bool
-	EnablePprof      bool
-	UseFieldKey      bool
-	MarshalOmitempty bool
+	Headers                 []string `dft:"X-Request-Id"`
+	Validators              []string
+	PrivateIP               string
+	Hostname                string
+	RequestIDMetaKey        string `dft:"x-request-id"`
+	ContentType             string `dft:"application/json"`
+	PascalNameKey           bool
+	EnableTrace             bool
+	EnableMetric            bool
+	EnablePprof             bool
+	UseFieldKey             bool
+	MarshalUseProtoNames    bool
+	MarshalEmitUnpopulated  bool
+	UnmarshalDiscardUnknown bool
 
 	RateLimiterHeader        string
 	ParallelControllerHeader string
@@ -123,11 +125,13 @@ func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions, opts ...refx.Option)
 	}
 
 	muxInterceptor, _ := NewMuxInterceptorWithOptions(&MuxInterceptorOptions{
-		Headers:          options.Headers,
-		ContentType:      options.ContentType,
-		UseFieldKey:      options.UseFieldKey,
-		RequestIDMetaKey: options.RequestIDMetaKey,
-		MarshalOmitempty: options.MarshalOmitempty,
+		Headers:                 options.Headers,
+		ContentType:             options.ContentType,
+		UseFieldKey:             options.UseFieldKey,
+		RequestIDMetaKey:        options.RequestIDMetaKey,
+		MarshalUseProtoNames:    options.MarshalUseProtoNames,
+		MarshalEmitUnpopulated:  options.MarshalEmitUnpopulated,
+		UnmarshalDiscardUnknown: options.UnmarshalDiscardUnknown,
 	})
 
 	g := &GrpcGateway{
