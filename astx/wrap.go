@@ -52,7 +52,8 @@ func (r Rule) MarshalJSON() ([]byte, error) {
 
 type WrapperGeneratorOptions struct {
 	Debug                    bool                `flag:"usage: debug mode"`
-	SourcePath               string              `flag:"usage: source path; default: vendor"`
+	SourceDir                string              `flag:"usage: source directory; default: vendor"`
+	SourcePath               string              `flag:"usage: source path default is $SourceDir/$PackagePath"`
 	PackagePath              string              `flag:"usage: package path"`
 	PackageName              string              `flag:"usage: package name"`
 	OutputPackage            string              `flag:"usage: output package name; default: wrap" dft:"wrap"`
@@ -220,7 +221,11 @@ type RenderInfo struct {
 }
 
 func (g *WrapperGenerator) Generate() (string, error) {
-	functions, err := ParseFunction(path.Join(g.options.SourcePath, g.options.PackagePath), g.options.PackageName)
+	sourcePath := g.options.SourcePath
+	if sourcePath == "" {
+		sourcePath = path.Join(g.options.SourceDir, g.options.PackagePath)
+	}
+	functions, err := ParseFunction(sourcePath, g.options.PackageName)
 	if err != nil {
 		return "", errors.Wrap(err, "ParseFunction failed")
 	}

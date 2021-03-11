@@ -57,7 +57,7 @@ wrap: wrap/autogen_ots.go \
 	wrap/autogen_sms.go
 
 wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen wrap --sourcePath vendor \
+	build/bin/gen wrap --sourceDir vendor \
 		--packagePath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" \
 		--packageName tablestore \
 		--classPrefix OTS \
@@ -66,7 +66,7 @@ wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen wrap --sourcePath vendor \
+	build/bin/gen wrap --sourceDir vendor \
 		--packagePath "github.com/aliyun/alibaba-cloud-sdk-go/services/kms" \
 		--packageName kms \
 		--classPrefix KMS \
@@ -75,7 +75,7 @@ wrap/autogen_kms.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_ram.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen wrap --sourcePath vendor \
+	build/bin/gen wrap --sourceDir vendor \
 		--packagePath "github.com/aliyun/alibaba-cloud-sdk-go/services/ram" \
 		--packageName ram \
 		--classPrefix RAM \
@@ -84,7 +84,7 @@ wrap/autogen_ram.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_sts.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen wrap --sourcePath vendor \
+	build/bin/gen wrap --sourceDir vendor \
 		--packagePath "github.com/aliyun/alibaba-cloud-sdk-go/services/sts" \
 		--packageName sts \
 		--classPrefix STS \
@@ -93,7 +93,7 @@ wrap/autogen_sts.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_sms.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen wrap --sourcePath vendor \
+	build/bin/gen wrap --sourceDir vendor \
 		--packagePath "github.com/aliyun/alibaba-cloud-sdk-go/services/dysmsapi" \
 		--packageName dysmsapi \
 		--classPrefix SMS \
@@ -102,7 +102,7 @@ wrap/autogen_sms.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen wrap --sourcePath vendor \
+	build/bin/gen wrap --sourceDir vendor \
 		--packagePath "github.com/nacos-group/nacos-sdk-go/clients/config_client" \
 		--packageName config_client \
 		--classPrefix ACM \
@@ -111,7 +111,7 @@ wrap/autogen_acm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen wrap --sourcePath vendor \
+	build/bin/gen wrap --sourceDir vendor \
 		--packagePath "github.com/aliyun/aliyun-oss-go-sdk/oss" \
 		--packageName oss \
 		--classPrefix OSS \
@@ -121,7 +121,7 @@ wrap/autogen_oss.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_pds.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen wrap --sourcePath vendor \
+	build/bin/gen wrap --sourceDir vendor \
 		--packagePath "github.com/alibabacloud-go/pds-sdk/client" \
 		--packageName client \
 		--classPrefix PDS \
@@ -130,7 +130,7 @@ wrap/autogen_pds.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_mns.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen wrap --sourcePath vendor \
+	build/bin/gen wrap --sourceDir vendor \
 		--packagePath "github.com/aliyun/aliyun-mns-go-sdk" \
 		--packageName ali_mns \
 		--starClasses MNSClient,MNSQueue,MNSTopic \
@@ -139,7 +139,7 @@ wrap/autogen_mns.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen wrap --sourcePath vendor \
+	build/bin/gen wrap --sourceDir vendor \
 		--packagePath "github.com/jinzhu/gorm" \
 		--packageName gorm \
 		--classPrefix GORM \
@@ -151,7 +151,7 @@ wrap/autogen_gorm.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_elasticsearch.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen wrap --sourcePath vendor \
+	build/bin/gen wrap --sourceDir vendor \
 		--packagePath "github.com/olivere/elastic/v7" \
 		--packageName elastic \
 		--classPrefix ES \
@@ -161,7 +161,7 @@ wrap/autogen_elasticsearch.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_mongo.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen wrap --sourcePath vendor \
+	build/bin/gen wrap --sourceDir vendor \
 		--packagePath "go.mongodb.org/mongo-driver/mongo" \
 		--packageName mongo \
 		--classPrefix Mongo \
@@ -171,7 +171,7 @@ wrap/autogen_mongo.go: build/bin/gen vendor $(wildcard astx/*.go)
 		--output $@
 
 wrap/autogen_redis.go: build/bin/gen vendor $(wildcard astx/*.go)
-	build/bin/gen wrap --sourcePath vendor \
+	build/bin/gen wrap --sourceDir vendor \
 		--packagePath "github.com/go-redis/redis" \
 		--packageName redis \
 		--classPrefix Redis \
