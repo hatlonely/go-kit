@@ -11,4 +11,5 @@ func init() {
 	logger.RegisterWriter("ElasticSearch", NewElasticSearchWriterWithOptions)
 	logger.RegisterWriter("DingTalk", NewDingTalkWriterWithOptions)
 	logger.RegisterWriter("Email", NewEmailWriterWithOptions)
+	logger.RegisterWriter("MNS", NewMNSWriterWithOptions)
 }
