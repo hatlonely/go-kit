@@ -41,7 +41,8 @@ type Playbook struct {
 			Type       string `dft:"string"`
 			Default    string
 		}
-		Step []string
+		Const map[string]string
+		Step  []string
 	}
 }
 
@@ -190,7 +191,11 @@ func (r *PlaybookRunner) taskEnvironment(env string, taskName string, getter bin
 	if err != nil {
 		return nil, err
 	}
+
 	environment := r.environment[env]
+	for key, val := range r.playbook.Task[taskName].Const {
+		environment = append(environment, fmt.Sprintf("%s=%v", key, val))
+	}
 
 	for key, info := range r.playbook.Task[taskName].Args {
 		v, ok := getter.Get(key)
