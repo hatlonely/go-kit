@@ -115,6 +115,8 @@ task:
     args:
       key1:
         default: val1
+    const:
+      KEY: value
     step:
       - make test
       - make image
@@ -166,7 +168,8 @@ task:
 				Type       string `dft:"string"`
 				Default    string
 			}
-			Step []string
+			Const map[string]string
+			Step  []string
 		}{
 			"image": {
 				Args: map[string]struct {
@@ -178,6 +181,9 @@ task:
 						Type:    "string",
 						Default: "val1",
 					},
+				},
+				Const: map[string]string{
+					"KEY": "value",
 				},
 				Step: []string{
 					"make test",
