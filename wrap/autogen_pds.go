@@ -300,6 +300,96 @@ func (w *PDSClientWrapper) AccountTokenEx(ctx context.Context, request *client.A
 	return _result, err
 }
 
+func (w *PDSClientWrapper) AddUserToSubdomain(ctx context.Context, request *client.AddUserToSubdomainRequest) (*client.AddUserToSubdomainModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.AddUserToSubdomainModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.AddUserToSubdomain", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.AddUserToSubdomain", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.AddUserToSubdomain", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.AddUserToSubdomain", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.AddUserToSubdomain", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.AddUserToSubdomain", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.AddUserToSubdomain", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.AddUserToSubdomain(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) AddUserToSubdomainEx(ctx context.Context, request *client.AddUserToSubdomainRequest, runtime *client.RuntimeOptions) (*client.AddUserToSubdomainModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.AddUserToSubdomainModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.AddUserToSubdomainEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.AddUserToSubdomainEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.AddUserToSubdomainEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.AddUserToSubdomainEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.AddUserToSubdomainEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.AddUserToSubdomainEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.AddUserToSubdomainEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.AddUserToSubdomainEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
 func (w *PDSClientWrapper) AdminListStores(ctx context.Context, request *client.AdminListStoresRequest) (*client.AdminListStoresModel, error) {
 	ctxOptions := FromContext(ctx)
 	var _result *client.AdminListStoresModel
@@ -1294,6 +1384,186 @@ func (w *PDSClientWrapper) CreateFileEx(ctx context.Context, request *client.Cre
 	return _result, err
 }
 
+func (w *PDSClientWrapper) CreateGroup(ctx context.Context, request *client.CreateGroupRequest) (*client.CreateGroupModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.CreateGroupModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CreateGroup", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateGroup", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateGroup", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateGroup", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.CreateGroup", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.CreateGroup", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.CreateGroup", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.CreateGroup(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) CreateGroupEx(ctx context.Context, request *client.CreateGroupRequest, runtime *client.RuntimeOptions) (*client.CreateGroupModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.CreateGroupModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CreateGroupEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateGroupEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateGroupEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateGroupEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.CreateGroupEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.CreateGroupEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.CreateGroupEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.CreateGroupEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) CreateMembership(ctx context.Context, request *client.CreateMembershipRequest) (*client.CreateMembershipModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.CreateMembershipModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CreateMembership", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateMembership", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateMembership", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateMembership", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.CreateMembership", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.CreateMembership", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.CreateMembership", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.CreateMembership(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) CreateMembershipEx(ctx context.Context, request *client.CreateMembershipRequest, runtime *client.RuntimeOptions) (*client.CreateMembershipModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.CreateMembershipModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CreateMembershipEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateMembershipEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateMembershipEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateMembershipEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.CreateMembershipEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.CreateMembershipEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.CreateMembershipEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.CreateMembershipEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
 func (w *PDSClientWrapper) CreateShare(ctx context.Context, request *client.CreateShareRequest) (*client.CreateShareModel, error) {
 	ctxOptions := FromContext(ctx)
 	var _result *client.CreateShareModel
@@ -1556,6 +1826,96 @@ func (w *PDSClientWrapper) CreateStoryEx(ctx context.Context, request *client.Cr
 			}()
 		}
 		_result, err = w.obj.CreateStoryEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) CreateSubdomain(ctx context.Context, request *client.CreateSubdomainRequest) (*client.CreateSubdomainModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.CreateSubdomainModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CreateSubdomain", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateSubdomain", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateSubdomain", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateSubdomain", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.CreateSubdomain", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.CreateSubdomain", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.CreateSubdomain", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.CreateSubdomain(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) CreateSubdomainEx(ctx context.Context, request *client.CreateSubdomainRequest, runtime *client.RuntimeOptions) (*client.CreateSubdomainModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.CreateSubdomainModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.CreateSubdomainEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.CreateSubdomainEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.CreateSubdomainEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.CreateSubdomainEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.CreateSubdomainEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.CreateSubdomainEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.CreateSubdomainEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.CreateSubdomainEx(request, runtime)
 		if err != nil && span != nil {
 			span.SetTag("error", err.Error())
 		}
@@ -1834,6 +2194,186 @@ func (w *PDSClientWrapper) DeleteFileEx(ctx context.Context, request *client.Del
 	return _result, err
 }
 
+func (w *PDSClientWrapper) DeleteGroup(ctx context.Context, request *client.DeleteGroupRequest) (*client.DeleteGroupModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.DeleteGroupModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteGroup", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteGroup", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteGroup", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteGroup", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.DeleteGroup", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.DeleteGroup", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.DeleteGroup", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.DeleteGroup(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) DeleteGroupEx(ctx context.Context, request *client.DeleteGroupRequest, runtime *client.RuntimeOptions) (*client.DeleteGroupModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.DeleteGroupModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteGroupEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteGroupEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteGroupEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteGroupEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.DeleteGroupEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.DeleteGroupEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.DeleteGroupEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.DeleteGroupEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) DeleteMembership(ctx context.Context, request *client.DeleteMembershipRequest) (*client.DeleteMembershipModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.DeleteMembershipModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteMembership", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteMembership", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteMembership", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteMembership", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.DeleteMembership", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.DeleteMembership", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.DeleteMembership", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.DeleteMembership(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) DeleteMembershipEx(ctx context.Context, request *client.DeleteMembershipRequest, runtime *client.RuntimeOptions) (*client.DeleteMembershipModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.DeleteMembershipModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteMembershipEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteMembershipEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteMembershipEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteMembershipEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.DeleteMembershipEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.DeleteMembershipEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.DeleteMembershipEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.DeleteMembershipEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
 func (w *PDSClientWrapper) DeleteShare(ctx context.Context, request *client.DeleteShareRequest) (*client.DeleteShareModel, error) {
 	ctxOptions := FromContext(ctx)
 	var _result *client.DeleteShareModel
@@ -1916,6 +2456,96 @@ func (w *PDSClientWrapper) DeleteShareEx(ctx context.Context, request *client.De
 			}()
 		}
 		_result, err = w.obj.DeleteShareEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) DeleteSubdomain(ctx context.Context, request *client.DeleteSubdomainRequest) (*client.DeleteSubdomainModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.DeleteSubdomainModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteSubdomain", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteSubdomain", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteSubdomain", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteSubdomain", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.DeleteSubdomain", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.DeleteSubdomain", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.DeleteSubdomain", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.DeleteSubdomain(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) DeleteSubdomainEx(ctx context.Context, request *client.DeleteSubdomainRequest, runtime *client.RuntimeOptions) (*client.DeleteSubdomainModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.DeleteSubdomainModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.DeleteSubdomainEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.DeleteSubdomainEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.DeleteSubdomainEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.DeleteSubdomainEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.DeleteSubdomainEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.DeleteSubdomainEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.DeleteSubdomainEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.DeleteSubdomainEx(request, runtime)
 		if err != nil && span != nil {
 			span.SetTag("error", err.Error())
 		}
@@ -2874,6 +3504,96 @@ func (w *PDSClientWrapper) GetFileEx(ctx context.Context, request *client.GetFil
 	return _result, err
 }
 
+func (w *PDSClientWrapper) GetGroup(ctx context.Context, request *client.GetGroupRequest) (*client.GetGroupModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.GetGroupModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetGroup", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetGroup", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetGroup", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetGroup", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.GetGroup", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.GetGroup", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.GetGroup", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.GetGroup(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) GetGroupEx(ctx context.Context, request *client.GetGroupRequest, runtime *client.RuntimeOptions) (*client.GetGroupModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.GetGroupModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetGroupEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetGroupEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetGroupEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetGroupEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.GetGroupEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.GetGroupEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.GetGroupEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.GetGroupEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
 func (w *PDSClientWrapper) GetLastCursor(ctx context.Context, request *client.GetLastCursorRequest) (*client.GetLastCursorModel, error) {
 	ctxOptions := FromContext(ctx)
 	var _result *client.GetLastCursorModel
@@ -3226,6 +3946,96 @@ func (w *PDSClientWrapper) GetMediaPlayUrlEx(ctx context.Context, request *clien
 			}()
 		}
 		_result, err = w.obj.GetMediaPlayUrlEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) GetMembership(ctx context.Context, request *client.GetMembershipRequest) (*client.GetMembershipModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.GetMembershipModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetMembership", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetMembership", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetMembership", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetMembership", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.GetMembership", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.GetMembership", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.GetMembership", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.GetMembership(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) GetMembershipEx(ctx context.Context, request *client.GetMembershipRequest, runtime *client.RuntimeOptions) (*client.GetMembershipModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.GetMembershipModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetMembershipEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetMembershipEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetMembershipEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetMembershipEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.GetMembershipEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.GetMembershipEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.GetMembershipEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.GetMembershipEx(request, runtime)
 		if err != nil && span != nil {
 			span.SetTag("error", err.Error())
 		}
@@ -3919,6 +4729,96 @@ func (w *PDSClientWrapper) GetShareIdEx(ctx context.Context, request *client.Get
 	return _result, err
 }
 
+func (w *PDSClientWrapper) GetShareLink(ctx context.Context, request *client.GetShareLinkRequest) (*client.GetShareLinkModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.GetShareLinkModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetShareLink", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetShareLink", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetShareLink", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareLink", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.GetShareLink", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.GetShareLink", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.GetShareLink", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.GetShareLink(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) GetShareLinkEx(ctx context.Context, request *client.GetShareLinkRequest, runtime *client.RuntimeOptions) (*client.GetShareLinkModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.GetShareLinkModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetShareLinkEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetShareLinkEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetShareLinkEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetShareLinkEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.GetShareLinkEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.GetShareLinkEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.GetShareLinkEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.GetShareLinkEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
 func (w *PDSClientWrapper) GetShareToken(ctx context.Context, request *client.GetShareLinkTokenRequest) (*client.GetShareTokenModel, error) {
 	ctxOptions := FromContext(ctx)
 	var _result *client.GetShareTokenModel
@@ -4091,6 +4991,96 @@ func (w *PDSClientWrapper) GetStoryDetailEx(ctx context.Context, request *client
 			}()
 		}
 		_result, err = w.obj.GetStoryDetailEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) GetSubdomain(ctx context.Context, request *client.GetSubdomainRequest) (*client.GetSubdomainModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.GetSubdomainModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetSubdomain", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetSubdomain", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetSubdomain", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetSubdomain", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.GetSubdomain", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.GetSubdomain", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.GetSubdomain", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.GetSubdomain(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) GetSubdomainEx(ctx context.Context, request *client.GetSubdomainRequest, runtime *client.RuntimeOptions) (*client.GetSubdomainModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.GetSubdomainModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.GetSubdomainEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.GetSubdomainEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.GetSubdomainEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.GetSubdomainEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.GetSubdomainEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.GetSubdomainEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.GetSubdomainEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.GetSubdomainEx(request, runtime)
 		if err != nil && span != nil {
 			span.SetTag("error", err.Error())
 		}
@@ -4554,6 +5544,96 @@ func (w *PDSClientWrapper) GetVideoPreviewUrlEx(ctx context.Context, request *cl
 	return _result, err
 }
 
+func (w *PDSClientWrapper) HasMember(ctx context.Context, request *client.HasMemberRequest) (*client.HasMemberModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.HasMemberModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HasMember", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HasMember", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HasMember", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.HasMember", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.HasMember", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.HasMember", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.HasMember", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.HasMember(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) HasMemberEx(ctx context.Context, request *client.HasMemberRequest, runtime *client.RuntimeOptions) (*client.HasMemberModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.HasMemberModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.HasMemberEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.HasMemberEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.HasMemberEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.HasMemberEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.HasMemberEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.HasMemberEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.HasMemberEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.HasMemberEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
 func (w *PDSClientWrapper) Init(ctx context.Context, config *client.Config) error {
 	ctxOptions := FromContext(ctx)
 	var err error
@@ -4770,6 +5850,276 @@ func (w *PDSClientWrapper) ListAddressGroupsEx(ctx context.Context, request *cli
 			}()
 		}
 		_result, err = w.obj.ListAddressGroupsEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) ListDirectChildMemberships(ctx context.Context, request *client.ListDirectChildMembershipsRequest) (*client.ListDirectChildMembershipsModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.ListDirectChildMembershipsModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListDirectChildMemberships", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListDirectChildMemberships", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListDirectChildMemberships", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListDirectChildMemberships", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.ListDirectChildMemberships", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.ListDirectChildMemberships", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.ListDirectChildMemberships", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.ListDirectChildMemberships(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) ListDirectChildMembershipsEx(ctx context.Context, request *client.ListDirectChildMembershipsRequest, runtime *client.RuntimeOptions) (*client.ListDirectChildMembershipsModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.ListDirectChildMembershipsModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListDirectChildMembershipsEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListDirectChildMembershipsEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListDirectChildMembershipsEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListDirectChildMembershipsEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.ListDirectChildMembershipsEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.ListDirectChildMembershipsEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.ListDirectChildMembershipsEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.ListDirectChildMembershipsEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) ListDirectMemberships(ctx context.Context, request *client.ListDirectParentMembershipsRequest) (*client.ListDirectMembershipsModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.ListDirectMembershipsModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListDirectMemberships", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListDirectMemberships", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListDirectMemberships", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListDirectMemberships", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.ListDirectMemberships", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.ListDirectMemberships", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.ListDirectMemberships", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.ListDirectMemberships(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) ListDirectMembershipsEx(ctx context.Context, request *client.ListDirectParentMembershipsRequest, runtime *client.RuntimeOptions) (*client.ListDirectMembershipsModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.ListDirectMembershipsModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListDirectMembershipsEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListDirectMembershipsEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListDirectMembershipsEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListDirectMembershipsEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.ListDirectMembershipsEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.ListDirectMembershipsEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.ListDirectMembershipsEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.ListDirectMembershipsEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) ListDirectParentMemberships(ctx context.Context, request *client.ListDirectParentMembershipsRequest) (*client.ListDirectParentMembershipsModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.ListDirectParentMembershipsModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListDirectParentMemberships", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListDirectParentMemberships", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListDirectParentMemberships", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListDirectParentMemberships", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.ListDirectParentMemberships", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.ListDirectParentMemberships", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.ListDirectParentMemberships", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.ListDirectParentMemberships(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) ListDirectParentMembershipsEx(ctx context.Context, request *client.ListDirectParentMembershipsRequest, runtime *client.RuntimeOptions) (*client.ListDirectParentMembershipsModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.ListDirectParentMembershipsModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListDirectParentMembershipsEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListDirectParentMembershipsEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListDirectParentMembershipsEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListDirectParentMembershipsEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.ListDirectParentMembershipsEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.ListDirectParentMembershipsEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.ListDirectParentMembershipsEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.ListDirectParentMembershipsEx(request, runtime)
 		if err != nil && span != nil {
 			span.SetTag("error", err.Error())
 		}
@@ -5318,6 +6668,96 @@ func (w *PDSClientWrapper) ListFileEx(ctx context.Context, request *client.ListF
 	return _result, err
 }
 
+func (w *PDSClientWrapper) ListGroup(ctx context.Context, request *client.ListGroupRequest) (*client.ListGroupModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.ListGroupModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListGroup", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListGroup", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListGroup", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListGroup", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.ListGroup", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.ListGroup", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.ListGroup", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.ListGroup(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) ListGroupEx(ctx context.Context, request *client.ListGroupRequest, runtime *client.RuntimeOptions) (*client.ListGroupModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.ListGroupModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListGroupEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListGroupEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListGroupEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListGroupEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.ListGroupEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.ListGroupEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.ListGroupEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.ListGroupEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
 func (w *PDSClientWrapper) ListMyDrives(ctx context.Context, request *client.ListMyDriveRequest) (*client.ListMyDrivesModel, error) {
 	ctxOptions := FromContext(ctx)
 	var _result *client.ListMyDrivesModel
@@ -5670,6 +7110,96 @@ func (w *PDSClientWrapper) ListStoryEx(ctx context.Context, request *client.List
 			}()
 		}
 		_result, err = w.obj.ListStoryEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) ListSubdomains(ctx context.Context, request *client.ListSubdomainsRequest) (*client.ListSubdomainsModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.ListSubdomainsModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListSubdomains", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListSubdomains", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListSubdomains", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListSubdomains", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.ListSubdomains", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.ListSubdomains", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.ListSubdomains", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.ListSubdomains(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) ListSubdomainsEx(ctx context.Context, request *client.ListSubdomainsRequest, runtime *client.RuntimeOptions) (*client.ListSubdomainsModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.ListSubdomainsModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.ListSubdomainsEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.ListSubdomainsEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.ListSubdomainsEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.ListSubdomainsEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.ListSubdomainsEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.ListSubdomainsEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.ListSubdomainsEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.ListSubdomainsEx(request, runtime)
 		if err != nil && span != nil {
 			span.SetTag("error", err.Error())
 		}
@@ -6488,6 +8018,96 @@ func (w *PDSClientWrapper) RemoveStoryImagesEx(ctx context.Context, request *cli
 	return _result, err
 }
 
+func (w *PDSClientWrapper) RemoveUserFromSubdomain(ctx context.Context, request *client.RemoveUserFromSubdomainRequest) (*client.RemoveUserFromSubdomainModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.RemoveUserFromSubdomainModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.RemoveUserFromSubdomain", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.RemoveUserFromSubdomain", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.RemoveUserFromSubdomain", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.RemoveUserFromSubdomain", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.RemoveUserFromSubdomain", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.RemoveUserFromSubdomain", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.RemoveUserFromSubdomain", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.RemoveUserFromSubdomain(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) RemoveUserFromSubdomainEx(ctx context.Context, request *client.RemoveUserFromSubdomainRequest, runtime *client.RuntimeOptions) (*client.RemoveUserFromSubdomainModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.RemoveUserFromSubdomainModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.RemoveUserFromSubdomainEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.RemoveUserFromSubdomainEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.RemoveUserFromSubdomainEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.RemoveUserFromSubdomainEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.RemoveUserFromSubdomainEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.RemoveUserFromSubdomainEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.RemoveUserFromSubdomainEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.RemoveUserFromSubdomainEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
 func (w *PDSClientWrapper) ScanFileMeta(ctx context.Context, request *client.ScanFileMetaRequest) (*client.ScanFileMetaModel, error) {
 	ctxOptions := FromContext(ctx)
 	var _result *client.ScanFileMetaModel
@@ -6750,6 +8370,96 @@ func (w *PDSClientWrapper) SearchFileEx(ctx context.Context, request *client.Sea
 			}()
 		}
 		_result, err = w.obj.SearchFileEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) SearchGroup(ctx context.Context, request *client.SearchGroupRequest) (*client.SearchGroupModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.SearchGroupModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SearchGroup", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SearchGroup", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SearchGroup", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SearchGroup", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.SearchGroup", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.SearchGroup", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.SearchGroup", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.SearchGroup(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) SearchGroupEx(ctx context.Context, request *client.SearchGroupRequest, runtime *client.RuntimeOptions) (*client.SearchGroupModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.SearchGroupModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.SearchGroupEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.SearchGroupEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.SearchGroupEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.SearchGroupEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.SearchGroupEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.SearchGroupEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.SearchGroupEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.SearchGroupEx(request, runtime)
 		if err != nil && span != nil {
 			span.SetTag("error", err.Error())
 		}
@@ -7354,6 +9064,186 @@ func (w *PDSClientWrapper) UpdateFileEx(ctx context.Context, request *client.Upd
 	return _result, err
 }
 
+func (w *PDSClientWrapper) UpdateGroup(ctx context.Context, request *client.UpdateGroupRequest) (*client.UpdateGroupModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.UpdateGroupModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateGroup", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateGroup", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateGroup", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateGroup", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.UpdateGroup", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.UpdateGroup", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.UpdateGroup", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.UpdateGroup(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) UpdateGroupEx(ctx context.Context, request *client.UpdateGroupRequest, runtime *client.RuntimeOptions) (*client.UpdateGroupModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.UpdateGroupModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateGroupEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateGroupEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateGroupEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateGroupEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.UpdateGroupEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.UpdateGroupEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.UpdateGroupEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.UpdateGroupEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) UpdateMembership(ctx context.Context, request *client.UpdateMembershipRequest) (*client.UpdateMembershipModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.UpdateMembershipModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateMembership", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateMembership", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateMembership", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateMembership", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.UpdateMembership", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.UpdateMembership", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.UpdateMembership", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.UpdateMembership(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) UpdateMembershipEx(ctx context.Context, request *client.UpdateMembershipRequest, runtime *client.RuntimeOptions) (*client.UpdateMembershipModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.UpdateMembershipModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateMembershipEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateMembershipEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateMembershipEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateMembershipEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.UpdateMembershipEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.UpdateMembershipEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.UpdateMembershipEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.UpdateMembershipEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
 func (w *PDSClientWrapper) UpdateShare(ctx context.Context, request *client.UpdateShareRequest) (*client.UpdateShareModel, error) {
 	ctxOptions := FromContext(ctx)
 	var _result *client.UpdateShareModel
@@ -7436,6 +9326,186 @@ func (w *PDSClientWrapper) UpdateShareEx(ctx context.Context, request *client.Up
 			}()
 		}
 		_result, err = w.obj.UpdateShareEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) UpdateShareLink(ctx context.Context, request *client.UpdateShareLinkRequest) (*client.UpdateShareLinkModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.UpdateShareLinkModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateShareLink", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateShareLink", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateShareLink", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateShareLink", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.UpdateShareLink", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.UpdateShareLink", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.UpdateShareLink", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.UpdateShareLink(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) UpdateShareLinkEx(ctx context.Context, request *client.UpdateShareLinkRequest, runtime *client.RuntimeOptions) (*client.UpdateShareLinkModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.UpdateShareLinkModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateShareLinkEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateShareLinkEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateShareLinkEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateShareLinkEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.UpdateShareLinkEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.UpdateShareLinkEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.UpdateShareLinkEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.UpdateShareLinkEx(request, runtime)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) UpdateSubdomain(ctx context.Context, request *client.UpdateSubdomainRequest) (*client.UpdateSubdomainModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.UpdateSubdomainModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateSubdomain", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateSubdomain", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateSubdomain", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateSubdomain", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.UpdateSubdomain", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.UpdateSubdomain", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.UpdateSubdomain", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.UpdateSubdomain(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return _result, err
+}
+
+func (w *PDSClientWrapper) UpdateSubdomainEx(ctx context.Context, request *client.UpdateSubdomainRequest, runtime *client.RuntimeOptions) (*client.UpdateSubdomainModel, error) {
+	ctxOptions := FromContext(ctx)
+	var _result *client.UpdateSubdomainModel
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.Client.UpdateSubdomainEx", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.Client.UpdateSubdomainEx", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.Client.UpdateSubdomainEx", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "client.Client.UpdateSubdomainEx", ctxOptions.startSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("client.Client.UpdateSubdomainEx", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("client.Client.UpdateSubdomainEx", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("client.Client.UpdateSubdomainEx", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		_result, err = w.obj.UpdateSubdomainEx(request, runtime)
 		if err != nil && span != nil {
 			span.SetTag("error", err.Error())
 		}

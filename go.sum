@@ -64,8 +64,8 @@ github.com/alibabacloud-go/debug v0.0.0-20190504072949-9472017b5c68 h1:NqugFkGxx
 github.com/alibabacloud-go/debug v0.0.0-20190504072949-9472017b5c68/go.mod h1:6pb/Qy8c+lqua8cFpEy7g39NRRqOWc3rOwAy8m5Y2BY=
 github.com/alibabacloud-go/pds-credentials v1.0.0 h1:vZn4ojaaUSkrIM8CDnDdHU2FEE6LWMgPtyKaJuf552A=
 github.com/alibabacloud-go/pds-credentials v1.0.0/go.mod h1:wSTM8JwdhiL8+PqcC464CnEIuZasJnS9hlV7Kk9iBrc=
-github.com/alibabacloud-go/pds-sdk v1.0.5 h1:9DqZ5EL48oWIUoeOQIEayQEcmcqEA2cfj5uOBeC8W8s=
-github.com/alibabacloud-go/pds-sdk v1.0.5/go.mod h1:C10LUgCTXUo25k7wIBjYTCE6HZaGuwg1YkhWojT57Tc=
+github.com/alibabacloud-go/pds-sdk v1.0.7 h1:Tq0+MgljsKTuIgoVdMW3cRB9VJ5YAHgWula8TBb36to=
+github.com/alibabacloud-go/pds-sdk v1.0.7/go.mod h1:C10LUgCTXUo25k7wIBjYTCE6HZaGuwg1YkhWojT57Tc=
 github.com/alibabacloud-go/tea v1.1.0/go.mod h1:IkGyUSX4Ba1V+k4pCtJUc6jDpZLFph9QMy2VUPTwukg=
 github.com/alibabacloud-go/tea v1.1.8/go.mod h1:/tmnEaQMyb4Ky1/5D+SE1BAsa5zj/KeGOFfwYm3N/p4=
 github.com/alibabacloud-go/tea v1.1.15 h1:IaBC1Mm5Ss+l7cWnOXSxCmnWoWrEdeHEtDgQzoCCgjY=
