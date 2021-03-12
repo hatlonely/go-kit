@@ -3,20 +3,30 @@
     "name": "example",
     "httpPort": 80,
     "grpcPort": 6080,
+    "exitTimeout": "10s",
+    "headers": ["X-Request-Id"],
+    "validators": ["Default"],
+    "privateIP": "",
+    "hostname": "",
+    "requestIDMetaKey": "x-request-id",
+    "ContentType": "application/json",
+    "usePascalNameLogKey": false,
+    "usePascalNameErrKey": false,
+    "marshalUseProtoNames": true,
+    "marshalEmitUnpopulated": true,
+    "unmarshalDiscardUnknown": true,
     "enableTrace": true,
     "enableMetric": true,
     "enablePprof": true,
-    "validators": ["Default"],
-    "usePascalNameLogKey": false,
-    "usePascalNameErrKey": false,
-    "jaeger": {
-      "serviceName": "rpc-ancient",
-      "sampler": {
-        "type": "const",
-        "param": 1
-      },
-      "reporter": {
-        "logSpans": false
+    "trace": {
+      "constTags": {
+        "key1": "val1"
+      }
+    },
+    "metric": {
+      "buckets": [0.1, 1, 10, 100],
+      "constLabels": {
+        "key1": "val1"
       }
     },
     "rateLimiterHeader": "x-user-id",
@@ -26,6 +36,16 @@
     "parallelControllerHeader": "x-user-id",
     "parallelController": {
       "type": "RedisTimedParallelControllerInstance"
+    },
+    "jaeger": {
+      "serviceName": "example",
+      "sampler": {
+        "type": "const",
+        "param": 1
+      },
+      "reporter": {
+        "logSpans": false
+      }
     }
   },
   "parallelController": {
