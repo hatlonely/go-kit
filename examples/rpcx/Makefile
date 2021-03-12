@@ -1,5 +1,5 @@
-binary=rpcx-example
-repository=rpcx-example
+binary=example
+repository=example
 version=$(shell git describe --tags | awk '{print(substr($$0,2,length($$0)))}')
 export GOPROXY=https://goproxy.cn
 
