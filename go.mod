@@ -22,7 +22,7 @@ require (
 	github.com/golang/protobuf v1.4.3
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.1-0.20190118093823-f849b5445de4
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.3.0
-	github.com/hatlonely/go-kit/examples/rpcx v0.0.0-20210312170014-8eb4dc29c113 // indirect
+	github.com/hatlonely/go-kit/examples/rpcx v0.0.0-20210312170014-8eb4dc29c113
 	github.com/jinzhu/gorm v1.9.15
 	github.com/json-iterator/go v1.1.10
 	github.com/lestrrat-go/file-rotatelogs v2.3.0+incompatible

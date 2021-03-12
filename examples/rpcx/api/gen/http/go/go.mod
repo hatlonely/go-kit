@@ -1,4 +1,4 @@
-module github.com/GIT_USER_ID/GIT_REPO_ID
+module github.com/hatlonely/go-kit/examples/api/gen/http/go
 
 require (
 	github.com/antihax/optional v1.0.0
