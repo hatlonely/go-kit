@@ -3,12 +3,12 @@
     "name": "example",
     "httpPort": 80,
     "grpcPort": 6080,
-    "exitTimeout": "10s",
+    "exitTimeout": "10s", // 服务退出最长等待时间，默认 10s
     "headers": ["X-Request-Id"], // 请求透传包头，默认透传 x- 开头包头
     "validators": ["Default"], // 请求包体校验，默认不校验
     "privateIP": "",
     "hostname": "",
-    "requestIDMetaKey": "x-request-id", // request id 包头 key
+    "requestIDMetaKey": "x-request-id", // request id 包头 key，默认 x-request-id
     "usePascalNameLogKey": false, // rpc 日志使用大写驼峰风格，默认小写驼峰
     "usePascalNameErrKey": false, // 错误返回包体使用大写驼峰风格，默认小写驼峰
     "marshalUseProtoNames": true, // 序列化返回时，使用 proto 文件中的名字，默认使用小写驼峰

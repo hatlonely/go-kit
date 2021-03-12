@@ -15,7 +15,6 @@ import (
 
 type MuxInterceptorOptions struct {
 	Headers                 []string `dft:"X-Request-Id"`
-	ContentType             string   `dft:"application/json"`
 	UsePascalNameErrKey     bool
 	RequestIDMetaKey        string `dft:"X-Request-Id"`
 	MarshalUseProtoNames    bool
@@ -92,7 +91,7 @@ func (m *MuxInterceptor) MuxOutgoingHeaderMatcher() runtime.ServeMuxOption {
 
 func (m *MuxInterceptor) MuxProtoErrorHandler() runtime.ServeMuxOption {
 	return runtime.WithErrorHandler(func(ctx context.Context, mux *runtime.ServeMux, marshaler runtime.Marshaler, res http.ResponseWriter, req *http.Request, err error) {
-		res.Header().Set("Content-Type", m.options.ContentType)
+		res.Header().Set("Content-Type", "application/json")
 		for _, header := range m.options.Headers {
 			res.Header().Set(header, req.Header.Get(header))
 		}

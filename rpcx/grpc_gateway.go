@@ -26,19 +26,18 @@ import (
 type GrpcGatewayOptions struct {
 	HttpPort    int
 	GrpcPort    int
-	ExitTimeout time.Duration
+	ExitTimeout time.Duration `dft:"10s"` // 服务退出最长等待时间
 
-	Headers                 []string `dft:"X-Request-Id"`
-	Validators              []string
+	Headers                 []string `dft:"X-Request-Id"` // 请求透传包头，默认透传 x- 开头包头
+	Validators              []string // 请求包体校验，默认不校验
 	PrivateIP               string
 	Hostname                string
-	RequestIDMetaKey        string `dft:"x-request-id"`
-	ContentType             string `dft:"application/json"`
-	UsePascalNameLogKey     bool
-	UsePascalNameErrKey     bool
-	MarshalUseProtoNames    bool
-	MarshalEmitUnpopulated  bool
-	UnmarshalDiscardUnknown bool
+	RequestIDMetaKey        string `dft:"x-request-id"` // request id 包头 key
+	UsePascalNameLogKey     bool   // rpc 日志使用大写驼峰风格，默认小写驼峰
+	UsePascalNameErrKey     bool   // 错误返回包体使用大写驼峰风格，默认小写驼峰
+	MarshalUseProtoNames    bool   // 序列化返回时，使用 proto 文件中的名字，默认使用小写驼峰
+	MarshalEmitUnpopulated  bool   // 序列化返回时，返回空字段，默认不返回
+	UnmarshalDiscardUnknown bool   // 反序列化请求时，丢弃未知的字段，默认返回请求包体错误
 
 	Name         string
 	EnableTrace  bool
@@ -139,7 +138,6 @@ func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions, opts ...refx.Option)
 
 	muxInterceptor, _ := NewMuxInterceptorWithOptions(&MuxInterceptorOptions{
 		Headers:                 options.Headers,
-		ContentType:             options.ContentType,
 		UsePascalNameErrKey:     options.UsePascalNameErrKey,
 		RequestIDMetaKey:        options.RequestIDMetaKey,
 		MarshalUseProtoNames:    options.MarshalUseProtoNames,
