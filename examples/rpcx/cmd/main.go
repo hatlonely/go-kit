@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/signal"
@@ -82,6 +83,11 @@ func main() {
 	grpcGateway, err := rpcx.NewGrpcGatewayWithOptions(&options.GrpcGateway)
 	refx.Must(err)
 	grpcGateway.SetLogger(infoLog, grpcLog)
+
+	grpcGateway.AddGrpcPreHandlers(func(ctx context.Context, req interface{}) error {
+		fmt.Println("x-user-id", rpcx.MetaDataIncomingGet(ctx, "x-user-id"))
+		return nil
+	})
 
 	api.RegisterExampleServiceServer(grpcGateway.GRPCServer(), svc)
 	refx.Must(grpcGateway.RegisterServiceHandlerFunc(api.RegisterExampleServiceHandlerFromEndpoint))
