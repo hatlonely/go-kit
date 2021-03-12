@@ -20,7 +20,7 @@ message AddReq {
 }
 
 message AddRes {
-  int64 val = 1;
+  int32 val = 1;
 }
 
 service ExampleService {

@@ -97,8 +97,8 @@
       "type": "object",
       "properties": {
         "val": {
-          "type": "string",
-          "format": "int64"
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
