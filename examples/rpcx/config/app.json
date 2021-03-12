@@ -4,17 +4,16 @@
     "httpPort": 80,
     "grpcPort": 6080,
     "exitTimeout": "10s",
-    "headers": ["X-Request-Id"],
-    "validators": ["Default"],
+    "headers": ["X-Request-Id"], // 请求透传包头，默认透传 x- 开头包头
+    "validators": ["Default"], // 请求包体校验，默认不校验
     "privateIP": "",
     "hostname": "",
-    "requestIDMetaKey": "x-request-id",
-    "ContentType": "application/json",
-    "usePascalNameLogKey": false,
-    "usePascalNameErrKey": false,
-    "marshalUseProtoNames": true,
-    "marshalEmitUnpopulated": false,
-    "unmarshalDiscardUnknown": true,
+    "requestIDMetaKey": "x-request-id", // request id 包头 key
+    "usePascalNameLogKey": false, // rpc 日志使用大写驼峰风格，默认小写驼峰
+    "usePascalNameErrKey": false, // 错误返回包体使用大写驼峰风格，默认小写驼峰
+    "marshalUseProtoNames": true, // 序列化返回时，使用 proto 文件中的名字，默认使用小写驼峰
+    "marshalEmitUnpopulated": false, // 序列化返回时，返回空字段，默认不返回
+    "unmarshalDiscardUnknown": true, // 反序列化请求时，丢弃未知的字段，默认返回请求包体错误
     "enableTrace": true,
     "enableMetric": true,
     "enablePprof": true,
