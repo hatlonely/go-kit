@@ -34,11 +34,11 @@ type GrpcGatewayOptions struct {
 	Hostname                string
 	RequestIDMetaKey        string `dft:"x-request-id"`
 	ContentType             string `dft:"application/json"`
-	PascalNameKey           bool
 	EnableTrace             bool
 	EnableMetric            bool
 	EnablePprof             bool
-	UseFieldKey             bool
+	UsePascalNameLogKey     bool
+	UsePascalNameErrKey     bool
 	MarshalUseProtoNames    bool
 	MarshalEmitUnpopulated  bool
 	UnmarshalDiscardUnknown bool
@@ -112,7 +112,7 @@ func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions, opts ...refx.Option)
 		PrivateIP:                options.PrivateIP,
 		Hostname:                 options.Hostname,
 		Validators:               options.Validators,
-		PascalNameKey:            options.PascalNameKey,
+		UsePascalNameLogKey:      options.UsePascalNameLogKey,
 		RequestIDMetaKey:         options.RequestIDMetaKey,
 		EnableTrace:              options.EnableTrace,
 		RateLimiter:              options.RateLimiter,
@@ -127,7 +127,7 @@ func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions, opts ...refx.Option)
 	muxInterceptor, _ := NewMuxInterceptorWithOptions(&MuxInterceptorOptions{
 		Headers:                 options.Headers,
 		ContentType:             options.ContentType,
-		UseFieldKey:             options.UseFieldKey,
+		UsePascalNameErrKey:     options.UsePascalNameErrKey,
 		RequestIDMetaKey:        options.RequestIDMetaKey,
 		MarshalUseProtoNames:    options.MarshalUseProtoNames,
 		MarshalEmitUnpopulated:  options.MarshalEmitUnpopulated,

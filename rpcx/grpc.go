@@ -58,7 +58,7 @@ func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions, opts ...refx
 	g.errKey = "err"
 	g.errStackKey = "errStack"
 	g.resTimeMsKey = "resTimeMs"
-	if options.PascalNameKey {
+	if options.UsePascalNameLogKey {
 		for _, key := range []*string{
 			&g.requestIDKey, &g.hostnameKey, &g.privateIPKey, &g.remoteIPKey, &g.clientIPKey, &g.methodKey, &g.rpcCodeKey, &g.errCodeKey,
 			&g.statusKey, &g.metaKey, &g.reqKey, &g.ctxKey, &g.resKey, &g.errKey, &g.errStackKey, &g.resTimeMsKey,
@@ -306,13 +306,13 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 }
 
 type GrpcInterceptorOptions struct {
-	Headers          []string `dft:"X-Request-Id"`
-	PrivateIP        string
-	Hostname         string
-	Validators       []string
-	PascalNameKey    bool
-	RequestIDMetaKey string `dft:"x-request-id"`
-	EnableTrace      bool
+	Headers             []string `dft:"X-Request-Id"`
+	PrivateIP           string
+	Hostname            string
+	Validators          []string
+	UsePascalNameLogKey bool
+	RequestIDMetaKey    string `dft:"x-request-id"`
+	EnableTrace         bool
 
 	RateLimiterHeader        string
 	ParallelControllerHeader string

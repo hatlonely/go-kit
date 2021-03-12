@@ -16,7 +16,7 @@ import (
 type MuxInterceptorOptions struct {
 	Headers                 []string `dft:"X-Request-Id"`
 	ContentType             string   `dft:"application/json"`
-	UseFieldKey             bool
+	UsePascalNameErrKey     bool
 	RequestIDMetaKey        string `dft:"X-Request-Id"`
 	MarshalUseProtoNames    bool
 	MarshalEmitUnpopulated  bool
@@ -34,7 +34,7 @@ func NewMuxInterceptorWithOptions(options *MuxInterceptorOptions) (*MuxIntercept
 		options:       options,
 		detailMarshal: JsonMarshalErrorDetail,
 	}
-	if options.UseFieldKey {
+	if options.UsePascalNameErrKey {
 		m.detailMarshal = JsonMarshalErrorDetailWithFieldKey
 	}
 
