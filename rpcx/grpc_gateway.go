@@ -34,17 +34,17 @@ type GrpcGatewayOptions struct {
 	Hostname                string
 	RequestIDMetaKey        string `dft:"x-request-id"`
 	ContentType             string `dft:"application/json"`
-	EnableTrace             bool
-	EnableMetric            bool
-	EnablePprof             bool
 	UsePascalNameLogKey     bool
 	UsePascalNameErrKey     bool
 	MarshalUseProtoNames    bool
 	MarshalEmitUnpopulated  bool
 	UnmarshalDiscardUnknown bool
 
-	Name  string
-	Trace struct {
+	Name         string
+	EnableTrace  bool
+	EnableMetric bool
+	EnablePprof  bool
+	Trace        struct {
 		ConstTags map[string]string
 	}
 	Metric struct {
