@@ -34,6 +34,7 @@ func (s *ExampleService) Echo(ctx context.Context, req *api.EchoReq) (*api.EchoR
 		Message: req.Message,
 	}, nil
 }
+
 func (s *ExampleService) Add(ctx context.Context, req *api.AddReq) (*api.AddRes, error) {
 	time.Sleep(s.options.SleepTime)
 
