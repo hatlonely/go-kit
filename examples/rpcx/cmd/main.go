@@ -80,11 +80,11 @@ func main() {
 	svc, err := service.NewExampleServiceWithOptions(&options.Service)
 	refx.Must(err)
 
-	grpcGateway, err := rpcx.NewGrpcGatewayWithOptions(&options.GrpcGateway)
+	grpcGateway, err := rpcx.NewGrpcGatewayWithOptions(&options.GrpcGateway, refx.WithCamelName())
 	refx.Must(err)
 	grpcGateway.SetLogger(infoLog, grpcLog)
 
-	grpcGateway.AddGrpcPreHandlers(func(ctx context.Context, req interface{}) error {
+	grpcGateway.AddGrpcPreHandler(func(ctx context.Context, req interface{}) error {
 		fmt.Println("x-user-id", rpcx.MetaDataIncomingGet(ctx, "x-user-id"))
 		return nil
 	})

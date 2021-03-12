@@ -6,7 +6,8 @@
     "enableMetric": true,
     "enablePprof": true,
     "validators": ["Default"],
-    "pascalNameKey": false,
+    "usePascalNameLogKey": false,
+    "usePascalNameErrKey": false,
     "jaeger": {
       "serviceName": "rpc-ancient",
       "sampler": {
@@ -63,6 +64,16 @@
     "grpc": {
       "level": "Info",
       "writers": [{
+        "type": "Stdout",
+        "options": {
+          "formatter": {
+            "type": "Json",
+            "options": {
+              "flatMap": true
+            }
+          }
+        }
+      }, {
         "type": "RotateFile",
         "options": {
           "filename": "log/app.rpc",
@@ -79,6 +90,13 @@
     "info": {
       "level": "Info",
       "writers": [{
+        "type": "Stdout",
+        "options": {
+          "formatter": {
+            "type": "Json",
+          }
+        }
+      }, {
         "type": "RotateFile",
         "options": {
           "filename": "log/app.log",
