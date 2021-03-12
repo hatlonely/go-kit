@@ -1,10 +1,10 @@
 # rpcx example
 
-## 代码生成
+## 命令
 
-```shell
-make codegen
-```
+- 添加依赖 `git submodule add git@github.com:hatlonely/rpc-api.git`
+- 代码生成 `make codegen`
+- 编译运行 `make build`
 
 ## 测试运行
 
