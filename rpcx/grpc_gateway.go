@@ -43,6 +43,15 @@ type GrpcGatewayOptions struct {
 	MarshalEmitUnpopulated  bool
 	UnmarshalDiscardUnknown bool
 
+	Name  string
+	Trace struct {
+		ConstTags map[string]string
+	}
+	Metric struct {
+		Buckets     []float64
+		ConstLabels map[string]string
+	}
+
 	RateLimiterHeader        string
 	ParallelControllerHeader string
 	RateLimiter              micro.RateLimiterOptions
@@ -119,6 +128,9 @@ func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions, opts ...refx.Option)
 		ParallelController:       options.ParallelController,
 		RateLimiterHeader:        options.RateLimiterHeader,
 		ParallelControllerHeader: options.ParallelControllerHeader,
+		Name:                     options.Name,
+		Trace:                    options.Trace,
+		Metric:                   options.Metric,
 	}, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "NewGrpcGatewayWithOptions failed")

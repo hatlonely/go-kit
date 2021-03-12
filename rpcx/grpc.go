@@ -15,6 +15,8 @@ import (
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	uuid "github.com/satori/go.uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -29,6 +31,31 @@ import (
 	"github.com/hatlonely/go-kit/validator"
 )
 
+type GrpcInterceptorOptions struct {
+	Headers             []string `dft:"X-Request-Id"`
+	PrivateIP           string
+	Hostname            string
+	Validators          []string
+	UsePascalNameLogKey bool
+	RequestIDMetaKey    string `dft:"x-request-id"`
+
+	Name         string
+	EnableTrace  bool
+	EnableMetric bool
+	Trace        struct {
+		ConstTags map[string]string
+	}
+	Metric struct {
+		Buckets     []float64
+		ConstLabels map[string]string
+	}
+
+	RateLimiterHeader        string
+	ParallelControllerHeader string
+	RateLimiter              micro.RateLimiterOptions
+	ParallelController       micro.ParallelControllerOptions
+}
+
 func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions, opts ...refx.Option) (*GrpcInterceptor, error) {
 	if options.Hostname == "" {
 		options.Hostname = Hostname()
@@ -42,6 +69,21 @@ func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions, opts ...refx
 		options: options,
 		appRpc:  logger.NewStdoutJsonLogger(),
 	}
+
+	if options.EnableMetric {
+		g.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
+			Name:        fmt.Sprintf("%s_gorm_DB_durationMs", options.Name),
+			Help:        fmt.Sprintf("%s response time milliseconds", options.Name),
+			Buckets:     options.Metric.Buckets,
+			ConstLabels: options.Metric.ConstLabels,
+		}, []string{"method", "errCode"})
+		g.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
+			Name:        fmt.Sprintf("%s_gorm_DB_inflight", options.Name),
+			Help:        fmt.Sprintf("%s inflight", options.Name),
+			ConstLabels: options.Metric.ConstLabels,
+		}, []string{"method"})
+	}
+
 	g.requestIDKey = "requestID"
 	g.hostnameKey = "hostname"
 	g.privateIPKey = "privateIP"
@@ -96,6 +138,9 @@ func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions, opts ...refx
 type GrpcInterceptor struct {
 	options *GrpcInterceptorOptions
 
+	durationMetric *prometheus.HistogramVec
+	inflightMetric *prometheus.GaugeVec
+
 	rateLimiter        micro.RateLimiter
 	parallelController micro.ParallelController
 
@@ -149,6 +194,8 @@ func (g *GrpcInterceptor) DialOptions() []grpc.DialOption {
 
 func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (res interface{}, err error) {
+		ts := time.Now()
+
 		var requestID, remoteIP string
 		md, ok := metadata.FromIncomingContext(ctx)
 		if ok {
@@ -160,11 +207,23 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 			remoteIP = strings.Split(strings.Join(md.Get("x-remote-addr"), ","), ":")[0]
 		}
 
+		errCode := "OK"
+		if g.options.EnableMetric {
+			g.inflightMetric.WithLabelValues(info.FullMethod).Inc()
+			defer func() {
+				g.inflightMetric.WithLabelValues(info.FullMethod).Dec()
+				g.durationMetric.WithLabelValues(info.FullMethod, errCode).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+
 		if g.options.EnableTrace {
 			spanCtx, err := opentracing.GlobalTracer().Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(md))
 			if err == nil || err == opentracing.ErrSpanContextNotFound {
 				span := opentracing.GlobalTracer().StartSpan("GrpcInterceptor", ext.RPCServerOption(spanCtx))
 				span.SetTag(g.methodKey, info.FullMethod)
+				for key, val := range g.options.Trace.ConstTags {
+					span.SetTag(key, val)
+				}
 				ctx = opentracing.ContextWithSpan(ctx, span)
 				defer span.Finish()
 			}
@@ -172,7 +231,6 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 
 		ctx = NewRPCXContext(ctx)
 
-		ts := time.Now()
 		defer func() {
 			if perr := recover(); perr != nil {
 				err = NewInternalError(errors.Wrap(fmt.Errorf("%v\n%v", string(debug.Stack()), perr), "panic"))
@@ -184,7 +242,6 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 			}
 
 			rpcCode := codes.OK.String()
-			errCode := "OK"
 			status := http.StatusOK
 			if err != nil {
 				e := err.(*Error)
@@ -303,21 +360,6 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 
 		return res, nil
 	})
-}
-
-type GrpcInterceptorOptions struct {
-	Headers             []string `dft:"X-Request-Id"`
-	PrivateIP           string
-	Hostname            string
-	Validators          []string
-	UsePascalNameLogKey bool
-	RequestIDMetaKey    string `dft:"x-request-id"`
-	EnableTrace         bool
-
-	RateLimiterHeader        string
-	ParallelControllerHeader string
-	RateLimiter              micro.RateLimiterOptions
-	ParallelController       micro.ParallelControllerOptions
 }
 
 func PrivateIP() string {

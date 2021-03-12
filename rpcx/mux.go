@@ -23,12 +23,6 @@ type MuxInterceptorOptions struct {
 	UnmarshalDiscardUnknown bool
 }
 
-type MuxInterceptor struct {
-	options *MuxInterceptorOptions
-
-	detailMarshal func(detail *ErrorDetail) []byte
-}
-
 func NewMuxInterceptorWithOptions(options *MuxInterceptorOptions) (*MuxInterceptor, error) {
 	m := &MuxInterceptor{
 		options:       options,
@@ -39,6 +33,12 @@ func NewMuxInterceptorWithOptions(options *MuxInterceptorOptions) (*MuxIntercept
 	}
 
 	return m, nil
+}
+
+type MuxInterceptor struct {
+	options *MuxInterceptorOptions
+
+	detailMarshal func(detail *ErrorDetail) []byte
 }
 
 func (m *MuxInterceptor) ServeMuxOptions() []runtime.ServeMuxOption {
