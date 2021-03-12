@@ -40,6 +40,8 @@ codegen: api/example.proto submodule
 	docker exec protobuf bash -c "protoc -Irpc-api -I. --go-grpc_out api/gen/go --go-grpc_opt paths=source_relative $<"
 	docker exec protobuf bash -c "protoc -Irpc-api -I. --grpc-gateway_out api/gen/go --grpc-gateway_opt logtostderr=true,paths=source_relative $<"
 	docker exec protobuf bash -c "protoc -Irpc-api -I. --openapiv2_out api/gen/swagger --openapiv2_opt logtostderr=true $<"
+	docker exec protobuf bash -c "java -jar openapi-generator-cli-4.3.1.jar generate -i api/gen/swagger/api/example.swagger.json -g go -o api/gen/http/go"
+	docker exec protobuf bash -c "java -jar openapi-generator-cli-4.3.1.jar generate -i api/gen/swagger/api/example.swagger.json -g dart -o api/gen/http/dart"
 	docker cp protobuf:api/gen api
 	docker stop protobuf
 
