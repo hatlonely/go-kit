@@ -72,13 +72,13 @@ func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions, opts ...refx
 
 	if options.EnableMetric {
 		g.durationMetric = promauto.NewHistogramVec(prometheus.HistogramOpts{
-			Name:        fmt.Sprintf("%s_gorm_DB_durationMs", options.Name),
+			Name:        fmt.Sprintf("%s_grpc_durationMs", options.Name),
 			Help:        fmt.Sprintf("%s response time milliseconds", options.Name),
 			Buckets:     options.Metric.Buckets,
 			ConstLabels: options.Metric.ConstLabels,
 		}, []string{"method", "errCode"})
 		g.inflightMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-			Name:        fmt.Sprintf("%s_gorm_DB_inflight", options.Name),
+			Name:        fmt.Sprintf("%s_grpc_inflight", options.Name),
 			Help:        fmt.Sprintf("%s inflight", options.Name),
 			ConstLabels: options.Metric.ConstLabels,
 		}, []string{"method"})
