@@ -12,7 +12,7 @@
     "ContentType": "application/json",
     "usePascalNameLogKey": false,
     "usePascalNameErrKey": false,
-    "marshalUseProtoNames": true,
+    "marshalUseProtoNames": false,
     "marshalEmitUnpopulated": true,
     "unmarshalDiscardUnknown": true,
     "enableTrace": true,

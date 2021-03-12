@@ -15,8 +15,8 @@ message EchoRes {
 }
 
 message AddReq {
-  int64 i1 = 1;
-  int64 i2 = 2;
+  int32 i1 = 1;
+  int32 i2 = 2;
 }
 
 message AddRes {
