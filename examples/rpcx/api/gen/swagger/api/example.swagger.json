@@ -1,0 +1,144 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/example.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ExampleService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/add": {
+      "post": {
+        "operationId": "ExampleService_Add",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiAddRes"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiAddReq"
+            }
+          }
+        ],
+        "tags": [
+          "ExampleService"
+        ]
+      }
+    },
+    "/v1/echo": {
+      "get": {
+        "operationId": "ExampleService_Echo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiEchoRes"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "message",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ExampleService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "apiAddReq": {
+      "type": "object",
+      "properties": {
+        "i1": {
+          "type": "string",
+          "format": "int64"
+        },
+        "i2": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "apiAddRes": {
+      "type": "object",
+      "properties": {
+        "val": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "apiEchoRes": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

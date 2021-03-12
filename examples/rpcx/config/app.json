@@ -1,0 +1,93 @@
+{
+  "grpcGateway": {
+    "httpPort": 80,
+    "grpcPort": 6080,
+    "enableTrace": true,
+    "enableMetric": true,
+    "enablePprof": true,
+    "validators": ["Default"],
+    "pascalNameKey": false,
+    "jaeger": {
+      "serviceName": "rpc-ancient",
+      "sampler": {
+        "type": "const",
+        "param": 1
+      },
+      "reporter": {
+        "logSpans": false
+      }
+    },
+    "rateLimiterHeader": "x-user-id",
+    "rateLimiter": {
+      "type": "RedisRateLimiterInstance"
+    },
+    "parallelControllerHeader": "x-user-id",
+    "parallelController": {
+      "type": "RedisTimedParallelControllerInstance"
+    }
+  },
+  "parallelController": {
+    "redis": {
+      "redis": {
+        "addr": "127.0.0.1:6379"
+      },
+      "wrapper": {
+        "name": "parallelController",
+        "enableTrace": true,
+        "enableMetric": true
+      }
+    },
+    "defaultMaxToken": 3,
+    "maxToken": {
+      "123|/api.ExampleService/Echo": 1
+    },
+    "interval": "3s",
+    "expiration": "10s"
+  },
+  "rateLimiter": {
+    "redis": {
+      "redis": {
+        "addr": "127.0.0.1:6379"
+      },
+      "wrapper": {
+        "name": "rateLimiter",
+        "enableTrace": true,
+        "enableMetric": true
+      }
+    },
+    "qps": {
+      "123|/api.ExampleService/Echo": 1
+    }
+  },
+  "logger": {
+    "grpc": {
+      "level": "Info",
+      "writers": [{
+        "type": "RotateFile",
+        "options": {
+          "filename": "log/app.rpc",
+          "maxAge": "24h",
+          "formatter": {
+            "type": "Json",
+            "options": {
+              "flatMap": true
+            }
+          }
+        }
+      }]
+    },
+    "info": {
+      "level": "Info",
+      "writers": [{
+        "type": "RotateFile",
+        "options": {
+          "filename": "log/app.log",
+          "maxAge": "24h",
+          "formatter": {
+            "type": "Json"
+          }
+        }
+      }]
+    }
+  }
+}

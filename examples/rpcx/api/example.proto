@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "github.com/hatlonely/go-kit/example/rpcx/api/gen/go/api";
+
+import "google/api/annotations.proto";
+
+message EchoReq {
+  string message = 1;
+}
+
+message EchoRes {
+  string message = 2;
+}
+
+message AddReq {
+  int64 i1 = 1;
+  int64 i2 = 2;
+}
+
+message AddRes {
+  int64 val = 1;
+}
+
+service ExampleService {
+  rpc Echo(EchoReq) returns (EchoRes) {
+    option (google.api.http) = {
+      get: "/v1/echo"
+    };
+  }
+
+  rpc Add(AddReq) returns (AddRes) {
+    option (google.api.http) = {
+      post: "/v1/add"
+      body: "*"
+    };
+  }
+}
