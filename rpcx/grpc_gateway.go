@@ -176,7 +176,7 @@ func (g *GrpcGateway) RegisterServiceHandlerFunc(fun func(ctx context.Context, m
 	return fun(context.Background(), g.muxServer, fmt.Sprintf("0.0.0.0:%v", g.options.GrpcPort), g.grpcInterceptor.DialOptions())
 }
 
-func (g *GrpcGateway) AddGrpcPreHandlers(handler GrpcPreHandler) {
+func (g *GrpcGateway) AddGrpcPreHandler(handler GrpcPreHandler) {
 	g.grpcInterceptor.AddPreHandler(handler)
 }
 
