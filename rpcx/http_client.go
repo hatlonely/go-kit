@@ -112,14 +112,14 @@ func (c *HttpClient) Do(method string, uri string, params map[string]string, req
 	if hres.StatusCode != http.StatusOK {
 		var herr HttpError
 		if err := json.Unmarshal(buf, &herr); err != nil {
-			return &herr
+			return &HttpError{
+				Status:  int32(hres.StatusCode),
+				Code:    hres.Status,
+				Message: string(buf),
+			}
 		}
 
-		return &HttpError{
-			Status:  int32(hres.StatusCode),
-			Code:    hres.Status,
-			Message: string(buf),
-		}
+		return &herr
 	}
 
 	if err := json.Unmarshal(buf, res); err != nil {
