@@ -3,8 +3,10 @@ package rpcx
 import (
 	"context"
 	"fmt"
+	"net"
 	"net/http"
 	"reflect"
+	"strconv"
 	"testing"
 	"time"
 
@@ -44,6 +46,20 @@ func (s *ExampleService) Add(ctx context.Context, req *api.AddReq) (*api.AddRes,
 	}, nil
 }
 
+func waitPortOpen(port int) {
+	for {
+		timeout := 50 * time.Millisecond
+		conn, err := net.DialTimeout("tcp", net.JoinHostPort("127.0.0.1", strconv.Itoa(port)), timeout)
+		if err != nil {
+			continue
+		}
+		if conn != nil {
+			_ = conn.Close()
+			return
+		}
+	}
+}
+
 func TestGrpcGateway_AddGrpcPreHandler(t *testing.T) {
 	Convey("TestGrpcGateway", t, func() {
 		server, err := NewGrpcGatewayWithOptions(&GrpcGatewayOptions{
@@ -71,7 +87,8 @@ func TestGrpcGateway_AddGrpcPreHandler(t *testing.T) {
 		go server.Run()
 		defer server.Stop()
 
-		time.Sleep(100 * time.Millisecond)
+		waitPortOpen(80)
+		waitPortOpen(6080)
 
 		client := NewHttpClient()
 
@@ -131,7 +148,8 @@ func TestGrpcGateway(t *testing.T) {
 		go server.Run()
 		defer server.Stop()
 
-		time.Sleep(100 * time.Millisecond)
+		waitPortOpen(80)
+		waitPortOpen(6080)
 
 		client := NewHttpClient()
 
@@ -163,6 +181,23 @@ func TestGrpcGateway(t *testing.T) {
 				&res,
 			), ShouldBeNil)
 			So(resMeta["X-Request-Id"], ShouldResemble, "test-request-id")
+			So(resMeta["X-User-Id"], ShouldResemble, "121231")
+			So(res.Val, ShouldEqual, 46)
+		})
+
+		Convey("test without request id", func() {
+			var res api.AddRes
+			resMeta := map[string]string{}
+			So(client.Post(
+				"http://127.0.0.1/v1/add",
+				nil,
+				map[string]string{"x-user-id": "121231"},
+				&api.AddReq{I1: 12, I2: 34},
+				&resMeta,
+				&res,
+			), ShouldBeNil)
+			fmt.Println(resMeta["X-Request-Id"])
+			So(resMeta["X-Request-Id"], ShouldNotBeEmpty)
 			So(resMeta["X-User-Id"], ShouldResemble, "121231")
 			So(res.Val, ShouldEqual, 46)
 		})
