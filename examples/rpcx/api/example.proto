@@ -5,6 +5,7 @@ package api;
 option go_package = "github.com/hatlonely/go-kit/example/rpcx/api/gen/go/api";
 
 import "google/api/annotations.proto";
+import "gogoproto/gogo.proto";
 
 message EchoReq {
   string message = 1;
@@ -15,8 +16,8 @@ message EchoRes {
 }
 
 message AddReq {
-  int32 i1 = 1;
-  int32 i2 = 2;
+  int32 i1 = 1 [(gogoproto.moretags) = "rule:\"x >= 0 && x <= 100\""];
+  int32 i2 = 2 [(gogoproto.moretags) = "rule:\"x >= 0 && x <= 100\""];
 }
 
 message AddRes {

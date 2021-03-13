@@ -21,10 +21,6 @@ require (
 	github.com/generikvault/gvalstrings v0.0.0-20180926130504-471f38f0112a
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.6.3
-	github.com/go-openapi/errors v0.20.0
-	github.com/go-openapi/runtime v0.19.26
-	github.com/go-openapi/strfmt v0.20.0
-	github.com/go-openapi/swag v0.19.9
 	github.com/go-redis/redis v6.15.8+incompatible
 	github.com/gogap/errors v0.0.0-20200228125012-531a6449b28c // indirect
 	github.com/gogap/stack v0.0.0-20150131034635-fef68dddd4f8 // indirect
