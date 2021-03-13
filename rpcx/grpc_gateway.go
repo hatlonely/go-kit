@@ -242,7 +242,7 @@ func (g *GrpcGateway) Stop() {
 	if err := g.httpServer.Shutdown(ctx); err != nil {
 		g.appLog.Warnf("httServer.Shutdown failed, err: [%v]", err)
 	}
-	g.grpcServer.Stop()
+	g.grpcServer.GracefulStop()
 	if g.traceCloser != nil {
 		_ = g.traceCloser.Close()
 	}

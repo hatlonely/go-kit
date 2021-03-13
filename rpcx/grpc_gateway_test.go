@@ -55,8 +55,23 @@ func waitPortOpen(port int) {
 		}
 		if conn != nil {
 			_ = conn.Close()
-			time.Sleep(100 * time.Millisecond)
+			time.Sleep(50 * time.Millisecond)
 			return
+		}
+	}
+}
+
+func waitPortClose(port int) {
+	for {
+		timeout := 50 * time.Millisecond
+		conn, err := net.DialTimeout("tcp", net.JoinHostPort("127.0.0.1", strconv.Itoa(port)), timeout)
+		if err != nil {
+			time.Sleep(50 * time.Millisecond)
+			return
+		}
+		if conn != nil {
+			_ = conn.Close()
+			time.Sleep(10 * time.Millisecond)
 		}
 	}
 }
@@ -69,6 +84,7 @@ func TestGrpcGateway_AddHttpHandler(t *testing.T) {
 			EnableTrace:      false,
 			EnableMetric:     false,
 			EnablePprof:      false,
+			ExitTimeout:      10 * time.Second,
 			Validators:       []string{"Default"},
 			RequestIDMetaKey: "x-request-id",
 			Headers:          []string{"X-Request-Id", "X-User-Id"},
@@ -87,7 +103,11 @@ func TestGrpcGateway_AddHttpHandler(t *testing.T) {
 		}), ShouldBeNil)
 
 		go server.Run()
-		defer server.Stop()
+		defer func() {
+			server.Stop()
+			waitPortClose(80)
+			waitPortClose(6080)
+		}()
 
 		waitPortOpen(6080)
 		waitPortOpen(80)
@@ -139,6 +159,7 @@ func TestGrpcGateway_AddGrpcPreHandler(t *testing.T) {
 			EnableTrace:      false,
 			EnableMetric:     false,
 			EnablePprof:      false,
+			ExitTimeout:      10 * time.Second,
 			Validators:       []string{"Default"},
 			RequestIDMetaKey: "x-request-id",
 			Headers:          []string{"X-Request-Id", "X-User-Id"},
@@ -156,7 +177,11 @@ func TestGrpcGateway_AddGrpcPreHandler(t *testing.T) {
 		})
 
 		go server.Run()
-		defer server.Stop()
+		defer func() {
+			server.Stop()
+			waitPortClose(80)
+			waitPortClose(6080)
+		}()
 
 		waitPortOpen(6080)
 		waitPortOpen(80)
@@ -207,6 +232,7 @@ func TestGrpcGateway(t *testing.T) {
 			EnableTrace:      false,
 			EnableMetric:     false,
 			EnablePprof:      false,
+			ExitTimeout:      10 * time.Second,
 			Validators:       []string{"Default"},
 			RequestIDMetaKey: "x-request-id",
 			Headers:          []string{"X-Request-Id", "X-User-Id"},
@@ -217,7 +243,11 @@ func TestGrpcGateway(t *testing.T) {
 		So(server.RegisterServiceHandlerFunc(api.RegisterExampleServiceHandlerFromEndpoint), ShouldBeNil)
 
 		go server.Run()
-		defer server.Stop()
+		defer func() {
+			server.Stop()
+			waitPortClose(80)
+			waitPortClose(6080)
+		}()
 
 		waitPortOpen(6080)
 		waitPortOpen(80)
@@ -285,6 +315,7 @@ func TestGrpcGateway(t *testing.T) {
 				&res,
 			)
 			e := err.(*HttpError)
+			fmt.Println(e)
 			So(e.RequestID, ShouldEqual, "test-request-id")
 			So(e.Status, ShouldEqual, 400)
 			So(e.Code, ShouldEqual, "InvalidArgument")
@@ -303,6 +334,7 @@ func TestGrpcGateway(t *testing.T) {
 				&res,
 			)
 			e := err.(*HttpError)
+			fmt.Println(e)
 			So(e.RequestID, ShouldEqual, "test-request-id")
 			So(e.Status, ShouldEqual, 400)
 			So(e.Code, ShouldEqual, "BadRequest")
@@ -359,6 +391,7 @@ func TestGrpcGateway(t *testing.T) {
 			)
 			So(reflect.TypeOf(err), ShouldEqual, reflect.TypeOf(&HttpError{}))
 			e := err.(*HttpError)
+			fmt.Println(e)
 			So(e.Status, ShouldEqual, 404)
 			So(e.Code, ShouldEqual, http.StatusText(http.StatusNotFound))
 			So(e.RequestID, ShouldEqual, "test-request-id")
@@ -377,6 +410,7 @@ func TestGrpcGateway(t *testing.T) {
 				&res,
 			)
 			e := err.(*HttpError)
+			fmt.Println(e)
 			So(e.Status, ShouldEqual, 501)
 			So(e.Code, ShouldEqual, http.StatusText(http.StatusNotImplemented))
 			So(e.RequestID, ShouldEqual, "test-request-id")
