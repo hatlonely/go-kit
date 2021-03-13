@@ -55,6 +55,7 @@ func waitPortOpen(port int) {
 		}
 		if conn != nil {
 			_ = conn.Close()
+			time.Sleep(100 * time.Millisecond)
 			return
 		}
 	}
@@ -88,8 +89,8 @@ func TestGrpcGateway_AddHttpHandler(t *testing.T) {
 		go server.Run()
 		defer server.Stop()
 
-		waitPortOpen(80)
 		waitPortOpen(6080)
+		waitPortOpen(80)
 
 		client := NewHttpClient()
 		Convey("add handler", func() {
@@ -157,8 +158,8 @@ func TestGrpcGateway_AddGrpcPreHandler(t *testing.T) {
 		go server.Run()
 		defer server.Stop()
 
-		waitPortOpen(80)
 		waitPortOpen(6080)
+		waitPortOpen(80)
 
 		client := NewHttpClient()
 
@@ -218,8 +219,8 @@ func TestGrpcGateway(t *testing.T) {
 		go server.Run()
 		defer server.Stop()
 
-		waitPortOpen(80)
 		waitPortOpen(6080)
+		waitPortOpen(80)
 
 		client := NewHttpClient()
 

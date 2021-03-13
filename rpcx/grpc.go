@@ -68,6 +68,7 @@ func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions, opts ...refx
 	g := &GrpcInterceptor{
 		options: options,
 		appRpc:  logger.NewStdoutJsonLogger(),
+		appLog:  logger.NewStdoutJsonLogger(),
 	}
 
 	if options.EnableMetric {
