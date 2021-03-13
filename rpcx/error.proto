@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package rpcx;
 
+option go_package="github.com/hatlonely/go-kit/rpcx";
+
 message ErrorDetail {
   int32 status = 1;
   string requestID = 2;

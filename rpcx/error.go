@@ -1,4 +1,4 @@
-//go:generate protoc -I. --gofast_out=plugins=grpc,paths=source_relative:. error.proto
+//go:generate protoc -I. --go_out . --go_opt paths=source_relative error.proto
 
 package rpcx
 
