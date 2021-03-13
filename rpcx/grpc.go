@@ -234,6 +234,7 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 		defer func() {
 			if perr := recover(); perr != nil {
 				err = NewInternalError(errors.Wrap(fmt.Errorf("%v\n%v", string(debug.Stack()), perr), "panic"))
+				g.appLog.Fatalf("requestID: [%v], err: [%+v]", requestID, err)
 			}
 
 			clientIP := ""
