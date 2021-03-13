@@ -60,8 +60,78 @@ func waitPortOpen(port int) {
 	}
 }
 
+func TestGrpcGateway_AddHttpHandler(t *testing.T) {
+	Convey("TestGrpcGateway_AddHttpHandler", t, func() {
+		server, err := NewGrpcGatewayWithOptions(&GrpcGatewayOptions{
+			HttpPort:         80,
+			GrpcPort:         6080,
+			EnableTrace:      false,
+			EnableMetric:     false,
+			EnablePprof:      false,
+			Validators:       []string{"Default"},
+			RequestIDMetaKey: "x-request-id",
+			Headers:          []string{"X-Request-Id", "X-User-Id"},
+		})
+		So(err, ShouldBeNil)
+
+		api.RegisterExampleServiceServer(server.GRPCServer(), &ExampleService{})
+		So(server.RegisterServiceHandlerFunc(api.RegisterExampleServiceHandlerFromEndpoint), ShouldBeNil)
+
+		server.AddHttpHandler("/hello", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			_, _ = w.Write([]byte(`{"key1": "val1"}`))
+		}))
+
+		So(server.HandleHttp("GET", "/hello/{name}", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			_, _ = w.Write([]byte(fmt.Sprintf(`{"message": "hello %s"}`, pathParams["name"])))
+		}), ShouldBeNil)
+
+		go server.Run()
+		defer server.Stop()
+
+		waitPortOpen(80)
+		waitPortOpen(6080)
+
+		client := NewHttpClient()
+		Convey("add handler", func() {
+			var res interface{}
+			resMeta := map[string]string{}
+			So(client.Get(
+				"http://127.0.0.1/hello",
+				nil,
+				nil,
+				nil,
+				&resMeta,
+				&res,
+			), ShouldBeNil)
+			fmt.Println(resMeta)
+			fmt.Println(res)
+			So(res, ShouldResemble, map[string]interface{}{
+				"key1": "val1",
+			})
+		})
+
+		Convey("handler pass", func() {
+			var res interface{}
+			resMeta := map[string]string{}
+			So(client.Get(
+				"http://127.0.0.1/hello/world",
+				nil,
+				nil,
+				nil,
+				&resMeta,
+				&res,
+			), ShouldBeNil)
+			fmt.Println(resMeta)
+			fmt.Println(res)
+			So(res, ShouldResemble, map[string]interface{}{
+				"message": "hello world",
+			})
+		})
+	})
+}
+
 func TestGrpcGateway_AddGrpcPreHandler(t *testing.T) {
-	Convey("TestGrpcGateway", t, func() {
+	Convey("TestGrpcGateway_AddGrpcPreHandler", t, func() {
 		server, err := NewGrpcGatewayWithOptions(&GrpcGatewayOptions{
 			HttpPort:         80,
 			GrpcPort:         6080,
