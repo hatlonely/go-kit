@@ -12,7 +12,6 @@ require (
 	github.com/aliyun/aliyun-mns-go-sdk v0.0.0-20210305050620-d1b5875bda58
 	github.com/aliyun/aliyun-oss-go-sdk v2.1.6+incompatible
 	github.com/aliyun/aliyun-tablestore-go-sdk v4.1.3+incompatible
-	github.com/antihax/optional v1.0.0
 	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/coocood/freecache v1.1.1
@@ -22,9 +21,10 @@ require (
 	github.com/generikvault/gvalstrings v0.0.0-20180926130504-471f38f0112a
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.6.3
-	github.com/go-openapi/errors v0.20.0 // indirect
-	github.com/go-openapi/runtime v0.19.26 // indirect
-	github.com/go-openapi/strfmt v0.20.0 // indirect
+	github.com/go-openapi/errors v0.20.0
+	github.com/go-openapi/runtime v0.19.26
+	github.com/go-openapi/strfmt v0.20.0
+	github.com/go-openapi/swag v0.19.9
 	github.com/go-redis/redis v6.15.8+incompatible
 	github.com/gogap/errors v0.0.0-20200228125012-531a6449b28c // indirect
 	github.com/gogap/stack v0.0.0-20150131034635-fef68dddd4f8 // indirect
@@ -50,7 +50,6 @@ require (
 	github.com/valyala/fasthttp v1.22.0 // indirect
 	github.com/yosuke-furukawa/json5 v0.1.1
 	go.mongodb.org/mongo-driver v1.4.3
-	golang.org/x/oauth2 v0.0.0-20210220000619-9bb904979d93
 	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324
 	google.golang.org/genproto v0.0.0-20210224155714-063164c882e6
 	google.golang.org/grpc v1.36.0

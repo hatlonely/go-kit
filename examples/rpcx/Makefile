@@ -32,7 +32,7 @@ codegen: api/example.proto submodule
 		docker stop protobuf; \
 	fi
 	docker run --name protobuf -d --rm hatlonely/protobuf:1.0.0 tail -f /dev/null
-	docker exec protobuf mkdir -p api
+	docker exec protobuf bash -c "mkdir -p api/gen/http/go && mkdir -p \$$GOPATH/src"
 	docker cp $< protobuf:/$<
 	docker cp rpc-api protobuf:/
 	docker exec protobuf bash -c "mkdir -p api/gen/go && mkdir -p api/gen/swagger"
@@ -40,7 +40,8 @@ codegen: api/example.proto submodule
 	docker exec protobuf bash -c "protoc -Irpc-api -I. --go-grpc_out api/gen/go --go-grpc_opt paths=source_relative $<"
 	docker exec protobuf bash -c "protoc -Irpc-api -I. --grpc-gateway_out api/gen/go --grpc-gateway_opt logtostderr=true,paths=source_relative $<"
 	docker exec protobuf bash -c "protoc -Irpc-api -I. --openapiv2_out api/gen/swagger --openapiv2_opt logtostderr=true $<"
-	docker exec protobuf bash -c "java -jar openapi-generator-cli-4.3.1.jar generate -i api/gen/swagger/api/example.swagger.json -g dart -o api/gen/http/dart"
+#	docker exec protobuf bash -c "java -jar openapi-generator-cli-4.3.1.jar generate -i api/gen/swagger/api/example.swagger.json -g dart -o api/gen/http/dart"
+#	docker exec protobuf bash -c "swagger generate client -f api/gen/swagger/api/example.swagger.json --target \$$GOPATH/src --client-package github.com/hatlonely/go-kit/examples/rpcx/api/gen/http/go/client --model-package github.com/hatlonely/go-kit/examples/rpcx/api/gen/http/go/models && cp -r \$$GOPATH/src/github.com/hatlonely/go-kit/examples/rpcx/api/gen/http/go api/gen/http"
 	docker cp protobuf:api/gen api
 	docker stop protobuf
 
