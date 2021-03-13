@@ -44,6 +44,73 @@ func (s *ExampleService) Add(ctx context.Context, req *api.AddReq) (*api.AddRes,
 	}, nil
 }
 
+func TestGrpcGateway_AddGrpcPreHandler(t *testing.T) {
+	Convey("TestGrpcGateway", t, func() {
+		server, err := NewGrpcGatewayWithOptions(&GrpcGatewayOptions{
+			HttpPort:         80,
+			GrpcPort:         6080,
+			EnableTrace:      false,
+			EnableMetric:     false,
+			EnablePprof:      false,
+			Validators:       []string{"Default"},
+			RequestIDMetaKey: "x-request-id",
+			Headers:          []string{"X-Request-Id", "X-User-Id"},
+		})
+		So(err, ShouldBeNil)
+
+		api.RegisterExampleServiceServer(server.GRPCServer(), &ExampleService{})
+		So(server.RegisterServiceHandlerFunc(api.RegisterExampleServiceHandlerFromEndpoint), ShouldBeNil)
+
+		server.AddGrpcPreHandler(func(ctx context.Context, req interface{}) error {
+			if MetaDataIncomingGet(ctx, "x-user-id") == "" {
+				return NewError(errors.New("permission deny"), codes.PermissionDenied, "Forbidden", "permission deny")
+			}
+			return nil
+		})
+
+		go server.Run()
+		defer server.Stop()
+
+		time.Sleep(100 * time.Millisecond)
+
+		client := NewHttpClient()
+
+		Convey("pass", func() {
+			var res api.EchoRes
+			resMeta := map[string]string{}
+			So(client.Get(
+				"http://127.0.0.1/v1/echo",
+				map[string]string{"message": "hello world"},
+				map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231"},
+				nil,
+				&resMeta,
+				&res,
+			), ShouldBeNil)
+			So(resMeta["X-Request-Id"], ShouldResemble, "test-request-id")
+			So(resMeta["X-User-Id"], ShouldResemble, "121231")
+			So(res.Message, ShouldEqual, "hello world")
+		})
+
+		Convey("permission deny", func() {
+			var res api.AddRes
+			resMeta := map[string]string{}
+			err := client.Post(
+				"http://127.0.0.1/v1/add",
+				nil,
+				map[string]string{"x-request-id": "test-request-id"},
+				&api.AddReq{I1: -12, I2: 34},
+				&resMeta,
+				&res,
+			)
+			e := err.(*HttpError)
+			So(e.RequestID, ShouldEqual, "test-request-id")
+			So(e.Status, ShouldEqual, 403)
+			So(e.Code, ShouldEqual, "Forbidden")
+			So(e.Message, ShouldEqual, "permission deny")
+		})
+	})
+}
+
 func TestGrpcGateway(t *testing.T) {
 	Convey("TestGrpcGateway", t, func() {
 		server, err := NewGrpcGatewayWithOptions(&GrpcGatewayOptions{
