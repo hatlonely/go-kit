@@ -2,6 +2,7 @@ package rpcx
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"reflect"
 	"testing"
@@ -31,6 +32,12 @@ func (s *ExampleService) Add(ctx context.Context, req *api.AddReq) (*api.AddRes,
 	if req.I2 < 0 {
 		return nil, errors.Wrap(NewError(errors.New("i2 should be positive"), codes.InvalidArgument, "BadRequest", "i2 should be positive"), "wrap error")
 	}
+	if req.I1 == 101 {
+		return nil, errors.New("hello world")
+	}
+	if req.I1 == 102 {
+		panic("panic")
+	}
 
 	return &api.AddRes{
 		Val: req.I1 + req.I2,
@@ -57,7 +64,7 @@ func TestGrpcGateway(t *testing.T) {
 		go server.Run()
 		defer server.Stop()
 
-		time.Sleep(time.Second)
+		time.Sleep(100 * time.Millisecond)
 
 		client := NewHttpClient()
 
@@ -127,6 +134,44 @@ func TestGrpcGateway(t *testing.T) {
 			So(e.Status, ShouldEqual, 400)
 			So(e.Code, ShouldEqual, "BadRequest")
 			So(e.Message, ShouldEqual, "i2 should be positive")
+		})
+
+		Convey("test internal error", func() {
+			var res api.AddRes
+			resMeta := map[string]string{}
+			err := client.Post(
+				"http://127.0.0.1/v1/add",
+				nil,
+				map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231"},
+				&api.AddReq{I1: 101, I2: 34},
+				&resMeta,
+				&res,
+			)
+			e := err.(*HttpError)
+			fmt.Println(e)
+			So(e.RequestID, ShouldEqual, "test-request-id")
+			So(e.Status, ShouldEqual, 500)
+			So(e.Code, ShouldEqual, "InternalError")
+			So(e.Message, ShouldEqual, "unknown error")
+		})
+
+		Convey("test panic", func() {
+			var res api.AddRes
+			resMeta := map[string]string{}
+			err := client.Post(
+				"http://127.0.0.1/v1/add",
+				nil,
+				map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231"},
+				&api.AddReq{I1: 102, I2: 34},
+				&resMeta,
+				&res,
+			)
+			e := err.(*HttpError)
+			fmt.Println(e)
+			So(e.RequestID, ShouldEqual, "test-request-id")
+			So(e.Status, ShouldEqual, 500)
+			So(e.Code, ShouldEqual, "InternalError")
+			So(e.Message, ShouldEqual, "unknown error")
 		})
 
 		Convey("test not found", func() {
