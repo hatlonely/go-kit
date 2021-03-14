@@ -8,14 +8,6 @@ import (
 	"github.com/hatlonely/go-kit/refx"
 )
 
-type CORSOptions struct {
-	AllowAll    bool
-	AllowRegex  []string
-	AllowOrigin []string
-	AllowMethod []string `dft:"GET,HEAD,POST,PUT,DELETE"`
-	AllowHeader []string `dft:"Content-Type,Accept"`
-}
-
 type CORSOption func(options *CORSOptions)
 
 func WithCORSAllowAll() CORSOption {

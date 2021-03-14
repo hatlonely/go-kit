@@ -18,6 +18,14 @@ type HttpHandlerOptions struct {
 	Cors             CORSOptions
 }
 
+type CORSOptions struct {
+	AllowAll    bool
+	AllowRegex  []string
+	AllowOrigin []string
+	AllowMethod []string `dft:"GET,HEAD,POST,PUT,DELETE"`
+	AllowHeader []string `dft:"Content-Type,Accept"`
+}
+
 func NewHttpHandlerWithOptions(options *HttpHandlerOptions) *HttpHandler {
 	var allowRegex []*regexp.Regexp
 	for _, v := range options.Cors.AllowRegex {
