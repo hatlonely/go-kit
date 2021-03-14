@@ -80,17 +80,19 @@ func ensureServiceUp() {
 	var res api.AddRes
 	resMeta := map[string]string{}
 	for i := 0; i < 10; i++ {
-		if err := client.Get(
+		err := client.Get(
 			"http://127.0.0.1/v1/echo",
 			map[string]string{"message": "hello world"},
-			map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231"},
+			map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231", "origin": "http://abc.example.com"},
 			nil,
 			&resMeta,
 			&res,
-		); err == nil {
+		)
+		fmt.Println(err, res)
+		if err == nil {
 			break
 		}
-		time.Sleep(20 * time.Millisecond)
+		time.Sleep(1000 * time.Millisecond)
 	}
 }
 
@@ -136,7 +138,7 @@ func TestGrpcGateway_Cors(t *testing.T) {
 				So(client.Post(
 					"http://127.0.0.1/v1/add",
 					nil,
-					map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231", "origin": "http://example.com"},
+					map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231", "origin": "http://abc.example.com"},
 					&api.AddReq{I1: 12, I2: 34},
 					&resMeta,
 					&res,
@@ -151,7 +153,7 @@ func TestGrpcGateway_Cors(t *testing.T) {
 			{
 				resMeta := map[string]string{}
 				So(client.Do("OPTIONS", "http://127.0.0.1/", nil,
-					map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231", "origin": "http://example.com"},
+					map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231", "origin": "http://abc.example.com"},
 					nil, &resMeta, nil), ShouldBeNil)
 				fmt.Println(resMeta)
 				So(resMeta["Access-Control-Allow-Headers"], ShouldEqual, "X-Request-Id,X-User-Id")
