@@ -128,6 +128,7 @@ func (h *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 			httpError.RequestID = requestID
 			buf, _ := json.Marshal(httpError)
+			w.WriteHeader(int(httpError.Status))
 			_, _ = w.Write(buf)
 			return
 		}
