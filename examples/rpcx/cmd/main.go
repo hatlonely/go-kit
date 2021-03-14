@@ -84,7 +84,7 @@ func main() {
 	refx.Must(err)
 	grpcGateway.SetLogger(infoLog, grpcLog)
 
-	grpcGateway.AddGrpcPreHandler(func(ctx context.Context, req interface{}) error {
+	grpcGateway.AddGrpcPreHandler(func(ctx context.Context, method string, req interface{}) error {
 		fmt.Println("x-user-id", rpcx.MetaDataIncomingGet(ctx, "x-user-id"))
 		return nil
 	})
