@@ -66,8 +66,7 @@ type GrpcGateway struct {
 	muxServer   *runtime.ServeMux
 	httpServer  *http.Server
 	traceCloser io.Closer
-
-	httpHandlerMap map[string]http.Handler
+	httpHandler *HttpHandler
 
 	options *GrpcGatewayOptions
 
@@ -145,17 +144,34 @@ func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions, opts ...refx.Option)
 		UnmarshalDiscardUnknown: options.UnmarshalDiscardUnknown,
 	})
 
+	httpHandler := NewHttpHandlerWithOptions(&HttpHandlerOptions{
+		EnableTrace:      options.EnableTrace,
+		RequestIDMetaKey: options.RequestIDMetaKey,
+	})
+	if options.EnableMetric {
+		httpHandler.AddHandler("/metrics", promhttp.Handler())
+	}
+	if options.EnablePprof {
+		httpHandler.AddHandler("/debug/pprof/", http.HandlerFunc(pprof.Index))
+		httpHandler.AddHandler("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
+		httpHandler.AddHandler("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
+		httpHandler.AddHandler("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
+		httpHandler.AddHandler("/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
+	}
+
 	g := &GrpcGateway{
 		grpcInterceptor: grpcInterceptor,
 		muxInterceptor:  muxInterceptor,
+		httpHandler:     httpHandler,
 		options:         options,
-		httpHandlerMap:  map[string]http.Handler{},
 		appLog:          logger.NewStdoutTextLogger(),
 		appRpc:          logger.NewStdoutJsonLogger(),
 	}
 
 	g.grpcServer = grpc.NewServer(grpcInterceptor.ServerOption())
 	g.muxServer = runtime.NewServeMux(muxInterceptor.ServeMuxOptions()...)
+
+	httpHandler.SetDefaultHandler(g.muxServer)
 
 	if options.EnableTrace {
 		tracer, closer, err := options.Jaeger.NewTracer(jaegercfg.Logger(jaeger.StdLogger))
@@ -192,7 +208,11 @@ func (g *GrpcGateway) AddGrpcPreHandler(handler GrpcPreHandler) {
 }
 
 func (g *GrpcGateway) AddHttpHandler(path string, handler http.Handler) {
-	g.httpHandlerMap[path] = handler
+	g.httpHandler.AddHandler(path, handler)
+}
+
+func (g *GrpcGateway) AddHttpPreHandler(handler HttpPreHandler) {
+	g.httpHandler.AddPreHandler(handler)
 }
 
 func (g *GrpcGateway) HandleHttp(method string, path string, handleFunc runtime.HandlerFunc) error {
@@ -206,27 +226,9 @@ func (g *GrpcGateway) Run() {
 		refx.Must(g.grpcServer.Serve(address))
 	}()
 
-	var handler http.Handler
-	handler = g.muxServer
-	if g.options.EnableMetric {
-		g.AddHttpHandler("/metrics", promhttp.Handler())
-	}
-	if g.options.EnablePprof {
-		g.AddHttpHandler("/debug/pprof/", http.HandlerFunc(pprof.Index))
-		g.AddHttpHandler("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
-		g.AddHttpHandler("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
-		g.AddHttpHandler("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
-		g.AddHttpHandler("/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
-	}
-	if g.options.EnableTrace {
-		handler = TraceWrapper(handler)
-	}
-	if len(g.httpHandlerMap) != 0 {
-		handler = MapHandlerWrapper(handler, g.httpHandlerMap)
-	}
 	g.httpServer = &http.Server{
 		Addr:    fmt.Sprintf(":%v", g.options.HttpPort),
-		Handler: handler,
+		Handler: g.httpHandler,
 	}
 	go func() {
 		if err := g.httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
