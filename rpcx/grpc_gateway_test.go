@@ -352,7 +352,9 @@ func TestGrpcGateway_AddHttpHandler(t *testing.T) {
 		ensureServiceUp()
 
 		client := NewHttpClient()
-		Convey("add handler", func() {
+
+		// test addHandler
+		{
 			var res interface{}
 			resMeta := map[string]string{}
 			So(client.Get(
@@ -368,9 +370,10 @@ func TestGrpcGateway_AddHttpHandler(t *testing.T) {
 			So(res, ShouldResemble, map[string]interface{}{
 				"key1": "val1",
 			})
-		})
+		}
 
-		Convey("handler pass", func() {
+		// test handlePath
+		{
 			var res interface{}
 			resMeta := map[string]string{}
 			So(client.Get(
@@ -386,7 +389,7 @@ func TestGrpcGateway_AddHttpHandler(t *testing.T) {
 			So(res, ShouldResemble, map[string]interface{}{
 				"message": "hello world",
 			})
-		})
+		}
 	})
 }
 
@@ -426,7 +429,8 @@ func TestGrpcGateway_AddHttpPreHandler(t *testing.T) {
 
 		client := NewHttpClient()
 
-		Convey("pass", func() {
+		// pass
+		{
 			var res api.EchoRes
 			resMeta := map[string]string{}
 			So(client.Get(
@@ -440,9 +444,10 @@ func TestGrpcGateway_AddHttpPreHandler(t *testing.T) {
 			So(resMeta["X-Request-Id"], ShouldResemble, "test-request-id")
 			So(resMeta["X-User-Id"], ShouldResemble, "121231")
 			So(res.Message, ShouldEqual, "hello world")
-		})
+		}
 
-		Convey("permission deny", func() {
+		// permission deny
+		{
 			var res api.AddRes
 			resMeta := map[string]string{}
 			err := client.Post(
@@ -459,7 +464,7 @@ func TestGrpcGateway_AddHttpPreHandler(t *testing.T) {
 			So(e.Status, ShouldEqual, 403)
 			So(e.Code, ShouldEqual, "Forbidden")
 			So(e.Message, ShouldEqual, "permission deny")
-		})
+		}
 	})
 }
 
@@ -499,7 +504,8 @@ func TestGrpcGateway_AddGrpcPreHandler(t *testing.T) {
 
 		client := NewHttpClient()
 
-		Convey("pass", func() {
+		// pass
+		{
 			var res api.EchoRes
 			resMeta := map[string]string{}
 			So(client.Get(
@@ -513,9 +519,10 @@ func TestGrpcGateway_AddGrpcPreHandler(t *testing.T) {
 			So(resMeta["X-Request-Id"], ShouldResemble, "test-request-id")
 			So(resMeta["X-User-Id"], ShouldResemble, "121231")
 			So(res.Message, ShouldEqual, "hello world")
-		})
+		}
 
-		Convey("permission deny", func() {
+		// permission deny
+		{
 			var res api.AddRes
 			resMeta := map[string]string{}
 			err := client.Post(
@@ -531,7 +538,7 @@ func TestGrpcGateway_AddGrpcPreHandler(t *testing.T) {
 			So(e.Status, ShouldEqual, 403)
 			So(e.Code, ShouldEqual, "Forbidden")
 			So(e.Message, ShouldEqual, "permission deny")
-		})
+		}
 	})
 }
 
@@ -564,7 +571,8 @@ func TestGrpcGateway(t *testing.T) {
 
 		client := NewHttpClient()
 
-		Convey("test echo", func() {
+		// test echo
+		{
 			var res api.EchoRes
 			resMeta := map[string]string{}
 			So(client.Get(
@@ -578,9 +586,10 @@ func TestGrpcGateway(t *testing.T) {
 			So(resMeta["X-Request-Id"], ShouldResemble, "test-request-id")
 			So(resMeta["X-User-Id"], ShouldResemble, "121231")
 			So(res.Message, ShouldEqual, "hello world")
-		})
+		}
 
-		Convey("test add", func() {
+		// test add
+		{
 			var res api.AddRes
 			resMeta := map[string]string{}
 			So(client.Post(
@@ -594,9 +603,10 @@ func TestGrpcGateway(t *testing.T) {
 			So(resMeta["X-Request-Id"], ShouldResemble, "test-request-id")
 			So(resMeta["X-User-Id"], ShouldResemble, "121231")
 			So(res.Val, ShouldEqual, 46)
-		})
+		}
 
-		Convey("test without request id", func() {
+		// test without request id
+		{
 			var res api.AddRes
 			resMeta := map[string]string{}
 			So(client.Post(
@@ -611,9 +621,10 @@ func TestGrpcGateway(t *testing.T) {
 			So(resMeta["X-Request-Id"], ShouldNotBeEmpty)
 			So(resMeta["X-User-Id"], ShouldResemble, "121231")
 			So(res.Val, ShouldEqual, 46)
-		})
+		}
 
-		Convey("test error", func() {
+		// test error
+		{
 			var res api.AddRes
 			resMeta := map[string]string{}
 			err := client.Post(
@@ -630,9 +641,10 @@ func TestGrpcGateway(t *testing.T) {
 			So(e.Status, ShouldEqual, 400)
 			So(e.Code, ShouldEqual, "InvalidArgument")
 			So(e.Message, ShouldEqual, "i1 should be positive")
-		})
+		}
 
-		Convey("test wrap error", func() {
+		// test wrap error
+		{
 			var res api.AddRes
 			resMeta := map[string]string{}
 			err := client.Post(
@@ -649,9 +661,10 @@ func TestGrpcGateway(t *testing.T) {
 			So(e.Status, ShouldEqual, 400)
 			So(e.Code, ShouldEqual, "BadRequest")
 			So(e.Message, ShouldEqual, "i2 should be positive")
-		})
+		}
 
-		Convey("test internal error", func() {
+		// test internal error
+		{
 			var res api.AddRes
 			resMeta := map[string]string{}
 			err := client.Post(
@@ -668,9 +681,10 @@ func TestGrpcGateway(t *testing.T) {
 			So(e.Status, ShouldEqual, 500)
 			So(e.Code, ShouldEqual, "InternalError")
 			So(e.Message, ShouldEqual, "unknown error")
-		})
+		}
 
-		Convey("test panic", func() {
+		// test panic
+		{
 			var res api.AddRes
 			resMeta := map[string]string{}
 			err := client.Post(
@@ -687,9 +701,10 @@ func TestGrpcGateway(t *testing.T) {
 			So(e.Status, ShouldEqual, 500)
 			So(e.Code, ShouldEqual, "InternalError")
 			So(e.Message, ShouldEqual, "unknown error")
-		})
+		}
 
-		Convey("test not found", func() {
+		// test not found
+		{
 			var res interface{}
 			err := client.Get(
 				"http://127.0.0.1/v1/found",
@@ -706,9 +721,10 @@ func TestGrpcGateway(t *testing.T) {
 			So(e.Code, ShouldEqual, http.StatusText(http.StatusNotFound))
 			So(e.RequestID, ShouldEqual, "test-request-id")
 			So(e.Message, ShouldEqual, http.StatusText(http.StatusNotFound))
-		})
+		}
 
-		Convey("test not implement", func() {
+		// test not implement
+		{
 			var res api.EchoRes
 			resMeta := map[string]string{}
 			err := client.Post(
@@ -725,6 +741,6 @@ func TestGrpcGateway(t *testing.T) {
 			So(e.Code, ShouldEqual, http.StatusText(http.StatusNotImplemented))
 			So(e.RequestID, ShouldEqual, "test-request-id")
 			So(e.Message, ShouldEqual, "Method Not Allowed")
-		})
+		}
 	})
 }
