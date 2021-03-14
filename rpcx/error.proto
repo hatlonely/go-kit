@@ -4,6 +4,12 @@ package rpcx;
 
 option go_package="github.com/hatlonely/go-kit/rpcx";
 
+import "gogoproto/gogo.proto";
+
+option (gogoproto.goproto_unkeyed_all) = false;
+option (gogoproto.goproto_unrecognized_all) = false;
+option (gogoproto.goproto_sizecache_all) = false;
+
 message ErrorDetail {
   int32 status = 1;
   string requestID = 2;
