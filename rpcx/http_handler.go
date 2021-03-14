@@ -28,7 +28,7 @@ type HttpHandler struct {
 	preHandlers    []HttpPreHandler
 }
 
-type HttpPreHandler func(r *http.Request) error
+type HttpPreHandler func(w http.ResponseWriter, r *http.Request) error
 
 func (h *HttpHandler) SetDefaultHandler(handler http.Handler) {
 	h.defaultHandler = handler
@@ -66,7 +66,7 @@ func (h *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, preHandler := range h.preHandlers {
-		if err := preHandler(r); err != nil {
+		if err := preHandler(w, r); err != nil {
 			var httpError *HttpError
 			switch e := err.(type) {
 			case *HttpError:
