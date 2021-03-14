@@ -15,8 +15,8 @@ import (
 
 type MuxInterceptorOptions struct {
 	Headers                 []string `dft:"X-Request-Id"`
+	RequestIDMetaKey        string   `dft:"X-Request-Id"`
 	UsePascalNameErrKey     bool
-	RequestIDMetaKey        string `dft:"X-Request-Id"`
 	MarshalUseProtoNames    bool
 	MarshalEmitUnpopulated  bool
 	UnmarshalDiscardUnknown bool
