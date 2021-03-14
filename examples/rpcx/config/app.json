@@ -28,6 +28,14 @@
         "key1": "val1"
       }
     },
+    "enableCors": false,
+    "cors": {
+      "allowAll": "false",
+      "allowRegex": [],
+      "allowOrigin": [],
+      "allowMethod": ["GET", "HEAD", "POST", "PUT", "DELETE"],
+      "allowHeader": ["Content-Type", "Accept"],
+    },
     "rateLimiterHeader": "x-user-id",
     "rateLimiter": {
       "type": "RedisRateLimiterInstance"
