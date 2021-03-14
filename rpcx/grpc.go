@@ -146,7 +146,7 @@ type GrpcInterceptor struct {
 	parallelController micro.ParallelController
 
 	validators  []func(interface{}) error
-	preHandlers []func(ctx context.Context, req interface{}) error
+	preHandlers []GrpcPreHandler
 
 	requestIDKey string
 	hostnameKey  string
@@ -169,7 +169,7 @@ type GrpcInterceptor struct {
 	appLog Logger
 }
 
-type GrpcPreHandler func(ctx context.Context, req interface{}) error
+type GrpcPreHandler func(ctx context.Context, method string, req interface{}) error
 
 func (g *GrpcInterceptor) AddPreHandler(handler GrpcPreHandler) {
 	g.preHandlers = append(g.preHandlers, handler)
@@ -328,7 +328,7 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 
 		if err == nil {
 			for _, h := range g.preHandlers {
-				if err = h(ctx, req); err != nil {
+				if err = h(ctx, info.FullMethod, req); err != nil {
 					break
 				}
 			}

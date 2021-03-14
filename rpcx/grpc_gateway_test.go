@@ -488,7 +488,7 @@ func TestGrpcGateway_AddGrpcPreHandler(t *testing.T) {
 		api.RegisterExampleServiceServer(server.GRPCServer(), &ExampleService{})
 		So(server.RegisterServiceHandlerFunc(api.RegisterExampleServiceHandlerFromEndpoint), ShouldBeNil)
 
-		server.AddGrpcPreHandler(func(ctx context.Context, req interface{}) error {
+		server.AddGrpcPreHandler(func(ctx context.Context, method string, req interface{}) error {
 			if MetaDataIncomingGet(ctx, "x-user-id") == "" {
 				return NewError(errors.New("permission deny"), codes.PermissionDenied, "Forbidden", "permission deny")
 			}
