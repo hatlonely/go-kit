@@ -37,7 +37,7 @@ func main() {
 
 配置文件
 
-```json
+```js
 {
   "name": "example",
   "httpPort": 80,
