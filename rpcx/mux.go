@@ -24,11 +24,11 @@ type MuxInterceptorOptions struct {
 
 func NewMuxInterceptorWithOptions(options *MuxInterceptorOptions) (*MuxInterceptor, error) {
 	m := &MuxInterceptor{
-		options:       options,
-		detailMarshal: JsonMarshalErrorDetail,
+		options:              options,
+		errorDetailMarshaler: JsonMarshalErrorDetail,
 	}
 	if options.UsePascalNameErrKey {
-		m.detailMarshal = JsonMarshalErrorDetailWithFieldKey
+		m.errorDetailMarshaler = JsonMarshalErrorDetailWithFieldKey
 	}
 
 	return m, nil
@@ -37,7 +37,7 @@ func NewMuxInterceptorWithOptions(options *MuxInterceptorOptions) (*MuxIntercept
 type MuxInterceptor struct {
 	options *MuxInterceptorOptions
 
-	detailMarshal func(detail *ErrorDetail) []byte
+	errorDetailMarshaler func(detail *ErrorDetail) []byte
 }
 
 func (m *MuxInterceptor) ServeMuxOptions() []runtime.ServeMuxOption {
@@ -98,7 +98,7 @@ func (m *MuxInterceptor) MuxProtoErrorHandler() runtime.ServeMuxOption {
 
 		e := StatusErrorDetail(err, req.Header.Get(m.options.RequestIDMetaKey))
 		res.WriteHeader(int(e.Status))
-		_, _ = res.Write(m.detailMarshal(e))
+		_, _ = res.Write(m.errorDetailMarshaler(e))
 	})
 }
 
