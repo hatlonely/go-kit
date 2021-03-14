@@ -3,6 +3,8 @@ package rpcx
 import (
 	"encoding/json"
 	"net/http"
+	"regexp"
+	"strings"
 
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
@@ -11,13 +13,28 @@ import (
 
 type HttpHandlerOptions struct {
 	EnableTrace      bool
+	EnableCors       bool
 	RequestIDMetaKey string
+	Cors             CORSOptions
 }
 
 func NewHttpHandlerWithOptions(options *HttpHandlerOptions) *HttpHandler {
+	var allowRegex []*regexp.Regexp
+	for _, v := range options.Cors.AllowRegex {
+		allowRegex = append(allowRegex, regexp.MustCompile(v))
+	}
+	allowOrigin := map[string]bool{}
+	for _, v := range options.Cors.AllowOrigin {
+		allowOrigin[v] = true
+	}
+
 	return &HttpHandler{
 		options:        options,
 		httpHandlerMap: map[string]http.Handler{},
+		allowRegex:     allowRegex,
+		allowOrigin:    allowOrigin,
+		allowMethod:    strings.Join(options.Cors.AllowMethod, ","),
+		allowHeader:    strings.Join(options.Cors.AllowHeader, ","),
 	}
 }
 
@@ -26,6 +43,11 @@ type HttpHandler struct {
 	defaultHandler http.Handler
 	httpHandlerMap map[string]http.Handler
 	preHandlers    []HttpPreHandler
+
+	allowRegex  []*regexp.Regexp
+	allowOrigin map[string]bool
+	allowMethod string
+	allowHeader string
 }
 
 type HttpPreHandler func(w http.ResponseWriter, r *http.Request) error
@@ -43,6 +65,34 @@ func (h *HttpHandler) AddPreHandler(handler HttpPreHandler) {
 }
 
 func (h *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if h.options.EnableCors {
+		if origin := r.Header.Get("Origin"); origin != "" {
+		out:
+			for {
+				if h.options.Cors.AllowAll {
+					w.Header().Set("Access-Control-Allow-Origin", "*")
+					break
+				}
+				if h.allowOrigin[origin] {
+					w.Header().Set("Access-Control-Allow-Origin", origin)
+					break
+				}
+				for _, re := range h.allowRegex {
+					if re.MatchString(origin) {
+						w.Header().Set("Access-Control-Allow-Origin", origin)
+						break out
+					}
+				}
+			}
+
+			if r.Method == "OPTIONS" && r.Header.Get("Access-Control-Request-Method") != "" {
+				w.Header().Set("Access-Control-Allow-Headers", h.allowHeader)
+				w.Header().Set("Access-Control-Allow-Methods", h.allowMethod)
+				return
+			}
+		}
+	}
+
 	if h.options.EnableTrace {
 		parentSpanContext, err := opentracing.GlobalTracer().Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(r.Header))
 		if err == nil || err == opentracing.ErrSpanContextNotFound {

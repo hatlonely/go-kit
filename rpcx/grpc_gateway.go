@@ -51,6 +51,9 @@ type GrpcGatewayOptions struct {
 		ConstLabels map[string]string
 	}
 
+	EnableCors bool
+	Cors       CORSOptions
+
 	RateLimiterHeader        string
 	ParallelControllerHeader string
 	RateLimiter              micro.RateLimiterOptions
@@ -147,6 +150,8 @@ func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions, opts ...refx.Option)
 	httpHandler := NewHttpHandlerWithOptions(&HttpHandlerOptions{
 		EnableTrace:      options.EnableTrace,
 		RequestIDMetaKey: options.RequestIDMetaKey,
+		EnableCors:       options.EnableCors,
+		Cors:             options.Cors,
 	})
 	if options.EnableMetric {
 		httpHandler.AddHandler("/metrics", promhttp.Handler())
