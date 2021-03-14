@@ -118,12 +118,13 @@ func (c *HttpClient) Do(method string, uri string, params map[string]string, req
 				Message: string(buf),
 			}
 		}
-
 		return &herr
 	}
 
-	if err := json.Unmarshal(buf, res); err != nil {
-		return errors.Wrap(err, "json.Unmarshal failed")
+	if len(buf) != 0 {
+		if err := json.Unmarshal(buf, res); err != nil {
+			return errors.Wrap(err, "json.Unmarshal failed")
+		}
 	}
 
 	return nil

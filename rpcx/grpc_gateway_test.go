@@ -55,7 +55,6 @@ func waitPortOpen(port int) {
 		}
 		if conn != nil {
 			_ = conn.Close()
-			time.Sleep(50 * time.Millisecond)
 			return
 		}
 	}
@@ -66,14 +65,255 @@ func waitPortClose(port int) {
 		timeout := 50 * time.Millisecond
 		conn, err := net.DialTimeout("tcp", net.JoinHostPort("127.0.0.1", strconv.Itoa(port)), timeout)
 		if err != nil {
-			time.Sleep(50 * time.Millisecond)
 			return
 		}
 		if conn != nil {
 			_ = conn.Close()
-			time.Sleep(10 * time.Millisecond)
 		}
 	}
+}
+
+func ensureServiceUp() {
+	waitPortOpen(6080)
+	waitPortOpen(80)
+	client := NewHttpClient()
+	var res api.AddRes
+	resMeta := map[string]string{}
+	for i := 0; i < 10; i++ {
+		if err := client.Get(
+			"http://127.0.0.1/v1/echo",
+			map[string]string{"message": "hello world"},
+			map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231"},
+			nil,
+			&resMeta,
+			&res,
+		); err == nil {
+			break
+		}
+		time.Sleep(20 * time.Millisecond)
+	}
+}
+
+func TestGrpcGateway_Cors(t *testing.T) {
+	Convey("TestGrpcGateway_AddHttpHandler", t, func() {
+		Convey("allow all", func() {
+			server, err := NewGrpcGatewayWithOptions(&GrpcGatewayOptions{
+				HttpPort:         80,
+				GrpcPort:         6080,
+				EnableTrace:      false,
+				EnableMetric:     false,
+				EnablePprof:      false,
+				ExitTimeout:      10 * time.Second,
+				Validators:       []string{"Default"},
+				RequestIDMetaKey: "x-request-id",
+				Headers:          []string{"X-Request-Id", "X-User-Id"},
+				EnableCors:       true,
+				Cors: CORSOptions{
+					AllowAll:    true,
+					AllowMethod: []string{"GET", "POST"},
+					AllowHeader: []string{"X-Request-Id", "X-User-Id"},
+				},
+			})
+			So(err, ShouldBeNil)
+
+			api.RegisterExampleServiceServer(server.GRPCServer(), &ExampleService{})
+			So(server.RegisterServiceHandlerFunc(api.RegisterExampleServiceHandlerFromEndpoint), ShouldBeNil)
+
+			go server.Run()
+			defer func() {
+				server.Stop()
+				waitPortClose(80)
+				waitPortClose(6080)
+			}()
+
+			ensureServiceUp()
+
+			client := NewHttpClient()
+
+			{
+				var res api.AddRes
+				resMeta := map[string]string{}
+				So(client.Post(
+					"http://127.0.0.1/v1/add",
+					nil,
+					map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231", "origin": "http://example.com"},
+					&api.AddReq{I1: 12, I2: 34},
+					&resMeta,
+					&res,
+				), ShouldBeNil)
+				fmt.Println(resMeta)
+				So(resMeta["X-Request-Id"], ShouldResemble, "test-request-id")
+				So(resMeta["X-User-Id"], ShouldResemble, "121231")
+				So(resMeta["Access-Control-Allow-Origin"], ShouldEqual, "*")
+				So(res.Val, ShouldEqual, 46)
+			}
+
+			{
+				resMeta := map[string]string{}
+				So(client.Do("OPTIONS", "http://127.0.0.1/", nil,
+					map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231", "origin": "http://example.com"},
+					nil, &resMeta, nil), ShouldBeNil)
+				fmt.Println(resMeta)
+				So(resMeta["Access-Control-Allow-Headers"], ShouldEqual, "X-Request-Id,X-User-Id")
+				So(resMeta["Access-Control-Allow-Methods"], ShouldEqual, "GET,POST")
+				So(resMeta["Access-Control-Allow-Origin"], ShouldEqual, "*")
+			}
+		})
+
+		Convey("allow origin", func() {
+			server, err := NewGrpcGatewayWithOptions(&GrpcGatewayOptions{
+				HttpPort:         80,
+				GrpcPort:         6080,
+				EnableTrace:      false,
+				EnableMetric:     false,
+				EnablePprof:      false,
+				ExitTimeout:      10 * time.Second,
+				Validators:       []string{"Default"},
+				RequestIDMetaKey: "x-request-id",
+				Headers:          []string{"X-Request-Id", "X-User-Id"},
+				EnableCors:       true,
+				Cors: CORSOptions{
+					AllowAll:    false,
+					AllowOrigin: []string{"http://abc.example.com", "http://def.example.com"},
+				},
+			})
+			So(err, ShouldBeNil)
+
+			api.RegisterExampleServiceServer(server.GRPCServer(), &ExampleService{})
+			So(server.RegisterServiceHandlerFunc(api.RegisterExampleServiceHandlerFromEndpoint), ShouldBeNil)
+
+			go server.Run()
+			defer func() {
+				server.Stop()
+				waitPortClose(80)
+				waitPortClose(6080)
+			}()
+
+			ensureServiceUp()
+
+			client := NewHttpClient()
+
+			{
+				var res api.AddRes
+				resMeta := map[string]string{}
+				So(client.Post(
+					"http://127.0.0.1/v1/add",
+					nil,
+					map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231", "origin": "http://abc.example.com"},
+					&api.AddReq{I1: 12, I2: 34},
+					&resMeta,
+					&res,
+				), ShouldBeNil)
+				fmt.Println(resMeta)
+				So(resMeta["X-Request-Id"], ShouldResemble, "test-request-id")
+				So(resMeta["X-User-Id"], ShouldResemble, "121231")
+				So(resMeta["Access-Control-Allow-Origin"], ShouldEqual, "http://abc.example.com")
+				So(res.Val, ShouldEqual, 46)
+			}
+
+			{
+				var res api.AddRes
+				resMeta := map[string]string{}
+				So(client.Post(
+					"http://127.0.0.1/v1/add",
+					nil,
+					map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231", "origin": "http://def.example.com"},
+					&api.AddReq{I1: 12, I2: 34},
+					&resMeta,
+					&res,
+				), ShouldBeNil)
+				fmt.Println(resMeta)
+				So(resMeta["X-Request-Id"], ShouldResemble, "test-request-id")
+				So(resMeta["X-User-Id"], ShouldResemble, "121231")
+				So(resMeta["Access-Control-Allow-Origin"], ShouldEqual, "http://def.example.com")
+				So(res.Val, ShouldEqual, 46)
+			}
+
+			{
+				var res api.AddRes
+				resMeta := map[string]string{}
+				err := client.Post(
+					"http://127.0.0.1/v1/add",
+					nil,
+					map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231", "origin": "http://ghi.example.com"},
+					&api.AddReq{I1: 12, I2: 34},
+					&resMeta,
+					&res,
+				)
+				fmt.Println(err)
+				e := err.(*HttpError)
+				So(e.Status, ShouldEqual, 403)
+			}
+		})
+
+		Convey("allow regex", func() {
+			server, err := NewGrpcGatewayWithOptions(&GrpcGatewayOptions{
+				HttpPort:         80,
+				GrpcPort:         6080,
+				EnableTrace:      false,
+				EnableMetric:     false,
+				EnablePprof:      false,
+				ExitTimeout:      10 * time.Second,
+				Validators:       []string{"Default"},
+				RequestIDMetaKey: "x-request-id",
+				Headers:          []string{"X-Request-Id", "X-User-Id"},
+				EnableCors:       true,
+				Cors: CORSOptions{
+					AllowAll:   false,
+					AllowRegex: []string{`.*\.example\..*`},
+				},
+			})
+			So(err, ShouldBeNil)
+
+			api.RegisterExampleServiceServer(server.GRPCServer(), &ExampleService{})
+			So(server.RegisterServiceHandlerFunc(api.RegisterExampleServiceHandlerFromEndpoint), ShouldBeNil)
+
+			go server.Run()
+			defer func() {
+				server.Stop()
+				waitPortClose(80)
+				waitPortClose(6080)
+			}()
+
+			ensureServiceUp()
+
+			client := NewHttpClient()
+
+			{
+				var res api.AddRes
+				resMeta := map[string]string{}
+				So(client.Post(
+					"http://127.0.0.1/v1/add",
+					nil,
+					map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231", "origin": "http://abc.example.com"},
+					&api.AddReq{I1: 12, I2: 34},
+					&resMeta,
+					&res,
+				), ShouldBeNil)
+				fmt.Println(resMeta)
+				So(resMeta["X-Request-Id"], ShouldResemble, "test-request-id")
+				So(resMeta["X-User-Id"], ShouldResemble, "121231")
+				So(resMeta["Access-Control-Allow-Origin"], ShouldEqual, "http://abc.example.com")
+				So(res.Val, ShouldEqual, 46)
+			}
+
+			{
+				var res api.AddRes
+				resMeta := map[string]string{}
+				err := client.Post(
+					"http://127.0.0.1/v1/add",
+					nil,
+					map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231", "origin": "http://abc.notallow.com"},
+					&api.AddReq{I1: 12, I2: 34},
+					&resMeta,
+					&res,
+				)
+				fmt.Println(err)
+				e := err.(*HttpError)
+				So(e.Status, ShouldEqual, 403)
+			}
+		})
+	})
 }
 
 func TestGrpcGateway_AddHttpHandler(t *testing.T) {
@@ -109,8 +349,7 @@ func TestGrpcGateway_AddHttpHandler(t *testing.T) {
 			waitPortClose(6080)
 		}()
 
-		waitPortOpen(6080)
-		waitPortOpen(80)
+		ensureServiceUp()
 
 		client := NewHttpClient()
 		Convey("add handler", func() {
@@ -183,8 +422,7 @@ func TestGrpcGateway_AddHttpPreHandler(t *testing.T) {
 			waitPortClose(6080)
 		}()
 
-		waitPortOpen(6080)
-		waitPortOpen(80)
+		ensureServiceUp()
 
 		client := NewHttpClient()
 
@@ -257,8 +495,7 @@ func TestGrpcGateway_AddGrpcPreHandler(t *testing.T) {
 			waitPortClose(6080)
 		}()
 
-		waitPortOpen(6080)
-		waitPortOpen(80)
+		ensureServiceUp()
 
 		client := NewHttpClient()
 
@@ -323,8 +560,7 @@ func TestGrpcGateway(t *testing.T) {
 			waitPortClose(6080)
 		}()
 
-		waitPortOpen(6080)
-		waitPortOpen(80)
+		ensureServiceUp()
 
 		client := NewHttpClient()
 

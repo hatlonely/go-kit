@@ -67,6 +67,7 @@ func (h *HttpHandler) AddPreHandler(handler HttpPreHandler) {
 func (h *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if h.options.EnableCors {
 		if origin := r.Header.Get("Origin"); origin != "" {
+			allow := true
 		out:
 			for {
 				if h.options.Cors.AllowAll {
@@ -83,13 +84,23 @@ func (h *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						break out
 					}
 				}
+				allow = false
+				break
 			}
-
-			if r.Method == "OPTIONS" && r.Header.Get("Access-Control-Request-Method") != "" {
-				w.Header().Set("Access-Control-Allow-Headers", h.allowHeader)
-				w.Header().Set("Access-Control-Allow-Methods", h.allowMethod)
+			if !allow {
+				w.WriteHeader(http.StatusForbidden)
 				return
 			}
+
+			if r.Method == "OPTIONS" {
+				w.Header().Set("Access-Control-Allow-Headers", h.allowHeader)
+				w.Header().Set("Access-Control-Allow-Methods", h.allowMethod)
+				w.WriteHeader(http.StatusOK)
+				return
+			}
+		} else {
+			w.WriteHeader(http.StatusForbidden)
+			return
 		}
 	}
 
