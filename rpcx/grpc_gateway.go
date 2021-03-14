@@ -29,7 +29,7 @@ type GrpcGatewayOptions struct {
 	ExitTimeout time.Duration `dft:"10s"` // 服务退出最长等待时间
 
 	Headers                 []string `dft:"X-Request-Id"` // 请求透传包头，默认透传 x- 开头包头
-	Validators              []string // 请求包体校验，默认不校验
+	Validators              []string // 请求包体校验，默认不校验，支持 Playground / Default 两种
 	PrivateIP               string
 	Hostname                string
 	RequestIDMetaKey        string `dft:"x-request-id"` // request id 包头 key
