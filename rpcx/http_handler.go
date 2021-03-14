@@ -65,6 +65,7 @@ func (h *HttpHandler) AddPreHandler(handler HttpPreHandler) {
 }
 
 func (h *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// 参考 https://github.com/grpc-ecosystem/grpc-gateway/issues/544
 	if h.options.EnableCors {
 		if origin := r.Header.Get("Origin"); origin != "" {
 			allow := true
