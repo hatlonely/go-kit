@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -86,6 +87,13 @@ func main() {
 
 	grpcGateway.AddGrpcPreHandler(func(ctx context.Context, method string, req interface{}) error {
 		fmt.Println("x-user-id", rpcx.MetaDataIncomingGet(ctx, "x-user-id"))
+		return nil
+	})
+
+	grpcGateway.AddHttpPreHandler(func(w http.ResponseWriter, r *http.Request) error {
+		if action := r.URL.Query().Get("Action"); action != "" {
+			r.URL.Path = fmt.Sprintf("%s/%s", r.URL.Path, action)
+		}
 		return nil
 	})
 
