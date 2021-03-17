@@ -1,7 +1,9 @@
 package rpcx
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"regexp"
 	"strings"
@@ -51,6 +53,7 @@ type HttpHandler struct {
 	defaultHandler http.Handler
 	httpHandlerMap map[string]http.Handler
 	preHandlers    []HttpPreHandler
+	postHandlers   []HttpPostHandler
 
 	allowRegex  []*regexp.Regexp
 	allowOrigin map[string]bool
@@ -59,6 +62,7 @@ type HttpHandler struct {
 }
 
 type HttpPreHandler func(w http.ResponseWriter, r *http.Request) error
+type HttpPostHandler func(w *BufferedHttpResponseWriter, r *http.Request) (*BufferedHttpResponseWriter, error)
 
 func (h *HttpHandler) SetDefaultHandler(handler http.Handler) {
 	h.defaultHandler = handler
@@ -72,7 +76,26 @@ func (h *HttpHandler) AddPreHandler(handler HttpPreHandler) {
 	h.preHandlers = append(h.preHandlers, handler)
 }
 
+func (h *HttpHandler) AddPostHandler(handler HttpPostHandler) {
+	h.postHandlers = append(h.postHandlers, handler)
+}
+
 func (h *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	bw := NewBufferedHttpResponseWriter()
+
+	defer func() {
+		if len(h.postHandlers) == 0 {
+			return
+		}
+		w.WriteHeader(bw.status)
+		_, _ = w.Write(bw.body.Bytes())
+		for key, vals := range bw.header {
+			for _, val := range vals {
+				w.Header().Set(key, val)
+			}
+		}
+	}()
+
 	// 参考 https://github.com/grpc-ecosystem/grpc-gateway/issues/544
 	if h.options.EnableCors {
 		if origin := r.Header.Get("Origin"); origin != "" {
@@ -80,16 +103,16 @@ func (h *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		out:
 			for {
 				if h.options.Cors.AllowAll {
-					w.Header().Set("Access-Control-Allow-Origin", "*")
+					bw.Header().Set("Access-Control-Allow-Origin", "*")
 					break
 				}
 				if h.allowOrigin[origin] {
-					w.Header().Set("Access-Control-Allow-Origin", origin)
+					bw.Header().Set("Access-Control-Allow-Origin", origin)
 					break
 				}
 				for _, re := range h.allowRegex {
 					if re.MatchString(origin) {
-						w.Header().Set("Access-Control-Allow-Origin", origin)
+						bw.Header().Set("Access-Control-Allow-Origin", origin)
 						break out
 					}
 				}
@@ -97,18 +120,18 @@ func (h *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 			if !allow {
-				w.WriteHeader(http.StatusForbidden)
+				bw.WriteHeader(http.StatusForbidden)
 				return
 			}
 
 			if r.Method == "OPTIONS" {
-				w.Header().Set("Access-Control-Allow-Headers", h.allowHeader)
-				w.Header().Set("Access-Control-Allow-Methods", h.allowMethod)
-				w.WriteHeader(http.StatusOK)
+				bw.Header().Set("Access-Control-Allow-Headers", h.allowHeader)
+				bw.Header().Set("Access-Control-Allow-Methods", h.allowMethod)
+				bw.WriteHeader(http.StatusOK)
 				return
 			}
 		} else {
-			w.WriteHeader(http.StatusForbidden)
+			bw.WriteHeader(http.StatusForbidden)
 			return
 		}
 	}
@@ -136,7 +159,7 @@ func (h *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, preHandler := range h.preHandlers {
-		if err := preHandler(w, r); err != nil {
+		if err := preHandler(bw, r); err != nil {
 			var httpError *HttpError
 			switch e := err.(type) {
 			case *HttpError:
@@ -148,15 +171,61 @@ func (h *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 			httpError.RequestID = requestID
 			buf, _ := json.Marshal(httpError)
-			w.WriteHeader(int(httpError.Status))
-			_, _ = w.Write(buf)
+			bw.WriteHeader(int(httpError.Status))
+			_, _ = bw.Write(buf)
 			return
 		}
 	}
 
 	if handler, ok := h.httpHandlerMap[r.URL.Path]; ok {
-		handler.ServeHTTP(w, r)
+		handler.ServeHTTP(bw, r)
 	} else {
-		h.defaultHandler.ServeHTTP(w, r)
+		h.defaultHandler.ServeHTTP(bw, r)
 	}
+	fmt.Println(bw.status, "@@")
+
+	for _, postHandler := range h.postHandlers {
+		var err error
+		bw, err = postHandler(bw, r)
+		if err != nil {
+			return
+		}
+	}
+}
+
+type BufferedHttpResponseWriter struct {
+	status int
+	body   bytes.Buffer
+	header http.Header
+}
+
+func NewBufferedHttpResponseWriter() *BufferedHttpResponseWriter {
+	return &BufferedHttpResponseWriter{
+		status: http.StatusOK,
+		header: map[string][]string{},
+	}
+}
+
+func (w *BufferedHttpResponseWriter) Header() http.Header {
+	return w.header
+}
+
+func (w *BufferedHttpResponseWriter) Write(buf []byte) (int, error) {
+	return w.body.Write(buf)
+}
+
+func (w *BufferedHttpResponseWriter) WriteHeader(statusCode int) {
+	w.status = statusCode
+}
+
+func (w *BufferedHttpResponseWriter) Status() int {
+	return w.status
+}
+
+func (w *BufferedHttpResponseWriter) Body() []byte {
+	return w.body.Bytes()
+}
+
+func (w *BufferedHttpResponseWriter) SetHeader(header http.Header) {
+	w.header = header
 }

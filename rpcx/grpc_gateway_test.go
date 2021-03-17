@@ -97,6 +97,72 @@ func ensureServiceUp() {
 	}
 }
 
+func TestGrpcGateway_AddHttpPostHandler(t *testing.T) {
+	Convey("TestGrpcGateway_AddHttpPostHandler", t, func() {
+		server, err := NewGrpcGatewayWithOptions(&GrpcGatewayOptions{
+			HttpPort:         80,
+			GrpcPort:         6080,
+			EnableTrace:      false,
+			EnableMetric:     false,
+			EnablePprof:      false,
+			ExitTimeout:      10 * time.Second,
+			Validators:       []string{"Default"},
+			RequestIDMetaKey: "x-request-id",
+			Headers:          []string{"X-Request-Id", "X-User-Id"},
+		})
+		So(err, ShouldBeNil)
+
+		server.AddHttpPostHandler(func(w *BufferedHttpResponseWriter, r *http.Request) (*BufferedHttpResponseWriter, error) {
+			fmt.Println(w.status)
+			fmt.Println(w.body.String())
+			fmt.Println(w.header)
+			var v map[string]interface{}
+			if err := json.Unmarshal(w.Body(), &v); err != nil {
+				return w, err
+			}
+
+			v["httpStatusCode"] = w.Status()
+
+			nw := NewBufferedHttpResponseWriter()
+			nw.WriteHeader(http.StatusOK)
+			buf, _ := json.Marshal(v)
+			_, _ = nw.Write(buf)
+			nw.SetHeader(w.header)
+			return nw, nil
+		})
+
+		api.RegisterExampleServiceServer(server.GRPCServer(), &ExampleService{})
+		So(server.RegisterServiceHandlerFunc(api.RegisterExampleServiceHandlerFromEndpoint), ShouldBeNil)
+
+		go server.Run()
+		defer func() {
+			server.Stop()
+			waitPortClose(80)
+			waitPortClose(6080)
+		}()
+
+		ensureServiceUp()
+		client := NewHttpClient()
+
+		{
+			var res map[string]interface{}
+			resMeta := map[string]string{}
+			err := client.Post(
+				"http://127.0.0.1/v1/add",
+				nil,
+				map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231"},
+				&api.AddReq{I1: 12, I2: 34},
+				&resMeta,
+				&res,
+			)
+			So(err, ShouldBeNil)
+			fmt.Println(res)
+			So(res["val"], ShouldEqual, 46)
+			So(res["httpStatusCode"], ShouldEqual, 200)
+		}
+	})
+}
+
 func TestGrpcGateway_SetErrorDetailMarshaler(t *testing.T) {
 	Convey("TestGrpcGateway_SetErrorDetailMarshaler", t, func() {
 		server, err := NewGrpcGatewayWithOptions(&GrpcGatewayOptions{
@@ -143,9 +209,7 @@ func TestGrpcGateway_SetErrorDetailMarshaler(t *testing.T) {
 			waitPortClose(80)
 			waitPortClose(6080)
 		}()
-
 		ensureServiceUp()
-
 		client := NewHttpClient()
 
 		{

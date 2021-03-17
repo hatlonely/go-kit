@@ -220,6 +220,10 @@ func (g *GrpcGateway) AddHttpPreHandler(handler HttpPreHandler) {
 	g.httpHandler.AddPreHandler(handler)
 }
 
+func (g *GrpcGateway) AddHttpPostHandler(handler HttpPostHandler) {
+	g.httpHandler.AddPostHandler(handler)
+}
+
 func (g *GrpcGateway) HandleHttp(method string, path string, handleFunc runtime.HandlerFunc) error {
 	return g.muxServer.HandlePath(method, path, handleFunc)
 }
