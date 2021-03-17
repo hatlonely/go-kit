@@ -37,7 +37,13 @@ func NewMuxInterceptorWithOptions(options *MuxInterceptorOptions) (*MuxIntercept
 type MuxInterceptor struct {
 	options *MuxInterceptorOptions
 
-	errorDetailMarshaler func(detail *ErrorDetail) []byte
+	errorDetailMarshaler ErrorDetailMarshaler
+}
+
+type ErrorDetailMarshaler func(detail *ErrorDetail) []byte
+
+func (m *MuxInterceptor) SetErrorDetailMarshaler(errorDetailMarshaler ErrorDetailMarshaler) {
+	m.errorDetailMarshaler = errorDetailMarshaler
 }
 
 func (m *MuxInterceptor) ServeMuxOptions() []runtime.ServeMuxOption {

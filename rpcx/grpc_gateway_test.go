@@ -2,6 +2,7 @@ package rpcx
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net"
 	"net/http"
@@ -94,6 +95,75 @@ func ensureServiceUp() {
 		}
 		time.Sleep(1000 * time.Millisecond)
 	}
+}
+
+func TestGrpcGateway_SetErrorDetailMarshaler(t *testing.T) {
+	Convey("TestGrpcGateway_SetErrorDetailMarshaler", t, func() {
+		server, err := NewGrpcGatewayWithOptions(&GrpcGatewayOptions{
+			HttpPort:         80,
+			GrpcPort:         6080,
+			EnableTrace:      false,
+			EnableMetric:     false,
+			EnablePprof:      false,
+			ExitTimeout:      10 * time.Second,
+			Validators:       []string{"Default"},
+			RequestIDMetaKey: "x-request-id",
+			Headers:          []string{"X-Request-Id", "X-User-Id"},
+		})
+		So(err, ShouldBeNil)
+
+		server.SetErrorDetailMarshaler(func(detail *ErrorDetail) []byte {
+			buf, _ := json.Marshal(&struct {
+				RequestId      string
+				HttpStatusCode int32  `json:"httpStatusCode"`
+				DynamicCode    string `json:"dynamicCode"`
+				DynamicMessage string `json:"dynamicMessage"`
+				Success        bool   `json:"success"`
+				Code           string `json:"code"`
+				Message        string `json:"message"`
+			}{
+				RequestId:      detail.RequestID,
+				HttpStatusCode: detail.Status,
+				DynamicCode:    detail.Code,
+				DynamicMessage: detail.Message,
+				Code:           detail.Code,
+				Message:        detail.Message,
+				Success:        false,
+			})
+
+			return buf
+		})
+
+		api.RegisterExampleServiceServer(server.GRPCServer(), &ExampleService{})
+		So(server.RegisterServiceHandlerFunc(api.RegisterExampleServiceHandlerFromEndpoint), ShouldBeNil)
+
+		go server.Run()
+		defer func() {
+			server.Stop()
+			waitPortClose(80)
+			waitPortClose(6080)
+		}()
+
+		ensureServiceUp()
+
+		client := NewHttpClient()
+
+		{
+			var res api.AddRes
+			resMeta := map[string]string{}
+			err := client.Post(
+				"http://127.0.0.1/v1/add",
+				nil,
+				map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231"},
+				&api.AddReq{I1: -12, I2: 34},
+				&resMeta,
+				&res,
+			)
+			e := err.(*HttpError)
+			fmt.Println(e)
+			So(e.RequestID, ShouldEqual, "test-request-id")
+		}
+	})
 }
 
 func TestGrpcGateway_Cors(t *testing.T) {

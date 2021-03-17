@@ -224,6 +224,10 @@ func (g *GrpcGateway) HandleHttp(method string, path string, handleFunc runtime.
 	return g.muxServer.HandlePath(method, path, handleFunc)
 }
 
+func (g *GrpcGateway) SetErrorDetailMarshaler(errorDetailMarshaler ErrorDetailMarshaler) {
+	g.muxInterceptor.errorDetailMarshaler = errorDetailMarshaler
+}
+
 func (g *GrpcGateway) Run() {
 	go func() {
 		address, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%v", g.options.GrpcPort))
