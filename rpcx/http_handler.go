@@ -3,7 +3,6 @@ package rpcx
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"regexp"
 	"strings"
@@ -84,16 +83,13 @@ func (h *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	bw := NewBufferedHttpResponseWriter()
 
 	defer func() {
-		if len(h.postHandlers) == 0 {
-			return
-		}
-		w.WriteHeader(bw.status)
-		_, _ = w.Write(bw.body.Bytes())
-		for key, vals := range bw.header {
+		for key, vals := range bw.Header() {
 			for _, val := range vals {
 				w.Header().Set(key, val)
 			}
 		}
+		w.WriteHeader(bw.Status())
+		_, _ = w.Write(bw.Body())
 	}()
 
 	// 参考 https://github.com/grpc-ecosystem/grpc-gateway/issues/544
@@ -182,7 +178,6 @@ func (h *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	} else {
 		h.defaultHandler.ServeHTTP(bw, r)
 	}
-	fmt.Println(bw.status, "@@")
 
 	for _, postHandler := range h.postHandlers {
 		var err error

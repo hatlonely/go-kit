@@ -577,6 +577,7 @@ func TestGrpcGateway_AddHttpPreHandler(t *testing.T) {
 				&resMeta,
 				&res,
 			), ShouldBeNil)
+			fmt.Println(resMeta)
 			So(resMeta["X-Request-Id"], ShouldResemble, "test-request-id")
 			So(resMeta["X-User-Id"], ShouldResemble, "121231")
 			So(res.Message, ShouldEqual, "hello world")
