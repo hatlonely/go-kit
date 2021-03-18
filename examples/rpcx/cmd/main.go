@@ -42,7 +42,7 @@ type Options struct {
 
 func main() {
 	var options Options
-	refx.Must(flag.Struct(&Options{}, refx.WithCamelName()))
+	refx.Must(flag.Struct(&options, refx.WithCamelName()))
 	refx.Must(flag.Parse(flag.WithJsonVal()))
 	if options.Help {
 		fmt.Println(flag.Usage())
