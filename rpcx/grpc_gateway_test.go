@@ -124,10 +124,10 @@ func TestGrpcGateway_AddHttpPostHandler(t *testing.T) {
 			v["httpStatusCode"] = w.Status()
 
 			nw := NewBufferedHttpResponseWriter()
+			nw.SetHeader(w.header)
 			nw.WriteHeader(http.StatusOK)
 			buf, _ := json.Marshal(v)
 			_, _ = nw.Write(buf)
-			nw.SetHeader(w.header)
 			return nw, nil
 		})
 
