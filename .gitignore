@@ -2,4 +2,4 @@ vendor/
 build/
 .vscode/
 .idea/
-
+*.bk
