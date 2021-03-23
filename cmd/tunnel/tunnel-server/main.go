@@ -268,6 +268,11 @@ func main() {
 		refx.Must(err)
 		server.SetLogger(log)
 	}
+	if options.UseCustomLogger {
+		log, err := logger.NewLoggerWithOptions(&options.Logger, refx.WithCamelName())
+		refx.Must(err)
+		server.SetLogger(log)
+	}
 
 	server.Run()
 	defer server.Stop()
