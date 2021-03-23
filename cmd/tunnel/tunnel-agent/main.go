@@ -210,6 +210,7 @@ func main() {
 			Writers: []logger.WriterOptions{{
 				Type: "RotateFile",
 				Options: &logger.RotateFileWriterOptions{
+					Level:    "Info",
 					Filename: "log/tunnel-agent.log",
 					MaxAge:   24 * time.Hour,
 					Formatter: logger.FormatterOptions{
