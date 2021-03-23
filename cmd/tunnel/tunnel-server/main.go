@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"sync"
 	"syscall"
+	"time"
 
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
@@ -68,8 +69,8 @@ func (s *TunnelServer) Run() {
 		go func(i int) {
 			for !s.stop {
 				log := s.log.WithFields(map[string]interface{}{
-					"AcceptNo": i,
-					"AcceptID": uuid.NewV4().String(),
+					"acceptNo": i,
+					"acceptID": uuid.NewV4().String(),
 				})
 				log.Info("accept begin")
 				if err := s.accept(); err != nil {
@@ -85,8 +86,8 @@ func (s *TunnelServer) Run() {
 		go func(i int) {
 			for clientConn := range s.clientConnChan {
 				log := s.log.WithFields(map[string]interface{}{
-					"WorkerNo": i,
-					"TunnelID": uuid.NewV4().String(),
+					"workerNo": i,
+					"workerID": uuid.NewV4().String(),
 				})
 				log.Info("work begin")
 				if err := s.work(log, clientConn); err != nil {
@@ -249,6 +250,23 @@ func main() {
 	refx.Must(err)
 	if options.UseStdoutJsonLogger {
 		server.SetLogger(logger.NewStdoutJsonLogger())
+	}
+	if options.UseRotateFileJsonLogger {
+		log, err := logger.NewLoggerWithOptions(&logger.Options{
+			Level: "Info",
+			Writers: []logger.WriterOptions{{
+				Type: "RotateFile",
+				Options: &logger.RotateFileWriterOptions{
+					Filename: "log/tunnel-server.log",
+					MaxAge:   24 * time.Hour,
+					Formatter: logger.FormatterOptions{
+						Type: "Json",
+					},
+				},
+			}},
+		})
+		refx.Must(err)
+		server.SetLogger(log)
 	}
 
 	server.Run()

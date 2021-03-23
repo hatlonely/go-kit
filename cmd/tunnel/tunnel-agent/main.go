@@ -53,8 +53,8 @@ func (a *TunnelAgent) Run() {
 		go func(i int) {
 			for !a.stop {
 				log := a.log.WithFields(map[string]interface{}{
-					"WorkerNo": i,
-					"TunnelID": uuid.NewV4().String(),
+					"workerNo": i,
+					"workerID": uuid.NewV4().String(),
 				})
 				log.Info("work begin")
 				if err := a.work(log); err != nil {
@@ -203,6 +203,23 @@ func main() {
 	refx.Must(err)
 	if options.UseStdoutJsonLogger {
 		agent.SetLogger(logger.NewStdoutJsonLogger())
+	}
+	if options.UseRotateFileJsonLogger {
+		log, err := logger.NewLoggerWithOptions(&logger.Options{
+			Level: "Info",
+			Writers: []logger.WriterOptions{{
+				Type: "RotateFile",
+				Options: &logger.RotateFileWriterOptions{
+					Filename: "log/tunnel-agent.log",
+					MaxAge:   24 * time.Hour,
+					Formatter: logger.FormatterOptions{
+						Type: "Json",
+					},
+				},
+			}},
+		})
+		refx.Must(err)
+		agent.SetLogger(log)
 	}
 
 	agent.Run()
