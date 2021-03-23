@@ -168,7 +168,7 @@ func (a *TunnelAgent) work(log *logger.Logger) error {
 	return nil
 }
 
-var AgentVersion string
+var Version string
 
 type AgentOptions struct {
 	flag.Options
@@ -204,7 +204,7 @@ func main() {
 
 	}
 	if options.Version {
-		fmt.Println(AgentVersion)
+		fmt.Println(Version)
 		return
 	}
 

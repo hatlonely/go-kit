@@ -216,7 +216,7 @@ func (s *TunnelServer) work(log *logger.Logger, clientConn net.Conn) error {
 	return nil
 }
 
-var ServerVersion string
+var Version string
 
 type ServerOptions struct {
 	flag.Options
@@ -252,7 +252,7 @@ func main() {
 
 	}
 	if options.Version {
-		fmt.Println(ServerVersion)
+		fmt.Println(Version)
 		return
 	}
 
