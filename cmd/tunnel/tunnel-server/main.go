@@ -21,11 +21,11 @@ import (
 )
 
 type TunnelServerOptions struct {
-	TunnelPort   int `dft:"5080"`
-	ServerPort   int `dft:"80"`
-	WorkerNum    int `dft:"32"`
-	AcceptNum    int `dft:"1"`
-	ConnQueueLen int `dft:"20"`
+	TunnelPort   int `flag:"usage: tunnel server listen port" dft:"5080"`
+	ServerPort   int `flag:"usage: server listen port" dft:"80"`
+	WorkerNum    int `flag:"usage: worker goroutine number" dft:"32"`
+	AcceptNum    int `flag:"usage: accept goroutine number" dft:"1"`
+	ConnQueueLen int `flag:"usage: connection queue length. if the queue is full, connection will drop immediately" dft:"20"`
 }
 
 func NewTunnelServerWithOptions(options *TunnelServerOptions) (*TunnelServer, error) {
@@ -223,7 +223,7 @@ type ServerOptions struct {
 	Server                  TunnelServerOptions
 	UseStdoutJsonLogger     bool
 	UseRotateFileJsonLogger bool
-	UseCustomLogger         bool
+	UseCustomLogger         bool `flag:"usage: if ture, the logger options will enable"`
 	Logger                  logger.Options
 }
 
@@ -234,7 +234,19 @@ func main() {
 	if options.Help {
 		fmt.Println(flag.Usage())
 		fmt.Print(`Example:
-  tunnel-server --server.serverPort 8000 --useStdoutJsonLogger
+  tunnel-server --server.serverPort 8000
+  tunnel-server --server.serverPort 8000 --server.tunnelPort 5080 --server.workerNum 16 --server.acceptNum 5 --server.connQueueLen 200 --useStdoutJsonLogger
+  tunnel-server --server.serverPort 8000 --useCustomLogger --logger.level Info --logger.writers '[{
+        "type": "RotateFile",
+        "options": {
+          "level": "Info",
+          "filename": "log/test.log",
+          "maxAge": "24h",
+          "formatter": {
+            "type": "Json"
+          }
+        }
+      }]'
 `)
 		return
 

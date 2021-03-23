@@ -21,10 +21,10 @@ import (
 )
 
 type TunnelAgentOptions struct {
-	TunnelAddr      string `dft:"127.0.0.1:5080"`
-	ServerAddr      string
-	WorkerNum       int           `dft:"32"`
-	KeepAlivePeriod time.Duration `dft:"20s"`
+	TunnelAddr      string        `flag:"usage: tunnel server address" dft:"127.0.0.1:5080"`
+	ServerAddr      string        `flag:"usage: server address"`
+	WorkerNum       int           `flag:"usage: worker goroutine number" dft:"32"`
+	KeepAlivePeriod time.Duration `flag:"usage: tunnel connection keep alive period" dft:"20s"`
 }
 
 func NewTunnelAgentWithOptions(options *TunnelAgentOptions) (*TunnelAgent, error) {
@@ -175,7 +175,7 @@ type AgentOptions struct {
 	Agent                   TunnelAgentOptions
 	UseStdoutJsonLogger     bool
 	UseRotateFileJsonLogger bool
-	UseCustomLogger         bool
+	UseCustomLogger         bool `flag:"usage: if ture, the logger options will enable"`
 	Logger                  logger.Options
 }
 
@@ -187,7 +187,18 @@ func main() {
 		fmt.Println(flag.Usage())
 		fmt.Print(`Example:
   tunnel-agent --agent.tunnelAddr 127.0.0.1:5080 --agent.serverAddr 127.0.0.1:9000
-  tunnel-agent --agent.tunnelAddr 127.0.0.1:5080 --agent.serverAddr 127.0.0.1:9000 --useStdoutJsonLogger
+  tunnel-agent --agent.tunnelAddr 127.0.0.1:5080 --agent.serverAddr 127.0.0.1:9000 --agent.workerNum 16 --agent.keepAlivePeriod 30s --useStdoutJsonLogger
+  tunnel-agent --agent.tunnelAddr 127.0.0.1:5080 --agent.serverAddr 127.0.0.1:9000 --useCustomLogger --logger.level Info --logger.writers '[{
+        "type": "RotateFile",
+        "options": {
+          "level": "Info",
+          "filename": "log/test.log",
+          "maxAge": "24h",
+          "formatter": {
+            "type": "Json"
+          }
+        }
+      }]'
 `)
 		return
 
