@@ -43,8 +43,8 @@ type TunnelAgent struct {
 	stop bool
 }
 
-func (s *TunnelAgent) SetLogger(log *logger.Logger) {
-	s.log = log
+func (a *TunnelAgent) SetLogger(log *logger.Logger) {
+	a.log = log
 }
 
 func (a *TunnelAgent) Run() {
