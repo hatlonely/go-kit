@@ -14,12 +14,6 @@ import (
 
 var Version = "1.0.0"
 
-func Must(err error) {
-	if err != nil {
-		panic(fmt.Sprintf("%+v", err))
-	}
-}
-
 type Options struct {
 	flag.Options
 
@@ -41,8 +35,8 @@ type Options struct {
 
 func main() {
 	var options Options
-	Must(flag.Struct(&options, refx.WithCamelName()))
-	Must(flag.Parse())
+	refx.Must(flag.Struct(&options, refx.WithCamelName()))
+	refx.Must(flag.Parse())
 	if options.Version {
 		strx.Trac(Version)
 		return
@@ -108,21 +102,21 @@ func main() {
 	var outOptions config.Options
 	if options.InBaseFile != "" {
 		cfg, err := config.NewConfigWithSimpleFile(options.InBaseFile)
-		Must(err)
-		Must(cfg.Unmarshal(&inOptions, opts...))
+		refx.Must(err)
+		refx.Must(cfg.Unmarshal(&inOptions, opts...))
 		if options.OutBaseFile == "" {
 			options.OutBaseFile = options.InBaseFile
 		}
 	}
 	if options.OutBaseFile != "" {
 		cfg, err := config.NewConfigWithSimpleFile(options.OutBaseFile)
-		Must(err)
-		Must(cfg.Unmarshal(&outOptions, opts...))
+		refx.Must(err)
+		refx.Must(cfg.Unmarshal(&outOptions, opts...))
 	}
 
 	if options.Action == "get" {
 		cfg, err := config.NewConfigWithOptions(&inOptions)
-		Must(err)
+		refx.Must(err)
 		val, ok := cfg.Get(options.Key)
 		if !ok {
 			fmt.Println("null")
@@ -134,17 +128,17 @@ func main() {
 
 	if options.Action == "diff" {
 		icfg, err := config.NewConfigWithOptions(&inOptions)
-		Must(err)
+		refx.Must(err)
 		ocfg, err := config.NewConfigWithOptions(&outOptions)
-		Must(err)
+		refx.Must(err)
 
 		if options.Key != "" {
 			if options.JsonVal != "" {
 				var v interface{}
-				Must(json.Unmarshal([]byte(options.JsonVal), &v))
-				Must(ocfg.UnsafeSet(options.Key, v))
+				refx.Must(json.Unmarshal([]byte(options.JsonVal), &v))
+				refx.Must(ocfg.UnsafeSet(options.Key, v))
 			} else {
-				Must(icfg.UnsafeSet(options.Key, options.Val))
+				refx.Must(icfg.UnsafeSet(options.Key, options.Val))
 			}
 		}
 
@@ -155,7 +149,7 @@ func main() {
 
 	if options.Action == "set" {
 		ocfg, err := config.NewConfigWithOptions(&outOptions)
-		Must(err)
+		refx.Must(err)
 
 		BackUpCurrentConfig(ocfg, options.BackupFile)
 
@@ -166,12 +160,12 @@ func main() {
 
 		if options.JsonVal != "" {
 			var v interface{}
-			Must(json.Unmarshal([]byte(options.JsonVal), &v))
-			Must(ocfg.UnsafeSet(options.Key, v))
+			refx.Must(json.Unmarshal([]byte(options.JsonVal), &v))
+			refx.Must(ocfg.UnsafeSet(options.Key, v))
 		} else {
-			Must(ocfg.UnsafeSet(options.Key, options.Val))
+			refx.Must(ocfg.UnsafeSet(options.Key, options.Val))
 		}
-		Must(ocfg.Save())
+		refx.Must(ocfg.Save())
 
 		strx.Trac("Save success. Use follow command to rollback:")
 		strx.Info(RollbackCommand(&options))
@@ -181,9 +175,9 @@ func main() {
 
 	if options.Action == "put" {
 		icfg, err := config.NewConfigWithOptions(&inOptions)
-		Must(err)
+		refx.Must(err)
 		ocfg, err := config.NewConfigWithOptions(&outOptions)
-		Must(err)
+		refx.Must(err)
 		BackUpCurrentConfig(ocfg, options.BackupFile)
 
 		ocfg, err = icfg.TransformWithOptions(&outOptions, &config.TransformOptions{
@@ -191,8 +185,8 @@ func main() {
 			CipherKeysToAdd: options.AddCipherKeys,
 			NoCipher:        options.NoCipher,
 		})
-		Must(err)
-		Must(ocfg.Save())
+		refx.Must(err)
+		refx.Must(ocfg.Save())
 
 		strx.Trac("Save success. Use follow command to rollback:")
 		strx.Info(RollbackCommand(&options))
@@ -202,10 +196,10 @@ func main() {
 
 	if options.Action == "rollback" {
 		icfg, err := config.NewConfigWithSimpleFile(options.BackupFile)
-		Must(err)
+		refx.Must(err)
 		ocfg, err := icfg.Transform(&outOptions)
-		Must(err)
-		Must(ocfg.Save())
+		refx.Must(err)
+		refx.Must(ocfg.Save())
 
 		strx.Info("Rollback success")
 
@@ -241,6 +235,6 @@ func BackUpCurrentConfig(cfg *config.Config, name string) {
 			},
 		},
 	})
-	Must(err)
-	Must(cfg.Save())
+	refx.Must(err)
+	refx.Must(cfg.Save())
 }

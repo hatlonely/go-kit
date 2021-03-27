@@ -31,16 +31,10 @@ type Options struct {
 
 var Version string
 
-func Must(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
 func main() {
 	var options Options
-	Must(flag.Struct(&options, refx.WithCamelName()))
-	Must(flag.Parse(flag.WithJsonVal()))
+	refx.Must(flag.Struct(&options, refx.WithCamelName()))
+	refx.Must(flag.Parse(flag.WithJsonVal()))
 	if options.Help {
 		strx.Trac(flag.Usage())
 		strx.Trac(`
