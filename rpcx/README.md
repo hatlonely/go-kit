@@ -32,7 +32,6 @@ func main() {
 	grpcGateway.Stop()
 	infoLog.Info("server exit properly")
 }
-
 ```
 
 配置文件
