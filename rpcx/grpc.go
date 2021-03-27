@@ -175,6 +175,18 @@ func (g *GrpcInterceptor) AddPreHandler(handler GrpcPreHandler) {
 	g.preHandlers = append(g.preHandlers, handler)
 }
 
+func (g *GrpcInterceptor) AddPreHandlers(handlers ...GrpcPreHandler) {
+	g.preHandlers = append(g.preHandlers, handlers...)
+}
+
+type GrpcMiddleWare interface {
+	GrpcPreHandlers() []GrpcPreHandler
+}
+
+func (h *GrpcInterceptor) AddMiddleWare(middleWare GrpcMiddleWare) {
+	h.preHandlers = append(h.preHandlers, middleWare.GrpcPreHandlers()...)
+}
+
 func (g *GrpcInterceptor) SetLogger(log, rpc Logger) {
 	g.appLog = log
 	g.appRpc = rpc

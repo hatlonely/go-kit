@@ -16,7 +16,7 @@ var Version = "1.0.0"
 
 func Must(err error) {
 	if err != nil {
-		panic(err)
+		panic(fmt.Sprintf("%+v", err))
 	}
 }
 

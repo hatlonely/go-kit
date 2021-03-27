@@ -79,6 +79,24 @@ func (h *HttpHandler) AddPostHandler(handler HttpPostHandler) {
 	h.postHandlers = append(h.postHandlers, handler)
 }
 
+func (h *HttpHandler) AddPreHandlers(handlers ...HttpPreHandler) {
+	h.preHandlers = append(h.preHandlers, handlers...)
+}
+
+func (h *HttpHandler) AddPostHandlers(handlers ...HttpPostHandler) {
+	h.postHandlers = append(h.postHandlers, handlers...)
+}
+
+type HttpMiddleWare interface {
+	HttpPreHandlers() []HttpPreHandler
+	HttpPostHandlers() []HttpPostHandler
+}
+
+func (h *HttpHandler) AddMiddleWare(middleWare HttpMiddleWare) {
+	h.preHandlers = append(h.preHandlers, middleWare.HttpPreHandlers()...)
+	h.postHandlers = append(middleWare.HttpPostHandlers(), h.postHandlers...)
+}
+
 func (h *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	bw := NewBufferedHttpResponseWriter()
 

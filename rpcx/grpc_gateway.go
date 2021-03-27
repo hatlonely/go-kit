@@ -212,16 +212,38 @@ func (g *GrpcGateway) AddGrpcPreHandler(handler GrpcPreHandler) {
 	g.grpcInterceptor.AddPreHandler(handler)
 }
 
-func (g *GrpcGateway) AddHttpHandler(path string, handler http.Handler) {
-	g.httpHandler.AddHandler(path, handler)
-}
-
 func (g *GrpcGateway) AddHttpPreHandler(handler HttpPreHandler) {
 	g.httpHandler.AddPreHandler(handler)
 }
 
 func (g *GrpcGateway) AddHttpPostHandler(handler HttpPostHandler) {
 	g.httpHandler.AddPostHandler(handler)
+}
+
+func (g *GrpcGateway) AddGrpcPreHandlers(handlers ...GrpcPreHandler) {
+	g.grpcInterceptor.AddPreHandlers(handlers...)
+}
+
+func (g *GrpcGateway) AddHttpPreHandlers(handlers ...HttpPreHandler) {
+	g.httpHandler.AddPreHandlers(handlers...)
+}
+
+func (g *GrpcGateway) AddHttpPostHandlers(handlers ...HttpPostHandler) {
+	g.httpHandler.AddPostHandlers(handlers...)
+}
+
+type MiddleWare interface {
+	HttpMiddleWare
+	GrpcMiddleWare
+}
+
+func (g *GrpcGateway) AddMiddleWare(middleWare MiddleWare) {
+	g.httpHandler.AddMiddleWare(middleWare)
+	g.grpcInterceptor.AddMiddleWare(middleWare)
+}
+
+func (g *GrpcGateway) AddHttpHandler(path string, handler http.Handler) {
+	g.httpHandler.AddHandler(path, handler)
 }
 
 func (g *GrpcGateway) HandleHttp(method string, path string, handleFunc runtime.HandlerFunc) error {

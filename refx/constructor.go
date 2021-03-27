@@ -1,6 +1,7 @@
 package refx
 
 import (
+	"fmt"
 	"reflect"
 
 	"github.com/pkg/errors"
@@ -8,7 +9,7 @@ import (
 
 func Must(err error) {
 	if err != nil {
-		panic(err)
+		panic(fmt.Sprintf("%+v", err))
 	}
 }
 
