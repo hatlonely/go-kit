@@ -22,17 +22,11 @@ type Options struct {
 
 var Version string
 
-func Must(err error) {
-	if err != nil {
-		panic(fmt.Sprintf("%+v", err))
-	}
-}
-
 func main() {
 	var options Options
-	Must(flag.Struct(&options, refx.WithCamelName()))
-	Must(flag.Parse(flag.WithJsonVal()))
-	Must(bind.Bind(&options, []bind.Getter{flag.Instance()}, refx.WithCamelName(), refx.WithDefaultValidator()))
+	refx.Must(flag.Struct(&options, refx.WithCamelName()))
+	refx.Must(flag.Parse(flag.WithJsonVal()))
+	refx.Must(bind.Bind(&options, []bind.Getter{flag.Instance()}, refx.WithCamelName(), refx.WithDefaultValidator()))
 
 	if options.Version {
 		strx.Trac(Version)
@@ -44,7 +38,7 @@ func main() {
 		case "wrap":
 			f := flag.NewFlag("gen wrap")
 			var options astx.WrapperGeneratorOptions
-			Must(f.Struct(&options, refx.WithCamelName()))
+			refx.Must(f.Struct(&options, refx.WithCamelName()))
 			strx.Trac(f.Usage())
 			strx.Trac(`Example:
   gen wrap --sourcePath vendor \
@@ -82,9 +76,9 @@ func main() {
 	if options.SubCommand == "wrap" {
 		f := flag.NewFlag("gen wrap")
 		var subOptions astx.WrapperGeneratorOptions
-		Must(f.Struct(&subOptions, refx.WithCamelName()))
-		Must(f.ParseArgs(os.Args[2:], flag.WithJsonVal()))
-		Must(bind.Bind(&subOptions, []bind.Getter{f}, refx.WithCamelName(), refx.WithDefaultValidator()))
+		refx.Must(f.Struct(&subOptions, refx.WithCamelName()))
+		refx.Must(f.ParseArgs(os.Args[2:], flag.WithJsonVal()))
+		refx.Must(bind.Bind(&subOptions, []bind.Getter{f}, refx.WithCamelName(), refx.WithDefaultValidator()))
 
 		generator := astx.NewWrapperGeneratorWithOptions(&subOptions)
 		str, err := generator.Generate()
