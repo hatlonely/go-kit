@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"html/template"
 	"io"
 	"io/ioutil"
 	"os"
@@ -14,6 +13,7 @@ import (
 	"sort"
 	"strings"
 	"syscall"
+	"text/template"
 
 	"github.com/pkg/errors"
 
