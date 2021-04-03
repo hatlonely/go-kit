@@ -31,6 +31,8 @@ type Options struct {
 	InBaseFile    string   `flag:"usage: base file name; default: base.json"`
 	OutBaseFile   string   `flag:"usage: put/set target config, it will use in-base-file if not set"`
 	BackupFile    string   `flag:"usage: file name to backup or rollback"`
+	InFile        string   `flag:"usage: input config file"`
+	OutFile       string   `flag:"usage: output config file"`
 }
 
 func main() {
@@ -104,14 +106,48 @@ func main() {
 		cfg, err := config.NewConfigWithSimpleFile(options.InBaseFile)
 		refx.Must(err)
 		refx.Must(cfg.Unmarshal(&inOptions, opts...))
-		if options.OutBaseFile == "" {
-			options.OutBaseFile = options.InBaseFile
-		}
 	}
 	if options.OutBaseFile != "" {
 		cfg, err := config.NewConfigWithSimpleFile(options.OutBaseFile)
 		refx.Must(err)
 		refx.Must(cfg.Unmarshal(&outOptions, opts...))
+	}
+	if options.InFile != "" {
+		inOptions = config.Options{
+			Decoder: config.DecoderOptions{
+				Type: "Json",
+			},
+			Provider: config.ProviderOptions{
+				Type: "Local",
+				Options: &config.LocalProviderOptions{
+					Filename: options.InFile,
+				},
+			},
+		}
+	}
+	if options.OutFile != "" {
+		if _, err := os.Stat(options.OutFile); err != nil {
+			if os.IsNotExist(err) {
+				_, err := os.Create(options.OutFile)
+				refx.Must(err)
+			} else {
+				refx.Must(err)
+			}
+		}
+		outOptions = config.Options{
+			Decoder: config.DecoderOptions{
+				Type: "Json",
+			},
+			Provider: config.ProviderOptions{
+				Type: "Local",
+				Options: &config.LocalProviderOptions{
+					Filename: options.OutFile,
+				},
+			},
+		}
+	}
+	if options.OutBaseFile == "" && options.OutFile == "" {
+		outOptions = inOptions
 	}
 
 	if options.Action == "get" {
