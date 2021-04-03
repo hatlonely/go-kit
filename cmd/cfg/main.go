@@ -28,6 +28,7 @@ type Options struct {
 	SetCipherKeys []string `flag:"usage: set cipher keys when put"`
 	AddCipherKeys []string `flag:"usage: add cipher keys when put"`
 	NoCipher      bool     `flag:"usage: decrypt all keys when put"`
+	NoBackup      bool     `flag:"usage: not generate backup file"`
 	InBaseFile    string   `flag:"usage: base file name; default: base.json"`
 	OutBaseFile   string   `flag:"usage: put/set target config, it will use in-base-file if not set"`
 	BackupFile    string   `flag:"usage: file name to backup or rollback"`
@@ -187,7 +188,9 @@ func main() {
 		ocfg, err := config.NewConfigWithOptions(&outOptions)
 		refx.Must(err)
 
-		BackUpCurrentConfig(ocfg, options.BackupFile)
+		if !options.NoBackup {
+			BackUpCurrentConfig(ocfg, options.BackupFile)
+		}
 
 		if options.Key == "" {
 			strx.Warn("[key] is required in set action")
@@ -214,7 +217,10 @@ func main() {
 		refx.Must(err)
 		ocfg, err := config.NewConfigWithOptions(&outOptions)
 		refx.Must(err)
-		BackUpCurrentConfig(ocfg, options.BackupFile)
+
+		if !options.NoBackup {
+			BackUpCurrentConfig(ocfg, options.BackupFile)
+		}
 
 		ocfg, err = icfg.TransformWithOptions(&outOptions, &config.TransformOptions{
 			CipherKeysToSet: options.SetCipherKeys,
