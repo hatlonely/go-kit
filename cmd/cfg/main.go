@@ -206,8 +206,10 @@ func main() {
 		}
 		refx.Must(ocfg.Save())
 
-		strx.Trac("Save success. Use follow command to rollback:")
-		strx.Info(RollbackCommand(&options))
+		if !options.NoBackup {
+			strx.Trac("Save success. Use follow command to rollback:")
+			strx.Info(RollbackCommand(&options))
+		}
 
 		return
 	}
@@ -230,8 +232,10 @@ func main() {
 		refx.Must(err)
 		refx.Must(ocfg.Save())
 
-		strx.Trac("Save success. Use follow command to rollback:")
-		strx.Info(RollbackCommand(&options))
+		if !options.NoBackup {
+			strx.Trac("Save success. Use follow command to rollback:")
+			strx.Info(RollbackCommand(&options))
+		}
 
 		return
 	}
