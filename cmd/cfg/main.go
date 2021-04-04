@@ -33,7 +33,9 @@ type Options struct {
 	OutBaseFile   string   `flag:"usage: put/set target config, it will use in-base-file if not set"`
 	BackupFile    string   `flag:"usage: file name to backup or rollback"`
 	InFile        string   `flag:"usage: input config file"`
+	InFileType    string   `flag:"usage: input config file type; default: Json"`
 	OutFile       string   `flag:"usage: output config file"`
+	OutFileType   string   `flag:"usage: output config file type; default: Json"`
 }
 
 func main() {
@@ -116,7 +118,7 @@ func main() {
 	if options.InFile != "" {
 		inOptions = config.Options{
 			Decoder: config.DecoderOptions{
-				Type: "Json",
+				Type: options.InFileType,
 			},
 			Provider: config.ProviderOptions{
 				Type: "Local",
@@ -137,7 +139,7 @@ func main() {
 		}
 		outOptions = config.Options{
 			Decoder: config.DecoderOptions{
-				Type: "Json",
+				Type: options.OutFileType,
 			},
 			Provider: config.ProviderOptions{
 				Type: "Local",
