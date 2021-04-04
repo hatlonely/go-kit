@@ -16,17 +16,18 @@ import (
 type Options struct {
 	flag.Options
 
-	Action    string `flag:"-a; usage: actions, one of [dep/run/cmd/env/desc/listEnv/listTask]"`
-	Playbook  string `flag:"usage: playbook file; default: .ops.yaml"`
-	Variable  string `flag:"usage: variable file; default: ~/.ops/root.json"`
-	Env       string `flag:"usage: environment, one of key in env; default: default"`
-	Task      string `flag:"usage: task, one of key in task"`
-	StartStep int    `flag:"usage: run task start step. start from 1; default: 1"`
-	EndStep   int    `flag:"usage: run task end step. set -1 to the end; default: -1"`
-	Command   string `flag:"usage: run command"`
-	Force     bool   `flag:"usage: force update dependency"`
-	BaseFile  string
-	Base      config.Options
+	Action       string `flag:"-a; usage: actions, one of [dep/run/cmd/env/desc/listEnv/listTask]"`
+	Playbook     string `flag:"usage: playbook file; default: .ops.yaml"`
+	Variable     string `flag:"usage: variable file; default: ~/.ops/root.json"`
+	Env          string `flag:"usage: environment, one of key in env; default: default"`
+	Task         string `flag:"usage: task, one of key in task"`
+	StartStep    int    `flag:"usage: run task start step. start from 1; default: 1"`
+	EndStep      int    `flag:"usage: run task end step. set -1 to the end; default: -1"`
+	Command      string `flag:"usage: run command"`
+	Force        bool   `flag:"usage: force update dependency"`
+	VariableType string `flag:"usage: variable file type; default: Yaml"`
+	BaseFile     string `flag:"usage: get variable from base file"`
+	Base         config.Options
 }
 
 var Version string
@@ -55,7 +56,7 @@ func main() {
 	var cfg *config.Config
 	var err error
 	if len(options.Variable) != 0 {
-		cfg, err = config.NewConfigWithSimpleFile(options.Variable)
+		cfg, err = config.NewConfigWithSimpleFile(options.Variable, config.WithSimpleFileType(options.VariableType))
 	} else if len(options.BaseFile) != 0 {
 		cfg, err = config.NewConfigWithBaseFile(options.BaseFile)
 	} else {
