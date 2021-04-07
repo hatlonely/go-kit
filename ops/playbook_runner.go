@@ -61,8 +61,8 @@ func NewPlaybookRunnerWithVariable(playbookFile string, v interface{}) (*Playboo
 		return nil, errors.Wrapf(err, "ioutil.ReadFile failed. file: [%v]", playbookFile)
 	}
 	tpl, err := template.New("").Funcs(template.FuncMap{
-		"indent": func(indent int, str string) string {
-			vals := strings.Split(str, "\n")
+		"indent": func(indent int, source string) string {
+			vals := strings.Split(source, "\n")
 			var buf bytes.Buffer
 			for _, val := range vals {
 				for i := 0; i < indent; i++ {
@@ -72,6 +72,9 @@ func NewPlaybookRunnerWithVariable(playbookFile string, v interface{}) (*Playboo
 				buf.WriteByte('\n')
 			}
 			return buf.String()
+		},
+		"replace": func(old, new, source string) string {
+			return strings.Replace(source, old, new, -1)
 		},
 	}).Parse(string(buf))
 	if err != nil {
