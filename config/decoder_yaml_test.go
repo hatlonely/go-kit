@@ -70,6 +70,10 @@ Key8:
     Key12: |-
       Hello
       World
+    Key13: "
+Hello
+World
+"
 `))
 			So(err, ShouldBeNil)
 			So(strx.JsonMarshalSortKeys(s.Interface()), ShouldResemble, strx.JsonMarshalSortKeys(map[string]interface{}{
@@ -87,6 +91,7 @@ Key8:
 						"Key10": 10,
 						"Key11": 11,
 						"Key12": "Hello\nWorld",
+						"Key13": " Hello World ",
 					},
 				},
 			}))

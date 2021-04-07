@@ -52,6 +52,7 @@ func TestParseEnvironment(t *testing.T) {
 				"REGISTRY_USERNAME": "{{.registry.username}}",
 				"REGISTRY_PASSWORD": "{{.registry.password}}",
 				"NAME1":             "${NAME//-/_}",
+				//"HELLO_WORLD":       "Hello\nWorld", // 不支持多行
 			},
 		}, "tmp", "prod")
 
