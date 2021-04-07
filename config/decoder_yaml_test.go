@@ -29,6 +29,7 @@ func TestYamlDecoder(t *testing.T) {
 				"Key9": map[string]interface{}{
 					"Key10": 10,
 					"Key11": 11,
+					"Key12": "Hello\nWorld",
 				},
 			},
 		})
@@ -48,6 +49,9 @@ Key8:
   Key9:
     Key10: 10
     Key11: 11
+    Key12: |-
+      Hello
+      World
 `)
 		}
 
@@ -63,6 +67,9 @@ Key8:
   Key9:
     Key10: 10
     Key11: 11
+    Key12: |-
+      Hello
+      World
 `))
 			So(err, ShouldBeNil)
 			So(strx.JsonMarshalSortKeys(s.Interface()), ShouldResemble, strx.JsonMarshalSortKeys(map[string]interface{}{
@@ -79,6 +86,7 @@ Key8:
 					"Key9": map[string]interface{}{
 						"Key10": 10,
 						"Key11": 11,
+						"Key12": "Hello\nWorld",
 					},
 				},
 			}))
