@@ -194,7 +194,7 @@ func (r *PlaybookRunner) Environment(env string) ([]string, error) {
 	if r.environment[env] == nil {
 		environment, err := ParseEnvironment(r.playbook.Env, r.playbook.Tmp, env)
 		if err != nil {
-			return nil, errors.Wrap(err, "ParseEnvironment failed")
+			return nil, errors.Wrapf(err, "ParseEnvironment failed. env [%v]", env)
 		}
 		r.environment[env] = environment
 	}
@@ -298,14 +298,14 @@ func (r *PlaybookRunner) RunTaskWithOutput(
 		}
 		status, err := ExecCommandWithOutput(cmd, environment, "", stdout, stderr)
 		if err := onSuccess(i, length, cmd, status); err != nil {
-			return errors.Wrap(err, "onSuccess failed")
+			return errors.Wrapf(err, "onSuccess failed, cmd: [%v]", cmd)
 		}
 		if err != nil {
 			onError(i, length, cmd, err)
-			return errors.Wrap(err, "ExecCommand failed. cmd [%v]")
+			return errors.Wrapf(err, "ExecCommand failed. cmd [%v]", cmd)
 		}
 		if status != 0 {
-			return errors.Errorf("ExecCommand failed. cmd [%v], exit: [%v]", cmd, status)
+			return errors.Errorf("ExecCommand failed. exit: [%v], cmd [%v]", status, cmd)
 		}
 	}
 	return nil
@@ -400,10 +400,10 @@ func ParseEnvironment(environmentMap map[string]map[string]string, tmp string, e
 	for _, key := range keys {
 		status, stdout, _, err := ExecCommand(fmt.Sprintf("eval echo %v", envMap[key]), envs, "")
 		if err != nil {
-			return nil, errors.Wrap(err, "ExecCommand failed")
+			return nil, errors.Wrapf(err, "ExecCommand failed. key: [%v]", key)
 		}
 		if status != 0 {
-			return nil, errors.Errorf("ExecCommand failed. exit: [%v]", status)
+			return nil, errors.Errorf("ExecCommand failed. exit: [%v], key: [%v]", status, key)
 		}
 		envs = append(envs, fmt.Sprintf(`%s=%s`, key, strings.TrimSpace(stdout)))
 	}
