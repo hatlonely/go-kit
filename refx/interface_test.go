@@ -543,6 +543,32 @@ func TestInterfaceToStruct(t *testing.T) {
 	})
 }
 
+func TestInterfaceToStructWithInherit(t *testing.T) {
+	Convey("TestInterfaceToStructWithInherit", t, func() {
+		v := map[interface{}]interface{}{
+			"Key1": "val1",
+			"Key2": "val2",
+			"Key3": "val3",
+		}
+
+		type A struct {
+			Key1 string
+			Key2 string
+		}
+
+		type B struct {
+			A
+			Key3 string
+		}
+
+		var b B
+		So(InterfaceToStruct(v, &b), ShouldBeNil)
+		So(b.Key1, ShouldEqual, "val1")
+		So(b.Key2, ShouldEqual, "val2")
+		So(b.Key3, ShouldEqual, "val3")
+	})
+}
+
 func TestInterfaceToStructWithCamelName(t *testing.T) {
 	Convey("TestInterfaceToStruct snake name", t, func() {
 		v := map[interface{}]interface{}{

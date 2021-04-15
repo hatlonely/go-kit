@@ -330,6 +330,14 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 				continue
 			}
 
+			// support inherit
+			if rv.Type().Field(i).Anonymous {
+				if err := interfaceToStructRecursive(src, rv.Field(i).Addr().Interface(), prefix, options); err != nil {
+					return err
+				}
+				continue
+			}
+
 			key := options.FormatKey(rt.Field(i).Name)
 			var val interface{}
 			switch srt.Kind() {
@@ -346,15 +354,9 @@ func interfaceToStructRecursive(src interface{}, dst interface{}, prefix string,
 				nv := reflect.New(rv.Field(i).Type().Elem())
 				rv.Field(i).Set(nv)
 			}
-			// support inherit
-			if rv.Type().Field(i).Anonymous {
-				if err := interfaceToStructRecursive(val, rv.Field(i).Addr().Interface(), prefix, options); err != nil {
-					return err
-				}
-			} else {
-				if err := interfaceToStructRecursive(val, rv.Field(i).Addr().Interface(), PrefixAppendKey(prefix, key), options); err != nil {
-					return err
-				}
+
+			if err := interfaceToStructRecursive(val, rv.Field(i).Addr().Interface(), PrefixAppendKey(prefix, key), options); err != nil {
+				return err
 			}
 		}
 	case reflect.Slice:
