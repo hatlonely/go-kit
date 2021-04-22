@@ -16,4 +16,5 @@ message ErrorDetail {
   string code = 3;
   string message = 4;
   string refer = 5;
+  string body = 6;
 }

@@ -1,4 +1,5 @@
 //go:generate protoc -I. -I../rpc-api --gofast_out . --gofast_opt paths=source_relative error.proto
+//go:generate protoc -I. -I../rpc-api --go_out . --go_opt paths=source_relative error.proto
 
 package rpcx
 
