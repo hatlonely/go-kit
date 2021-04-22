@@ -365,7 +365,7 @@ func (g *GrpcInterceptor) ServerOption() grpc.ServerOption {
 				if e.Detail.Status == 0 {
 					e.Detail.Status = int32(runtime.HTTPStatusFromCode(e.Code))
 				}
-				err = NewError(err, e.Code, e.Detail.Code, e.Detail.Message).SetStatus(int(e.Detail.Status)).SetRequestID(e.Detail.RequestID).SetRefer(e.Detail.Refer)
+				err = NewError(err, e.Code, e.Detail.Code, e.Detail.Message).SetStatus(int(e.Detail.Status)).SetRequestID(e.Detail.RequestID).SetRefer(e.Detail.Refer).SetBody(e.Detail.Body)
 			default:
 				err = NewInternalError(err)
 			}

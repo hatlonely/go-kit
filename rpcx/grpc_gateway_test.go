@@ -41,6 +41,12 @@ func (s *ExampleService) Add(ctx context.Context, req *api.AddReq) (*api.AddRes,
 	if req.I1 == 102 {
 		panic("panic")
 	}
+	if req.I1 == 103 {
+		return nil, errors.Wrap(NewError(
+			errors.New("hello world"), codes.Unknown, "PermissionDenied", "permissionDeny").
+			SetStatus(http.StatusUnauthorized).
+			SetBody(`{"errCode": "hello", "message": "world"}`), "wrap error")
+	}
 
 	return &api.AddRes{
 		Val: req.I1 + req.I2,
@@ -878,6 +884,22 @@ func TestGrpcGateway(t *testing.T) {
 			So(e.Code, ShouldEqual, http.StatusText(http.StatusNotImplemented))
 			So(e.RequestID, ShouldEqual, "test-request-id")
 			So(e.Message, ShouldEqual, "Method Not Allowed")
+		}
+
+		// test error.SetStatus and error.SetBody
+		{
+			var res interface{}
+			resMeta := map[string]string{}
+			err := client.Post(
+				"http://127.0.0.1/v1/add",
+				nil,
+				map[string]string{"x-request-id": "test-request-id", "x-user-id": "121231"},
+				&api.AddReq{I1: 103, I2: 34},
+				&resMeta,
+				&res,
+			)
+
+			fmt.Println("@@@", err, res, resMeta)
 		}
 	})
 }
