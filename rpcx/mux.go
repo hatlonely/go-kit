@@ -104,7 +104,11 @@ func (m *MuxInterceptor) MuxProtoErrorHandler() runtime.ServeMuxOption {
 
 		e := StatusErrorDetail(err, req.Header.Get(m.options.RequestIDMetaKey))
 		res.WriteHeader(int(e.Status))
-		_, _ = res.Write(m.errorDetailMarshaler(e))
+		if len(e.Body) != 0 {
+			_, _ = res.Write([]byte(e.Body))
+		} else {
+			_, _ = res.Write(m.errorDetailMarshaler(e))
+		}
 	})
 }
 

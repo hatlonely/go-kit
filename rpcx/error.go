@@ -80,6 +80,11 @@ func (e *Error) SetMessage(message string) *Error {
 	return e
 }
 
+func (e *Error) SetBody(body string) *Error {
+	e.Detail.Body = body
+	return e
+}
+
 func (e *Error) Error() string {
 	return e.err.Error()
 }
