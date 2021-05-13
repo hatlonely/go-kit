@@ -66,7 +66,7 @@ wrap: wrap/autogen_ots.go \
 
 wrap/autogen_ots.go: build/bin/gen vendor $(wildcard astx/*.go)
 	build/bin/gen wrap --sourceDir vendor \
-		--packagePath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" \
+		--packagePath "github.com/aliyun/aliyun-tablestore-go-sdk/v5/tablestore" \
 		--packageName tablestore \
 		--classPrefix OTS \
 		--starClasses TableStoreClient \
