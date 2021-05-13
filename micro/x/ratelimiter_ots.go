@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
+	"github.com/aliyun/aliyun-tablestore-go-sdk/v5/tablestore"
 	"github.com/pkg/errors"
 
 	"github.com/hatlonely/go-kit/config"

@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
+	"github.com/aliyun/aliyun-tablestore-go-sdk/v5/tablestore"
 	. "github.com/smartystreets/goconvey/convey"
 
 	"github.com/hatlonely/go-kit/micro"

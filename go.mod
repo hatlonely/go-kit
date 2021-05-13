@@ -12,6 +12,7 @@ require (
 	github.com/aliyun/aliyun-mns-go-sdk v0.0.0-20210305050620-d1b5875bda58
 	github.com/aliyun/aliyun-oss-go-sdk v2.1.6+incompatible
 	github.com/aliyun/aliyun-tablestore-go-sdk v4.1.3+incompatible
+	github.com/aliyun/aliyun-tablestore-go-sdk/v5 v5.0.2
 	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect

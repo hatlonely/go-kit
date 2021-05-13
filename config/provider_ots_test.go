@@ -8,7 +8,7 @@ import (
 	"time"
 
 	. "github.com/agiledragon/gomonkey"
-	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
+	"github.com/aliyun/aliyun-tablestore-go-sdk/v5/tablestore"
 	"github.com/pkg/errors"
 	. "github.com/smartystreets/goconvey/convey"
 )
