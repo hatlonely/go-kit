@@ -504,7 +504,7 @@ func TestInterfaceToStruct(t *testing.T) {
 
 	Convey("TestInterfaceToStruct 3", t, func() {
 		type Options struct {
-			Key1 int
+			Key1 *int
 			Key2 *string
 			Key3 []*struct {
 				Key4 string
@@ -514,10 +514,16 @@ func TestInterfaceToStruct(t *testing.T) {
 					Key8 []*int64
 				}
 			}
+			Key109 *int
+			Key110 *string
+			Key111 *struct {
+				Key112 *string
+				Key113 *int
+			}
 		}
 		var options Options
 		So(InterfaceToStruct(v, &options), ShouldBeNil)
-		So(options.Key1, ShouldEqual, 1)
+		So(*options.Key1, ShouldEqual, 1)
 		So(*options.Key2, ShouldEqual, "val2")
 		So(options.Key3[0].Key4, ShouldEqual, "val4")
 		So(options.Key3[0].Key5, ShouldEqual, "val5")
@@ -525,6 +531,9 @@ func TestInterfaceToStruct(t *testing.T) {
 		So(*options.Key3[0].Key6.Key8[0], ShouldEqual, 1)
 		So(*options.Key3[0].Key6.Key8[1], ShouldEqual, 2)
 		So(*options.Key3[0].Key6.Key8[2], ShouldEqual, 3)
+		So(options.Key109, ShouldBeNil)
+		So(options.Key110, ShouldBeNil)
+		So(options.Key111, ShouldBeNil)
 	})
 
 	Convey("TestInterfaceToStruct 4", t, func() {
