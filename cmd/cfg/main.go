@@ -29,7 +29,7 @@ type Options struct {
 	AddCipherKeys []string `flag:"usage: add cipher keys when put"`
 	NoCipher      bool     `flag:"usage: decrypt all keys when put"`
 	NoBackup      bool     `flag:"usage: not generate backup file"`
-	InBaseFile    string   `flag:"usage: base file name; default: base.json"`
+	InBaseFile    string   `flag:"usage: base file name"`
 	OutBaseFile   string   `flag:"usage: put/set target config, it will use in-base-file if not set"`
 	BackupFile    string   `flag:"usage: file name to backup or rollback"`
 	InFile        string   `flag:"usage: input config file"`
