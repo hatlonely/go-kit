@@ -39,12 +39,12 @@ func main() {
 	if options.Help {
 		strx.Trac(flag.Usage())
 		strx.Trac(`
-  ops --playbook .ops.yaml --variable ~/.ops/root.json -a listEnv
-  ops --playbook .ops.yaml --variable ~/.ops/root.json -a listTask
-  ops --playbook .ops.yaml --variable ~/.ops/root.json -a dep
-  ops --playbook .ops.yaml --variable ~/.ops/root.json -a dep --force
-  ops --playbook .ops.yaml --variable ~/.ops/root.json -a env --env test
-  ops --playbook .ops.yaml --variable ~/.ops/root.json -a run --env test --task test
+  ops --playbook .ops.yaml --variable .cfg/secret.json -a listEnv
+  ops --playbook .ops.yaml --variable .cfg/secret.json -a listTask
+  ops --playbook .ops.yaml --variable .cfg/secret.json -a dep
+  ops --playbook .ops.yaml --variable .cfg/secret.json -a dep --force
+  ops --playbook .ops.yaml --variable .cfg/secret.json -a env --env test
+  ops --playbook .ops.yaml --variable .cfg/secret.json -a run --env test --task test
 `)
 		return
 	}
