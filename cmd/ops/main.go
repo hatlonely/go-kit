@@ -18,7 +18,7 @@ type Options struct {
 
 	Action       string `flag:"-a; usage: actions, one of [dep/run/cmd/env/desc/listEnv/listTask]"`
 	Playbook     string `flag:"usage: playbook file; default: .ops.yaml"`
-	Variable     string `flag:"usage: variable file; default: ~/.ops/root.json"`
+	Variable     string `flag:"usage: variable file"`
 	Env          string `flag:"usage: environment, one of key in env; default: default"`
 	Task         string `flag:"usage: task, one of key in task"`
 	StartStep    int    `flag:"usage: run task start step. start from 1; default: 1"`
