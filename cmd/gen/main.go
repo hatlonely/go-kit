@@ -42,7 +42,7 @@ func main() {
 			strx.Trac(f.Usage())
 			strx.Trac(`Example:
   gen wrap --sourcePath vendor \
-      --packagePath "github.com/aliyun/aliyun-tablestore-go-sdk/tablestore" \
+      --packagePath "github.com/aliyun/aliyun-tablestore-go-sdk/v5/tablestore" \
       --packageName tablestore \
       --classPrefix OTS \
       --starClasses TableStoreClient \
