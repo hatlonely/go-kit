@@ -179,11 +179,11 @@ func (g *GrpcInterceptor) AddPreHandlers(handlers ...GrpcPreHandler) {
 	g.preHandlers = append(g.preHandlers, handlers...)
 }
 
-type GrpcMiddleWare interface {
+type GrpcMiddleware interface {
 	GrpcPreHandlers() []GrpcPreHandler
 }
 
-func (g *GrpcInterceptor) AddMiddleWare(middleWare GrpcMiddleWare) {
+func (g *GrpcInterceptor) AddMiddleware(middleWare GrpcMiddleware) {
 	g.preHandlers = append(g.preHandlers, middleWare.GrpcPreHandlers()...)
 }
 

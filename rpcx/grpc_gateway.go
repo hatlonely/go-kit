@@ -232,14 +232,14 @@ func (g *GrpcGateway) AddHttpPostHandlers(handlers ...HttpPostHandler) {
 	g.httpHandler.AddPostHandlers(handlers...)
 }
 
-type MiddleWare interface {
-	HttpMiddleWare
-	GrpcMiddleWare
+type Middleware interface {
+	HttpMiddleware
+	GrpcMiddleware
 }
 
-func (g *GrpcGateway) AddMiddleWare(middleWare MiddleWare) {
-	g.httpHandler.AddMiddleWare(middleWare)
-	g.grpcInterceptor.AddMiddleWare(middleWare)
+func (g *GrpcGateway) AddMiddleware(middleWare Middleware) {
+	g.httpHandler.AddMiddleware(middleWare)
+	g.grpcInterceptor.AddMiddleware(middleWare)
 }
 
 func (g *GrpcGateway) AddHttpHandler(path string, handler http.Handler) {

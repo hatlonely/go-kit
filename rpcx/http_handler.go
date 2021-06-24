@@ -87,12 +87,12 @@ func (h *HttpHandler) AddPostHandlers(handlers ...HttpPostHandler) {
 	h.postHandlers = append(h.postHandlers, handlers...)
 }
 
-type HttpMiddleWare interface {
+type HttpMiddleware interface {
 	HttpPreHandlers() []HttpPreHandler
 	HttpPostHandlers() []HttpPostHandler
 }
 
-func (h *HttpHandler) AddMiddleWare(middleWare HttpMiddleWare) {
+func (h *HttpHandler) AddMiddleware(middleWare HttpMiddleware) {
 	h.preHandlers = append(h.preHandlers, middleWare.HttpPreHandlers()...)
 	h.postHandlers = append(middleWare.HttpPostHandlers(), h.postHandlers...)
 }
