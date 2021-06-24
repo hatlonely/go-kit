@@ -124,12 +124,12 @@ func NewGrpcInterceptorWithOptions(options *GrpcInterceptorOptions, opts ...refx
 
 	rateLimiter, err := micro.NewRateLimiterWithOptions(&options.RateLimiter, opts...)
 	if err != nil {
-		return nil, errors.Wrap(err, "micro.NewRateLimiterWithOptions failed")
+		return nil, errors.WithMessage(err, "micro.NewRateLimiterWithOptions failed")
 	}
 	g.rateLimiter = rateLimiter
 	parallelController, err := micro.NewParallelControllerWithOptions(&options.ParallelController, opts...)
 	if err != nil {
-		return nil, errors.Wrap(err, "micro.NewParallelControllerWithOptions failed")
+		return nil, errors.WithMessage(err, "micro.NewParallelControllerWithOptions failed")
 	}
 	g.parallelController = parallelController
 

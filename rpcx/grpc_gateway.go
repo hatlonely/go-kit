@@ -59,6 +59,7 @@ type GrpcGatewayOptions struct {
 	RateLimiter              micro.RateLimiterOptions
 	ParallelController       micro.ParallelControllerOptions
 	Jaeger                   jaegercfg.Configuration
+	Middlewares              []MiddlewareOptions
 }
 
 type GrpcGateway struct {
@@ -135,7 +136,7 @@ func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions, opts ...refx.Option)
 		Metric:                   options.Metric,
 	}, opts...)
 	if err != nil {
-		return nil, errors.Wrap(err, "NewGrpcGatewayWithOptions failed")
+		return nil, errors.WithMessage(err, "NewGrpcGatewayWithOptions failed")
 	}
 
 	muxInterceptor, _ := NewMuxInterceptorWithOptions(&MuxInterceptorOptions{
@@ -187,6 +188,14 @@ func NewGrpcGatewayWithOptions(options *GrpcGatewayOptions, opts ...refx.Option)
 		g.traceCloser = closer
 	}
 
+	for _, o := range options.Middlewares {
+		middleware, err := NewMiddlewareWithOptions(&o, opts...)
+		if err != nil {
+			return nil, errors.WithMessage(err, "NewMiddlewareWithOptions failed")
+		}
+		g.AddMiddleware(middleware)
+	}
+
 	return g, nil
 }
 
@@ -230,11 +239,6 @@ func (g *GrpcGateway) AddHttpPreHandlers(handlers ...HttpPreHandler) {
 
 func (g *GrpcGateway) AddHttpPostHandlers(handlers ...HttpPostHandler) {
 	g.httpHandler.AddPostHandlers(handlers...)
-}
-
-type Middleware interface {
-	HttpMiddleware
-	GrpcMiddleware
 }
 
 func (g *GrpcGateway) AddMiddleware(middleWare Middleware) {
