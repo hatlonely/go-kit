@@ -14,7 +14,7 @@ type MiddlewareOptions struct {
 	Options string
 }
 
-func RegisterLocker(key string, constructor interface{}) {
+func RegisterMiddleware(key string, constructor interface{}) {
 	if _, ok := middlewareConstructorMap[key]; ok {
 		panic(fmt.Sprintf("locker type [%v] is already registered", key))
 	}
