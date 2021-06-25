@@ -11,7 +11,7 @@ import (
 
 type MiddlewareOptions struct {
 	Type    string
-	Options string
+	Options interface{}
 }
 
 func RegisterMiddleware(key string, constructor interface{}) {
