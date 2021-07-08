@@ -15,7 +15,7 @@ import (
 func NewStdoutTextLogger() *Logger {
 	log, err := NewLoggerWithOptions(&Options{
 		Level: "Debug",
-		Writers: []WriterOptions{{
+		Writers: []refx.TypeOptions{{
 			Type: "Stdout",
 			Options: &StdoutWriterOptions{
 				Formatter: FormatterOptions{
@@ -36,7 +36,7 @@ func NewStdoutTextLogger() *Logger {
 func NewStdoutJsonLogger() *Logger {
 	log, err := NewLoggerWithOptions(&Options{
 		Level: "Debug",
-		Writers: []WriterOptions{{
+		Writers: []refx.TypeOptions{{
 			Type: "Stdout",
 			Options: &StdoutWriterOptions{
 				Formatter: FormatterOptions{
@@ -80,7 +80,7 @@ func NewLoggerWithOptions(options *Options, opts ...refx.Option) (*Logger, error
 
 type Options struct {
 	Level   string `rule:"x in ['Info', 'Warn', 'Debug', 'Error', 'Fatal']"`
-	Writers []WriterOptions
+	Writers []refx.TypeOptions
 }
 
 func NewLogger(level Level, writers ...Writer) *Logger {

@@ -100,3 +100,54 @@ func NewConstructor(constructor interface{}, implement reflect.Type) (*Construct
 
 	return &info, nil
 }
+
+var constructorMap = map[reflect.Type]map[string]*Constructor{}
+
+func Register(implement reflect.Type, key string, constructor interface{}) {
+	if _, ok := constructorMap[implement]; !ok {
+		constructorMap[implement] = map[string]*Constructor{}
+	}
+
+	if _, ok := constructorMap[implement][key]; ok {
+		panic(fmt.Sprintf("%v type [%v] is already registered", implement.String(), key))
+	}
+
+	info, err := NewConstructor(constructor, implement)
+	Must(err)
+
+	constructorMap[implement][key] = info
+}
+
+func New(implement reflect.Type, options *TypeOptions, opts ...Option) (interface{}, error) {
+	if options.Type == "" {
+		return nil, nil
+	}
+
+	if _, ok := constructorMap[implement]; !ok {
+		return nil, errors.Errorf("%v type not found", implement.String())
+	}
+
+	constructor, ok := constructorMap[implement][options.Type]
+	if !ok {
+		return nil, errors.Errorf("unregistered %v type: [%v]", implement.String(), options.Type)
+	}
+
+	result, err := constructor.Call(options.Options, opts...)
+	if err != nil {
+		return nil, errors.WithMessage(err, "constructor.Call failed")
+	}
+
+	if constructor.ReturnError {
+		if !result[1].IsNil() {
+			return nil, errors.Wrapf(result[1].Interface().(error), "New failed. type: [%v]", options.Type)
+		}
+		return result[0].Interface(), nil
+	}
+
+	return result[0].Interface(), nil
+}
+
+type TypeOptions struct {
+	Type    string
+	Options interface{}
+}

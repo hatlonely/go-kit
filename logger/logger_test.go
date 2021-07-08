@@ -1,10 +1,12 @@
 package logger
 
 import (
+	"os"
 	"sync"
 	"testing"
 	"time"
 
+	"github.com/hatlonely/go-kit/refx"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -12,7 +14,7 @@ func TestLogger(t *testing.T) {
 	Convey("TestLogger", t, func() {
 		log, err := NewLoggerWithOptions(&Options{
 			Level: "Info",
-			Writers: []WriterOptions{{
+			Writers: []refx.TypeOptions{{
 				Type: "Stdout",
 				Options: &StdoutWriterOptions{
 					Formatter: FormatterOptions{
@@ -27,7 +29,7 @@ func TestLogger(t *testing.T) {
 				Options: &RotateFileWriterOptions{
 					Level:    "Info",
 					MaxAge:   24 * time.Hour,
-					Filename: "log/test.log",
+					Filename: "tmp/test.log",
 					Formatter: FormatterOptions{
 						Type:    "Json",
 						Options: &JsonFormatterOptions{},
@@ -41,23 +43,42 @@ func TestLogger(t *testing.T) {
 			"key1": "val1",
 			"key2": "val2",
 		})
+
+		os.RemoveAll("tmp")
 	})
 }
 
 func TestNewStdoutLogger(t *testing.T) {
 	Convey("TestNewStdoutLogger", t, func() {
-		log := NewStdoutJsonLogger()
-		log.Info("hello world")
-		log.Warn("hello golang")
-		log.WithFunc("key1", func() interface{} {
-			return time.Now().UnixNano()
-		}).Info("")
-		log.WithFunc("key2", func() interface{} {
-			return time.Now().UnixNano()
-		}).Info("")
-		log.With("Key1", "Val1").With("Key2", "Val2").Info("")
-		log.With("Key3", "Val3").With("Key4", "Val4").Info("")
-		log.WithFields(map[string]interface{}{"Key1": "Val1", "Key2": "Val2"}).Info("")
+		Convey("JsonLogger", func() {
+			log := NewStdoutJsonLogger()
+			log.Info("hello world")
+			log.Warn("hello golang")
+			log.WithFunc("key1", func() interface{} {
+				return time.Now().UnixNano()
+			}).Info("")
+			log.WithFunc("key2", func() interface{} {
+				return time.Now().UnixNano()
+			}).Info("")
+			log.With("Key1", "Val1").With("Key2", "Val2").Info("")
+			log.With("Key3", "Val3").With("Key4", "Val4").Info("")
+			log.WithFields(map[string]interface{}{"Key1": "Val1", "Key2": "Val2"}).Info("")
+		})
+
+		Convey("TextLogger", func() {
+			log := NewStdoutTextLogger()
+			log.Info("hello world")
+			log.Warn("hello golang")
+			log.WithFunc("key1", func() interface{} {
+				return time.Now().UnixNano()
+			}).Info("")
+			log.WithFunc("key2", func() interface{} {
+				return time.Now().UnixNano()
+			}).Info("")
+			log.With("Key1", "Val1").With("Key2", "Val2").Info("")
+			log.With("Key3", "Val3").With("Key4", "Val4").Info("")
+			log.WithFields(map[string]interface{}{"Key1": "Val1", "Key2": "Val2"}).Info("")
+		})
 	})
 }
 
@@ -65,7 +86,7 @@ func TestNewFlatMapLogger(t *testing.T) {
 	Convey("TestNewFlatMapLogger", t, func() {
 		log, _ := NewLoggerWithOptions(&Options{
 			Level: "Debug",
-			Writers: []WriterOptions{{
+			Writers: []refx.TypeOptions{{
 				Type: "Stdout",
 				Options: &StdoutWriterOptions{
 					Formatter: FormatterOptions{
@@ -104,6 +125,9 @@ func TestParallel(t *testing.T) {
 		}()
 	}
 	wg.Wait()
+	_ = l.Close()
+
+	_ = os.RemoveAll("tmp")
 }
 
 func BenchmarkLogger(b *testing.B) {

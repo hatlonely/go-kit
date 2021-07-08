@@ -1,9 +1,11 @@
 package logger
 
 import (
+	"os"
 	"testing"
 	"time"
 
+	"github.com/hatlonely/go-kit/refx"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -25,7 +27,7 @@ func TestRotateFileWriter(t *testing.T) {
 	}
 
 	Convey("TestRotateFileWriter", t, func() {
-		writer, err := NewWriterWithOptions(&WriterOptions{
+		writer, err := NewWriterWithOptions(&refx.TypeOptions{
 			Type: "RotateFile",
 			Options: &RotateFileWriterOptions{
 				Level: "Info",
@@ -33,12 +35,14 @@ func TestRotateFileWriter(t *testing.T) {
 					Type: "Json",
 				},
 				MaxAge:   24 * time.Hour,
-				Filename: "log/test.log",
+				Filename: "tmp/test.log",
 			},
 		})
 
 		So(err, ShouldBeNil)
 		So(writer.Write(info), ShouldBeNil)
 		So(writer.Close(), ShouldBeNil)
+
+		_ = os.RemoveAll("tmp")
 	})
 }
