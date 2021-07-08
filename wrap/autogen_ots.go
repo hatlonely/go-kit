@@ -165,6 +165,51 @@ func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, reque
 	return res0, err
 }
 
+func (w *OTSTableStoreClientWrapper) AddDefinedColumn(ctx context.Context, request *tablestore.AddDefinedColumnRequest) (*tablestore.AddDefinedColumnResponse, error) {
+	ctxOptions := FromContext(ctx)
+	var res0 *tablestore.AddDefinedColumnResponse
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.AddDefinedColumn", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.AddDefinedColumn", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.AddDefinedColumn", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.AddDefinedColumn", ctxOptions.StartSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.AddDefinedColumn", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.AddDefinedColumn", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.AddDefinedColumn", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		res0, err = w.obj.AddDefinedColumn(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return res0, err
+}
+
 func (w *OTSTableStoreClientWrapper) BatchGetRow(ctx context.Context, request *tablestore.BatchGetRowRequest) (*tablestore.BatchGetRowResponse, error) {
 	ctxOptions := FromContext(ctx)
 	var res0 *tablestore.BatchGetRowResponse
@@ -472,6 +517,51 @@ func (w *OTSTableStoreClientWrapper) CreateTable(ctx context.Context, request *t
 			}()
 		}
 		res0, err = w.obj.CreateTable(request)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return res0, err
+}
+
+func (w *OTSTableStoreClientWrapper) DeleteDefinedColumn(ctx context.Context, request *tablestore.DeleteDefinedColumnRequest) (*tablestore.DeleteDefinedColumnResponse, error) {
+	ctxOptions := FromContext(ctx)
+	var res0 *tablestore.DeleteDefinedColumnResponse
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteDefinedColumn", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteDefinedColumn", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.TableStoreClient.DeleteDefinedColumn", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteDefinedColumn", ctxOptions.StartSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DeleteDefinedColumn", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("tablestore.TableStoreClient.DeleteDefinedColumn", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("tablestore.TableStoreClient.DeleteDefinedColumn", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		res0, err = w.obj.DeleteDefinedColumn(request)
 		if err != nil && span != nil {
 			span.SetTag("error", err.Error())
 		}

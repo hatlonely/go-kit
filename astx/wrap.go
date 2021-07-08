@@ -57,6 +57,7 @@ type WrapperGeneratorOptions struct {
 	PackagePath              string              `flag:"usage: package path"`
 	PackageName              string              `flag:"usage: package name"`
 	OutputPackage            string              `flag:"usage: output package name; default: wrap" dft:"wrap"`
+	UseWrapPackagePrefix     bool                `flag:"usage: use wrap package prefix"`
 	Classes                  []string            `flag:"usage: classes to wrap"`
 	StarClasses              []string            `flag:"usage: star classes to wrap"`
 	ClassPrefix              string              `flag:"usage: wrap class name prefix"`
@@ -157,7 +158,7 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 	}
 
 	var wrapPackagePrefix string
-	if options.OutputPackage != "wrap" {
+	if options.OutputPackage != "wrap" || options.UseWrapPackagePrefix {
 		wrapPackagePrefix = "wrap."
 	}
 
@@ -174,21 +175,22 @@ func NewWrapperGeneratorWithOptions(options *WrapperGeneratorOptions) *WrapperGe
 }
 
 type RenderInfo struct {
-	Debug             bool
-	Package           string
-	WrapPackagePrefix string
-	UnwrapFunc        string
-	Class             string
-	WrapClass         string
-	OutputPackage     string
-	PackagePath       string
-	ErrorField        string
-	Interface         string
-	ObjectType        string
-	EnableHystrix     bool
-	IsStarClass       bool
-	NewLine           string
-	Function          struct {
+	Debug                bool
+	Package              string
+	WrapPackagePrefix    string
+	UnwrapFunc           string
+	Class                string
+	WrapClass            string
+	OutputPackage        string
+	UseWrapPackagePrefix bool
+	PackagePath          string
+	ErrorField           string
+	Interface            string
+	ObjectType           string
+	EnableHystrix        bool
+	IsStarClass          bool
+	NewLine              string
+	Function             struct {
 		Name             string
 		ErrCode          string
 		ParamList        string
@@ -274,6 +276,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 		ErrorField:               g.options.ErrorField,
 		EnableHystrix:            g.options.EnableHystrix,
 		NewLine:                  "\n",
+		UseWrapPackagePrefix:     g.options.UseWrapPackagePrefix,
 	}
 
 	buf.WriteString(renderTemplate(WrapperImportTpl, info, "WrapperImportTpl"))
@@ -395,7 +398,7 @@ func (g *WrapperGenerator) Generate() (string, error) {
 
 			if !function.IsReturnError && !(info.Rule.ErrorInResult && len(function.Results) == 1) {
 				info.Function.ErrCode = `"OK"`
-			} else if info.OutputPackage == "wrap" {
+			} else if info.OutputPackage == "wrap" && !info.UseWrapPackagePrefix {
 				if info.Rule.ErrorInResult && len(function.Results) == 1 {
 					info.Function.ErrCode = fmt.Sprintf("ErrCode(res0.%s)", info.ErrorField)
 				} else {
@@ -723,7 +726,7 @@ const WrapperFunctionBodyWithoutErrorTpl = `
 {{- end}}
 {{- if .Rule.Trace}}
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ := opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}", ctxOptions.startSpanOpts...)
+		span, _ := opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}", ctxOptions.StartSpanOpts...)
 		for key, val := range w.options.Trace.ConstTags {
 			span.SetTag(key, val)
 		}
@@ -779,7 +782,7 @@ const WrapperFunctionBodyWithErrorWithoutRetryTpl = `
 {{- if .Rule.Trace}}
 	var span opentracing.Span
 	if w.options.EnableTrace && !ctxOptions.DisableTrace {
-		span, _ = opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}", ctxOptions.startSpanOpts...)
+		span, _ = opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}", ctxOptions.StartSpanOpts...)
 		for key, val := range w.options.Trace.ConstTags {
 			span.SetTag(key, val)
 		}
@@ -833,7 +836,7 @@ const WrapperFunctionBodyWithErrorWithRetryTpl = `
 {{- if .Rule.Trace}}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "{{.Package}}.{{.Class}}.{{.Function.Name}}", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}

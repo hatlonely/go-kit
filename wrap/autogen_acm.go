@@ -300,6 +300,51 @@ func (w *ACMConfigClientWrapper) ListenConfig(ctx context.Context, param vo.Conf
 	return err
 }
 
+func (w *ACMConfigClientWrapper) PublishAggr(ctx context.Context, param vo.ConfigParam) (bool, error) {
+	ctxOptions := FromContext(ctx)
+	var published bool
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ConfigClient.PublishAggr", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ConfigClient.PublishAggr", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ConfigClient.PublishAggr", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.PublishAggr", ctxOptions.StartSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("config_client.ConfigClient.PublishAggr", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("config_client.ConfigClient.PublishAggr", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("config_client.ConfigClient.PublishAggr", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		published, err = w.obj.PublishAggr(param)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return published, err
+}
+
 func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.ConfigParam) (bool, error) {
 	ctxOptions := FromContext(ctx)
 	var published bool
@@ -337,6 +382,51 @@ func (w *ACMConfigClientWrapper) PublishConfig(ctx context.Context, param vo.Con
 			}()
 		}
 		published, err = w.obj.PublishConfig(param)
+		if err != nil && span != nil {
+			span.SetTag("error", err.Error())
+		}
+		return err
+	})
+	return published, err
+}
+
+func (w *ACMConfigClientWrapper) RemoveAggr(ctx context.Context, param vo.ConfigParam) (bool, error) {
+	ctxOptions := FromContext(ctx)
+	var published bool
+	var err error
+	err = w.retry.Do(func() error {
+		if w.rateLimiter != nil {
+			if err := w.rateLimiter.Wait(ctx, fmt.Sprintf("%s.ConfigClient.RemoveAggr", w.options.Name)); err != nil {
+				return err
+			}
+		}
+		if w.parallelController != nil {
+			if token, err := w.parallelController.Acquire(ctx, fmt.Sprintf("%s.ConfigClient.RemoveAggr", w.options.Name)); err != nil {
+				return err
+			} else {
+				defer w.parallelController.Release(ctx, fmt.Sprintf("%s.ConfigClient.RemoveAggr", w.options.Name), token)
+			}
+		}
+		var span opentracing.Span
+		if w.options.EnableTrace && !ctxOptions.DisableTrace {
+			span, _ = opentracing.StartSpanFromContext(ctx, "config_client.ConfigClient.RemoveAggr", ctxOptions.StartSpanOpts...)
+			for key, val := range w.options.Trace.ConstTags {
+				span.SetTag(key, val)
+			}
+			for key, val := range ctxOptions.TraceTags {
+				span.SetTag(key, val)
+			}
+			defer span.Finish()
+		}
+		if w.options.EnableMetric && !ctxOptions.DisableMetric {
+			ts := time.Now()
+			w.inflightMetric.WithLabelValues("config_client.ConfigClient.RemoveAggr", ctxOptions.MetricCustomLabelValue).Inc()
+			defer func() {
+				w.inflightMetric.WithLabelValues("config_client.ConfigClient.RemoveAggr", ctxOptions.MetricCustomLabelValue).Dec()
+				w.durationMetric.WithLabelValues("config_client.ConfigClient.RemoveAggr", ErrCode(err), ctxOptions.MetricCustomLabelValue).Observe(float64(time.Now().Sub(ts).Milliseconds()))
+			}()
+		}
+		published, err = w.obj.RemoveAggr(param)
 		if err != nil && span != nil {
 			span.SetTag("error", err.Error())
 		}
