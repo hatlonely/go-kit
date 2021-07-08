@@ -24,7 +24,7 @@ type CtxOptions struct {
 	DisableMetric          bool
 	MetricCustomLabelValue string
 	TraceTags              map[string]string
-	startSpanOpts          []opentracing.StartSpanOption
+	StartSpanOpts          []opentracing.StartSpanOption
 }
 
 type CtxOption func(options *CtxOptions)
@@ -58,7 +58,7 @@ func WithCtxTraceTag(key string, val string) CtxOption {
 
 func WithCtxStartSpanOpts(opts ...opentracing.StartSpanOption) CtxOption {
 	return func(options *CtxOptions) {
-		options.startSpanOpts = opts
+		options.StartSpanOpts = opts
 	}
 }
 

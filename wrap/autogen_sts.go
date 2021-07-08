@@ -139,7 +139,7 @@ func (w *STSClientWrapper) AssumeRole(ctx context.Context, request *sts.AssumeRo
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "sts.Client.AssumeRole", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "sts.Client.AssumeRole", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -194,7 +194,7 @@ func (w *STSClientWrapper) AssumeRoleWithSAML(ctx context.Context, request *sts.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "sts.Client.AssumeRoleWithSAML", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "sts.Client.AssumeRoleWithSAML", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -249,7 +249,7 @@ func (w *STSClientWrapper) GetCallerIdentity(ctx context.Context, request *sts.G
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "sts.Client.GetCallerIdentity", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "sts.Client.GetCallerIdentity", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}

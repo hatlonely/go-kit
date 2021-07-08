@@ -139,7 +139,7 @@ func (w *SMSClientWrapper) AddShortUrl(ctx context.Context, request *dysmsapi.Ad
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.AddShortUrl", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.AddShortUrl", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -194,7 +194,7 @@ func (w *SMSClientWrapper) AddSmsSign(ctx context.Context, request *dysmsapi.Add
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.AddSmsSign", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.AddSmsSign", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -249,7 +249,7 @@ func (w *SMSClientWrapper) AddSmsTemplate(ctx context.Context, request *dysmsapi
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.AddSmsTemplate", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.AddSmsTemplate", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -304,7 +304,7 @@ func (w *SMSClientWrapper) CreateShortParam(ctx context.Context, request *dysmsa
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.CreateShortParam", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.CreateShortParam", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -359,7 +359,7 @@ func (w *SMSClientWrapper) DeleteShortUrl(ctx context.Context, request *dysmsapi
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.DeleteShortUrl", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.DeleteShortUrl", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -414,7 +414,7 @@ func (w *SMSClientWrapper) DeleteSmsSign(ctx context.Context, request *dysmsapi.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.DeleteSmsSign", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.DeleteSmsSign", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -469,7 +469,7 @@ func (w *SMSClientWrapper) DeleteSmsTemplate(ctx context.Context, request *dysms
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.DeleteSmsTemplate", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.DeleteSmsTemplate", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -524,7 +524,7 @@ func (w *SMSClientWrapper) ModifySmsSign(ctx context.Context, request *dysmsapi.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.ModifySmsSign", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.ModifySmsSign", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -579,7 +579,7 @@ func (w *SMSClientWrapper) ModifySmsTemplate(ctx context.Context, request *dysms
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.ModifySmsTemplate", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.ModifySmsTemplate", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -634,7 +634,7 @@ func (w *SMSClientWrapper) QuerySendDetails(ctx context.Context, request *dysmsa
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.QuerySendDetails", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.QuerySendDetails", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -689,7 +689,7 @@ func (w *SMSClientWrapper) QueryShortUrl(ctx context.Context, request *dysmsapi.
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.QueryShortUrl", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.QueryShortUrl", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -744,7 +744,7 @@ func (w *SMSClientWrapper) QuerySmsSign(ctx context.Context, request *dysmsapi.Q
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.QuerySmsSign", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.QuerySmsSign", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -799,7 +799,7 @@ func (w *SMSClientWrapper) QuerySmsTemplate(ctx context.Context, request *dysmsa
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.QuerySmsTemplate", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.QuerySmsTemplate", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -854,7 +854,7 @@ func (w *SMSClientWrapper) SendBatchSms(ctx context.Context, request *dysmsapi.S
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.SendBatchSms", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.SendBatchSms", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -909,7 +909,7 @@ func (w *SMSClientWrapper) SendSms(ctx context.Context, request *dysmsapi.SendSm
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.SendSms", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "dysmsapi.Client.SendSms", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}

@@ -139,7 +139,7 @@ func (w *OTSTableStoreClientWrapper) AbortTransaction(ctx context.Context, reque
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.AbortTransaction", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.AbortTransaction", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -184,7 +184,7 @@ func (w *OTSTableStoreClientWrapper) BatchGetRow(ctx context.Context, request *t
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.BatchGetRow", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.BatchGetRow", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -229,7 +229,7 @@ func (w *OTSTableStoreClientWrapper) BatchWriteRow(ctx context.Context, request 
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.BatchWriteRow", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.BatchWriteRow", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -274,7 +274,7 @@ func (w *OTSTableStoreClientWrapper) CommitTransaction(ctx context.Context, requ
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CommitTransaction", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CommitTransaction", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -319,7 +319,7 @@ func (w *OTSTableStoreClientWrapper) ComputeSplitPointsBySize(ctx context.Contex
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ComputeSplitPointsBySize", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ComputeSplitPointsBySize", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -364,7 +364,7 @@ func (w *OTSTableStoreClientWrapper) CreateIndex(ctx context.Context, request *t
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateIndex", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateIndex", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -409,7 +409,7 @@ func (w *OTSTableStoreClientWrapper) CreateSearchIndex(ctx context.Context, requ
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateSearchIndex", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateSearchIndex", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -454,7 +454,7 @@ func (w *OTSTableStoreClientWrapper) CreateTable(ctx context.Context, request *t
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateTable", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.CreateTable", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -499,7 +499,7 @@ func (w *OTSTableStoreClientWrapper) DeleteIndex(ctx context.Context, request *t
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteIndex", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteIndex", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -544,7 +544,7 @@ func (w *OTSTableStoreClientWrapper) DeleteRow(ctx context.Context, request *tab
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteRow", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteRow", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -589,7 +589,7 @@ func (w *OTSTableStoreClientWrapper) DeleteSearchIndex(ctx context.Context, requ
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteSearchIndex", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteSearchIndex", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -634,7 +634,7 @@ func (w *OTSTableStoreClientWrapper) DeleteTable(ctx context.Context, request *t
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteTable", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DeleteTable", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -679,7 +679,7 @@ func (w *OTSTableStoreClientWrapper) DescribeSearchIndex(ctx context.Context, re
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeSearchIndex", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeSearchIndex", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -724,7 +724,7 @@ func (w *OTSTableStoreClientWrapper) DescribeStream(ctx context.Context, req *ta
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeStream", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeStream", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -769,7 +769,7 @@ func (w *OTSTableStoreClientWrapper) DescribeTable(ctx context.Context, request 
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeTable", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.DescribeTable", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -814,7 +814,7 @@ func (w *OTSTableStoreClientWrapper) GetRange(ctx context.Context, request *tabl
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetRange", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetRange", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -859,7 +859,7 @@ func (w *OTSTableStoreClientWrapper) GetRow(ctx context.Context, request *tables
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetRow", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetRow", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -904,7 +904,7 @@ func (w *OTSTableStoreClientWrapper) GetShardIterator(ctx context.Context, req *
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetShardIterator", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetShardIterator", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -949,7 +949,7 @@ func (w *OTSTableStoreClientWrapper) GetStreamRecord(ctx context.Context, req *t
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetStreamRecord", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.GetStreamRecord", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -994,7 +994,7 @@ func (w *OTSTableStoreClientWrapper) ListSearchIndex(ctx context.Context, reques
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListSearchIndex", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListSearchIndex", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1039,7 +1039,7 @@ func (w *OTSTableStoreClientWrapper) ListStream(ctx context.Context, req *tables
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListStream", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListStream", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1084,7 +1084,7 @@ func (w *OTSTableStoreClientWrapper) ListTable(ctx context.Context) (*tablestore
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListTable", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.ListTable", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1129,7 +1129,7 @@ func (w *OTSTableStoreClientWrapper) PutRow(ctx context.Context, request *tables
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.PutRow", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.PutRow", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1174,7 +1174,7 @@ func (w *OTSTableStoreClientWrapper) Search(ctx context.Context, request *tables
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.Search", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.Search", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1219,7 +1219,7 @@ func (w *OTSTableStoreClientWrapper) StartLocalTransaction(ctx context.Context, 
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.StartLocalTransaction", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.StartLocalTransaction", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1264,7 +1264,7 @@ func (w *OTSTableStoreClientWrapper) UpdateRow(ctx context.Context, request *tab
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.UpdateRow", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.UpdateRow", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
@@ -1309,7 +1309,7 @@ func (w *OTSTableStoreClientWrapper) UpdateTable(ctx context.Context, request *t
 		}
 		var span opentracing.Span
 		if w.options.EnableTrace && !ctxOptions.DisableTrace {
-			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.UpdateTable", ctxOptions.startSpanOpts...)
+			span, _ = opentracing.StartSpanFromContext(ctx, "tablestore.TableStoreClient.UpdateTable", ctxOptions.StartSpanOpts...)
 			for key, val := range w.options.Trace.ConstTags {
 				span.SetTag(key, val)
 			}
