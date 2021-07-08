@@ -266,7 +266,7 @@ func main() {
 	if options.UseRotateFileJsonLogger {
 		log, err := logger.NewLoggerWithOptions(&logger.Options{
 			Level: "Info",
-			Writers: []logger.WriterOptions{{
+			Writers: []refx.TypeOptions{{
 				Type: "RotateFile",
 				Options: &logger.RotateFileWriterOptions{
 					Level:    "Info",
